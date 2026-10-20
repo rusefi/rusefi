@@ -18,8 +18,9 @@ import java.util.Objects;
 /**
  * Swing rendering of lvgl-linux-dash's classic circular gauge, restyled with a
  * light dial to match the console's light theme. Geometry follows
- * ui/components/ui_comp_gaugecontainer.c; display rounding and the shared
- * needle/arc position follow ui/gauge_display_value.c.
+ * ui/components/ui_comp_gaugecontainer.c; the shared needle/arc position follows
+ * ui/gauge_display_value.c. Readings round to the .ini value decimals, as in TS,
+ * not to the dash's range-based step, which showed e.g. a 0.45 V nernst as 0.550.
  * Draw in a 400-unit square, scaled to fit the component without stretching.
  */
 public final class CircularGauge extends JComponent implements GaugeDisplay {
@@ -28,7 +29,11 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
     // Light dial matching the console's FlatLaf light theme.
     static final Color PROGRESS = new Color(0xFCE38A);
     static final Color DANGER_FILL = new Color(0xFFCDD2);
-    private static final Color DANGER = new Color(0xE53935);
+    static final Color DANGER = new Color(0xE53935);
+    // Amber rather than yellow: the normal progress fill is already yellow.
+    static final Color WARNING = new Color(0xFFA000);
+    static final Color WARNING_FILL = new Color(0xFFCC80);
+    static final Color WARNING_TEXT = new Color(0xE65100);
     static final Color NEEDLE = new Color(0xE53935);
     private static final Color SCALE = new Color(0x5F656D);
     private static final Color TICK = new Color(0x9AA0A6);
@@ -52,6 +57,13 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
     private final int valueDecimals;
     private final String[] scaleLabels = new String[11];
     private double dangerThreshold;
+    // Raw .ini limits (NaN when absent); updateZones() derives the drawn, ordered thresholds.
+    private final double lowDangerValue;
+    private final double lowWarningValue;
+    private final double highWarningValue;
+    private double lowDangerThreshold;
+    private double lowWarningThreshold;
+    private double highWarningThreshold;
     private String title;
     private String units;
     // Sensor callbacks can run off the EDT. Publishing one immutable reading
@@ -59,44 +71,31 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
     private volatile Reading reading;
 
     public CircularGauge(GaugeModel model, IniFileModel ini, ConfigurationImage configuration) {
-        this(resolve(model.getLowValueValue(), ini, configuration, 0),
-            resolve(model.getHighValueValue(), ini, configuration, 0), model,
-            resolve(model.getHighDangerValueValue(), ini, configuration, Double.NaN),
-            (int) resolve(model.getValueDecimalPlacesValue(), ini, configuration, 0),
-            (int) resolve(model.getLabelDecimalPlacesValue(), ini, configuration, 0));
+        this(GaugeScale.fromIni(model, ini, configuration), model);
     }
 
     public CircularGauge(double minValue, double maxValue, GaugeModel model) {
-        this(minValue, maxValue, model,
-            model.getHighDangerValueValue().isExpression() ? Double.NaN : model.getHighDangerValue(),
-            model.getValueDecimalPlaces(), model.getLabelDecimalPlaces());
+        this(GaugeScale.of(minValue, maxValue,
+            numeric(model.getLowDangerValueValue()), numeric(model.getLowWarningValueValue()),
+            numeric(model.getHighWarningValueValue()), numeric(model.getHighDangerValueValue()),
+            model.getValueDecimalPlaces(), model.getLabelDecimalPlaces()), model);
     }
 
-    private CircularGauge(double minValue, double maxValue, GaugeModel model,
-                          double highDangerValue, int valueDecimals, int labelDecimals) {
-        if (!Double.isFinite(minValue)) {
-            minValue = 0;
-        }
-        if (!Double.isFinite(maxValue) || maxValue <= minValue || !Double.isFinite(maxValue - minValue)) {
-            maxValue = minValue + 10;
-            if (!Double.isFinite(maxValue) || maxValue <= minValue) {
-                minValue = 0;
-                maxValue = 10;
-            }
-        }
-        this.minValue = minValue;
-        this.maxValue = maxValue;
-        double maxAbs = Math.max(Math.abs(minValue), Math.abs(maxValue));
-        displayStep = maxAbs > 150 ? 4 : maxAbs >= 75 ? 2 : maxAbs >= 40 ? 1 : 0.25;
-        this.valueDecimals = boundedDecimals(valueDecimals);
+    public CircularGauge(GaugeScale scale, GaugeModel model) {
+        minValue = scale.getMin();
+        maxValue = scale.getMax();
+        valueDecimals = scale.getValueDecimals();
+        displayStep = Math.pow(10, -valueDecimals);
         title = model.getTitle();
         units = model.getUnits();
         for (int i = 0; i < scaleLabels.length; i++) {
-            scaleLabels[i] = format(minValue + (maxValue - minValue) * i / 10,
-                boundedDecimals(labelDecimals));
+            scaleLabels[i] = format(minValue + (maxValue - minValue) * i / 10, scale.getLabelDecimals());
         }
-        reading = new Reading(Double.NaN);
-        setHighDangerValue(highDangerValue);
+        lowDangerValue = scale.getLowDanger();
+        lowWarningValue = scale.getLowWarning();
+        highWarningValue = scale.getHighWarning();
+        reading = new Reading(Double.NaN, Double.NaN);
+        setHighDangerValue(scale.getHighDanger());
         setPreferredSize(new Dimension(200, 200));
         setMinimumSize(new Dimension(80, 80));
         setOpaque(false);
@@ -110,6 +109,10 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
         return evaluated != null && Double.isFinite(evaluated) ? evaluated : fallback;
     }
 
+    private static double numeric(IniValue value) {
+        return value.isExpression() ? Double.NaN : value.getNumericValue();
+    }
+
     /** Configuration/label setters are called on the EDT. */
     public void setHighDangerValue(double highDangerValue) {
         if (!Double.isFinite(highDangerValue)) {
@@ -119,7 +122,53 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
         int dangerPercent = (int) Math.max(0, Math.min(100,
             (maxValue - highDangerValue) / (maxValue - minValue) * 100));
         dangerThreshold = maxValue - dangerPercent / 100.0 * (maxValue - minValue);
+        updateZones();
         repaint();
+    }
+
+    /**
+     * Orders the TS limits min <= lowDanger <= lowWarning <= highWarning <= highDanger <= max,
+     * so a malformed definition still draws non-overlapping zones. A missing limit leaves its
+     * zone empty.
+     */
+    private void updateZones() {
+        highWarningThreshold = Double.isFinite(highWarningValue)
+            ? Math.max(minValue, Math.min(dangerThreshold, highWarningValue)) : dangerThreshold;
+        lowDangerThreshold = Double.isFinite(lowDangerValue)
+            ? Math.max(minValue, Math.min(highWarningThreshold, lowDangerValue)) : minValue;
+        lowWarningThreshold = Double.isFinite(lowWarningValue)
+            ? Math.max(lowDangerThreshold, Math.min(highWarningThreshold, lowWarningValue)) : lowDangerThreshold;
+    }
+
+    enum Zone {NORMAL, WARNING, DANGER}
+
+    /**
+     * High zones include their threshold, as the end-of-scale danger zone always has; low zones
+     * exclude it, so a limit equal to the minimum (common in the .ini) adds no zone. Readings
+     * below the minimum are not flagged: TS shows a disconnected 0 AFR or 0 C sensor
+     * temperature, both below their scales, on a normal dial.
+     */
+    Zone zoneOf(double value, double tolerance) {
+        if (!Double.isFinite(value)) {
+            return Zone.NORMAL;
+        }
+        if (value >= dangerThreshold - tolerance) {
+            return Zone.DANGER;
+        }
+        if (value < minValue) {
+            return Zone.NORMAL;
+        }
+        if (value < lowDangerThreshold - tolerance) {
+            return Zone.DANGER;
+        }
+        if (value >= highWarningThreshold - tolerance || value < lowWarningThreshold - tolerance) {
+            return Zone.WARNING;
+        }
+        return Zone.NORMAL;
+    }
+
+    Zone getZone() {
+        return zoneOf(reading.rawValue, 0);
     }
 
     public void setTitle(String title) {
@@ -147,12 +196,14 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
     public void setValue(double value) {
         double displayValue = Double.NaN;
         if (Double.isFinite(value)) {
-            double steps = (value - minValue) / displayStep;
-            // C roundf rounds ties away from zero, unlike Math.round for negatives.
-            displayValue = minValue + Math.copySign(Math.floor(Math.abs(steps) + 0.5), steps) * displayStep;
+            double steps = value / displayStep;
+            // Ties round away from zero, so negative readings mirror positive ones.
+            displayValue = Math.copySign(Math.floor(Math.abs(steps) + 0.5), steps) * displayStep;
         }
-        if (Double.compare(reading.value, displayValue) != 0) {
-            reading = new Reading(displayValue);
+        Reading previous = reading;
+        if (Double.compare(previous.value, displayValue) != 0
+            || zoneOf(previous.rawValue, 0) != zoneOf(value, 0)) {
+            reading = new Reading(displayValue, value);
             repaint();
         }
     }
@@ -171,20 +222,22 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
 
     private final class Reading {
         final double value;
+        /**
+         * Unrounded reading, which selects the zone: rounding to the displayed decimals could
+         * otherwise move a reading just below a limit across it.
+         */
+        final double rawValue;
         final String text;
         final int degrees;
 
-        Reading(double value) {
+        Reading(double value, double rawValue) {
             this.value = value;
+            this.rawValue = rawValue;
             text = Double.isFinite(value) ? format(value, valueDecimals) : "---";
             double visualValue = Math.max(minValue, Math.min(maxValue, value));
             degrees = Double.isFinite(value)
                 ? (int) Math.round((visualValue - minValue) / (maxValue - minValue) * SWEEP_DEGREES) : 0;
         }
-    }
-
-    private static int boundedDecimals(int decimals) {
-        return Math.max(0, Math.min(6, decimals));
     }
 
     private static String format(double value, int decimals) {
@@ -208,8 +261,8 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
             Reading current = reading;
-            boolean danger = current.value >= dangerThreshold;
-            Color fill = danger ? DANGER_FILL : PROGRESS;
+            Zone zone = zoneOf(current.rawValue, 0);
+            Color fill = zone == Zone.DANGER ? DANGER_FILL : zone == Zone.WARNING ? WARNING_FILL : PROGRESS;
 
             // Everything stays inside the dial circle: detached windows clip to it.
             g.setPaint(new GradientPaint(0, 0, BEZEL_TOP, 0, 400, BEZEL_BOTTOM));
@@ -223,15 +276,21 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
 
             drawArc(g, 140, 80, 0, current.degrees, fill);
             drawArc(g, 184, 4, 0, SWEEP_DEGREES, TRACK);
-            double dangerStart = (dangerThreshold - minValue) / (maxValue - minValue) * SWEEP_DEGREES;
+            double lowDangerEnd = degreesOf(lowDangerThreshold);
+            double lowWarningEnd = degreesOf(lowWarningThreshold);
+            double highWarningStart = degreesOf(highWarningThreshold);
+            double dangerStart = degreesOf(dangerThreshold);
+            drawArc(g, 184, 6, 0, lowDangerEnd, DANGER);
+            drawArc(g, 184, 6, lowDangerEnd, lowWarningEnd - lowDangerEnd, WARNING);
+            drawArc(g, 184, 6, highWarningStart, dangerStart - highWarningStart, WARNING);
             drawArc(g, 184, 6, dangerStart, SWEEP_DEGREES - dangerStart, DANGER);
 
             for (int i = 0; i <= 10; i++) {
                 double value = minValue + (maxValue - minValue) * i / 10;
-                boolean dangerLabel = value >= dangerThreshold - 0.001;
-                Color color = dangerLabel ? DANGER : SCALE;
+                Zone labelZone = zoneOf(value, 0.001);
+                Color color = labelZone == Zone.DANGER ? DANGER : labelZone == Zone.WARNING ? WARNING_TEXT : SCALE;
                 double angle = Math.toRadians(START_DEGREES + i * SWEEP_DEGREES / 10.0);
-                g.setColor(dangerLabel ? DANGER : TICK);
+                g.setColor(labelZone == Zone.DANGER ? DANGER : labelZone == Zone.WARNING ? WARNING : TICK);
                 g.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER));
                 double inner = i % 2 == 0 ? 168 : 174;
                 g.draw(new Line2D.Double(200 + inner * Math.cos(angle), 200 + inner * Math.sin(angle),
@@ -257,12 +316,17 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
             g.setColor(HUB_RIM);
             g.setStroke(new BasicStroke(1.5f));
             g.draw(new Ellipse2D.Double(100, 100, 200, 200));
-            drawText(g, current.text, 200, 200, 60, 165, danger ? DANGER : TEXT);
+            drawText(g, current.text, 200, 200, 60, 165,
+                zone == Zone.DANGER ? DANGER : zone == Zone.WARNING ? WARNING_TEXT : TEXT);
             drawText(g, units, 202, 246, 16, 160, LABEL_TEXT);
             drawText(g, title, 200, 331, 16, 230, LABEL_TEXT);
         } finally {
             g.dispose();
         }
+    }
+
+    private double degreesOf(double value) {
+        return (value - minValue) / (maxValue - minValue) * SWEEP_DEGREES;
     }
 
     private static void drawArc(Graphics2D g, double radius, float width, double start, double sweep, Color color) {

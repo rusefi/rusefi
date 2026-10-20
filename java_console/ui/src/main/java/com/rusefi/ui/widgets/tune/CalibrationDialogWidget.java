@@ -22,6 +22,7 @@ import com.rusefi.ui.widgets.CircularGauge;
 import com.rusefi.ui.laf.GradientTitleBorder;
 import com.rusefi.ui.util.ConstrainedBorderLayout;
 import com.rusefi.ui.util.ScrollablePanel;
+import com.rusefi.ui.util.SquareGridLayout;
 import com.rusefi.ui.util.SwingUtil;
 import com.rusefi.ui.util.WrapLayout;
 import com.rusefi.trigger.TriggerImage;
@@ -66,6 +67,10 @@ public class CalibrationDialogWidget {
     private boolean active;
     private boolean hasReadoutDemand;
     private static final int READOUT_GAUGE_SIZE = 150;
+    private static final int MIN_GAUGE_SIZE = 100;
+    private static final int MAX_GAUGE_SIZE = 300;
+    /** Counts gauge groups so renderPanelEntry can mark panels that contain gauges as growing. */
+    private int gaugeGroupsRendered;
     /** Called after each user edit with the current working image, so listeners can re-evaluate their own expressions. */
     private Consumer<ConfigurationImage> onConfigChange;
     /** Called when the user opens Wiring/Pinout from a pin-enum field; arg is the current enum value. */
@@ -515,9 +520,18 @@ public class CalibrationDialogWidget {
         container.add(ip.getPanel());
     }
 
+    /**
+     * Gauges scale with the width the dialog offers: the dialog fills the viewport width, panels
+     * holding gauges are marked {@link ConstrainedBorderLayout#GROWS} so they take the spare
+     * width, and the square grid turns that width into taller gauges, up to MAX_GAUGE_SIZE.
+     */
     private void renderGaugeGroup(JPanel container, List<String> gaugeNames, IniFileModel iniFileModel) {
-        JPanel gaugePanel = new JPanel(new GridLayout(0, 2, 4, 4));
+        JPanel gaugePanel = new JPanel(new SquareGridLayout(2, 4, MIN_GAUGE_SIZE, READOUT_GAUGE_SIZE, MAX_GAUGE_SIZE));
+        SquareGridLayout.revalidateOnWidthChange(gaugePanel);
+        gaugePanel.putClientProperty(ConstrainedBorderLayout.GROWS, Boolean.TRUE);
         gaugePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        viewportPane.fillWidth = true;
+        gaugeGroupsRendered++;
         for (String gaugeName : gaugeNames) {
             GaugeModel gaugeModel = iniFileModel.getGauge(gaugeName);
             if (gaugeModel != null) {
@@ -665,8 +679,9 @@ public class CalibrationDialogWidget {
             return;
         }
 
-        JPanel panelWidget = new JPanel();
+        JPanel panelWidget = new GrowAwarePanel();
         panelWidget.setAlignmentX(Component.LEFT_ALIGNMENT);
+        int gaugeGroupsBefore = gaugeGroupsRendered;
         DialogModel subDialog = panel.resolveDialog(iniFileModel);
         String subLayoutHint = subDialog != null ? subDialog.getLayoutHint() : null;
         JPanel body = prepareTopicHelp(panelWidget, subDialog == null ? null : subDialog.getTopicHelp(), iniFileModel);
@@ -690,7 +705,37 @@ public class CalibrationDialogWidget {
             panelWidget.setName(panel.getPanelName());
             GradientTitleBorder.installBorder(panel.getPanelName(), panelWidget);
         }
+        if (gaugeGroupsRendered > gaugeGroupsBefore) {
+            panelWidget.putClientProperty(ConstrainedBorderLayout.GROWS, Boolean.TRUE);
+        }
         if (constraint != null) targetContainer.add(panelWidget, constraint); else targetContainer.add(panelWidget);
+    }
+
+    /**
+     * In a horizontal BoxLayout, Swing shares spare width among children up to their maximum
+     * widths. Once a sibling holds gauges ({@link ConstrainedBorderLayout#GROWS}), the other
+     * panels stay at their preferred width so the spare width reaches the gauges.
+     */
+    private static final class GrowAwarePanel extends JPanel {
+        @Override
+        public Dimension getMaximumSize() {
+            Dimension maximum = super.getMaximumSize();
+            Container parent = getParent();
+            if (ConstrainedBorderLayout.grows(this) || parent == null || !isHorizontalBox(parent.getLayout())) {
+                return maximum;
+            }
+            for (Component sibling : parent.getComponents()) {
+                if (sibling.isVisible() && ConstrainedBorderLayout.grows(sibling)) {
+                    return new Dimension(getPreferredSize().width, maximum.height);
+                }
+            }
+            return maximum;
+        }
+
+        private static boolean isHorizontalBox(LayoutManager layout) {
+            return layout instanceof BoxLayout
+                && (((BoxLayout) layout).getAxis() == BoxLayout.X_AXIS || ((BoxLayout) layout).getAxis() == BoxLayout.LINE_AXIS);
+        }
     }
 
     private static List<DialogModel.DialogEntry> synthesizeOrderedEntries(DialogModel dialog) {
@@ -822,11 +867,8 @@ public class CalibrationDialogWidget {
     }
 
     private JComponent buildGaugeCell(GaugeModel gaugeModel) {
+        // SquareGridLayout sizes the cell; the gauge draws a square of whatever it is given.
         CircularGauge radial = new CircularGauge(gaugeModel, currentIniFileModel, workingImage);
-        Dimension size = new Dimension(READOUT_GAUGE_SIZE, READOUT_GAUGE_SIZE);
-        radial.setPreferredSize(size);
-        radial.setMinimumSize(size);
-        radial.setMaximumSize(size);
         boolean exprTitle = gaugeModel.getTitleValue().isExpression() && TsStringFunction.containsStringFunction(gaugeModel.getTitle());
         boolean exprUnits = gaugeModel.getUnitsValue().isExpression() && TsStringFunction.containsStringFunction(gaugeModel.getUnits());
         if (exprTitle) {

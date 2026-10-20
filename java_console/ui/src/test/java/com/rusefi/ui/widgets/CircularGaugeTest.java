@@ -27,26 +27,28 @@ class CircularGaugeTest {
     }
 
     @Test
-    void matchesDashboardQuantizationIncludingNegativeTies() {
+    void roundsToIniValueDecimalsIncludingNegativeTies() {
         CircularGauge gauge = gauge(0, 100, 80, 0);
         gauge.setValue(43);
-        assertEquals("44", gauge.getDisplayText());
-        gauge.setValue(-5);
+        assertEquals("43", gauge.getDisplayText());
+        gauge.setValue(-5.5);
         assertEquals("-6", gauge.getDisplayText());
-        gauge = gauge(-100, 100, 80, 0);
-        gauge.setValue(-103);
-        assertEquals("-104", gauge.getDisplayText());
+        gauge = gauge(-100, 100, 80, 1);
+        gauge.setValue(-103.26);
+        assertEquals("-103.3", gauge.getDisplayText());
         gauge = gauge(0, 10, 8, 2);
-        gauge.setValue(2.125);
-        assertEquals("2.25", gauge.getDisplayText());
+        gauge.setValue(2.126);
+        assertEquals("2.13", gauge.getDisplayText());
 
-        for (double[] sample : new double[][] {
-            {39, 1.125, 1.25}, {40, 1.5, 2}, {75, 3, 4}, {150, 3, 4}, {151, 6, 8}
-        }) {
-            gauge = gauge(0, sample[0], sample[0], 2);
-            gauge.setValue(sample[1]);
-            assertEquals(sample[2], gauge.getValue());
+        // wb1nernstVoltage: -0.2..1.1 V with 3 decimals. The dash's range-based 0.25 step
+        // showed 0.45 as 0.550 and 0.838 as 0.800.
+        gauge = new CircularGauge(-0.2, 1.1, model(-0.2, 1.1, 0.35, 0.40, 0.50, 0.55, 3));
+        for (double[] sample : new double[][] {{0.45, 0.45}, {0.838, 0.838}, {0.3804, 0.38}, {-0.15, -0.15}}) {
+            gauge.setValue(sample[0]);
+            assertEquals(sample[1], gauge.getValue(), 1e-9);
         }
+        gauge.setValue(0.838);
+        assertEquals("0.838", gauge.getDisplayText());
     }
 
     @Test
@@ -97,7 +99,73 @@ class CircularGaugeTest {
             "Danger starts at the threshold, inclusively");
         gauge.setHighDangerValue(100);
         image = render(gauge, 400, 400);
-        assertEquals(progress, rgb(image, 70, 150), "Changing threshold updates the fill");
+        // model() sets the high warning value equal to the original danger value.
+        assertEquals(CircularGauge.WARNING_FILL.getRGB() & 0xFFFFFF, rgb(image, 70, 150),
+            "Raising the danger threshold leaves the reading in the warning zone");
+        gauge.setValue(50);
+        assertEquals(progress, rgb(render(gauge, 400, 400), 70, 150));
+    }
+
+    private static GaugeModel model(double min, double max, double lowDanger, double lowWarning,
+                                    double highWarning, double highDanger, int decimals) {
+        return new GaugeModel("ZoneTestGauge", "zoneTestChannel",
+            IniValue.ofString("WBO1: nernst V"), IniValue.ofString("V"),
+            IniValue.ofNumeric(min), IniValue.ofNumeric(max),
+            IniValue.ofNumeric(lowDanger), IniValue.ofNumeric(lowWarning),
+            IniValue.ofNumeric(highWarning), IniValue.ofNumeric(highDanger),
+            IniValue.ofNumeric(decimals), IniValue.ofNumeric(decimals));
+    }
+
+    @Test
+    void classifiesReadingsByTsWarningAndDangerLimits() {
+        // afr1Gauge from gauge_declarations.ini
+        CircularGauge afr = new CircularGauge(10, 19.4, model(10, 19.4, 12, 13, 15, 16, 2));
+        for (Object[] sample : new Object[][] {
+            {0.0, CircularGauge.Zone.NORMAL}, // disconnected sensor, below the scale: TS shows no alarm
+            {11.0, CircularGauge.Zone.DANGER},
+            {12.5, CircularGauge.Zone.WARNING},
+            {14.0, CircularGauge.Zone.NORMAL},
+            {15.5, CircularGauge.Zone.WARNING},
+            {16.5, CircularGauge.Zone.DANGER},
+            {25.0, CircularGauge.Zone.DANGER},
+            {Double.NaN, CircularGauge.Zone.NORMAL},
+        }) {
+            afr.setValue((Double) sample[0]);
+            assertEquals(sample[1], afr.getZone(), "AFR " + sample[0]);
+        }
+
+        // A low limit equal to the minimum adds no zone: a TPS-style 0..100 gauge reading 0 is normal.
+        CircularGauge tps = new CircularGauge(0, 100, model(0, 100, 0, 0, 100, 100, 0));
+        tps.setValue(0);
+        assertEquals(CircularGauge.Zone.NORMAL, tps.getZone());
+    }
+
+    @Test
+    void paintsWarningAndDangerZonesOnTheRim() {
+        // wb1nernstVoltage from gauge_declarations.ini
+        CircularGauge gauge = new CircularGauge(-0.2, 1.1, model(-0.2, 1.1, 0.35, 0.40, 0.50, 0.55, 3));
+        BufferedImage image = render(gauge, 400, 400);
+        assertEquals(CircularGauge.DANGER.getRGB() & 0xFFFFFF, rimRgb(image, gauge, 0.0), "Low danger");
+        assertEquals(CircularGauge.WARNING.getRGB() & 0xFFFFFF, rimRgb(image, gauge, 0.375), "Low warning");
+        assertNotEquals(CircularGauge.WARNING.getRGB() & 0xFFFFFF, rimRgb(image, gauge, 0.45), "Normal band");
+        assertNotEquals(CircularGauge.DANGER.getRGB() & 0xFFFFFF, rimRgb(image, gauge, 0.45), "Normal band");
+        assertEquals(CircularGauge.WARNING.getRGB() & 0xFFFFFF, rimRgb(image, gauge, 0.525), "High warning");
+        assertEquals(CircularGauge.DANGER.getRGB() & 0xFFFFFF, rimRgb(image, gauge, 0.8), "High danger");
+
+        gauge.setValue(0.45);
+        assertEquals(CircularGauge.PROGRESS.getRGB() & 0xFFFFFF, rgb(render(gauge, 400, 400), 70, 150));
+        gauge.setValue(0.52);
+        assertEquals(CircularGauge.WARNING_FILL.getRGB() & 0xFFFFFF, rgb(render(gauge, 400, 400), 70, 150));
+        gauge.setValue(0.838);
+        assertEquals(CircularGauge.DANGER_FILL.getRGB() & 0xFFFFFF, rgb(render(gauge, 400, 400), 70, 150));
+    }
+
+    /** Colour of the zone ring at {@code value}'s position on a 400x400 render. */
+    private static int rimRgb(BufferedImage image, CircularGauge gauge, double value) {
+        double min = -0.2;
+        double max = 1.1;
+        double angle = Math.toRadians(135 + (value - min) / (max - min) * 270);
+        return rgb(image, (int) Math.round(200 + 184 * Math.cos(angle)), (int) Math.round(200 + 184 * Math.sin(angle)));
     }
 
     @Test

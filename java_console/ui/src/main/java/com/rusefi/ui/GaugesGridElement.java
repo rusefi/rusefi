@@ -1,16 +1,21 @@
 package com.rusefi.ui;
 
+import com.opensr5.ini.GaugeModel;
+import com.opensr5.ini.IniFileModel;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.ui.widgets.GaugeDisplayKind;
+import com.rusefi.ui.widgets.GaugeMenuLabel;
+import com.rusefi.ui.widgets.GaugeScaleOverrides;
 import com.rusefi.ui.widgets.JPanelWithListener;
 import com.rusefi.ui.widgets.SensorGauge;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 
 /**
  * This panel contains either a {@link SensorGauge} or {@link SensorLiveGraph}
@@ -24,6 +29,7 @@ public class GaugesGridElement {
     private static final String IS_LIVE_GRAPH = "type";
     static final String DISPLAY = "display";
     static final String DISPLAY_AS = "Display as";
+    static final String SCALE = "Scale\u2026";
 
     private final JPanelWithListener wrapper = new JPanelWithListener(new BorderLayout());
     private final UIContext uiContext;
@@ -85,13 +91,49 @@ public class GaugesGridElement {
             @Override
             public void onSensorChange(String gaugeName) {
                 config.setProperty(GAUGE_TYPE, gaugeName);
+                // Scale settings were chosen for the previous channel.
+                GaugeScaleOverrides.clear(config);
             }
         };
 
         wrapper.setLayout(new BorderLayout());
         SensorGauge.createGaugeBody(uiContext, config.getProperty(GAUGE_TYPE), wrapper, gaugeChangeListener,
-            createDisplayAsMenu(kind), kind);
+            Arrays.asList(createDisplayAsMenu(kind), createScaleMenuItem()), kind, GaugeScaleOverrides.read(config));
+    }
 
+    /** "Scale…" item: replaces the .ini min, max, danger value and decimals of this slot's gauge. */
+    // Package-private so tests drive the same menu users see.
+    @NotNull JMenuItem createScaleMenuItem() {
+        JMenuItem item = new JMenuItem(SCALE);
+        item.setToolTipText("Set this gauge's min, max, danger value and decimals");
+        item.addActionListener(e -> {
+            GaugeScaleDialog dialog = createScaleDialog();
+            if (dialog == null) {
+                return;
+            }
+            GaugeScaleOverrides overrides = dialog.show(wrapper);
+            if (overrides != null) {
+                setScaleOverrides(overrides);
+            }
+        });
+        return item;
+    }
+
+    /** The dialog for the slot's current gauge, or {@code null} while its .ini definition is unknown. */
+    GaugeScaleDialog createScaleDialog() {
+        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+        GaugeModel model = ini == null ? null : ini.getGauge(config.getProperty(GAUGE_TYPE));
+        if (model == null) {
+            return null;
+        }
+        String units = model.getUnitsValue().isExpression() ? null : model.getUnits();
+        return new GaugeScaleDialog(GaugeMenuLabel.getTitle(uiContext, model), units,
+            SensorGauge.iniScale(uiContext, model), GaugeScaleOverrides.read(config));
+    }
+
+    void setScaleOverrides(GaugeScaleOverrides overrides) {
+        overrides.writeTo(config);
+        rebuild();
     }
 
     /** "Display as" submenu with the current presentation checked. */
