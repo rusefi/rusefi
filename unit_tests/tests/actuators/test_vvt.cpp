@@ -48,7 +48,7 @@ struct FakeMap : public ValueProvider3D {
 	}
 };
 
-TEST(Vvt, ActivationDelayDiscardsFractionalSeconds) {
+TEST(Vvt, ActivationDelayRetainsFractionalSeconds) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	Sensor::setMockValue(SensorType::Clt, 70);
 	engineConfiguration->vvtControlMinClt = 0;
@@ -59,7 +59,7 @@ TEST(Vvt, ActivationDelayDiscardsFractionalSeconds) {
 	FakeMap targetMap;
 	targetMap.setpoint = 20;
 	StrictMock<MockPwm> pwm;
-	EXPECT_CALL(pwm, setSimplePwmDutyCycle(0)).Times(2);
+	EXPECT_CALL(pwm, setSimplePwmDutyCycle(0)).Times(3);
 	VvtController dut(0);
 	dut.init(&targetMap, &pwm);
 
@@ -67,7 +67,10 @@ TEST(Vvt, ActivationDelayDiscardsFractionalSeconds) {
 	dut.onFastCallback();
 	EXPECT_FALSE(dut.getSetpoint());
 
-	// The 1500 ms setting currently becomes one second, enabling control too soon.
+	advanceTimeUs(350000);
+	dut.onFastCallback();
+	EXPECT_FALSE(dut.getSetpoint());
+
 	advanceTimeUs(350000);
 	dut.onFastCallback();
 	EXPECT_EQ(20, dut.getSetpoint().value_or(-1000));

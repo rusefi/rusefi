@@ -43,7 +43,7 @@ void VvtController::onFastCallback() {
 	m_isCltWarmEnough = Sensor::getOrZero(SensorType::Clt) > engineConfiguration->vvtControlMinClt;
 
 	auto nowNt = getTimeNowNt();
-	m_engineRunningLongEnough = engine->rpmCalculator.getSecondsSinceEngineStart(nowNt) > engineConfiguration->vvtActivationDelayMs / MS_PER_SECOND;
+	m_engineRunningLongEnough = engine->rpmCalculator.getSecondsSinceEngineStart(nowNt) > MS2SEC(engineConfiguration->vvtActivationDelayMs);
 
 	update();
 }
