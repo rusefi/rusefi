@@ -43,3 +43,36 @@ namespace {
         EXPECT_EQ(engine->hardSparkLimiter.getTargetSkipRatio(), TEST_LUA_HARD_SPARK_SKIP + TEST_TRACTION_CONTROL_IGNITION_SKIP);
     }
 }
+
+TEST(TractionSparkSkip, OnePercentHardCutSkipsEverySpark) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->useHardSkipInTraction = true;
+	setTable(engineConfiguration->tractionControlIgnitionSkip, 1);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 50);
+	Sensor::setMockValue(SensorType::WheelSlipRatio, 5);
+	engine->rpmCalculator.setRpmValue(2000);
+	engine->periodicFastCallback();
+	ASSERT_FLOAT_EQ(1, engine->engineState.tractionControlSparkSkip);
+	EXPECT_FLOAT_EQ(1, engine->hardSparkLimiter.getTargetSkipRatio());
+	int skipped = 0;
+	for (int i = 0; i < 100; i++) {
+		skipped += engine->hardSparkLimiter.shouldSkip();
+	}
+	EXPECT_EQ(100, skipped); // The configured value is 1%, not a ratio of 1.
+}
+
+TEST(TractionSparkSkip, OnePercentSoftCutSkipsHalfTheSparks) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->useHardSkipInTraction = false;
+	setTable(engineConfiguration->tractionControlIgnitionSkip, 1);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 50);
+	Sensor::setMockValue(SensorType::WheelSlipRatio, 5);
+	engine->rpmCalculator.setRpmValue(2000);
+	engine->periodicFastCallback();
+	EXPECT_FLOAT_EQ(1, engine->softSparkLimiter.getTargetSkipRatio());
+	int skipped = 0;
+	for (int i = 0; i < 100; i++) {
+		skipped += engine->softSparkLimiter.shouldSkip();
+	}
+	EXPECT_EQ(50, skipped); // The consecutive-skip guard limits the erroneous cut.
+}
