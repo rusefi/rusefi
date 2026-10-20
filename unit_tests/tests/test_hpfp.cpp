@@ -6,6 +6,24 @@
 using ::testing::_;
 using ::testing::StrictMock;
 
+TEST(HPFP, ZeroLobesDisableConfiguredPump) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* cfg) {
+		cfg->hpfpValvePin = Gpio::A2;
+	});
+	engineConfiguration->hpfpCamLobes = 0;
+	engineConfiguration->hpfpPumpVolume = 0.29f;
+	ASSERT_TRUE(validateConfigOnStartUpOrBurn());
+	engine->engineState.injectionMass[0] = 0.01f * fuelDensity;
+	HpfpQuantity quantity;
+	EXPECT_FLOAT_EQ(0, quantity.calcFuelPercent(2000));
+	HpfpController controller;
+	EXPECT_FLOAT_EQ(0, quantity.pumpAngleFuel(2000, &controller));
+	EXPECT_FLOAT_EQ(0, controller.fuel_requested_percent);
+	engine->rpmCalculator.setRpmValue(2000);
+	controller.onFastCallback();
+	EXPECT_FALSE(controller.isHpfpActive);
+}
+
 TEST(HPFP, Lobe) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 

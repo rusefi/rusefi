@@ -76,6 +76,10 @@ angle_t HpfpLobe::findNextLobe() {
 
 // As a percent of the full pump stroke
 float HpfpQuantity::calcFuelPercent(float rpm) {
+	if (!engineConfiguration->hpfpCamLobes || engineConfiguration->hpfpPumpVolume <= 0) {
+		return 0;
+	}
+
 	float fuel_requested_cc_per_cycle =
 		engine->engineState.injectionMass[0] * (1.f / fuelDensity) * engineConfiguration->cylindersCount;
 	float fuel_requested_cc_per_lobe = fuel_requested_cc_per_cycle / engineConfiguration->hpfpCamLobes;
@@ -137,6 +141,12 @@ float HpfpQuantity::calcPI(float rpm, float calc_fuel_percent, HpfpController *m
 }
 
 angle_t HpfpQuantity::pumpAngleFuel(float rpm, HpfpController *model) {
+	if (!engineConfiguration->hpfpCamLobes || engineConfiguration->hpfpPumpVolume <= 0) {
+		model->fuel_requested_percent = 0;
+		model->fuel_requested_percent_pi = 0;
+		return 0;
+	}
+
 	// Math based on fuel requested
 	model->fuel_requested_percent = calcFuelPercent(rpm);
 
@@ -156,7 +166,7 @@ void HpfpController::onFastCallback() {
 
 	isHpfpActive = !(rpm < rpm_spinning_cutoff ||
 		    !isGdiEngine() ||
-		    engineConfiguration->hpfpPumpVolume == 0 ||
+		    engineConfiguration->hpfpPumpVolume <= 0 ||
 		    !enginePins.hpfpValve.isInitialized());
 	// What conditions can we not handle?
 	if (!isHpfpActive) {
@@ -259,9 +269,12 @@ void HpfpController::scheduleNextCycle() {
 #endif // EFI_HPFP
 
 bool isGdiEngine() {
+	if (!engineConfiguration->hpfpCamLobes) {
+		return false;
+	}
 #if EFI_PROD_CODE
     return enginePins.hpfpValve.isInitialized();
 #else
-    return engineConfiguration->hpfpCamLobes > 0;
+    return true;
 #endif
 }
