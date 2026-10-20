@@ -35,15 +35,14 @@ does not establish hardware timing or the physical severity of an outcome.
 | 7 | ECU-012 | S2 — High | Source-confirmed; identity mismatch reproduced | Software knock uses firing-order position as physical cylinder identity |
 | 8 | ECU-005 | S2 — High | Reproduced | Invalid fuel pressure selects injection duration, mass correction and deadtime |
 | 9 | ECU-009 | S2 — High | Source-confirmed; reachability reproduced | Ninth/tenth forward gear indexes beyond the boost duty adder array |
-| 10 | ECU-027 | S2 — High | Source-confirmed; arithmetic reproduced | Zero HPFP lobes leave a configured GDI pump active with a nonfinite fuel request |
-| 11 | ECU-032 | S2 — High | Source-confirmed | Delayed software-knock window can be attributed to the next cylinder |
-| 12 | ECU-033 | S3 — Moderate | Arithmetic reproduced; scheduler path source-confirmed | Zero injector flow is accepted and yields an infinite pulse duration |
-| 13 | ECU-013 | S3 — Moderate | Reproduced | Knock response treats retarded timing as hundreds of degrees of advance |
-| 14 | ECU-019 | S3 — Moderate | Reproduced | Percentage acceleration enrichment shrinks with batch/simultaneous injection |
-| 15 | ECU-026 | S3 — Moderate | Reproduced | Predictive MAP substitutes the previous run's estimate after a quick restart |
-| 16 | ECU-021 | S3 — Moderate | Reproduced | VVT activation delay discards fractional seconds |
-| 17 | ECU-007 | S3 — Moderate | Reproduced | DFCO ignition recovery uses a fixed half-second ramp |
-| 18 | ECU-029 | S3 — Moderate | Reproduced | Failed A/C pressure feedback can re-enable a compressor after a pressure cut |
+| 10 | ECU-032 | S2 — High | Source-confirmed | Delayed software-knock window can be attributed to the next cylinder |
+| 11 | ECU-033 | S3 — Moderate | Arithmetic reproduced; live-write path source-confirmed | Unburned zero injector flow can yield an infinite pulse duration |
+| 12 | ECU-013 | S3 — Moderate | Reproduced | Knock response treats retarded timing as hundreds of degrees of advance |
+| 13 | ECU-019 | S3 — Moderate | Reproduced | Percentage acceleration enrichment shrinks with batch/simultaneous injection |
+| 14 | ECU-026 | S3 — Moderate | Reproduced | Predictive MAP substitutes the previous run's estimate after a quick restart |
+| 15 | ECU-021 | S3 — Moderate | Reproduced | VVT activation delay discards fractional seconds |
+| 16 | ECU-007 | S3 — Moderate | Reproduced | DFCO ignition recovery uses a fixed half-second ramp |
+| 17 | ECU-029 | S3 — Moderate | Reproduced | Failed A/C pressure feedback can re-enable a compressor after a pressure cut |
 
 ### ECU-024 — Ignition schedule rebuild can orphan a charged coil
 
@@ -359,41 +358,6 @@ does not establish hardware timing or the physical severity of an outcome.
 - **Fix direction:** Size the table for every supported gear including reverse
   and neutral, and validate/bound the sensor-to-index conversion.
 
-### ECU-027 — Zero HPFP lobes do not disable a configured GDI pump
-
-- **Source:** `validateGdi()` in
-  [engine_controller.cpp](firmware/controllers/engine_controller.cpp) accepts
-  zero `hpfpCamLobes`, and `HpfpLobe::findNextLobe()` in
-  [high_pressure_fuel_pump.cpp](firmware/controllers/engine_cycle/high_pressure_fuel_pump.cpp)
-  explicitly handles zero as an inactive lobe configuration. In production,
-  however, `isGdiEngine()` uses the valve pin's initialized state, and
-  `HpfpController::onFastCallback()` gates activity on that state, RPM and pump
-  volume without checking `hpfpCamLobes`. `HpfpQuantity::calcFuelPercent()`
-  divides positive requested fuel by the zero lobe count.
-- **Trigger:** A GDI tune retains an assigned HPFP valve pin and nonzero pump
-  volume while the lobe count is set to zero, for example during a live tuning
-  change. Zero is within the exposed configuration range and passes validation.
-- **Actual:** On the production path the controller can remain active. The
-  fuel-per-lobe request becomes nonfinite; with default host tables, the
-  downstream requested activation angle still exceeds the minimum, so the
-  scheduler can continue commanding the valve despite the zero-lobe setting.
-- **Expected:** Zero lobes must disable valve scheduling, or the configuration
-  must be rejected before a running controller uses it.
-- **Impact:** An unintended or malformed high-pressure pump command can disrupt
-  rail pressure and GDI fueling, risking loss of propulsion or damaging
-  combustion. The exact hardware pressure result is not established; this
-  finding depends on a valve pin remaining assigned when lobes are zero.
-- **Validation:** `ZeroHpfpLobesProduceNonfiniteFuelRequest` exercises the real
-  configuration validator, quantity and angle calculations with nonzero fuel
-  mass, zero lobes and pump volume 0.29 cc. Validation accepts the tune, and
-  calculation produces a nonfinite fuel request and an activation angle
-  above `hpfpMinAngle`. The host `isGdiEngine()` deliberately uses lobe count
-  rather than the production pin-state check, so the host test does not execute
-  the full active controller path; production gate reachability is source-traced.
-- **Fix direction:** Make the production active condition require positive
-  lobe count; reject zero divisors before fuel calculation and clear any
-  queued valve actions during reconfiguration.
-
 ### ECU-032 — Delayed knock callbacks use the next cylinder's identity
 
 - **Source:** `Engine::onSparkFireKnockSense()` in
@@ -427,38 +391,45 @@ does not establish hardware timing or the physical severity of an outcome.
 - **Fix direction:** Bind cylinder and bank to each pending scheduler action,
   and exercise windows that cross one or more later sparks.
 
-### ECU-033 — Zero injector flow yields an infinite scheduled pulse width
+### ECU-033 — Unburned zero injector flow can yield an infinite pulse width
 
-- **Source:** The injector-flow field in
-  [rusefi_config.txt](firmware/integration/rusefi_config.txt) accepts zero.
-  `validateConfig()` in
-  [engine_controller.cpp](firmware/controllers/engine_controller.cpp) does not
-  reject it. `InjectorModelBase::getBaseDurationImpl()` in
+- **Source:** `TunerStudio::handleWriteChunkCommand()` in
+  [tunerstudio.cpp](firmware/console/binary/tunerstudio.cpp) copies settings
+  directly to the live configuration before `finishPendingBurn()` validates
+  them. `validateConfig()` in
+  [engine_controller.cpp](firmware/controllers/engine_controller.cpp) rejects
+  zero or nonfinite primary flow, and secondary flow when staging is enabled,
+  at startup and burn. `getInjectionMass()` in
+  [fuel_math.cpp](firmware/controllers/algo/fuel_math.cpp) prepares the injector
+  model from live settings; `InjectorModelBase::getBaseDurationImpl()` in
   [injector_model.cpp](firmware/controllers/algo/fuel/injector_model.cpp)
-  divides positive fuel mass by the prepared mass-flow rate. The scheduling
-  path in
+  divides by that flow. The stage-one scheduler in
   [main_trigger_callback.cpp](firmware/controllers/engine_cycle/main_trigger_callback.cpp)
-  rejects NaN and negative stage-one durations but not positive infinity,
-  then converts that duration to an integer tick offset.
-- **Trigger:** The primary injector flow is set to zero while normal
-  mass-to-duration injector modeling is active and positive fuel mass is
-  requested. A live tune change or malformed saved tune can reach this state;
-  the default flow is nonzero.
-- **Actual:** Validation succeeds and the model returns positive infinity
-  for the pulse duration. The scheduler's finite-value gate does not reject
-  it; a float-to-integer conversion of infinity has undefined C++ behavior.
-- **Expected:** Reject zero flow for the active model or inhibit injection
-  before a nonfinite pulse reaches scheduling.
-- **Impact:** A zero-flow tune can produce unpredictable pulse scheduling and
-  loss of normal fueling. The host test establishes validation and infinity,
-  not the physical injector output or a particular target's integer-cast
-  behavior.
-- **Validation:** `ZeroInjectorFlowPassesValidationAndProducesInfinitePulse`
-  calls startup validation, prepares the primary injector model with zero
-  flow, and observes an infinite duration for positive mass.
-- **Fix direction:** Validate positive effective flow for the selected
-  injector mode and guard scheduled durations with `std::isfinite` before
-  converting to ticks. Cover primary and secondary staging configurations.
+  rejects NaN and negative durations but not positive infinity.
+- **Trigger:** A running ECU starts with valid injector flow, then receives a
+  zero-flow settings write before the burn and its validation complete. The
+  normal fuel calculation runs during that interval.
+- **Actual:** Startup and burn validation reject the zero flow, but the live
+  write has already changed the value consumed by `prepare()`. Positive fuel
+  mass then produces an infinite duration; conversion to integer ticks in the
+  scheduler has undefined C++ behavior. The burn error does not guard the
+  interval before validation.
+- **Expected:** An invalid live write must not reach pulse scheduling, and
+  duration conversion must reject nonfinite values.
+- **Impact:** A live zero-flow edit can briefly disrupt injection or produce
+  unpredictable scheduling before the burn error. The host test establishes
+  the model result, not the physical injector output or a target-specific cast.
+- **Validation:** `UnburnedZeroInjectorFlowStillProducesInfinitePulse` first
+  validates a positive-flow tune, changes the live flow to zero, observes an
+  infinite model duration for positive fuel mass, then confirms that burn
+  validation rejects the value. `InjectorFlowRegression.SecondaryZeroFlowRejectedOnlyWhenStaged`
+  confirms that zero secondary flow is accepted while unused and rejected when
+  staging is enabled. The TunerStudio write and scheduler paths are source-traced
+  rather than driven end-to-end in the host test.
+- **Fix direction:** Validate before a new flow value becomes active, or retain
+  the last valid flow until validation succeeds. Guard scheduled durations
+  with `std::isfinite` before converting to ticks. Cover running primary and
+  enabled staged-secondary updates.
 
 ### ECU-013 — Wrapped retarded timing produces excessive knock response
 
@@ -637,6 +608,7 @@ does not establish hardware timing or the physical severity of an outcome.
 | ECU-020 | VVT could drive a solenoid without a cam measurement or after cam pulses stopped. | Per-cam update timers now require synchronized feedback newer than one second; missing or stale feedback disables PWM and resets control state. `Vvt.DoesNotActuateWithoutAnyCamMeasurement` and `Vvt.StopsDrivingAfterCamPulsesStop` cover both cases. |
 | ECU-022 | TPS acceleration enrichment could replay across a quick resync or appear from held throttle after a stopped reset. | Stop resets TPS event state and fuel fractions; the first sample after reset seeds the baseline. `fuel.PreviousTpsAccelerationClearedOnFastPhaseResync` and `fuel.StoppedTpsResetDoesNotInventAccelerationFromHeldThrottle` cover both callback orders. |
 | ECU-023 | Invalid flat-shift axis payload could select spark cut, timing and time limit. | Flat-shift lookup paths require valid axis input and use a defined fallback for an unavailable time axis. `ShiftTorqueReduction.InvalidFlatShiftAxisPayloadCannotChangeSparkCutOrTiming` covers cut, retard and time-gate behavior. |
+| ECU-027 | Zero HPFP lobes could leave a configured GDI pump active with a nonfinite fuel request. | Zero lobes now disable GDI pump activation and yield zero quantity and angle requests, even with an assigned valve pin and nonzero pump volume. `HPFP.ZeroLobesDisableConfiguredPump` covers the validator, quantity calculation and active-state gate. |
 
 ## Candidates under investigation
 
@@ -687,13 +659,13 @@ electrical behavior on an engine. The following checks bound the review.
   sensor registry and stored values, fuel-pressure compensation, flex fueling,
   nitrous activation, anti-lag, and knock control. Inspection does not mean all
   behavior in these areas is covered.
-- Host `make -j12` succeeds. All 27 remaining `EcuLogicReview.*` tests,
-  `LimpRegression.InvalidOilPressurePayloadDoesNotTriggerMaxCut`, and the seven
-  relevant master tests for VVT feedback, TPS stop/reset, flat-shift input and
-  traction spark cut pass on GCC with ASan/bounds enabled (35 focused tests).
-  The review and traction tests assert current defects; the fixed-path tests
-  assert corrected behavior.
-- The full GCC ASan/bounds suite passes: 1,835 tests from 300 suites. Command:
+- Host `make -j12` succeeds. All 26 remaining `EcuLogicReview.*` tests,
+  `LimpRegression.InvalidOilPressurePayloadDoesNotTriggerMaxCut`,
+  `HPFP.ZeroLobesDisableConfiguredPump`, and
+  `InjectorFlowRegression.SecondaryZeroFlowRejectedOnlyWhenStaged` pass on GCC
+  with ASan/bounds enabled (29 focused tests). The review tests assert current
+  defects; the regression tests assert corrected behavior.
+- The full GCC ASan/bounds suite passes: 1,836 tests from 301 suites. Command:
   `cd unit_tests && make -j12 && build/rusefi_test`.
 - The build regenerated tracked generated files. They remain unstaged, per
   repository guidance; no production source has been changed for this review.

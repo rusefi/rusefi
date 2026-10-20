@@ -6,7 +6,6 @@
 #include "fuel_math.h"
 #include "injector_model.h"
 #include "gear_detector.h"
-#include "high_pressure_fuel_pump.h"
 #include "limp_manager.h"
 #include "knock_logic.h"
 #include "mocks.h"
@@ -699,28 +698,25 @@ TEST(EcuLogicReview, PredictiveMapBlendReplaysAfterQuickEngineRestart) {
 	EXPECT_TRUE(engine->outputChannels.isMapPredictionActive);
 }
 
-TEST(EcuLogicReview, ZeroHpfpLobesProduceNonfiniteFuelRequest) {
+TEST(EcuLogicReview, UnburnedZeroInjectorFlowStillProducesInfinitePulse) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engineConfiguration->hpfpCamLobes = 0;
-	engineConfiguration->hpfpPumpVolume = 0.29f;
-	ASSERT_TRUE(validateConfigOnStartUpOrBurn());
-	engine->engineState.injectionMass[0] = 0.01f * fuelDensity;
-	HpfpQuantity quantity;
-	EXPECT_FALSE(std::isfinite(quantity.calcFuelPercent(2000)));
-	HpfpController controller;
-	const auto requestedAngle = quantity.pumpAngleFuel(2000, &controller);
-	EXPECT_FALSE(std::isfinite(controller.fuel_requested_percent));
-	EXPECT_GT(requestedAngle, engineConfiguration->hpfpMinAngle);
-}
-
-TEST(EcuLogicReview, ZeroInjectorFlowPassesValidationAndProducesInfinitePulse) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engineConfiguration->injector.flow = 0;
 	engineConfiguration->useInjectorFlowLinearizationTable = false;
 	ASSERT_TRUE(validateConfigOnStartUpOrBurn());
+	// TunerStudio writes directly to the live settings page before burn validation.
+	engineConfiguration->injector.flow = 0;
 	auto& injector = engine->module<InjectorModelPrimary>().unmock();
 	injector.prepare();
 	EXPECT_TRUE(std::isinf(injector.getInjectionDuration(0.01f)));
+	EXPECT_FATAL_ERROR(validateConfigOnStartUpOrBurn());
+}
+
+TEST(InjectorFlowRegression, SecondaryZeroFlowRejectedOnlyWhenStaged) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->injectorSecondary.flow = 0;
+	engineConfiguration->enableStagedInjection = false;
+	ASSERT_TRUE(validateConfigOnStartUpOrBurn());
+	engineConfiguration->enableStagedInjection = true;
+	EXPECT_FATAL_ERROR(validateConfigOnStartUpOrBurn());
 }
 
 TEST(EcuLogicReview, FailedAcPressureSensorReleasesCompressorPressureCut) {
