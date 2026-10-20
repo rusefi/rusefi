@@ -501,3 +501,84 @@ TEST(Vvt, AdvancedModeClampsFinalCommandAndDrivesPwm) {
 	dut.setOutput(unexpected);
 	EXPECT_FLOAT_EQ(dut.vvtOutput, 0);
 }
+
+namespace {
+
+void configureVvtFeedbackReproduction() {
+	Sensor::setMockValue(SensorType::Clt, 70);
+	engineConfiguration->vvtControlMinRpm = 500;
+	engineConfiguration->vvtControlMinClt = 0;
+	engineConfiguration->vvtActivationDelayMs = 0;
+	engineConfiguration->vvtAdvancedModeEnabled = false;
+	engineConfiguration->invertVvtControlIntake = false;
+	engineConfiguration->auxPid[0].pFactor = 1;
+	engineConfiguration->auxPid[0].iFactor = 0;
+	engineConfiguration->auxPid[0].dFactor = 0;
+	engineConfiguration->auxPid[0].offset = 0;
+	engineConfiguration->auxPid[0].minValue = 0;
+	engineConfiguration->auxPid[0].maxValue = 100;
+}
+
+} // namespace
+
+TEST(Vvt, ActuatesWithoutAnyCamMeasurement) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	configureVvtFeedbackReproduction();
+	engineConfiguration->camInputs[0] = Gpio::A10;
+	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
+	engine->rpmCalculator.setRpmValue(1500);
+	advanceTimeUs(100000);
+	ASSERT_EQ(0u, engine->triggerCentral.vvtEventRiseCounter[0]);
+	StrictMock<MockVp3d> targetMap;
+	StrictMock<MockPwm> pwm;
+	EXPECT_CALL(targetMap, getValue(testing::_, testing::_)).WillRepeatedly(Return(20));
+	EXPECT_CALL(pwm, setSimplePwmDutyCycle(testing::FloatNear(0.2f, 0.00001f)));
+	VvtController dut(0);
+	dut.init(&targetMap, &pwm);
+	ASSERT_TRUE(dut.observePlant());
+	EXPECT_FLOAT_EQ(0, dut.observePlant().Value);
+	dut.onFastCallback();
+	EXPECT_FLOAT_EQ(20, dut.vvtOutput);
+}
+
+TEST(Vvt, KeepsDrivingAfterCamPulsesStop) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	configureVvtFeedbackReproduction();
+	engineConfiguration->globalTriggerAngleOffset = -37;
+	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
+	engineConfiguration->vvtOffsets[0] = 360;
+	setCrankOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_HALF_MOON);
+	engineConfiguration->camInputs[0] = Gpio::A10;
+	eth.fireTriggerEvents2(5, 25);
+	for (int i = 0; i < 4; i++) {
+		eth.moveTimeForwardUs(10000);
+		if (i % 2 == 0) {
+			hwHandleVvtCamSignal(TriggerValue::RISE, getTimeNowNt(), 0);
+		}
+		eth.moveTimeForwardUs(15000);
+		eth.firePrimaryTriggerRise();
+		eth.moveTimeForwardUs(25000);
+		eth.firePrimaryTriggerFall();
+	}
+	ASSERT_TRUE(engine->triggerCentral.triggerState.hasSynchronizedPhase());
+	ASSERT_EQ(1200, engine->rpmCalculator.getCachedRpm());
+	const auto camEdges = engine->triggerCentral.vvtEventRiseCounter[0];
+	ASSERT_GT(camEdges, 0u);
+	const float measuredPosition = engine->triggerCentral.getVVTPosition(0, 0);
+	ASSERT_NEAR(71, measuredPosition, 0.001f);
+	StrictMock<MockVp3d> targetMap;
+	StrictMock<MockPwm> pwm;
+	EXPECT_CALL(targetMap, getValue(testing::_, testing::_)).WillRepeatedly(Return(measuredPosition + 20));
+	EXPECT_CALL(pwm, setSimplePwmDutyCycle(testing::FloatNear(0.2f, 0.00001f))).Times(2);
+	VvtController dut(0);
+	dut.init(&targetMap, &pwm);
+	dut.onFastCallback();
+	// Crank still turns for thirty seconds, but the cam has no more edges.
+	eth.fireTriggerEvents2(600, 25);
+	ASSERT_EQ(1200, engine->rpmCalculator.getCachedRpm());
+	ASSERT_EQ(camEdges, engine->triggerCentral.vvtEventRiseCounter[0]);
+	EXPECT_FLOAT_EQ(measuredPosition, dut.observePlant().value_or(-1000));
+	dut.onFastCallback();
+	EXPECT_FLOAT_EQ(20, dut.vvtOutput);
+}
