@@ -1,0 +1,2 @@
+*.msl -text -diff
+*.msq -text -diff
