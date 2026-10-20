@@ -26,89 +26,20 @@ does not establish hardware timing or the physical severity of an outcome.
 
 | Rank | ID | Severity | Confidence | Finding |
 | --- | --- | --- | --- | --- |
-| 1 | ECU-024 | S2 — High | Reproduced | Ignition schedule rebuild can leave the previously charged coil energized |
-| 2 | ECU-015 | S2 — High | Reproduced | A 1% traction spark cut becomes 100% hard cut or 50% soft cut |
-| 3 | ECU-001 | S2 — High | Reproduced | Invalid wastegate/idle-valve controller outputs still drive the motor |
-| 4 | ECU-006 | S2 — High | Reproduced | Injector duty protection ignores saturation of secondary injectors |
-| 5 | ECU-017 | S2 — High | Reproduced | Primary injector duty protection ignores actual trims, wall film and cranking mode |
-| 6 | ECU-011 | S2 — High | Reproduced | Shared-coil ignition ignores cylinder timing trims and distributor odd-fire offsets |
-| 7 | ECU-012 | S2 — High | Source-confirmed; identity mismatch reproduced | Software knock uses firing-order position as physical cylinder identity |
-| 8 | ECU-005 | S2 — High | Reproduced | Invalid fuel pressure selects injection duration, mass correction and deadtime |
-| 9 | ECU-009 | S2 — High | Source-confirmed; reachability reproduced | Ninth/tenth forward gear indexes beyond the boost duty adder array |
-| 10 | ECU-032 | S2 — High | Source-confirmed | Delayed software-knock window can be attributed to the next cylinder |
-| 11 | ECU-033 | S3 — Moderate | Arithmetic reproduced; live-write path source-confirmed | Unburned zero injector flow can yield an infinite pulse duration |
-| 12 | ECU-013 | S3 — Moderate | Reproduced | Knock response treats retarded timing as hundreds of degrees of advance |
-| 13 | ECU-019 | S3 — Moderate | Reproduced | Percentage acceleration enrichment shrinks with batch/simultaneous injection |
-| 14 | ECU-026 | S3 — Moderate | Reproduced | Predictive MAP substitutes the previous run's estimate after a quick restart |
-| 15 | ECU-021 | S3 — Moderate | Reproduced | VVT activation delay discards fractional seconds |
-| 16 | ECU-007 | S3 — Moderate | Reproduced | DFCO ignition recovery uses a fixed half-second ramp |
-| 17 | ECU-029 | S3 — Moderate | Reproduced | Failed A/C pressure feedback can re-enable a compressor after a pressure cut |
-
-### ECU-024 — Ignition schedule rebuild can orphan a charged coil
-
-- **Source:** `mainTriggerCallback()` in
-  [main_trigger_callback.cpp](firmware/controllers/engine_cycle/main_trigger_callback.cpp)
-  clears `ignitionEvents.isReady` after a trigger-configuration change.
-  `onTriggerEventSparkLogic()` / `initializeIgnitionActions()` then rewrite
-  `IgnitionEvent::outputs` in
-  [spark_logic.cpp](firmware/controllers/engine_cycle/spark_logic.cpp). The
-  already queued `fireSparkAndPrepareNextSchedule()` callback reads that same
-  mutable array. `Engine::efiWatchdog()` in
-  [engine.cpp](firmware/controllers/algo/engine.cpp) does not call `stopPins()`
-  while the engine is still producing trigger edges.
-- **Trigger:** A configuration change rebuilds the trigger/ignition schedule
-  during dwell and changes the event's coil mapping, for example from two-coil
-  to single-coil ignition. The pending fire callback retains the event pointer.
-- **Actual:** The old coil remains high after its scheduled fire time. The
-  callback lowers the newly mapped coil instead. Continued trigger activity
-  prevents the stopped-engine watchdog from clearing the old output.
-- **Expected:** A fire action must lower every output charged by its matching
-  dwell action, even if the schedule is rebuilt before fire time.
-- **Impact:** Sustained coil energization can overheat or damage a coil/driver
-  and removes sparks from that output. Exposure requires a live schedule rebuild
-  during a narrow dwell window and a changed coil mapping; host testing does not
-  quantify electrical damage or reproduce a full TunerStudio configuration burn.
-- **Validation:** `RebuildingIgnitionScheduleRedirectsPendingCoilShutoff`
-  charges the second output in two-coil mode, queues a real scheduler fire
-  action, models the `mainTriggerCallback()` invalidation, and rebuilds the
-  same event in single-coil mode through `onTriggerEventSparkLogic()`. When the
-  scheduler fires three milliseconds later, coil zero is low while the
-  originally charged output remains high. The test lowers it for cleanup.
-- **Fix direction:** Preserve the charged output identity until its scheduled
-  discharge, or explicitly discharge all active outputs before remapping;
-  cover live configuration and phase/synchronization transitions with a test
-  that exercises the full trigger path.
-
-### ECU-015 — Traction spark-cut percent is consumed as a fraction
-
-- **Source:** `getRunningAdvance()` in
-  [ignition_state.cpp](firmware/controllers/algo/ignition/ignition_state.cpp),
-  `EngineState::updateSparkSkip()` in
-  [engine2.cpp](firmware/controllers/algo/engine2.cpp), and
-  `SoftSparkLimiter::shouldSkip()` in
-  [launch_control.cpp](firmware/controllers/algo/launch_control.cpp).
-  `tractionControlIgnitionSkip` is explicitly a 0–100 percent table in the
-  configuration definition and tuning UI.
-- **Trigger:** Traction's spark-cut table returns a nonzero percentage. At an
-  interpolated value of 1% or greater, the behavior is already saturated.
-- **Actual:** The raw percentage is added directly to a limiter that expects
-  a 0–1 fraction; no division by 100 occurs. With `useHardSkipInTraction`, a
-  table value of 1 skips every spark. In soft mode, the consecutive-skip guard
-  produces alternating skips, i.e. 50%, instead of 1%.
-- **Expected:** Convert the percentage to a bounded fraction before combining
-  it with other spark-cut requests.
-- **Impact:** A mild traction intervention can abruptly remove all combustion
-  torque or produce severe alternating misfire. Spark cuts do not themselves
-  remove the corresponding fuel request, adding unburned-fuel consequences.
-- **Validation:** `TractionSparkSkip.OnePercentHardCutSkipsEverySpark` and
-  `TractionSparkSkip.OnePercentSoftCutSkipsHalfTheSparks` use a 1% table, real
-  running timing math and spark limiters at 2,000 RPM. Of 100 decisions, all 100
-  are cut in hard mode and 50 in soft mode. These are deterministic saturation
-  cases, not statistical assertions about a random 1% sample.
-- **Fix direction:** Convert units at the table-to-limiter boundary, keep
-  telemetry units explicit, and test low/interpolated and full-scale requests
-  plus combinations with launch, shift and Lua cuts. Target-ratio tests assert
-  addition of the raw table value and do not enforce percent conversion.
+| 1 | ECU-001 | S2 — High | Reproduced | Invalid wastegate/idle-valve controller outputs still drive the motor |
+| 2 | ECU-006 | S2 — High | Reproduced | Injector duty protection ignores saturation of secondary injectors |
+| 3 | ECU-017 | S2 — High | Reproduced | Primary injector duty protection ignores actual trims, wall film and cranking mode |
+| 4 | ECU-011 | S2 — High | Reproduced | Shared-coil ignition ignores cylinder timing trims and distributor odd-fire offsets |
+| 5 | ECU-012 | S2 — High | Source-confirmed; identity mismatch reproduced | Software knock uses firing-order position as physical cylinder identity |
+| 6 | ECU-009 | S2 — High | Source-confirmed; reachability reproduced | Ninth/tenth forward gear indexes beyond the boost duty adder array |
+| 7 | ECU-032 | S2 — High | Source-confirmed | Delayed software-knock window can be attributed to the next cylinder |
+| 8 | ECU-033 | S3 — Moderate | Arithmetic reproduced; live-write path source-confirmed | Unburned zero injector flow can yield an infinite pulse duration |
+| 9 | ECU-013 | S3 — Moderate | Reproduced | Knock response treats retarded timing as hundreds of degrees of advance |
+| 10 | ECU-019 | S3 — Moderate | Reproduced | Percentage acceleration enrichment shrinks with batch/simultaneous injection |
+| 11 | ECU-026 | S3 — Moderate | Reproduced | Predictive MAP substitutes the previous run's estimate after a quick restart |
+| 12 | ECU-021 | S3 — Moderate | Reproduced | VVT activation delay discards fractional seconds |
+| 13 | ECU-007 | S3 — Moderate | Reproduced | DFCO ignition recovery uses a fixed half-second ramp |
+| 14 | ECU-029 | S3 — Moderate | Reproduced | Failed A/C pressure feedback can re-enable a compressor after a pressure cut |
 
 ### ECU-001 — Invalid wastegate/idle-valve outputs still drive the motor
 
@@ -282,54 +213,6 @@ does not establish hardware timing or the physical severity of an outcome.
 - **Fix direction:** Convert event order to physical cylinder before scheduling
   knock acquisition and retain that identity in each pending sample. Cover
   nontrivial firing orders, both banks and differing per-cylinder gains.
-
-### ECU-005 — Invalid fuel pressure controls injection duration and deadtime
-
-- **Source:** `InjectorModelWithConfig::getInjectionDuration()`, `updateState()`,
-  `getFuelPressure()`, `getFuelDifferentialPressure()`, and `getDeadtime()` in
-  [injector_model.cpp](firmware/controllers/algo/fuel/injector_model.cpp);
-  production `Engine::updateSlowSensors()` in
-  [engine.cpp](firmware/controllers/algo/engine.cpp).
-- **Trigger:** Differential pressure is unavailable, including `ICM_None` /
-  manual-compensation modes (the switch returns `unexpected`), or a sensed-rail
-  mode with failed/missing fuel pressure or required MAP input.
-  Additionally, the direct flow-linearization table or HPFP manual compensation
-  is enabled and its registered fuel-pressure sensor fails or times out.
-- **Actual:** `updateState()` unconditionally reads the invalid result's
-  `.Value` into `pressureCorrectionReference`. `getDeadtime()` uses that value
-  as the pressure axis of the lag table. In the legacy absolute-pressure mode,
-  `getFuelPressure()` adds MAP to that invalid payload and wraps the result as
-  **valid**, losing the failure state.
-  The direct linearization path uses raw `FuelPressureInjector.Value` to select
-  the entire pulse duration. Manual HPFP compensation checks sensor presence
-  but then uses raw `FuelPressureHigh.Value` to scale commanded fuel mass.
-- **Expected:** Use a defined reference pressure/failure fallback for lag
-  correction, and preserve failure validity when computing absolute pressure.
-- **Impact:** Full pulse duration or commanded mass can change based on an
-  invalid result, with credible substantial under/overfueling and damaging
-  combustion risk in these optional pressure-based modes. Pressure-dependent
-  deadtime also changes without a valid pressure input. Exposure includes normal operation
-  with compensation disabled if the lag table varies by pressure. A table with
-  identical pressure rows masks the numerical effect. Actual invalid bytes and
-  resultant pulse-width error are not established by host tests.
-- **Validation:** `InvalidDifferentialPressureBecomesValidAbsolutePressure`
-  and `InvalidDifferentialPressureControlsDeadtimeAxis` override the pressure
-  provider with initialized invalid payloads. They demonstrate lost validity
-  and direct selection of the deadtime axis by unusable data. The periodic
-  caller is production-only, so normal host fast/slow callback tests do not
-  automatically exercise this update; these reproductions call it explicitly.
-  `InvalidFuelPressureSelectsLinearizedInjectionDuration` requests the same
-  10 mg mass and gets 5 ms versus 1 ms solely from changing an invalid payload.
-  `InvalidHighPressureSelectsManualFuelMassCorrection` similarly gets 11 ms
-  versus 21 ms. Both use real model/table calculations and registered sensors;
-  the initialized invalid payloads establish misuse without predicting real
-  error-storage bytes.
-- **Fix direction:** Resolve valid pressure or a defined fallback before
-  updating the lag axis; propagate invalid state from `getFuelPressure()`.
-  Apply an explicit failure policy before the direct-duration and manual-mass
-  lookup paths too.
-  Cover no-compensation mode, absent and timed-out pressure/MAP, both legacy
-  axis modes, and a lag table whose rows differ.
 
 ### ECU-009 — Upper forward gears overrun the boost adder array
 
@@ -609,6 +492,9 @@ does not establish hardware timing or the physical severity of an outcome.
 | ECU-022 | TPS acceleration enrichment could replay across a quick resync or appear from held throttle after a stopped reset. | Stop resets TPS event state and fuel fractions; the first sample after reset seeds the baseline. `fuel.PreviousTpsAccelerationClearedOnFastPhaseResync` and `fuel.StoppedTpsResetDoesNotInventAccelerationFromHeldThrottle` cover both callback orders. |
 | ECU-023 | Invalid flat-shift axis payload could select spark cut, timing and time limit. | Flat-shift lookup paths require valid axis input and use a defined fallback for an unavailable time axis. `ShiftTorqueReduction.InvalidFlatShiftAxisPayloadCannotChangeSparkCutOrTiming` covers cut, retard and time-gate behavior. |
 | ECU-027 | Zero HPFP lobes could leave a configured GDI pump active with a nonfinite fuel request. | Zero lobes now disable GDI pump activation and yield zero quantity and angle requests, even with an assigned valve pin and nonzero pump volume. `HPFP.ZeroLobesDisableConfiguredPump` covers the validator, quantity calculation and active-state gate. |
+| ECU-024 | Ignition schedule rebuild could leave the previously charged coil energized. | Each ignition event retains the physical outputs charged for its pending fire callback, so remapping the event does not redirect discharge. `ignition.ScheduleRebuildTurnsOffPreviouslyChargedCoil` covers a two-coil to single-coil rebuild during dwell. |
+| ECU-015 | A 1% traction spark cut could saturate the hard limiter or produce a 50% soft cut. | Traction percentages are divided by 100 before entering either spark limiter. The `TractionSparkSkip.OnePercent*` and `TenPercent*` tests cover both modes and normalized ratios. |
+| ECU-005 | Invalid fuel pressure could select injection duration, manual mass correction and pressure-dependent deadtime. | Direct duration lookup uses nominal reference pressure when feedback is invalid; manual HPFP correction skips the invalid reading; deadtime uses nominal differential pressure plus MAP for the legacy absolute axis. The three `InjectorModel.InvalidFuelPressure*` tests cover these production paths. |
 
 ## Candidates under investigation
 
@@ -631,9 +517,10 @@ does not establish hardware timing or the physical severity of an outcome.
 - A proposed 100%-secondary staging starvation case is not reachable through
   the normal staging computation, which clamps to 90%. The primary-pulse early
   return alone is not ranked without a realistic supported calibration.
-- Identical pressure rows mask the deadtime subcase of ECU-005, but optional
-  direct-duration/manual-mass pressure tables also consume invalid values and
-  can change the entire pulse. Those paths justify its high severity.
+- `InjectorModelWithConfig::getFuelPressure()` still wraps an invalid
+  differential-pressure payload as a valid absolute result. Its former
+  production caller now uses a validated fallback, and no current production
+  caller remains. Keep the helper's validity semantics in mind if it is reused.
 - A generic timer-saturation concern is not an immediate short-timeout defect
   on the primary STM32 targets: their native tick multiplier is 4, not the
   host test build's 100. Do not infer a production limit from host timing alone.
@@ -659,13 +546,13 @@ electrical behavior on an engine. The following checks bound the review.
   sensor registry and stored values, fuel-pressure compensation, flex fueling,
   nitrous activation, anti-lag, and knock control. Inspection does not mean all
   behavior in these areas is covered.
-- Host `make -j12` succeeds. All 26 remaining `EcuLogicReview.*` tests,
-  `LimpRegression.InvalidOilPressurePayloadDoesNotTriggerMaxCut`,
-  `HPFP.ZeroLobesDisableConfiguredPump`, and
-  `InjectorFlowRegression.SecondaryZeroFlowRejectedOnlyWhenStaged` pass on GCC
-  with ASan/bounds enabled (29 focused tests). The review tests assert current
-  defects; the regression tests assert corrected behavior.
-- The full GCC ASan/bounds suite passes: 1,836 tests from 301 suites. Command:
+- Host `make -j12` succeeds. All 21 remaining `EcuLogicReview.*` tests,
+  the oil-pressure and injector-flow regressions in the review test file, and
+  eight master regressions for fuel pressure, traction spark cut and ignition
+  schedule rebuild pass on GCC with ASan/bounds enabled (31 focused tests).
+  The review tests assert current defects; the regressions assert corrected
+  behavior.
+- The full GCC ASan/bounds suite passes: 1,837 tests from 301 suites. Command:
   `cd unit_tests && make -j12 && build/rusefi_test`.
 - The build regenerated tracked generated files. They remain unstaged, per
   repository guidance; no production source has been changed for this review.

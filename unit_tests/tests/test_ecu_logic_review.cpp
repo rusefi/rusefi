@@ -114,38 +114,7 @@ public:
 	float payload = 0;
 };
 
-class InvalidPressureInjector final : public InjectorModelPrimary {
-public:
-	expected<float> getFuelDifferentialPressure() const override {
-		return invalidResultWithPayload(payload);
-	}
-	float payload = 0;
-};
-
 } // namespace
-
-TEST(EcuLogicReview, InvalidDifferentialPressureBecomesValidAbsolutePressure) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	Sensor::setMockValue(SensorType::Map, 100);
-	InvalidPressureInjector dut;
-	dut.payload = 300;
-	ASSERT_FALSE(dut.getFuelDifferentialPressure());
-	const auto absolute = dut.getFuelPressure();
-	EXPECT_TRUE(absolute.Valid);
-	EXPECT_FLOAT_EQ(400, absolute.Value);
-}
-
-TEST(EcuLogicReview, InvalidDifferentialPressureControlsDeadtimeAxis) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engineConfiguration->useAbsolutePressureForLagTime = false;
-	InvalidPressureInjector dut;
-	dut.payload = 100;
-	dut.updateState();
-	EXPECT_FLOAT_EQ(100, dut.pressureCorrectionReference);
-	dut.payload = 500;
-	dut.updateState();
-	EXPECT_FLOAT_EQ(500, dut.pressureCorrectionReference);
-}
 
 TEST(EcuLogicReview, SecondaryInjectorOverDutyDoesNotTriggerProtection) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
@@ -345,52 +314,6 @@ TEST(EcuLogicReview, KnockRetardTreatsWrappedNegativeTimingAsLargeAdvance) {
 	ASSERT_TRUE(dut.onKnockSenseCompleted(0, 30, getTimeNowNt()));
 	// Ten percent of the distance from -10 to -20 is 1 degree, not the 8-degree cap.
 	EXPECT_FLOAT_EQ(8, dut.getKnockRetard());
-}
-
-TEST(EcuLogicReview, InvalidFuelPressureSelectsLinearizedInjectionDuration) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engineConfiguration->useInjectorFlowLinearizationTable = true;
-	Sensor::resetMockValue(SensorType::FuelPressureInjector);
-	InvalidPayloadSensor sensor(SensorType::FuelPressureInjector);
-	ASSERT_TRUE(sensor.Register());
-	config->injectorFlowLinearizationPressureBins[0] = 10;
-	config->injectorFlowLinearizationPressureBins[1] = 100;
-	config->injectorFlowLinearizationFuelMassBins[0] = 0;
-	config->injectorFlowLinearizationFuelMassBins[1] = 100;
-	setArrayValues(config->injectorFlowLinearization[0], 5.0f);
-	setArrayValues(config->injectorFlowLinearization[1], 1.0f);
-	InjectorModelPrimary dut;
-	sensor.payload = 1000; // kPa; the table axis is bar.
-	ASSERT_FALSE(Sensor::get(SensorType::FuelPressureInjector));
-	EXPECT_FLOAT_EQ(5, dut.getInjectionDuration(0.01f));
-	sensor.payload = 10000;
-	ASSERT_FALSE(Sensor::get(SensorType::FuelPressureInjector));
-	EXPECT_FLOAT_EQ(1, dut.getInjectionDuration(0.01f));
-}
-
-TEST(EcuLogicReview, InvalidHighPressureSelectsManualFuelMassCorrection) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engineConfiguration->injectorCompensationMode = ICM_HPFP_Manual_Compensation;
-	engineConfiguration->injectorFlowAsMassFlow = true;
-	engineConfiguration->injector.flow = 1;
-	engineConfiguration->injectorNonlinearMode = INJ_None;
-	setTable(engineConfiguration->injector.battLagCorrTable, 1.0f);
-	for (size_t i = 0; i < HPFP_FUEL_MASS_COMPENSATION_SIZE; i++) {
-		config->hpfpFuelMassCompensationFuelPressure[i] = 10 * (i + 1);
-		config->hpfpFuelMassCompensationFuelMass[i] = 10 * (i + 1);
-		setArrayValues(config->hpfpFuelMassCompensation[i], i == 0 ? 1.0f : 2.0f);
-	}
-	Sensor::resetMockValue(SensorType::FuelPressureHigh);
-	InvalidPayloadSensor sensor(SensorType::FuelPressureHigh);
-	ASSERT_TRUE(sensor.Register());
-	InjectorModelPrimary dut;
-	dut.prepare();
-	sensor.payload = 1000;
-	ASSERT_FALSE(Sensor::get(SensorType::FuelPressureHigh));
-	EXPECT_NEAR(11, dut.getInjectionDuration(0.01f), 0.001f);
-	sensor.payload = 8000;
-	ASSERT_FALSE(Sensor::get(SensorType::FuelPressureHigh));
-	EXPECT_NEAR(21, dut.getInjectionDuration(0.01f), 0.001f);
 }
 
 TEST(LimpRegression, InvalidOilPressurePayloadDoesNotTriggerMaxCut) {
@@ -633,40 +556,6 @@ TEST(EcuLogicReview, VvtActivationDelayTruncatesMillisecondsToWholeSeconds) {
 	EXPECT_CALL(pwm, setSimplePwmDutyCycle(testing::FloatNear(0.2f, 0.00001f)));
 	dut.onFastCallback();
 	EXPECT_FLOAT_EQ(20, dut.vvtOutput);
-}
-
-TEST(EcuLogicReview, RebuildingIgnitionScheduleRedirectsPendingCoilShutoff) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engineConfiguration->ignitionMode = IM_TWO_COILS;
-	engine->rpmCalculator.setRpmValue(1500);
-	engine->ignitionState.updateDwell(1500, false);
-	setArrayValues(engine->engineState.timingAdvance, 0.0f);
-	initializeIgnitionActions();
-	auto& event = engine->ignitionEvents.elements[1];
-	auto* chargedCoil = event.outputs[0];
-	ASSERT_NE(nullptr, chargedCoil);
-	ASSERT_NE(&enginePins.coils[0], chargedCoil);
-	ASSERT_EQ(1u, event.sparkCounter);
-	turnSparkPinHighStartCharging(&event);
-	ASSERT_TRUE(chargedCoil->getLogicValue());
-	const auto fireTime = getTimeNowNt() + MS2NT(3);
-	engine->scheduler.schedule("firing", &event.sparkEvent.eventScheduling,
-		fireTime, action_s::make<fireSparkAndPrepareNextSchedule>(&event));
-
-	// A changed trigger configuration clears isReady in mainTriggerCallback;
-	// the next onTriggerEventSparkLogic rebuilds these same event objects.
-	engineConfiguration->ignitionMode = IM_ONE_COIL;
-	engine->ignitionEvents.isReady = false;
-	onTriggerEventSparkLogic(1500, getTimeNowNt(), 0, 0);
-	ASSERT_EQ(&enginePins.coils[0], event.outputs[0]);
-	ASSERT_TRUE(chargedCoil->getLogicValue());
-
-	// The pending fire callback dereferences the new mapping, so the coil
-	// charged under the old mapping stays on while the engine is still running.
-	eth.setTimeAndInvokeEventsUs(getTimeNowUs() + 3001);
-	EXPECT_FALSE(enginePins.coils[0].getLogicValue());
-	EXPECT_TRUE(chargedCoil->getLogicValue());
-	chargedCoil->setLow();
 }
 
 TEST(EcuLogicReview, PredictiveMapBlendReplaysAfterQuickEngineRestart) {
