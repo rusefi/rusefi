@@ -10,7 +10,7 @@
 
 #include "can_filter.h"
 
-#if EFI_CAN_SUPPORT
+#if EFI_CAN_SUPPORT && EFI_LUA
 
 #include "rusefi_lua.h"
 
@@ -206,4 +206,4 @@ size_t getLuaCanRxDropped() {
 	return dropRxCount;
 }
 
-#endif // EFI_CAN_SUPPORT
+#endif // EFI_CAN_SUPPORT && EFI_LUA

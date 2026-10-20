@@ -71,7 +71,7 @@ int testLuaReturnsInteger(const char* script);
 void testLuaExecString(const char* script);
 #endif
 
-#if EFI_CAN_SUPPORT
+#if EFI_CAN_SUPPORT && EFI_LUA
 
 #include "can.h"
 
@@ -83,4 +83,4 @@ int doLuaCanRx(LuaHandle& ls);
 // Called from the CAN RX thread to queue a frame for Lua consumption
 void processLuaCan(const size_t busIndex, const CANRxFrame& frame);
 size_t getLuaCanRxDropped();
-#endif // EFI_CAN_SUPPORT
+#endif // EFI_CAN_SUPPORT && EFI_LUA
