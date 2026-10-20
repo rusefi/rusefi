@@ -91,6 +91,7 @@ sandbox class also carries a brief comment on top describing what it does.
 | `KnockCanvasSandbox` | The `KnockCanvas` with simulated spectrogram data. |
 | `RemoteTabSandbox` | The TS plugin "remote" tab. |
 | `LogUploadSelectorSandbox` | Log-upload selector with a mocked `ControllerAccess`. |
+| `LogViewerSandbox` | Opens a bundled time-series log in a standalone chart viewer. Run `./gradlew :ui:runLogViewerSandbox`. |
 
 ## Logging & sensor data
 

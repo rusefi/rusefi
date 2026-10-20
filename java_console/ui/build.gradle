@@ -45,6 +45,14 @@ tasks.register('runLLMTabSandbox', JavaExec) {
     }
 }
 
+tasks.register('runLogViewerSandbox', JavaExec) {
+    dependsOn testClasses
+    group = 'Execution'
+    description = 'Open the bundled time-series log in the standalone log viewer'
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.rusefi.ui.logview.LogViewerSandbox'
+}
+
 // Explicit release check: downloads the published ZIP, without ECU access or ChatGPT authorization.
 tasks.register('verifyHostedKnowledgeDelivery', JavaExec) {
     dependsOn testClasses
