@@ -178,6 +178,38 @@ namespace {
         );
     }
 
+    TEST_F(AcPressureTest, FailedPressureFeedbackReenablesCompressorAfterCut) {
+        setUpTestConfig(TEST_AC_PRESSURE_CONFIG);
+        engineConfiguration->acDelay = 0;
+        Sensor::setMockValue(SensorType::Rpm, 500);
+        engine->engineState.lua.acRequestState = true;
+        auto& ac = engine->engineModules.get<AcController>();
+
+        updateAcPressure(100);
+        ASSERT_TRUE(enginePins.acRelay.getLogicValue());
+
+        updateAcPressure(240);
+        ASSERT_TRUE(ac->acPressureTooHigh);
+        ASSERT_FALSE(enginePins.acRelay.getLogicValue());
+
+        Sensor::setInvalidMockValue(SensorType::AcPressure);
+        periodicSlowCallback();
+        EXPECT_TRUE(ac->acPressureTooHigh);
+        EXPECT_TRUE(enginePins.acRelay.getLogicValue());
+
+        updateAcPressure(100);
+        ASSERT_TRUE(enginePins.acRelay.getLogicValue());
+
+        updateAcPressure(10);
+        ASSERT_TRUE(ac->acPressureTooLow);
+        ASSERT_FALSE(enginePins.acRelay.getLogicValue());
+
+        Sensor::setInvalidMockValue(SensorType::AcPressure);
+        periodicSlowCallback();
+        EXPECT_TRUE(ac->acPressureTooLow);
+        EXPECT_TRUE(enginePins.acRelay.getLogicValue());
+    }
+
 
     TEST_F(AcPressureTest, pressureTooHighWithZeroHysteresis) {
         doTest(
