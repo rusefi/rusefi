@@ -187,6 +187,39 @@ TEST(ignition, twoCoils) {
 	ASSERT_EQ((void*)engine->ignitionEvents.elements[3].outputs[0], (void*)&enginePins.coils[6]);
 }
 
+TEST(ignition, ScheduleRebuildLeavesPreviouslyChargedCoilOn) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->ignitionMode = IM_TWO_COILS;
+	engine->rpmCalculator.setRpmValue(1500);
+	engine->ignitionState.updateDwell(1500, false);
+	setArrayValues(engine->engineState.timingAdvance, 0.0f);
+	initializeIgnitionActions();
+	auto& event = engine->ignitionEvents.elements[1];
+	auto* chargedCoil = event.outputs[0];
+	ASSERT_NE(nullptr, chargedCoil);
+	ASSERT_NE(&enginePins.coils[0], chargedCoil);
+	ASSERT_EQ(1u, event.sparkCounter);
+	turnSparkPinHighStartCharging(&event);
+	ASSERT_TRUE(chargedCoil->getLogicValue());
+	const auto fireTime = getTimeNowNt() + MS2NT(3);
+	engine->scheduler.schedule("firing", &event.sparkEvent.eventScheduling,
+		fireTime, action_s::make<fireSparkAndPrepareNextSchedule>(&event));
+
+	// A changed trigger configuration rebuilds these event objects while
+	// the previously scheduled fire callback is still pending.
+	engineConfiguration->ignitionMode = IM_ONE_COIL;
+	engine->ignitionEvents.isReady = false;
+	onTriggerEventSparkLogic(1500, getTimeNowNt(), 0, 0);
+	ASSERT_EQ(&enginePins.coils[0], event.outputs[0]);
+	ASSERT_TRUE(chargedCoil->getLogicValue());
+
+	// The callback uses the new mapping, leaving the charged coil on.
+	eth.setTimeAndInvokeEventsUs(getTimeNowUs() + 3001);
+	EXPECT_FALSE(enginePins.coils[0].getLogicValue());
+	EXPECT_TRUE(chargedCoil->getLogicValue());
+	chargedCoil->setLow();
+}
+
 TEST(ignition, trailingSpark) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
