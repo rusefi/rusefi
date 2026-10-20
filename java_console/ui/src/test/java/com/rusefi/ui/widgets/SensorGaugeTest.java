@@ -262,7 +262,7 @@ class SensorGaugeTest {
                     for (CircularGauge gauge : new CircularGauge[] {dashboardGauge.get(), dialogGauge.get()}) {
                         assertEquals(index == 0 ? "Cold" : "Warm", gauge.getTitle());
                         assertEquals(index == 0 ? "F" : "C", gauge.getUnitString());
-                        assertEquals(index == 0 ? "44.0" : "46.0", gauge.getDisplayText());
+                        assertEquals(index == 0 ? "43.0" : "45.0", gauge.getDisplayText());
                     }
                 });
             }
@@ -300,10 +300,10 @@ class SensorGaugeTest {
             });
             // Simulate the ECU thread. The rendered reading must be published atomically.
             sensors.setValue(43, model.getChannel());
-            assertEquals("44", original.get().getDisplayText());
+            assertEquals("43", original.get().getDisplayText());
             SwingUtilities.invokeAndWait(() -> wrapper.setActive(false));
             sensors.setValue(50, model.getChannel());
-            assertEquals("44", original.get().getDisplayText());
+            assertEquals("43", original.get().getDisplayText());
             SwingUtilities.invokeAndWait(() -> {
                 wrapper.setActive(true);
                 SensorGauge.createGaugeBody(context, model.getName(), wrapper, name -> { }, null);
@@ -311,7 +311,7 @@ class SensorGaugeTest {
                 assertEquals(1, wrapper.getMouseListeners().length);
             });
             sensors.setValue(60, model.getChannel());
-            assertEquals("44", original.get().getDisplayText(), "Removed gauge no longer receives data");
+            assertEquals("43", original.get().getDisplayText(), "Removed gauge no longer receives data");
             SwingUtilities.invokeAndWait(() ->
                 assertEquals("60", ((CircularGauge) wrapper.getComponent(0)).getDisplayText()));
         } finally {
