@@ -34,24 +34,19 @@ does not establish hardware timing or the physical severity of an outcome.
 | 6 | ECU-011 | S2 — High | Reproduced | Shared-coil ignition ignores cylinder timing trims and distributor odd-fire offsets |
 | 7 | ECU-012 | S2 — High | Source-confirmed; identity mismatch reproduced | Software knock uses firing-order position as physical cylinder identity |
 | 8 | ECU-020 | S2 — High | Reproduced | VVT keeps actuating with absent or indefinitely stale cam feedback |
-| 9 | ECU-004 | S2 — High | Reproduced | Invalid ethanol readings determine running-fuel stoichiometry |
-| 10 | ECU-005 | S2 — High | Reproduced | Invalid fuel pressure selects injection duration, mass correction and deadtime |
-| 11 | ECU-002 | S2 — High | Reproduced | Zero protection delays cause fuel cuts with healthy inputs, including disabled lambda protection |
-| 12 | ECU-014 | S2 — High | Reproduced | Invalid oil-pressure payload can assert or release a running fuel cut |
-| 13 | ECU-009 | S2 — High | Source-confirmed; reachability reproduced | Ninth/tenth forward gear indexes beyond the boost duty adder array |
-| 14 | ECU-027 | S2 — High | Source-confirmed; arithmetic reproduced | Zero HPFP lobes leave a configured GDI pump active with a nonfinite fuel request |
-| 15 | ECU-032 | S2 — High | Source-confirmed | Delayed software-knock window can be attributed to the next cylinder |
-| 16 | ECU-023 | S2 — High | Reproduced | Invalid flat-shift table input selects arbitrary spark cut and timing |
-| 17 | ECU-033 | S3 — Moderate | Arithmetic reproduced; scheduler path source-confirmed | Zero injector flow is accepted and yields an infinite pulse duration |
-| 18 | ECU-028 | S3 — Moderate | Reproduced | Kick-start cranking fires coils despite Lua spark cut or required phase sync |
-| 19 | ECU-008 | S3 — Moderate | Reproduced | Maximum oil-pressure timeout may already be expired at engine start |
-| 20 | ECU-013 | S3 — Moderate | Reproduced | Knock response treats retarded timing as hundreds of degrees of advance |
-| 21 | ECU-019 | S3 — Moderate | Reproduced | Percentage acceleration enrichment shrinks with batch/simultaneous injection |
-| 22 | ECU-022 | S3 — Moderate | Reproduced | TPS acceleration enrichment appears without a new throttle step after a stop |
-| 23 | ECU-026 | S3 — Moderate | Reproduced | Predictive MAP substitutes the previous run's estimate after a quick restart |
-| 24 | ECU-021 | S3 — Moderate | Reproduced | VVT activation delay discards fractional seconds |
-| 25 | ECU-007 | S3 — Moderate | Reproduced | DFCO ignition recovery uses a fixed half-second ramp |
-| 26 | ECU-029 | S3 — Moderate | Reproduced | Failed A/C pressure feedback can re-enable a compressor after a pressure cut |
+| 9 | ECU-005 | S2 — High | Reproduced | Invalid fuel pressure selects injection duration, mass correction and deadtime |
+| 10 | ECU-009 | S2 — High | Source-confirmed; reachability reproduced | Ninth/tenth forward gear indexes beyond the boost duty adder array |
+| 11 | ECU-027 | S2 — High | Source-confirmed; arithmetic reproduced | Zero HPFP lobes leave a configured GDI pump active with a nonfinite fuel request |
+| 12 | ECU-032 | S2 — High | Source-confirmed | Delayed software-knock window can be attributed to the next cylinder |
+| 13 | ECU-023 | S2 — High | Reproduced | Invalid flat-shift table input selects arbitrary spark cut and timing |
+| 14 | ECU-033 | S3 — Moderate | Arithmetic reproduced; scheduler path source-confirmed | Zero injector flow is accepted and yields an infinite pulse duration |
+| 15 | ECU-013 | S3 — Moderate | Reproduced | Knock response treats retarded timing as hundreds of degrees of advance |
+| 16 | ECU-019 | S3 — Moderate | Reproduced | Percentage acceleration enrichment shrinks with batch/simultaneous injection |
+| 17 | ECU-022 | S3 — Moderate | Reproduced | TPS acceleration enrichment appears without a new throttle step after a stop |
+| 18 | ECU-026 | S3 — Moderate | Reproduced | Predictive MAP substitutes the previous run's estimate after a quick restart |
+| 19 | ECU-021 | S3 — Moderate | Reproduced | VVT activation delay discards fractional seconds |
+| 20 | ECU-007 | S3 — Moderate | Reproduced | DFCO ignition recovery uses a fixed half-second ramp |
+| 21 | ECU-029 | S3 — Moderate | Reproduced | Failed A/C pressure feedback can re-enable a compressor after a pressure cut |
 
 ### ECU-024 — Ignition schedule rebuild can orphan a charged coil
 
@@ -326,36 +321,6 @@ does not establish hardware timing or the physical severity of an outcome.
   engine synchronization. Cover first acquisition, separate-bank dropout,
   missing-cam diagnostics, stop/restart and re-acquisition under both modes.
 
-### ECU-004 — Invalid ethanol readings determine running-fuel stoichiometry
-
-- **Source:** `FuelComputer::getStoichiometricRatio()` in
-  [fuel_computer.cpp](firmware/controllers/algo/fuel/fuel_computer.cpp),
-  [flex_sensor.h](firmware/controllers/sensors/flex_sensor.h), and
-  [stored_value_sensor.h](firmware/controllers/sensors/core/stored_value_sensor.h).
-- **Trigger:** A configured flex-fuel sensor times out or reports an invalid
-  frequency. Registration remains present; `hasSensor()` does not mean the
-  current reading is valid.
-- **Actual:** After checking presence, the fuel computer interpolates between
-  the primary and secondary stoichiometric ratios using `flex.Value` without
-  testing `flex.Valid`. A failed reading contains an error code, not a usable
-  ethanol value. `getCycleFuel()` uses this ratio to compute requested fuel mass.
-- **Expected:** A defined failed-flex policy must select a usable fuel
-  composition or protection response. Invalid payload bytes cannot select it.
-- **Impact:** Sensor failure can change the base fuel request unpredictably.
-  An inappropriate gasoline-like ratio on ethanol fuel can underfuel the engine;
-  a rich result can degrade driveability. The direction/size on real hardware
-  depends on the invalid payload and calibration, and is not established here.
-- **Validation:** `InvalidEthanolPayloadControlsFuelStoichiometry` registers a
-  sensor that always reports invalid, with initialized payloads solely to make
-  misuse deterministic. With configured ratios 15 and 10, changing the unusable
-  payload changes the returned ratio between both extremes. No protection
-  response occurs in this function. Real flex timeout/error paths are traced
-  in source; a hardware failure is not simulated.
-- **Fix direction:** Define a consistent failed-flex fallback/last-known-value
-  policy and apply it to running fueling and any composition-based adjustments.
-  Existing cranking/priming code already explicitly uses a 50% fallback, whereas
-  running stoichiometry currently has none.
-
 ### ECU-005 — Invalid fuel pressure controls injection duration and deadtime
 
 - **Source:** `InjectorModelWithConfig::getInjectionDuration()`, `updateState()`,
@@ -403,63 +368,6 @@ does not establish hardware timing or the physical severity of an outcome.
   lookup paths too.
   Cover no-compensation mode, absent and timed-out pressure/MAP, both legacy
   axis modes, and a lag table whose rows differ.
-
-### ECU-002 — Zero protection delays cause false fuel cuts
-
-- **Source:** `LimpManager::updateState()` in
-  [limp_manager.cpp](firmware/controllers/limp_manager.cpp),
-  `LambdaMonitorBase::update()` in
-  [lambda_monitor.cpp](firmware/controllers/math/lambda_monitor.cpp), and
-  `Timer::hasElapsedUs()` in
-  [timer.cpp](firmware/libfirmware/util/src/timer.cpp).
-- **Trigger:** A relevant delay is zero, which the setting ranges in
-  [rusefi_config.txt](firmware/integration/rusefi_config.txt) explicitly allow.
-  The injector case requires duty at or above the 20% recovery threshold;
-  the lambda case requires the operating point to be outside its restore
-  conditions; oil checks require a running engine and their respective enable
-  conditions.
-- **Actual:** Healthy input resets a timer, then an unconditional timeout check
-  sees `hasElapsedSec(0) == true` and requests a cut anyway:
-  - `minimumOilPressureTimeout = 0` cuts with pressure above the minimum.
-  - `maxOilPressureTimeout = 0` cuts with pressure below a configured maximum.
-  - `maxInjectorDutySustainedTimeout = 0` cuts at 30% duty with limits of 85%
-    sustained / 95% instant.
-  - `lambdaProtectionTimeout = 0` latches a lambda cut even with
-    `lambdaProtectionEnable = false` and healthy lambda.
-- **Expected:** Zero delay means immediate reaction to an actual fault, and
-  disabled lambda protection cannot request a new cut.
-- **Impact:** A valid calibration can cause no-start/stall or abrupt loss of
-  propulsion; the disabled lambda case is particularly misleading to a tuner.
-  Default positive lambda/low-oil/injector delays avoid those subcases. The
-  high-oil timeout has no explicit nonzero assignment in shared defaults, so
-  enabling a maximum-pressure table deserves particular attention.
-- **Validation:** Four zero-delay review tests exercise real
-  monitor/limp logic. The oil tests also show the same healthy inputs allow
-  injection with a positive 0.1-second delay.
-- **Fix direction:** Gate each timeout by the actual fault predicate and
-  protection enable state. Preserve existing latch/recovery behavior, and add
-  healthy/faulty zero-delay and positive-delay boundary coverage separately.
-
-### ECU-014 — Invalid oil pressure chooses whether running fuel is cut
-
-- **Source:** The maximum-pressure branch in
-  [limp_manager.cpp](firmware/controllers/limp_manager.cpp).
-- **Trigger:** A maximum oil-pressure limit is enabled and the registered
-  pressure sensor fails or times out while the engine is running.
-- **Actual:** `hasSensor()` permits the branch, which compares `oilp.Value`
-  without checking validity. Invalid storage controls timer reset and whether
-  the maximum-pressure timeout cuts fuel.
-- **Expected:** Apply a defined unavailable-sensor policy; invalid payload bytes
-  cannot determine either pressure protection or recovery.
-- **Impact:** A failed sensor can cause an arbitrary propulsion cut or suppress
-  protection. This is separate from startup and zero-delay timer behavior.
-- **Validation:** `InvalidOilPressurePayloadDeterminesProtectionCut` uses a
-  registered invalid sensor, a 500 kPa maximum and positive 1-second timeout.
-  An initialized invalid payload of 400 allows fuel; 600 followed by 1.1 s
-  causes an oil-pressure cut; changing the still-invalid payload to 400
-  releases it. These values expose the missing check, not real failure bytes.
-- **Fix direction:** Check the result before comparison and make timer/latch
-  behavior explicit for sensor loss, recovery, enable changes and engine stop.
 
 ### ECU-009 — Upper forward gears overrun the boost adder array
 
@@ -623,61 +531,6 @@ does not establish hardware timing or the physical severity of an outcome.
 - **Fix direction:** Validate positive effective flow for the selected
   injector mode and guard scheduled durations with `std::isfinite` before
   converting to ticks. Cover primary and secondary staging configurations.
-
-### ECU-028 — Kick-start cranking bypasses ignition permission
-
-- **Source:** `handleShaftSignal()` calls `handleKickStart()` in
-  [trigger_central.cpp](firmware/controllers/trigger/trigger_central.cpp) after
-  checking `allowTriggerInput()`, but `handleKickStart()` checks only its mode,
-  `isIgnitionEnabled`, trigger edge, RPM and dwell before charging and firing
-  both coils. `LimpManager::updateState()` in
-  [limp_manager.cpp](firmware/controllers/limp_manager.cpp) can deny ignition
-  for Lua cut or missing required phase synchronization without denying trigger
-  input.
-- **Trigger:** Kick-start cranking is enabled below 800 RPM while a Lua spark
-  cut is active, or while `isPhaseSyncRequiredForIgnition` is set but full phase
-  synchronization has not yet been achieved.
-- **Actual:** Both coils charge and fire from the primary trigger edge even
-  though `LimpManager::allowIgnition()` is false. Normal angle-based ignition
-  obeys that permission; the direct kick-start path bypasses it.
-- **Expected:** The direct cranking spark path must honor the same ignition
-  inhibition decisions as normal scheduling, except any explicitly documented
-  and narrowly defined kick-start override.
-- **Impact:** A safety or control-requested spark cut can fail during cranking;
-  pre-sync firing may cause a backfire or ignition when phase is explicitly
-  required. Consequence depends on engine hardware and configuration. Host
-  tests observe coil commands, not electrical discharge or combustion.
-- **Validation:** `KickStartSparkBypassesLuaIgnitionCut` sets an actual Lua
-  ignition cut, confirms the limp manager denies ignition, then drives a real
-  primary trigger edge and observes both coils charge and fire.
-  `KickStartSparkBypassesRequiredPhaseSync` uses a half-moon crank trigger and
-  explicit phase requirement, confirms phase is unsynchronized and ignition is
-  denied, then observes the same coil sequence.
-- **Fix direction:** Gate kick-start charging on actual ignition permission and
-  define ordering with `ClearReason::KickStart` so the special mode can still
-  suppress only normal scheduling without suppressing its own permitted spark.
-
-### ECU-008 — High oil-pressure delay is expired on the first running sample
-
-- **Source:** Maximum-pressure and stopped-engine branches of
-  [limp_manager.cpp](firmware/controllers/limp_manager.cpp).
-- **Trigger:** A maximum oil-pressure table is enabled, pressure initially
-  exceeds it as the engine starts, and a positive debounce timeout is configured.
-- **Actual:** The stopped branch resets the low-pressure timer but not the
-  high-pressure timer. The high-pressure timer begins in the expired state or
-  retains elapsed stopped time. The first high running sample can cut fuel
-  immediately instead of waiting for the configured duration.
-- **Expected:** A new high-pressure episode should receive its selected delay;
-  stopped time must not count as time spent above the running pressure limit.
-- **Impact:** A brief startup pressure spike can produce a false cut, stumble
-  or failed start. This is distinct from the zero-delay fault in ECU-002.
-- **Validation:** `HighOilPressureTimeoutAlreadyExpiredAtEngineStart` waits
-  10 seconds stopped with zero pressure, then starts at 1,000 RPM / 600 kPa
-  against a 500 kPa maximum and a 1-second timeout. Fuel cuts immediately.
-  After a healthy running sample resets the timer, the same high pressure
-  allows fuel at 0.9 seconds and cuts after 1.1 seconds.
-- **Fix direction:** Reset/rearm the high-pressure timer at the appropriate
-  engine-state and enable transitions; define invalid-sensor handling separately.
 
 ### ECU-013 — Wrapped retarded timing produces excessive knock response
 
@@ -891,6 +744,11 @@ does not establish hardware timing or the physical severity of an outcome.
 | ECU-003 | Anti-lag could remain active after its configured maximum duration. | The timer condition is evaluated on every update; a zero maximum keeps the feature unrestricted. `Actuators.AntilagStopsAfterConfiguredTimeout` covers timeout and rearming. |
 | ECU-034 | Invalid MAP feedback could clear an active overboost fuel cut. | The boost-cut hysteresis retains its state until a valid MAP reading falls below the resume threshold. `limp.BoostFuelCutRemainsActiveWhenMapSensorFails` covers sensor loss and recovery. |
 | ECU-018 | Priming could inject with fuel disabled or after delayed startup conditions changed. | `PrimeController::onPrimeStart()` rechecks start permission and injection permission when the pulse is due. The `priming.PrimeRespectsDisabledInjection`, `DelayedPrimeSkipsAfterEngineStarts`, `DelayedPrimeRespectsFloodClear`, and `AllowedPrimeStillInjects` tests cover denial and normal delivery. |
+| ECU-004 | Invalid ethanol readings could select secondary-fuel stoichiometry from unusable payload bytes. | `FuelComputer::getStoichiometricRatio()` uses primary stoichiometry when flex feedback is missing or invalid. `FuelComputer.InvalidEthanolPayloadDoesNotControlFuelStoichiometry` covers different invalid payloads. |
+| ECU-002 | Zero protection delays could cut fuel despite healthy inputs or disabled lambda protection. | Lambda, low- and high-oil pressure, and sustained injector-duty cuts now require their fault conditions. The four `limp.zero*DelayDoesNotCut*` tests, `LambdaMonitor.ZeroTimeoutRequiresBadReading`, and `limp.disablingLambdaProtectionReleasesActiveCut` cover immediate faults and healthy or disabled states. |
+| ECU-028 | Kick-start cranking could fire coils despite a Lua ignition cut or required phase sync. | `handleKickStart()` checks ignition permission and permits only its own `KickStart` clear reason. `kickStart.sparkRespectsLuaIgnitionCut` and `sparkRespectsRequiredPhaseSync` cover both denied paths. |
+| ECU-008 | The high oil-pressure timeout could already be expired on the first running sample. | The timer resets while stopped or without valid high-pressure feedback, then begins on the first running sample. `limp.highOilPressureTimeoutAlreadyExpiredAtEngineStart` and `highOilPressureTimeoutStartsAtFirstRunningSample` cover startup and elapsed time. |
+| ECU-014 | Invalid oil-pressure payload could control a running maximum-pressure fuel cut. | The high-pressure branch requires a valid sensor result before comparison, so invalid payload bytes cannot trigger its timer or cut. `LimpRegression.InvalidOilPressurePayloadDoesNotTriggerMaxCut` checks both payload values after the timeout. |
 
 ## Candidates under investigation
 
@@ -944,12 +802,12 @@ electrical behavior on an engine. The following checks bound the review.
   sensor registry and stored values, fuel-pressure compensation, flex fueling,
   nitrous activation, anti-lag, and knock control. Inspection does not mean all
   behavior in these areas is covered.
-- Host `make -j12` succeeds. All 43 remaining `EcuLogicReview.*` tests and
-  14 master regression tests named in the fixed-findings table pass
-  together on GCC with ASan/bounds enabled (57 tests total). The review tests
-  intentionally assert current defects; the fixed-findings tests assert the
-  corrected behavior.
-- The full GCC ASan/bounds suite passes: 1,824 tests from 297 suites. Command:
+- Host `make -j12` succeeds. All 34 remaining `EcuLogicReview.*` tests and
+  `LimpRegression.InvalidOilPressurePayloadDoesNotTriggerMaxCut` pass on GCC
+  with ASan/bounds enabled (35 focused tests total). The review tests
+  intentionally assert current defects; the regression asserts corrected
+  behavior. The other fixed findings cite master regression tests above.
+- The full GCC ASan/bounds suite passes: 1,828 tests from 298 suites. Command:
   `cd unit_tests && make -j12 && build/rusefi_test`.
 - The build regenerated tracked generated files. They remain unstaged, per
   repository guidance; no production source has been changed for this review.

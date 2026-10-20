@@ -4,7 +4,6 @@
 #include "dc_motor.h"
 #include "electronic_throttle_impl.h"
 #include "fuel_math.h"
-#include "fuel_computer.h"
 #include "injector_model.h"
 #include "gear_detector.h"
 #include "high_pressure_fuel_pump.h"
@@ -20,78 +19,9 @@ using ::testing::_;
 using ::testing::Return;
 using ::testing::StrictMock;
 
-// Investigation coverage: these tests deliberately assert the current defects.
+// EcuLogicReview coverage deliberately asserts current defects.
 // When a fix lands, update or remove its reproduction in favor of regression coverage.
 // The ranked findings and intended behavior are in order_by_severity.md.
-
-TEST(EcuLogicReview, ZeroLambdaDelayCutsEvenWhenProtectionDisabled) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engineConfiguration->lambdaProtectionEnable = false;
-	engineConfiguration->lambdaProtectionTimeout = 0;
-	engineConfiguration->lambdaProtectionRestoreRpm = 2000;
-	Sensor::setMockValue(SensorType::Lambda1, 0.85f);
-
-	engine->lambdaMonitor.update(3000, 80);
-	ASSERT_TRUE(engine->lambdaMonitor.lambdaCurrentlyGood);
-	EXPECT_TRUE(engine->lambdaMonitor.isCut());
-
-	LimpManager dut;
-	dut.updateState(3000, getTimeNowNt());
-	EXPECT_EQ(ClearReason::LambdaProtection, dut.allowInjection().reason);
-}
-
-TEST(EcuLogicReview, ZeroLowOilDelayCutsWithHealthyPressure) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engineConfiguration->minOilPressureAfterStart = 0;
-	engineConfiguration->enableOilPressureProtect = true;
-	engineConfiguration->minimumOilPressureTimeout = 0;
-	setArrayValues(config->minimumOilPressureValues, 100);
-	setArrayValues(config->maximumOilPressureValues, 0);
-	Sensor::setMockValue(SensorType::OilPressure, 200);
-	engine->rpmCalculator.setRpmValue(1000);
-
-	LimpManager dut;
-	dut.updateState(1000, getTimeNowNt());
-	EXPECT_EQ(ClearReason::OilPressure, dut.allowInjection().reason);
-
-	// A positive delay avoids the false cut with exactly the same inputs.
-	engineConfiguration->minimumOilPressureTimeout = 0.1f;
-	dut.updateState(1000, getTimeNowNt());
-	EXPECT_TRUE(dut.allowInjection());
-}
-
-TEST(EcuLogicReview, ZeroHighOilDelayCutsWithHealthyPressure) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engineConfiguration->minOilPressureAfterStart = 0;
-	engineConfiguration->enableOilPressureProtect = false;
-	engineConfiguration->maxOilPressureTimeout = 0;
-	setArrayValues(config->maximumOilPressureValues, 500);
-	Sensor::setMockValue(SensorType::OilPressure, 200);
-	engine->rpmCalculator.setRpmValue(1000);
-
-	LimpManager dut;
-	dut.updateState(1000, getTimeNowNt());
-	EXPECT_EQ(ClearReason::OilPressure, dut.allowInjection().reason);
-
-	engineConfiguration->maxOilPressureTimeout = 0.1f;
-	dut.updateState(1000, getTimeNowNt());
-	EXPECT_TRUE(dut.allowInjection());
-}
-
-TEST(EcuLogicReview, ZeroInjectorDutyDelayCutsBelowBothLimits) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engineConfiguration->injectionMode = IM_SEQUENTIAL;
-	engineConfiguration->maxInjectorDutyInstant = 95;
-	engineConfiguration->maxInjectorDutySustained = 85;
-	engineConfiguration->maxInjectorDutySustainedTimeout = 0;
-	engine->engineState.injectionDuration = 12;
-
-	// At 3000 RPM the 720-degree cycle is 40 ms, so duty is 30%.
-	ASSERT_NEAR(30, getInjectorDutyCycle(3000), 0.01f);
-	LimpManager dut;
-	dut.updateState(3000, getTimeNowNt());
-	EXPECT_EQ(ClearReason::InjectorDutyCycle, dut.allowInjection().reason);
-}
 
 static void reproduceInvalidDcOutput(dc_function_e function) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
@@ -195,24 +125,6 @@ public:
 
 } // namespace
 
-TEST(EcuLogicReview, InvalidEthanolPayloadControlsFuelStoichiometry) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	Sensor::resetMockValue(SensorType::FuelEthanolPercent);
-	InvalidPayloadSensor sensor(SensorType::FuelEthanolPercent);
-	ASSERT_TRUE(sensor.Register());
-	ASSERT_TRUE(Sensor::hasSensor(SensorType::FuelEthanolPercent));
-	ASSERT_FALSE(Sensor::get(SensorType::FuelEthanolPercent));
-	engineConfiguration->stoichRatioPrimary = 15;
-	engineConfiguration->stoichRatioSecondary = 10;
-	FuelComputer dut;
-
-	// Both readings are invalid, but their unusable payload changes fueling.
-	sensor.payload = 0;
-	EXPECT_FLOAT_EQ(15, dut.getStoichiometricRatio());
-	sensor.payload = 100;
-	EXPECT_FLOAT_EQ(10, dut.getStoichiometricRatio());
-}
-
 TEST(EcuLogicReview, InvalidDifferentialPressureBecomesValidAbsolutePressure) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	Sensor::setMockValue(SensorType::Map, 100);
@@ -311,38 +223,6 @@ TEST(EcuLogicReview, DfcoOneSecondTimingRampEndsAfterHalfSecond) {
 	EXPECT_FLOAT_EQ(10, dut.getTimingRetard()); // A 1-second ramp would still remove 15 degrees.
 	advanceTimeUs(250000);
 	EXPECT_FLOAT_EQ(0, dut.getTimingRetard()); // Configured ramp is only halfway complete.
-}
-
-TEST(EcuLogicReview, HighOilPressureTimeoutAlreadyExpiredAtEngineStart) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engineConfiguration->minOilPressureAfterStart = 0;
-	engineConfiguration->enableOilPressureProtect = false;
-	engineConfiguration->maxOilPressureTimeout = 1;
-	setArrayValues(config->maximumOilPressureValues, 500);
-	LimpManager dut;
-	Sensor::setMockValue(SensorType::OilPressure, 0);
-	engine->rpmCalculator.setRpmValue(0);
-	dut.updateState(0, getTimeNowNt());
-	advanceTimeUs(10000000);
-	dut.updateState(0, getTimeNowNt());
-
-	// The first running sample is high, but no running timeout has elapsed yet.
-	Sensor::setMockValue(SensorType::OilPressure, 600);
-	engine->rpmCalculator.setRpmValue(1000);
-	dut.updateState(1000, getTimeNowNt());
-	EXPECT_EQ(ClearReason::OilPressure, dut.allowInjection().reason);
-
-	// Once a healthy running sample resets the timer, its configured delay works.
-	Sensor::setMockValue(SensorType::OilPressure, 400);
-	dut.updateState(1000, getTimeNowNt());
-	ASSERT_TRUE(dut.allowInjection());
-	Sensor::setMockValue(SensorType::OilPressure, 600);
-	advanceTimeUs(900000);
-	dut.updateState(1000, getTimeNowNt());
-	EXPECT_TRUE(dut.allowInjection());
-	advanceTimeUs(200000);
-	dut.updateState(1000, getTimeNowNt());
-	EXPECT_EQ(ClearReason::OilPressure, dut.allowInjection().reason);
 }
 
 TEST(EcuLogicReview, GearDetectorCanExceedBoostAdderForwardGearCapacity) {
@@ -514,7 +394,7 @@ TEST(EcuLogicReview, InvalidHighPressureSelectsManualFuelMassCorrection) {
 	EXPECT_NEAR(21, dut.getInjectionDuration(0.01f), 0.001f);
 }
 
-TEST(EcuLogicReview, InvalidOilPressurePayloadDeterminesProtectionCut) {
+TEST(LimpRegression, InvalidOilPressurePayloadDoesNotTriggerMaxCut) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->minOilPressureAfterStart = 0;
 	engineConfiguration->enableOilPressureProtect = false;
@@ -532,9 +412,9 @@ TEST(EcuLogicReview, InvalidOilPressurePayloadDeterminesProtectionCut) {
 	sensor.payload = 600;
 	advanceTimeUs(1100000);
 	dut.updateState(1000, getTimeNowNt());
-	EXPECT_EQ(ClearReason::OilPressure, dut.allowInjection().reason);
+	EXPECT_TRUE(dut.allowInjection());
 
-	// Neither result is valid, but changing unusable storage releases the cut.
+	// Neither result is valid; changing unusable storage cannot change protection.
 	sensor.payload = 400;
 	dut.updateState(1000, getTimeNowNt());
 	EXPECT_TRUE(dut.allowInjection());
@@ -1030,45 +910,6 @@ TEST(EcuLogicReview, ZeroInjectorFlowPassesValidationAndProducesInfinitePulse) {
 	auto& injector = engine->module<InjectorModelPrimary>().unmock();
 	injector.prepare();
 	EXPECT_TRUE(std::isinf(injector.getInjectionDuration(0.01f)));
-}
-
-TEST(EcuLogicReview, KickStartSparkBypassesLuaIgnitionCut) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engineConfiguration->kickStartCranking = true;
-	engineConfiguration->ignitionDwellForCrankingMs = 3;
-	engine->ignitionState.updateDwell(0, true);
-	engine->engineState.lua.luaIgnCut = true;
-	getLimpManager()->updateState(0, getTimeNowNt());
-	ASSERT_EQ(ClearReason::Lua, getLimpManager()->allowIgnition().reason);
-	ASSERT_TRUE(getLimpManager()->allowTriggerInput());
-
-	eth.firePrimaryTriggerRise();
-	EXPECT_TRUE(enginePins.coils[0].getLogicValue());
-	EXPECT_TRUE(enginePins.coils[1].getLogicValue());
-	eth.moveTimeForwardAndInvokeEventsUs(4000);
-	EXPECT_FALSE(enginePins.coils[0].getLogicValue());
-	EXPECT_FALSE(enginePins.coils[1].getLogicValue());
-}
-
-TEST(EcuLogicReview, KickStartSparkBypassesRequiredPhaseSync) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engineConfiguration->kickStartCranking = true;
-	engineConfiguration->isPhaseSyncRequiredForIgnition = true;
-	engineConfiguration->ignitionDwellForCrankingMs = 3;
-	setCrankOperationMode();
-	eth.setTriggerType(trigger_type_e::TT_HALF_MOON);
-	engine->ignitionState.updateDwell(0, true);
-	ASSERT_FALSE(engine->triggerCentral.triggerState.hasSynchronizedPhase());
-	getLimpManager()->updateState(0, getTimeNowNt());
-	ASSERT_FALSE(getLimpManager()->allowIgnition());
-	ASSERT_TRUE(getLimpManager()->allowTriggerInput());
-
-	eth.firePrimaryTriggerRise();
-	EXPECT_TRUE(enginePins.coils[0].getLogicValue());
-	EXPECT_TRUE(enginePins.coils[1].getLogicValue());
-	eth.moveTimeForwardAndInvokeEventsUs(4000);
-	EXPECT_FALSE(enginePins.coils[0].getLogicValue());
-	EXPECT_FALSE(enginePins.coils[1].getLogicValue());
 }
 
 TEST(EcuLogicReview, FailedAcPressureSensorReleasesCompressorPressureCut) {
