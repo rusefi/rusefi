@@ -346,7 +346,7 @@ TEST(RollingLaunch, SharedLimiterPreservesOtherRequestsOnRelease) {
 	engineConfiguration->useHardSkipInTraction = true;
 	engine->engineState.luaHardSparkSkip = 0.2f;
 	engine->engineState.luaSoftSparkSkip = 0.15f;
-	engine->engineState.tractionControlSparkSkip = 0.1f;
+	engine->engineState.tractionControlSparkSkip = 10.0f; // percent
 	step(3500, 30, true);
 	step(3750, 30, true);
 	engine->engineState.updateSparkSkip();

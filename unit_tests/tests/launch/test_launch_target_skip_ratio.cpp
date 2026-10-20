@@ -76,3 +76,46 @@ TEST(TractionSparkSkip, OnePercentSoftCutSkipsAboutOnePercent) {
 	}
 	EXPECT_LT(skipped, 10);
 }
+
+TEST(TractionSparkSkip, TenPercentHardCutUsesNormalizedRatio) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->useHardSkipInTraction = true;
+	setTable(engineConfiguration->tractionControlIgnitionSkip, 10);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 50);
+	Sensor::setMockValue(SensorType::WheelSlipRatio, 5);
+	engine->rpmCalculator.setRpmValue(2000);
+	engine->periodicFastCallback();
+	ASSERT_FLOAT_EQ(10, engine->engineState.tractionControlSparkSkip);
+	EXPECT_FLOAT_EQ(0.1f, engine->hardSparkLimiter.getTargetSkipRatio());
+	EXPECT_FLOAT_EQ(0, engine->softSparkLimiter.getTargetSkipRatio());
+	int skipped = 0;
+	for (int i = 0; i < 10000; i++) {
+		skipped += engine->hardSparkLimiter.shouldSkip();
+	}
+	EXPECT_GT(skipped, 800);
+	EXPECT_LT(skipped, 1200);
+}
+
+TEST(TractionSparkSkip, TenPercentSoftCutUsesNormalizedRatio) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->useHardSkipInTraction = false;
+	setTable(engineConfiguration->tractionControlIgnitionSkip, 10);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 50);
+	Sensor::setMockValue(SensorType::WheelSlipRatio, 5);
+	engine->rpmCalculator.setRpmValue(2000);
+	engine->periodicFastCallback();
+	ASSERT_FLOAT_EQ(10, engine->engineState.tractionControlSparkSkip);
+	EXPECT_FLOAT_EQ(0.1f, engine->softSparkLimiter.getTargetSkipRatio());
+	EXPECT_FLOAT_EQ(0, engine->hardSparkLimiter.getTargetSkipRatio());
+	int skipped = 0;
+	bool previousSkipped = false;
+	for (int i = 0; i < 10000; i++) {
+		const bool skip = engine->softSparkLimiter.shouldSkip();
+		EXPECT_FALSE(skip && previousSkipped);
+		skipped += skip;
+		previousSkipped = skip;
+	}
+	// Soft limiting doubles the draw probability and prevents adjacent skips.
+	EXPECT_GT(skipped, 1400);
+	EXPECT_LT(skipped, 1900);
+}
