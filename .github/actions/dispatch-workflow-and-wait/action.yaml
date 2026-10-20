@@ -1,0 +1,41 @@
+name: Dispatch Workflow and Wait
+description: Dispatch a workflow and wait for the exact run returned by GitHub.
+
+inputs:
+  owner:
+    description: Repository owner
+    required: true
+  repo:
+    description: Repository name
+    required: true
+  workflow_file_name:
+    description: Workflow filename
+    required: true
+  ref:
+    description: Branch or tag to dispatch
+    required: true
+  github_token:
+    description: Token with workflow dispatch and run-read permissions
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Dispatch and wait for the returned run ID
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github_token }}
+        TARGET_REPOSITORY: ${{ inputs.owner }}/${{ inputs.repo }}
+        TARGET_WORKFLOW: ${{ inputs.workflow_file_name }}
+        TARGET_REF: ${{ inputs.ref }}
+      run: |
+        set -euo pipefail
+        # This API version returns workflow_run_id. Never infer a run from a
+        # list: another caller may dispatch the same workflow concurrently.
+        response=$(gh api --method POST \
+          -H 'X-GitHub-Api-Version: 2026-03-10' \
+          "repos/$TARGET_REPOSITORY/actions/workflows/$TARGET_WORKFLOW/dispatches" \
+          -f "ref=$TARGET_REF")
+        run_id=$(jq -er '.workflow_run_id | select(type == "number" and . > 0)' <<< "$response")
+        echo "Waiting for https://github.com/$TARGET_REPOSITORY/actions/runs/$run_id"
+        gh run watch "$run_id" --repo "$TARGET_REPOSITORY" --exit-status --interval 10
