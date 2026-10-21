@@ -1,15 +1,17 @@
+set_prefix "TrqRed"
+
 struct_no_prefix shift_torque_reduction_state_s
 
-bit isTorqueReductionTriggerPinValid
-bit torqueReductionTriggerPinState
-bit isTimeConditionSatisfied
-bit isRpmConditionSatisfied
-bit isAppConditionSatisfied
-bit isFlatShiftConditionSatisfied
-bit isBelowTemperatureThreshold
+	bit isTorqueReductionTriggerPinValid;Trigger Pin Valid
+	bit torqueReductionTriggerPinState;Trigger Pin State
+	bit isTimeConditionSatisfied
+	bit isRpmConditionSatisfied
+	bit isAppConditionSatisfied
+	bit isFlatShiftConditionSatisfied;FFS Condition
+	bit isBelowTemperatureThreshold;Below Temperature
 
-int16_t trqRedCutXaxisValue
-int16_t trqRedTimeXaxisValue
-int16_t trqRedIgnRetXaxisValue
+	int16_t trqRedCutXaxisValue
+	int16_t trqRedTimeXaxisValue
+	int16_t trqRedIgnRetXaxisValue
 
 end_struct
