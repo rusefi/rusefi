@@ -2,18 +2,18 @@
 
 struct_no_prefix electronic_throttle_s
 	! Note: this is already after board adjust!
-	float etbCurrentTarget;ETB: target for current pedal;"%", 1, 0, 0, 100, 2,@@GAUGE_CATEGORY_ETB@@
-	float boardEtbAdjustment;ETB: board adjustment;"%", 1, 0, -100, 100, 2,@@GAUGE_CATEGORY_ETB@@
-	float targetWithIdlePosition;"ETB: target with idle";"%", 1, 0, 0, 100, 2,@@GAUGE_CATEGORY_ETB@@
-	float luaAdjustment;"ETB: luaAdjustment";"%", 1, 0, -100, 100, 2,@@GAUGE_CATEGORY_ETB@@
-	float trim;"ETB: trim";"%", 1, 0, -100, 100, 2,@@GAUGE_CATEGORY_ETB@@
-	int16_t autoscale adjustedEtbTarget;ETB: target with adjustments;"%", 0.01, 0, 0, 100, 2,@@GAUGE_CATEGORY_ETB@@
+	float etbCurrentTarget;target for current pedal;"%", 1, 0, 0, 100, 2,@@GAUGE_CATEGORY_ETB@@
+	float boardEtbAdjustment;board adjustment;"%", 1, 0, -100, 100, 2,@@GAUGE_CATEGORY_ETB@@
+	float targetWithIdlePosition;"target with idle";"%", 1, 0, 0, 100, 2,@@GAUGE_CATEGORY_ETB@@
+	float luaAdjustment;"luaAdjustment";"%", 1, 0, -100, 100, 2,@@GAUGE_CATEGORY_ETB@@
+	float trim;"trim";"%", 1, 0, -100, 100, 2,@@GAUGE_CATEGORY_ETB@@
+	int16_t autoscale adjustedEtbTarget;target with adjustments;"%", 0.01, 0, 0, 100, 2,@@GAUGE_CATEGORY_ETB@@
 	! final position after rev limiter and min max position clamping
-	int16_t autoscale m_adjustedTarget;ETB: final target;"%", 0.01, 0, 0, 100, 2,@@GAUGE_CATEGORY_ETB@@
+	int16_t autoscale m_adjustedTarget;final target;"%", 0.01, 0, 0, 100, 2,@@GAUGE_CATEGORY_ETB@@
 
 	float m_wastegatePosition;"DC: wastegatePosition";"%", 1,0, 0,3, 2,@@GAUGE_CATEGORY_ETB@@
 
-	float m_lastPidDtMs;"EBT: last PID dT";"mS", 1, 0, 0, 4, 3,@@GAUGE_CATEGORY_ETB@@
+	float m_lastPidDtMs;"last PID dT";"mS", 1, 0, 0, 4, 3,@@GAUGE_CATEGORY_ETB@@
 
 	custom percent_t 4 scalar, F32, @OFFSET@, "", 1, 0, 0, 100, 2
 
@@ -24,14 +24,14 @@ struct_no_prefix electronic_throttle_s
 	bit jamDetected
 	bit validPlantPosition
 
-	uint16_t etbTpsErrorCounter;"ETB TPS error counter";"count", 1,0, 0,3, 0,@@GAUGE_CATEGORY_ETB@@
-	uint16_t etbPpsErrorCounter;"ETB pedal error counter";"count", 1,0, 0,3, 0,@@GAUGE_CATEGORY_ETB@@
+	uint16_t etbTpsErrorCounter;"TPS error counter";"count", 1,0, 0,3, 0,@@GAUGE_CATEGORY_ETB@@
+	uint16_t etbPpsErrorCounter;"pedal error counter";"count", 1,0, 0,3, 0,@@GAUGE_CATEGORY_ETB@@
 
 	int8_t etbErrorCode
 	int8_t etbErrorCodeBlinker
-	int8_t tcEtbDrop;ETB traction control;"%", 1, 0, 0, 100, 0
+	int8_t tcEtbDrop;traction control;"%", 1, 0, 0, 100, 0
 
-	uint16_t autoscale jamTimer;ETB jam timer;"sec", 0.01, 0, 0, 100, 2
+	uint16_t autoscale jamTimer;jam timer;"sec", 0.01, 0, 0, 100, 2
 	uint8_t state
 
 end_struct

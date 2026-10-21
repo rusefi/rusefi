@@ -225,6 +225,7 @@ Usages:
     folder: controllers/actuators
     prepend: integration/rusefi_config_shared.txt
     output_name: [ "etb1", "etb2" ]
+    prefix_names: [ "ETB1", "ETB2" ]
     additional_headers: [ "electronic_throttle_impl.h" ]
     constexpr: ["getLiveDataConstexpr<electronic_throttle_s, 0>()", "getLiveDataConstexpr<electronic_throttle_s, 1>()"]
     isPtr: true
