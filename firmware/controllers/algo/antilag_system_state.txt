@@ -1,18 +1,20 @@
+set_prefix "ALS"
+
 struct_no_prefix antilag_system_state_s
 
-bit isAntilagCondition
-bit ALSMinRPMCondition
-bit ALSMaxRPMCondition
-bit ALSMinCLTCondition
-bit ALSMaxCLTCondition
-bit ALSMaxThrottleIntentCondition
-bit isALSSwitchActivated
-bit ALSActivatePinState
-bit ALSSwitchCondition
-bit ALSTimerCondition
-bit luaAntilagState
+	bit isAntilagCondition
+	bit ALSMinRPMCondition
+	bit ALSMaxRPMCondition
+	bit ALSMinCLTCondition
+	bit ALSMaxCLTCondition
+	bit ALSMaxThrottleIntentCondition
+	bit isALSSwitchActivated
+	bit ALSActivatePinState
+	bit ALSSwitchCondition
+	bit ALSTimerCondition
+	bit luaAntilagState
 
-float fuelALSCorrection
-int16_t autoscale timingALSCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
-int16_t autoscale timingALSSkip;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 50, 2
+	float fuelALSCorrection
+	int16_t autoscale timingALSCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
+	int16_t autoscale timingALSSkip;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 50, 2
 end_struct
