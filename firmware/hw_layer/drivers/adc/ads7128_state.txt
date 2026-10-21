@@ -1,5 +1,7 @@
 ! units,scale,offset,min,max,digits
 
+set_prefix ADS7128
+
 struct_no_prefix ads7128_state_s
-	uint16_t[8 iterate] adcRaw;"ADS7128";"", 1, 0, 0, 4095, 0
+	uint16_t[8 iterate] adcRaw;"RAW";"", 1, 0, 0, 4095, 0
 end_struct

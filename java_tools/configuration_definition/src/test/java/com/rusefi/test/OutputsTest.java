@@ -134,6 +134,73 @@ public class OutputsTest {
     }
 
     @Test
+    public void generateDataLogWithPrefix() {
+        String test = "struct total\n" +
+                "set_prefix \"Idle\"\n" +
+                "bit isBlipping\n" +
+                "uint16_t idleTarget;Target RPM\n" +
+                "float position;Idle: Position\n" +
+                "set_prefix Fan\n" +
+                "float fanDuty\n" +
+                "set_prefix\n" +
+                "float noPrefix\n" +
+                "end_struct\n";
+        ReaderStateImpl state = new ReaderStateImpl();
+
+        DataLogConsumer dataLogConsumer = new DataLogConsumer(null, new TestFileCaptor());
+        state.readBufferedReader(test, dataLogConsumer);
+        assertEquals(
+                "entry = isBlipping, \"Idle: isBlipping\", int,    \"%d\"\n" +
+                        "entry = idleTarget, \"Idle: Target RPM\", int,    \"%d\"\n" +
+                        "entry = position, \"Idle: Position\", float,  \"%.3f\"\n" +
+                        "entry = fanDuty, \"Fan: fanDuty\", float,  \"%.3f\"\n" +
+                        "entry = noPrefix, \"noPrefix\", float,  \"%.3f\"\n", dataLogConsumer.getContent());
+
+        // prefix does not leak into the next file
+        DataLogConsumer secondFile = new DataLogConsumer(null, new TestFileCaptor());
+        ReaderStateImpl reusedState = new ReaderStateImpl();
+        reusedState.readBufferedReader("set_prefix Idle\nstruct a\nfloat x\nend_struct\n", secondFile);
+        reusedState.readBufferedReader("struct b\nfloat y\nend_struct\n", secondFile);
+        assertEquals(
+                "entry = x, \"Idle: x\", float,  \"%.3f\"\n" +
+                        "entry = y, \"y\", float,  \"%.3f\"\n", secondFile.getContent());
+    }
+
+    @Test
+    public void generateDataLogWithPrefixNames() {
+        String test = "set_prefix \"WBO\"\n" +
+                "struct_no_prefix wideband_state_s\n" +
+                "uint8_t heaterDuty;Heater duty;\"%\", 1, 0, 0, 100, 0, @@GAUGE_CATEGORY@@\n" +
+                "uint8_t pumpDuty;WBO: Pump duty\n" +
+                "set_prefix\n" +
+                "uint16_t esr;ESR\n" +
+                "end_struct\n";
+        ReaderStateImpl state = new ReaderStateImpl();
+        state.getVariableRegistry().register("GAUGE_CATEGORY", "Wideband");
+
+        DataLogConsumer dataLogConsumer = new DataLogConsumer(null, new TestFileCaptor());
+        dataLogConsumer.outputNames = new String[]{"wb1", "wb2"};
+        dataLogConsumer.prefixNames = new String[]{"WBO1", "WBO2"};
+        GaugeConsumer gaugeConsumer = new GaugeConsumer(null, new TestFileCaptor());
+        gaugeConsumer.outputNames = dataLogConsumer.outputNames;
+        gaugeConsumer.prefixNames = dataLogConsumer.prefixNames;
+        state.readBufferedReader(test, dataLogConsumer, gaugeConsumer);
+        assertEquals(
+                "entry = wb1heaterDuty, \"WBO1 WBO: Heater duty\", int,    \"%d\"\n" +
+                        "entry = wb1pumpDuty, \"WBO1 WBO: Pump duty\", int,    \"%d\"\n" +
+                        "entry = wb1esr, \"WBO1: ESR\", int,    \"%d\"\n" +
+                        "entry = wb2heaterDuty, \"WBO2 WBO: Heater duty\", int,    \"%d\"\n" +
+                        "entry = wb2pumpDuty, \"WBO2 WBO: Pump duty\", int,    \"%d\"\n" +
+                        "entry = wb2esr, \"WBO2: ESR\", int,    \"%d\"\n",
+                dataLogConsumer.getContent());
+
+        assertEquals("\tgaugeCategory = Wideband\n" +
+                        "wb1heaterDutyGauge = wb1heaterDuty,\"WBO1 WBO: Heater duty\", \"%\", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0\n" +
+                        "wb2heaterDutyGauge = wb2heaterDuty,\"WBO2 WBO: Heater duty\", \"%\", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0\n",
+                gaugeConsumer.getContent());
+    }
+
+    @Test
     public void generateDataLogMultiLineCommentWithQuotes() {
         String test = "#define GAUGE_NAME_FUEL_BASE \"fuel: base mass\"\n" +
                 "struct total\n" +

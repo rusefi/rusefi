@@ -1,9 +1,13 @@
 ! [tag:wall_fuel_telemetry] These are the sole wall-fuel telemetry fields for TS, SD logs and Lua.
 ! Store both in grams; scale 1000 exposes mg without converting model state on every injection.
 ! SD logging and Lua automatically use the same field scale as TunerStudio.
-struct_no_prefix wall_fuel_state_s
-float wallFuelCorrection;@@GAUGE_NAME_FUEL_WALL_CORRECTION@@\nFuel mass correction for wall wetting in the last calculated injection event 0. Positive adds fuel, negative subtracts fuel. May retain its last calculated value while compensation is bypassed.;"mg", 1000, 0, -20, 20, 3
-float wallFuel;@@GAUGE_NAME_FUEL_WALL_AMOUNT@@\nEstimated fuel mass on the intake port wall for injection event 0, not an all-cylinder total.;"mg", 1000, 0, 0, 100, 3
-! wall_fuel_state
-end_struct
 
+set_prefix "Fuel Wall"
+
+struct_no_prefix wall_fuel_state_s
+	! Fuel mass correction for wall wetting in the last calculated injection event 0. Positive adds fuel, negative subtracts fuel. May retain its last calculated value while compensation is bypassed.
+	float wallFuelCorrection;@@GAUGE_NAME_FUEL_WALL_CORRECTION@@;"mg", 1000, 0, -20, 20, 3
+	! Estimated fuel mass on the intake port wall for injection event 0, not an all-cylinder total
+	float wallFuel;@@GAUGE_NAME_FUEL_WALL_AMOUNT@@;"mg", 1000, 0, 0, 100, 3
+	! wall_fuel_state
+end_struct

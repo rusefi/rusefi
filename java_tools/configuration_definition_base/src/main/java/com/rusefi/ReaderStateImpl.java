@@ -36,6 +36,11 @@ public class ReaderStateImpl implements ReaderState {
     private static final String STRUCT = "struct ";
     public static final String SPLIT_LINES = "split_lines";
     public static final String INCLUDE_FILE = "include_file";
+    /**
+     * set_prefix "Idle" makes [Datalog]/gauge names of all following fields "Idle: <name>", see getHumanGaugeName
+     * may be used several times in one file, empty argument clears the prefix, reset at the start of each file
+     */
+    public static final String SET_PREFIX = "set_prefix";
     // used to update other files
     private final List<String> inputFiles = new ArrayList<>();
     private final Stack<ConfigStructureImpl> stack = new Stack<>();
@@ -57,6 +62,7 @@ public class ReaderStateImpl implements ReaderState {
     private final VariableRegistry variableRegistry = new VariableRegistry();
     private final Map<String, EnumGenerator.Parser.EnumDefinition> enumDefinitionMap = new HashMap<>();
     private int defaultBitNameCounter;
+    private String logNamePrefix = "";
 
     public ReaderStateImpl() {
         this(ReaderProvider.REAL, LazyFile.REAL);
@@ -283,6 +289,7 @@ public class ReaderStateImpl implements ReaderState {
         }
         for (ConfigurationConsumer consumer : consumers)
             consumer.startFile();
+        logNamePrefix = "";
 
         List<String> lines = new ArrayList<>();
         String lineReaded;
@@ -315,6 +322,8 @@ public class ReaderStateImpl implements ReaderState {
                 handleStartStructure(this, line.substring(STRUCT.length()), true);
             } else if (line.startsWith(STRUCT_NO_PREFIX)) {
                 handleStartStructure(this, line.substring(STRUCT_NO_PREFIX.length()), false);
+            } else if (line.equals(SET_PREFIX) || ToolUtil.startsWithToken(line, SET_PREFIX)) {
+                logNamePrefix = unquote(line.substring(SET_PREFIX.length()).trim());
             } else if (line.startsWith(END_STRUCT)) {
                 addBitPadding();
                 handleEndStruct(consumers);
@@ -498,6 +507,11 @@ public class ReaderStateImpl implements ReaderState {
         String unquoted = unquote(cf.getCommentOrName());
         String string = unquoted + " " + i;
         return VariableRegistry.quote(string);
+    }
+
+    @Override
+    public String getLogNamePrefix() {
+        return logNamePrefix;
     }
 
     @Override

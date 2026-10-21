@@ -1,12 +1,14 @@
 ! same live data is used for crank and cam decoders, so we usually have 1+4 of these
 
-struct_no_prefix trigger_state_s
-	uint32_t synchronizationCounter;sync: wheel sync counter
-    uint32_t vvtToothDurations0;;"us", 1, 0, 0, 100000, 3
-    float vvtCurrentPosition;"sync: Primary Position";"", 1, 0, -10000, 10000, 3
-    float[4 iterate] vvtToothPosition;"sync: Cam Position";"", 1, 0, -10000, 10000, 3
-    float triggerSyncGapRatio;@@GAUGE_NAME_TRG_GAP@@;"", 1, 0, -10000, 10000, 3
+set_prefix "Sync"
 
-    uint8_t triggerStateIndex
-    int8_t triggerCountersError
+struct_no_prefix trigger_state_s
+	uint32_t synchronizationCounter;wheel sync counter
+	uint32_t vvtToothDurations0;;"us", 1, 0, 0, 100000, 3
+	float vvtCurrentPosition;"Primary Position";"", 1, 0, -10000, 10000, 3
+	float[4 iterate] vvtToothPosition;"Cam Position";"", 1, 0, -10000, 10000, 3
+	float triggerSyncGapRatio;@@GAUGE_NAME_TRG_GAP@@;"", 1, 0, -10000, 10000, 3
+
+	uint8_t triggerStateIndex
+	int8_t triggerCountersError
 end_struct

@@ -235,6 +235,7 @@ Usages:
     java: WidebandController.java
     folder: controllers/sensors/
     output_name: [ "wb1", "wb2" ]
+    prefix_names: [ "WBO1", "WBO2" ]
 
   - name: dc_motors
     java: DcMotors.java

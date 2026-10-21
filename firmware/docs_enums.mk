@@ -15,12 +15,18 @@ DOCS_ENUMS_INPUTS = \
   $(PROJECT_DIR)/controllers/trigger/trigger_state.txt \
   $(PROJECT_DIR)/controllers/trigger/trigger_state_primary.txt \
   $(PROJECT_DIR)/controllers/algo/shift_torque_reduction_state.txt \
+  $(PROJECT_DIR)/controllers/algo/ignition/ignition_state.txt \
+  $(PROJECT_DIR)/controllers/algo/tps_accel_state.txt \
   $(PROJECT_DIR)/controllers/algo/launch_control_state.txt \
+  $(PROJECT_DIR)/controllers/algo/antilag_system_state.txt \
+  $(PROJECT_DIR)/controllers/sensors/sent_state.txt \
+  $(PROJECT_DIR)/controllers/sensors/wideband_state.txt \
   $(PROJECT_DIR)/controllers/engine_cycle/high_pressure_fuel_pump.txt \
   $(PROJECT_DIR)/controllers/actuators/idle_state.txt \
   $(PROJECT_DIR)/controllers/actuators/electronic_throttle.txt \
   $(PROJECT_DIR)/controllers/algo/misfire_detection_state.txt \
   $(PROJECT_DIR)/controllers/algo/wall_fuel_state.txt \
+  $(PROJECT_DIR)/controllers/algo/nitrous_control_state.txt \
   $(PROJECT_DIR)/hw_layer/drivers/gpio/mc33810_state.txt \
   $(PROJECT_DIR)/hw_layer/drivers/adc/ads7128_state.txt \
   $(PROJECT_DIR)/integration/LiveData.yaml \
