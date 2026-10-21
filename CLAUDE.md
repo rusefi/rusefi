@@ -277,6 +277,16 @@ the Windows check suite, but its failing XML and logs came from the Linux
 console workflow (run 37950058647); inspect the producing workflow rather
 than inferring the host from the report association.
 
+### Java tests run headless on CI
+
+The console workflow's `./gradlew test` step runs on Ubuntu without
+`xvfb-run`, so Java reports `GraphicsEnvironment.isHeadless()`; a Windows
+desktop run is not headless. Drag and drop setup differs: headless Swing
+installs no `DropTarget` (`getDropTarget()` returns null after
+`setTransferHandler`), and `JList.setDragEnabled(true)` throws
+`HeadlessException`. Guard such calls, and reproduce CI locally with
+`JAVA_TOOL_OPTIONS=-Djava.awt.headless=true ./gradlew :ui:test`.
+
 ### Native Swing screenshots under WSLg
 
 Xvfb without a window manager verifies shaped-window input but cannot reveal

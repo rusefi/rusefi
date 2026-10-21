@@ -5,10 +5,6 @@ import com.rusefi.logview.CsvLogReader;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.JList;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -41,24 +37,30 @@ class LogViewerSandboxTest {
         assertTrue(log.sampleCount() > 3000);
     }
 
+    /** Time lookups use binary search, which requires non-decreasing time. */
+    @Test
+    void fixtureTimeNeverDecreases() throws IOException {
+        for (String path : new String[]{"/logview/test-log-binary-1.mlg", "/logview/test-log-1.msl"}) {
+            CsvLogReader log = LogViewerSandbox.load(path);
+            for (int sample = 1; sample < log.sampleCount(); sample++) {
+                assertTrue(log.value(sample, 0) >= log.value(sample - 1, 0), path + " sample " + sample);
+            }
+        }
+    }
+
     @Test
     void timeIsNotASelectableFieldInEitherLogFormat() throws IOException {
         for (String path : new String[]{"/logview/test-log-binary-1.mlg", "/logview/test-log-1.msl"}) {
             CsvLogReader log = LogViewerSandbox.load(path);
             LogViewerPanel panel = new LogViewerPanel(log);
-            JSplitPane split = (JSplitPane) panel.getComponent(0);
-            JPanel fields = (JPanel) split.getLeftComponent();
-            JScrollPane scroll = (JScrollPane) fields.getComponent(1);
-            JList<?> list = (JList<?>) scroll.getViewport().getView();
+            JList<?> list = panel.fieldList();
 
             assertEquals(log.fieldCount() - 1, list.getModel().getSize(), path);
             for (int index = 0; index < list.getModel().getSize(); index++) {
                 assertNotEquals(0, list.getModel().getElementAt(index), path);
             }
 
-            JPanel heading = (JPanel) fields.getComponent(0);
-            JTextField search = (JTextField) heading.getComponent(1);
-            search.setText(GAUGE_NAME_TIME);
+            panel.searchField().setText(GAUGE_NAME_TIME);
             for (int index = 0; index < list.getModel().getSize(); index++) {
                 assertNotEquals(0, list.getModel().getElementAt(index), path);
             }
@@ -73,7 +75,7 @@ class LogViewerSandboxTest {
         BufferedImage image = new BufferedImage(500, 300, BufferedImage.TYPE_INT_RGB);
         chart.paint(image.createGraphics());
 
-        int labelColor = 0xffc6d1de;
+        int labelColor = chart.palette().label.getRGB();
         int labelPixels = 0;
         for (int y = 255; y < 300; y++) {
             for (int x = 0; x < 500; x++) {
