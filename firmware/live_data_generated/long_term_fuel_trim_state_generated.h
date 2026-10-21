@@ -6,45 +6,45 @@
 // start of long_term_fuel_trim_state_s
 struct long_term_fuel_trim_state_s {
 	/**
-	 * LTFT learning: hits
+	 * learning: hits
 	 * units: cnt
 	 * offset 0
 	 */
 	uint32_t ltftCntHit = (uint32_t)0;
 	/**
-	 * LTFT learning: miss
+	 * learning: miss
 	 * units: cnt
 	 * offset 4
 	 */
 	uint32_t ltftCntMiss = (uint32_t)0;
 	/**
-	 * LTFT learning: in deadband
+	 * learning: in deadband
 	 * units: cnt
 	 * offset 8
 	 */
 	uint32_t ltftCntDeadband = (uint32_t)0;
 	/**
-	 * LTFT learning
+	 * learning
 	offset 12 bit 0 */
 	bool ltftLearning : 1 {};
 	/**
-	 * LTFT correcting
+	 * correcting
 	offset 12 bit 1 */
 	bool ltftCorrecting : 1 {};
 	/**
-	 * LTFT saving
+	 * saving
 	offset 12 bit 2 */
 	bool ltftSavePending : 1 {};
 	/**
-	 * LTFT loading calibration
+	 * loading calibration
 	offset 12 bit 3 */
 	bool ltftLoadPending : 1 {};
 	/**
-	 * LTFT loading calibration error
+	 * loading calibration error
 	offset 12 bit 4 */
 	bool ltftLoadError : 1 {};
 	/**
-	 * LTFT page refresh frag
+	 * page refresh frag
 	offset 12 bit 5 */
 	bool ltftPageRefreshFlag : 1 {};
 	/**
@@ -126,13 +126,13 @@ struct long_term_fuel_trim_state_s {
 	offset 12 bit 31 */
 	bool unusedBit_9_31 : 1 {};
 	/**
-	 * LTFT: Bank
+	 * Bank
 	 * units: %
 	 * offset 16
 	 */
 	float ltftCorrection[FT_BANK_COUNT] = {};
 	/**
-	 * LTFT: Total Bank
+	 * Total Bank
 	 * units: %
 	 * offset 24
 	 */

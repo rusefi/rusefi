@@ -6,7 +6,7 @@
 // start of ads7128_state_s
 struct ads7128_state_s {
 	/**
-	 * "ADS7128"
+	 * "RAW"
 	 * offset 0
 	 */
 	uint16_t adcRaw[8] = {};

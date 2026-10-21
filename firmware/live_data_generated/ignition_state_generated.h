@@ -6,7 +6,7 @@
 // start of ignition_state_s
 struct ignition_state_s {
 	/**
-	 * "Ignition: base dwell"
+	 * "base dwell"
 	 * units: ms
 	 * offset 0
 	 */
@@ -18,7 +18,7 @@ struct ignition_state_s {
 	 */
 	floatms_t sparkDwell = (floatms_t)0;
 	/**
-	 * Ignition: dwell duration
+	 * dwell duration
 	 * as crankshaft angle
 	 * NAN if engine is stopped
 	 * See also sparkDwell
@@ -27,191 +27,192 @@ struct ignition_state_s {
 	 */
 	angle_t dwellDurationAngle = (angle_t)0;
 	/**
-	 * Ign: CLT correction
+	 * CLT correction
 	 * units: deg
 	 * offset 12
 	 */
 	scaled_channel<int16_t, 100, 1> cltTimingCorrection = (int16_t)0;
 	/**
-	 * Ign: IAT correction
+	 * IAT correction
 	 * units: deg
 	 * offset 14
 	 */
 	scaled_channel<int16_t, 100, 1> timingIatCorrection = (int16_t)0;
 	/**
-	 * Idle: Timing adjustment
-	 * units: deg
-	 * offset 16
-	 */
-	scaled_channel<int16_t, 100, 1> timingPidCorrection = (int16_t)0;
-	/**
-	 * DFCO: Timing retard
-	 * units: deg
-	 * offset 18
-	 */
-	scaled_channel<int16_t, 100, 1> dfcoTimingRetard = (int16_t)0;
-	/**
 	 * @@GAUGE_NAME_TIMING_ADVANCE@@
 	 * units: deg
-	 * offset 20
+	 * offset 16
 	 */
 	scaled_channel<int16_t, 50, 1> baseIgnitionAdvance = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_ADJUSTED_TIMING@@
 	 * units: deg
-	 * offset 22
+	 * offset 18
 	 */
 	scaled_channel<int16_t, 50, 1> correctedIgnitionAdvance = (int16_t)0;
 	/**
-	 * Traction: timing correction
-	 * units: deg
-	 * offset 24
-	 */
-	scaled_channel<int16_t, 50, 1> tractionAdvanceDrop = (int16_t)0;
-	/**
-	 * need 4 byte alignment
-	 * units: units
-	 * offset 26
-	 */
-	uint8_t alignmentFill_at_26[2] = {};
-	/**
-	 * Ign: Dwell voltage correction
-	 * offset 28
+	 * Dwell voltage correction
+	 * offset 20
 	 */
 	float dwellVoltageCorrection = (float)0;
 	/**
-	 * Ign: Lua timing add
+	 * Lua timing add
 	 * units: deg
-	 * offset 32
+	 * offset 24
 	 */
 	float luaTimingAdd = (float)0;
 	/**
-	 * Ign: Lua timing mult
+	 * Lua timing mult
 	 * units: deg
-	 * offset 36
+	 * offset 28
 	 */
 	float luaTimingMult = (float)0;
 	/**
-	 * Ign: Lua Spark Skip
-	offset 40 bit 0 */
+	 * Lua Spark Skip
+	offset 32 bit 0 */
 	bool luaIgnitionSkip : 1 {};
 	/**
-	offset 40 bit 1 */
-	bool unusedBit_15_1 : 1 {};
+	offset 32 bit 1 */
+	bool unusedBit_11_1 : 1 {};
 	/**
-	offset 40 bit 2 */
-	bool unusedBit_15_2 : 1 {};
+	offset 32 bit 2 */
+	bool unusedBit_11_2 : 1 {};
 	/**
-	offset 40 bit 3 */
-	bool unusedBit_15_3 : 1 {};
+	offset 32 bit 3 */
+	bool unusedBit_11_3 : 1 {};
 	/**
-	offset 40 bit 4 */
-	bool unusedBit_15_4 : 1 {};
+	offset 32 bit 4 */
+	bool unusedBit_11_4 : 1 {};
 	/**
-	offset 40 bit 5 */
-	bool unusedBit_15_5 : 1 {};
+	offset 32 bit 5 */
+	bool unusedBit_11_5 : 1 {};
 	/**
-	offset 40 bit 6 */
-	bool unusedBit_15_6 : 1 {};
+	offset 32 bit 6 */
+	bool unusedBit_11_6 : 1 {};
 	/**
-	offset 40 bit 7 */
-	bool unusedBit_15_7 : 1 {};
+	offset 32 bit 7 */
+	bool unusedBit_11_7 : 1 {};
 	/**
-	offset 40 bit 8 */
-	bool unusedBit_15_8 : 1 {};
+	offset 32 bit 8 */
+	bool unusedBit_11_8 : 1 {};
 	/**
-	offset 40 bit 9 */
-	bool unusedBit_15_9 : 1 {};
+	offset 32 bit 9 */
+	bool unusedBit_11_9 : 1 {};
 	/**
-	offset 40 bit 10 */
-	bool unusedBit_15_10 : 1 {};
+	offset 32 bit 10 */
+	bool unusedBit_11_10 : 1 {};
 	/**
-	offset 40 bit 11 */
-	bool unusedBit_15_11 : 1 {};
+	offset 32 bit 11 */
+	bool unusedBit_11_11 : 1 {};
 	/**
-	offset 40 bit 12 */
-	bool unusedBit_15_12 : 1 {};
+	offset 32 bit 12 */
+	bool unusedBit_11_12 : 1 {};
 	/**
-	offset 40 bit 13 */
-	bool unusedBit_15_13 : 1 {};
+	offset 32 bit 13 */
+	bool unusedBit_11_13 : 1 {};
 	/**
-	offset 40 bit 14 */
-	bool unusedBit_15_14 : 1 {};
+	offset 32 bit 14 */
+	bool unusedBit_11_14 : 1 {};
 	/**
-	offset 40 bit 15 */
-	bool unusedBit_15_15 : 1 {};
+	offset 32 bit 15 */
+	bool unusedBit_11_15 : 1 {};
 	/**
-	offset 40 bit 16 */
-	bool unusedBit_15_16 : 1 {};
+	offset 32 bit 16 */
+	bool unusedBit_11_16 : 1 {};
 	/**
-	offset 40 bit 17 */
-	bool unusedBit_15_17 : 1 {};
+	offset 32 bit 17 */
+	bool unusedBit_11_17 : 1 {};
 	/**
-	offset 40 bit 18 */
-	bool unusedBit_15_18 : 1 {};
+	offset 32 bit 18 */
+	bool unusedBit_11_18 : 1 {};
 	/**
-	offset 40 bit 19 */
-	bool unusedBit_15_19 : 1 {};
+	offset 32 bit 19 */
+	bool unusedBit_11_19 : 1 {};
 	/**
-	offset 40 bit 20 */
-	bool unusedBit_15_20 : 1 {};
+	offset 32 bit 20 */
+	bool unusedBit_11_20 : 1 {};
 	/**
-	offset 40 bit 21 */
-	bool unusedBit_15_21 : 1 {};
+	offset 32 bit 21 */
+	bool unusedBit_11_21 : 1 {};
 	/**
-	offset 40 bit 22 */
-	bool unusedBit_15_22 : 1 {};
+	offset 32 bit 22 */
+	bool unusedBit_11_22 : 1 {};
 	/**
-	offset 40 bit 23 */
-	bool unusedBit_15_23 : 1 {};
+	offset 32 bit 23 */
+	bool unusedBit_11_23 : 1 {};
 	/**
-	offset 40 bit 24 */
-	bool unusedBit_15_24 : 1 {};
+	offset 32 bit 24 */
+	bool unusedBit_11_24 : 1 {};
 	/**
-	offset 40 bit 25 */
-	bool unusedBit_15_25 : 1 {};
+	offset 32 bit 25 */
+	bool unusedBit_11_25 : 1 {};
 	/**
-	offset 40 bit 26 */
-	bool unusedBit_15_26 : 1 {};
+	offset 32 bit 26 */
+	bool unusedBit_11_26 : 1 {};
 	/**
-	offset 40 bit 27 */
-	bool unusedBit_15_27 : 1 {};
+	offset 32 bit 27 */
+	bool unusedBit_11_27 : 1 {};
 	/**
-	offset 40 bit 28 */
-	bool unusedBit_15_28 : 1 {};
+	offset 32 bit 28 */
+	bool unusedBit_11_28 : 1 {};
 	/**
-	offset 40 bit 29 */
-	bool unusedBit_15_29 : 1 {};
+	offset 32 bit 29 */
+	bool unusedBit_11_29 : 1 {};
 	/**
-	offset 40 bit 30 */
-	bool unusedBit_15_30 : 1 {};
+	offset 32 bit 30 */
+	bool unusedBit_11_30 : 1 {};
 	/**
-	offset 40 bit 31 */
-	bool unusedBit_15_31 : 1 {};
+	offset 32 bit 31 */
+	bool unusedBit_11_31 : 1 {};
 	/**
-	 * Ign: Trailing spark deg
+	 * Trailing spark deg
 	 * units: deg
-	 * offset 44
+	 * offset 36
 	 */
 	scaled_channel<int16_t, 100, 1> trailingSparkAngle = (int16_t)0;
 	/**
-	 * offset 46
+	 * offset 38
 	 */
 	int16_t rpmForIgnitionTableDot = (int16_t)0;
 	/**
-	 * offset 48
+	 * RPM for Idle table
+	 * offset 40
 	 */
 	int16_t rpmForIgnitionIdleTableDot = (int16_t)0;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 50
+	 * offset 42
 	 */
-	uint8_t alignmentFill_at_50[2] = {};
+	uint8_t alignmentFill_at_42[2] = {};
 	/**
-	 * offset 52
+	 * offset 44
 	 */
 	float loadForIgnitionTableDot = (float)0;
+	/**
+	 * Idle: Timing adjustment
+	 * units: deg
+	 * offset 48
+	 */
+	scaled_channel<int16_t, 100, 1> timingPidCorrection = (int16_t)0;
+	/**
+	 * DFCO: Timing retard
+	 * units: deg
+	 * offset 50
+	 */
+	scaled_channel<int16_t, 100, 1> dfcoTimingRetard = (int16_t)0;
+	/**
+	 * Traction: timing correction
+	 * units: deg
+	 * offset 52
+	 */
+	scaled_channel<int16_t, 50, 1> tractionAdvanceDrop = (int16_t)0;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 54
+	 */
+	uint8_t alignmentFill_at_54[2] = {};
 };
 static_assert(sizeof(ignition_state_s) == 56);
 

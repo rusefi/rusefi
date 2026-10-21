@@ -6,27 +6,35 @@
 // start of nitrous_control_state_s
 struct nitrous_control_state_s {
 	/**
+	 * isArmed
 	offset 0 bit 0 */
 	bool isNitrousArmed : 1 {};
 	/**
+	 * isSpeedCondition
 	offset 0 bit 1 */
 	bool isNitrousSpeedCondition : 1 {};
 	/**
+	 * isTpsCondition
 	offset 0 bit 2 */
 	bool isNitrousTpsCondition : 1 {};
 	/**
+	 * isCltCondition
 	offset 0 bit 3 */
 	bool isNitrousCltCondition : 1 {};
 	/**
+	 * isMapCondition
 	offset 0 bit 4 */
 	bool isNitrousMapCondition : 1 {};
 	/**
+	 * isAfrCondition
 	offset 0 bit 5 */
 	bool isNitrousAfrCondition : 1 {};
 	/**
+	 * isRpmCondition
 	offset 0 bit 6 */
 	bool isNitrousRpmCondition : 1 {};
 	/**
+	 * isCondition
 	offset 0 bit 7 */
 	bool isNitrousCondition : 1 {};
 	/**

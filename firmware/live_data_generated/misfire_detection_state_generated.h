@@ -6,11 +6,11 @@
 // start of misfire_detection_state_s
 struct misfire_detection_state_s {
 	/**
-	 * Misfire: active
+	 * active
 	offset 0 bit 0 */
 	bool misfireDetectionActive : 1 {};
 	/**
-	 * Misfire: MIL latched
+	 * MIL latched
 	offset 0 bit 1 */
 	bool misfireLatched : 1 {};
 	/**
@@ -104,7 +104,7 @@ struct misfire_detection_state_s {
 	offset 0 bit 31 */
 	bool unusedBit_2_31 : 1 {};
 	/**
-	 * Misfire: total count
+	 * total count
 	 * units: events
 	 * offset 4
 	 */
@@ -116,31 +116,31 @@ struct misfire_detection_state_s {
 	 */
 	uint8_t alignmentFill_at_5[3] = {};
 	/**
-	 * Misfire: EMA baseline
+	 * EMA baseline
 	 * units: ms
 	 * offset 8
 	 */
 	float misfireEmaUs = (float)0;
 	/**
-	 * Misfire: last segment
+	 * last segment
 	 * units: ms
 	 * offset 12
 	 */
 	float misfireLastSegUs = (float)0;
 	/**
-	 * Misfire: threshold
+	 * threshold
 	 * units: ms
 	 * offset 16
 	 */
 	float misfireThreshUs = (float)0;
 	/**
-	 * Misfire: wobble EMA
+	 * wobble EMA
 	 * units: ms
 	 * offset 20
 	 */
 	float misfireWobbleUs = (float)0;
 	/**
-	 * Misfire: wobble thresh
+	 * wobble thresh
 	 * units: ms
 	 * offset 24
 	 */

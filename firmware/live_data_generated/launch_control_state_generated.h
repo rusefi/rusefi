@@ -6,7 +6,7 @@
 // start of launch_control_state_s
 struct launch_control_state_s {
 	/**
-	 * Launch: Retard threshold RPM
+	 * Retard threshold RPM
 	 * offset 0
 	 */
 	int retardThresholdRpm = (int)0;
@@ -17,26 +17,26 @@ struct launch_control_state_s {
 	offset 4 bit 1 */
 	bool isPreLaunchCondition : 1 {};
 	/**
-	 * Launch Control Triggered
+	 * Triggered
 	offset 4 bit 2 */
 	bool isLaunchCondition : 1 {};
 	/**
-	 * Launch: isSwitchActivated
+	 * isSwitchActivated
 	offset 4 bit 3 */
 	bool isSwitchActivated : 1 {};
 	/**
-	 * Launch: isClutchActivated
+	 * isClutchActivated
 	offset 4 bit 4 */
 	bool isClutchActivated : 1 {};
 	/**
 	offset 4 bit 5 */
 	bool isBrakePedalActivated : 1 {};
 	/**
-	 * Launch: isValidInputPin
+	 * isValidInputPin
 	offset 4 bit 6 */
 	bool isValidInputPin : 1 {};
 	/**
-	 * Launch: activateSwitchCondition
+	 * activateSwitchCondition
 	offset 4 bit 7 */
 	bool activateSwitchCondition : 1 {};
 	/**
@@ -46,18 +46,18 @@ struct launch_control_state_s {
 	offset 4 bit 9 */
 	bool rpmPreLaunchCondition : 1 {};
 	/**
-	 * Launch: speedCondition
+	 * speedCondition
 	offset 4 bit 10 */
 	bool speedCondition : 1 {};
 	/**
-	 * Launch: tpsCondition
+	 * tpsCondition
 	offset 4 bit 11 */
 	bool tpsCondition : 1 {};
 	/**
 	offset 4 bit 12 */
 	bool luaLaunchState : 1 {};
 	/**
-	 * Launch: isLaunchLatched
+	 * isLaunchLatched
 	offset 4 bit 13 */
 	bool isLaunchLatched : 1 {};
 	/**

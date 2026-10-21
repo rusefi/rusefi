@@ -814,8 +814,8 @@
 #define GAUGE_NAME_FUEL_TEMPERATURE "Fuel Temperature"
 #define GAUGE_NAME_FUEL_TPS_EXTRA "Fuel: TPS AE (ms or fraction)"
 #define GAUGE_NAME_FUEL_VE "Fuel: VE"
-#define GAUGE_NAME_FUEL_WALL_AMOUNT "Fuel: wall amount"
-#define GAUGE_NAME_FUEL_WALL_CORRECTION "Fuel: wall correction"
+#define GAUGE_NAME_FUEL_WALL_AMOUNT "Fuel Wall: amount"
+#define GAUGE_NAME_FUEL_WALL_CORRECTION "Fuel Wall: correction"
 #define GAUGE_NAME_FW_VERSION "ECU: Software Version"
 #define GAUGE_NAME_GEAR_RATIO "Gearbox Ratio"
 #define GAUGE_NAME_GYRO_YAW "Gyro: Yaw rate"
@@ -1687,7 +1687,7 @@
 #define show_default_engine_type false
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2212255845
+#define SIGNATURE_HASH 3143855989
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2352,7 +2352,7 @@
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
 #define ts_show_wot_enrichment true
-#define TS_SIGNATURE "rusEFI master.2026.10.21.proteus_f7.2212255845"
+#define TS_SIGNATURE "rusEFI master.2026.10.21.proteus_f7.3143855989"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

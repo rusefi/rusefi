@@ -6,50 +6,52 @@
 // start of tps_accel_state_s
 struct tps_accel_state_s {
 	/**
-	 * Fuel: TPS AE from
+	 * from
 	 * offset 0
 	 */
 	percent_t tpsFrom = (percent_t)0;
 	/**
-	 * Fuel: TPS AE to
+	 * to
 	 * offset 4
 	 */
 	percent_t tpsTo = (percent_t)0;
 	/**
-	 * Fuel: TPS AE change
+	 * change
 	 * offset 8
 	 */
 	percent_t deltaTps = (percent_t)0;
 	/**
-	 * Fuel: TPS extraFuel
+	 * extraFuel
 	 * offset 12
 	 */
 	floatms_t extraFuel = (floatms_t)0;
 	/**
-	 * Fuel: TPS valueFromTable
+	 * valueFromTable
 	 * offset 16
 	 */
 	float valueFromTable = (float)0;
 	/**
-	 * Fuel: TPS AE Active
+	 * Active
 	offset 20 bit 0 */
 	bool isAboveAccelThreshold : 1 {};
 	/**
+	 * Below Decel Thres
 	offset 20 bit 1 */
 	bool isBelowDecelThreshold : 1 {};
 	/**
-	 * Fuel: TPS AE: reset time
+	 * reset time
 	offset 20 bit 2 */
 	bool isTimeToResetAccumulator : 1 {};
 	/**
+	 * Fractional Enrich
 	offset 20 bit 3 */
 	bool isFractionalEnrichment : 1 {};
 	/**
-	 * Fuel: TPS AE: below threshold
+	 * below threshold
 	offset 20 bit 4 */
 	bool belowEpsilon : 1 {};
 	/**
-	 * Fuel: TPS AE: too short
+	 * too short
 	offset 20 bit 5 */
 	bool tooShort : 1 {};
 	/**
@@ -131,7 +133,7 @@ struct tps_accel_state_s {
 	offset 20 bit 31 */
 	bool unusedBit_11_31 : 1 {};
 	/**
-	 * Fuel: TPS AE fractionalInjFuel
+	 * fractionalInjFuel
 	 * offset 24
 	 */
 	float fractionalInjFuel = (float)0;
@@ -156,7 +158,7 @@ struct tps_accel_state_s {
 	 */
 	int cycleCnt = (int)0;
 	/**
-	 * Fuel: Lua AE cycle mass
+	 * Fuel: Lua AE: cycle mass
 	 * units: g
 	 * offset 48
 	 */

@@ -740,8 +740,8 @@ public class VariableRegistryValues {
 	public static final String GAUGE_NAME_FUEL_TEMPERATURE = "Fuel Temperature";
 	public static final String GAUGE_NAME_FUEL_TPS_EXTRA = "Fuel: TPS AE (ms or fraction)";
 	public static final String GAUGE_NAME_FUEL_VE = "Fuel: VE";
-	public static final String GAUGE_NAME_FUEL_WALL_AMOUNT = "Fuel: wall amount";
-	public static final String GAUGE_NAME_FUEL_WALL_CORRECTION = "Fuel: wall correction";
+	public static final String GAUGE_NAME_FUEL_WALL_AMOUNT = "Fuel Wall: amount";
+	public static final String GAUGE_NAME_FUEL_WALL_CORRECTION = "Fuel Wall: correction";
 	public static final String GAUGE_NAME_FW_VERSION = "ECU: Software Version";
 	public static final String GAUGE_NAME_GEAR_RATIO = "Gearbox Ratio";
 	public static final String GAUGE_NAME_GYRO_YAW = "Gyro: Yaw rate";
@@ -1552,7 +1552,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 199360744;
+	public static final int SIGNATURE_HASH = 861747192;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1892,7 +1892,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.10.21.stm32f767_nucleo.199360744";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.10.21.t-b-g.861747192";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2304;

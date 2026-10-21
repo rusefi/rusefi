@@ -985,21 +985,12 @@ float getOutputValueByHash(const int hash) {
 // timingIatCorrection
 		case -1886479485:
 			return engine->ignitionState.timingIatCorrection;
-// timingPidCorrection
-		case -319326974:
-			return engine->ignitionState.timingPidCorrection;
-// dfcoTimingRetard
-		case -735105365:
-			return engine->ignitionState.dfcoTimingRetard;
 // baseIgnitionAdvance
 		case 493641747:
 			return engine->ignitionState.baseIgnitionAdvance;
 // correctedIgnitionAdvance
 		case 352421907:
 			return engine->ignitionState.correctedIgnitionAdvance;
-// tractionAdvanceDrop
-		case -899895696:
-			return engine->ignitionState.tractionAdvanceDrop;
 // dwellVoltageCorrection
 		case -80612537:
 			return engine->ignitionState.dwellVoltageCorrection;
@@ -1024,6 +1015,15 @@ float getOutputValueByHash(const int hash) {
 // loadForIgnitionTableDot
 		case 2031242236:
 			return engine->ignitionState.loadForIgnitionTableDot;
+// timingPidCorrection
+		case -319326974:
+			return engine->ignitionState.timingPidCorrection;
+// dfcoTimingRetard
+		case -735105365:
+			return engine->ignitionState.dfcoTimingRetard;
+// tractionAdvanceDrop
+		case -899895696:
+			return engine->ignitionState.tractionAdvanceDrop;
 // m_knockLevel
 		case -1571781441:
 			return engine->module<KnockController>()->m_knockLevel;

@@ -6,18 +6,18 @@
 // start of wideband_state_s
 struct wideband_state_s {
 	/**
-	 * WBO: State code
+	 * State code
 	 * offset 0
 	 */
 	uint8_t stateCode = (uint8_t)0;
 	/**
-	 * WBO: Heater duty
+	 * Heater duty
 	 * units: %
 	 * offset 1
 	 */
 	uint8_t heaterDuty = (uint8_t)0;
 	/**
-	 * WBO: Pump duty
+	 * Pump duty
 	 * units: %
 	 * offset 2
 	 */
@@ -125,19 +125,19 @@ struct wideband_state_s {
 	offset 4 bit 31 */
 	bool unusedBit_10_31 : 1 {};
 	/**
-	 * WBO: Temperature
+	 * Temperature
 	 * units: C
 	 * offset 8
 	 */
 	uint16_t tempC = (uint16_t)0;
 	/**
-	 * WBO: Nernst Voltage
+	 * Nernst Voltage
 	 * units: V
 	 * offset 10
 	 */
 	scaled_channel<uint16_t, 1000, 1> nernstVoltage = (uint16_t)0;
 	/**
-	 * WBO: ESR
+	 * ESR
 	 * units: ohm
 	 * offset 12
 	 */

@@ -7,14 +7,12 @@
 struct wall_fuel_state_s {
 	/**
 	 * @@GAUGE_NAME_FUEL_WALL_CORRECTION@@
-	 * Fuel mass correction for wall wetting in the last calculated injection event 0. Positive adds fuel, negative subtracts fuel. May retain its last calculated value while compensation is bypassed.
 	 * units: mg
 	 * offset 0
 	 */
 	float wallFuelCorrection = (float)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_WALL_AMOUNT@@
-	 * Estimated fuel mass on the intake port wall for injection event 0, not an all-cylinder total.
 	 * units: mg
 	 * offset 4
 	 */

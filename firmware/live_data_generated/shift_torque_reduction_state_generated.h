@@ -6,9 +6,11 @@
 // start of shift_torque_reduction_state_s
 struct shift_torque_reduction_state_s {
 	/**
+	 * Trigger Pin Valid
 	offset 0 bit 0 */
 	bool isTorqueReductionTriggerPinValid : 1 {};
 	/**
+	 * Trigger Pin State
 	offset 0 bit 1 */
 	bool torqueReductionTriggerPinState : 1 {};
 	/**
@@ -21,9 +23,11 @@ struct shift_torque_reduction_state_s {
 	offset 0 bit 4 */
 	bool isAppConditionSatisfied : 1 {};
 	/**
+	 * FFS Condition
 	offset 0 bit 5 */
 	bool isFlatShiftConditionSatisfied : 1 {};
 	/**
+	 * Below Temperature
 	offset 0 bit 6 */
 	bool isBelowTemperatureThreshold : 1 {};
 	/**
