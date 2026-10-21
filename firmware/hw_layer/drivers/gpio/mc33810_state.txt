@@ -1,3 +1,5 @@
+set_prefix "Ignition"
+
 ! units,scale,offset,min,max,digits
 
 struct_no_prefix mc33810_state_s
