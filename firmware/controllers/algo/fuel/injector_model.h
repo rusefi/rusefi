@@ -64,6 +64,8 @@ private:
 	[[nodiscard]] virtual float getFuelReferencePressure() const = 0;
 
 	const injector_s* const m_cfg;
+	// An updated pressure can also be zero, so the value alone cannot signal initialization.
+	bool m_pressureStateUpdated = false;
 };
 
 struct InjectorModelPrimary : InjectorModelWithConfig {

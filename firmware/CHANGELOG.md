@@ -60,6 +60,7 @@ Release template (copy/paste this for new release):
  - VVT activation delay honors the full configured millisecond value, including fractions of a second.
  - Ignition schedule rebuilds now discharge the coil charged before its output mapping changed.
  - Invalid fuel-pressure readings use nominal pressure for injector duration and deadtime, and skip HPFP mass correction.
+ - Injector dead time uses the configured reference pressure before its first periodic pressure update, instead of the first pressure-table row.
  - A GDI pump with zero configured cam lobes stays inactive and makes no fuel request.
  - Shift torque reduction ignores invalid sensor readings when selecting spark cut, ignition retard, and time limits.
  - Closed-loop VVT output stops when cam position feedback is missing or stale.

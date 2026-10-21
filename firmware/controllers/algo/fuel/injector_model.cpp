@@ -89,12 +89,15 @@ InjectorNonlinearMode InjectorModelSecondary::getNonlinearMode() const {
 void InjectorModelWithConfig::updateState() {
 	// TODO: remove at the end of 2025
 	// hack not to break tunes before 2779925f54f5c2d23499cbb2797f71508c652f54 "injector lag lookup should be done based on differential pressure"
-	// Use nominal pressure for the deadtime lookup when measured pressure is unavailable.
+	// Cache the deadtime lookup pressure during the slow sensor update. None mode
+	// and an unavailable sensor both use the configured nominal pressure.
 	const auto differentialPressure = getFuelDifferentialPressure();
 	pressureCorrectionReference = differentialPressure.value_or(getFuelReferencePressure());
 	if (engineConfiguration->useAbsolutePressureForLagTime) {
 		pressureCorrectionReference += Sensor::get(SensorType::Map).value_or(STD_ATMOSPHERE);
 	}
+	// Only the completed lookup pressure should replace the startup fallback.
+	m_pressureStateUpdated = true;
 }
 
 expected<float> InjectorModelWithConfig::getFuelPressure() const {
@@ -191,9 +194,21 @@ float InjectorModelWithConfig::getInjectorFlowRatio() {
 }
 
 float InjectorModelWithConfig::getDeadtime() const {
+	float lookupPressure = pressureCorrectionReference;
+	if (!m_pressureStateUpdated) {
+		// prepare() may ask for deadtime before the first slow sensor update.
+		// The live-data field starts at zero, so use the configured pressure
+		// rather than interpolating from the first table row.
+		lookupPressure = getFuelReferencePressure();
+		if (engineConfiguration->useAbsolutePressureForLagTime) {
+			// Match the legacy MAP addition in updateState().
+			lookupPressure += Sensor::get(SensorType::Map).value_or(STD_ATMOSPHERE);
+		}
+	}
+
 	return interpolate3d(
 		m_cfg->battLagCorrTable,
-      	m_cfg->battLagCorrPressBins, pressureCorrectionReference,
+		m_cfg->battLagCorrPressBins, lookupPressure,
       	m_cfg->battLagCorrBattBins, Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE)
 	);
 }
