@@ -24,6 +24,8 @@ shadowJar {
 }
 
 test {
+	// [tag:docs_enums_inputs] DocsEnumsInputsTest reads these, rerun it when they change
+	inputs.files('../../firmware/docs_enums.mk', '../../firmware/integration/LiveData.yaml', '../../firmware/gen_live_documentation.sh')
 	testLogging {
 		events "failed"
 		exceptionFormat = "full"

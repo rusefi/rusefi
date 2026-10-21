@@ -1,4 +1,4 @@
-# every .txt referenced by integration/LiveData.yaml (name + folder/input_folder, prepend) and every
+# [tag:docs_enums_inputs] checked by DocsEnumsInputsTest: every .txt referenced by integration/LiveData.yaml (name + folder/input_folder, prepend) and every
 # input of gen_live_documentation.sh must be listed here, otherwise editing it does not regenerate the ini
 DOCS_ENUMS_INPUTS = \
   $(PROJECT_DIR)/integration/rusefi_config.txt \
@@ -115,6 +115,11 @@ endif
 
 ifneq ("$(wildcard $(BOARD_DIR)/firmware/extra.txt)","")
   DOCS_ENUMS_INPUTS += $(BOARD_DIR)/firmware/extra.txt
+endif
+
+# LiveDataProcessor.extra_prepend in gen_live_documentation.sh
+ifneq ("$(wildcard $(BOARD_DIR)/prepend.txt)","")
+  DOCS_ENUMS_INPUTS += $(BOARD_DIR)/prepend.txt
 endif
 
 ifneq ("$(wildcard $(BOARD_DIR)/board_config.txt)","")
