@@ -9,9 +9,9 @@ struct_no_prefix fan_control_s
 	bit cold;Below cold threshold
 	bit disabledBySpeed
 	bit m_state;On
+	bit pwmActive;PWM mode active
 	uint8_t radiatorFanStatus
 	float fanSpeedTarget;Fan speed target\n0% = fan off, 100% = full fan. Pulled from the PWM curve plus any A/C boost or inhibit override, before soft-start ramping.
 	float fanSpeedApplied;Fan speed applied\n0% = fan off, 100% = full fan. Same as Fan speed target but after soft-start ramping - commanded demand, not a measured fan speed.
 	float pwmAppliedPwm;PWM duty applied\nThe raw PWM duty cycle sent to the pin, after off/full-speed duty mapping. May be inverted vs fan speed (min/max can be set either way to match hardware).
-	bit pwmActive;PWM mode active
 end_struct

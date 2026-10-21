@@ -13,6 +13,7 @@ struct_no_prefix trigger_central_s
     int8_t mapVvt_MAP_AT_CYCLE_COUNT;;"distance", 1, 0, -10, 100, 0
     uint8_t mapVvt_sync_counter;Instant MAP sync counter;"counter", 1, 0, 0, 100, 0
     uint8_t mapVvt_min_point_counter
+	uint8_t triggerIgnoredToothCount
     uint32_t temp_mapVvt_index
     float mapVvt_CycleDelta
 
@@ -20,7 +21,6 @@ struct_no_prefix trigger_central_s
 
 	float triggerToothAngleError;Sync: trigger angle error;"deg", 1, 0, -30, 30, 2
 
-	uint8_t triggerIgnoredToothCount
     angle_t mapCamPrevToothAngle;Sync: MAP: prev angle;"deg", 1, 0, -3000, 3000, 2
 	bit isDecodingMapCam
 
