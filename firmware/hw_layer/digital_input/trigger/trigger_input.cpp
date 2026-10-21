@@ -169,10 +169,11 @@ void onEcuStartDoSomethingTriggerInputPins() {
 		return;
 	}
 
-#if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
+#if (EFI_PROD_CODE || EFI_UNIT_TEST) && EFI_SHAFT_POSITION_INPUT
 	if (isBrainPinValid(engineConfiguration->triggerInputPins[0])) {
-	    // todo: we have another 'rpmCalculator.Register' for UNIT_TEST would be great to unify
+		// [tag:trigger_rpm_startup] Exercise this registration in host tests too:
+		// self-stimulation or the test helper must not hide a missing startup sensor.
 		engine->rpmCalculator.Register();
 	}
-#endif /* EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT */
+#endif /* (EFI_PROD_CODE || EFI_UNIT_TEST) && EFI_SHAFT_POSITION_INPUT */
 }

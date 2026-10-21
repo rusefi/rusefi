@@ -488,6 +488,8 @@ void commonInitEngineController() {
 #endif // EFI_ENGINE_CONTROL
 
 #if EFI_UNIT_TEST
+	// [tag:trigger_rpm_startup] General algorithm tests need RPM without a pin.
+	// TriggerRpmStartup removes this registration before testing hardware startup.
 	engine->rpmCalculator.Register();
 #endif /* EFI_UNIT_TEST */
 
