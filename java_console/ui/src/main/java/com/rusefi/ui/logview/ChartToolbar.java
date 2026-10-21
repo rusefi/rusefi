@@ -15,6 +15,7 @@ import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.JToggleButton;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.UIManager;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
@@ -23,12 +24,13 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 /**
- * Toolbar above the log chart, styled like the Gauges toolbar: plot colours, a Grid button that
+ * Toolbar above the log chart, styled like the Gauges toolbar: Open, plot colours, a Grid button that
  * opens the grid options, and the cursor Snap / Free switch. [tag:console_theme]
  */
 final class ChartToolbar extends ThemedStrip {
     final JToggleButton lightPlot = SegmentedControl.segment("Light");
     final JToggleButton darkPlot = SegmentedControl.segment("Dark");
+    final JButton openButton = new JButton("Open…");
     final JButton gridButton = new JButton();
     final JToggleButton snapCursor = SegmentedControl.segment("Snap");
     final JToggleButton freeCursor = SegmentedControl.segment("Free");
@@ -47,6 +49,11 @@ final class ChartToolbar extends ThemedStrip {
     private final Runnable onChange;
 
     ChartToolbar(ChartSettings settings, Runnable onChange) {
+        this(settings, onChange, null);
+    }
+
+    /** @param onOpen action of an Open button at the start of the toolbar, or null for no button */
+    ChartToolbar(ChartSettings settings, Runnable onChange, Runnable onOpen) {
         super(new FlowLayout(FlowLayout.LEFT, JoinedButtons.ROW_GAP, 0), "Console.Toolbar.background", false);
         this.settings = settings;
         this.onChange = onChange;
@@ -88,6 +95,13 @@ final class ChartToolbar extends ThemedStrip {
         horizontalBox.addActionListener(e -> apply());
         horizontalDivisions.addChangeListener(e -> apply());
 
+        if (onOpen != null) {
+            openButton.setIcon(UIManager.getIcon("Tree.openIcon"));
+            openButton.setToolTipText("Open a data log (" + LogViewerHost.SUPPORTED + ") - Ctrl+O, or drop a file on the viewer");
+            openButton.addActionListener(e -> onOpen.run());
+            add(new JoinedButtons(openButton));
+            add(Box.createHorizontalStrut(JoinedButtons.ROW_GAP));
+        }
         add(muted(new JLabel("Plot")));
         add(new SegmentedControl(lightPlot, darkPlot));
         add(new JoinedButtons(gridButton));

@@ -48,7 +48,7 @@ public final class LogViewerPanel extends JPanel {
 
     private final CsvLogReader log;
     private final TraceColors colors;
-    private final ChartSettings settings = new ChartSettings();
+    private final ChartSettings settings;
     private final DefaultListModel<Integer> visibleFields = new DefaultListModel<>();
     private final JList<Integer> fieldList = new JList<Integer>(visibleFields) {
         @Override
@@ -79,8 +79,17 @@ public final class LogViewerPanel extends JPanel {
     }
 
     public LogViewerPanel(CsvLogReader log, String fileName) {
+        this(log, fileName, new ChartSettings(), null);
+    }
+
+    /**
+     * @param settings chart options, shared so they carry over when another log is opened
+     * @param onOpen   action of the toolbar's Open button, or null for no button
+     */
+    LogViewerPanel(CsvLogReader log, String fileName, ChartSettings settings, Runnable onOpen) {
         super(new BorderLayout());
         this.log = log;
+        this.settings = settings;
         boolean[] initial = new boolean[log.fieldCount()];
         for (int field = 1; field < log.fieldCount(); field++) {
             String name = log.name(field);
@@ -97,7 +106,7 @@ public final class LogViewerPanel extends JPanel {
             chart.repaint();
             // the list dots use the plot palette, which follows the Light / Dark switch
             fieldList.repaint();
-        }), BorderLayout.NORTH);
+        }, onOpen), BorderLayout.NORTH);
         plotArea.add(chart, BorderLayout.CENTER);
 
         JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, createSidebar(), plotArea);
