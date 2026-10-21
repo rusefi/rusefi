@@ -83,7 +83,6 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
   uint8_t stopEngineCode
 
 	uint8_t autoscale injectorDutyCycle;@@GAUGE_NAME_FUEL_INJ_DUTY@@;"%",{1/2}, 0, 0, 0, 0
-	uint8_t tempLogging1
 	int8_t internalMcuTemperature;@@GAUGE_NAME_CPU_TEMP@@;"deg C",1, 0, 0, 0, 0
 	int16_t injectionOffset;@@GAUGE_NAME_FUEL_INJECTION_TIMING@@;"deg", 1, 0, 0, 0, 0
 
@@ -140,9 +139,6 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	uint8_t autoscale flexPercent;@@GAUGE_NAME_FLEX@@;"%",{1/@@PACK_MULT_FLEX@@}, 0, 0, 0, 1
 
 	int16_t autoscale wastegatePositionSensor;@@GAUGE_NAME_WG_POSITION@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
-	int16_t autoscale highFuelPressure;@@GAUGE_NAME_FUEL_PRESSURE_HIGH@@;"bar",{1/@@PACK_MULT_HIGH_PRESSURE@@}, 0, 0, 0, 0
-	uint8_t tempLogging3
-	uint8_t tempLogging4
 
 	! These two fields indicate to TS that we'd like to set a particular field to a particular value
 	! We use a maintainConstantValue in TS for each field we'd like to set, like this:
@@ -207,7 +203,6 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	uint16_t autoscale SmoothedAFRValue;@@SMOOTHED_GAUGE_NAME_AFR@@;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 2
 	uint16_t autoscale SmoothedAFRValue2;@@SMOOTHED_GAUGE_NAME_AFR2@@;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 2
 
-	uint16_t autoscale VssAcceleration;Vss Accel;"m/s2",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 2
 	uint16_t autoscale lambdaValue2;@@GAUGE_NAME_LAMBDA2@@;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 3
 
 	int16_t autoscale vvtPositionB1E;@@GAUGE_NAME_VVT_B1E@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 1
@@ -254,6 +249,7 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	uint16_t autoscale rawAfr;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	int8_t sparkCutReasonBlinker
 	int8_t fuelCutReasonBlinker
+	int16_t autoscale highFuelPressure;@@GAUGE_NAME_FUEL_PRESSURE_HIGH@@;"bar",{1/@@PACK_MULT_HIGH_PRESSURE@@}, 0, 0, 0, 0
 
 	float calibrationValue2;;"", 1, 0, 0, 0, 0
 
@@ -428,7 +424,6 @@ float mapFast
 	uint16_t mc33810spiErrorCounter
 
 	uint8_t injectionPrimingCounter
-	uint8_t tempLogging2
 
 	float acPressure;@@GAUGE_NAME_AC_PRESSURE@@;"kPa", 1, 0, 0, 0, 0
 
