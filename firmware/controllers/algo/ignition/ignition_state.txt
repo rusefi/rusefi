@@ -19,10 +19,10 @@ struct_no_prefix ignition_state_s
 	float luaTimingMult;Lua timing mult;"deg",1, 0, -20, 20, 2, @@GAUGE_CATEGORY_TIMING@@
 	bit luaIgnitionSkip;Lua Spark Skip
 
+	float loadForIgnitionTableDot;
 	int16_t autoscale trailingSparkAngle;Trailing spark deg;"deg",{1/@@PACK_MULT_PERCENT@@},0, -20,20, 2,@@GAUGE_CATEGORY_TIMING@@
 	int16_t rpmForIgnitionTableDot;
 	int16_t rpmForIgnitionIdleTableDot;RPM for Idle table
-	float loadForIgnitionTableDot;
 
 	! some fields related to other modules
 set_prefix ""

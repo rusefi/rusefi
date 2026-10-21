@@ -50,7 +50,6 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 
 	uint16_t autoscale speedToRpmRatio;@@GAUGE_NAME_GEAR_RATIO@@;"value",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 
-	int8_t internalMcuTemperature;@@GAUGE_NAME_CPU_TEMP@@;"deg C",1, 0, 0, 0, 0
 	int16_t autoscale internalVref;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	int16_t autoscale internalVbat;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
@@ -85,6 +84,7 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 
 	uint8_t autoscale injectorDutyCycle;@@GAUGE_NAME_FUEL_INJ_DUTY@@;"%",{1/2}, 0, 0, 0, 0
 	uint8_t tempLogging1
+	int8_t internalMcuTemperature;@@GAUGE_NAME_CPU_TEMP@@;"deg C",1, 0, 0, 0, 0
 	int16_t injectionOffset;@@GAUGE_NAME_FUEL_INJECTION_TIMING@@;"deg", 1, 0, 0, 0, 0
 
 !  Corrections
@@ -155,8 +155,6 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	! The ECU simply has to sequentially set a mode/value, wait briefly, then repeat until all the values
 	! it wants to send have been sent.
 	float calibrationValue;;"", 1, 0, 0, 0, 0
-	uint8_t calibrationMode;;"", 1, 0, 0, 0, 0
-	uint8_t idleStepperTargetPosition;Idle: Stepper target position;"", 1, 0, 0, 0, 0
 
 ! Errors
 	uint32_t totalTriggerErrorCounter;@@GAUGE_NAME_TRG_ERR@@;"counter",1, 0, 0, 0, 0
@@ -254,6 +252,8 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	uint16_t autoscale rawMap;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	uint16_t autoscale rawMapFast;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	uint16_t autoscale rawAfr;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+	int8_t sparkCutReasonBlinker
+	int8_t fuelCutReasonBlinker
 
 	float calibrationValue2;;"", 1, 0, 0, 0, 0
 
@@ -324,9 +324,9 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	int16_t[VE_BLEND_COUNT iterate] autoscale veBlendYAxis;;"", 0.1, 0, -1000, 1000, 1
 
 	int16_t autoscale secondVeBlendParameter;;"", 0.1, 0, -1000, 1000, 1
+	int16_t autoscale secondIgnitionBlendParameter;;"", 0.1, 0, -1000, 1000, 1
 	uint8_t autoscale secondVeBlendBias;;"%", 0.5, 0, 0, 100, 1
 
-	int16_t autoscale secondIgnitionBlendParameter;;"", 0.1, 0, -1000, 1000, 1
 	uint8_t autoscale secondIgnitionBlendBias;;"%", 0.5, 0, 0, 100, 1
 
 	int16_t[BOOST_BLEND_COUNT iterate] autoscale boostOpenLoopBlendParameter;;"", 0.1, 0, -1000, 1000, 1
@@ -344,6 +344,8 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	int16_t[TARGET_AFR_BLEND_COUNT iterate] autoscale targetAfrBlendOutput;;"%", 0.1, 0, -1000, 1000, 1
 	int16_t[TARGET_AFR_BLEND_COUNT iterate] autoscale targetAfrBlendYAxis;;"", 0.1, 0, -1000, 1000, 1
 
+	! 2 bytes here keep the following bit word 4-byte aligned without fill
+	uint16_t autoscale actualLastInjectionStage2;@@GAUGE_NAME_FUEL_LAST_INJECTION_STAGE_2@@;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 3
 bit coilState1
 bit coilState2
 bit coilState3
@@ -408,13 +410,14 @@ float mapFast
 
 	uint16_t autoscale afrGasolineScale;@@GAUGE_NAME_AFR_GAS_SCALE@@;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 2
 	uint16_t autoscale afr2GasolineScale;@@GAUGE_NAME_AFR2_GAS_SCALE@@;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 2
+	uint8_t calibrationMode;;"", 1, 0, 0, 0, 0
+	uint8_t idleStepperTargetPosition;Idle: Stepper target position;"", 1, 0, 0, 0, 0
 
 	float wheelSlipRatio
 
 	uint8_t[MAX_CYLINDER_COUNT iterate] ignitorDiagnostic
 	uint8_t[MAX_CYLINDER_COUNT iterate] injectorDiagnostic
 
-	uint16_t autoscale actualLastInjectionStage2;@@GAUGE_NAME_FUEL_LAST_INJECTION_STAGE_2@@;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 3
 	float actualLastInjectionRatioStage2;@@GAUGE_NAME_FUEL_LAST_INJECTION_RATIO_STAGE_2@@;"", 1, 0, 0, 0, 3
 
 	uint8_t autoscale injectorDutyCycleStage2;@@GAUGE_NAME_FUEL_INJ_DUTY_STAGE_2@@;"%",{1/2}, 0, 0, 0, 0
@@ -443,8 +446,6 @@ float mapFast
 	int16_t autoscale rawAmbientTemp;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	uint32_t rtcUnixEpochTime
 
-	int8_t sparkCutReasonBlinker
-	int8_t fuelCutReasonBlinker
 
 	int16_t hp
 	int16_t torque
@@ -484,6 +485,13 @@ float mapFast
 
 	uint16_t instantRpmRange;sync: instant RPM range\nMax minus min instant RPM within the last complete engine cycle, 0 when RPM is perfectly steady;"rpm", 1, 0, 0, 65535, 0
 
+! TunerStudio/MLV integration requires channel 'engine' and exact log label 'Engine'.
+! Bits: 0 running, 1 cranking, 2 after-start enrichment, 3 warmup enrichment,
+! 4 TPS acceleration (including MAP Prediction), 5 TPS deceleration or DFCO.
+! Bits 6/7 (MAP-rate acceleration/deceleration) are unused.
+	uint8_t engine;Engine;"", 1, 0, 0, 255, 0
+	! SD_MODE from mmc_card.h: 0 idle, 1 ECU, 2 PC, 3 unmounted, 4 formatting.
+	uint8_t sdCardMode;SD: Mount mode;"code", 1, 0, 0, 4, 0
 ! Dash light indicators, set from Lua via setDashLight(index, state) - see lua_hooks.cpp.
 ! Only the fixed-size bit word is reserved here; the firmware itself never sets these.
 ! Index order matches the setDashLight() argument: 0 left turn, 1 right turn, 2 check engine, 3 high beams, 4 parking brake.
@@ -492,15 +500,9 @@ float mapFast
 	bit dashCheckEngine;Dash: Check engine
 	bit dashHighBeams;Dash: High beams
 	bit dashParkingBrake;Dash: Parking brake
+	! not a dash light: set by firmware, shares the dash bit word to avoid a separate 4-byte word
+	bit transmissionSlipValid;Transmission slip valid
 
-! TunerStudio/MLV integration requires channel 'engine' and exact log label 'Engine'.
-! Bits: 0 running, 1 cranking, 2 after-start enrichment, 3 warmup enrichment,
-! 4 TPS acceleration (including MAP Prediction), 5 TPS deceleration or DFCO.
-! Bits 6/7 (MAP-rate acceleration/deceleration) are unused.
-	uint8_t engine;Engine;"", 1, 0, 0, 255, 0
-	! SD_MODE from mmc_card.h: 0 idle, 1 ECU, 2 PC, 3 unmounted, 4 formatting.
-	uint8_t sdCardMode;SD: Mount mode;"code", 1, 0, 0, 4, 0
 	float outputShaftSpeed;Output Shaft Speed;"RPM", 1, 0, 0, 30000, 0
 	float transmissionSlipPercent;@@GAUGE_NAME_TRANS_SLIP@@;"%", 1, 0, -100, 1000, 1
-	bit transmissionSlipValid;Transmission slip valid
 end_struct
