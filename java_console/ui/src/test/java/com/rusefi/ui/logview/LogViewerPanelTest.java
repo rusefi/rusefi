@@ -46,6 +46,20 @@ class LogViewerPanelTest {
         assertEquals("none plotted", panel.plottedLabel().getText());
     }
 
+    @Test
+    void shiftClickPutsASignalInANewPlot() throws IOException {
+        LogViewerPanel panel = new LogViewerPanel(log(), null);
+        panel.addToNewPlot(2);
+        PlotLayout layout = panel.chart().plotLayout();
+        assertEquals(2, layout.plotCount());
+        assertEquals(1, layout.plotOf(2));
+        assertEquals("2 plotted · 2 plots", panel.plottedLabel().getText());
+
+        // a plain click goes to the active (new) plot
+        panel.toggle(3);
+        assertEquals(1, layout.plotOf(3));
+    }
+
     /** Row renderers must lay themselves out: validate() does nothing without a native peer. */
     @Test
     void signalRowPaintsWithoutAWindow() throws IOException {

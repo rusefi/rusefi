@@ -35,11 +35,13 @@ class LogChartSettingsTest {
         return image;
     }
 
-    /** Non-background pixels inside the plot, below the "Select a field" prompt and above the axis labels. */
-    private static int plotInk(BufferedImage image) {
+    /** Paints the chart and counts non-background pixels in the first plot's traces, below the empty-plot hint. */
+    private static int plotInk(LogChart chart) {
+        BufferedImage image = paint(chart);
+        java.awt.Rectangle area = chart.bands().get(0).traces;
         int count = 0;
-        for (int y = 140; y < HEIGHT - 50; y++) {
-            for (int x = 56; x < WIDTH - 24; x++) {
+        for (int y = area.y + 40; y < area.y + area.height - 2; y++) {
+            for (int x = area.x + 2; x < area.x + area.width - 2; x++) {
                 if (image.getRGB(x, y) != BACKGROUND) {
                     count++;
                 }
@@ -52,7 +54,7 @@ class LogChartSettingsTest {
     void gridIsOffByDefault() throws IOException {
         CsvLogReader log = denseLog();
         LogChart chart = new LogChart(log, new boolean[log.fieldCount()]);
-        assertEquals(0, plotInk(paint(chart)));
+        assertEquals(0, plotInk(chart));
     }
 
     @Test
@@ -62,16 +64,16 @@ class LogChartSettingsTest {
         LogChart chart = new LogChart(log, new boolean[log.fieldCount()], grid);
 
         grid.setVertical(true);
-        int vertical = plotInk(paint(chart));
+        int vertical = plotInk(chart);
         assertTrue(vertical > 0);
 
         grid.setVertical(false);
         grid.setHorizontal(true);
-        int horizontal = plotInk(paint(chart));
+        int horizontal = plotInk(chart);
         assertTrue(horizontal > 0);
 
         grid.setVertical(true);
-        assertTrue(plotInk(paint(chart)) > Math.max(vertical, horizontal));
+        assertTrue(plotInk(chart) > Math.max(vertical, horizontal));
     }
 
     @Test
@@ -82,9 +84,9 @@ class LogChartSettingsTest {
         LogChart chart = new LogChart(log, new boolean[log.fieldCount()], grid);
 
         grid.setHorizontalDivisions(2);
-        int few = plotInk(paint(chart));
+        int few = plotInk(chart);
         grid.setHorizontalDivisions(20);
-        assertTrue(plotInk(paint(chart)) > few);
+        assertTrue(plotInk(chart) > few);
     }
 
     @Test
@@ -161,9 +163,9 @@ class LogChartSettingsTest {
         grid.setVerticalMode(ChartSettings.VerticalMode.SAMPLES);
         LogChart chart = new LogChart(log, new boolean[log.fieldCount()], grid);
 
-        assertEquals(0, plotInk(paint(chart)), "too dense at full view: no lines");
+        assertEquals(0, plotInk(chart), "too dense at full view: no lines");
         chart.timeWindow().show(50, 50.05);
-        assertTrue(plotInk(paint(chart)) > 0);
+        assertTrue(plotInk(chart) > 0);
     }
 
     /** Samples one second apart over 0..10 s, about 50 px apart on screen. */

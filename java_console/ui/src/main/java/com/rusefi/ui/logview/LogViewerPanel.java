@@ -32,6 +32,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -40,14 +41,15 @@ import java.util.Locale;
 import static com.rusefi.ui.logview.ThemedStrip.themed;
 
 /**
- * Log viewer: a searchable signal list on the left (click or Space plots a signal; a dot shows its trace
- * colour), the chart with its toolbar on the right, and a status strip below. [tag:console_theme]
+ * Log viewer: a searchable signal list on the left (click or Space adds a signal to the active plot,
+ * Shift+click or Shift+Space to a new plot; a dot shows its trace colour), the stacked plots with their
+ * toolbar on the right, and a status strip below. [tag:console_theme]
  */
 public final class LogViewerPanel extends JPanel {
     private static final int SIDEBAR_WIDTH = 280;
 
     private final CsvLogReader log;
-    private final TraceColors colors;
+    private final PlotLayout layout;
     private final ChartSettings settings;
     private final DefaultListModel<Integer> visibleFields = new DefaultListModel<>();
     private final JList<Integer> fieldList = new JList<Integer>(visibleFields) {
@@ -60,7 +62,10 @@ public final class LogViewerPanel extends JPanel {
             int field = visibleFields.get(index);
             String unit = log.unit(field);
             String name = log.name(field) + (unit.isEmpty() ? "" : " (" + unit + ")");
-            return name + (colors.isPlotted(field) ? " · click to remove" : " · click to plot");
+            if (layout.isPlotted(field)) {
+                return name + " · in " + plotName(layout.plotOf(field)) + " · click to remove";
+            }
+            return name + " · click to add to " + plotName(layout.activePlot()) + " · Shift+click: new plot";
         }
 
         // Always fit the sidebar: a long name is shortened with "…" instead of pushing units under the scrollbar.
@@ -96,8 +101,12 @@ public final class LogViewerPanel extends JPanel {
             initial[field] = name.equalsIgnoreCase("RPM") || name.equalsIgnoreCase("MAP")
                     || name.equalsIgnoreCase("TPS");
         }
-        colors = TraceColors.plotted(log.fieldCount(), initial);
-        chart = new LogChart(log, colors, settings);
+        layout = PlotLayout.single(log.fieldCount(), initial);
+        chart = new LogChart(log, layout, settings);
+        layout.addListener(() -> {
+            fieldList.repaint();
+            updatePlottedLabel();
+        });
         statusBar = new LogStatusBar(fileName, log);
         chart.setViewListener(() -> statusBar.update(chart.timeWindow(), chart.cursorTime()));
 
@@ -163,7 +172,11 @@ public final class LogViewerPanel extends JPanel {
             public void mouseClicked(MouseEvent event) {
                 int index = fieldList.locationToIndex(event.getPoint());
                 if (index >= 0 && fieldList.getCellBounds(index, index).contains(event.getPoint())) {
-                    toggle(visibleFields.get(index));
+                    if (event.isShiftDown()) {
+                        addToNewPlot(visibleFields.get(index));
+                    } else {
+                        toggle(visibleFields.get(index));
+                    }
                 }
             }
         });
@@ -174,6 +187,16 @@ public final class LogViewerPanel extends JPanel {
                 Integer field = fieldList.getSelectedValue();
                 if (field != null) {
                     toggle(field);
+                }
+            }
+        });
+        fieldList.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, InputEvent.SHIFT_DOWN_MASK), "plotInNewPlot");
+        fieldList.getActionMap().put("plotInNewPlot", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                Integer field = fieldList.getSelectedValue();
+                if (field != null) {
+                    addToNewPlot(field);
                 }
             }
         });
@@ -205,19 +228,24 @@ public final class LogViewerPanel extends JPanel {
         return plottedLabel;
     }
 
+    /** Removes a plotted signal, otherwise adds it to the active plot. */
     void toggle(int field) {
-        colors.toggle(field);
-        int index = visibleFields.indexOf(field);
-        if (index >= 0) {
-            fieldList.repaint(fieldList.getCellBounds(index, index));
-        }
-        updatePlottedLabel();
-        chart.repaint();
+        layout.toggle(field);
+    }
+
+    /** Adds an unplotted signal to a new plot (Shift+click). */
+    void addToNewPlot(int field) {
+        layout.addToNewPlot(field);
+    }
+
+    private static String plotName(int plot) {
+        return "plot " + (plot + 1);
     }
 
     private void updatePlottedLabel() {
-        int count = colors.plottedCount();
-        plottedLabel.setText(count == 0 ? "none plotted" : count + " plotted");
+        int count = layout.plottedCount();
+        String text = count == 0 ? "none plotted" : count + " plotted";
+        plottedLabel.setText(layout.plotCount() > 1 ? text + " · " + layout.plotCount() + " plots" : text);
     }
 
     /** Plotted signals first, then the rest, both in log order. Time (field 0) is the x axis, not a signal. */
@@ -225,12 +253,12 @@ public final class LogViewerPanel extends JPanel {
         String needle = query.trim().toLowerCase(Locale.ROOT);
         visibleFields.clear();
         for (int field = 1; field < log.fieldCount(); field++) {
-            if (colors.isPlotted(field) && log.name(field).toLowerCase(Locale.ROOT).contains(needle)) {
+            if (layout.isPlotted(field) && log.name(field).toLowerCase(Locale.ROOT).contains(needle)) {
                 visibleFields.addElement(field);
             }
         }
         for (int field = 1; field < log.fieldCount(); field++) {
-            if (!colors.isPlotted(field) && log.name(field).toLowerCase(Locale.ROOT).contains(needle)) {
+            if (!layout.isPlotted(field) && log.name(field).toLowerCase(Locale.ROOT).contains(needle)) {
                 visibleFields.addElement(field);
             }
         }
@@ -335,9 +363,9 @@ public final class LogViewerPanel extends JPanel {
         public Component getListCellRendererComponent(JList<? extends Integer> list, Integer field,
                                                       int index, boolean selected, boolean focused) {
             Color muted = themed("Console.LogViewer.mutedForeground", Color.GRAY);
-            boolean plotted = colors.isPlotted(field);
+            boolean plotted = layout.isPlotted(field);
             if (plotted) {
-                Color trace = chart.palette().trace(colors.slot(field));
+                Color trace = chart.palette().trace(layout.colors().slot(field));
                 // a darker outline keeps pale dark-plot colours visible on the light list
                 dot.set(trace, trace.darker());
             } else {

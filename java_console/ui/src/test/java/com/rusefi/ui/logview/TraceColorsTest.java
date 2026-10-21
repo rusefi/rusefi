@@ -8,8 +8,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TraceColorsTest {
     @Test
-    void initialSelectionGetsSlotsInFieldOrder() {
-        TraceColors colors = TraceColors.plotted(6, new boolean[]{false, true, false, true, true, false});
+    void slotsFollowPlottingOrder() {
+        TraceColors colors = new TraceColors(6);
+        colors.plot(1);
+        colors.plot(3);
+        colors.plot(4);
         assertEquals(0, colors.slot(1));
         assertEquals(1, colors.slot(3));
         assertEquals(2, colors.slot(4));

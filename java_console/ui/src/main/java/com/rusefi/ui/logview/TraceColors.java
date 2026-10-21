@@ -15,17 +15,6 @@ final class TraceColors {
         Arrays.fill(slots, NONE);
     }
 
-    /** Plots the given fields in order, e.g. the initial selection. */
-    static TraceColors plotted(int fieldCount, boolean[] displayed) {
-        TraceColors colors = new TraceColors(fieldCount);
-        for (int field = 0; field < displayed.length; field++) {
-            if (displayed[field]) {
-                colors.plot(field);
-            }
-        }
-        return colors;
-    }
-
     int fieldCount() {
         return slots.length;
     }

@@ -99,6 +99,7 @@ class PlotPaletteTest {
         assertColor(theme, prefix + "hint", palette.hint);
         assertColor(theme, prefix + "cursor", palette.cursor);
         assertColor(theme, prefix + "selection", palette.selection);
+        assertColor(theme, prefix + "accent", palette.accent);
         for (int i = 0; i < PlotPalette.TRACE_COUNT; i++) {
             assertColor(theme, prefix + "trace" + (i + 1), palette.trace(i));
         }

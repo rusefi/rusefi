@@ -4,12 +4,16 @@ import com.rusefi.logview.CsvLogReader;
 import com.rusefi.ui.widgets.ConsoleFonts;
 
 import javax.swing.JComponent;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import java.awt.BasicStroke;
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -22,7 +26,9 @@ import java.util.Locale;
 import static com.rusefi.config.generated.VariableRegistryValues.GAUGE_NAME_TIME;
 
 /**
- * Time plot for the fields plotted in the companion list, each in its {@link TraceColors} slot colour.
+ * Stacked time plots from a {@link PlotLayout}, sharing one time axis, zoom, range selection and cursor.
+ * Each plot has a header with its legend (hover a legend item for x to remove it) and a ⋯ menu; the row
+ * below the time axis adds a plot. Clicking a plot makes it active, so new signals go there.
  * Wheel zooms around the pointer, drag selects a range to zoom into, right-drag or Shift+wheel pans,
  * double-click shows the whole log.
  */
@@ -34,35 +40,81 @@ final class LogChart extends JComponent {
     /** A drag shorter than this many pixels is a click, not a range selection. */
     static final int MIN_SELECTION_PIXELS = 5;
 
+    private static final int LEFT = 54;
+    private static final int RIGHT_MARGIN = 22;
+    private static final int TOP = 8;
+    private static final int AXIS_HEIGHT = 46;
+    private static final int ADD_ROW_HEIGHT = 30;
+    private static final int PLOT_GAP = 10;
+    private static final int LEGEND_LINE = 19;
+    private static final int HEADER_PADDING = 8;
+    private static final int MENU_WIDTH = 24;
+    private static final int CLOSE_WIDTH = 14;
+    private static final int MIN_TRACE_HEIGHT = 20;
+
     private final CsvLogReader log;
-    private final TraceColors colors;
+    private final PlotLayout layout;
     private final TimeWindow window;
     private final ChartSettings grid;
     private int cursorSample = -1;
     private int cursorX = -1;
-    // Plot rectangle from the last paint, used to map mouse positions to time.
-    private int plotLeft = 54;
-    private int plotRight = 55;
-    private int plotTop = 68;
-    private int plotBottom = 69;
+    // Geometry from the last paint, used to map mouse positions to time, plots and controls.
+    private int plotLeft = LEFT;
+    private int plotRight = LEFT + 1;
+    private List<Band> bands = new ArrayList<>();
+    private Rectangle addPlotRow = new Rectangle();
     private int selectionFrom = -1;
     private int selectionTo = -1;
     private int panFromX = -1;
     private double panFromStart;
+    private int hoveredField = -1;
+    private int hoveredMenu = -1;
     private Runnable viewListener = () -> {
     };
+
+    /** One plot's area: legend header on top, traces below. */
+    static final class Band {
+        final int plot;
+        final Rectangle header;
+        final Rectangle traces;
+        final Rectangle menu;
+        final List<LegendItem> legend = new ArrayList<>();
+
+        Band(int plot, Rectangle header, Rectangle traces, Rectangle menu) {
+            this.plot = plot;
+            this.header = header;
+            this.traces = traces;
+            this.menu = menu;
+        }
+    }
+
+    static final class LegendItem {
+        final int field;
+        final Rectangle bounds;
+        final Rectangle close;
+        final int nameWidth;
+        final int valueWidth;
+
+        LegendItem(int field, Rectangle bounds, Rectangle close, int nameWidth, int valueWidth) {
+            this.field = field;
+            this.bounds = bounds;
+            this.close = close;
+            this.nameWidth = nameWidth;
+            this.valueWidth = valueWidth;
+        }
+    }
 
     LogChart(CsvLogReader log, boolean[] displayed) {
         this(log, displayed, new ChartSettings());
     }
 
     LogChart(CsvLogReader log, boolean[] displayed, ChartSettings grid) {
-        this(log, TraceColors.plotted(log.fieldCount(), displayed), grid);
+        this(log, PlotLayout.single(log.fieldCount(), displayed), grid);
     }
 
-    LogChart(CsvLogReader log, TraceColors colors, ChartSettings grid) {
+    LogChart(CsvLogReader log, PlotLayout layout, ChartSettings grid) {
         this.log = log;
-        this.colors = colors;
+        this.layout = layout;
         this.grid = grid;
         double fullStart = log.minimum(0);
         double fullEnd = log.maximum(0);
@@ -74,10 +126,15 @@ final class LogChart extends JComponent {
         addMouseListener(mouse);
         addMouseMotionListener(mouse);
         addMouseWheelListener(mouse);
+        layout.addListener(this::repaint);
     }
 
     TimeWindow timeWindow() {
         return window;
+    }
+
+    PlotLayout plotLayout() {
+        return layout;
     }
 
     PlotPalette palette() {
@@ -89,12 +146,21 @@ final class LogChart extends JComponent {
         this.viewListener = viewListener;
     }
 
-    /** Time under the cursor line, or NaN when the pointer is outside the plot. */
+    /** Time under the cursor line, or NaN when the pointer is outside the plots. */
     double cursorTime() {
         if (cursorSample < 0) {
             return Double.NaN;
         }
         return grid.isSnapCursor() ? log.value(cursorSample, 0) : timeAt(cursorX);
+    }
+
+    /** Plot areas from the last paint, top to bottom. */
+    List<Band> bands() {
+        return bands;
+    }
+
+    Rectangle addPlotRow() {
+        return addPlotRow;
     }
 
     private double timeAt(int x) {
@@ -110,12 +176,62 @@ final class LogChart extends JComponent {
         return x >= plotLeft && x <= plotRight;
     }
 
+    private Band bandAt(int x, int y) {
+        for (Band band : bands) {
+            if (band.header.contains(x, y) || band.traces.contains(x, y)) {
+                return band;
+            }
+        }
+        return null;
+    }
+
+    private LegendItem legendAt(int x, int y) {
+        for (Band band : bands) {
+            for (LegendItem item : band.legend) {
+                if (item.bounds.contains(x, y)) {
+                    return item;
+                }
+            }
+        }
+        return null;
+    }
+
+    private boolean onControl(int x, int y) {
+        Band band = bandAt(x, y);
+        return addPlotRow.contains(x, y) || legendAt(x, y) != null || (band != null && band.menu.contains(x, y));
+    }
+
+    /** Menu behind a plot's ⋯ button. */
+    JPopupMenu plotMenu(int plot) {
+        JPopupMenu menu = new JPopupMenu();
+        JMenuItem up = new JMenuItem("Move up");
+        up.setEnabled(plot > 0);
+        up.addActionListener(e -> layout.move(plot, -1));
+        JMenuItem down = new JMenuItem("Move down");
+        down.setEnabled(plot < layout.plotCount() - 1);
+        down.addActionListener(e -> layout.move(plot, 1));
+        JMenuItem remove = new JMenuItem("Remove plot");
+        remove.setEnabled(layout.canRemovePlot());
+        remove.addActionListener(e -> layout.removePlot(plot));
+        menu.add(up);
+        menu.add(down);
+        menu.addSeparator();
+        menu.add(remove);
+        return menu;
+    }
+
     private final class MouseHandler extends MouseAdapter {
         @Override
         public void mouseMoved(MouseEvent event) {
             boolean inside = insidePlot(event.getX());
             cursorX = inside ? event.getX() : -1;
             cursorSample = inside ? log.nearestSample(timeAt(event.getX())) : -1;
+            LegendItem item = legendAt(event.getX(), event.getY());
+            hoveredField = item != null ? item.field : -1;
+            Band band = bandAt(event.getX(), event.getY());
+            hoveredMenu = band != null && band.menu.contains(event.getX(), event.getY()) ? band.plot : -1;
+            setCursor(onControl(event.getX(), event.getY())
+                    ? Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) : Cursor.getDefaultCursor());
             repaint();
             viewListener.run();
         }
@@ -124,6 +240,7 @@ final class LogChart extends JComponent {
         public void mouseExited(MouseEvent event) {
             if (selectionFrom < 0 && panFromX < 0) {
                 cursorX = cursorSample = -1;
+                hoveredField = hoveredMenu = -1;
                 repaint();
                 viewListener.run();
             }
@@ -131,10 +248,31 @@ final class LogChart extends JComponent {
 
         @Override
         public void mousePressed(MouseEvent event) {
-            if (SwingUtilities.isLeftMouseButton(event) && insidePlot(event.getX())) {
-                selectionFrom = selectionTo = event.getX();
+            int x = event.getX();
+            int y = event.getY();
+            if (SwingUtilities.isLeftMouseButton(event)) {
+                if (addPlotRow.contains(x, y)) {
+                    layout.addPlot();
+                    return;
+                }
+                LegendItem item = legendAt(x, y);
+                if (item != null && item.close.contains(x, y)) {
+                    layout.remove(item.field);
+                    hoveredField = -1;
+                    return;
+                }
+                Band band = bandAt(x, y);
+                if (band == null) {
+                    return;
+                }
+                layout.setActive(band.plot);
+                if (band.menu.contains(x, y)) {
+                    plotMenu(band.plot).show(LogChart.this, band.menu.x, band.menu.y + band.menu.height);
+                } else if (band.traces.contains(x, y) && insidePlot(x)) {
+                    selectionFrom = selectionTo = x;
+                }
             } else if (SwingUtilities.isRightMouseButton(event) || SwingUtilities.isMiddleMouseButton(event)) {
-                panFromX = event.getX();
+                panFromX = x;
                 panFromStart = window.start();
             }
         }
@@ -163,7 +301,8 @@ final class LogChart extends JComponent {
 
         @Override
         public void mouseClicked(MouseEvent event) {
-            if (SwingUtilities.isLeftMouseButton(event) && event.getClickCount() == 2) {
+            if (SwingUtilities.isLeftMouseButton(event) && event.getClickCount() == 2
+                    && !onControl(event.getX(), event.getY())) {
                 window.reset();
                 repaint();
                 viewListener.run();
@@ -183,6 +322,56 @@ final class LogChart extends JComponent {
         }
     }
 
+    /** Lays out each plot's legend, then splits the height between the plots. */
+    private List<Band> layoutBands(FontMetrics metrics, FontMetrics valueMetrics) {
+        int plots = layout.plotCount();
+        int legendRight = plotRight - MENU_WIDTH - 6;
+        List<List<LegendItem>> legends = new ArrayList<>();
+        List<Integer> lineCounts = new ArrayList<>();
+        for (int plot = 0; plot < plots; plot++) {
+            List<LegendItem> items = new ArrayList<>();
+            int x = plotLeft;
+            int line = 0;
+            for (int field : layout.fields(plot)) {
+                int nameWidth = metrics.stringWidth(log.name(field) + " ");
+                int valueWidth = valueMetrics.stringWidth(legendValue(field, cursorSample));
+                int width = 19 + nameWidth + valueWidth + metrics.stringWidth(unitSuffix(field)) + CLOSE_WIDTH + 10;
+                if (x + width > legendRight && x > plotLeft) {
+                    x = plotLeft;
+                    line++;
+                }
+                // y is relative to the header top until the bands are placed
+                items.add(new LegendItem(field, new Rectangle(x, line * LEGEND_LINE, width, LEGEND_LINE),
+                        new Rectangle(x + width - CLOSE_WIDTH - 8, line * LEGEND_LINE, CLOSE_WIDTH, LEGEND_LINE),
+                        nameWidth, valueWidth));
+                x += width;
+            }
+            legends.add(items);
+            lineCounts.add(line + 1);
+        }
+
+        int bottom = getHeight() - ADD_ROW_HEIGHT - AXIS_HEIGHT;
+        int bandHeight = Math.max(1, (bottom - TOP - PLOT_GAP * (plots - 1)) / plots);
+        List<Band> result = new ArrayList<>();
+        int top = TOP;
+        for (int plot = 0; plot < plots; plot++) {
+            int headerHeight = HEADER_PADDING + lineCounts.get(plot) * LEGEND_LINE;
+            int traceHeight = Math.max(MIN_TRACE_HEIGHT, bandHeight - headerHeight);
+            Rectangle header = new Rectangle(plotLeft, top, plotRight - plotLeft, headerHeight);
+            Rectangle traces = new Rectangle(plotLeft, top + headerHeight, plotRight - plotLeft, traceHeight);
+            Rectangle menu = new Rectangle(plotRight - MENU_WIDTH, top + 2, MENU_WIDTH, LEGEND_LINE);
+            Band band = new Band(plot, header, traces, menu);
+            for (LegendItem item : legends.get(plot)) {
+                item.bounds.translate(0, top + HEADER_PADDING / 2);
+                item.close.translate(0, top + HEADER_PADDING / 2);
+                band.legend.add(item);
+            }
+            result.add(band);
+            top += headerHeight + traceHeight + PLOT_GAP;
+        }
+        return result;
+    }
+
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
@@ -192,133 +381,161 @@ final class LogChart extends JComponent {
             g.setColor(palette.background);
             g.fillRect(0, 0, getWidth(), getHeight());
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            int left = 54;
-            int right = Math.max(left + 1, getWidth() - 22);
             FontMetrics metrics = g.getFontMetrics();
             // Fixed-width digits so legend values do not jitter as the cursor moves.
             Font valueFont = ConsoleFonts.mono(Font.PLAIN, g.getFont().getSize());
             FontMetrics valueMetrics = g.getFontMetrics(valueFont);
+            plotLeft = LEFT;
+            plotRight = Math.max(LEFT + 1, getWidth() - RIGHT_MARGIN);
+            bands = layoutBands(metrics, valueMetrics);
+            Band last = bands.get(bands.size() - 1);
+            int axisTop = last.traces.y + last.traces.height;
+            addPlotRow = new Rectangle(plotLeft, axisTop + AXIS_HEIGHT, plotRight - plotLeft, ADD_ROW_HEIGHT - 6);
 
-            List<Integer> signals = selectedSignals();
-            int legendX = left;
-            int legendY = 26;
-            for (int index = 0; index < signals.size(); index++) {
-                int field = signals.get(index);
-                String name = log.name(field) + " ";
-                String value = legendValue(field, cursorSample);
-                String unit = log.unit(field).isEmpty() ? "" : " " + log.unit(field);
-                int nameWidth = metrics.stringWidth(name);
-                int valueWidth = valueMetrics.stringWidth(value);
-                int width = 19 + nameWidth + valueWidth + metrics.stringWidth(unit) + 13;
-                if (legendX + width > right && legendX > left) {
-                    legendX = left;
-                    legendY += 19;
-                }
-                g.setColor(palette.trace(colors.slot(field)));
-                g.fillRoundRect(legendX, legendY - 10, 13, 5, 4, 4);
-                g.setColor(palette.label);
-                g.drawString(name, legendX + 19, legendY);
-                g.setFont(valueFont);
-                g.drawString(value, legendX + 19 + nameWidth, legendY);
-                g.setFont(metrics.getFont());
-                g.drawString(unit, legendX + 19 + nameWidth + valueWidth, legendY);
-                legendX += width;
+            List<Double> sampleTimes = grid.isVertical() && grid.getVerticalMode() == ChartSettings.VerticalMode.SAMPLES
+                    ? sampleGridTimes() : null;
+            for (Band band : bands) {
+                paintBand(g, band, palette, metrics, valueFont, sampleTimes);
             }
-            int top = Math.max(46, legendY + 20);
-            int bottom = Math.max(top + 1, getHeight() - 46);
-            plotLeft = left;
-            plotRight = right;
-            plotTop = top;
-            plotBottom = bottom;
-
-            if (grid.isHorizontal()) {
-                // Traces are scaled independently, so these lines mark fractions of each trace's range.
-                g.setColor(palette.grid);
-                int divisions = grid.getHorizontalDivisions();
-                for (int i = 0; i <= divisions; i++) {
-                    int y = top + (bottom - top) * i / divisions;
-                    g.drawLine(left, y, right, y);
-                }
-            }
-            drawTimeAxis(g, metrics, palette);
-            if (signals.isEmpty()) {
-                g.setColor(palette.hint);
-                g.drawString("Click a signal on the left to plot it", left + 20, top + 30);
-                return;
-            }
-
-            Graphics2D plot = (Graphics2D) g.create();
-            try {
-                plot.clipRect(left, top - 1, right - left + 1, bottom - top + 3);
-                plot.setStroke(new BasicStroke(palette.strokeWidth));
-                for (int field : signals) {
-                    plot.setColor(palette.trace(colors.slot(field)));
-                    plot.draw(tracePath(field));
-                }
-                if (selectionFrom >= 0 && selectionTo != selectionFrom) {
-                    plot.setColor(palette.selection);
-                    plot.fillRect(Math.min(selectionFrom, selectionTo), top, Math.abs(selectionTo - selectionFrom), bottom - top);
-                }
-                int cursorLine = cursorLineX();
-                if (cursorLine >= 0) {
-                    plot.setColor(palette.cursor);
-                    plot.setStroke(new BasicStroke(1));
-                    plot.drawLine(cursorLine, top, cursorLine, bottom);
-                }
-                if (cursorLine >= 0 && !grid.isSnapCursor()) {
-                    // The line no longer sits on the sample being read, so mark that sample on each trace.
-                    int sampleX = xOf(log.value(cursorSample, 0));
-                    for (int field : signals) {
-                        double value = log.value(cursorSample, field);
-                        if (Double.isFinite(value)) {
-                            int y = (int) Math.round(yOf(field, value));
-                            plot.setColor(palette.trace(colors.slot(field)));
-                            plot.fillOval(sampleX - 3, y - 3, 7, 7);
-                        }
-                    }
-                }
-            } finally {
-                plot.dispose();
-            }
+            drawTimeAxis(g, metrics, palette, axisTop, sampleTimes);
+            drawAddPlotRow(g, metrics, palette);
         } finally {
             g.dispose();
         }
     }
 
-    private void drawTimeAxis(Graphics2D g, FontMetrics metrics, PlotPalette palette) {
-        boolean tickLines = grid.isVertical() && grid.getVerticalMode() == ChartSettings.VerticalMode.TIME_TICKS;
-        boolean sampleLines = grid.isVertical() && grid.getVerticalMode() == ChartSettings.VerticalMode.SAMPLES;
-        List<Double> sampleTimes = sampleLines ? sampleGridTimes() : null;
-        if (sampleTimes != null) {
+    private void paintBand(Graphics2D g, Band band, PlotPalette palette, FontMetrics metrics, Font valueFont,
+                           List<Double> sampleTimes) {
+        Rectangle area = band.traces;
+        boolean stacked = layout.plotCount() > 1;
+        if (band.plot > 0) {
             g.setColor(palette.grid);
+            int y = band.header.y - PLOT_GAP / 2;
+            g.drawLine(plotLeft, y, plotRight, y);
+        }
+        if (stacked && band.plot == layout.activePlot()) {
+            g.setColor(palette.accent);
+            g.fillRoundRect(plotLeft - 12, band.header.y, 3, area.y + area.height - band.header.y, 3, 3);
+        }
+
+        for (LegendItem item : band.legend) {
+            int baseline = item.bounds.y + 14;
+            int x = item.bounds.x;
+            g.setColor(palette.trace(layout.colors().slot(item.field)));
+            g.fillRoundRect(x, baseline - 10, 13, 5, 4, 4);
+            g.setColor(palette.label);
+            g.drawString(log.name(item.field) + " ", x + 19, baseline);
+            g.setFont(valueFont);
+            g.drawString(legendValue(item.field, cursorSample), x + 19 + item.nameWidth, baseline);
+            g.setFont(metrics.getFont());
+            g.drawString(unitSuffix(item.field), x + 19 + item.nameWidth + item.valueWidth, baseline);
+            if (item.field == hoveredField) {
+                g.setColor(palette.hint);
+                g.drawString("×", item.close.x + (item.close.width - metrics.stringWidth("×")) / 2, baseline);
+            }
+        }
+        // ⋯ menu button: three dots, darker while hovered
+        g.setColor(band.plot == hoveredMenu ? palette.label : palette.hint);
+        int dotsX = band.menu.x + band.menu.width / 2 - 7;
+        int dotsY = band.menu.y + band.menu.height / 2 - 1;
+        for (int dot = 0; dot < 3; dot++) {
+            g.fillOval(dotsX + dot * 6, dotsY, 3, 3);
+        }
+
+        if (grid.isHorizontal()) {
+            // Traces are scaled independently, so these lines mark fractions of each trace's range.
+            g.setColor(palette.grid);
+            int divisions = grid.getHorizontalDivisions();
+            for (int i = 0; i <= divisions; i++) {
+                int y = area.y + area.height * i / divisions;
+                g.drawLine(plotLeft, y, plotRight, y);
+            }
+        }
+        g.setColor(palette.grid);
+        if (sampleTimes != null) {
             for (double time : sampleTimes) {
                 int x = xOf(time);
-                g.drawLine(x, plotTop, x, plotBottom);
+                g.drawLine(x, area.y, x, area.y + area.height);
+            }
+        } else if (grid.isVertical() && grid.getVerticalMode() == ChartSettings.VerticalMode.TIME_TICKS) {
+            for (double time : timeTicks()) {
+                int x = xOf(time);
+                g.drawLine(x, area.y, x, area.y + area.height);
             }
         }
-        double step = timeTickStep();
-        int decimals = Math.max(0, Math.min(6, (int) -Math.floor(Math.log10(step))));
-        long lastTick = (long) Math.floor(window.end() / step + 1e-6);
-        for (long tick = (long) Math.ceil(window.start() / step - 1e-6); tick <= lastTick; tick++) {
-            double time = tick * step;
-            int x = xOf(time);
-            if (tickLines) {
-                g.setColor(palette.grid);
-                g.drawLine(x, plotTop, x, plotBottom);
+
+        List<Integer> fields = layout.fields(band.plot);
+        if (fields.isEmpty()) {
+            g.setColor(palette.hint);
+            String hint = band.plot == layout.activePlot() || !stacked
+                    ? "Click a signal on the left to add it here"
+                    : "Click this plot, then a signal on the left";
+            g.drawString(hint, plotLeft + 20, area.y + Math.min(30, area.height - 4));
+        }
+
+        Graphics2D plot = (Graphics2D) g.create();
+        try {
+            plot.clipRect(area.x, area.y - 1, area.width + 1, area.height + 3);
+            plot.setStroke(new BasicStroke(palette.strokeWidth));
+            for (int field : fields) {
+                plot.setColor(palette.trace(layout.colors().slot(field)));
+                plot.draw(tracePath(field));
             }
-            String text = String.format(Locale.ROOT, "%." + decimals + "f", time);
-            g.setColor(palette.label);
-            g.drawString(text, x - metrics.stringWidth(text) / 2, plotBottom + 19);
+            if (selectionFrom >= 0 && selectionTo != selectionFrom) {
+                plot.setColor(palette.selection);
+                plot.fillRect(Math.min(selectionFrom, selectionTo), area.y, Math.abs(selectionTo - selectionFrom), area.height);
+            }
+            int cursorLine = cursorLineX();
+            if (cursorLine >= 0) {
+                plot.setColor(palette.cursor);
+                plot.setStroke(new BasicStroke(1));
+                plot.drawLine(cursorLine, area.y, cursorLine, area.y + area.height);
+            }
+            if (cursorLine >= 0 && !grid.isSnapCursor()) {
+                // The line no longer sits on the sample being read, so mark that sample on each trace.
+                int sampleX = xOf(log.value(cursorSample, 0));
+                for (int field : fields) {
+                    double value = log.value(cursorSample, field);
+                    if (Double.isFinite(value)) {
+                        int y = (int) Math.round(yOf(field, value, area));
+                        plot.setColor(palette.trace(layout.colors().slot(field)));
+                        plot.fillOval(sampleX - 3, y - 3, 7, 7);
+                    }
+                }
+            }
+        } finally {
+            plot.dispose();
         }
-        String timeLabel = GAUGE_NAME_TIME + " (s)";
-        if (sampleLines && sampleTimes == null) {
-            timeLabel += "  ·  zoom in to see sample lines";
-        }
-        g.setColor(palette.label);
-        g.drawString(timeLabel, (plotLeft + plotRight - metrics.stringWidth(timeLabel)) / 2, plotBottom + 37);
     }
 
-    /** Screen x of the cursor line, or -1 when the pointer is outside the plot. */
+    private void drawTimeAxis(Graphics2D g, FontMetrics metrics, PlotPalette palette, int axisTop, List<Double> sampleTimes) {
+        double step = timeTickStep();
+        int decimals = Math.max(0, Math.min(6, (int) -Math.floor(Math.log10(step))));
+        g.setColor(palette.label);
+        for (double time : timeTicks()) {
+            String text = String.format(Locale.ROOT, "%." + decimals + "f", time);
+            g.drawString(text, xOf(time) - metrics.stringWidth(text) / 2, axisTop + 19);
+        }
+        String timeLabel = GAUGE_NAME_TIME + " (s)";
+        if (grid.isVertical() && grid.getVerticalMode() == ChartSettings.VerticalMode.SAMPLES && sampleTimes == null) {
+            timeLabel += "  ·  zoom in to see sample lines";
+        }
+        g.drawString(timeLabel, (plotLeft + plotRight - metrics.stringWidth(timeLabel)) / 2, axisTop + 37);
+    }
+
+    private void drawAddPlotRow(Graphics2D g, FontMetrics metrics, PlotPalette palette) {
+        Rectangle row = addPlotRow;
+        g.setColor(palette.grid);
+        g.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 1, new float[]{4, 4}, 0));
+        g.drawRoundRect(row.x, row.y, row.width, row.height, 8, 8);
+        g.setStroke(new BasicStroke(1));
+        String text = layout.canAddPlot() ? "+  Add plot" : "Maximum of " + PlotLayout.MAX_PLOTS + " plots";
+        g.setColor(palette.hint);
+        g.drawString(text, row.x + (row.width - metrics.stringWidth(text)) / 2,
+                row.y + (row.height + metrics.getAscent() - metrics.getDescent()) / 2);
+    }
+
+    /** Screen x of the cursor line, or -1 when the pointer is outside the plots. */
     int cursorLineX() {
         if (cursorSample < 0) {
             return -1;
@@ -326,16 +543,26 @@ final class LogChart extends JComponent {
         return grid.isSnapCursor() ? xOf(log.value(cursorSample, 0)) : cursorX;
     }
 
-    /** Screen y of {@code value}; each field is scaled to its own whole-log range. */
-    private double yOf(int field, double value) {
+    /** Screen y of {@code value} inside {@code area}; each field is scaled to its own whole-log range. */
+    private double yOf(int field, double value, Rectangle area) {
         double min = log.minimum(field);
         double range = log.maximum(field) - min;
-        return plotTop + (1 - (range == 0 ? 0.5 : (value - min) / range)) * (plotBottom - plotTop);
+        return area.y + (1 - (range == 0 ? 0.5 : (value - min) / range)) * area.height;
     }
 
     /** Seconds between time-axis ticks, chosen so ticks are roughly the configured spacing apart. */
     double timeTickStep() {
         return niceStep(window.span() / Math.max(2, (plotRight - plotLeft) / (double) grid.getTimeSpacing()));
+    }
+
+    private List<Double> timeTicks() {
+        double step = timeTickStep();
+        List<Double> ticks = new ArrayList<>();
+        long lastTick = (long) Math.floor(window.end() / step + 1e-6);
+        for (long tick = (long) Math.ceil(window.start() / step - 1e-6); tick <= lastTick; tick++) {
+            ticks.add(tick * step);
+        }
+        return ticks;
     }
 
     /**
@@ -372,16 +599,17 @@ final class LogChart extends JComponent {
     }
 
     /**
-     * Line through the visible samples of {@code field}, plus one sample beyond each edge.
+     * Line through the visible samples of {@code field} in its plot, plus one sample beyond each edge.
      * Samples landing in the same pixel column collapse to a vertical min/max stroke, so the
      * path size depends on the plot width rather than on the number of samples.
      */
     Path2D tracePath(int field) {
         Path2D path = new Path2D.Double();
-        double min = log.minimum(field);
-        if (!Double.isFinite(min)) {
+        int plot = layout.plotOf(field);
+        if (!Double.isFinite(log.minimum(field)) || plot < 0 || plot >= bands.size()) {
             return path;
         }
+        Rectangle area = bands.get(plot).traces;
         int first = Math.max(0, log.firstSampleAtOrAfter(window.start()) - 1);
         int last = Math.min(log.sampleCount() - 1, log.firstSampleAtOrAfter(window.end()));
         double scale = (plotRight - plotLeft) / window.span();
@@ -393,7 +621,7 @@ final class LogChart extends JComponent {
                 continue;
             }
             double x = plotLeft + (log.value(sample, 0) - window.start()) * scale;
-            column.add(x, yOf(field, value));
+            column.add(x, yOf(field, value, area));
         }
         column.flush();
         return path;
@@ -452,14 +680,8 @@ final class LogChart extends JComponent {
         }
     }
 
-    private List<Integer> selectedSignals() {
-        List<Integer> result = new ArrayList<>();
-        for (int field = 1; field < colors.fieldCount(); field++) {
-            if (colors.isPlotted(field)) {
-                result.add(field);
-            }
-        }
-        return result;
+    private String unitSuffix(int field) {
+        return log.unit(field).isEmpty() ? "" : " " + log.unit(field);
     }
 
     /** Value at the cursor sample, or the whole-log range when there is no cursor. */
