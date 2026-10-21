@@ -1,8 +1,8 @@
 # Small open issues an LLM can handle
 
-**23 bounded implementation or documentation tasks and 8 test-only tasks** form this shortlist. Begin with #8688, #10433, #7255, #7909 and #8826; their current source gives a particularly clear starting point. The final two UI shortcuts require one small UX clarification and are not ready to implement from the title alone.
+**23 bounded implementation or documentation tasks and 5 test-only tasks** form this shortlist. Begin with #8688, #10433, #7255, #7909 and #8826; their current source gives a particularly clear starting point. The final two UI shortcuts require one small UX clarification and are not ready to implement from the title alone.
 
-Snapshot: 21 October 2026. The live [GitHub issue inventory](https://github.com/rusefi/rusefi/issues) contained **1,290 open issues and 2,510 comments**, with no pull requests included. REST and GraphQL issue IDs matched, and every exported comment count matched GitHub REST. Source baseline: [master `e162a070d308`](https://github.com/rusefi/rusefi/commit/e162a070d3085babe783c2058b3846327c8dc788), which matched GitHub master when checked.
+Snapshot: 21 October 2026. The live [GitHub issue inventory](https://github.com/rusefi/rusefi/issues) contained **1,269 open issues and 2,488 comments**, with no pull requests included. REST and GraphQL issue IDs matched, and every exported comment count matched GitHub REST. Source baseline: [master `cd0baa77ae8d`](https://github.com/rusefi/rusefi/commit/cd0baa77ae8dfae395c8ae1b386f1a83c5aa24b7), which matched GitHub master when checked.
 
 Selection favors a clear local change and a specific way to verify it. S means one focused component; M means multiple layers or a larger test seam. These are scope estimates, not elapsed-time promises. The issue must still reproduce against the current branch before a change is made. Tickets that appear already delivered belong in the [closure report](open-issue-closure-review.md).
 
@@ -41,14 +41,11 @@ Selection favors a clear local change and a specific way to verify it. S means o
 
 ## Test only tasks
 
-These overlap the [coverage-only report](coverage-only-issues.md). They can be delivered without changing production behavior; a discovered bug becomes a separate follow-up after the reproduction is preserved.
+These overlap the [coverage-only report](coverage-only-issues.md). They can be delivered without changing production behavior; a discovered bug becomes a separate follow-up after the reproduction is preserved. The completed #3329, #7184 and #4258 requests are excluded; their tests are listed in the coverage report.
 
 | Issue | Size | Task | Scope |
 | --- | --- | --- | --- |
 | [#8371 Real trigger tests: check that RPM stays above 0 after first RPM](https://github.com/rusefi/rusefi/issues/8371) | S | RPM continuity after synchronization | Use the opt-in helper change and deliberate dropout case described in the coverage report. |
-| [#3329 We need coverage for 3328](https://github.com/rusefi/rusefi/issues/3329) | S | Named MAP preset conversion | Assert known volts to kPa through a real subscription/converter, not a mocked pressure. |
-| [#7184 Target AFR blend feature test coverage](https://github.com/rusefi/rusefi/issues/7184) | S | Real target Lambda blend arithmetic | Test the actual target lookup with neutral, endpoint and intermediate bias values. |
-| [#4258 unit test around fix closed loop fueling if post cranking fuel taper not enabled #4254](https://github.com/rusefi/rusefi/issues/4258) | M | Cranking clock with enrichment disabled | Exercise the clock producer plus STFT startup gate across the real transition. |
 | [#3306 unit test for IAC H-Bridge Microstepping](https://github.com/rusefi/rusefi/issues/3306) | M | Fractional H-bridge stepping | Extend the existing full-step host seam to fractional phase duty sequences. |
 | [#7989 test coverage for console closes if we have non-rusEFI serial ports](https://github.com/rusefi/rusefi/issues/7989) | M | Non-rusEFI serial discovery | Use fake streams and an explicit no-process-exit/recovery assertion. |
 | [#3322 Unit test help for Fix cranking->idling taper phase for useSeparate*ForIdle tables #3168](https://github.com/rusefi/rusefi/issues/3322) | M | Separate idle tables during taper | Integrate phase detection with real VE/advance table selection after settling expected semantics. |
