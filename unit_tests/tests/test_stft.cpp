@@ -165,6 +165,99 @@ TEST(ClosedLoopFuel, StateBasedRegionMapping) {
 
 namespace {
 
+// #4258 / #4254: the startup timer must advance even when post-cranking
+// enrichment is disabled. Exercise its producer and STFT together through
+// the engine callback, without assigning timeSinceCrankingInSecs in the test.
+void checkClosedLoopStartup(float postCrankingFactor, float expectedCorrection) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	auto& stft = engine->module<ShortTermFuelTrim>().unmock();
+	engineConfiguration->cranking.rpm = 500;
+	engineConfiguration->fuelClosedLoopCorrectionEnabled = true;
+	engineConfiguration->isTuningDetectorEnabled = false;
+	engineConfiguration->useEngineStateMachine = false;
+	engineConfiguration->coastingFuelCutEnabled = false;
+	engineConfiguration->noFuelTrimAfterAccelTime = 0;
+	engineConfiguration->stftIgnoreErrorMagnitude = false;
+	auto& cfg = engineConfiguration->stft;
+	cfg.startupDelay = 10;
+	cfg.minClt = 60;
+	cfg.minAfr = 10;
+	cfg.maxAfr = 18;
+	cfg.deadband = 1;
+	for (auto& cell : cfg.cellCfgs) {
+		cell.maxAdd = 10;
+		cell.maxRemove = 10;
+		cell.timeConstant = 0.1f;
+	}
+	stft.init(&cfg);
+	setTable(config->lambdaTable, 1);
+	setTable(config->postCrankingFactor, postCrankingFactor);
+	Sensor::setMockValue(SensorType::Clt, 80);
+	Sensor::setMockValue(SensorType::Lambda1, 1.1f);
+	Sensor::setMockValue(SensorType::Lambda2, 0.9f);
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
+		.WillRepeatedly(Return(AirmassResult{0.6f, 50}));
+
+	auto advance = [&](float milliseconds) {
+		eth.moveTimeForwardMs(milliseconds);
+		engine->periodicFastCallback();
+		EXPECT_FLOAT_EQ(expectedCorrection, engine->fuelComputer.running.postCrankingFuelCorrection);
+	};
+	auto expectDisabled = [&](stft_state_e reason) {
+		EXPECT_EQ(reason, stft.stftCorrectionState);
+		for (size_t bank = 0; bank < FT_BANK_COUNT; bank++) {
+			EXPECT_EQ(reason, stft.stftLearningState[bank]);
+			EXPECT_FLOAT_EQ(1, engine->engineState.stftCorrection[bank]);
+		}
+	};
+
+	// Repeat after a stop: a fresh cranking attempt must reset the delay,
+	// regardless of the elapsed time and learned trim from the previous run.
+	for (int attempt = 0; attempt < 2; attempt++) {
+		SCOPED_TRACE(attempt);
+		engine->rpmCalculator.setRpmValue(0);
+		advance(0);
+		expectDisabled(stftDisabledRPM);
+		engine->rpmCalculator.setRpmValue(200);
+		ASSERT_TRUE(engine->rpmCalculator.isCranking());
+		advance(5000);
+		EXPECT_FLOAT_EQ(0, engine->fuelComputer.running.timeSinceCrankingInSecs);
+		expectDisabled(stftDisabledRPM);
+		advance(5000);
+		EXPECT_FLOAT_EQ(0, engine->fuelComputer.running.timeSinceCrankingInSecs);
+
+		engine->rpmCalculator.setRpmValue(3000);
+		ASSERT_TRUE(engine->rpmCalculator.isRunning());
+		advance(0);
+		expectDisabled(stftDisabledCrankingDelay);
+		advance(9999);
+		EXPECT_NEAR(9.999f, engine->fuelComputer.running.timeSinceCrankingInSecs, 1e-5f);
+		expectDisabled(stftDisabledCrankingDelay);
+
+		advance(1);
+		EXPECT_FLOAT_EQ(10, engine->fuelComputer.running.timeSinceCrankingInSecs);
+		EXPECT_EQ(stftEnabled, stft.stftCorrectionState);
+		EXPECT_EQ(stftEnabled, stft.stftLearningState[0]);
+		EXPECT_EQ(stftEnabled, stft.stftLearningState[1]);
+		// Lambda errors must produce real corrections, not just an enabled flag.
+		EXPECT_GT(engine->engineState.stftCorrection[0], 1);
+		EXPECT_LT(engine->engineState.stftCorrection[1], 1);
+	}
+}
+
+TEST(ClosedLoopFuel, StartupDelayWithNeutralPostCrankingEnrichment) {
+	checkClosedLoopStartup(1, 1);
+}
+
+TEST(ClosedLoopFuel, StartupDelayWithZeroPostCrankingEnrichment) {
+	// Values below unity are treated as no enrichment for compatibility.
+	checkClosedLoopStartup(0, 1);
+}
+
+TEST(ClosedLoopFuel, StartupDelayWithActivePostCrankingEnrichment) {
+	checkClosedLoopStartup(1.2f, 1.2f);
+}
+
 // Exercise the production cells through the public correction API, without
 // simulating trigger events or writing the private integrator state.
 class ShortTermFuelTrimBehavior : public ::testing::Test {
