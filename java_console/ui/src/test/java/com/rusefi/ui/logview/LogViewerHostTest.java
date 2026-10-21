@@ -1,8 +1,11 @@
 package com.rusefi.ui.logview;
 
+import com.formdev.flatlaf.FlatClientProperties;
+import com.rusefi.ui.widgets.JoinedButtons;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
@@ -81,6 +84,22 @@ class LogViewerHostTest {
         assertTrue(host.currentPanel().statusBar().fileLabel.getText().startsWith("drive.mlg  ·  220 samples"));
         assertEquals(Collections.singletonList("drive.mlg"), titles);
         assertTrue(errors.isEmpty(), errors.toString());
+    }
+
+    /** Open buttons look like the console's other toolbar buttons (Edit dashboard): outlined, not blue. */
+    @Test
+    void openButtonsUseTheToolbarButtonStyle() throws Exception {
+        LogViewerHost host = host();
+        JButton empty = find(host, JButton.class);
+        assertEquals("Open log…", empty.getText());
+        assertTrue(empty.getParent() instanceof JoinedButtons);
+        assertNull(empty.getClientProperty(FlatClientProperties.STYLE_CLASS), "not the blue primary style");
+
+        openAndWait(host, copy("/logview/test-log-1.msl", "a.msl"));
+        JButton toolbar = find(host.currentPanel(), ChartToolbar.class).openButton;
+        assertTrue(toolbar.getParent() instanceof JoinedButtons);
+        assertSame(empty.getIcon(), toolbar.getIcon());
+        assertEquals(empty.getIconTextGap(), toolbar.getIconTextGap());
     }
 
     @Test

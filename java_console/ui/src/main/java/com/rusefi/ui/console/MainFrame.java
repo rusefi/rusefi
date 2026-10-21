@@ -34,6 +34,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.Objects;
@@ -206,6 +207,7 @@ public class MainFrame {
 
     private JMenuItem loadTuneItem;
     private JMenuItem saveTuneItem;
+    private JMenuItem openLogItem;
     /**
      * user experience overview at Autoupdate.java
      */
@@ -323,6 +325,15 @@ public class MainFrame {
 
         fileMenu.addSeparator();
 
+        openLogItem = new JMenuItem("Open Data Log…");
+        openLogItem.setIcon(loadMenuIcon("view"));
+        openLogItem.setMnemonic(KeyEvent.VK_D);
+        openLogItem.setToolTipText("Open an .mlg or .msl data log in the Log Viewer tab");
+        openLogItem.setEnabled(false);
+        fileMenu.add(openLogItem);
+
+        fileMenu.addSeparator();
+
         JMenuItem exitItem = new JMenuItem("Exit");
         exitItem.setIcon(loadMenuIcon("logout"));
         exitItem.setMnemonic(KeyEvent.VK_X);
@@ -359,7 +370,7 @@ public class MainFrame {
         menuBar.add(actionsMenu);
 
         binaryLoggingMenu = new BinaryLoggingMenu(consoleUI.uiContext, frame.getFrame(),
-                loadMenuIcon("player-play"), loadMenuIcon("player-stop"));
+                loadMenuIcon("player-play"), loadMenuIcon("player-stop"), loadMenuIcon("view"));
         menuBar.add(binaryLoggingMenu.getMenu());
 
         menuBar.add(new MenuBarDivider());
@@ -420,6 +431,21 @@ public class MainFrame {
 
     public void setUpdateEcuAction(Runnable action) {
         this.updateEcuAction = action;
+    }
+
+    /**
+     * Enables File > Open Data Log… and Binary Logging > View Last Log.
+     *
+     * @param viewLog       shows a log file in the Log Viewer tab
+     * @param chooseAndOpen shows the Log Viewer tab and its file chooser
+     */
+    public void setLogViewerActions(Consumer<File> viewLog, Runnable chooseAndOpen) {
+        for (ActionListener old : openLogItem.getActionListeners()) {
+            openLogItem.removeActionListener(old);
+        }
+        openLogItem.addActionListener(e -> chooseAndOpen.run());
+        openLogItem.setEnabled(true);
+        binaryLoggingMenu.setViewLogAction(viewLog);
     }
 
     public void setExitRequestHandler(Runnable exitRequestHandler) {
@@ -1064,7 +1090,7 @@ public class MainFrame {
         SimulatorHelper.onWindowClosed();
         Node root = getConfig().getRoot();
         root.setProperty("version", Launcher.CONSOLE_VERSION);
-        root.setProperty(ConsoleUI.TAB_INDEX, tabbedPane.tabbedPane.getSelectedIndex());
+        SavedTab.save(root, tabbedPane.tabbedPane);
         consoleUI.uiContext.DetachedRepositoryINSTANCE.saveConfig();
         getConfig().save();
         binaryLoggingMenu.stop();

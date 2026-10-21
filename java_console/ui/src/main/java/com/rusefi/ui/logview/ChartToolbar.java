@@ -15,7 +15,6 @@ import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.JToggleButton;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.UIManager;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
@@ -30,7 +29,7 @@ import java.awt.Insets;
 final class ChartToolbar extends ThemedStrip {
     final JToggleButton lightPlot = SegmentedControl.segment("Light");
     final JToggleButton darkPlot = SegmentedControl.segment("Dark");
-    final JButton openButton = new JButton("Open…");
+    final JButton openButton = LogViewerHost.openLogButton("Open…");
     final JButton gridButton = new JButton();
     final JToggleButton snapCursor = SegmentedControl.segment("Snap");
     final JToggleButton freeCursor = SegmentedControl.segment("Free");
@@ -96,8 +95,6 @@ final class ChartToolbar extends ThemedStrip {
         horizontalDivisions.addChangeListener(e -> apply());
 
         if (onOpen != null) {
-            openButton.setIcon(UIManager.getIcon("Tree.openIcon"));
-            openButton.setToolTipText("Open a data log (" + LogViewerHost.SUPPORTED + ") - Ctrl+O, or drop a file on the viewer");
             openButton.addActionListener(e -> onOpen.run());
             add(new JoinedButtons(openButton));
             add(Box.createHorizontalStrut(JoinedButtons.ROW_GAP));

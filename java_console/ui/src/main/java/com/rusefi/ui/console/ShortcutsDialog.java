@@ -73,6 +73,18 @@ final class ShortcutsDialog extends JDialog {
             "In curve tables, type to replace a cell value, Enter to accept, or Esc to cancel "
                     + "an edit. Curve tables have no dedicated increase/decrease shortcuts.",
             "",
+            "LOG VIEWER",
+            "Ctrl+O  Open a data log (.mlg or .msl) while the Log Viewer tab has focus.",
+            "        File > Open Data Log… and Binary Logging > View Last Log also open logs;",
+            "        so does dropping a log file onto the tab.",
+            "In the signal list: Space adds the selected signal to the active plot or removes it,",
+            "Shift+Space adds it to a new plot. Click and Shift+click do the same.",
+            "Mouse on the plots: wheel zooms around the pointer, drag selects a time range to zoom "
+                    + "into, right-drag or Shift+wheel pans, double-click shows the whole log.",
+            "Drag a signal or legend item onto a plot or onto + Add plot; drag a legend item back "
+                    + "onto the list to remove it. Drag the gap between plots to resize them; "
+                    + "double-click the gap to make all plots the same height.",
+            "",
             "COMMAND INPUT",
             "Ctrl+Enter  Send the command text (each line is sent separately).",
             "In a single-line command field, Enter also sends the command and Up/Down "

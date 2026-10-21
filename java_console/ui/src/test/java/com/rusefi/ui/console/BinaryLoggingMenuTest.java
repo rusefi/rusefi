@@ -5,11 +5,17 @@ import com.rusefi.io.ConnectionStatusValue;
 import com.rusefi.sensor_logs.SensorLogger;
 import com.rusefi.ui.UIContext;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -29,7 +35,7 @@ class BinaryLoggingMenuTest {
                 ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
                 UIContext context = mock(UIContext.class);
                 context.sensorLogger = mock(SensorLogger.class);
-                BinaryLoggingMenu logging = new BinaryLoggingMenu(context, null, null, null);
+                BinaryLoggingMenu logging = new BinaryLoggingMenu(context, null, null, null, null);
                 JMenuItem start = logging.getMenu().getItem(0);
                 JMenuItem stop = logging.getMenu().getItem(1);
                 KeyStroke toggle = KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK);
@@ -64,6 +70,34 @@ class BinaryLoggingMenuTest {
             } finally {
                 ConnectionStatusLogic.INSTANCE.setValue(previous);
             }
+        });
+    }
+
+    @Test
+    void viewLastLogOpensTheFinishedRecording(@TempDir Path folder) throws Exception {
+        File recording = Files.createFile(folder.resolve("drive.mlg")).toFile();
+        SwingUtilities.invokeAndWait(() -> {
+            UIContext context = mock(UIContext.class);
+            context.sensorLogger = mock(SensorLogger.class);
+            when(context.sensorLogger.start(recording, null)).thenReturn(true);
+            BinaryLoggingMenu logging = new BinaryLoggingMenu(context, null, null, null, null);
+            JMenuItem viewLast = logging.viewLastItem();
+            List<File> viewed = new ArrayList<>();
+
+            assertFalse(viewLast.isEnabled(), "no viewer yet");
+            logging.setViewLogAction(viewed::add);
+            assertFalse(viewLast.isEnabled(), "nothing recorded yet");
+
+            when(context.sensorLogger.isLogging()).thenReturn(true);
+            logging.start(recording, null);
+            assertEquals(recording, logging.lastLog());
+            assertFalse(viewLast.isEnabled(), "still recording");
+
+            when(context.sensorLogger.isLogging()).thenReturn(false);
+            logging.refresh();
+            assertTrue(viewLast.isEnabled());
+            viewLast.doClick();
+            assertEquals(Collections.singletonList(recording), viewed);
         });
     }
 }
