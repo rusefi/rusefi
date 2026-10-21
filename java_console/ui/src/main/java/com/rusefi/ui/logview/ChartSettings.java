@@ -15,7 +15,7 @@ final class ChartSettings {
     static final int MIN_HORIZONTAL_DIVISIONS = 2;
     static final int MAX_HORIZONTAL_DIVISIONS = 20;
     static final int DEFAULT_HORIZONTAL_DIVISIONS = 4;
-    /** Sample lines closer than this many pixels would merge into a solid block, so they are skipped. */
+    /** Sample lines are hidden when there would be more than one per this many pixels on average. */
     static final int MIN_SAMPLE_LINE_SPACING = 4;
 
     private boolean vertical;

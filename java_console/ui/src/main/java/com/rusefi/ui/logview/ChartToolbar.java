@@ -1,120 +1,208 @@
 package com.rusefi.ui.logview;
 
+import com.rusefi.ui.widgets.JoinedButtons;
 import com.rusefi.ui.widgets.SegmentedControl;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JCheckBox;
-import javax.swing.JToggleButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JSpinner;
-import javax.swing.JToolBar;
-import javax.swing.SpinnerNumberModel;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JSeparator;
+import javax.swing.JSpinner;
+import javax.swing.JToggleButton;
+import javax.swing.SpinnerNumberModel;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
-/** Plot colour, grid and cursor controls above the log chart. */
-final class ChartToolbar extends JToolBar {
-    private static final String[] VERTICAL_MODES = {"Time ticks", "Every sample"};
-
-    final JCheckBox verticalBox = new JCheckBox("Vertical");
-    final JComboBox<String> verticalMode = new JComboBox<>(VERTICAL_MODES);
-    final JSpinner timeSpacing;
-    final JCheckBox horizontalBox = new JCheckBox("Horizontal");
-    final JSpinner horizontalDivisions;
-    final JCheckBox snapCursorBox = new JCheckBox("Snap cursor to samples");
+/**
+ * Toolbar above the log chart, styled like the Gauges toolbar: plot colours, a Grid button that
+ * opens the grid options, and the cursor Snap / Free switch. [tag:console_theme]
+ */
+final class ChartToolbar extends ThemedStrip {
     final JToggleButton lightPlot = SegmentedControl.segment("Light");
     final JToggleButton darkPlot = SegmentedControl.segment("Dark");
-    private final ChartSettings grid;
+    final JButton gridButton = new JButton();
+    final JToggleButton snapCursor = SegmentedControl.segment("Snap");
+    final JToggleButton freeCursor = SegmentedControl.segment("Free");
+
+    // grid options, shown in a popup under the Grid button
+    final JPanel gridPanel = new JPanel(new GridBagLayout());
+    final JCheckBox verticalBox = new JCheckBox("Vertical lines");
+    final JToggleButton timeTicksMode = SegmentedControl.segment("Time ticks");
+    final JToggleButton samplesMode = SegmentedControl.segment("Every sample");
+    final JSpinner timeSpacing;
+    final JCheckBox horizontalBox = new JCheckBox("Horizontal lines");
+    final JSpinner horizontalDivisions;
+
+    private final JPopupMenu gridPopup = new JPopupMenu();
+    private final ChartSettings settings;
     private final Runnable onChange;
 
-    ChartToolbar(ChartSettings grid, Runnable onChange) {
-        this.grid = grid;
+    ChartToolbar(ChartSettings settings, Runnable onChange) {
+        super(new FlowLayout(FlowLayout.LEFT, JoinedButtons.ROW_GAP, 0), "Console.Toolbar.background", false);
+        this.settings = settings;
         this.onChange = onChange;
-        setFloatable(false);
-        timeSpacing = spinner(new SpinnerNumberModel(grid.getTimeSpacing(),
-                ChartSettings.MIN_TIME_SPACING, ChartSettings.MAX_TIME_SPACING, 10));
-        horizontalDivisions = spinner(new SpinnerNumberModel(grid.getHorizontalDivisions(),
-                ChartSettings.MIN_HORIZONTAL_DIVISIONS, ChartSettings.MAX_HORIZONTAL_DIVISIONS, 1));
-
-        verticalBox.setSelected(grid.isVertical());
-        verticalBox.setToolTipText("Show vertical grid lines");
-        verticalMode.setSelectedIndex(grid.getVerticalMode().ordinal());
-        // a toolbar's BoxLayout would otherwise stretch the combo across the free space
-        verticalMode.setMaximumSize(verticalMode.getPreferredSize());
-        verticalMode.setToolTipText("<html>Time ticks: a line at each labelled time<br>"
-                + "Every sample: a line at each logged sample, shown once zoomed in far enough</html>");
-        timeSpacing.setToolTipText("Approximate distance between time ticks, in pixels ("
-                + ChartSettings.MIN_TIME_SPACING + "–" + ChartSettings.MAX_TIME_SPACING + ")");
-        horizontalBox.setSelected(grid.isHorizontal());
-        horizontalBox.setToolTipText("<html>Show horizontal grid lines<br>"
-                + "Each trace has its own scale, so lines mark equal fractions of each trace's range</html>");
-        horizontalDivisions.setToolTipText("Number of horizontal bands ("
-                + ChartSettings.MIN_HORIZONTAL_DIVISIONS + "–" + ChartSettings.MAX_HORIZONTAL_DIVISIONS + ")");
-
-        snapCursorBox.setSelected(grid.isSnapCursor());
-        snapCursorBox.setToolTipText("<html>On: the cursor line jumps to each logged sample<br>"
-                + "Off: the line follows the mouse; values come from the nearest sample, marked with a dot</html>");
+        setBorder(BorderFactory.createEmptyBorder(8, JoinedButtons.ROW_END_INSET - JoinedButtons.ROW_GAP, 9, 0));
 
         ButtonGroup plotGroup = new ButtonGroup();
         plotGroup.add(lightPlot);
         plotGroup.add(darkPlot);
-        (grid.isDarkPlot() ? darkPlot : lightPlot).setSelected(true);
+        (settings.isDarkPlot() ? darkPlot : lightPlot).setSelected(true);
         lightPlot.setToolTipText("Plot area with a light background");
         darkPlot.setToolTipText("Plot area with a dark background");
-        SegmentedControl plotMode = new SegmentedControl(lightPlot, darkPlot);
-        plotMode.setMaximumSize(plotMode.getPreferredSize());
+
+        gridButton.setToolTipText("Grid line options");
+        gridButton.addActionListener(e -> gridPopup.show(gridButton, 0, gridButton.getHeight() + 4));
+
+        ButtonGroup cursorGroup = new ButtonGroup();
+        cursorGroup.add(snapCursor);
+        cursorGroup.add(freeCursor);
+        (settings.isSnapCursor() ? snapCursor : freeCursor).setSelected(true);
+        snapCursor.setToolTipText("The cursor line jumps to each logged sample");
+        freeCursor.setToolTipText("<html>The cursor line follows the mouse; values come from the<br>"
+                + "nearest logged sample, marked with a dot on each trace</html>");
+
+        timeSpacing = spinner(new SpinnerNumberModel(settings.getTimeSpacing(),
+                ChartSettings.MIN_TIME_SPACING, ChartSettings.MAX_TIME_SPACING, 10));
+        horizontalDivisions = spinner(new SpinnerNumberModel(settings.getHorizontalDivisions(),
+                ChartSettings.MIN_HORIZONTAL_DIVISIONS, ChartSettings.MAX_HORIZONTAL_DIVISIONS, 1));
+        buildGridPanel();
+        gridPopup.add(gridPanel);
 
         lightPlot.addActionListener(e -> apply());
         darkPlot.addActionListener(e -> apply());
+        snapCursor.addActionListener(e -> apply());
+        freeCursor.addActionListener(e -> apply());
         verticalBox.addActionListener(e -> apply());
-        snapCursorBox.addActionListener(e -> apply());
-        verticalMode.addActionListener(e -> apply());
+        timeTicksMode.addActionListener(e -> apply());
+        samplesMode.addActionListener(e -> apply());
         timeSpacing.addChangeListener(e -> apply());
         horizontalBox.addActionListener(e -> apply());
         horizontalDivisions.addChangeListener(e -> apply());
 
-        add(new JLabel("Plot  "));
-        add(plotMode);
-        addSeparator();
-        add(new JLabel("Grid  "));
-        add(verticalBox);
-        add(verticalMode);
-        add(Box.createHorizontalStrut(6));
-        add(timeSpacing);
-        add(new JLabel(" px"));
-        addSeparator();
-        add(horizontalBox);
-        add(horizontalDivisions);
-        add(new JLabel(" divisions"));
-        addSeparator();
-        add(snapCursorBox);
-        add(Box.createHorizontalGlue());
-        updateEnabled();
+        add(muted(new JLabel("Plot")));
+        add(new SegmentedControl(lightPlot, darkPlot));
+        add(new JoinedButtons(gridButton));
+        add(Box.createHorizontalStrut(JoinedButtons.ROW_GAP));
+        add(muted(new JLabel("Cursor")));
+        add(new SegmentedControl(snapCursor, freeCursor));
+        updateControls();
+    }
+
+    private void buildGridPanel() {
+        gridPanel.setBorder(BorderFactory.createEmptyBorder(10, 12, 10, 12));
+        ButtonGroup modeGroup = new ButtonGroup();
+        modeGroup.add(timeTicksMode);
+        modeGroup.add(samplesMode);
+        (settings.getVerticalMode() == ChartSettings.VerticalMode.SAMPLES ? samplesMode : timeTicksMode).setSelected(true);
+
+        verticalBox.setSelected(settings.isVertical());
+        timeTicksMode.setToolTipText("A line at each labelled time");
+        samplesMode.setToolTipText("A line at each logged sample, shown once zoomed in far enough to tell them apart");
+        timeSpacing.setToolTipText("Approximate distance between time ticks, in pixels ("
+                + ChartSettings.MIN_TIME_SPACING + "–" + ChartSettings.MAX_TIME_SPACING
+                + "); also spaces the time labels");
+        horizontalBox.setSelected(settings.isHorizontal());
+        horizontalDivisions.setToolTipText("Number of horizontal bands ("
+                + ChartSettings.MIN_HORIZONTAL_DIVISIONS + "–" + ChartSettings.MAX_HORIZONTAL_DIVISIONS + ")");
+
+        int row = 0;
+        addRow(verticalBox, null, row++, 0);
+        addRow(muted(new JLabel("Lines at")), new SegmentedControl(timeTicksMode, samplesMode), row++, 24);
+        addRow(muted(new JLabel("Spacing")), withUnit(timeSpacing, "px"), row++, 24);
+        GridBagConstraints separator = constraints(0, row++, 2, 0);
+        separator.fill = GridBagConstraints.HORIZONTAL;
+        separator.insets = new Insets(8, 0, 8, 0);
+        gridPanel.add(new JSeparator(), separator);
+        addRow(horizontalBox, null, row++, 0);
+        addRow(muted(new JLabel("Bands")), horizontalDivisions, row++, 24);
+        JLabel note = muted(new JLabel("<html>Each trace has its own scale, so horizontal<br>"
+                + "lines mark fractions of each trace's range.</html>"));
+        GridBagConstraints noteConstraints = constraints(0, row, 2, 0);
+        noteConstraints.insets = new Insets(8, 0, 0, 0);
+        gridPanel.add(note, noteConstraints);
+    }
+
+    private void addRow(Component label, Component control, int row, int indent) {
+        GridBagConstraints left = constraints(0, row, control == null ? 2 : 1, indent);
+        gridPanel.add(label, left);
+        if (control != null) {
+            GridBagConstraints right = constraints(1, row, 1, 12);
+            gridPanel.add(control, right);
+        }
+    }
+
+    private static GridBagConstraints constraints(int column, int row, int width, int leftInset) {
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = column;
+        c.gridy = row;
+        c.gridwidth = width;
+        c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(3, leftInset, 3, 0);
+        return c;
+    }
+
+    private static JPanel withUnit(JSpinner spinner, String unit) {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 0));
+        panel.setOpaque(false);
+        panel.add(spinner);
+        panel.add(muted(new JLabel(unit)));
+        return panel;
+    }
+
+    static JLabel muted(JLabel label) {
+        label.setForeground(themed("Console.LogViewer.mutedForeground", Color.GRAY));
+        return label;
     }
 
     private static JSpinner spinner(SpinnerNumberModel model) {
         JSpinner spinner = new JSpinner(model);
         ((JSpinner.DefaultEditor) spinner.getEditor()).getTextField().setColumns(3);
-        spinner.setMaximumSize(spinner.getPreferredSize());
         return spinner;
     }
 
+    /** Grid button text, so the current state is visible without opening the popup. */
+    static String gridSummary(ChartSettings settings) {
+        String state;
+        if (settings.isVertical() && settings.isHorizontal()) {
+            state = "Both";
+        } else if (settings.isVertical()) {
+            state = "Vertical";
+        } else if (settings.isHorizontal()) {
+            state = "Horizontal";
+        } else {
+            state = "Off";
+        }
+        return "Grid: " + state + "  ▾";
+    }
+
     private void apply() {
-        grid.setVertical(verticalBox.isSelected());
-        grid.setVerticalMode(ChartSettings.VerticalMode.values()[verticalMode.getSelectedIndex()]);
-        grid.setTimeSpacing((Integer) timeSpacing.getValue());
-        grid.setHorizontal(horizontalBox.isSelected());
-        grid.setHorizontalDivisions((Integer) horizontalDivisions.getValue());
-        grid.setSnapCursor(snapCursorBox.isSelected());
-        grid.setDarkPlot(darkPlot.isSelected());
-        updateEnabled();
+        settings.setDarkPlot(darkPlot.isSelected());
+        settings.setSnapCursor(snapCursor.isSelected());
+        settings.setVertical(verticalBox.isSelected());
+        settings.setVerticalMode(samplesMode.isSelected()
+                ? ChartSettings.VerticalMode.SAMPLES : ChartSettings.VerticalMode.TIME_TICKS);
+        settings.setTimeSpacing((Integer) timeSpacing.getValue());
+        settings.setHorizontal(horizontalBox.isSelected());
+        settings.setHorizontalDivisions((Integer) horizontalDivisions.getValue());
+        updateControls();
         onChange.run();
     }
 
-    private void updateEnabled() {
-        verticalMode.setEnabled(grid.isVertical());
+    private void updateControls() {
+        gridButton.setText(gridSummary(settings));
+        timeTicksMode.setEnabled(settings.isVertical());
+        samplesMode.setEnabled(settings.isVertical());
         // Spacing also sets the time labels, so it stays usable while the vertical lines are off.
-        timeSpacing.setEnabled(grid.getVerticalMode() == ChartSettings.VerticalMode.TIME_TICKS || !grid.isVertical());
-        horizontalDivisions.setEnabled(grid.isHorizontal());
+        timeSpacing.setEnabled(settings.getVerticalMode() == ChartSettings.VerticalMode.TIME_TICKS || !settings.isVertical());
+        horizontalDivisions.setEnabled(settings.isHorizontal());
     }
 }

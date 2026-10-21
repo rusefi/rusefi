@@ -115,6 +115,44 @@ class LogChartSettingsTest {
         assertEquals(50.05, times.get(times.size() - 1), 1e-9);
     }
 
+    /**
+     * Real logs contain samples sharing one timestamp (about 15% of test-log-1.msl). Such samples must
+     * share one line, not count as two lines 0 px apart, which hid every sample line at any zoom.
+     */
+    @Test
+    void sampleLinesWithDuplicateTimestamps() throws IOException {
+        StringBuilder text = new StringBuilder("Time\tRPM\ns\trpm\n");
+        for (int i = 0; i <= 100; i++) {
+            // 10 ms samples, every fifth one logged twice with the same time
+            text.append(i / 100.0).append('\t').append(i).append('\n');
+            if (i % 5 == 0) {
+                text.append(i / 100.0).append('\t').append(i + 1).append('\n');
+            }
+        }
+        CsvLogReader log = CsvLogReader.read(new StringReader(text.toString()));
+        LogChart chart = new LogChart(log, new boolean[log.fieldCount()]);
+        paint(chart);
+        // 0.2 s visible: 21 distinct times about 26 px apart
+        chart.timeWindow().show(0.4, 0.6);
+        List<Double> times = chart.sampleGridTimes();
+        assertEquals(21, times.size(), "one line per distinct time");
+        assertEquals(0.4, times.get(0), 1e-9);
+        assertEquals(0.6, times.get(times.size() - 1), 1e-9);
+    }
+
+    @Test
+    void sampleLinesAppearOnRealLogWhenZoomedIn() throws IOException {
+        CsvLogReader log = LogViewerSandbox.load("/logview/test-log-1.msl");
+        LogChart chart = new LogChart(log, new boolean[log.fieldCount()]);
+        paint(chart);
+        assertNull(chart.sampleGridTimes(), "3191 samples over ~500 px are too dense");
+
+        double start = log.value(1000, 0);
+        chart.timeWindow().show(start, start + 0.3);
+        List<Double> times = chart.sampleGridTimes();
+        assertTrue(times != null && times.size() > 10, "300 ms of a ~4 ms log: " + times);
+    }
+
     @Test
     void sampleModeDrawsLinesWhenZoomedIn() throws IOException {
         CsvLogReader log = denseLog();
@@ -213,25 +251,30 @@ class LogChartSettingsTest {
         ChartSettings grid = new ChartSettings();
         int[] repaints = {0};
         ChartToolbar toolbar = new ChartToolbar(grid, () -> repaints[0]++);
-        assertFalse(toolbar.verticalMode.isEnabled());
+        assertEquals("Grid: Off  ▾", toolbar.gridButton.getText());
+        assertFalse(toolbar.samplesMode.isEnabled());
         assertFalse(toolbar.horizontalDivisions.isEnabled());
 
         toolbar.verticalBox.doClick();
         assertTrue(grid.isVertical());
-        assertTrue(toolbar.verticalMode.isEnabled());
+        assertTrue(toolbar.samplesMode.isEnabled());
+        assertEquals("Grid: Vertical  ▾", toolbar.gridButton.getText());
 
-        toolbar.verticalMode.setSelectedIndex(ChartSettings.VerticalMode.SAMPLES.ordinal());
+        toolbar.samplesMode.doClick();
         assertEquals(ChartSettings.VerticalMode.SAMPLES, grid.getVerticalMode());
+        assertFalse(toolbar.timeTicksMode.isSelected());
         assertFalse(toolbar.timeSpacing.isEnabled(), "spacing does not apply to sample lines");
 
         toolbar.horizontalBox.doClick();
         assertTrue(toolbar.horizontalDivisions.isEnabled());
         toolbar.horizontalDivisions.setValue(8);
         assertEquals(8, grid.getHorizontalDivisions());
+        assertEquals("Grid: Both  ▾", toolbar.gridButton.getText());
 
-        assertTrue(toolbar.snapCursorBox.isSelected());
-        toolbar.snapCursorBox.doClick();
+        assertTrue(toolbar.snapCursor.isSelected());
+        toolbar.freeCursor.doClick();
         assertFalse(grid.isSnapCursor());
+        assertFalse(toolbar.snapCursor.isSelected());
 
         assertTrue(toolbar.lightPlot.isSelected());
         toolbar.darkPlot.doClick();

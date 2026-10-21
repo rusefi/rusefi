@@ -27,13 +27,17 @@ public final class LogViewerSandbox {
         SwingUtilities.invokeLater(() -> {
             // the console look: FlatLaf with the rusEFI theme files [tag:console_theme]
             UiHelper.configureLaf();
-            JFrame frame = new JFrame("rusEFI Log Viewer " + path);
+            JFrame frame = new JFrame("rusEFI Log Viewer - " + fileName(path));
             frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-            frame.setContentPane(new LogViewerPanel(log));
+            frame.setContentPane(new LogViewerPanel(log, fileName(path)));
             frame.pack();
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         });
+    }
+
+    private static String fileName(String path) {
+        return path.substring(path.lastIndexOf('/') + 1);
     }
 
     static CsvLogReader load(String path) throws IOException {

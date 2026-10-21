@@ -22,12 +22,11 @@ import java.util.Locale;
 import static com.rusefi.config.generated.VariableRegistryValues.GAUGE_NAME_TIME;
 
 /**
- * Time plot for the fields selected in the companion list.
+ * Time plot for the fields plotted in the companion list, each in its {@link TraceColors} slot colour.
  * Wheel zooms around the pointer, drag selects a range to zoom into, right-drag or Shift+wheel pans,
  * double-click shows the whole log.
  */
 final class LogChart extends JComponent {
-    private static final String HELP = "Wheel: zoom  ·  Drag: zoom to range  ·  Right-drag / Shift+wheel: pan  ·  Double-click: whole log";
     /** Each wheel notch scales the visible span by this factor. */
     static final double WHEEL_ZOOM = 1.25;
     /** Fraction of the visible span that one Shift+wheel notch pans. */
@@ -36,7 +35,7 @@ final class LogChart extends JComponent {
     static final int MIN_SELECTION_PIXELS = 5;
 
     private final CsvLogReader log;
-    private final boolean[] displayed;
+    private final TraceColors colors;
     private final TimeWindow window;
     private final ChartSettings grid;
     private int cursorSample = -1;
@@ -50,14 +49,20 @@ final class LogChart extends JComponent {
     private int selectionTo = -1;
     private int panFromX = -1;
     private double panFromStart;
+    private Runnable viewListener = () -> {
+    };
 
     LogChart(CsvLogReader log, boolean[] displayed) {
         this(log, displayed, new ChartSettings());
     }
 
     LogChart(CsvLogReader log, boolean[] displayed, ChartSettings grid) {
+        this(log, TraceColors.plotted(log.fieldCount(), displayed), grid);
+    }
+
+    LogChart(CsvLogReader log, TraceColors colors, ChartSettings grid) {
         this.log = log;
-        this.displayed = displayed;
+        this.colors = colors;
         this.grid = grid;
         double fullStart = log.minimum(0);
         double fullEnd = log.maximum(0);
@@ -77,6 +82,19 @@ final class LogChart extends JComponent {
 
     PlotPalette palette() {
         return PlotPalette.of(grid.isDarkPlot());
+    }
+
+    /** Called after the visible time range or the cursor changes, e.g. to update a status line. */
+    void setViewListener(Runnable viewListener) {
+        this.viewListener = viewListener;
+    }
+
+    /** Time under the cursor line, or NaN when the pointer is outside the plot. */
+    double cursorTime() {
+        if (cursorSample < 0) {
+            return Double.NaN;
+        }
+        return grid.isSnapCursor() ? log.value(cursorSample, 0) : timeAt(cursorX);
     }
 
     private double timeAt(int x) {
@@ -99,6 +117,16 @@ final class LogChart extends JComponent {
             cursorX = inside ? event.getX() : -1;
             cursorSample = inside ? log.nearestSample(timeAt(event.getX())) : -1;
             repaint();
+            viewListener.run();
+        }
+
+        @Override
+        public void mouseExited(MouseEvent event) {
+            if (selectionFrom < 0 && panFromX < 0) {
+                cursorX = cursorSample = -1;
+                repaint();
+                viewListener.run();
+            }
         }
 
         @Override
@@ -130,6 +158,7 @@ final class LogChart extends JComponent {
             selectionFrom = selectionTo = -1;
             panFromX = -1;
             repaint();
+            viewListener.run();
         }
 
         @Override
@@ -137,6 +166,7 @@ final class LogChart extends JComponent {
             if (SwingUtilities.isLeftMouseButton(event) && event.getClickCount() == 2) {
                 window.reset();
                 repaint();
+                viewListener.run();
             }
         }
 
@@ -169,16 +199,9 @@ final class LogChart extends JComponent {
             Font valueFont = ConsoleFonts.mono(Font.PLAIN, g.getFont().getSize());
             FontMetrics valueMetrics = g.getFontMetrics(valueFont);
 
-            g.setColor(palette.label);
-            g.drawString("Selected signals", left, 23);
-            int helpWidth = metrics.stringWidth(HELP);
-            if (left + metrics.stringWidth("Selected signals") + 24 + helpWidth <= right) {
-                g.setColor(palette.hint);
-                g.drawString(HELP, right - helpWidth, 23);
-            }
             List<Integer> signals = selectedSignals();
             int legendX = left;
-            int legendY = 46;
+            int legendY = 26;
             for (int index = 0; index < signals.size(); index++) {
                 int field = signals.get(index);
                 String name = log.name(field) + " ";
@@ -191,7 +214,7 @@ final class LogChart extends JComponent {
                     legendX = left;
                     legendY += 19;
                 }
-                g.setColor(palette.trace(index));
+                g.setColor(palette.trace(colors.slot(field)));
                 g.fillRoundRect(legendX, legendY - 10, 13, 5, 4, 4);
                 g.setColor(palette.label);
                 g.drawString(name, legendX + 19, legendY);
@@ -201,7 +224,7 @@ final class LogChart extends JComponent {
                 g.drawString(unit, legendX + 19 + nameWidth + valueWidth, legendY);
                 legendX += width;
             }
-            int top = Math.max(68, legendY + 19);
+            int top = Math.max(46, legendY + 20);
             int bottom = Math.max(top + 1, getHeight() - 46);
             plotLeft = left;
             plotRight = right;
@@ -219,8 +242,8 @@ final class LogChart extends JComponent {
             }
             drawTimeAxis(g, metrics, palette);
             if (signals.isEmpty()) {
-                g.setColor(palette.label);
-                g.drawString("Select a field to plot", left + 20, top + 30);
+                g.setColor(palette.hint);
+                g.drawString("Click a signal on the left to plot it", left + 20, top + 30);
                 return;
             }
 
@@ -228,9 +251,9 @@ final class LogChart extends JComponent {
             try {
                 plot.clipRect(left, top - 1, right - left + 1, bottom - top + 3);
                 plot.setStroke(new BasicStroke(palette.strokeWidth));
-                for (int index = 0; index < signals.size(); index++) {
-                    plot.setColor(palette.trace(index));
-                    plot.draw(tracePath(signals.get(index)));
+                for (int field : signals) {
+                    plot.setColor(palette.trace(colors.slot(field)));
+                    plot.draw(tracePath(field));
                 }
                 if (selectionFrom >= 0 && selectionTo != selectionFrom) {
                     plot.setColor(palette.selection);
@@ -245,11 +268,11 @@ final class LogChart extends JComponent {
                 if (cursorLine >= 0 && !grid.isSnapCursor()) {
                     // The line no longer sits on the sample being read, so mark that sample on each trace.
                     int sampleX = xOf(log.value(cursorSample, 0));
-                    for (int index = 0; index < signals.size(); index++) {
-                        double value = log.value(cursorSample, signals.get(index));
+                    for (int field : signals) {
+                        double value = log.value(cursorSample, field);
                         if (Double.isFinite(value)) {
-                            int y = (int) Math.round(yOf(signals.get(index), value));
-                            plot.setColor(palette.trace(index));
+                            int y = (int) Math.round(yOf(field, value));
+                            plot.setColor(palette.trace(colors.slot(field)));
                             plot.fillOval(sampleX - 3, y - 3, 7, 7);
                         }
                     }
@@ -288,10 +311,6 @@ final class LogChart extends JComponent {
             g.drawString(text, x - metrics.stringWidth(text) / 2, plotBottom + 19);
         }
         String timeLabel = GAUGE_NAME_TIME + " (s)";
-        if (!window.isFull()) {
-            timeLabel += String.format(Locale.ROOT, "  ·  showing %.2f–%.2f of %.2f–%.2f",
-                    window.start(), window.end(), window.fullStart(), window.fullEnd());
-        }
         if (sampleLines && sampleTimes == null) {
             timeLabel += "  ·  zoom in to see sample lines";
         }
@@ -320,24 +339,23 @@ final class LogChart extends JComponent {
     }
 
     /**
-     * Times of the samples inside the visible window, or {@code null} when any two of them would be drawn
-     * closer than {@link ChartSettings#MIN_SAMPLE_LINE_SPACING} pixels apart.
+     * Distinct sample times inside the visible window, or {@code null} when they are too many to tell apart:
+     * more than one per {@link ChartSettings#MIN_SAMPLE_LINE_SPACING} pixels on average. Samples sharing a
+     * timestamp (common in real logs) are one line; uneven logging may still put a few lines close together.
      */
     List<Double> sampleGridTimes() {
         int first = log.firstSampleAtOrAfter(window.start());
         int end = log.firstSampleAtOrAfter(Math.nextUp(window.end()));
-        int width = plotRight - plotLeft;
-        if (end - first > width / ChartSettings.MIN_SAMPLE_LINE_SPACING + 1) {
-            return null;
-        }
-        double pixelsPerSecond = width / window.span();
+        int maxLines = (plotRight - plotLeft) / ChartSettings.MIN_SAMPLE_LINE_SPACING + 1;
         List<Double> times = new ArrayList<>();
         for (int sample = first; sample < end; sample++) {
             double time = log.value(sample, 0);
-            if (!times.isEmpty() && (time - times.get(times.size() - 1)) * pixelsPerSecond < ChartSettings.MIN_SAMPLE_LINE_SPACING) {
-                return null;
+            if (times.isEmpty() || time != times.get(times.size() - 1)) {
+                if (times.size() == maxLines) {
+                    return null;
+                }
+                times.add(time);
             }
-            times.add(time);
         }
         return times;
     }
@@ -436,8 +454,8 @@ final class LogChart extends JComponent {
 
     private List<Integer> selectedSignals() {
         List<Integer> result = new ArrayList<>();
-        for (int field = 1; field < displayed.length; field++) {
-            if (displayed[field]) {
+        for (int field = 1; field < colors.fieldCount(); field++) {
+            if (colors.isPlotted(field)) {
                 result.add(field);
             }
         }
