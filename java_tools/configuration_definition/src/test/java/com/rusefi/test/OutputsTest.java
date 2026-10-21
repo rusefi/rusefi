@@ -201,6 +201,28 @@ public class OutputsTest {
     }
 
     @Test
+    public void prefixIsNotAppliedToAlignmentFill() {
+        String test = "set_prefix \"Rolling Launch\"\n" +
+                "struct_no_prefix total\n" +
+                "uint8_t a;;\"\", 1, 0, 0, 100, 0, @@GAUGE_CATEGORY@@\n" +
+                "uint16_t b\n" +
+                "end_struct\n";
+        ReaderStateImpl state = new ReaderStateImpl();
+        state.getVariableRegistry().register("GAUGE_CATEGORY", "Launch");
+
+        DataLogConsumer dataLogConsumer = new DataLogConsumer(null, new TestFileCaptor());
+        GaugeConsumer gaugeConsumer = new GaugeConsumer(null, new TestFileCaptor());
+        state.readBufferedReader(test, dataLogConsumer, gaugeConsumer);
+        assertEquals(
+                "entry = a, \"Rolling Launch: a\", int,    \"%d\"\n" +
+                        "entry = b, \"Rolling Launch: b\", int,    \"%d\"\n",
+                dataLogConsumer.getContent());
+        assertEquals("\tgaugeCategory = Launch\n" +
+                        "aGauge = a,\"Rolling Launch: a\", \"\", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0\n",
+                gaugeConsumer.getContent());
+    }
+
+    @Test
     public void generateDataLogMultiLineCommentWithQuotes() {
         String test = "#define GAUGE_NAME_FUEL_BASE \"fuel: base mass\"\n" +
                 "struct total\n" +

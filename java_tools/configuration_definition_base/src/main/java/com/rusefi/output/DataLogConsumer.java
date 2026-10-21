@@ -83,7 +83,8 @@ public class DataLogConsumer implements ConfigurationConsumer {
     }
 
     private String handle(ConfigField configField, String variableNamePrefixForEmptyComment, String temporaryLineComment, String outputNamePrefix, String humanNamePrefix) {
-        if (configField.getName().contains(UNUSED))
+        // alignment fill and unused fields are not logged, also keeps them away from the name length check
+        if (configField.isUnusedField())
             return "";
 
         if (configField.isArray()) {
