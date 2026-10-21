@@ -121,6 +121,9 @@ public class DataLogConsumer implements ConfigurationConsumer {
              */
             comment = variableNamePrefixForEmptyComment + unquote(configField.getName());
         }
+        String logNamePrefix = configField.getLogNamePrefix();
+        if (!logNamePrefix.isEmpty())
+            comment = logNamePrefix + ": " + comment;
         comment = outputNamePrefix + comment + variableNameSuffix;
         if (comment.length() > MSQ_LENGTH_LIMIT)
             throw new IllegalStateException("[" + comment + "] is too long for log files at " + comment.length() + " limit " + MSQ_LENGTH_LIMIT);

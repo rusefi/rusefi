@@ -59,6 +59,8 @@ public class ConfigFieldImpl implements ConfigField {
     private boolean isFromIterate;
     private String iterateOriginalName;
     private int iterateIndex;
+    // 'set_prefix' value active when this field was declared
+    private String logNamePrefix;
 
     // index of this bit within its 32-bit word, only meaningful when isBit(), assigned by
     // ConfigStructureImpl#addBitField at parse time
@@ -95,6 +97,7 @@ public class ConfigFieldImpl implements ConfigField {
         this.state = state;
         this.parentType = state == null ? null : (state.isStackEmpty() ? null : state.peek());
         this.comment = comment;
+        this.logNamePrefix = state == null ? "" : state.getLogNamePrefix();
 
         if (TypesHelper.isBoolean(type) && (trueName == null || falseName == null) && !getName().startsWith(ConfigStructureImpl.UNUSED_BIT_PREFIX)) {
             if (this.isWithinStruct("persistent_config_s")) {
@@ -389,6 +392,15 @@ public class ConfigFieldImpl implements ConfigField {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public String getLogNamePrefix() {
+        return logNamePrefix;
+    }
+
+    public void setLogNamePrefix(String logNamePrefix) {
+        this.logNamePrefix = logNamePrefix;
     }
 
     /**

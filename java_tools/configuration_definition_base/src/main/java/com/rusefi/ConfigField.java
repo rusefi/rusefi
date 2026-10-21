@@ -244,4 +244,11 @@ public interface ConfigField {
     void setTsInfo(String tsInfo);
 
     boolean isWithinStruct(String structName);
+
+    /**
+     * @see ReaderStateImpl#SET_PREFIX
+     */
+    default String getLogNamePrefix() {
+        return "";
+    }
 }

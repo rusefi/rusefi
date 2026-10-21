@@ -79,6 +79,7 @@ public class ConfigStructureImpl implements ConfigStructure {
                 original.getFalseName()
             );
             substituted.setBitPositionInWord(original.getBitPositionInWord());
+            substituted.setLogNamePrefix(original.getLogNamePrefix());
             instance.cFields.add(substituted);
             instance.tsFields.add(substituted);
             instance.tsFieldsMap.put(substituted.getName(), substituted);

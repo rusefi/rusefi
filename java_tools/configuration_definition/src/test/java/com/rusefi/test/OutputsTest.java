@@ -134,6 +134,37 @@ public class OutputsTest {
     }
 
     @Test
+    public void generateDataLogWithPrefix() {
+        String test = "struct total\n" +
+                "set_prefix \"Idle\"\n" +
+                "bit isBlipping\n" +
+                "uint16_t idleTarget;Target RPM\n" +
+                "set_prefix Fan\n" +
+                "float fanDuty\n" +
+                "set_prefix\n" +
+                "float noPrefix\n" +
+                "end_struct\n";
+        ReaderStateImpl state = new ReaderStateImpl();
+
+        DataLogConsumer dataLogConsumer = new DataLogConsumer(null, new TestFileCaptor());
+        state.readBufferedReader(test, dataLogConsumer);
+        assertEquals(
+                "entry = isBlipping, \"Idle: isBlipping\", int,    \"%d\"\n" +
+                        "entry = idleTarget, \"Idle: Target RPM\", int,    \"%d\"\n" +
+                        "entry = fanDuty, \"Fan: fanDuty\", float,  \"%.3f\"\n" +
+                        "entry = noPrefix, \"noPrefix\", float,  \"%.3f\"\n", dataLogConsumer.getContent());
+
+        // prefix does not leak into the next file
+        DataLogConsumer secondFile = new DataLogConsumer(null, new TestFileCaptor());
+        ReaderStateImpl reusedState = new ReaderStateImpl();
+        reusedState.readBufferedReader("set_prefix Idle\nstruct a\nfloat x\nend_struct\n", secondFile);
+        reusedState.readBufferedReader("struct b\nfloat y\nend_struct\n", secondFile);
+        assertEquals(
+                "entry = x, \"Idle: x\", float,  \"%.3f\"\n" +
+                        "entry = y, \"y\", float,  \"%.3f\"\n", secondFile.getContent());
+    }
+
+    @Test
     public void generateDataLogMultiLineCommentWithQuotes() {
         String test = "#define GAUGE_NAME_FUEL_BASE \"fuel: base mass\"\n" +
                 "struct total\n" +
