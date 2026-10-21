@@ -112,7 +112,8 @@ class StatsPanelTest {
         LogViewerPanel panel = panel();
         panel.chart().timeWindow().show(2, 4);
         panel.statsPanel().refreshValues();
-        assertEquals("Min, max and avg over the visible 2.00–4.00 s", panel.statsPanel().footer.getText());
+        assertEquals("<html>Min, max and avg over the visible 2.00–4.00 s<br>"
+                + "Hover a row to highlight its trace; click to keep it highlighted</html>", panel.statsPanel().footer.getText());
 
         for (int plot = panel.chart().plotLayout().plotCount() - 1; plot > 0; plot--) {
             panel.chart().plotLayout().removePlot(plot);

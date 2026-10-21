@@ -17,6 +17,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -93,6 +96,33 @@ final class StatsPanel extends JPanel {
             table.getColumnModel().getColumn(column).setHeaderRenderer(header);
         }
         table.setDefaultRenderer(Object.class, new CellRenderer());
+        // hovering a row highlights its trace on the plots, a click keeps it highlighted
+        table.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent event) {
+                int field = fieldAt(table.rowAtPoint(event.getPoint()));
+                if (field >= 0) {
+                    chart.focus().hover(field);
+                } else {
+                    chart.focus().clearHover();
+                }
+            }
+        });
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseExited(MouseEvent event) {
+                chart.focus().clearHover();
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent event) {
+                int field = fieldAt(table.rowAtPoint(event.getPoint()));
+                if (field >= 0) {
+                    chart.focus().togglePin(field);
+                }
+            }
+        });
+        chart.focus().addListener(table::repaint);
         JScrollPane scroll = new JScrollPane(table);
         // a scroll pane only adopts the table header once it is in a window; attach it now
         scroll.setColumnHeaderView(table.getTableHeader());
@@ -125,7 +155,8 @@ final class StatsPanel extends JPanel {
         TimeWindow window = chart.timeWindow();
         footer.setText(model.rows.isEmpty()
                 ? "Plot signals to see their statistics"
-                : String.format(Locale.ROOT, "Min, max and avg over the visible %.2f–%.2f s",
+                : String.format(Locale.ROOT, "<html>Min, max and avg over the visible %.2f–%.2f s<br>"
+                + "Hover a row to highlight its trace; click to keep it highlighted</html>",
                 window.start(), window.end()));
     }
 
@@ -146,6 +177,11 @@ final class StatsPanel extends JPanel {
 
     List<Row> currentRows() {
         return model.rows;
+    }
+
+    /** The signal of a table row, or -1 for a plot heading or no row. */
+    int fieldAt(int row) {
+        return row >= 0 && row < model.rows.size() ? model.rows.get(row).field : -1;
     }
 
     /** Text shown in a cell, as the table renders it. */
@@ -226,9 +262,11 @@ final class StatsPanel extends JPanel {
             Color muted = themed("Console.LogViewer.mutedForeground", Color.GRAY);
             setIcon(null);
             setBorder(BorderFactory.createEmptyBorder(0, column == 0 ? 12 : 4, 0, 12));
-            setBackground(table.getBackground());
+            boolean rowFocused = !row.isHeading() && row.field == chart.focus().focused();
+            boolean pinned = !row.isHeading() && row.field == chart.focus().pinned();
+            setBackground(rowFocused ? themed("Console.LogViewer.chipBackground", table.getBackground()) : table.getBackground());
             setForeground(table.getForeground());
-            setFont(table.getFont());
+            setFont(pinned ? table.getFont().deriveFont(Font.BOLD) : table.getFont());
             setHorizontalAlignment(column == 0 ? SwingConstants.LEFT : SwingConstants.RIGHT);
             if (row.isHeading()) {
                 setFont(table.getFont().deriveFont(Font.BOLD, table.getFont().getSize2D() - 1));
@@ -247,7 +285,7 @@ final class StatsPanel extends JPanel {
                         escape(log.name(row.field)), muted.getRGB() & 0xffffff, escape(unit)));
                 setToolTipText(unit.isEmpty() ? log.name(row.field) : log.name(row.field) + " (" + unit + ")");
             } else {
-                setFont(ConsoleFonts.mono(Font.PLAIN, table.getFont().getSize()));
+                setFont(ConsoleFonts.mono(pinned ? Font.BOLD : Font.PLAIN, table.getFont().getSize()));
             }
             return this;
         }

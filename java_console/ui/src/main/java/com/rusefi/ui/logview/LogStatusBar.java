@@ -16,7 +16,8 @@ import java.util.Locale;
  * of it is visible, the cursor time, and how to navigate. [tag:console_theme]
  */
 final class LogStatusBar extends ThemedStrip {
-    static final String HELP = "Wheel: zoom  ·  Drag: zoom to range  ·  Right-drag or Shift+wheel: pan  ·  Double-click: whole log";
+    static final String HELP = "Wheel: zoom  ·  Drag: zoom to range  ·  Right-drag or Shift+wheel: pan  ·  Double-click: whole log"
+            + "  ·  Hover or click a legend item: min and max";
 
     final JLabel fileLabel = new JLabel();
     final JLabel viewLabel = new JLabel();
