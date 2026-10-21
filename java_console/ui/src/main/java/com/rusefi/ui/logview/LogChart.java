@@ -93,8 +93,8 @@ final class LogChart extends JComponent {
     private double panFromStart;
     private int hoveredField = -1;
     private int hoveredMenu = -1;
-    private Runnable viewListener = () -> {
-    };
+    private final List<Runnable> viewListeners = new ArrayList<>();
+    private final VisibleStats stats;
 
     /** One plot's area: legend header on top, traces below. */
     static final class Band {
@@ -145,6 +145,7 @@ final class LogChart extends JComponent {
         double interval = log.minimumSampleInterval();
         // Allow zooming in until only a few samples are visible.
         window = new TimeWindow(fullStart, fullEnd, interval > 0 ? interval * 4 : (fullEnd - fullStart) / 1000);
+        stats = new VisibleStats(log, window);
         setOpaque(true);
         MouseAdapter mouse = new MouseHandler();
         addMouseListener(mouse);
@@ -186,8 +187,28 @@ final class LogChart extends JComponent {
     }
 
     /** Called after the visible time range or the cursor changes, e.g. to update a status line. */
-    void setViewListener(Runnable viewListener) {
-        this.viewListener = viewListener;
+    void addViewListener(Runnable listener) {
+        viewListeners.add(listener);
+    }
+
+    private void fireViewChanged() {
+        for (Runnable listener : viewListeners) {
+            listener.run();
+        }
+    }
+
+    /** Sample under the cursor line, or -1 when the pointer is outside the plots. */
+    int cursorSample() {
+        return cursorSample;
+    }
+
+    /** Statistics of the visible time window, shared with the Stats panel. */
+    VisibleStats visibleStats() {
+        return stats;
+    }
+
+    CsvLogReader log() {
+        return log;
     }
 
     /** Time under the cursor line, or NaN when the pointer is outside the plots. */
@@ -341,7 +362,7 @@ final class LogChart extends JComponent {
                         ? Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) : Cursor.getDefaultCursor());
             }
             repaint();
-            viewListener.run();
+            fireViewChanged();
         }
 
         @Override
@@ -350,7 +371,7 @@ final class LogChart extends JComponent {
                 cursorX = cursorSample = -1;
                 hoveredField = hoveredMenu = -1;
                 repaint();
-                viewListener.run();
+                fireViewChanged();
             }
         }
 
@@ -433,7 +454,7 @@ final class LogChart extends JComponent {
             resizing = -1;
             dragField = -1;
             repaint();
-            viewListener.run();
+            fireViewChanged();
         }
 
         @Override
@@ -446,7 +467,7 @@ final class LogChart extends JComponent {
             } else if (!onControl(event.getX(), event.getY())) {
                 window.reset();
                 repaint();
-                viewListener.run();
+                fireViewChanged();
             }
         }
 
@@ -895,11 +916,14 @@ final class LogChart extends JComponent {
         return log.unit(field).isEmpty() ? "" : " " + log.unit(field);
     }
 
-    /** Value at the cursor sample, or the whole-log range when there is no cursor. */
-    private String legendValue(int field, int sample) {
-        if (sample >= 0 && Double.isFinite(log.value(sample, field))) {
-            return String.format(Locale.ROOT, "%.2f", log.value(sample, field));
+    /**
+     * The value at the cursor while the pointer is over the plots; otherwise the minimum and maximum of the
+     * visible time window, so the legend summarises what is on screen.
+     */
+    String legendValue(int field, int sample) {
+        if (sample >= 0) {
+            return ValueFormat.format(log, field, log.value(sample, field));
         }
-        return String.format(Locale.ROOT, "%.1f–%.1f", log.minimum(field), log.maximum(field));
+        return ValueFormat.range(log, field, stats.get(field));
     }
 }
