@@ -130,6 +130,12 @@ When testing actuator init paths, remember that `EngineTestHelper` construction 
 
 #### Troubleshooting test output
 
+`RpmCalculator::setRpmValue()` invokes `periodicFastCallback()` when RPM changes
+from zero to nonzero. This recalculates target lambda and other fuel state even
+in a test that otherwise calls only one controller. Set controlled fuel inputs
+after starting/restarting RPM, or use the recalculated target when checking that
+a learned trim is held (see `ShortTermFuelTrimBehavior`).
+
 For suspected test-order leaks, run the built binary directly from `unit_tests/`:
 `build/rusefi_test --gtest_shuffle --gtest_random_seed=31337 --gtest_repeat=3`.
 Record the failing iteration's seed and keep the same test selection when replaying;
@@ -199,6 +205,15 @@ callbacks. A linear callback that chains another conversion must not guard on
 start API directly from the callback (see `slowAdcEndCB()` in
 `firmware/hw_layer/ports/stm32/stm32_adc_v2.cpp`).
 
+### Simulator build feature flags
+
+The simulator Makefile does not track changes to board-derived
+`TS_PAGE_GUARD_DEFS` as object dependencies. When switching between board
+configurations with different feature flags (for example, `EFI_LUA=FALSE` and
+Lua enabled), run `make clean` in `simulator/` before validating the new build;
+otherwise stale objects can make it appear to pass without compiling the new
+configuration.
+
 ### Simulator Functional Test (local WSL quirks)
 
 `./gradlew simulatorFunctionalTestLauncherWithSimulator` (repo root; also CI `build-simulator.yaml`, Linux-only) launches `simulator/build/rusefi_simulator` and talks TS protocol over TCP :29001. Two local traps, both hit 2026-08-25:
@@ -243,6 +258,7 @@ firmware/gen_enum_to_string.sh
 
 ### Deep Dive AI Guidance
 For detailed technical documentation intended for AI assistants, see:
+- [Firmware Business Logic Testing](docs/firmware-business-logic-testing.md) - Host-test seams, fuel-trim and PWM behavior tests, A/C state ownership and LTFT persistence follow-ups.
 - [Fueling System](docs/AI/fueling_system.md) - Mass-based fueling pipeline (17 stages).
 - [Cold-start Logic](docs/AI/cold_start.md) - Priming, cranking-state hysteresis, mass tables, ASE/WUE overlap, cycle counters and sensor fallbacks.
 - [Acceleration Enrichment](docs/AI/acceleration_enrichment.md) - Four selectable AE modes including Lua mass injection, independent wall wetting, TPS sampling, correction units, flex compensation and diagnostics.
