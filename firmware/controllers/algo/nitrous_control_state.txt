@@ -1,12 +1,14 @@
+set_prefix "Nitrous"
+
 struct_no_prefix nitrous_control_state_s
 
-bit isNitrousArmed
-bit isNitrousSpeedCondition
-bit isNitrousTpsCondition
-bit isNitrousCltCondition
-bit isNitrousMapCondition
-bit isNitrousAfrCondition
-bit isNitrousRpmCondition
-bit isNitrousCondition
+	bit isNitrousArmed;isArmed
+	bit isNitrousSpeedCondition;isSpeedCondition
+	bit isNitrousTpsCondition;isTpsCondition
+	bit isNitrousCltCondition;isCltCondition
+	bit isNitrousMapCondition;isMapCondition
+	bit isNitrousAfrCondition;isAfrCondition
+	bit isNitrousRpmCondition;isRpmCondition
+	bit isNitrousCondition;isCondition
 
 end_struct
