@@ -162,6 +162,44 @@ TEST(InjectorModel, InvalidFuelPressureUsesReferenceDeadtime) {
 	EXPECT_FLOAT_EQ(2.0f, dut.getDeadtime());
 }
 
+TEST(InjectorModel, UnavailablePressureUsesFirstRowBeforeStateUpdate) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	engineConfiguration->fuelReferencePressure = 400;
+	engineConfiguration->useAbsolutePressureForLagTime = false;
+	setLinearCurve(engineConfiguration->injector.battLagCorrPressBins, 200, 400);
+	setTable(engineConfiguration->injector.battLagCorrTable, 1.0f);
+	for (auto& deadtime : engineConfiguration->injector.battLagCorrTable[1]) {
+		deadtime = 2.0f;
+	}
+
+	auto checkDeadtime = [] {
+		InjectorModelPrimary dut;
+
+		// Before the first pressure-state update, the zero-initialized pressure
+		// reference clamps the lookup to the first row instead of 400 kPa.
+		EXPECT_FLOAT_EQ(0.0f, dut.pressureCorrectionReference);
+		EXPECT_FLOAT_EQ(1.0f, dut.getDeadtime());
+
+		dut.updateState();
+		EXPECT_FLOAT_EQ(400.0f, dut.pressureCorrectionReference);
+		EXPECT_FLOAT_EQ(2.0f, dut.getDeadtime());
+	};
+
+	engineConfiguration->injectorCompensationMode = ICM_None;
+	checkDeadtime();
+
+	engineConfiguration->injectorCompensationMode = ICM_SensedRailPressure;
+	Sensor::resetMockValue(SensorType::FuelPressureInjector);
+	EXPECT_FALSE(Sensor::hasSensor(SensorType::FuelPressureInjector));
+	checkDeadtime();
+
+	Sensor::setInvalidMockValue(SensorType::FuelPressureInjector);
+	EXPECT_TRUE(Sensor::hasSensor(SensorType::FuelPressureInjector));
+	EXPECT_FALSE(Sensor::get(SensorType::FuelPressureInjector));
+	checkDeadtime();
+}
+
 TEST(InjectorModel, nonLinearFordMode) {
 	StrictMock<MockInjectorModel> dut;
 
