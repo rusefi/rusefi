@@ -1,8 +1,7 @@
 # Rev Limiters
 
-This guide describes the native RPM-limiting paths, reviewed against firmware
-revision `26e4cee117c`. They share RPM inputs but have separate settings, state
-and outputs; there is no single combined "active RPM limit" value.
+This guide describes the native RPM-limiting paths. They share RPM inputs but
+have separate settings, state and outputs; there is no single combined "active RPM limit" value.
 
 | Mechanism | Action | Where implemented |
 | --- | --- | --- |
@@ -286,15 +285,23 @@ limiter. Percentage spark skipping from launch, flat shift, traction or Lua
 can also suppress ignition without a `LimpManager` hard-limit code. See
 [Lua implementation injection](lua_implementation_injection.md).
 
+Native skip-target refresh currently runs inside the dynamic timing calculation.
+Changing to fixed timing can therefore retain a previous launch skip target after
+the launch request clears, while Lua skip setters explicitly refresh the target.
+`EcuLogicReview.FixedTimingRetainsReleasedLaunchSparkCut` reproduces the retained
+100% cut and absence of dwell; see ECU-050 in
+[the findings inventory](../../order_by_severity.md).
+
 `LimpManager` refreshes its last-cut timer whenever a transient fuel **or spark**
 permission is false. STFT pauses per-cell learning while that timer is less
 than 2 seconds old (`stftDisabledFuelCut`), subject to earlier disable reasons,
 and retains existing cell adjustments. The soft ramps alone do not refresh
 that timer. `LongTermFuelTrim::learn()` checks the global STFT correction state
-and has an explicit launch gate, but no equivalent general-cut timer or
-per-bank STFT learning-state check. Do not assume LTFT learning stops merely
-because a bank's STFT learning state displays Fuel Cut; this is a current
-source-review limitation, distinct from the tested launch-specific inhibition.
+and has an explicit launch gate, but no per-bank STFT learning-state check.
+It keeps integrating frozen STFT values during invalid lambda feedback or a
+fuel cut. `LTFT.InvalidLambdaStillLearnsFrozenShortTermCorrection` and
+`FuelCutStillLearnsFrozenShortTermCorrection` reproduce this behavior; see
+ECU-049 in [the findings inventory](../../order_by_severity.md).
 
 ## Diagnostics and troubleshooting
 

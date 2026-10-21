@@ -266,13 +266,10 @@ the trigger scheduler consumes the computed state.
 
 The following are current implementation limitations, not promised features:
 
-- `LaunchControlBase::update()` returns immediately when launch is disabled;
-  it does not clear the activity bits, input history, latch or cached skip
-  ratio. Timing, fuel coefficient, learning gates, shared-trigger ownership,
-  and full-cut helpers explicitly check enable, but `getSparkSkipRatio()`
-  returns the cached ratio without that guard. Disabling an already-active
-  launch can leave a stale skip contribution. Existing disabled-at-start
-  tests do not establish safe clearing on a runtime disable.
+- Disabling launch clears its activity bits, input-edge history, latch and
+  cached spark-skip ratio on the next launch update.
+  `LaunchControl.DisablingActiveLaunchControlClearsSparkCut` covers the
+  active-to-disabled transition.
 - `launchActivateDelay` remains in the configuration layout but has no native
   runtime consumer or current launch-dialog control. There is no implemented
   activation delay or maximum launch duration in this controller.
@@ -324,7 +321,7 @@ Review a log in this order:
    arming RPM if the RPM bits unexpectedly stay false.
 4. Compare both activity bits with final timing, `luaIgnitionSkip`, fuel/ignition
    cut codes, STFT learning state and `ltftLearning`. A pre-launch skip can occur
-   without a full-cut code; cached launch bits can remain set after disable.
+   without a full-cut code. Disabled launch clears its activity on the next update.
 5. For a shared clutch, check `isLaunchLatched` before diagnosing an absent
    flat-shift request. For missing enrichment, distinguish `PreLaunch` from
    `Launch` and account for the fuel-calculation ordering.
@@ -350,9 +347,9 @@ build/rusefi_test --gtest_filter='LaunchControl.*:launchRpmThreshold.*:rpmCondit
 
 These host tests exercise logic with mocked sensors/pins. They do not validate
 physical wiring, an engine-specific calibration, or every lifecycle/boundary
-case described above. In particular, the runtime-disable cache, Speed Based
-edge behavior and Lua reload omissions are source-review findings, not claims
-of dedicated regression coverage.
+case described above. `EcuLogicReview.LuaResetRetainsLaunchFuelAndSparkRequests`
+reproduces the Lua reload omission through the real binding and controller
+updates. Speed Based edge behavior still lacks dedicated regression coverage.
 
 
 ## Rolling launch

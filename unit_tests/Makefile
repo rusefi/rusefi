@@ -85,6 +85,14 @@ CPPSRC += $(ALLCPPSRC) \
 	$(MODULES_CPPSRC) \
 	$(RUSEFI_LIB_CPP_TEST) \
 
+# Compile the real delayed knock scheduling path with a host driver observer.
+# Use a separate BUILDDIR: compiler flag changes are not dependency tracked.
+# The ADC/DSP driver needs ChibiOS/HAL and remains a firmware-build concern.
+ifeq ($(KNOCK_SCHEDULING_TEST),yes)
+  DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE
+  CPPSRC := $(filter-out %/software_knock.cpp,$(CPPSRC))
+endif
+
 INCDIR += \
 	$(PCH_DIR) \
 	$(BOARDINC) \

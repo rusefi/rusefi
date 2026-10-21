@@ -11,6 +11,47 @@ using ::testing::Not;
 using ::testing::Property;
 using ::testing::Truly;
 
+TEST(injectionScheduling, FirstOddFireScheduleUsesPreviousCylinderIdentity) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->cylindersCount = 2;
+	engineConfiguration->firingOrder = FO_1_2;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
+	engineConfiguration->injectionTimingMode = InjectionTimingMode::Start;
+	engineConfiguration->timing_offset_cylinder[0] = -19;
+	engineConfiguration->timing_offset_cylinder[1] = 13;
+	engine->updateTriggerConfiguration();
+	engine->rpmCalculator.setRpmValue(1000);
+	engine->engineState.injectionOffset = 0;
+	engine->engineState.injectionDuration = 2;
+	engine->engineState.shouldUpdateInjectionTiming = true;
+	setArrayValues(engine->engineState.injectionMass, 0.01f);
+	MockInjectorModel2 injector;
+	engine->module<InjectorModelPrimary>().set(&injector);
+	EXPECT_CALL(injector, getInjectionDuration(_)).WillOnce(Return(2.0f));
+	auto* schedule = getFuelSchedule();
+	ASSERT_FALSE(schedule->isReady);
+
+	// handleFuel performs this build immediately before dispatching a tooth
+	// when RPM first becomes available, without another intervening update.
+	schedule->addFuelEvents();
+	ASSERT_TRUE(schedule->isReady);
+	EXPECT_FLOAT_EQ(341, schedule->elements[1].injectionStartAngle);
+	EXPECT_EQ(2, schedule->elements[1].calculateInjectorOutputMask());
+	// Cylinder 2 should use 360 + 13 = 373 degrees, but initially uses -19.
+	schedule->onTriggerTooth(getTimeNowNt(), 330, 350);
+	ASSERT_EQ(2, engine->scheduler.size());
+	eth.moveTimeForwardUs(2000);
+	ASSERT_EQ(1, eth.executeActions());
+	EXPECT_TRUE(enginePins.injectors[1].getLogicValue());
+	EXPECT_FALSE(enginePins.injectors[0].getLogicValue());
+	eth.moveTimeForwardUs(2000);
+	ASSERT_EQ(1, eth.executeActions());
+	EXPECT_FALSE(enginePins.injectors[1].getLogicValue());
+	// Closing the first pulse refreshes the angle with the now-correct identity.
+	EXPECT_FLOAT_EQ(373, schedule->elements[1].injectionStartAngle);
+}
+
 TEST(injectionScheduling, InjectionIsScheduled) {
 	StrictMock<MockExecutor> mockExec;
 

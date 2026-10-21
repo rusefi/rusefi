@@ -79,8 +79,9 @@ else
 endif
 
 # Generate dependency information
-CFLAGS   += -MD -MP -MF .dep/$(@F).d
-CPPFLAGS += -MD -MP -MF .dep/$(@F).d
+DEPDIR ?= .dep
+CFLAGS   += -MD -MP -MF $(DEPDIR)/$(@F).d
+CPPFLAGS += -MD -MP -MF $(DEPDIR)/$(@F).d
 
 # Paths where to search for sources
 VPATH     = $(SRCPATHS)
@@ -158,7 +159,7 @@ $(SHARED_OUTPUT): $(OBJS)
 
 clean: CLEAN_RULE_HOOK CLEAN_PCH_HOOK
 	@echo Cleaning
-	-rm -fR .dep $(BUILDDIR)
+	-rm -fR $(DEPDIR) $(BUILDDIR)
 	@echo Done
 
 CLEAN_RULE_HOOK:
@@ -168,6 +169,6 @@ CLEAN_PCH_HOOK:
 #
 # Include the dependency files, should be the last of the makefile
 #
--include $(shell mkdir .dep 2>/dev/null) $(wildcard .dep/*)
+-include $(shell mkdir -p $(DEPDIR)) $(wildcard $(DEPDIR)/*)
 
 # *** EOF ***

@@ -6,6 +6,9 @@
 #include "thermistor_func.h"
 #include "adc_inputs.h"
 #include "board_overrides.h"
+#include "speed_density_airmass.h"
+#include "mocks.h"
+#include "map_averaging.h"
 
 namespace {
 struct ScopedTemperatureElectricalOverrides {
@@ -359,6 +362,9 @@ TEST(SensorInit, Map) {
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 
 	initMap();
+	// The static averager survives fixture time rewinds. Seed this fallback
+	// test with no acquired fast sample before exercising its mock override.
+	getMapAvg(0).invalidate();
 
 	auto s = Sensor::getSensorOfType(SensorType::Map);
 	ASSERT_NE(nullptr, s);
@@ -372,4 +378,48 @@ TEST(SensorInit, Map) {
 	// But when that fails, should return slow MAP
 	Sensor::resetMockValue(SensorType::MapFast);
 	EXPECT_FLOAT_EQ(75, Sensor::getOrZero(SensorType::Map));
+}
+
+TEST(SensorInit, CustomBaroUsesMapCalibrationInsteadOfBaroEndpoints) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_NONE;
+	engineConfiguration->map.sensor.type = MT_CUSTOM;
+	engineConfiguration->mapLowValueVoltage = 0;
+	engineConfiguration->mapHighValueVoltage = 5;
+	engineConfiguration->map.sensor.lowValue = 0;
+	engineConfiguration->map.sensor.highValue = 200;
+	engineConfiguration->mapErrorDetectionTooLow = 0;
+	engineConfiguration->mapErrorDetectionTooHigh = 250;
+	engineConfiguration->baroSensor.hwChannel = EFI_ADC_4;
+	engineConfiguration->baroSensor.type = MT_CUSTOM;
+	engineConfiguration->baroSensor.lowValue = 0;
+	engineConfiguration->baroSensor.highValue = 120;
+	Sensor::resetMockValue(SensorType::BarometricPressure);
+	initMap();
+	auto* sensor = static_cast<FunctionalSensor*>(const_cast<Sensor*>(
+		Sensor::getSensorOfType(SensorType::BarometricPressure)));
+	ASSERT_NE(nullptr, sensor);
+	sensor->invalidate();
+	// 4 V means 96 kPa for the configured baro sensor, but MAP's curve wins.
+	EXPECT_POINT_VALID(sensor, 4.0f, 160.0f);
+	engineConfiguration->useCompensatedMap = true;
+	::testing::StrictMock<MockVp3d> unusedTable;
+	SpeedDensityAirmass airmass(unusedTable, unusedTable);
+	EXPECT_NEAR(40.0f / 1.5f, airmass.getCompensatedMap(40), 0.001f);
+
+	// Editing the baro endpoints has no effect after reinitialization.
+	engineConfiguration->baroSensor.highValue = 100;
+	initMap();
+	EXPECT_POINT_VALID(sensor, 4.0f, 160.0f);
+	// Editing MAP's endpoints changes the separate baro channel instead.
+	engineConfiguration->map.sensor.highValue = 120;
+	initMap();
+	EXPECT_POINT_VALID(sensor, 4.0f, 96.0f);
+	EXPECT_NEAR(40.0f * STD_ATMOSPHERE / 96.0f, airmass.getCompensatedMap(40), 0.001f);
+
+	// Preset baro curves do not use the custom MAP endpoints.
+	engineConfiguration->baroSensor.type = MT_MPX4100;
+	initMap();
+	EXPECT_POINT_VALID(sensor, 4.897f, 105.0f);
+	sensor->invalidate(); // Static sensor survives the test clock reset.
 }

@@ -1,6 +1,6 @@
 # ECU firmware findings ordered by severity
 
-This report ranks 12 defects that remain in the current firmware. The 24 fixed
+This report ranks 26 defects that remain in the current firmware. The 24 fixed
 findings are tracked separately below; active reproductions assert current defects.
 
 ## Ranking rules
@@ -26,18 +26,103 @@ does not establish hardware timing or the physical severity of an outcome.
 
 | Rank | ID | Severity | Confidence | Finding |
 | --- | --- | --- | --- | --- |
-| 1 | ECU-001 | S2 — High | Reproduced | Invalid wastegate/idle-valve controller outputs still drive the motor |
-| 2 | ECU-006 | S2 — High | Reproduced | Injector duty protection ignores saturation of secondary injectors |
-| 3 | ECU-017 | S2 — High | Reproduced | Primary injector duty protection ignores actual trims, wall film and cranking mode |
-| 4 | ECU-011 | S2 — High | Reproduced | Shared-coil ignition ignores cylinder timing trims and distributor odd-fire offsets |
-| 5 | ECU-012 | S2 — High | Source-confirmed; identity mismatch reproduced | Software knock uses firing-order position as physical cylinder identity |
-| 6 | ECU-009 | S2 — High | Source-confirmed; reachability reproduced | Ninth/tenth forward gear indexes beyond the boost duty adder array |
-| 7 | ECU-032 | S2 — High | Source-confirmed | Delayed software-knock window can be attributed to the next cylinder |
-| 8 | ECU-033 | S3 — Moderate | Arithmetic reproduced; live-write path source-confirmed | Unburned zero injector flow can yield an infinite pulse duration |
-| 9 | ECU-013 | S3 — Moderate | Reproduced | Knock response treats retarded timing as hundreds of degrees of advance |
-| 10 | ECU-019 | S3 — Moderate | Reproduced | Percentage acceleration enrichment shrinks with batch/simultaneous injection |
-| 11 | ECU-026 | S3 — Moderate | Reproduced | Predictive MAP substitutes the previous run's estimate after a quick restart |
-| 12 | ECU-007 | S3 — Moderate | Reproduced | DFCO ignition recovery uses a fixed half-second ramp |
+| 1 | ECU-041 | S2 — High | Reproduced | Lua reload retains spark cuts, launch requests and anti-lag throttle opening |
+| 2 | ECU-045 | S2 — High | Source-confirmed in production build | Extra-page burns bypass the running-engine flash-write gate |
+| 3 | ECU-001 | S2 — High | Reproduced | Invalid wastegate/idle-valve controller outputs still drive the motor |
+| 4 | ECU-006 | S2 — High | Reproduced | Injector duty protection ignores saturation of secondary injectors |
+| 5 | ECU-017 | S2 — High | Reproduced | Primary injector duty protection ignores actual trims, wall film and cranking mode |
+| 6 | ECU-039 | S2 — High | Reproduced | Lean second-bank feedback bypasses lambda protection |
+| 7 | ECU-011 | S2 — High | Reproduced | Shared-coil ignition ignores cylinder timing trims and distributor odd-fire offsets |
+| 8 | ECU-012 | S2 — High | Reproduced through delayed driver request | Software knock uses firing-order position as physical cylinder identity |
+| 9 | ECU-037 | S2 — High | Reproduced | Disabling trailing sparks during dwell leaves the trailing coil charged |
+| 10 | ECU-046 | S2 — High | Gate/output overlap reproduced | Sync loss permits flash writes before pending coil discharge |
+| 11 | ECU-009 | S2 — High | Source-confirmed; reachability reproduced | Ninth/tenth forward gear indexes beyond the boost duty adder array |
+| 12 | ECU-032 | S2 — High | Reproduced with software knock enabled | Delayed software-knock window can be attributed to the next cylinder |
+| 13 | ECU-044 | S3 — Moderate | Unsafe callback premise reproduced | Sync loss leaves an HPFP start with invalid off-event timing |
+| 14 | ECU-033 | S3 — Moderate | Arithmetic reproduced; live-write path source-confirmed | Unburned zero injector flow can yield an infinite pulse duration |
+| 15 | ECU-049 | S3 — Moderate | Reproduced | LTFT learns frozen corrections during invalid lambda feedback or fuel cuts |
+| 16 | ECU-050 | S3 — Moderate | Reproduced | Fixed timing retains a released launch spark cut |
+| 17 | ECU-038 | S3 — Moderate | Reproduced | Multispark holds the trailing coil through the entire restrike sequence |
+| 18 | ECU-040 | S3 — Moderate | Reproduced | Odd-fire MAP windows overlap and discard or misattribute pressure samples |
+| 19 | ECU-042 | S3 — Moderate | Reproduced | Custom barometric pressure ignores its own calibration endpoints |
+| 20 | ECU-043 | S3 — Moderate | Reproduced | Idle timing soft entry retains the previous run’s elapsed-time origin |
+| 21 | ECU-013 | S3 — Moderate | Reproduced | Knock response treats retarded timing as hundreds of degrees of advance |
+| 22 | ECU-019 | S3 — Moderate | Reproduced | Percentage acceleration enrichment shrinks with batch/simultaneous injection |
+| 23 | ECU-026 | S3 — Moderate | Reproduced | Predictive MAP substitutes the previous run's estimate after a quick restart |
+| 24 | ECU-007 | S3 — Moderate | Reproduced | DFCO ignition recovery uses a fixed half-second ramp |
+| 25 | ECU-047 | S3 — Moderate | Reproduced | Unassigning an active launch switch retains the full spark cut |
+| 26 | ECU-048 | S4 — Low | Reproduced | First odd-fire injection uses the previous cylinder's timing offset |
+
+### ECU-041 — Lua reload retains control requests from the destroyed script
+
+- **Source:** Lua setters in [lua_hooks.cpp](firmware/controllers/lua/lua_hooks.cpp),
+  `LuaThread::ThreadTask()` in [lua.cpp](firmware/controllers/lua/lua.cpp),
+  `Engine::resetLua()` in [engine.cpp](firmware/controllers/algo/engine.cpp), and
+  consumers in `EngineState::updateSparkSkip()`, `LaunchControlBase::update()`,
+  `AntilagSystemBase::update()` and `EtbController::getSetpointEtb()`.
+- **Trigger:** A script calls `setSparkSkipRatio`, `setSparkHardSkipRatio`,
+  `setLaunchTrigger` or `setRollingIdleTrigger`, then the Lua VM reloads and the
+  replacement script does not explicitly clear that request. Native launch
+  and anti-lag requests additionally require their normal configuration and
+  sensor gates to pass.
+- **Actual:** `resetLua()` clears the nested Lua state and several subsystem
+  overrides but omits `luaSoftSparkSkip`, `luaHardSparkSkip`, `luaLaunchState`
+  and `luaAntilagState`. Their consumers continue applying the old requests
+  indefinitely, subject to normal controller gates. Anti-lag can continue
+  adding throttle and fuel even with the driver's pedal released.
+- **Expected:** VM teardown clears every request owned by that script. A new
+  script starts with neutral overrides; applicable controllers refresh their
+  outputs from the cleared requests.
+- **Impact:** Retained full spark cut can stall the engine or prevent restart;
+  retained launch restricts torque. Retained anti-lag can maintain unintended
+  airflow and altered combustion. Torque, thermal and physical actuator
+  consequences depend on calibration and hardware; no vehicle test was run.
+- **Severity/confidence:** S2 — High, reproduced. The explicit request, reload
+  and permissive native gates narrow exposure; the host tests demonstrate
+  persistent commands rather than a measured vehicle acceleration.
+- **Validation:** Three `EcuLogicReview.LuaReset*` tests use real Lua bindings
+  and the actual teardown reset. The spark test observes an empty scheduler
+  after reset with a 100% hard skip, then normal coil charge/discharge after
+  an explicit clear. The launch test observes retained 100% skip and 20%
+  fuel addition. The anti-lag test observes a retained 20% ETB target, positive
+  motor command and 50% fuel correction; explicit clearing returns the
+  target to the configured 1% minimum and removes the fuel correction.
+  Host execution calls the production reset directly; it does not run the
+  ChibiOS Lua thread or physical throttle.
+- **Fix direction:** Give all Lua-owned requests a consistent reset lifecycle,
+  then refresh cached limiter/controller outputs and cover script reloads
+  whose replacement never writes the old request.
+
+### ECU-045 — Extra-page burns bypass the running-engine flash-write gate
+
+- **Source:** `TunerStudio::handleBurnCommand()` in
+  [tunerstudio.cpp](firmware/console/binary/tunerstudio.cpp),
+  `burnExtraFlashPage()` in [extra_flash_pages.cpp](firmware/controllers/extra_flash_pages.cpp),
+  `writeToFlashNow()` in [flash_main.cpp](firmware/controllers/flash_main.cpp),
+  and `storageManagerThread()` in [storage.cpp](firmware/controllers/storage.cpp).
+- **Trigger:** A TunerStudio Lua-page or second-tables-page burn while the
+  engine is running on an internal-flash board without MFS, including F407.
+  No self-stimulation or explicit forced-write command is required.
+- **Actual:** The extra-page branch calls `writeToFlashNow()`, requesting
+  `MSG_CMD_WRITE_NOW`. The storage manager bypasses `storageAllowWriteID()`
+  for this command and writes the full settings sector. The F4 capability
+  explicitly disallows flash writes while running, but this path never
+  consults it. Ordinary main-page burns use the deferred request.
+- **Expected:** A normal configuration-page burn observes the board's running
+  write restriction, regardless of which page changed.
+- **Impact:** Internal flash erase/program can stall execution and delay
+  ignition/injector callbacks and trigger processing, risking extended dwell,
+  incorrect fuel delivery or engine shutdown. The bypass is established;
+  erase latency and actual output duration were not measured on hardware.
+- **Severity/confidence:** S2 — High, source-confirmed in a production build.
+- **Validation:** The F407 firmware builds and links. Disassembly of
+  `TunerstudioThread::ThreadTask()` contains both extra-page comparisons and
+  their call to `writeToFlashNow()`. The complete request/manager/backend path
+  reaches internal flash erase/program without the running gate. Normal host
+  builds exclude these page-burn calls with `!EFI_UNIT_TEST`; no host burn
+  test is claimed for this finding.
+- **Fix direction:** Route normal extra-page burns through deferred storage
+  policy while preserving shared-sector consistency.
 
 ### ECU-001 — Invalid wastegate/idle-valve outputs still drive the motor
 
@@ -147,6 +232,35 @@ does not establish hardware timing or the physical severity of an outcome.
   no-start. These two tests exercise mode selection and real limp decisions;
   they do not execute the corresponding injector pulses.
 
+### ECU-039 — Lean second-bank feedback bypasses lambda protection
+
+- **Source:** `LambdaMonitorBase::isCurrentlyGood()` in
+  [lambda_monitor.cpp](firmware/controllers/math/lambda_monitor.cpp) reads only
+  `SensorType::Lambda1`. In contrast, `ShortTermFuelTrim::getSensorForBankIndex()`
+  in [closed_loop_fuel.cpp](firmware/controllers/math/closed_loop_fuel.cpp)
+  supports Lambda1/Lambda2 and `EngineState::periodicFastCallback()` applies
+  the selected bank's trim using `cylinderBankSelect`.
+- **Trigger:** Two lambda banks are configured, the engine exceeds all lambda
+  protection activation thresholds, bank 1 is healthy and bank 2 stays lean
+  beyond the configured timeout. No other cut or DFCO inhibit is active.
+- **Actual:** The monitor continually reports good lambda from bank 1 and
+  resets its timer. `LimpManager` permits injection despite bank 2 exceeding
+  the same configured lambda limit for longer than the timeout.
+- **Expected:** A configured lean-protection limit covers each active feedback
+  bank, or the configuration explicitly identifies a narrower protected bank.
+- **Impact:** A second-bank fuel-delivery fault can persist without the intended
+  protection cut, creating a credible damaging lean-combustion risk under load.
+  The test proves the missed cut, not physical mixture or damage.
+- **Validation:** `EcuLogicReview.LeanSecondBankDoesNotTriggerLambdaProtection`
+  uses the real monitor and limp manager at 3,000 RPM, load 100, 80% TPS,
+  target lambda 1.0, allowed deviation 0.1 and a 0.5-second timeout. Lambda1
+  0.95 / Lambda2 1.3 remains allowed after 0.6 seconds. Moving the same 1.3
+  reading to Lambda1 triggers the cut after 0.6 seconds. A lift below all
+  restore thresholds clears it. Sensor samples are supplied by host mocks;
+  no exhaust transport or physical injector fault is simulated.
+- **Fix direction:** Check all configured fuel-feedback banks with defined
+  missing/invalid-sensor behavior, retaining the intended cut latch and recovery.
+
 ### ECU-011 — Shared-coil ignition uses the wrong cylinder's timing and offset
 
 - **Source:** `prepareCylinderIgnitionSchedule()` in
@@ -206,11 +320,78 @@ does not establish hardware timing or the physical severity of an outcome.
   initializes the real ignition schedule for order 1-3-4-2 and proves that the
   event for physical cylinder 3 supplies identity 1 (physical cylinder 2),
   selecting a different configured knock bank. The complete caller/consumer
-  path is confirmed in source. The standard host build disables
-  `EFI_SOFTWARE_KNOCK`, so ADC scheduling/acquisition is not executed here.
+  path is confirmed in source. The optional software-knock host test
+  `KnockSchedulingReview.RealSparkSamplesFiringOrderPositionInsteadOfCylinder`
+  also executes the real dwell, spark and delayed sampling callbacks and
+  observes cylinder index 1/bank 0 instead of physical index 2/bank 1 at the
+  hardware-driver boundary. ADC acquisition and DSP gain/retard remain untested.
 - **Fix direction:** Convert event order to physical cylinder before scheduling
   knock acquisition and retain that identity in each pending sample. Cover
   nontrivial firing orders, both banks and differing per-cylinder gains.
+
+### ECU-037 — Disabling trailing sparks during dwell leaves a coil charged
+
+- **Source:** `turnSparkPinHighStartCharging()` and
+  `fireSparkAndPrepareNextSchedule()` in
+  [spark_logic.cpp](firmware/controllers/engine_cycle/spark_logic.cpp).
+  Both independently check the live `enableTrailingSparks` flag; the charge
+  callback schedules only charge, and the later leading-fire callback is
+  responsible for scheduling discharge. There is no trailing-coil dwell watchdog.
+- **Trigger:** Trailing sparks are enabled and a trailing coil starts dwelling.
+  A live tune write disables the feature before the leading spark fires.
+  The tuning field is live and has no `requiresPowerCycle` annotation.
+- **Actual:** The leading coil discharges normally, but its callback skips
+  scheduling trailing discharge because the flag is now false. The queue can
+  become empty while the trailing output remains high. Subsequent disabled
+  cycles do not discharge it. The stopped-engine pin sweep eventually clears
+  it; `Engine::efiWatchdog()` bypasses that sweep while trigger motion is recent.
+- **Expected:** Every started dwell retains a discharge action independently
+  of subsequent feature-disable writes, while new disabled cycles do not charge.
+- **Impact:** Prolonged coil/igniter energization can overheat hardware or invoke
+  its internal protection and disrupt ignition. An eventual uncontrolled
+  discharge can occur at the wrong phase. Electrical response and damage are
+  inferred and depend on the coil and driver; only logical outputs are tested.
+- **Validation:** `EcuLogicReview.DisablingTrailingSparkDuringDwellLeavesCoilCharged`
+  schedules real ignition callbacks at 1,000 RPM with 3-ms dwell and a 6-degree
+  trailing delay. Disabling after both outputs are high leaves the trailing
+  output high with an empty queue, including at 100 ms; the leading output is
+  low. The real stopped-engine sweep clears it. The adjacent
+  `IgnitionReview.UnchangedTrailingSparkDischargesBothCoils` control discharges
+  both outputs normally. This drives scheduling directly, not TunerStudio I/O
+  or continuous crank edges.
+- **Fix direction:** Preserve trailing charge/discharge ownership and the
+  pending plan across feature changes; add bounded dwell protection.
+
+### ECU-046 — Sync loss permits a flash write while a coil is charging
+
+- **Source:** `Engine::OnTriggerSynchronizationLost()` and `efiWatchdog()` in
+  [engine.cpp](firmware/controllers/algo/engine.cpp), `storageAllowWriteID()`
+  in [storage.cpp](firmware/controllers/storage.cpp), and timed ignition actions
+  in [spark_logic.cpp](firmware/controllers/engine_cycle/spark_logic.cpp).
+- **Trigger:** An internal-flash settings write is pending when decoder sync
+  is lost during dwell. The crank has moved recently and the timed spark
+  remains queued. The storage worker runs before that discharge.
+- **Actual:** Sync loss sets cached RPM to stopped immediately. The flash
+  gate accepts settings and backup writes based on that state, while the
+  watchdog leaves outputs alone when crank activity is recent. A charged
+  coil and a permitted flash write therefore coexist.
+- **Expected:** Flash-stalling storage waits until engine-control outputs
+  and pending work are safe; loss of decoded RPM is not proof that the
+  rotating engine and its scheduled outputs have stopped.
+- **Impact:** An erase started before the pending spark can stall execution
+  with the coil energized and miss crank edges, extending dwell or delaying
+  resynchronization. Hardware timing and resulting energy were not measured.
+  This requires a pending write and a narrow worker window.
+- **Severity/confidence:** S2 — High. Gate/output overlap is reproduced;
+  the subsequent flash stall and physical consequences are source-inferred.
+- **Validation:** `StorageBoardGate.SyncLossAllowsSettingsWriteDuringActiveDwell`
+  schedules real dwell/spark callbacks at 1,000 RPM. Running writes are
+  refused. Sync loss during dwell leaves the coil high and one spark queued
+  even after the watchdog runs, but both settings write gates now pass.
+  Without a simulated erase, the queued spark discharges normally.
+- **Fix direction:** Define a storage-safe stopped state accounting for
+  recent crank activity and outstanding output work; cover sync loss and
+  resynchronization with a pending write.
 
 ### ECU-009 — Upper forward gears overrun the boost adder array
 
@@ -264,13 +445,48 @@ does not establish hardware timing or the physical severity of an outcome.
   uses the wrong cylinder's gain, peak record and base timing when calculating
   the global retard amount. That can weaken or misdirect knock response under
   knock. The consequence depends on tune, engine layout, and actual knock;
-  no hardware DSP capture or host reproduction was run for this path.
-- **Validation:** Source path and accepted configuration range establish the
-  overwrite. The default 20-degree start does not meet this condition on a
-  V12. This remains source-confirmed, with a multi-cylinder timing test and
-  actual software-knock build still needed.
+  no hardware DSP capture was run.
+- **Validation:** The optional `KnockSchedulingReview.DelayedWindowUsesNextSparkCylinderAndBank`
+  executes real scheduled callbacks for consecutive V12 sparks at 1000 RPM
+  and a 70-degree start. Both windows request cylinder 1/bank 1, although the
+  first belongs to cylinder 0/bank 0. The 20-degree control retains both
+  identities; a stopped-engine control discards the due window. The F407
+  firmware build also links the production scheduler and knock DSP thread.
+  Hardware acquisition, DSP timing and physical knock response remain untested.
 - **Fix direction:** Bind cylinder and bank to each pending scheduler action,
   and exercise windows that cross one or more later sparks.
+
+### ECU-044 — Sync loss leaves an HPFP start with no finite off-event timing
+
+- **Source:** `HpfpController::onFastCallback()` and `pinTurnOn()` in
+  [high_pressure_fuel_pump.cpp](firmware/controllers/engine_cycle/high_pressure_fuel_pump.cpp),
+  sync-loss RPM reset in [engine.cpp](firmware/controllers/algo/engine.cpp), and
+  `scheduleByAngle()` / `sumTickAndFloat()` timing conversion.
+- **Trigger:** An HPFP start has been promoted from the angle queue into a
+  timed callback when synchronization is lost before it executes.
+- **Actual:** The inactive fast update zeros the pump request but does not
+  cancel the queued start. Sync loss makes `oneDegreeUs` NaN. `pinTurnOn()`
+  has no active/RPM recheck: it energizes the valve and then derives the
+  turn-off time from that NaN value. Conversion to integer ticks has no
+  finite guard, so there is no defined portable turn-off scheduling result.
+- **Expected:** Cancel or refuse the pending start after sync loss, or use
+  a validated bounded duration that still guarantees valve turn-off.
+- **Impact:** HPFP activation can occur after control is inactive with
+  unreliable pulse duration, affecting rail pressure, fueling and restart.
+  A permanently energized valve or specific physical failure is not claimed:
+  behavior after the undefined conversion was deliberately not executed.
+- **Severity/confidence:** S3 — Moderate; complete source path confirmed,
+  pending-callback and invalid-timing prerequisites reproduced.
+- **Validation:** `HPFP.SyncLossRetainsPendingStartWithInvalidOffTiming` uses
+  the real HPFP controller, a production-valid 12-minus-1 wheel, angle queue
+  and sync-loss reset. After the inactive update it observes the unchanged
+  valve-on callback and NaN timing basis, then removes the event without
+  executing undefined behavior. `HPFP.PendingStartClosesValveWithValidRpm`
+  runs the same setup without sync loss and observes valve activation and
+  normal timed turn-off. The F407 ELF contains both HPFP callbacks.
+- **Fix direction:** Include HPFP events in sync-loss cancellation and give
+  every energized-valve path a finite, bounded off time independent of later
+  RPM invalidation.
 
 ### ECU-033 — Unburned zero injector flow can yield an infinite pulse width
 
@@ -311,6 +527,179 @@ does not establish hardware timing or the physical severity of an outcome.
   the last valid flow until validation succeeds. Guard scheduled durations
   with `std::isfinite` before converting to ticks. Cover running primary and
   enabled staged-secondary updates.
+
+### ECU-049 — LTFT learns a frozen correction while bank feedback is unusable
+
+- **Source:** `ShortTermFuelTrim::getCorrection()` in
+  [closed_loop_fuel.cpp](firmware/controllers/math/closed_loop_fuel.cpp),
+  `LongTermFuelTrim::learn()` in
+  [long_term_fuel_trim.cpp](firmware/controllers/long_term_fuel_trim.cpp), and
+  their handoff in [engine2.cpp](firmware/controllers/algo/engine2.cpp).
+- **Trigger:** A nonzero short-term trim has been learned, LTFT learning is
+  enabled, and lambda feedback becomes invalid or fuel/spark is cut while
+  the engine remains in the globally permitted STFT correction state.
+- **Actual:** STFT freezes its cell adjustment and reports a per-bank disabled
+  learning state. LTFT checks only the global correction state and its special
+  launch gate; it keeps integrating the stale adjustment into long-term cells.
+  The same omission applies to the per-bank DFCO and AE holdoff states.
+- **Expected:** LTFT learning pauses for each bank whenever its upstream
+  short-term estimate is frozen because feedback is unsuitable for learning.
+- **Impact:** Stored correction can drift without fresh mixture evidence and
+  compound the frozen short-term adjustment or contaminate other visited
+  load/RPM cells, affecting fueling during recovery and later operation.
+  Persistence writes and resulting mixture were not measured in these tests.
+- **Severity/confidence:** S3 — Moderate, reproduced for invalid lambda and
+  a sustained fuel cut; DFCO/AE share the source path but are not separately tested.
+- **Validation:** `LTFT.InvalidLambdaStillLearnsFrozenShortTermCorrection` and
+  `FuelCutStillLearnsFrozenShortTermCorrection` first learn a real 10% STFT
+  correction. They then execute the normal STFT-to-LTFT handoff at 200 Hz for
+  one second. STFT reports the applicable disabled learning state and stays
+  at 10%, while LTFT grows above 6% with a one-second time constant. The neutral
+  second bank stays neutral. Disabling global STFT correction stops LTFT growth.
+- **Fix direction:** Carry per-bank learning eligibility with the correction
+  result and apply it consistently to LTFT, including cut-recovery holdoffs.
+
+### ECU-050 — Fixed timing retains a released launch spark cut
+
+- **Source:** `IgnitionState::getAdvance()` / `getRunningAdvance()` in
+  [ignition_state.cpp](firmware/controllers/algo/ignition/ignition_state.cpp),
+  `EngineState::updateSparkSkip()` in [engine2.cpp](firmware/controllers/algo/engine2.cpp).
+- **Trigger:** Launch has set a full hard-skip request, timing mode changes
+  to fixed, and launch is then released without another Lua skip setter call.
+- **Actual:** Native skip-target refresh is embedded in running timing-table
+  calculation. Fixed timing returns before it, so launch updates clear their
+  request but the spark limiter retains its prior 100% target indefinitely.
+  The same structure can omit newly requested native skips in fixed mode.
+- **Expected:** Skip arbitration follows current control requests independently
+  of whether timing angle comes from a fixed value or a table.
+- **Impact:** Continued full spark cut can stall the engine or prevent firing
+  during timing setup. This requires a mode transition with an existing cut;
+  normal dynamic timing refreshes it.
+- **Severity/confidence:** S3 — Moderate, reproduced.
+- **Validation:** `EcuLogicReview.FixedTimingRetainsReleasedLaunchSparkCut`
+  runs real periodic updates before and after mode change and release. Ten
+  fixed-mode updates leave the limiter at 100% although launch requests zero.
+  Actual spark scheduling produces no dwell events. Returning to dynamic
+  timing clears the limiter and restores normal coil charge/discharge.
+- **Fix direction:** Refresh skip arbitration in the common control-update
+  path; cover fixed timing and separate cranking-timing branches.
+
+### ECU-038 — Multispark extends trailing-coil dwell through every restrike
+
+- **Source:** `turnSparkPinHighStartCharging()` schedules trailing charge for
+  each leading dwell, but `fireSparkAndPrepareNextSchedule()` schedules trailing
+  discharge only in its `sparksRemaining == 0` branch in
+  [spark_logic.cpp](firmware/controllers/engine_cycle/spark_logic.cpp).
+- **Trigger:** Trailing sparks and multispark are both enabled at an RPM where
+  extra sparks are requested. These are independently accepted settings.
+- **Actual:** The trailing coil charges for the main event and stays charged
+  throughout the restrikes. Repeated charge callbacks only set an already-high
+  pin high; the one trailing spark occurs after the final leading restrike.
+  Its dwell therefore includes all intervening spark gaps and restrike dwells.
+- **Expected:** Trailing-coil dwell must obey a defined duration independent of
+  the number of leading restrikes. Supporting repeated trailing sparks or one
+  final trailing spark both require correctly paired, bounded charge intervals.
+- **Impact:** Excessive dwell can overheat the coil/igniter or trigger internal
+  current/dwell protection; trailing spark timing and energy can differ from
+  the requested plan, causing misfire or starting/driveability problems. Actual
+  electrical current, temperature and combustion are not measured.
+- **Validation:** `EcuLogicReview.MultisparkHoldsTrailingCoilUntilLastRestrike`
+  computes three extra sparks from supported settings at 1,000 RPM. Real
+  callbacks produce leading sparks at 5/8/11/14 ms. The trailing output stays
+  continuously high from 3 to 15 ms: 12-ms dwell despite a 3-ms main request
+  and 2-ms restrike dwell. It finally returns low and the queue empties.
+- **Fix direction:** Define trailing/multispark composition explicitly and pair
+  each trailing dwell with its discharge and watchdog. This is separate from
+  ECU-037: it occurs in steady configuration without a live write.
+
+### ECU-040 — Odd-fire MAP windows overwrite another cylinder's accumulator
+
+- **Source:** `MapAveragingModule::onFastCallback()` clamps window duration
+  using the uniform `engineCycle / cylindersCount` interval in
+  [map_averaging.cpp](firmware/controllers/modules/map_averaging/map_averaging.cpp).
+  Start angles include individual odd-fire offsets. Every window shares the
+  same `MapAverager`; `start()` resets its accumulator/identity and `stop()`
+  disables it without checking which window owns it.
+- **Trigger:** All-cylinder MAP sampling on an odd-fire engine, with the
+  configured duration longer than a short firing interval but within the
+  uniform-period clamp. A six-cylinder 90/150-degree layout permits a
+  110-degree window, overlapping across its 90-degree intervals.
+- **Actual:** The second start erases the first cylinder's accumulated samples.
+  The first stop publishes the second cylinder's partial measurement and stops
+  its accumulation early. Its later stop republishes that same partial value
+  with a new timestamp; samples after the premature stop are ignored.
+- **Expected:** Windows must retain independent ownership or be bounded to
+  the actual next sampling start, including odd-fire offsets and wraparound.
+- **Impact:** The fast MAP value used for fueling/load can differ materially
+  from the intended pressure-window average, producing fueling/timing errors
+  and misfire or driveability problems. Physical pressure traces and resulting
+  combustion are not simulated.
+- **Validation:**
+  `MapSamplingAngle.OddFireOverlappingWindowsDiscardAndMisattributeSamples`
+  exercises the real phase scheduling, callbacks and voltage converter. With
+  starts at 0/90 degrees at 1,000 RPM, a 110-degree window loses cylinder 1's
+  20-kPa sample and reports cylinder 2 at 100 kPa, dropping its later 40-kPa
+  sample. A 50-degree control correctly reports 20 kPa and the second window's
+  70-kPa mean. The test uses deterministic samples and no ADC/DMA acquisition.
+- **Fix direction:** Bound windows using actual cylinder geometry or provide
+  separate accumulators and matching completion identities. Cover wrapping
+  windows, changed RPM and live window changes as well as steady odd-fire geometry.
+
+### ECU-042 — Custom barometric pressure uses the MAP calibration
+
+- **Source:** `getMapCfg()` / `configureMapFunction()` / `initMap()` in
+  [init_map.cpp](firmware/init/sensor/init_map.cpp), and
+  `SpeedDensityAirmass::getCompensatedMap()` in
+  [speed_density_airmass.cpp](firmware/controllers/algo/airmass/speed_density_airmass.cpp).
+- **Trigger:** An analog baro channel uses `MT_CUSTOM` with pressure endpoints
+  different from the MAP sensor. The Baro dialog exposes separate low/high
+  pressure values, but both converters take the custom MAP configuration.
+- **Actual:** The baro converter ignores `baroSensor.lowValue/highValue`.
+  With 0–5 V / 0–120 kPa baro and 0–200 kPa MAP, a 4 V baro sample publishes
+  160 kPa instead of 96 kPa. Editing baro endpoints does nothing; editing MAP
+  endpoints changes both channels. MAP plausibility bounds also govern baro.
+- **Expected:** Custom baro pressure uses its own configured endpoints.
+- **Impact:** Incorrect barometric correction changes fuel calculations and,
+  with compensated MAP enabled, fuel/spark table load selection. The example
+  changes 40 kPa measured MAP to 26.67 kPa load instead of 42.22 kPa. Actual
+  fuel/timing changes depend on the corresponding tables; no engine outcome
+  or ADC electrical accuracy was measured.
+- **Severity/confidence:** S3 — Moderate, reproduced.
+- **Validation:** `SensorInit.CustomBaroUsesMapCalibrationInsteadOfBaroEndpoints`
+  initializes the real registered converter, posts raw voltages and executes
+  compensated-MAP calculation. Reinitializing after separate baro/MAP edits
+  establishes the wrong dependency; a preset baro curve is the unaffected
+  control. Host ADC subscriptions are stubs, so this covers conversion and
+  consumption, not sampling hardware.
+- **Fix direction:** Pass the sensor-specific custom endpoints and plausibility
+  policy to each converter; retain independent MAP/baro calibration coverage.
+
+### ECU-043 — Idle timing soft entry retains the previous run's time origin
+
+- **Source:** `IdleController::determinePhase()`, `getIdleTimingAdjustment()`
+  and `onEngineStop()` in [idle_thread.cpp](firmware/controllers/actuators/idle_thread.cpp).
+- **Trigger:** Idle timing PID and a positive `idleTimingSoftEntryTime` are
+  enabled. The engine first reaches idle some time after cranking, stops, and
+  restarts into idle earlier in the new run.
+- **Actual:** The initial idle transition stores `m_crankTaperEndTime` and its
+  soft-entry endpoint only when that member is zero. Stop resets the RPM PID
+  but leaves these times intact. `timeSinceCrankingInSecs` restarts at zero,
+  so timing-error amplification stays zero until the new run reaches the old
+  timestamp. An idle entry at 20 seconds followed by restart/idle at 1 second
+  suppresses correction through 20 seconds despite a configured 2-second ramp.
+- **Expected:** Each restart establishes a fresh idle timing soft-entry interval.
+- **Impact:** A configured fast idle stabilization mechanism is absent during
+  the restart period; idle sag or stalling under load is plausible. The test
+  demonstrates suppressed timing correction, not a measured stall.
+- **Severity/confidence:** S3 — Moderate, reproduced.
+- **Validation:** `idle_v2.RestartRetainsPreviousIdleTimingSoftEntryEpoch` runs
+  real phase classification, stop handling and timing PID. It observes 0°
+  instead of 10° correction at four seconds into the second run, then 5° at
+  21 seconds and 10° at 23 seconds. A fresh-controller control reaches 10° at
+  four seconds. The fixture supplies the per-run elapsed-time field directly;
+  it does not replay crank edges or simulate engine response.
+- **Fix direction:** Reset per-run idle timing entry state with engine stop,
+  and cover repeated crank-to-idle transitions with different taper lengths.
 
 ### ECU-013 — Wrapped retarded timing produces excessive knock response
 
@@ -416,6 +805,59 @@ does not establish hardware timing or the physical severity of an outcome.
 - **Fix direction:** Use the configured duration in the interpolation; cover
   short, long and zero ramps and transitions back into DFCO.
 
+### ECU-047 — Unassigning an active launch switch retains its control request
+
+- **Source:** `LaunchControlBase::isInsideSwitchCondition()` in
+  [launch_control.cpp](firmware/controllers/algo/launch_control.cpp).
+- **Trigger:** Switch-input launch is active, then a live tune changes
+  `launchActivatePin` to Unassigned while launch remains enabled and its
+  RPM, TPS and speed conditions still permit operation.
+- **Actual:** An invalid pin skips sampling without clearing
+  `launchActivatePinState`. Subsequent updates keep the old active request,
+  launch fuel addition and full spark skip. Releasing the former switch has
+  no effect because it is no longer read.
+- **Expected:** Removing the selected input makes its request inactive.
+- **Impact:** Unexpected torque restriction or stalling can continue after
+  the input is removed. Exposure is limited to live input reconfiguration
+  while the cached switch was active; normal switch release works.
+- **Severity/confidence:** S3 — Moderate, reproduced.
+- **Validation:** `LaunchControl.UnassigningActiveSwitchRetainsLaunchCut`
+  samples a real mocked input, unassigns it, releases the old pin and runs
+  three controller/skip updates. The 100% hard skip and 20% fuel addition
+  persist. Reassigning the released input clears both effects. This tests
+  live configuration consumption, not physical GPIO reinitialization.
+- **Fix direction:** Clear cached input state when the pin is unavailable;
+  review the equivalent anti-lag input cache, which has the same source pattern
+  but a production-only GPIO read that this test does not execute.
+
+### ECU-048 — First odd-fire injection uses the previous cylinder's offset
+
+- **Source:** `InjectionEvent::update()` and `computeInjectionAngle()` in
+  [fuel_schedule.cpp](firmware/controllers/engine_cycle/fuel_schedule.cpp),
+  first-ready schedule construction in `handleFuel()` in
+  [main_trigger_callback.cpp](firmware/controllers/engine_cycle/main_trigger_callback.cpp).
+- **Trigger:** The first ready sequential schedule for an odd-fire engine,
+  or an output-mode transition that changes an event's physical cylinder.
+  A tooth consumes the rebuilt angle before the next schedule refresh.
+- **Actual:** The angle is computed using the previous `cylinderNumber`, then
+  that identity is changed to the current injector. Initial events all carry
+  cylinder zero, so another cylinder can receive cylinder one's odd-fire
+  correction for its first pulse. The next update uses the right identity.
+- **Expected:** An angle and its output selection use the same cylinder.
+- **Impact:** Transient injection-phase error during startup or mode changes.
+  The test demonstrates a 32-degree error, not an incorrect pulse quantity,
+  sustained error or measured misfire; engine impact depends on injection type.
+- **Severity/confidence:** S4 — Low, reproduced; limited duration and no
+  demonstrated significant driveability consequence justify the lower rank.
+- **Validation:** `injectionScheduling.FirstOddFireScheduleUsesPreviousCylinderIdentity`
+  builds a real two-cylinder sequential schedule with -19/+13 degree offsets.
+  Cylinder two opens at 341 degrees instead of 373 and the scheduled callbacks
+  operate the correct physical injector. Its pulse closes normally and the
+  close callback refreshes the angle to 373 degrees. This exercises schedule
+  construction and dispatch, not a full crank-signal replay.
+- **Fix direction:** Resolve cylinder identity before deriving the angle;
+  cover initial readiness and simultaneous-to-sequential transitions.
+
 ## Fixed findings
 
 | ID | Former defect | Current behavior and regression coverage |
@@ -447,11 +889,14 @@ does not establish hardware timing or the physical severity of an outcome.
 
 ## Candidates under investigation
 
-- Software-knock pending cylinder identity is now ECU-032 for a configured
-  window beginning after the next spark. Multispark interactions remain to
-  be checked separately: `fireSparkAndPrepareNextSchedule()` schedules a
-  knock window after each restrike, so sampling may repeat or overlap for one
-  combustion event. The driver-level effect is unverified.
+- Software-knock overlapping requests are demonstrated by
+  `KnockSchedulingReview.OverlappingWindowsRequestBothSamples` and
+  `RestrikesScheduleOverlappingWindowsForOneCombustion`: two restrikes produce
+  three requests 1.5 ms apart, each requesting 8.33 ms of sampling. The real
+  driver rejects requests while acquisition or DSP owns its single buffer.
+  Acquisition length clamping, processing completion and which later requests
+  are accepted still need hardware-driver coverage before ranking a separate
+  missed-window or duplicate-retard finding. Delayed identity is ECU-032.
 - On failed CLT during cranking, `getCrankingFuel3()` uses 0 °C for its base
   fuel table but 20 °C for its coolant multiplier. The default base table is
   flat, so a material effect needs a supported temperature-varying tune and
@@ -495,7 +940,8 @@ electrical behavior on an engine. The following checks bound the review.
   sensor registry and stored values, fuel-pressure compensation, flex fueling,
   nitrous activation, anti-lag, and knock control. Inspection does not mean all
   behavior in these areas is covered.
-- Host `make -j12` succeeds with GCC and ASan/bounds enabled. All 78 focused
+- Prior inventory validation (not a substitute for the current review):
+  host `make -j12` succeeded with GCC and ASan/bounds enabled. All 78 focused
   tests pass: 19 `EcuLogicReview.*` defect reproductions, the oil-pressure and
   injector-flow regressions, the complete VVT, A/C-pressure, injector-model and
   traction-spark-skip suites, and the ignition schedule-rebuild regression.
@@ -504,12 +950,42 @@ electrical behavior on an engine. The following checks bound the review.
   before, at and after positive delay boundaries, plus zero delay at and after
   startup. A/C coverage configures the ADC channel explicitly; sensor mocks
   alone represent neither sensor wiring nor the configured-failure path.
-- The full GCC ASan/bounds suite passes: 1,851 tests from 303 suites. Command:
+- The prior full GCC ASan/bounds suite passed: 1,851 tests from 303 suites. Command:
   `cd unit_tests && make -j12 && build/rusefi_test`.
   The 78 focused tests also pass three shuffled runs with seeds 31337–31339
   (`--gtest_shuffle --gtest_random_seed=31337 --gtest_repeat=3`).
-- Host execution does not exercise software-knock ADC acquisition or establish
-  physical injector/coil/solenoid behavior. The delayed-knock identity finding
-  still needs timing coverage with software knock enabled.
+- Host execution does not exercise software-knock ADC acquisition/DSP or
+  establish physical injector/coil/solenoid behavior. Optional host coverage
+  executes the real knock scheduling branch up to the hardware-driver boundary.
 - The build regenerates tracked generated files. They remain unstaged, per
   repository guidance; production source is unchanged by this review.
+
+### Current review validation checkpoint
+
+- Baseline `make -C unit_tests -j12` and
+  `build/rusefi_test --gtest_filter='EcuLogicReview.*:LimpRegression.*:InjectorFlowRegression.*'`
+  pass (21 tests, run from `unit_tests/`).
+- After new coverage, `make -C unit_tests -j12` and
+  `build/rusefi_test --gtest_filter='EcuLogicReview.*:IgnitionReview.*:MapSamplingAngle.*'`
+  pass: 36 tests, including the four new defect reproductions and a normal
+  trailing-discharge control. The same selection passes three shuffled runs
+  with seeds 31337–31339. The full normal host suite passes 1,856 tests from
+  304 suites (`build/rusefi_test`). Repeat final validation after further edits.
+- `cd firmware && bash bin/compile.sh config/boards/f407-discovery/meta-info.env -j12`
+  succeeds. The linked ELF contains the `startKnockSampling` action and
+  `KnockThread::ThreadTask`; this verifies feature compilation/linking, not ADC
+  acquisition or runtime timing on a physical ECU.
+- All six optional `KnockSchedulingReview.*` tests pass. The build command is
+  `make -C unit_tests -j12 BUILDDIR=build-knock-review DEPDIR=build-knock-review/.dep KNOCK_SCHEDULING_TEST=yes`.
+  It compiles the real software-knock scheduling branch and substitutes only
+  the hardware driver. Run `build-knock-review/rusefi_test --gtest_filter='KnockSchedulingReview.*'`
+  from `unit_tests/`. This selection also passes three shuffled runs with
+  seeds 31337–31339. The default host suite compiles without software knock.
+
+- Later focused additions pass: three `EcuLogicReview.LuaReset*` tests;
+  `SensorInit.CustomBaroUsesMapCalibrationInsteadOfBaroEndpoints`;
+  `idle_v2.RestartRetainsPreviousIdleTimingSoftEntryEpoch`; both
+  `HPFP.SyncLossRetainsPendingStartWithInvalidOffTiming` and
+  `HPFP.PendingStartClosesValveWithValidRpm`; and
+  `StorageBoardGate.SyncLossAllowsSettingsWriteDuringActiveDwell`.
+  Final full-suite and shuffled validation remain pending while review continues.

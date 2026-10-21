@@ -1,5 +1,6 @@
 TESTS_SRC_CPP = \
 	tests/test_ecu_logic_review.cpp \
+	tests/test_knock_scheduling_review.cpp \
 	tests/test_past_codes.cpp \
 	tests/test_setting_diagnostics.cpp \
 	tests/test_nucleo_hardware_ci.cpp \

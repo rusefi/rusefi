@@ -133,6 +133,59 @@ TEST(gpio, deInit) {
 	EXPECT_NO_FATAL_ERROR(dut.initPin("testPin", Gpio::B5));
 }
 
+static void checkInjectorRemovalBeforeClose(bool removeDuringPulse) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	ScopedPinOwnershipForUnitTest pinOwnership;
+	ScopedCylinderOutputPinCleanup outputCleanup;
+	constexpr auto oldPin = Gpio::MC33810_0_OUT_0;
+	ScopedIssue10311PinCleanup oldPinCleanup(oldPin);
+	establishEmptyCylinderOutputBaseline();
+	configureCylinderOutputPins(1);
+	engineConfiguration->firingOrder = FO_1;
+	engineConfiguration->injectionPins[0] = oldPin;
+	enginePins.updateCylinderOutputPinsForUnitTest();
+	rememberCurrentConfiguration();
+	engine->rpmCalculator.oneDegreeUs = 100;
+	engine->engineState.injectionMass[0] = 0.01f;
+	MockInjectorModel2 injector;
+	engine->module<InjectorModelPrimary>().set(&injector);
+	EXPECT_CALL(injector, getInjectionDuration(::testing::_)).WillOnce(Return(10.0f));
+	InjectionEvent event;
+	event.setIndex(0);
+	event.injectionStartAngle = 5;
+	event.onTriggerTooth(getTimeNowNt(), 0, 10);
+	ASSERT_EQ(2, engine->scheduler.size());
+	eth.moveTimeForwardUs(1000);
+	ASSERT_EQ(1, eth.executeActions());
+	ASSERT_TRUE(efiReadPin(oldPin));
+	ASSERT_EQ(1, enginePins.injectors[0].getOverlappingCounter());
+
+	if (removeDuringPulse) {
+		engineConfiguration->injectionPins[0] = Gpio::Unassigned;
+		enginePins.updateCylinderOutputPinsForUnitTest();
+		rememberCurrentConfiguration();
+		ASSERT_EQ(Gpio::Unassigned, enginePins.injectors[0].brainPin);
+	}
+	eth.moveTimeForwardUs(10000);
+	ASSERT_EQ(1, eth.executeActions());
+	EXPECT_FALSE(enginePins.injectors[0].getLogicValue());
+	EXPECT_EQ(0, enginePins.injectors[0].getOverlappingCounter());
+	EXPECT_EQ(removeDuringPulse, efiReadPin(oldPin));
+	enginePins.stopPins();
+	EXPECT_EQ(removeDuringPulse, efiReadPin(oldPin));
+	// The host mock retains the last electrical write. Production MC33810's
+	// inherited setPadMode also performs no write, so deinit does not turn off
+	// its latched/direct output. This test covers event/output lifetime, not SPI.
+}
+
+TEST(gpio, RemovingActiveInjectorLosesPendingPhysicalTurnOff) {
+	checkInjectorRemovalBeforeClose(true);
+}
+
+TEST(gpio, RetainedInjectorPinClosesWithPendingEvent) {
+	checkInjectorRemovalBeforeClose(false);
+}
+
 // #10311: these tests assert current bugs, not the desired behavior.
 // A rejected pin user should leave the existing owner untouched.
 // Mode 0 tests pin ownership only, not ADC/EXTI hardware setup.

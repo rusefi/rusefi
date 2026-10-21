@@ -50,6 +50,53 @@ TEST(idle_v2, timingPid) {
 	EXPECT_FLOAT_EQ(-5,   dut.getIdleTimingAdjustment(1050, 1000, ICP::Idling));
 }
 
+TEST(idle_v2, RestartRetainsPreviousIdleTimingSoftEntryEpoch) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	IdleController dut;
+	engineConfiguration->useIdleTimingPidControl = true;
+	engineConfiguration->idleTimingSoftEntryTime = 2;
+	engineConfiguration->idleTimingPid.pFactor = 0.1f;
+	engineConfiguration->idleTimingPid.iFactor = 0;
+	engineConfiguration->idleTimingPid.dFactor = 0;
+	engineConfiguration->idleTimingPid.minValue = -20;
+	engineConfiguration->idleTimingPid.maxValue = 20;
+	engineConfiguration->idlePidDeactivationTpsThreshold = 5;
+	engineConfiguration->maxIdleVss = 0;
+	dut.init();
+	const TgtInfo target{900, 1100, 1200};
+	engine->rpmCalculator.setRpmValue(800);
+	engine->fuelComputer.running.timeSinceCrankingInSecs = 20;
+	ASSERT_EQ(ICP::Idling, dut.determinePhase(800, target, 0, 0, 1));
+	EXPECT_FLOAT_EQ(0, dut.getIdleTimingAdjustment(800, 900, ICP::Idling));
+	engine->fuelComputer.running.timeSinceCrankingInSecs = 23;
+	EXPECT_FLOAT_EQ(10, dut.getIdleTimingAdjustment(800, 900, ICP::Idling));
+
+	// A normal stop resets the PID, but not the previous run's soft-entry epoch.
+	dut.onEngineStop();
+	engine->rpmCalculator.setStopSpinning();
+	engine->fuelComputer.running.timeSinceCrankingInSecs = 0;
+	ASSERT_EQ(ICP::Cranking, dut.determinePhase(0, target, 0, 0, 0));
+	dut.getIdleTimingAdjustment(0, 900, ICP::Cranking);
+	engine->rpmCalculator.setRpmValue(800);
+	engine->fuelComputer.running.timeSinceCrankingInSecs = 1;
+	ASSERT_EQ(ICP::Idling, dut.determinePhase(800, target, 0, 0, 1));
+	engine->fuelComputer.running.timeSinceCrankingInSecs = 4;
+	EXPECT_FLOAT_EQ(0, dut.getIdleTimingAdjustment(800, 900, ICP::Idling));
+	// Correction returns only when this run catches the old 20-second epoch.
+	engine->fuelComputer.running.timeSinceCrankingInSecs = 21;
+	EXPECT_FLOAT_EQ(5, dut.getIdleTimingAdjustment(800, 900, ICP::Idling));
+	engine->fuelComputer.running.timeSinceCrankingInSecs = 23;
+	EXPECT_FLOAT_EQ(10, dut.getIdleTimingAdjustment(800, 900, ICP::Idling));
+
+	// The same restart timing with a fresh controller completes at 3 seconds.
+	IdleController fresh;
+	fresh.init();
+	engine->fuelComputer.running.timeSinceCrankingInSecs = 1;
+	ASSERT_EQ(ICP::Idling, fresh.determinePhase(800, target, 0, 0, 1));
+	engine->fuelComputer.running.timeSinceCrankingInSecs = 4;
+	EXPECT_FLOAT_EQ(10, fresh.getIdleTimingAdjustment(800, 900, ICP::Idling));
+}
+
 TEST(idle_v2, testTargetRpm) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	IdleController dut;

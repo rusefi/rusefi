@@ -6,7 +6,72 @@
  */
 
 #include "pch.h"
+#include "high_pressure_fuel_pump.h"
 using ::testing::_;
+
+static void checkPendingHpfpStart(bool loseSync) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* cfg) {
+		cfg->hpfpValvePin = Gpio::A2;
+		cfg->hpfpCamLobes = 0;
+	});
+	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL;
+	engineConfiguration->trigger.customTotalToothCount = 12;
+	engineConfiguration->trigger.customSkippedToothCount = 1;
+	engine->updateTriggerConfiguration();
+	engine->rpmCalculator.setRpmValue(1000);
+	engineConfiguration->hpfpCamLobes = 1;
+	engineConfiguration->hpfpCam = HPFP_CAM_NONE;
+	engineConfiguration->hpfpPumpVolume = 0.2f;
+	engineConfiguration->hpfpPeakPos = 60;
+	engineConfiguration->hpfpMinAngle = 1;
+	engineConfiguration->hpfpActivationAngle = 20;
+	setArrayValues(config->hpfpDeadtimeMS, 0);
+	setArrayValues(config->hpfpLobeProfileAngle, 30);
+	ASSERT_GT(engine->triggerCentral.triggerShape.getSize(), 6);
+	auto& controller = engine->module<HpfpController>().unmock();
+	controller.onFastCallback();
+	ASSERT_TRUE(controller.isHpfpActive);
+	ASSERT_FLOAT_EQ(30, controller.m_event.getAngle());
+	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(
+		1000, getTimeNowNt(), 0, 40);
+	ASSERT_EQ(1, engine->scheduler.size());
+	ASSERT_EQ(&controller.m_event.eventScheduling, engine->scheduler.getHead());
+	const auto scheduledAction = engine->scheduler.getHead()->action;
+	ASSERT_EQ(action_s::make<HpfpController::pinTurnOn>(&controller), scheduledAction);
+
+	eth.moveTimeForwardUs(1000);
+	if (loseSync) {
+		engine->OnTriggerSynchronizationLost();
+		controller.onFastCallback();
+		ASSERT_TRUE(engine->rpmCalculator.isStopped());
+		EXPECT_FALSE(controller.isHpfpActive);
+		EXPECT_FLOAT_EQ(0, controller.m_requested_pump);
+		EXPECT_EQ(1, engine->scheduler.size());
+		EXPECT_EQ(scheduledAction, engine->scheduler.getHead()->action);
+		EXPECT_TRUE(std::isnan(engine->rpmCalculator.getOneDegreeUs()));
+		// Do not execute the stale pinTurnOn: it sets the valve high then calls
+		// scheduleByAngle for its off event using NaN oneDegreeUs. That reaches
+		// sumTickAndFloat's undefined float-to-int conversion. This test proves
+		// the reachable callback and invalid timing premise without invoking UB.
+		engine->scheduler.clear();
+	} else {
+		eth.moveTimeForwardUs(4000);
+		ASSERT_EQ(1, eth.executeActions());
+		EXPECT_TRUE(enginePins.hpfpValve.getLogicValue());
+		eth.moveTimeForwardUs(3500);
+		ASSERT_EQ(1, eth.executeActions());
+		EXPECT_FALSE(enginePins.hpfpValve.getLogicValue());
+		EXPECT_EQ(0, engine->scheduler.size());
+	}
+}
+
+TEST(HPFP, SyncLossRetainsPendingStartWithInvalidOffTiming) {
+	checkPendingHpfpStart(true);
+}
+
+TEST(HPFP, PendingStartClosesValveWithValidRpm) {
+	checkPendingHpfpStart(false);
+}
 
 #if FUEL_RPM_COUNT == 16
 static int hpfpTotalToggle = 0;

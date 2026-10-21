@@ -9,6 +9,7 @@
 #include "map_averaging.h"
 #include "harley.h"
 #include "linear_func.h"
+#include "init.h"
 
 #include <array>
 
@@ -405,6 +406,65 @@ TEST_F(MapSamplingAngle, TriggerEdgesStartAndStopWindowAtConfiguredAngles) {
 	eth.setTimeAndInvokeEventsNt(endNt);
 	EXPECT_FALSE(engine->outputChannels.isMapAveraging);
 	EXPECT_EQ(0, engine->scheduler.size());
+}
+
+TEST_F(MapSamplingAngle, OddFireOverlappingWindowsDiscardAndMisattributeSamples) {
+	engineConfiguration->cylindersCount = 6;
+	engineConfiguration->firingOrder = FO_1_2_3_4_5_6;
+	for (size_t i = 0; i < 6; i++) {
+		engineConfiguration->timing_offset_cylinder[i] = (i % 2) ? -30 : 0;
+	}
+	engine->updateTriggerConfiguration();
+	engineConfiguration->measureMapOnlyInOneCylinder = false;
+	engineConfiguration->mapMinBufferLength = 1;
+	engineConfiguration->mapExpAverageAlpha = 1;
+	engineConfiguration->map.sensor.type = MT_CUSTOM;
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_NONE;
+	engineConfiguration->mapLowValueVoltage = 0;
+	engineConfiguration->mapHighValueVoltage = 5;
+	engineConfiguration->map.sensor.lowValue = 0;
+	engineConfiguration->map.sensor.highValue = 100;
+	engineConfiguration->mapErrorDetectionTooLow = 0;
+	engineConfiguration->mapErrorDetectionTooHigh = 200;
+	initMap(); // Production static converter; no pointer to a temporary test object.
+	auto& sensor = getMapAvg(0);
+
+	for (const float duration : {50.0f, 110.0f}) {
+		SCOPED_TRACE(duration);
+		const bool overlaps = duration > 90;
+		engine->scheduler.clear();
+		module.init();
+		sensor.invalidate();
+		setArrayValues(engine->outputChannels.mapPerCylinder, 0.0f);
+		setWindow(0, duration);
+		ASSERT_FLOAT_EQ(0, engine->engineState.mapAveragingStart[0]);
+		ASSERT_FLOAT_EQ(90, engine->engineState.mapAveragingStart[1]);
+		ASSERT_FLOAT_EQ(duration, engine->engineState.mapAveragingDuration);
+		module.onEnginePhase(1000, getTimeNowNt(), 0, 120);
+		eth.executeActions(); // Start cylinder 1 at phase zero.
+		ASSERT_FLOAT_EQ(20, sensor.submit(1).Value);
+		eth.moveTimeForwardUs(9000);
+		eth.executeActions(); // The 50-degree control has finished.
+		EXPECT_EQ(!overlaps, sensor.get().Valid);
+		eth.moveTimeForwardUs(6000); // 90 degrees: start cylinder 2.
+		eth.executeActions();
+		ASSERT_FLOAT_EQ(100, sensor.submit(5).Value);
+		eth.moveTimeForwardUs(4000); // First long window ends at 110 degrees.
+		eth.executeActions();
+		EXPECT_FLOAT_EQ(overlaps ? 0 : 20, engine->outputChannels.mapPerCylinder[0]);
+		eth.moveTimeForwardUs(1000);
+		ASSERT_FLOAT_EQ(40, sensor.submit(2).Value);
+		eth.moveTimeForwardUs(14000);
+		eth.executeActions(); // Second window has now ended in both cases.
+		ASSERT_TRUE(sensor.get());
+		// Control window averages (100 + 40)/2 = 70. With overlap, the
+		// first stop prematurely closes cylinder 2, dropping its 40-kPa sample
+		// and publishing its early 100-kPa value again at the second stop.
+		EXPECT_FLOAT_EQ(overlaps ? 100 : 70, sensor.get().Value);
+		EXPECT_FLOAT_EQ(overlaps ? 100 : 70, engine->outputChannels.mapPerCylinder[1]);
+		EXPECT_EQ(0, engine->scheduler.size());
+	}
+	sensor.invalidate();
 }
 
 } // namespace

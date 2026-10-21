@@ -35,8 +35,9 @@ obtain milliseconds. A nonpositive resulting duration produces no pulse.
 
 The ignition-on handler skips scheduling when the engine is already spinning, or
 when flood clear is enabled and `Tps1` is strictly above 90%. These gates are
-checked when scheduling; the delayed `onPrimeStart()` callback does not recheck
-them. Coolant and ethanol are read when that callback calculates the pulse.
+checked both when scheduling and when the delayed `onPrimeStart()` callback
+runs. The callback also checks injection enable and current limp-manager
+permission. Coolant and ethanol are read when that callback calculates the pulse.
 Invalid coolant skips priming. A configured but invalid ethanol sensor uses 50%.
 
 On targets with backup SRAM, a key-cycle counter suppresses repeated priming when

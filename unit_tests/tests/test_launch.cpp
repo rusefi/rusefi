@@ -2,6 +2,44 @@
 
 #include "launch_control.h"
 
+TEST(LaunchControl, UnassigningActiveSwitchRetainsLaunchCut) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->launchControlEnabled = true;
+	engineConfiguration->launchActivationMode = SWITCH_INPUT_LAUNCH;
+	engineConfiguration->launchActivatePin = Gpio::G1;
+	engineConfiguration->launchRpm = 3000;
+	engineConfiguration->launchRpmThreshold = 0;
+	engineConfiguration->launchSpeedThreshold = 0;
+	engineConfiguration->launchTpsThreshold = 5;
+	engineConfiguration->launchSparkCutEnable = true;
+	engineConfiguration->launchFuelAdderPercent = 20;
+	engine->rpmCalculator.setRpmValue(3500);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 80);
+	setMockState(Gpio::G1, true);
+	auto& launch = engine->launchController;
+	launch.update();
+	ASSERT_TRUE(launch.isLaunchCondition);
+
+	// A live tune unassigns the input while its last sampled state was active.
+	engineConfiguration->launchActivatePin = Gpio::Unassigned;
+	setMockState(Gpio::G1, false);
+	for (int i = 0; i < 3; i++) {
+		launch.update();
+		engine->engineState.updateSparkSkip();
+		EXPECT_TRUE(launch.isLaunchCondition);
+		EXPECT_FLOAT_EQ(1, engine->hardSparkLimiter.getTargetSkipRatio());
+		EXPECT_FLOAT_EQ(1.2f, launch.getFuelCoefficient());
+	}
+
+	// Reassigning a released switch refreshes the cache and removes the cut.
+	engineConfiguration->launchActivatePin = Gpio::G1;
+	launch.update();
+	engine->engineState.updateSparkSkip();
+	EXPECT_FALSE(launch.isLaunchCondition);
+	EXPECT_FLOAT_EQ(0, engine->hardSparkLimiter.getTargetSkipRatio());
+	EXPECT_FLOAT_EQ(1, launch.getFuelCoefficient());
+}
+
 TEST(LaunchControl, TpsCondition) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 

@@ -11,6 +11,7 @@
 #include "spark_logic.h"
 #include "speed_density_airmass.h"
 #include "stored_value_sensor.h"
+#include "rusefi_lua.h"
 
 using ::testing::_;
 using ::testing::Return;
@@ -562,4 +563,309 @@ TEST(InjectorFlowRegression, SecondaryZeroFlowRejectedOnlyWhenStaged) {
 	ASSERT_TRUE(validateConfigOnStartUpOrBurn());
 	engineConfiguration->enableStagedInjection = true;
 	EXPECT_FATAL_ERROR(validateConfigOnStartUpOrBurn());
+}
+
+namespace {
+
+void configureReviewTrailingSpark() {
+	engineConfiguration->cylindersCount = 1;
+	engineConfiguration->firingOrder = FO_1;
+	engineConfiguration->ignitionMode = IM_ONE_COIL;
+	engineConfiguration->isInjectionEnabled = false;
+	engineConfiguration->isIgnitionEnabled = true;
+	engineConfiguration->enableTrailingSparks = true;
+	engine->updateTriggerConfiguration();
+	engine->rpmCalculator.setRpmValue(1000);
+	setArrayValues(config->sparkDwellValues, 3.0f);
+	setArrayValues(config->dwellVoltageCorrValues, 1.0f);
+	engine->ignitionState.updateDwell(1000, false);
+	setTable(config->trailingSparkTable, 6);
+	engine->ignitionState.trailingSparkAngle = 6;
+	setArrayValues(engine->engineState.timingAdvance, -30.0f);
+	initializeIgnitionActions();
+}
+
+void checkTrailingSparkDisable(bool disableDuringDwell) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	configureReviewTrailingSpark();
+	const auto startUs = getTimeNowUs();
+	onTriggerEventSparkLogic(1000, getTimeNowNt(), 0, 90);
+	eth.setTimeAndInvokeEventsUs(startUs + 3100);
+	ASSERT_TRUE(enginePins.coils[0].getLogicValue());
+	ASSERT_TRUE(enginePins.trailingCoils[0].getLogicValue());
+	if (disableDuringDwell) {
+		engineConfiguration->enableTrailingSparks = false;
+	}
+	eth.setTimeAndInvokeEventsUs(startUs + 7000);
+	EXPECT_FALSE(enginePins.coils[0].getLogicValue());
+	EXPECT_EQ(disableDuringDwell, enginePins.trailingCoils[0].getLogicValue());
+	EXPECT_EQ(0, engine->scheduler.size());
+	// With the feature disabled there is no future callback to discharge this
+	// coil. Time alone does not recover it; the final stopped-engine sweep does.
+	eth.setTimeAndInvokeEventsUs(startUs + 100000);
+	EXPECT_EQ(disableDuringDwell, enginePins.trailingCoils[0].getLogicValue());
+	engine->onEngineHasStopped();
+	EXPECT_FALSE(enginePins.trailingCoils[0].getLogicValue());
+}
+
+} // namespace
+
+TEST(EcuLogicReview, DisablingTrailingSparkDuringDwellLeavesCoilCharged) {
+	checkTrailingSparkDisable(true);
+}
+
+TEST(IgnitionReview, UnchangedTrailingSparkDischargesBothCoils) {
+	checkTrailingSparkDisable(false);
+}
+
+TEST(EcuLogicReview, MultisparkHoldsTrailingCoilUntilLastRestrike) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	configureReviewTrailingSpark();
+	engineConfiguration->multisparkEnable = true;
+	engineConfiguration->multisparkMaxRpm = 3000;
+	engineConfiguration->multisparkMaxSparkingAngle = 60;
+	engineConfiguration->multisparkMaxExtraSparkCount = 3;
+	engineConfiguration->multisparkSparkDuration = 1;
+	engineConfiguration->multisparkDwell = 2;
+	engine->engineState.multispark.count = getMultiSparkCount(1000);
+	ASSERT_EQ(3u, engine->engineState.multispark.count);
+	const auto startUs = getTimeNowUs();
+	onTriggerEventSparkLogic(1000, getTimeNowNt(), 0, 90);
+	eth.setTimeAndInvokeEventsUs(startUs + 3100);
+	ASSERT_TRUE(enginePins.trailingCoils[0].getLogicValue());
+	eth.setTimeAndInvokeEventsUs(startUs + 5001);
+	ASSERT_FALSE(enginePins.coils[0].getLogicValue());
+	// Main spark at 5 ms; subsequent sparks at 8, 11, 14 ms. Trailing
+	// coil begins dwelling at 3 ms but is never discharged between them.
+	for (int restrike = 0; restrike < 3; restrike++) {
+		SCOPED_TRACE(restrike);
+		eth.setTimeAndInvokeEventsUs(startUs + 6100 + restrike * 3000);
+		EXPECT_TRUE(enginePins.coils[0].getLogicValue());
+		EXPECT_TRUE(enginePins.trailingCoils[0].getLogicValue());
+		eth.setTimeAndInvokeEventsUs(startUs + 8100 + restrike * 3000);
+		EXPECT_FALSE(enginePins.coils[0].getLogicValue());
+		EXPECT_TRUE(enginePins.trailingCoils[0].getLogicValue());
+	}
+	eth.setTimeAndInvokeEventsUs(startUs + 14900);
+	EXPECT_TRUE(enginePins.trailingCoils[0].getLogicValue());
+	eth.setTimeAndInvokeEventsUs(startUs + 15100);
+	EXPECT_FALSE(enginePins.trailingCoils[0].getLogicValue());
+	EXPECT_EQ(0, engine->scheduler.size());
+	// The real callbacks hold trailing dwell for 12 ms with a 3-ms main
+	// request and 2-ms restrikes. There is no trailing overdwell watchdog.
+}
+
+TEST(EcuLogicReview, LeanSecondBankDoesNotTriggerLambdaProtection) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->lambdaProtectionEnable = true;
+	engineConfiguration->lambdaProtectionMinRpm = 2000;
+	engineConfiguration->lambdaProtectionMinLoad = 60;
+	engineConfiguration->lambdaProtectionMinTps = 20;
+	engineConfiguration->lambdaProtectionTimeout = 0.5f;
+	engineConfiguration->lambdaProtectionRestoreRpm = 1500;
+	engineConfiguration->lambdaProtectionRestoreLoad = 30;
+	engineConfiguration->lambdaProtectionRestoreTps = 5;
+	engineConfiguration->cylinderBankSelect[2] = 1;
+	engineConfiguration->cylinderBankSelect[3] = 1;
+	engineConfiguration->noFuelTrimAfterDfcoTime = 0;
+	setTable(config->lambdaMaxDeviationTable, 0.1f);
+	engine->rpmCalculator.setRpmValue(3000);
+	engine->fuelComputer.targetLambda = 1;
+	Sensor::setMockValue(SensorType::Tps1, 80);
+	Sensor::setMockValue(SensorType::Lambda1, 0.95f);
+	Sensor::setMockValue(SensorType::Lambda2, 1.3f);
+	auto& limp = engine->module<LimpManager>().unmock();
+	advanceTimeUs(3000000); // Exceed the inhibit time after any previous cut.
+	limp.updateState(3000, getTimeNowNt());
+	ASSERT_TRUE(limp.allowInjection());
+	auto& monitor = engine->lambdaMonitor;
+	monitor.update(3000, 100);
+	ASSERT_TRUE(monitor.lambdaCurrentlyGood);
+	advanceTimeUs(600000);
+	monitor.update(3000, 100);
+	limp.updateState(3000, getTimeNowNt());
+	EXPECT_FALSE(monitor.isCut());
+	EXPECT_TRUE(limp.allowInjection());
+
+	// Identical lean feedback on bank 1 causes the configured fuel cut.
+	Sensor::setMockValue(SensorType::Lambda1, 1.3f);
+	monitor.update(3000, 100);
+	ASSERT_FALSE(monitor.lambdaCurrentlyGood);
+	ASSERT_FALSE(monitor.isCut());
+	advanceTimeUs(600000);
+	monitor.update(3000, 100);
+	limp.updateState(3000, getTimeNowNt());
+	EXPECT_TRUE(monitor.isCut());
+	EXPECT_EQ(ClearReason::LambdaProtection, limp.allowInjection().reason);
+
+	// A lift below all configured restore thresholds clears the cut.
+	Sensor::setMockValue(SensorType::Tps1, 0);
+	monitor.update(1000, 20);
+	limp.updateState(1000, getTimeNowNt());
+	EXPECT_FALSE(monitor.isCut());
+	EXPECT_TRUE(limp.allowInjection());
+}
+
+TEST(EcuLogicReview, LuaResetRetainsSparkSkipAndPreventsDwell) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	configureReviewTrailingSpark();
+	engineConfiguration->enableTrailingSparks = false;
+	testLuaExecString("setSparkSkipRatio(0.25); setSparkHardSkipRatio(1)");
+	ASSERT_FLOAT_EQ(1, engine->hardSparkLimiter.getTargetSkipRatio());
+
+	// This is the reset called after the old Lua VM is destroyed on reload.
+	engine->resetLua();
+	for (int i = 0; i < 10; i++) {
+		engine->engineState.updateSparkSkip();
+	}
+	EXPECT_FLOAT_EQ(0.25f, engine->softSparkLimiter.getTargetSkipRatio());
+	EXPECT_FLOAT_EQ(1, engine->hardSparkLimiter.getTargetSkipRatio());
+	onTriggerEventSparkLogic(1000, getTimeNowNt(), 0, 90);
+	EXPECT_TRUE(engine->ignitionState.luaIgnitionSkip);
+	EXPECT_EQ(0, engine->scheduler.size());
+	EXPECT_FALSE(enginePins.coils[0].getLogicValue());
+
+	// Only a replacement script's explicit clear restores scheduled ignition.
+	testLuaExecString("setSparkSkipRatio(0); setSparkHardSkipRatio(0)");
+	const auto startUs = getTimeNowUs();
+	onTriggerEventSparkLogic(1000, getTimeNowNt(), 0, 90);
+	ASSERT_EQ(2, engine->scheduler.size());
+	eth.setTimeAndInvokeEventsUs(startUs + 2500);
+	EXPECT_TRUE(enginePins.coils[0].getLogicValue());
+	eth.setTimeAndInvokeEventsUs(startUs + 6000);
+	EXPECT_FALSE(enginePins.coils[0].getLogicValue());
+	EXPECT_EQ(0, engine->scheduler.size());
+}
+
+TEST(EcuLogicReview, LuaResetRetainsLaunchFuelAndSparkRequests) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->launchControlEnabled = true;
+	engineConfiguration->launchActivationMode = LUA_LAUNCH;
+	engineConfiguration->launchRpm = 3000;
+	engineConfiguration->launchRpmThreshold = 0;
+	engineConfiguration->launchSpeedThreshold = 0;
+	engineConfiguration->launchTpsThreshold = 5;
+	engineConfiguration->launchSparkCutEnable = true;
+	engineConfiguration->launchFuelAdderPercent = 20;
+	engine->rpmCalculator.setRpmValue(3500);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 80);
+	testLuaExecString("setLaunchTrigger(1)");
+	engine->launchController.update();
+	ASSERT_TRUE(engine->launchController.isLaunchCondition);
+	engine->resetLua();
+	engine->launchController.update();
+	engine->engineState.updateSparkSkip();
+	EXPECT_TRUE(engine->launchController.isLaunchCondition);
+	EXPECT_FLOAT_EQ(1, engine->hardSparkLimiter.getTargetSkipRatio());
+	EXPECT_FLOAT_EQ(1.2f, engine->launchController.getFuelCoefficient());
+
+	testLuaExecString("setLaunchTrigger(0)");
+	engine->launchController.update();
+	engine->engineState.updateSparkSkip();
+	EXPECT_FALSE(engine->launchController.isLaunchCondition);
+	EXPECT_FLOAT_EQ(0, engine->hardSparkLimiter.getTargetSkipRatio());
+	EXPECT_FLOAT_EQ(1, engine->launchController.getFuelCoefficient());
+}
+
+TEST(EcuLogicReview, FixedTimingRetainsReleasedLaunchSparkCut) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->cylindersCount = 1;
+	engineConfiguration->firingOrder = FO_1;
+	engineConfiguration->ignitionMode = IM_ONE_COIL;
+	engineConfiguration->enableTrailingSparks = false;
+	engineConfiguration->timingMode = TM_DYNAMIC;
+	engineConfiguration->launchControlEnabled = true;
+	engineConfiguration->launchActivationMode = LUA_LAUNCH;
+	engineConfiguration->launchRpm = 3000;
+	engineConfiguration->launchRpmThreshold = 0;
+	engineConfiguration->launchSpeedThreshold = 0;
+	engineConfiguration->launchTpsThreshold = 5;
+	engineConfiguration->launchSparkCutEnable = true;
+	engine->updateTriggerConfiguration();
+	engine->rpmCalculator.setRpmValue(3500);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 80);
+	testLuaExecString("setLaunchTrigger(1)");
+	engine->periodicFastCallback();
+	ASSERT_FLOAT_EQ(1, engine->hardSparkLimiter.getTargetSkipRatio());
+
+	engineConfiguration->timingMode = TM_FIXED;
+	engineConfiguration->fixedTiming = 10;
+	testLuaExecString("setLaunchTrigger(0)");
+	for (int i = 0; i < 10; i++) engine->periodicFastCallback();
+	ASSERT_FALSE(engine->launchController.isLaunchCondition);
+	ASSERT_FLOAT_EQ(0, engine->launchController.getSparkSkipRatio());
+	EXPECT_FLOAT_EQ(1, engine->hardSparkLimiter.getTargetSkipRatio());
+
+	// Use a known dwell/spark plan to observe the retained skip at its consumer.
+	engine->ignitionState.sparkDwell = 3;
+	engine->ignitionState.dwellDurationAngle = 63;
+	setArrayValues(engine->engineState.timingAdvance, -90.0f);
+	initializeIgnitionActions();
+	onTriggerEventSparkLogic(3500, getTimeNowNt(), 0, 180);
+	EXPECT_EQ(0, engine->scheduler.size());
+	EXPECT_FALSE(enginePins.coils[0].getLogicValue());
+
+	// Dynamic timing reaches the skip refresh and restores normal scheduling.
+	engineConfiguration->timingMode = TM_DYNAMIC;
+	engine->periodicFastCallback();
+	ASSERT_FLOAT_EQ(0, engine->hardSparkLimiter.getTargetSkipRatio());
+	engine->ignitionState.sparkDwell = 3;
+	engine->ignitionState.dwellDurationAngle = 63;
+	setArrayValues(engine->engineState.timingAdvance, -90.0f);
+	initializeIgnitionActions();
+	onTriggerEventSparkLogic(3500, getTimeNowNt(), 0, 180);
+	ASSERT_EQ(2, engine->scheduler.size());
+	eth.moveTimeForwardUs(2000);
+	ASSERT_EQ(1, eth.executeActions());
+	EXPECT_TRUE(enginePins.coils[0].getLogicValue());
+	eth.moveTimeForwardUs(3000);
+	ASSERT_EQ(1, eth.executeActions());
+	EXPECT_FALSE(enginePins.coils[0].getLogicValue());
+}
+
+TEST(EcuLogicReview, LuaResetRetainsAntilagThrottleOpening) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->antiLagEnabled = true;
+	engineConfiguration->antiLagActivationMode = LUA_ANTILAG;
+	engineConfiguration->ALSMinRPM = 400;
+	engineConfiguration->ALSMaxRPM = 3200;
+	engineConfiguration->ALSMinCLT = 50;
+	engineConfiguration->ALSMaxCLT = 105;
+	engineConfiguration->ALSMaxTPS = 5;
+	engineConfiguration->ALSMaxDuration = 0;
+	engineConfiguration->ALSEtbAdd = 20;
+	engineConfiguration->etbIdleThrottleRange = 0;
+	engineConfiguration->etbMinimumPosition = 1;
+	engineConfiguration->etbMaximumPosition = 100;
+	setTable(config->ALSFuelAdjustment, 50);
+	Sensor::setMockValue(SensorType::Rpm, 2000);
+	Sensor::setMockValue(SensorType::Clt, 80);
+	Sensor::setMockValue(SensorType::Tps1, 10, true);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
+	StrictMock<MockVp3d> pedalMap;
+	EXPECT_CALL(pedalMap, getValue(_, _)).WillRepeatedly(Return(0));
+	StrictMock<MockMotor> motor;
+	EtbController etb;
+	ASSERT_TRUE(etb.init(DC_Throttle1, &motor, &engineConfiguration->etb, &pedalMap));
+	testLuaExecString("setRollingIdleTrigger(1)");
+	engine->antilagController.update();
+	ASSERT_TRUE(engine->antilagController.isAntilagCondition);
+	ASSERT_NEAR(20, etb.getSetpoint().value_or(-1), 0.01f);
+
+	engine->resetLua();
+	engine->antilagController.update();
+	EXPECT_TRUE(engine->antilagController.isAntilagCondition);
+	EXPECT_FLOAT_EQ(50, engine->antilagController.fuelALSCorrection);
+	EXPECT_NEAR(20, etb.getSetpoint().value_or(-1), 0.01f);
+	// A controller update with the retained request commands the motor open.
+	EXPECT_CALL(motor, enable());
+	EXPECT_CALL(motor, set(::testing::Gt(0.0f))).WillOnce(Return(false));
+	etb.update();
+
+	testLuaExecString("setRollingIdleTrigger(0)");
+	engine->antilagController.update();
+	EXPECT_FALSE(engine->antilagController.isAntilagCondition);
+	EXPECT_FLOAT_EQ(0, engine->antilagController.fuelALSCorrection);
+	EXPECT_NEAR(1, etb.getSetpoint().value_or(-1), 0.01f);
 }

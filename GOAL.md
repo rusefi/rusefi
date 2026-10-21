@@ -5,10 +5,11 @@ Prioritize unintended torque, incorrect fuel or spark delivery, failed engine
 protection, loss of synchronization, stalls, and starting or restart failures.
 Deliver ranked findings with reproducible evidence and useful test coverage.
 
-**Status:** Ready to start. Creating this file does not start the review.
+**Status:** Review running. Session started 2026-10-21 16:19:12 UTC.
+Elapsed time includes initial task/guidance inspection; update at checkpoints.
 **Time budget:** 8 hours total, or 480 minutes.
-**Time consumed:** 0 minutes.
-**Time remaining:** 480 minutes.
+**Time consumed:** 234.9 minutes (checkpoint 2026-10-21 20:14:06 UTC).
+**Time remaining:** 245.1 minutes.
 
 ## Budget and stopping rules
 
@@ -137,3 +138,18 @@ The review is complete when the planned investigation has been exhausted and
 the deliverables are validated, or it stops at the time limit with a clear
 handoff. Budget exhaustion does not mean all firmware paths were reviewed or
 all suspected defects were resolved.
+
+## Current review checkpoint
+
+- Baseline: fetched origin/master; nine local commits ahead, zero behind. Initial inventory: 12 active / 24 fixed / 19 review reproductions. Five pre-existing generated-file modifications remain unstaged.
+- Reviewed ignition/trigger/knock scheduling, fueling/staging/priming/transients, protection and lambda banks, launch/anti-lag/Lua lifecycle, ETB/VVT/idle, sensor lifecycle/calibration, HPFP, start/stop and configuration storage.
+- Inventory now has 26 active and 24 fixed findings. ECU-037 through ECU-050 are new; ECU-012/032 have stronger delayed software-knock evidence. Production behavior remains unchanged.
+- Current full normal host suite passes: 1,869 tests / 304 suites. All new focused tests pass individually, including LTFT learning from frozen corrections and fixed-timing retention of a released launch cut.
+- Full-suite repeated shuffle exposed SensorInit.Map consuming a retained static MAP value, plus unrelated repeat-state failures. Added fixture invalidation; rebuild and rerun pending. EventQueue.simple's file-static previous value and GPIO test registration counters show repeat-state causes; production defects are not inferred from those test artifacts.
+- Optional software-knock variant: six tests and three shuffled runs passed earlier; rebuild with all current additions is in progress. Driver boundary remains an observer, not ADC/DSP coverage.
+- F407 production build passes; ELF contains knock/HPFP callbacks. Disassembly confirms extra-page burns reach forced settings writes. No hardware flash stall, DSP acquisition or physical engine effects were measured.
+- Normal and optional builds completed. Expanded 118-test selection passes three shuffled runs; six optional knock tests pass three shuffled runs. MAP fixture isolation is validated.
+- New strongest lead: external output removal loses the old pin address without sending an off command. MC33810 inherits a no-op mode setter. EG33 firmware builds and links this driver; host scheduled-pulse/removal test had a firing-order fixture mismatch, now corrected and awaiting execution.
+- Existing EventQueue.simple and gpioext.testGpioExt fail their second iteration when run alone, independently confirming unrelated repeat-state limitations.
+- Next: finish test isolation/validation, characterize remaining repeat-only failures independently, resolve remaining sensor/asynchronous candidates, and reconcile the report and coverage limits.
+- Session accounting anchor: 2026-10-21 16:19:12 UTC; no explicit pauses.

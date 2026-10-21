@@ -10,6 +10,7 @@
 #include "storage.h"
 #include "board_overrides.h"
 #include "engine_test_helper.h"
+#include "spark_logic.h"
 
 bool canFlashWhileRunning = true;
 
@@ -98,4 +99,44 @@ TEST_F(StorageBoardGate, NoHookPreservesExternalStorageWrites) {
 
 	canFlashWhileRunning = true;
 	EXPECT_TRUE(storageAllowWriteID(EFI_SETTINGS_RECORD_ID));
+}
+
+TEST_F(StorageBoardGate, SyncLossAllowsSettingsWriteDuringActiveDwell) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	canFlashWhileRunning = false; // The production STM32F4 capability.
+	custom_board_allowFlashNow.reset();
+	engine->triggerCentral.directSelfStimulation = false;
+	engineConfiguration->cylindersCount = 1;
+	engineConfiguration->firingOrder = FO_1;
+	engineConfiguration->ignitionMode = IM_ONE_COIL;
+	engineConfiguration->enableTrailingSparks = false;
+	engine->updateTriggerConfiguration();
+	engine->rpmCalculator.setRpmValue(1000);
+	engine->ignitionState.sparkDwell = 3;
+	engine->ignitionState.dwellDurationAngle = 18;
+	setArrayValues(engine->engineState.timingAdvance, -30.0f);
+	initializeIgnitionActions();
+	// Supply the recent-edge timestamp normally recorded by handleShaftSignal.
+	engine->triggerCentral.m_lastEventTimer.reset();
+	onTriggerEventSparkLogic(1000, getTimeNowNt(), 0, 90);
+	eth.moveTimeForwardUs(2500);
+	ASSERT_EQ(1, eth.executeActions());
+	ASSERT_TRUE(enginePins.coils[0].getLogicValue());
+	ASSERT_FALSE(storageAllowWriteID(EFI_SETTINGS_RECORD_ID));
+
+	// Decoder sync loss sets cached RPM to zero while the crank edge remains
+	// recent and the timed spark is still due. No simulated flash erase runs.
+	engine->OnTriggerSynchronizationLost();
+	ASSERT_TRUE(engine->rpmCalculator.isStopped());
+	ASSERT_TRUE(engine->triggerCentral.engineMovedRecently());
+	engine->efiWatchdog();
+	EXPECT_TRUE(enginePins.coils[0].getLogicValue());
+	EXPECT_EQ(1, engine->scheduler.size());
+	EXPECT_TRUE(storageAllowWriteID(EFI_SETTINGS_RECORD_ID));
+	EXPECT_TRUE(storageAllowWriteID(EFI_SETTINGS_BACKUP_RECORD_ID));
+
+	// With no flash stall, the queued protective discharge still completes.
+	eth.moveTimeForwardUs(3000);
+	ASSERT_EQ(1, eth.executeActions());
+	EXPECT_FALSE(enginePins.coils[0].getLogicValue());
 }

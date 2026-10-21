@@ -7,6 +7,90 @@
  */
 
 #include "pch.h"
+#include "limp_manager.h"
+
+static void checkLtftLearnsWhileStftIsFrozen(bool fuelCut) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	auto& stft = engine->module<ShortTermFuelTrim>().unmock();
+	stft.init(&engineConfiguration->stft);
+	engineConfiguration->fuelClosedLoopCorrectionEnabled = true;
+	engineConfiguration->stft.startupDelay = 0;
+	engineConfiguration->stft.minClt = 0;
+	engineConfiguration->stft.minAfr = 10;
+	engineConfiguration->stft.maxAfr = 18;
+	engineConfiguration->stft.deadband = 0;
+	engineConfiguration->stftIgnoreErrorMagnitude = false;
+	engineConfiguration->noFuelTrimAfterDfcoTime = 0;
+	engineConfiguration->noFuelTrimAfterAccelTime = 0;
+	engineConfiguration->launchControlEnabled = false;
+	for (auto& cell : engineConfiguration->stft.cellCfgs) {
+		cell.timeConstant = 0.1f;
+		cell.maxAdd = 25;
+		cell.maxRemove = 25;
+	}
+	for (size_t i = 0; i < VE_RPM_COUNT; i++) config->veRpmBins[i] = 500 + 500 * i;
+	for (size_t i = 0; i < VE_LOAD_COUNT; i++) config->veLoadBins[i] = 10 + 10 * i;
+	engine->rpmCalculator.setRpmValue(1000);
+	engine->fuelComputer.targetLambda = 1;
+	Sensor::setMockValue(SensorType::Clt, 80);
+	Sensor::setMockValue(SensorType::Lambda1, 1.2f);
+	Sensor::setMockValue(SensorType::Lambda2, 1);
+	eth.moveTimeForwardUs(3000000);
+	getLimpManager()->updateState(1000, getTimeNowNt());
+	ClosedLoopFuelResult correction;
+	for (int i = 0; i < 10; i++) {
+		correction = stft.getCorrection(1000, 50);
+		eth.moveTimeForwardUs(5000);
+	}
+	ASSERT_EQ(stftEnabled, stft.stftCorrectionState);
+	ASSERT_EQ(stftEnabled, stft.stftLearningState[0]);
+	ASSERT_NEAR(1.1f, correction.banks[0], 0.0001f);
+	ASSERT_FLOAT_EQ(1, correction.banks[1]);
+
+	LtftState state;
+	LongTermFuelTrim ltft;
+	ltft.init(&state);
+	engineConfiguration->ltft.enabled = true;
+	engineConfiguration->ltft.correctionEnabled = true;
+	engineConfiguration->ltft.deadband = 0;
+	engineConfiguration->ltft.maxAdd = 25;
+	engineConfiguration->ltft.maxRemove = 25;
+	setArrayValues(engineConfiguration->ltft.timeConstant, 1);
+	if (fuelCut) {
+		engine->engineState.lua.luaFuelCut = true;
+	} else {
+		Sensor::setInvalidMockValue(SensorType::Lambda1);
+	}
+
+	// Use the production STFT -> LTFT handoff for one second at 200 Hz.
+	for (int i = 0; i < 200; i++) {
+		getLimpManager()->updateState(1000, getTimeNowNt());
+		correction = stft.getCorrection(1000, 50);
+		ltft.learn(correction, 1000, 50);
+		eth.moveTimeForwardUs(5000);
+	}
+	EXPECT_EQ(stftEnabled, stft.stftCorrectionState);
+	EXPECT_EQ(fuelCut ? stftDisabledFuelCut : stftDisabledAfrOurOfRange, stft.stftLearningState[0]);
+	EXPECT_NEAR(1.1f, correction.banks[0], 0.0001f); // frozen short-term value
+	EXPECT_TRUE(ltft.ltftLearning);
+	auto trims = ltft.getTrims(1000, 50);
+	EXPECT_GT(trims.banks[0], 1.06f); // persisted-learning output grows without new feedback
+	EXPECT_FLOAT_EQ(1, trims.banks[1]);
+
+	// A global correction disable does stop LTFT; the per-bank gate is missing.
+	engineConfiguration->fuelClosedLoopCorrectionEnabled = false;
+	ltft.learn(stft.getCorrection(1000, 50), 1000, 50);
+	EXPECT_FALSE(ltft.ltftLearning);
+	EXPECT_FLOAT_EQ(trims.banks[0], ltft.getTrims(1000, 50).banks[0]);
+}
+
+TEST(LTFT, InvalidLambdaStillLearnsFrozenShortTermCorrection) {
+	checkLtftLearnsWhileStftIsFrozen(false);
+}
+
+TEST(LTFT, FuelCutStillLearnsFrozenShortTermCorrection) {
+	checkLtftLearnsWhileStftIsFrozen(true);
+}
 
 #define ITERATE_TIME(time, action)	\
 	for (size_t i = 0; i < (time * 1000 / FAST_CALLBACK_PERIOD_MS); i++) { \
