@@ -3,6 +3,7 @@ package com.rusefi.ui.console;
 import com.devexperts.logging.FileLogger;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionStatusValue;
 import com.rusefi.tune.xml.Msq;
@@ -25,7 +26,10 @@ import java.util.function.Consumer;
 /** Owns the logging menu and recorder lifecycle. Menu/lifecycle methods run on the Swing event thread. */
 final class BinaryLoggingMenu {
     private static final KeyStroke TOGGLE_LOGGING = KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK);
+    /** Path of the last recording, kept in the console config so View Last Log works after a restart. */
+    static final String LAST_LOG = "last_log";
     private final UIContext uiContext;
+    private final Node settings;
     private final Component parent;
     private final JMenu menu;
     private final JMenuItem startItem;
@@ -36,9 +40,14 @@ final class BinaryLoggingMenu {
     private File lastLog;
     private Consumer<File> viewLogAction;
 
-    BinaryLoggingMenu(UIContext uiContext, Component parent, Icon startIcon, Icon stopIcon, Icon viewIcon) {
+    /** @param settings where the last recording's path is kept; saved with the console config on exit */
+    BinaryLoggingMenu(UIContext uiContext, Component parent, Icon startIcon, Icon stopIcon, Icon viewIcon,
+                      Node settings) {
         this.uiContext = uiContext;
         this.parent = parent;
+        this.settings = settings;
+        String lastPath = settings.getProperty(LAST_LOG, null);
+        lastLog = lastPath == null || lastPath.isEmpty() ? null : new File(lastPath);
         menu = new JMenu("Binary Logging");
         menu.setMnemonic(KeyEvent.VK_B);
 
@@ -189,6 +198,7 @@ final class BinaryLoggingMenu {
     void start(File file, byte[] tune) {
         if (uiContext.sensorLogger.start(file, tune)) {
             lastLog = file;
+            settings.setProperty(LAST_LOG, file.getAbsolutePath());
         } else {
             JOptionPane.showMessageDialog(parent,
                     "No supported output channels are available for binary logging.",

@@ -1,5 +1,6 @@
 package com.rusefi.ui.console;
 
+import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionStatusValue;
 import com.rusefi.sensor_logs.SensorLogger;
@@ -35,7 +36,7 @@ class BinaryLoggingMenuTest {
                 ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
                 UIContext context = mock(UIContext.class);
                 context.sensorLogger = mock(SensorLogger.class);
-                BinaryLoggingMenu logging = new BinaryLoggingMenu(context, null, null, null, null);
+                BinaryLoggingMenu logging = new BinaryLoggingMenu(context, null, null, null, null, new Node());
                 JMenuItem start = logging.getMenu().getItem(0);
                 JMenuItem stop = logging.getMenu().getItem(1);
                 KeyStroke toggle = KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK);
@@ -73,6 +74,43 @@ class BinaryLoggingMenuTest {
         });
     }
 
+    /** Restarting the console creates a new menu; the last recording should still be viewable. */
+    @Test
+    void lastLogAfterRestart(@TempDir Path folder) throws Exception {
+        File recording = Files.createFile(folder.resolve("drive.mlg")).toFile();
+        SwingUtilities.invokeAndWait(() -> {
+            UIContext context = mock(UIContext.class);
+            context.sensorLogger = mock(SensorLogger.class);
+            when(context.sensorLogger.start(recording, null)).thenReturn(true);
+            // the console config node outlives the menu, like the saved config across restarts
+            Node settings = new Node();
+            BinaryLoggingMenu beforeRestart = new BinaryLoggingMenu(context, null, null, null, null, settings);
+            beforeRestart.start(recording, null);
+
+            BinaryLoggingMenu afterRestart = new BinaryLoggingMenu(context, null, null, null, null, settings);
+            List<File> viewed = new ArrayList<>();
+            afterRestart.setViewLogAction(viewed::add);
+            assertEquals(recording.getAbsoluteFile(), afterRestart.lastLog());
+            assertTrue(afterRestart.viewLastItem().isEnabled());
+            afterRestart.viewLastItem().doClick();
+            assertEquals(Collections.singletonList(recording.getAbsoluteFile()), viewed);
+        });
+    }
+
+    @Test
+    void deletedLastLogIsNotOffered(@TempDir Path folder) throws Exception {
+        Node settings = new Node();
+        settings.setProperty(BinaryLoggingMenu.LAST_LOG, folder.resolve("deleted.mlg").toString());
+        SwingUtilities.invokeAndWait(() -> {
+            UIContext context = mock(UIContext.class);
+            context.sensorLogger = mock(SensorLogger.class);
+            BinaryLoggingMenu logging = new BinaryLoggingMenu(context, null, null, null, null, settings);
+            logging.setViewLogAction(file -> {
+            });
+            assertFalse(logging.viewLastItem().isEnabled());
+        });
+    }
+
     @Test
     void viewLastLogOpensTheFinishedRecording(@TempDir Path folder) throws Exception {
         File recording = Files.createFile(folder.resolve("drive.mlg")).toFile();
@@ -80,7 +118,7 @@ class BinaryLoggingMenuTest {
             UIContext context = mock(UIContext.class);
             context.sensorLogger = mock(SensorLogger.class);
             when(context.sensorLogger.start(recording, null)).thenReturn(true);
-            BinaryLoggingMenu logging = new BinaryLoggingMenu(context, null, null, null, null);
+            BinaryLoggingMenu logging = new BinaryLoggingMenu(context, null, null, null, null, new Node());
             JMenuItem viewLast = logging.viewLastItem();
             List<File> viewed = new ArrayList<>();
 
