@@ -5,7 +5,10 @@
 #include "functional_sensor.h"
 #include "thermistor_func.h"
 #include "adc_inputs.h"
+#include "adc_subscription.h"
 #include "board_overrides.h"
+#include "map_averaging.h"
+#include "auto_generated_sensor.h"
 
 namespace {
 struct ScopedTemperatureElectricalOverrides {
@@ -373,3 +376,111 @@ TEST(SensorInit, Map) {
 	Sensor::resetMockValue(SensorType::MapFast);
 	EXPECT_FLOAT_EQ(75, Sensor::getOrZero(SensorType::Map));
 }
+
+namespace {
+
+class MapSensorReconfiguration : public testing::Test {
+protected:
+	EngineTestHelper eth{engine_type_e::TEST_ENGINE};
+
+	void SetUp() override {
+		engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
+		engineConfiguration->map.sensor.type = MT_CUSTOM;
+		engineConfiguration->mapLowValueVoltage = 0;
+		engineConfiguration->mapHighValueVoltage = 5;
+		engineConfiguration->map.sensor.lowValue = 0;
+		engineConfiguration->map.sensor.highValue = 200;
+		engineConfiguration->mapErrorDetectionTooLow = 5;
+		engineConfiguration->mapErrorDetectionTooHigh = 400;
+		engineConfiguration->analogInputDividerCoefficient = 2;
+		engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
+		engineConfiguration->maf2AdcChannel = EFI_ADC_NONE;
+		initNewSensors();
+		rememberCurrentConfiguration();
+
+		// The file-static averaged sensor can retain a value from another test.
+		// Exercise slow MAP and its fallback without mocking either MAP reading.
+		getMapAvg(0).invalidate();
+		setMockAdcVoltage(EFI_ADC_4, 0.5f); // 1 V at the connector = 40 kPa
+		AdcSubscription::UpdateSubscribers(getTimeNowNt());
+		expectMap(40);
+	}
+
+	void expectMap(float pressure) {
+		for (auto type : {SensorType::MapSlow, SensorType::Map}) {
+			SCOPED_TRACE(getSensorType(type));
+			auto value = Sensor::get(type);
+			ASSERT_TRUE(value.Valid);
+			EXPECT_NEAR(pressure, value.Value, EPS2D);
+		}
+	}
+
+	void updateAdc() {
+		// Deliver fresh samples through the real subscription and filter path.
+		// Allow 100 ms for the 100 Hz MAP filter to settle after a voltage change.
+		for (int i = 0; i < SLOW_ADC_RATE / 10; i++) {
+			eth.moveTimeForwardUs(1000000 / SLOW_ADC_RATE);
+			AdcSubscription::UpdateSubscribers(getTimeNowNt());
+		}
+	}
+};
+
+// Regression coverage for #3332 / #3331: a burn must leave MAP receiving ADC
+// samples after stopSensors() and reconfigureSensors(), not just registered.
+TEST_F(MapSensorReconfiguration, UnrelatedBurnKeepsReadingsFresh) {
+	for (int burn = 0; burn < 3; burn++) {
+		SCOPED_TRACE(burn);
+		engineConfiguration->compressionRatio += 0.1f;
+		stopSensors();
+		reconfigureSensors();
+		rememberCurrentConfiguration();
+
+		// Expire the pre-burn value so a stale reading cannot satisfy the test.
+		eth.moveTimeForwardMs(60);
+		EXPECT_FALSE(Sensor::get(SensorType::Map).Valid);
+		setMockAdcVoltage(EFI_ADC_4, 1.0f + 0.25f * burn);
+		updateAdc();
+		expectMap(80 + 20 * burn);
+	}
+}
+
+TEST_F(MapSensorReconfiguration, ChangedChannelResubscribesMap) {
+	// Different voltages distinguish the new input from a stale subscription.
+	setMockAdcVoltage(EFI_ADC_4, 0.75f);
+	setMockAdcVoltage(EFI_ADC_5, 1.5f);
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_5;
+	stopSensors();
+	ASSERT_FALSE(Sensor::hasSensor(SensorType::MapSlow));
+	reconfigureSensors();
+	rememberCurrentConfiguration();
+	ASSERT_TRUE(Sensor::hasSensor(SensorType::MapSlow));
+	updateAdc();
+	expectMap(120);
+
+	// Disable, then restore the input through the same burn lifecycle.
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_NONE;
+	stopSensors();
+	reconfigureSensors();
+	rememberCurrentConfiguration();
+	updateAdc();
+	EXPECT_FALSE(Sensor::hasSensor(SensorType::MapSlow));
+	EXPECT_FALSE(Sensor::get(SensorType::Map).Valid);
+
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
+	stopSensors();
+	reconfigureSensors();
+	rememberCurrentConfiguration();
+	updateAdc();
+	expectMap(60);
+}
+
+TEST_F(MapSensorReconfiguration, CalibrationBurnUpdatesConversion) {
+	engineConfiguration->map.sensor.highValue = 300;
+	stopSensors();
+	reconfigureSensors();
+	rememberCurrentConfiguration();
+	updateAdc();
+	expectMap(60); // same 1 V input, new 0..300 kPa calibration
+}
+
+} // namespace

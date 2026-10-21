@@ -2,21 +2,15 @@
 
 #include "adc_subscription.h"
 
-#if EFI_UNIT_TEST
-
-/*static*/ AdcSubscriptionEntry * AdcSubscription::SubscribeSensor(FunctionalSensorBase&, adc_channel_e, float, float) {
-  return nullptr;
-}
-
-/*static*/ void AdcSubscription::UnsubscribeSensor(FunctionalSensorBase&) {
-}
-
-/*static*/ void AdcSubscription::UnsubscribeSensor(FunctionalSensorBase&, adc_channel_e) {
-}
-
-#else
-
 static AdcSubscriptionEntry s_entries[16];
+
+#if EFI_UNIT_TEST
+void AdcSubscription::resetForUnitTest() {
+	for (auto& entry : s_entries) {
+		entry = {};
+	}
+}
+#endif
 
 static AdcSubscriptionEntry* findEntry(FunctionalSensorBase* sensor) {
 	for (size_t i = 0; i < efi::size(s_entries); i++) {
@@ -81,12 +75,14 @@ TODO: this code is similar to initIfValid, what is the plan? shall we extract he
 			efiSetPadModeWithoutOwnershipAcquisition(name, pin, PAL_MODE_INPUT_ANALOG);
 		}
 	}
+#endif /* EFI_PROD_CODE && HAL_USE_ADC */
 
+#if (EFI_PROD_CODE && HAL_USE_ADC) || EFI_UNIT_TEST
 	// if 0, default to the board's divider coefficient for given channel
 	if (voltsPerAdcVolt == 0) {
 		voltsPerAdcVolt = getAnalogInputDividerCoefficient(channel);
 	}
-#endif /* EFI_PROD_CODE && HAL_USE_ADC */
+#endif
 	// Populate the entry
 	entry->VoltsPerAdcVolt = voltsPerAdcVolt;
 	entry->Channel = channel;
@@ -199,5 +195,3 @@ void AdcSubscription::PrintInfo() {
 	}
 }
 #endif // EFI_PROD_CODE && HAL_USE_ADC
-
-#endif // !EFI_UNIT_TEST

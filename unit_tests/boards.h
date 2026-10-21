@@ -13,3 +13,6 @@
 #define ADC_CHANNEL_VREF 0
 
 int adcGetRawValue(const char *msg, adc_channel_e channel);
+
+void setMockAdcVoltage(adc_channel_e channel, float voltage);
+void resetMockAdcVoltages();

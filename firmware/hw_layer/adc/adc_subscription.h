@@ -28,4 +28,8 @@ public:
 	static void ResetFilters();
 
 	static void PrintInfo();
+
+#if EFI_UNIT_TEST
+	static void resetForUnitTest();
+#endif
 };

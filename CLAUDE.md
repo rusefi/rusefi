@@ -66,8 +66,18 @@ that a particular board was built.
 The host build shadows `firmware/hw_layer/adc/adc_inputs.h` with
 `unit_tests/adc_inputs.h`. Including the short name in a host test does not
 expose newly added production declarations; keep the mock declaration in sync
-when testing a shared ADC entry point. Host ADC subscriptions are stubs, so
-converter tests do not establish DMA acquisition, filtering or sample freshness.
+when testing a shared ADC entry point. Host tests run the shared ADC subscription
+and filtering code with per-channel voltages supplied by `setMockAdcVoltage()`.
+Call `AdcSubscription::UpdateSubscribers()` explicitly to deliver samples;
+posting directly to a sensor cannot establish that it remains subscribed.
+`EngineTestHelper` clears subscriptions and mock voltages between tests. These
+host tests do not establish hardware DMA acquisition or pin configuration.
+
+`TEST_ENGINE` enables MAF by default. In host tests, `init_maf.cpp`'s static
+`mafCurve` binds its table references before `EngineTestHelper` installs `config`;
+delivering ADC samples to that MAF converter dereferences an invalid table.
+Disable both MAF ADC channels in unrelated subscription tests (see
+`MapSensorReconfiguration`); testing MAF delivery requires fixing that lifetime.
 
 ```bash
 cd unit_tests

@@ -19,6 +19,7 @@
 #include "dc_motors.h"
 #include "idle_hardware.h"
 #include "electronic_throttle.h"
+#include "adc_subscription.h"
 // https://stackoverflow.com/questions/23427804/cant-find-mkdir-function-in-dirent-h-for-windows
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -53,6 +54,8 @@ EngineTestHelperBase::EngineTestHelperBase(Engine * eng, persistent_config_s * p
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
 	setTimeNowUs(0);
 	ButtonDebounce::resetForUnitTests();
+	AdcSubscription::resetForUnitTest();
+	resetMockAdcVoltages();
 
 	EnableToothLogger();
 	if (engine || engineConfiguration || config) {
@@ -72,6 +75,8 @@ EngineTestHelperBase::EngineTestHelperBase(Engine * eng, persistent_config_s * p
 
 EngineTestHelperBase::~EngineTestHelperBase() {
 	DisableToothLogger();
+	AdcSubscription::resetForUnitTest();
+	resetMockAdcVoltages();
 	engine = nullptr;
 	engineConfiguration = nullptr;
 	config = nullptr;
