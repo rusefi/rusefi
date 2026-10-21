@@ -6,7 +6,7 @@
 // start of burst_knock_state_s
 struct burst_knock_state_s {
 	/**
-	 * Burst Knock: active
+	 * active
 	offset 0 bit 0 */
 	bool isBurstKnockActive : 1 {};
 	/**
@@ -103,13 +103,13 @@ struct burst_knock_state_s {
 	offset 0 bit 31 */
 	bool unusedBit_1_31 : 1 {};
 	/**
-	 * Burst Knock: timing pull
+	 * timing pull
 	 * units: deg
 	 * offset 4
 	 */
 	float burstKnockRetard = (float)0;
 	/**
-	 * Burst Knock: TPS rate
+	 * TPS rate
 	 * units: %/s
 	 * offset 8
 	 */

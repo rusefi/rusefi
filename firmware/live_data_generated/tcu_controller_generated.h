@@ -28,18 +28,18 @@ struct tcu_controller_s {
 	 */
 	float lastShiftTime = (float)0;
 	/**
-	 * "TCU: Current Range"
+	 * "Current Range"
 	 * offset 8
 	 */
 	uint8_t tcu_currentRange = (uint8_t)0;
 	/**
-	 * "TCU: EPC Duty"
+	 * "EPC Duty"
 	 * units: %
 	 * offset 9
 	 */
 	int8_t pressureControlDuty = (int8_t)0;
 	/**
-	 * "TCU: TC Duty"
+	 * "TC Duty"
 	 * units: %
 	 * offset 10
 	 */

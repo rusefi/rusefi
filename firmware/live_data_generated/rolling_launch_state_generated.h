@@ -6,23 +6,23 @@
 // start of rolling_launch_state_s
 struct rolling_launch_state_s {
 	/**
-	 * Rolling Launch: armed
+	 * armed
 	offset 0 bit 0 */
 	bool isRollingLaunchArmed : 1 {};
 	/**
-	 * Rolling Launch: button active
+	 * button active
 	offset 0 bit 1 */
 	bool isRollingLaunchActive : 1 {};
 	/**
-	 * Rolling Launch: switch state
+	 * switch state
 	offset 0 bit 2 */
 	bool rollingLaunchSwitchState : 1 {};
 	/**
-	 * Rolling Launch: Lua trigger
+	 * Lua trigger
 	offset 0 bit 3 */
 	bool luaRollingLaunchState : 1 {};
 	/**
-	 * Rolling Launch: ramp-out active
+	 * ramp-out active
 	offset 0 bit 4 */
 	bool isRollingLaunchRampActive : 1 {};
 	/**
@@ -107,27 +107,27 @@ struct rolling_launch_state_s {
 	offset 0 bit 31 */
 	bool unusedBit_5_31 : 1 {};
 	/**
-	 * Rolling Launch: captured RPM
+	 * captured RPM
 	 * offset 4
 	 */
 	float capturedRpm = (float)0;
 	/**
-	 * Rolling Launch: hold target RPM
+	 * hold target RPM
 	 * offset 8
 	 */
 	float rollingLaunchTargetRpm = (float)0;
 	/**
-	 * Rolling Launch: spark skip ratio
+	 * spark skip ratio
 	 * offset 12
 	 */
 	float rollingLaunchSparkSkipRatio = (float)0;
 	/**
-	 * Rolling Launch: timing retard
+	 * timing retard
 	 * offset 16
 	 */
 	float rollingLaunchTimingRetardOut = (float)0;
 	/**
-	 * Rolling Launch: ramp elapsed
+	 * ramp elapsed
 	 * offset 20
 	 */
 	float rollingLaunchRampElapsed = (float)0;

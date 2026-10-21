@@ -6,19 +6,19 @@
 // start of main_relay_s
 struct main_relay_s {
 	/**
-	 * Main relay: Bench test
+	 * Bench test
 	offset 0 bit 0 */
 	bool isBenchTest : 1 {};
 	/**
-	 * Main relay: Has IGN voltage
+	 * Has IGN voltage
 	offset 0 bit 1 */
 	bool hasIgnitionVoltage : 1 {};
 	/**
-	 * Main relay: On
+	 * On
 	offset 0 bit 2 */
 	bool mainRelayState : 1 {};
 	/**
-	 * Main relay: Delayed shutoff
+	 * Delayed shutoff
 	offset 0 bit 3 */
 	bool delayedShutoffRequested : 1 {};
 	/**

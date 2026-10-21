@@ -6,36 +6,36 @@
 // start of high_pressure_fuel_pump_s
 struct high_pressure_fuel_pump_s {
 	/**
-	 * GDI: HPFP duration
+	 * HPFP duration
 	 * Computed requested pump duration in degrees (not including deadtime)
 	 * offset 0
 	 */
 	angle_t m_requested_pump = (angle_t)0;
 	/**
-	 * GDI: HPFP requested duty
+	 * HPFP requested duty
 	 * units: %
 	 * offset 4
 	 */
 	float fuel_requested_percent = (float)0;
 	/**
-	 * "GDI: percent_pi"
+	 * "percent_pi"
 	 * offset 8
 	 */
 	float fuel_requested_percent_pi = (float)0;
 	/**
-	 * GDI: HPFP no Valve control output
+	 * HPFP no Valve control output
 	offset 12 bit 0 */
 	bool noValve : 1 {};
 	/**
-	 * GDI: HPFP angle above min
+	 * HPFP angle above min
 	offset 12 bit 1 */
 	bool angleAboveMin : 1 {};
 	/**
-	 * GDI: HPFP Active
+	 * HPFP Active
 	offset 12 bit 2 */
 	bool isHpfpActive : 1 {};
 	/**
-	 * GDI: HPFP Valve state
+	 * HPFP Valve state
 	offset 12 bit 3 */
 	bool HpfpValveState : 1 {};
 	/**
@@ -123,7 +123,7 @@ struct high_pressure_fuel_pump_s {
 	offset 12 bit 31 */
 	bool unusedBit_7_31 : 1 {};
 	/**
-	 * "GDI: target pressure"
+	 * "target pressure"
 	 * offset 16
 	 */
 	float m_pressureTarget_kPa = (float)0;
@@ -136,23 +136,23 @@ struct high_pressure_fuel_pump_s {
 	 */
 	float hpfp_i_control_percent = (float)0;
 	/**
-	 * "GDI: next lobe N"
+	 * "next lobe N"
 	 * offset 28
 	 */
 	angle_t nextLobe = (angle_t)0;
 	/**
-	 * GDI: valve activation angle
+	 * valve activation angle
 	 * units: v
 	 * offset 32
 	 */
 	float di_nextStart = (float)0;
 	/**
-	 * "GDI: HPFP activation angle"
+	 * "HPFP activation angle"
 	 * offset 36
 	 */
 	float HpfdActivationPhase = (float)0;
 	/**
-	 * "GDI: HPFP deactivation angle"
+	 * "HPFP deactivation angle"
 	 * offset 40
 	 */
 	float HpfdDeactivationPhase = (float)0;

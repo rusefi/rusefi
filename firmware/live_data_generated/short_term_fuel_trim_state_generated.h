@@ -6,12 +6,12 @@
 // start of short_term_fuel_trim_state_s
 struct short_term_fuel_trim_state_s {
 	/**
-	 * STFT: used bin
+	 * used bin
 	 * offset 0
 	 */
 	ft_region_e stftCorrectionBinIdx;
 	/**
-	 * STFT: learning bin
+	 * learning bin
 	 * offset 1
 	 */
 	ft_region_e stftLearningBinIdx;
@@ -30,7 +30,7 @@ struct short_term_fuel_trim_state_s {
 	 */
 	uint8_t alignmentFill_at_5[3] = {};
 	/**
-	 * STFT: input Lambda error
+	 * input Lambda error
 	 * units: %
 	 * offset 8
 	 */

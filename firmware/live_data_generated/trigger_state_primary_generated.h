@@ -6,7 +6,7 @@
 // start of trigger_state_primary_s
 struct trigger_state_primary_s {
 	/**
-	 * sync: Phase Re-Sync Counter
+	 * Phase Re-Sync Counter
 	 * units: cnt
 	 * offset 0
 	 */
@@ -18,17 +18,17 @@ struct trigger_state_primary_s {
 	 */
 	uint8_t alignmentFill_at_1[1] = {};
 	/**
-	 * sync: phase adjustment
+	 * phase adjustment
 	 * units: deg
 	 * offset 2
 	 */
 	uint16_t m_phaseAdjustment = (uint16_t)0;
 	/**
-	 * sync: We Know Engine Phase
+	 * We Know Engine Phase
 	offset 4 bit 0 */
 	bool m_hasSynchronizedPhase : 1 {};
 	/**
-	 * sync: We have sync
+	 * We have sync
 	offset 4 bit 1 */
 	bool m_hasSynchronizedCrank : 1 {};
 	/**

@@ -1397,7 +1397,7 @@
 #define imu_type_e_IMU_TYPE_4 4
 #define imu_type_e_IMU_TYPE_MB_A0065422618 5
 #define imu_type_e_IMU_VAG 1
-#define INDICATOR_NAME_AC_SWITCH "AC switch"
+#define INDICATOR_NAME_AC_SWITCH "AC: switch"
 #define INDICATOR_NAME_BRAKE_DOWN "Brake switch"
 #define INDICATOR_NAME_CLUTCH_DOWN "Clutch: down"
 #define INDICATOR_NAME_CLUTCH_UP "Clutch: up"
@@ -1685,7 +1685,7 @@
 #define show_default_engine_type false
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3378691081
+#define SIGNATURE_HASH 2763978257
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2350,7 +2350,7 @@
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
 #define ts_show_wot_enrichment true
-#define TS_SIGNATURE "rusEFI master.2026.10.21.mre_f4.3378691081"
+#define TS_SIGNATURE "rusEFI master.2026.10.21.mre_f4.2763978257"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

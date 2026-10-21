@@ -1606,15 +1606,15 @@ float getOutputValueByHash(const int hash) {
 			return engine->module<MisfireController>()->misfireWobbleThreshUs * 0.001f;
 #endif
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
+// lambdaTimeSinceGood
+		case 481450608:
+			return engine->lambdaMonitor.lambdaTimeSinceGood;
 // lambdaCurrentlyGood
 		case 350535927:
 			return engine->lambdaMonitor.lambdaCurrentlyGood;
 // lambdaMonitorCut
 		case 1849938842:
 			return engine->lambdaMonitor.lambdaMonitorCut;
-// lambdaTimeSinceGood
-		case 481450608:
-			return engine->lambdaMonitor.lambdaTimeSinceGood;
 #endif
 #if EFI_LAUNCH_CONTROL
 // retardThresholdRpm

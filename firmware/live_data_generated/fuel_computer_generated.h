@@ -6,7 +6,7 @@
 // start of running_fuel_s
 struct running_fuel_s {
 	/**
-	 * Fuel: Post cranking mult
+	 * Post cranking mult
 	 * offset 0
 	 */
 	float postCrankingFuelCorrection = (float)0;
@@ -21,6 +21,7 @@ struct running_fuel_s {
 	 */
 	float coolantTemperatureCoefficient = (float)0;
 	/**
+	 * time run since cranking
 	 * units: secs
 	 * offset 12
 	 */
@@ -45,7 +46,7 @@ static_assert(sizeof(running_fuel_s) == 20);
 // start of fuel_computer_s
 struct fuel_computer_s {
 	/**
-	 * Fuel: Total correction
+	 * Total correction
 	 * units: mult
 	 * offset 0
 	 */
@@ -71,7 +72,7 @@ struct fuel_computer_s {
 	 */
 	scaled_channel<uint16_t, 1000, 1> targetAFR = (uint16_t)0;
 	/**
-	 * Fuel: Stoich ratio
+	 * Stoich ratio
 	 * units: ratio
 	 * offset 30
 	 */

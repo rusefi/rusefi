@@ -22,11 +22,11 @@ struct fuel_pump_control_s {
 	offset 0 bit 4 */
 	bool isSecondaryPumpOn : 1 {};
 	/**
-	 * Fuel pressure feedback active
+	 * pres feedback active
 	offset 0 bit 5 */
 	bool isFpPidActive : 1 {};
 	/**
-	 * Fuel pressure relief active
+	 * pressure relief active
 	offset 0 bit 6 */
 	bool isFpReliefActive : 1 {};
 	/**
@@ -105,13 +105,13 @@ struct fuel_pump_control_s {
 	offset 0 bit 31 */
 	bool unusedBit_7_31 : 1 {};
 	/**
-	 * Fuel pump PWM duty
+	 * pump PWM duty
 	 * units: %
 	 * offset 4
 	 */
 	scaled_channel<uint16_t, 10, 1> fuelPumpDuty = (uint16_t)0;
 	/**
-	 * Fuel pressure target
+	 * pressure target
 	 * units: kPa
 	 * offset 6
 	 */

@@ -6,43 +6,43 @@
 // start of electronic_throttle_s
 struct electronic_throttle_s {
 	/**
-	 * ETB: target for current pedal
+	 * target for current pedal
 	 * units: %
 	 * offset 0
 	 */
 	float etbCurrentTarget = (float)0;
 	/**
-	 * ETB: board adjustment
+	 * board adjustment
 	 * units: %
 	 * offset 4
 	 */
 	float boardEtbAdjustment = (float)0;
 	/**
-	 * "ETB: target with idle"
+	 * "target with idle"
 	 * units: %
 	 * offset 8
 	 */
 	float targetWithIdlePosition = (float)0;
 	/**
-	 * "ETB: luaAdjustment"
+	 * "luaAdjustment"
 	 * units: %
 	 * offset 12
 	 */
 	float luaAdjustment = (float)0;
 	/**
-	 * "ETB: trim"
+	 * "trim"
 	 * units: %
 	 * offset 16
 	 */
 	float trim = (float)0;
 	/**
-	 * ETB: target with adjustments
+	 * target with adjustments
 	 * units: %
 	 * offset 20
 	 */
 	scaled_channel<int16_t, 100, 1> adjustedEtbTarget = (int16_t)0;
 	/**
-	 * ETB: final target
+	 * final target
 	 * units: %
 	 * offset 22
 	 */
@@ -54,7 +54,7 @@ struct electronic_throttle_s {
 	 */
 	float m_wastegatePosition = (float)0;
 	/**
-	 * "EBT: last PID dT"
+	 * "last PID dT"
 	 * units: mS
 	 * offset 28
 	 */
@@ -165,13 +165,13 @@ struct electronic_throttle_s {
 	offset 40 bit 31 */
 	bool unusedBit_14_31 : 1 {};
 	/**
-	 * "ETB TPS error counter"
+	 * "TPS error counter"
 	 * units: count
 	 * offset 44
 	 */
 	uint16_t etbTpsErrorCounter = (uint16_t)0;
 	/**
-	 * "ETB pedal error counter"
+	 * "pedal error counter"
 	 * units: count
 	 * offset 46
 	 */
@@ -185,7 +185,7 @@ struct electronic_throttle_s {
 	 */
 	int8_t etbErrorCodeBlinker = (int8_t)0;
 	/**
-	 * ETB traction control
+	 * traction control
 	 * units: %
 	 * offset 50
 	 */
@@ -197,7 +197,7 @@ struct electronic_throttle_s {
 	 */
 	uint8_t alignmentFill_at_51[1] = {};
 	/**
-	 * ETB jam timer
+	 * jam timer
 	 * units: sec
 	 * offset 52
 	 */

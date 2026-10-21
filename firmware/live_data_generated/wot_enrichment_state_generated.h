@@ -6,7 +6,7 @@
 // start of wot_enrichment_state_s
 struct wot_enrichment_state_s {
 	/**
-	 * WOT Enrichment: active
+	 * active
 	offset 0 bit 0 */
 	bool isWotEnrichmentActive : 1 {};
 	/**
@@ -103,13 +103,13 @@ struct wot_enrichment_state_s {
 	offset 0 bit 31 */
 	bool unusedBit_1_31 : 1 {};
 	/**
-	 * WOT Enrichment: time at WOT
+	 * time at WOT
 	 * units: s
 	 * offset 4
 	 */
 	float wotEnrichmentTimer = (float)0;
 	/**
-	 * WOT Enrichment: AFR adder
+	 * AFR adder
 	 * units: afr
 	 * offset 8
 	 */

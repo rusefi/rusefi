@@ -22,7 +22,7 @@ struct vvt_s {
 	 */
 	uint8_t alignmentFill_at_3[1] = {};
 	/**
-	 * VVT signed target error
+	 * signed target error
 	 * units: deg
 	 * offset 4
 	 */

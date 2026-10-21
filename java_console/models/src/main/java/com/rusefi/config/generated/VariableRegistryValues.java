@@ -1311,7 +1311,7 @@ public class VariableRegistryValues {
 	public static final int imu_type_e_IMU_TYPE_4 = 4;
 	public static final int imu_type_e_IMU_TYPE_MB_A0065422618 = 5;
 	public static final int imu_type_e_IMU_VAG = 1;
-	public static final String INDICATOR_NAME_AC_SWITCH = "AC switch";
+	public static final String INDICATOR_NAME_AC_SWITCH = "AC: switch";
 	public static final String INDICATOR_NAME_BRAKE_DOWN = "Brake switch";
 	public static final String INDICATOR_NAME_CLUTCH_DOWN = "Clutch: down";
 	public static final String INDICATOR_NAME_CLUTCH_UP = "Clutch: up";
@@ -1552,7 +1552,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 699353002;
+	public static final int SIGNATURE_HASH = 1148390834;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1892,7 +1892,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.10.21.t-b-g.699353002";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.10.21.t-b-g.1148390834";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2304;

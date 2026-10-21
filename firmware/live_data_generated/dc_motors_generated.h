@@ -6,13 +6,13 @@
 // start of dc_motors_s
 struct dc_motors_s {
 	/**
-	 * "DC: output0"
+	 * "output0"
 	 * units: %
 	 * offset 0
 	 */
 	float dcOutput0 = (float)0;
 	/**
-	 * "DC: en0"
+	 * "en0"
 	 * units: %
 	 * offset 4
 	 */

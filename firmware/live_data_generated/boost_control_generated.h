@@ -102,7 +102,7 @@ struct boost_control_s {
 	offset 0 bit 31 */
 	bool unusedBit_11_31 : 1 {};
 	/**
-	 * "Boost: Lua target add"
+	 * "Lua target add"
 	 * units: percent
 	 * offset 4
 	 */
@@ -114,7 +114,7 @@ struct boost_control_s {
 	 */
 	uint8_t alignmentFill_at_6[2] = {};
 	/**
-	 * "Boost: Lua target mult"
+	 * "Lua target mult"
 	 * offset 8
 	 */
 	float luaTargetMult = (float)0;
@@ -147,7 +147,7 @@ struct boost_control_s {
 	 */
 	uint8_t alignmentFill_at_22[2] = {};
 	/**
-	 * "Boost: Lua open loop add"
+	 * "Lua open loop add"
 	 * units: percent
 	 * offset 24
 	 */

@@ -6,79 +6,79 @@
 // start of engine_state_machine_state_s
 struct engine_state_machine_state_s {
 	/**
-	 * Engine SM: enabled
+	 * enabled
 	offset 0 bit 0 */
 	bool engineSmEnabled : 1 {};
 	/**
-	 * Engine SM: Off
+	 * Off
 	offset 0 bit 1 */
 	bool engineSmIsOff : 1 {};
 	/**
-	 * Engine SM: Cranking
+	 * Cranking
 	offset 0 bit 2 */
 	bool engineSmIsCranking : 1 {};
 	/**
-	 * Engine SM: Afterstart
+	 * Afterstart
 	offset 0 bit 3 */
 	bool engineSmIsAfterStart : 1 {};
 	/**
-	 * Engine SM: Idle
+	 * Idle
 	offset 0 bit 4 */
 	bool engineSmIsIdle : 1 {};
 	/**
-	 * Engine SM: Coasting
+	 * Coasting
 	offset 0 bit 5 */
 	bool engineSmIsCoasting : 1 {};
 	/**
-	 * Engine SM: Transient
+	 * Transient
 	offset 0 bit 6 */
 	bool engineSmIsTransient : 1 {};
 	/**
-	 * Engine SM: WOT
+	 * WOT
 	offset 0 bit 7 */
 	bool engineSmIsWot : 1 {};
 	/**
-	 * Engine SM: Cruising
+	 * Cruising
 	offset 0 bit 8 */
 	bool engineSmIsCruising : 1 {};
 	/**
-	 * Engine SM: Overrun
+	 * Overrun
 	offset 0 bit 9 */
 	bool engineSmIsOverrun : 1 {};
 	/**
-	 * Engine SM: Launch Control
+	 * Launch Control
 	offset 0 bit 10 */
 	bool engineSmIsLaunchControl : 1 {};
 	/**
-	 * Engine SM: Torque Reduction
+	 * Torque Reduction
 	offset 0 bit 11 */
 	bool engineSmIsTorqueReduction : 1 {};
 	/**
-	 * Engine SM: Upshifting
+	 * Upshifting
 	offset 0 bit 12 */
 	bool engineSmIsUpshifting : 1 {};
 	/**
-	 * Engine SM: Downshifting
+	 * Downshifting
 	offset 0 bit 13 */
 	bool engineSmIsDownshifting : 1 {};
 	/**
-	 * Engine SM: Cold engine
+	 * Cold engine
 	offset 0 bit 14 */
 	bool engineSmIsCold : 1 {};
 	/**
-	 * Engine SM: At operating temp
+	 * At operating temp
 	offset 0 bit 15 */
 	bool engineSmIsOperating : 1 {};
 	/**
-	 * Engine SM: Hot engine
+	 * Hot engine
 	offset 0 bit 16 */
 	bool engineSmIsHot : 1 {};
 	/**
-	 * Engine SM: Accelerating
+	 * Accelerating
 	offset 0 bit 17 */
 	bool engineSmIsAccelerating : 1 {};
 	/**
-	 * Engine SM: Decelerating
+	 * Decelerating
 	offset 0 bit 18 */
 	bool engineSmIsDecelerating : 1 {};
 	/**
@@ -121,7 +121,7 @@ struct engine_state_machine_state_s {
 	offset 0 bit 31 */
 	bool unusedBit_19_31 : 1 {};
 	/**
-	 * Engine SM: display state
+	 * display state
 	 * offset 4
 	 */
 	uint8_t engineSmCurrentState = (uint8_t)0;
@@ -132,12 +132,12 @@ struct engine_state_machine_state_s {
 	 */
 	uint8_t alignmentFill_at_5[3] = {};
 	/**
-	 * Engine SM: Shift accumulator
+	 * Shift accumulator
 	 * offset 8
 	 */
 	float engineSmShiftAccumulator = (float)0;
 	/**
-	 * Engine SM: RPM rate (RPM/t)
+	 * RPM rate (RPM/t)
 	 * units: RPM/s
 	 * offset 12
 	 */

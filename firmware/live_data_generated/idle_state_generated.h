@@ -182,7 +182,7 @@ struct idle_state_s {
 	 */
 	percent_t idleClosedLoop = (percent_t)0;
 	/**
-	 * @@GAUGE_NAME_IAC@@
+	 * Position
 	 * units: %
 	 * offset 48
 	 */
