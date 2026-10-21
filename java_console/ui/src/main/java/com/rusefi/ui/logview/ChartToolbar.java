@@ -1,5 +1,6 @@
 package com.rusefi.ui.logview;
 
+import com.formdev.flatlaf.FlatClientProperties;
 import com.rusefi.ui.widgets.JoinedButtons;
 import com.rusefi.ui.widgets.SegmentedControl;
 
@@ -24,7 +25,7 @@ import java.awt.Insets;
 
 /**
  * Toolbar above the log chart, styled like the Gauges toolbar: Open, plot colours, a Grid button that
- * opens the grid options, and the cursor Snap / Free switch. [tag:console_theme]
+ * opens the grid options, the cursor Snap / Free switch and the Stats toggle. [tag:console_theme]
  */
 final class ChartToolbar extends ThemedStrip {
     final JToggleButton lightPlot = SegmentedControl.segment("Light");
@@ -33,6 +34,8 @@ final class ChartToolbar extends ThemedStrip {
     final JButton gridButton = new JButton();
     final JToggleButton snapCursor = SegmentedControl.segment("Snap");
     final JToggleButton freeCursor = SegmentedControl.segment("Free");
+    /** Shows the statistics table; the viewer panel listens to it. */
+    final JToggleButton statsButton = new JToggleButton("Stats");
 
     // grid options, shown in a popup under the Grid button
     final JPanel gridPanel = new JPanel(new GridBagLayout());
@@ -105,6 +108,12 @@ final class ChartToolbar extends ThemedStrip {
         add(Box.createHorizontalStrut(JoinedButtons.ROW_GAP));
         add(muted(new JLabel("Cursor")));
         add(new SegmentedControl(snapCursor, freeCursor));
+        add(Box.createHorizontalStrut(JoinedButtons.ROW_GAP));
+        // a light accent tint when on, instead of the toolbar buttons' heavy grey [tag:console_theme]
+        statsButton.putClientProperty(FlatClientProperties.STYLE_CLASS, "viewToggle");
+        statsButton.setToolTipText("Show the value at the cursor and the min, max and average over the "
+                + "visible time of every plotted signal");
+        add(new JoinedButtons(statsButton));
         updateControls();
     }
 

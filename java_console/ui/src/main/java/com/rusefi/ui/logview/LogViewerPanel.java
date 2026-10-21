@@ -81,6 +81,11 @@ public final class LogViewerPanel extends JPanel {
     private final JLabel plottedLabel = ChartToolbar.muted(new JLabel());
     private final LogChart chart;
     private final LogStatusBar statusBar;
+    private final ChartToolbar toolbar;
+    private final StatsPanel statsPanel;
+    private final JPanel plotArea = new JPanel(new BorderLayout());
+    /** Chart and Stats panel side by side while the Stats panel is shown. */
+    private final JSplitPane statsSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
     public LogViewerPanel(CsvLogReader log) {
         this(log, null);
@@ -111,14 +116,23 @@ public final class LogViewerPanel extends JPanel {
             updatePlottedLabel();
         });
         statusBar = new LogStatusBar(fileName, log);
-        chart.setViewListener(() -> statusBar.update(chart.timeWindow(), chart.cursorTime()));
+        chart.addViewListener(() -> statusBar.update(chart.timeWindow(), chart.cursorTime()));
 
-        JPanel plotArea = new JPanel(new BorderLayout());
-        plotArea.add(new ChartToolbar(settings, () -> {
+        statsPanel = new StatsPanel(chart, () -> setStatsVisible(false));
+        toolbar = new ChartToolbar(settings, () -> {
             chart.repaint();
-            // the list dots use the plot palette, which follows the Light / Dark switch
+            // the list and table dots use the plot palette, which follows the Light / Dark switch
             fieldList.repaint();
-        }, onOpen), BorderLayout.NORTH);
+            statsPanel.table.repaint();
+        }, onOpen);
+        layout.addListener(statsPanel::refresh);
+        chart.addViewListener(statsPanel::refreshValues);
+        toolbar.statsButton.addActionListener(e -> setStatsVisible(toolbar.statsButton.isSelected()));
+        statsSplit.setResizeWeight(1);
+        statsSplit.setContinuousLayout(true);
+        statsSplit.setDividerSize(5);
+        statsSplit.setBorder(BorderFactory.createEmptyBorder());
+        plotArea.add(toolbar, BorderLayout.NORTH);
         plotArea.add(chart, BorderLayout.CENTER);
 
         JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, createSidebar(), plotArea);
@@ -233,6 +247,39 @@ public final class LogViewerPanel extends JPanel {
         return statusBar;
     }
 
+    StatsPanel statsPanel() {
+        return statsPanel;
+    }
+
+    ChartToolbar toolbar() {
+        return toolbar;
+    }
+
+    boolean isStatsVisible() {
+        return statsPanel.getParent() == statsSplit;
+    }
+
+    /** Shows the Stats panel to the right of the plots (resizable), or the plots alone. */
+    void setStatsVisible(boolean visible) {
+        toolbar.statsButton.setSelected(visible);
+        if (visible == isStatsVisible()) {
+            return;
+        }
+        plotArea.remove(visible ? chart : statsSplit);
+        if (visible) {
+            statsSplit.setLeftComponent(chart);
+            statsSplit.setRightComponent(statsPanel);
+            statsPanel.refresh();
+            plotArea.add(statsSplit, BorderLayout.CENTER);
+        } else {
+            statsSplit.remove(chart);
+            statsSplit.remove(statsPanel);
+            plotArea.add(chart, BorderLayout.CENTER);
+        }
+        plotArea.revalidate();
+        plotArea.repaint();
+    }
+
     JLabel plottedLabel() {
         return plottedLabel;
     }
@@ -316,45 +363,6 @@ public final class LogViewerPanel extends JPanel {
                 g2.dispose();
             }
             super.paintComponent(g);
-        }
-    }
-
-    /** A filled dot in the trace colour for plotted signals, an empty ring for the rest. */
-    private static final class TraceDot implements Icon {
-        private static final int SIZE = 10;
-        private Color fill;
-        private Color ring;
-
-        void set(Color fill, Color ring) {
-            this.fill = fill;
-            this.ring = ring;
-        }
-
-        @Override
-        public void paintIcon(Component c, Graphics g, int x, int y) {
-            Graphics2D g2 = (Graphics2D) g.create();
-            try {
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                if (fill != null) {
-                    g2.setColor(fill);
-                    g2.fillOval(x, y, SIZE, SIZE);
-                }
-                g2.setColor(ring);
-                g2.setStroke(new BasicStroke(1.2f));
-                g2.drawOval(x, y, SIZE - 1, SIZE - 1);
-            } finally {
-                g2.dispose();
-            }
-        }
-
-        @Override
-        public int getIconWidth() {
-            return SIZE;
-        }
-
-        @Override
-        public int getIconHeight() {
-            return SIZE;
         }
     }
 

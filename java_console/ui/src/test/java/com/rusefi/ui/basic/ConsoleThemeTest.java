@@ -9,6 +9,7 @@ import java.awt.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * [tag:console_theme] The console look is defined in com/rusefi/ui/theme/*.properties;
@@ -51,6 +52,15 @@ public class ConsoleThemeTest {
                 assertEquals(new Color(0x2563eb), ui.getStyleableValue(primary, state + "Background"), state);
                 assertEquals(Color.WHITE, ui.getStyleableValue(primary, state + "Foreground"), state);
             }
+            // view toggles in toolbars (Log Viewer Stats) turn a light accent tint when on, not grey
+            JToggleButton viewToggle = new JToggleButton("Stats");
+            viewToggle.putClientProperty(FlatClientProperties.BUTTON_TYPE, FlatClientProperties.BUTTON_TYPE_TOOLBAR_BUTTON);
+            viewToggle.putClientProperty(FlatClientProperties.STYLE_CLASS, "viewToggle");
+            viewToggle.updateUI();
+            FlatStylingSupport.StyleableUI toggleUi = (FlatStylingSupport.StyleableUI) viewToggle.getUI();
+            Color selected = (Color) toggleUi.getStyleableValue(viewToggle, "toolbar.selectedBackground");
+            assertTrue(selected.getBlue() > selected.getRed() && selected.getRed() > 200, "light blue tint: " + selected);
+            assertEquals(new Color(0x1d4ed8), toggleUi.getStyleableValue(viewToggle, "toolbar.selectedForeground"));
         } finally {
             SwingUtilities.invokeAndWait(() -> {
                 UiHelper.unregisterThemeForUnitTest();
