@@ -170,7 +170,7 @@
 #define INDICATOR_NAME_CLUTCH_UP "Clutch: up"
 #define INDICATOR_NAME_CLUTCH_DOWN "Clutch: down"
 #define INDICATOR_NAME_BRAKE_DOWN "Brake switch"
-#define INDICATOR_NAME_AC_SWITCH "AC switch"
+#define INDICATOR_NAME_AC_SWITCH "AC: switch"
 
 ! SD card status output channel names: single source of truth shared between the
 ! output_channels.txt bit fields, tunerstudio.template.ini indicators and java_console
