@@ -162,7 +162,8 @@ public class DataLogConsumer implements ConfigurationConsumer {
 
     private static String getFirstLine(String comment) {
         String[] comments = comment == null ? new String[0] : unquote(comment).split("\\\\n");
-        comment = (comments.length > 0) ? comments[0] : "";
+        // a quoted define followed by more lines, like @@GAUGE_NAME_FUEL_BASE@@\nmore text, leaves quotes on the first line
+        comment = (comments.length > 0) ? unquote(comments[0]) : "";
         return comment;
     }
 

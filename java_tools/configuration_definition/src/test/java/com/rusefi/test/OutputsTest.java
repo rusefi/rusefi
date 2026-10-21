@@ -6,6 +6,7 @@ import com.rusefi.output.DataLogConsumer;
 import com.rusefi.output.DuplicateFieldNameException;
 import com.rusefi.output.GaugeConsumer;
 import com.rusefi.output.OutputsSectionConsumer;
+import com.rusefi.output.SdCardFieldsContent;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
@@ -240,6 +241,27 @@ public class OutputsTest {
                         "entry = baseFuel2, \"line1\", int,    \"%d\"\n"
                 , dataLogConsumer.getContent());
 
+    }
+
+    @Test
+    public void prefixWithMultiLineQuotedDefine() {
+        String test = "#define GAUGE_NAME_FUEL_BASE \"Fuel: base mass\"\n" +
+                "set_prefix \"Fuel\"\n" +
+                "struct total\n" +
+                "\tuint16_t autoscale baseFuel;@@GAUGE_NAME_FUEL_BASE@@\\nThis is the raw value;\"mg\",1, 0, 0, 0, 0\n" +
+                "\tuint16_t autoscale baseFuel2;\"line1\\nline2\";\"mg\",1, 0, 0, 0, 0\n" +
+                "end_struct\n";
+        ReaderStateImpl state = new ReaderStateImpl();
+
+        DataLogConsumer dataLogConsumer = new DataLogConsumer(null, new TestFileCaptor());
+        SdCardFieldsContent sdCardFieldsConsumer = new SdCardFieldsContent();
+        state.readBufferedReader(test, dataLogConsumer, sdCardFieldsConsumer::handleEndStruct);
+
+        assertEquals(
+                "entry = baseFuel, \"Fuel: base mass\", int,    \"%d\"\n" +
+                        "entry = baseFuel2, \"Fuel: line1\", int,    \"%d\"\n"
+                , dataLogConsumer.getContent());
+        assertTrue(sdCardFieldsConsumer.getBody(), sdCardFieldsConsumer.getBody().contains("\"Fuel: base mass\", \"mg\""));
     }
 
     @Test
