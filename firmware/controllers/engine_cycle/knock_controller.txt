@@ -1,17 +1,19 @@
+set_prefix "Knock"
+
 struct_no_prefix knock_controller_s
 	float m_knockLevel;@@GAUGE_NAME_KNOCK_LEVEL@@;"Volts", 1, 0, 0, 0, 2
-	int8_t[MAX_CYLINDER_COUNT iterate] m_knockCyl;Knock: Cyl;"dBv",1, 0, 0, 0, 0
+	int8_t[MAX_CYLINDER_COUNT iterate] m_knockCyl;Cyl;"dBv",1, 0, 0, 0, 0
 
 	angle_t m_knockRetard;@@GAUGE_NAME_KNOCK_RETARD@@;"deg",1,0,0,0,1
-	float m_knockThreshold;Knock: Threshold
+	float m_knockThreshold;Threshold
 	uint32_t m_knockCount;@@GAUGE_NAME_KNOCK_COUNTER@@;"",1, 0, 0, 0, 0
-	float m_maximumRetard;Knock: Max retard
+	float m_maximumRetard;Max retard
 
-	uint32_t[16 iterate] m_knockSpectrum;Knock: SpectrumData;"compressed data",1, 0, 0, 0, 0
-	uint16_t m_knockSpectrumChannelCyl;Knock: ChannelAndCylNumber;"compressed N + N", 1, 0, 0, 0, 0
-	uint16_t m_knockFrequencyStart;Knock: Start Freq;"Hz", 1, 0, 0, 0, 0
-	float    m_knockFrequencyStep;Knock: Step Freq;"Hz", 1, 0, 0, 0, 0
-	float  	 m_knockFuelTrimMultiplier;Knock: Fuel trim when knock;"multiplier", 1, 0, 0, 0, 0
-	bit hasKnockRecently;Knock: Detected recently
-	bit hasKnockRetardNow;Knock: Retard active
+	uint32_t[16 iterate] m_knockSpectrum;SpectrumData;"compressed data",1, 0, 0, 0, 0
+	uint16_t m_knockSpectrumChannelCyl;ChannelAndCylNumber;"compressed N + N", 1, 0, 0, 0, 0
+	uint16_t m_knockFrequencyStart;Start Freq;"Hz", 1, 0, 0, 0, 0
+	float    m_knockFrequencyStep;Step Freq;"Hz", 1, 0, 0, 0, 0
+	float  	 m_knockFuelTrimMultiplier;Fuel trim when knock;"multiplier", 1, 0, 0, 0, 0
+	bit hasKnockRecently;Detected recently
+	bit hasKnockRetardNow;Retard active
 end_struct
