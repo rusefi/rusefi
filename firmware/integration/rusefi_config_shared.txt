@@ -66,6 +66,11 @@
 #define LUA_GAUGE_COUNT 8
 
 
+! Full gauge range for signed 16-bit telemetry scaled by 0.1 per count.
+! Minimum = -32768 * 0.1; maximum = 32767 * 0.1.
+#define GAUGE_S16_TENTHS_MIN -3276.8
+#define GAUGE_S16_TENTHS_MAX 3276.7
+
 #define GAUGE_NAME_VERSION "firmware"
 #define GAUGE_NAME_UPTIME "Uptime"
 ! WARNING! THIS GAUGE NAME IS PART of REO integration API
