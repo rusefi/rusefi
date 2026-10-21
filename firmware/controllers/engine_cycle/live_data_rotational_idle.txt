@@ -1,3 +1,5 @@
+set_prefix "Rot Idle"
+
 struct_no_prefix live_data_rotational_idle_s
     bit rotationalIdleEngaged;
     ! RPM

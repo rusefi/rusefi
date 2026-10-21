@@ -8,10 +8,12 @@ DOCS_ENUMS_INPUTS = \
   $(PROJECT_DIR)/console/binary/output_channels.txt \
   $(PROJECT_DIR)//tunerstudio/gauge_declarations.ini \
   $(PROJECT_DIR)/controllers/engine_cycle/knock_controller.txt \
+  $(PROJECT_DIR)/controllers/engine_cycle/live_data_rotational_idle.txt \
   $(PROJECT_DIR)/controllers/engine_cycle/prime_injection.txt \
   $(PROJECT_DIR)/controllers/trigger/trigger_central.txt \
   $(PROJECT_DIR)/controllers/long_term_fuel_trim_state.txt \
   $(PROJECT_DIR)/controllers/math/short_term_fuel_trim_state.txt \
+  $(PROJECT_DIR)/controllers/modules/fuel_pump/fuel_pump_control.txt \
   $(PROJECT_DIR)/controllers/trigger/trigger_state.txt \
   $(PROJECT_DIR)/controllers/trigger/trigger_state_primary.txt \
   $(PROJECT_DIR)/controllers/algo/shift_torque_reduction_state.txt \
