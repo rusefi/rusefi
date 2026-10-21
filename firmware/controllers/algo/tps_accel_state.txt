@@ -1,22 +1,24 @@
+set_prefix "Fuel: TPS AE"
+
 struct_no_prefix tps_accel_state_s
 
-custom percent_t 4 scalar, F32, @OFFSET@, "", 1, 0, 0, 100, 2
+	custom percent_t 4 scalar, F32, @OFFSET@, "", 1, 0, 0, 100, 2
 
-percent_t tpsFrom;Fuel: TPS AE from
-percent_t tpsTo;Fuel: TPS AE to
-percent_t deltaTps;Fuel: TPS AE change
+	percent_t tpsFrom;from
+	percent_t tpsTo;to
+	percent_t deltaTps;change
 
-	floatms_t extraFuel;Fuel: TPS extraFuel
-	float valueFromTable;Fuel: TPS valueFromTable
+	floatms_t extraFuel;extraFuel
+	float valueFromTable;valueFromTable
 
-bit isAboveAccelThreshold;Fuel: TPS AE Active
-bit isBelowDecelThreshold;
-bit isTimeToResetAccumulator;Fuel: TPS AE: reset time
-bit isFractionalEnrichment
-bit belowEpsilon;Fuel: TPS AE: below threshold
-bit tooShort;Fuel: TPS AE: too short
+	bit isAboveAccelThreshold;Active
+	bit isBelowDecelThreshold;Below Decel Thres
+	bit isTimeToResetAccumulator;reset time
+	bit isFractionalEnrichment;Fractional Enrich
+	bit belowEpsilon;below threshold
+	bit tooShort;too short
 
-float fractionalInjFuel;Fuel: TPS AE fractionalInjFuel
+	float fractionalInjFuel;fractionalInjFuel
 
 !	/**
 !	 * Used for Fractional TPS enrichment.
@@ -27,8 +29,9 @@ float fractionalInjFuel;Fuel: TPS AE fractionalInjFuel
 	floatms_t maxInjectedPerPeriod
 	int cycleCnt
 
-! [tag:lua_accel_enrichment] Applied cycle mass, before injection-mode scaling; separate from the legacy ms/fraction channel.
-float luaAccelFuel;Fuel: Lua AE cycle mass;"g", 1, 0, 0, 10, 6
-
+	! some fields related to other modules
+set_prefix ""
+	! [tag:lua_accel_enrichment] Applied cycle mass, before injection-mode scaling; separate from the legacy ms/fraction channel.
+	float luaAccelFuel;Fuel: Lua AE: cycle mass;"g", 1, 0, 0, 10, 6
 
 end_struct
