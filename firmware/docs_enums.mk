@@ -16,6 +16,7 @@ DOCS_ENUMS_INPUTS = \
   $(PROJECT_DIR)/controllers/trigger/trigger_state_primary.txt \
   $(PROJECT_DIR)/controllers/algo/shift_torque_reduction_state.txt \
   $(PROJECT_DIR)/controllers/algo/ignition/ignition_state.txt \
+  $(PROJECT_DIR)/controllers/algo/tps_accel_state.txt \
   $(PROJECT_DIR)/controllers/algo/launch_control_state.txt \
   $(PROJECT_DIR)/controllers/engine_cycle/high_pressure_fuel_pump.txt \
   $(PROJECT_DIR)/controllers/actuators/idle_state.txt \
