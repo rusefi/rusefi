@@ -12,6 +12,7 @@ DOCS_ENUMS_INPUTS = \
   $(PROJECT_DIR)/controllers/engine_cycle/prime_injection.txt \
   $(PROJECT_DIR)/controllers/trigger/trigger_central.txt \
   $(PROJECT_DIR)/controllers/long_term_fuel_trim_state.txt \
+  $(PROJECT_DIR)/controllers/math/lambda_monitor.txt \
   $(PROJECT_DIR)/controllers/math/short_term_fuel_trim_state.txt \
   $(PROJECT_DIR)/controllers/modules/fuel_pump/fuel_pump_control.txt \
   $(PROJECT_DIR)/controllers/trigger/trigger_state.txt \
