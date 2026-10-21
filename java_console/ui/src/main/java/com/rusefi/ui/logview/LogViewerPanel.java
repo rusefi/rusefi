@@ -31,6 +31,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 import java.awt.RenderingHints;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
@@ -165,7 +166,10 @@ public final class LogViewerPanel extends JPanel {
         heading.add(search, BorderLayout.SOUTH);
         sidebar.add(heading, BorderLayout.NORTH);
 
-        fieldList.setDragEnabled(true);
+        // setDragEnabled throws HeadlessException without a display (CI); there is nothing to drag there anyway.
+        if (!GraphicsEnvironment.isHeadless()) {
+            fieldList.setDragEnabled(true);
+        }
         fieldList.setDropMode(DropMode.ON);
         fieldList.setTransferHandler(new ListTransferHandler());
         fieldList.setCellRenderer(new SignalRenderer());

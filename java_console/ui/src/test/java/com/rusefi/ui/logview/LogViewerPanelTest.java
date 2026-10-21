@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import javax.swing.JList;
 import javax.swing.TransferHandler;
 import java.awt.Component;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
@@ -66,7 +67,8 @@ class LogViewerPanelTest {
     void listDragsTheSelectedSignalAndRemovesTracesDroppedOnIt() throws IOException {
         LogViewerPanel panel = new LogViewerPanel(log(), null);
         LogViewerPanel.ListTransferHandler handler = (LogViewerPanel.ListTransferHandler) panel.fieldList().getTransferHandler();
-        assertTrue(panel.fieldList().getDragEnabled());
+        // drag gestures need a display; CI runs headless, where the panel must still build
+        assertEquals(!GraphicsEnvironment.isHeadless(), panel.fieldList().getDragEnabled());
 
         panel.fieldList().setSelectedValue(2, false);
         assertEquals(2, SignalTransfer.field(handler.createTransferable(panel.fieldList())));

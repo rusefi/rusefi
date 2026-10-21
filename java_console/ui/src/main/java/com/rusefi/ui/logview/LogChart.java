@@ -152,6 +152,10 @@ final class LogChart extends JComponent {
         addMouseWheelListener(mouse);
         layout.addListener(this::repaint);
         setTransferHandler(new ChartTransferHandler());
+        // Headless (CI, no display) Swing installs no drop target, and there is no drag and drop to highlight.
+        if (getDropTarget() == null) {
+            return;
+        }
         try {
             getDropTarget().addDropTargetListener(new DropTargetAdapter() {
                 @Override
