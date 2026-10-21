@@ -48,7 +48,7 @@ final class BinaryLoggingMenu {
         this.settings = settings;
         String lastPath = settings.getProperty(LAST_LOG, null);
         lastLog = lastPath == null || lastPath.isEmpty() ? null : new File(lastPath);
-        menu = new JMenu("Binary Logging");
+        menu = new JMenu("Logging");
         menu.setMnemonic(KeyEvent.VK_B);
 
         startItem = new JMenuItem("Start");
@@ -176,7 +176,7 @@ final class BinaryLoggingMenu {
                 } catch (ExecutionException failure) {
                     JOptionPane.showMessageDialog(parent,
                             "Could not save the tune. Data logging was not started.\n" + failure.getCause().getMessage(),
-                            "Binary Logging", JOptionPane.ERROR_MESSAGE);
+                            "Logging", JOptionPane.ERROR_MESSAGE);
                 } finally {
                     refresh();
                 }
@@ -202,7 +202,7 @@ final class BinaryLoggingMenu {
         } else {
             JOptionPane.showMessageDialog(parent,
                     "No supported output channels are available for binary logging.",
-                    "Binary Logging",
+                    "Logging",
                     JOptionPane.WARNING_MESSAGE);
         }
         refresh();
