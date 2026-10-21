@@ -44,7 +44,8 @@ struct_no_prefix idle_state_s
 	percent_t idleClosedLoop;Closed loop
 
 	! Final output
-	percent_t currentIdlePosition;@@GAUGE_NAME_IAC@@;"%", 1, 0, 0, 0, 1
+	percent_t currentIdlePosition;Position;"%", 1, 0, 0, 0, 1
+	! percent_t currentIdlePosition;@@GAUGE_NAME_IAC@@;"%", 1, 0, 0, 0, 1
 
 	uint16_t idleTargetAirmass;Target airmass;"mg", 1, 0, 0, 0, 0
 	uint16_t autoscale idleTargetFlow;Target airflow;"kg/h", 0.01, 0, 0, 0, 2
