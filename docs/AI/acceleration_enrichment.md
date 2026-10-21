@@ -143,6 +143,21 @@ nextWallMass  = alpha * W + beta * commandedMass
 
 Thus wall wetting can add or subtract commanded fuel as the film fills or releases fuel, without a TPS acceleration event.
 
+The exponential helper is accurate only over its -2..0 input interval. For
+`rpm * effectiveTau < 60`, it returns 0.818 instead of a smaller exponential,
+which also changes the beta-to-alpha clamp. Supported short time constants can
+reach this branch outside cranking. The
+`EcuLogicReview.LowRpmWallFilmUsesWrongExponentialFallback` test covers the
+resulting pulse discontinuity with real injector callbacks.
+
+Film state advances only when the injection event reaches `WallFuel::adjust()`.
+DFCO supplies zero desired fuel through that path, allowing the model to decay.
+A `LimpManager` injection prohibition instead returns before the event, freezing
+film state while the engine rotates. Recovery can then subtract too much
+modeled evaporation; `FuelCutFreezesWallFilmUntilInjectionResumes` covers the
+trigger gate and recovery pulse. A stopped slow callback clears each event's
+film mass. Neither host test measures physical evaporation or mixture.
+
 All three flex multiplier tables share `flexTransientCltBins` and `flexTransientEthanolBins`. `getFlexTransientMult()` returns neutral `1.0` when `flexFuelTransientComp` is off or no ethanol sensor is configured. With a configured but invalid sensor, it uses 50% ethanol; invalid CLT uses 90 C. An interpolated multiplier at or below `0.01` also becomes `1.0`, so an all-zero table is neutral.
 
 ## Closed-loop interaction and diagnostics

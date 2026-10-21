@@ -9,6 +9,8 @@
 
 #include "event_queue.h"
 #include "engine_state_machine.h"
+#include "frequency_sensor.h"
+#include "init.h"
 #include "tunerstudio.h"
 
 using ::testing::_;
@@ -129,6 +131,68 @@ static void sampleDfcoRpm(float rpm) {
 	advanceTimeUs(100000);
 	engine->rpmCalculator.setRpmValue(rpm);
 	engine->module<EngineStateMachine>()->onSlowCallback();
+}
+
+// ECU-053: removing the physical VSS leaves its registry entry behind.
+TEST(StateAwareDfco, RemovingSpeedInputBlocksAbsentSensorFallback) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	extern FrequencySensor vehicleSpeedSensor;
+	// The provider and acquisition history outlive the simulated-clock rewind.
+	deInitVehicleSpeedSensor();
+	vehicleSpeedSensor.unregister();
+	vehicleSpeedSensor.invalidate();
+	vehicleSpeedSensor.resetHistoryForUnitTest();
+	Sensor::resetMockValue(SensorType::VehicleSpeed);
+	setupStateAwareDfco();
+	engineConfiguration->useEngineStateMachine = true;
+	engineConfiguration->dfcoFuelCutMode = dfco_fuel_cut_mode_e::Decel;
+	engineConfiguration->smTransientHoldTimeMs = 0;
+	engineConfiguration->smDecelRateThreshold = 500;
+	engineConfiguration->smRpmRateWindowMs = 100;
+	engineConfiguration->vehicleSpeedSensorInputPin = Gpio::A3;
+	engineConfiguration->driveWheelRevPerKm = 500;
+	engineConfiguration->vssGearRatio = 1;
+	engineConfiguration->vssToothCount = 20;
+	engineConfiguration->vssFilterReciprocal = 5;
+	Sensor::setMockValue(SensorType::DetectedGear, 0);
+	MockIdleController idle;
+	engine->module<IdleController>().set(&idle);
+	ON_CALL(idle, getCurrentPhase()).WillByDefault(Return(IIdleController::Phase::Running));
+	auto& sm = engine->module<EngineStateMachine>().unmock();
+	initVehicleSpeedSensor();
+	ASSERT_TRUE(Sensor::hasSensor(SensorType::VehicleSpeed));
+	for (int i = 0; i < 100; i++) {
+		eth.moveTimeForwardUs(10000);
+		vehicleSpeedSensor.onEdge(getTimeNowNt());
+	}
+	ASSERT_NEAR(36, Sensor::get(SensorType::VehicleSpeed).value_or(-1), 0.1f);
+	sampleDfcoRpm(4000);
+	sampleDfcoRpm(3900);
+	sampleDfcoRpm(3800);
+	ASSERT_TRUE(sm.engineSmIsDecelerating);
+	ASSERT_TRUE(updateDfco());
+
+	// Exercise the same category teardown/init used during a configuration burn.
+	engineConfiguration->vehicleSpeedSensorInputPin = Gpio::Unassigned;
+	deInitVehicleSpeedSensor();
+	initVehicleSpeedSensor();
+	EXPECT_TRUE(Sensor::hasSensor(SensorType::VehicleSpeed));
+	EXPECT_TRUE(Sensor::get(SensorType::VehicleSpeed).Valid);
+	eth.moveTimeForwardUs(501000);
+	sampleDfcoRpm(3700);
+	sampleDfcoRpm(3600);
+	sampleDfcoRpm(3500);
+	ASSERT_FALSE(Sensor::get(SensorType::VehicleSpeed).Valid);
+	ASSERT_LT(sm.getLastRpmRate(), -500);
+	ASSERT_FALSE(sm.engineSmIsDecelerating);
+	EXPECT_FALSE(updateDfco());
+
+	// Control: vacating the obsolete provider immediately enables the documented
+	// no-VSS fallback, with the same RPM history and configuration.
+	vehicleSpeedSensor.unregister();
+	EXPECT_FALSE(Sensor::hasSensor(SensorType::VehicleSpeed));
+	EXPECT_TRUE(updateDfco());
+	vehicleSpeedSensor.invalidate();
 }
 
 TEST(StateAwareDfco, DecelUsesClassificationAndAbsentSpeedFallback) {

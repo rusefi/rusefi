@@ -5,11 +5,11 @@ Prioritize unintended torque, incorrect fuel or spark delivery, failed engine
 protection, loss of synchronization, stalls, and starting or restart failures.
 Deliver ranked findings with reproducible evidence and useful test coverage.
 
-**Status:** Review running. Session started 2026-10-21 16:19:12 UTC.
+**Status:** Complete. Planned source/host investigation and deliverables validated before the time limit.
 Elapsed time includes initial task/guidance inspection; update at checkpoints.
 **Time budget:** 8 hours total, or 480 minutes.
-**Time consumed:** 234.9 minutes (checkpoint 2026-10-21 20:14:06 UTC).
-**Time remaining:** 245.1 minutes.
+**Time consumed:** 266.5 minutes (final checkpoint 2026-10-21 20:47:53 UTC).
+**Time remaining:** 213.5 minutes unused.
 
 ## Budget and stopping rules
 
@@ -139,17 +139,16 @@ the deliverables are validated, or it stops at the time limit with a clear
 handoff. Budget exhaustion does not mean all firmware paths were reviewed or
 all suspected defects were resolved.
 
-## Current review checkpoint
+## Final review checkpoint
 
-- Baseline: fetched origin/master; nine local commits ahead, zero behind. Initial inventory: 12 active / 24 fixed / 19 review reproductions. Five pre-existing generated-file modifications remain unstaged.
-- Reviewed ignition/trigger/knock scheduling, fueling/staging/priming/transients, protection and lambda banks, launch/anti-lag/Lua lifecycle, ETB/VVT/idle, sensor lifecycle/calibration, HPFP, start/stop and configuration storage.
-- Inventory now has 26 active and 24 fixed findings. ECU-037 through ECU-050 are new; ECU-012/032 have stronger delayed software-knock evidence. Production behavior remains unchanged.
-- Current full normal host suite passes: 1,869 tests / 304 suites. All new focused tests pass individually, including LTFT learning from frozen corrections and fixed-timing retention of a released launch cut.
-- Full-suite repeated shuffle exposed SensorInit.Map consuming a retained static MAP value, plus unrelated repeat-state failures. Added fixture invalidation; rebuild and rerun pending. EventQueue.simple's file-static previous value and GPIO test registration counters show repeat-state causes; production defects are not inferred from those test artifacts.
-- Optional software-knock variant: six tests and three shuffled runs passed earlier; rebuild with all current additions is in progress. Driver boundary remains an observer, not ADC/DSP coverage.
-- F407 production build passes; ELF contains knock/HPFP callbacks. Disassembly confirms extra-page burns reach forced settings writes. No hardware flash stall, DSP acquisition or physical engine effects were measured.
-- Normal and optional builds completed. Expanded 118-test selection passes three shuffled runs; six optional knock tests pass three shuffled runs. MAP fixture isolation is validated.
-- New strongest lead: external output removal loses the old pin address without sending an off command. MC33810 inherits a no-op mode setter. EG33 firmware builds and links this driver; host scheduled-pulse/removal test had a firing-order fixture mismatch, now corrected and awaiting execution.
-- Existing EventQueue.simple and gpioext.testGpioExt fail their second iteration when run alone, independently confirming unrelated repeat-state limitations.
-- Next: finish test isolation/validation, characterize remaining repeat-only failures independently, resolve remaining sensor/asynchronous candidates, and reconcile the report and coverage limits.
-- Session accounting anchor: 2026-10-21 16:19:12 UTC; no explicit pauses.
+- Completed the bounded source/host investigation across ignition, synchronization, knock, fueling/transients, protection and torque actuators, sensors/configuration, start/restart, HPFP and persistence. The continuation resolved the remaining host-testable nitrous/VSS leads and two wall-film defects. Hardware- and policy-dependent premises remain explicit follow-ups.
+- Inventory: 31 active / 24 fixed / 55 unique IDs. ECU-037 through ECU-055 are new across the review; ECU-012/032 have stronger delayed driver-request evidence. The continuation adds ECU-052 through ECU-055 and four passing reproductions. Production source is unchanged.
+- Coverage grows by 24 normal host cases and six optional software-knock cases overall. Tests observe real controller transitions and scheduled callbacks where practical, with mocked inputs and physical limitations stated per finding.
+- Final `make -C unit_tests -j12` passes with GCC ASan/bounds. All 1,875 tests / 304 suites pass normally and in a separate fresh full shuffled process (31337). The expanded 224-case selection passes three shuffled iterations (31337–31339).
+- A fresh full shuffle exposed an old Lua sensor-read mock leak. Two existing tests alone reproduced it before cleanup; both getter tests now clear their mocks. The repaired three-test selection passes three repeats. Earlier static MAP fixture isolation is retained. Existing GPIO/EventQueue full-suite-repeat limitations remain documented and are not production findings.
+- Earlier six-case optional knock validation passes three shuffled iterations. F407 and EG33 F7 builds and saved disassembly establish the relevant production paths; production source is unchanged since those checks. No physical flash stall, injector/coil waveform, fuel mixture or knock ADC/DSP completion is claimed as measured.
+- Fetched master again: HEAD remains 3ff25e8539a, origin/master 439833ec0ef, ten commits ahead / 32 behind. Relevant upstream changes were inspected without merging. The user's intervening commit remains intact; the agent did not commit, push or rewrite history.
+- Findings, candidates, rejected/narrowed leads, exact checks and limitations are in order_by_severity.md. Architecture notes and the ignored local docs/report.md draft are updated. New coverage files from the earlier review are tracked; the continuation creates no new files. Final tests/docs remain uncommitted, and generated files/artifacts remain unstaged.
+- Completion audit: exact build/test pass counts, new-case totals, 55 unique IDs, rank/detail ordering, repository links, empty index and whitespace checks pass. No tool or approval is pending.
+- Prioritized follow-ups: measure external injector removal and unsafe flash-write windows on hardware; exercise knock ADC/DSP overlap and target ISR/shared-state behavior; resolve oil-sensor-loss policy; measure wall-film cut recovery and full crank/cam restart transients.
+- Accounting: carried 244.0 minutes into the continuation at 2026-10-21 20:25:24 UTC; excluded the between-session interval. Continuation 22.5 minutes; total 266.5 minutes. Stop before the ceiling because the planned source/host investigation and deliverable validation are complete.

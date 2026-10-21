@@ -88,6 +88,68 @@ namespace {
         checkNitrousCondition(false, "Without RPM condition");
     }
 
+    // ECU-052: the AFR gate reads Lambda1 even when bank 2 has its own feedback.
+    TEST(NitrousControl, SecondBankAfrDoesNotInhibitRelay) {
+        EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+        engineConfiguration->nitrousControlEnabled = true;
+        engineConfiguration->nitrousControlArmingMethod = LUA_GAUGE;
+        engineConfiguration->nitrousLuaGauge = LUA_GAUGE_1;
+        engineConfiguration->nitrousLuaGaugeMeaning = LUA_GAUGE_LOWER_BOUND;
+        engineConfiguration->nitrousLuaGaugeArmingValue = 1;
+        engineConfiguration->nitrousActivationRpm = 1000;
+        engineConfiguration->nitrousDeactivationRpm = 6000;
+        engineConfiguration->nitrousMinimumVehicleSpeed = 0;
+        engineConfiguration->nitrousMinimumTps = 0;
+        engineConfiguration->nitrousMinimumClt = 0;
+        engineConfiguration->nitrousMaximumMap = 300;
+        engineConfiguration->nitrousMaximumAfr = 13;
+        engineConfiguration->nitrousFuelAdderPercent = 25;
+        engineConfiguration->cylinderBankSelect[2] = 1;
+        engineConfiguration->cylinderBankSelect[3] = 1;
+        Sensor::setMockValue(SensorType::LuaGauge1, 1);
+        Sensor::setMockValue(SensorType::Map, 100);
+        Sensor::setMockValue(SensorType::Lambda1, 0.8f);
+        Sensor::setMockValue(SensorType::Lambda2, 0.8f);
+        engine->rpmCalculator.setRpmValue(3000);
+        auto& nitrous = engine->module<NitrousController>().unmock();
+        nitrous.onSlowCallback();
+        ASSERT_TRUE(getLimpManager()->allowInjection());
+        ASSERT_TRUE(nitrous.isNitrousCondition);
+        ASSERT_TRUE(enginePins.nitrousRelay.getLogicValue());
+
+        // 1.2 lambda exceeds the 13:1 gasoline-scale AFR limit on bank 2.
+        Sensor::setMockValue(SensorType::Lambda2, 1.2f);
+        nitrous.onSlowCallback();
+        nitrous.onFastCallback();
+        EXPECT_TRUE(nitrous.isNitrousAfrCondition);
+        EXPECT_TRUE(enginePins.nitrousRelay.getLogicValue());
+        EXPECT_FLOAT_EQ(1.25f, nitrous.getFuelCoefficient());
+
+        // Loss of that configured second-bank feedback also leaves nitrous on.
+        Sensor::setInvalidMockValue(SensorType::Lambda2);
+        nitrous.onSlowCallback();
+        EXPECT_TRUE(nitrous.isNitrousAfrCondition);
+        EXPECT_TRUE(enginePins.nitrousRelay.getLogicValue());
+
+        // Control: identical lean feedback on bank 1 turns the relay off.
+        Sensor::setMockValue(SensorType::Lambda2, 0.8f);
+        Sensor::setMockValue(SensorType::Lambda1, 1.2f);
+        nitrous.onSlowCallback();
+        EXPECT_FALSE(nitrous.isNitrousAfrCondition);
+        EXPECT_FALSE(enginePins.nitrousRelay.getLogicValue());
+        EXPECT_FLOAT_EQ(1, nitrous.getFuelCoefficient());
+        Sensor::setInvalidMockValue(SensorType::Lambda1);
+        nitrous.onSlowCallback();
+        EXPECT_FALSE(enginePins.nitrousRelay.getLogicValue());
+
+        Sensor::setMockValue(SensorType::Lambda1, 0.8f);
+        nitrous.onSlowCallback();
+        EXPECT_TRUE(enginePins.nitrousRelay.getLogicValue());
+        engineConfiguration->nitrousControlEnabled = false;
+        nitrous.onFastCallback();
+        EXPECT_FALSE(enginePins.nitrousRelay.getLogicValue());
+    }
+
     // ECU-025: nitrous must turn off when ECU injection is cut.
     TEST(NitrousControl, NitrousRelayTurnsOffDuringBoostFuelCut) {
         EngineTestHelper eth(engine_type_e::TEST_ENGINE);

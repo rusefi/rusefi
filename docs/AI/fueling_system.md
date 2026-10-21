@@ -128,6 +128,13 @@ enable that fallback. The fallback uses the held RPM rate independently of the
 primary state; it does not reclassify the SM as Decelerating. Decel bypasses the
 Overrun TPS, RPM, speed and gear gates. Both accepts either path.
 
+Provider registration determines whether VSS is absent. Pulse-VSS teardown
+currently releases the input pin without unregistering its sensor. Changing
+that pin to Unassigned therefore leaves a present-but-timed-out provider that
+blocks Decel's RPM-rate fallback until restart or explicit unregistration.
+`StateAwareDfco.RemovingSpeedInputBlocksAbsentSensorFallback` covers this
+configuration transition through frequency acquisition and controller updates.
+
 Enabled SM upshift/downshift overlays suppress either path. Suppression resets
 the entry delay, so eligibility must again satisfy `dfcoDelay` before cutting.
 Disabling the SM immediately removes its Decel request and shift suppression,

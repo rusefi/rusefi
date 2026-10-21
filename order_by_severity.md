@@ -1,7 +1,8 @@
 # ECU firmware findings ordered by severity
 
-This report ranks 26 defects that remain in the current firmware. The 24 fixed
-findings are tracked separately below; active reproductions assert current defects.
+This report ranks 31 defects in the reviewed checkout, including 19 new findings
+(ECU-037 through ECU-055). The 24 fixed findings are tracked separately below;
+active reproductions assert current defects.
 
 ## Ranking rules
 
@@ -32,26 +33,31 @@ does not establish hardware timing or the physical severity of an outcome.
 | 4 | ECU-006 | S2 — High | Reproduced | Injector duty protection ignores saturation of secondary injectors |
 | 5 | ECU-017 | S2 — High | Reproduced | Primary injector duty protection ignores actual trims, wall film and cranking mode |
 | 6 | ECU-039 | S2 — High | Reproduced | Lean second-bank feedback bypasses lambda protection |
-| 7 | ECU-011 | S2 — High | Reproduced | Shared-coil ignition ignores cylinder timing trims and distributor odd-fire offsets |
-| 8 | ECU-012 | S2 — High | Reproduced through delayed driver request | Software knock uses firing-order position as physical cylinder identity |
-| 9 | ECU-037 | S2 — High | Reproduced | Disabling trailing sparks during dwell leaves the trailing coil charged |
-| 10 | ECU-046 | S2 — High | Gate/output overlap reproduced | Sync loss permits flash writes before pending coil discharge |
-| 11 | ECU-009 | S2 — High | Source-confirmed; reachability reproduced | Ninth/tenth forward gear indexes beyond the boost duty adder array |
-| 12 | ECU-032 | S2 — High | Reproduced with software knock enabled | Delayed software-knock window can be attributed to the next cylinder |
-| 13 | ECU-044 | S3 — Moderate | Unsafe callback premise reproduced | Sync loss leaves an HPFP start with invalid off-event timing |
-| 14 | ECU-033 | S3 — Moderate | Arithmetic reproduced; live-write path source-confirmed | Unburned zero injector flow can yield an infinite pulse duration |
-| 15 | ECU-049 | S3 — Moderate | Reproduced | LTFT learns frozen corrections during invalid lambda feedback or fuel cuts |
-| 16 | ECU-050 | S3 — Moderate | Reproduced | Fixed timing retains a released launch spark cut |
-| 17 | ECU-038 | S3 — Moderate | Reproduced | Multispark holds the trailing coil through the entire restrike sequence |
-| 18 | ECU-040 | S3 — Moderate | Reproduced | Odd-fire MAP windows overlap and discard or misattribute pressure samples |
-| 19 | ECU-042 | S3 — Moderate | Reproduced | Custom barometric pressure ignores its own calibration endpoints |
-| 20 | ECU-043 | S3 — Moderate | Reproduced | Idle timing soft entry retains the previous run’s elapsed-time origin |
-| 21 | ECU-013 | S3 — Moderate | Reproduced | Knock response treats retarded timing as hundreds of degrees of advance |
-| 22 | ECU-019 | S3 — Moderate | Reproduced | Percentage acceleration enrichment shrinks with batch/simultaneous injection |
-| 23 | ECU-026 | S3 — Moderate | Reproduced | Predictive MAP substitutes the previous run's estimate after a quick restart |
-| 24 | ECU-007 | S3 — Moderate | Reproduced | DFCO ignition recovery uses a fixed half-second ramp |
-| 25 | ECU-047 | S3 — Moderate | Reproduced | Unassigning an active launch switch retains the full spark cut |
-| 26 | ECU-048 | S4 — Low | Reproduced | First odd-fire injection uses the previous cylinder's timing offset |
+| 7 | ECU-052 | S2 — High | Reproduced | Nitrous AFR arming ignores lean or invalid second-bank feedback |
+| 8 | ECU-011 | S2 — High | Reproduced | Shared-coil ignition ignores cylinder timing trims and distributor odd-fire offsets |
+| 9 | ECU-012 | S2 — High | Reproduced through delayed driver request | Software knock uses firing-order position as physical cylinder identity |
+| 10 | ECU-037 | S2 — High | Reproduced | Disabling trailing sparks during dwell leaves the trailing coil charged |
+| 11 | ECU-051 | S2 — High | Production source-confirmed | Removing an active external injector output loses its turn-off path |
+| 12 | ECU-046 | S2 — High | Gate/output overlap reproduced | Sync loss permits flash writes before pending coil discharge |
+| 13 | ECU-009 | S2 — High | Source-confirmed; reachability reproduced | Ninth/tenth forward gear indexes beyond the boost duty adder array |
+| 14 | ECU-032 | S2 — High | Reproduced with software knock enabled | Delayed software-knock window can be attributed to the next cylinder |
+| 15 | ECU-044 | S3 — Moderate | Unsafe callback premise reproduced | Sync loss leaves an HPFP start with invalid off-event timing |
+| 16 | ECU-033 | S3 — Moderate | Arithmetic reproduced; live-write path source-confirmed | Unburned zero injector flow can yield an infinite pulse duration |
+| 17 | ECU-049 | S3 — Moderate | Reproduced | LTFT learns frozen corrections during invalid lambda feedback or fuel cuts |
+| 18 | ECU-050 | S3 — Moderate | Reproduced | Fixed timing retains a released launch spark cut |
+| 19 | ECU-054 | S3 — Moderate | Reproduced through injector callbacks | Low-RPM wall-film calculation selects the wrong exponential fallback |
+| 20 | ECU-055 | S3 — Moderate | Reproduced through trigger and injector callbacks | Fuel cuts freeze wall-film state and under-command recovery fuel |
+| 21 | ECU-038 | S3 — Moderate | Reproduced | Multispark holds the trailing coil through the entire restrike sequence |
+| 22 | ECU-040 | S3 — Moderate | Reproduced | Odd-fire MAP windows overlap and discard or misattribute pressure samples |
+| 23 | ECU-042 | S3 — Moderate | Reproduced | Custom barometric pressure ignores its own calibration endpoints |
+| 24 | ECU-043 | S3 — Moderate | Reproduced | Idle timing soft entry retains the previous run’s elapsed-time origin |
+| 25 | ECU-013 | S3 — Moderate | Reproduced | Knock response treats retarded timing as hundreds of degrees of advance |
+| 26 | ECU-019 | S3 — Moderate | Reproduced | Percentage acceleration enrichment shrinks with batch/simultaneous injection |
+| 27 | ECU-026 | S3 — Moderate | Reproduced | Predictive MAP substitutes the previous run's estimate after a quick restart |
+| 28 | ECU-007 | S3 — Moderate | Reproduced | DFCO ignition recovery uses a fixed half-second ramp |
+| 29 | ECU-047 | S3 — Moderate | Reproduced | Unassigning an active launch switch retains the full spark cut |
+| 30 | ECU-048 | S4 — Low | Reproduced | First odd-fire injection uses the previous cylinder's timing offset |
+| 31 | ECU-053 | S4 — Low | Reproduced | Removing the speed input leaves DFCO without its absent-sensor fallback |
 
 ### ECU-041 — Lua reload retains control requests from the destroyed script
 
@@ -261,6 +267,35 @@ does not establish hardware timing or the physical severity of an outcome.
 - **Fix direction:** Check all configured fuel-feedback banks with defined
   missing/invalid-sensor behavior, retaining the intended cut latch and recovery.
 
+### ECU-052 — Nitrous AFR arming ignores second-bank feedback
+
+- **Source:** `NitrousController::updateAfrConditionSatisfied()` and
+  `onSlowCallback()` in
+  [nitrous_controller.cpp](firmware/controllers/algo/nitrous_controller.cpp).
+  The AFR gate reads only Lambda1 before commanding the common nitrous relay.
+- **Trigger:** A dual-bank engine has nitrous armed with a nonzero maximum AFR,
+  healthy first-bank feedback and lean or invalid second-bank feedback. The
+  other arming gates pass and no independent injection cut is active.
+- **Actual:** The AFR condition remains satisfied, the relay remains on and
+  the configured nitrous fuel multiplier remains active. Neither the slow
+  arming callback nor the fast fuel-permission check rejects the second bank.
+- **Expected:** The configured AFR limit covers each active fuel-feedback bank,
+  with invalid feedback preventing activation for a bank that requires it.
+- **Impact:** Nitrous can continue adding oxidizer during a second-bank fuel
+  fault, defeating its mixture interlock and risking damaging lean combustion.
+  This is a separate controller from ECU-039's native lambda-protection timer;
+  the native protection does not supply the missing second-bank veto either.
+- **Severity/confidence:** S2 — High, reproduced. Nitrous use and permissive
+  arming gates narrow exposure; no solenoid flow or physical mixture is measured.
+- **Validation:** `NitrousControl.SecondBankAfrDoesNotInhibitRelay` configures
+  two cylinder banks, a 13:1 gasoline-scale AFR limit, 3,000 RPM and 25% extra
+  fuel. Lambda1 0.8 with Lambda2 1.2, then invalid Lambda2, leaves the relay on.
+  Identical lean or invalid feedback on Lambda1 turns it off and removes the
+  fuel multiplier; valid first-bank recovery rearms it. Disabling nitrous
+  clears the relay through the fast callback. Sensor inputs are host mocks.
+- **Fix direction:** Evaluate all active feedback banks in the nitrous gate,
+  with explicit missing/invalid policy and single-bank compatibility coverage.
+
 ### ECU-011 — Shared-coil ignition uses the wrong cylinder's timing and offset
 
 - **Source:** `prepareCylinderIgnitionSchedule()` in
@@ -361,6 +396,46 @@ does not establish hardware timing or the physical severity of an outcome.
   or continuous crank edges.
 - **Fix direction:** Preserve trailing charge/discharge ownership and the
   pending plan across feature changes; add bounded dwell protection.
+
+### ECU-051 — Removing an active external output loses its turn-off path
+
+- **Source:** `EnginePins::stopInjectionPins()` / `OutputPin::deInit()` in
+  [efi_gpio.cpp](firmware/controllers/system/efi_gpio.cpp), `efiSetPadUnused()`
+  in [io_pins.cpp](firmware/hw_layer/io_pins.cpp), and external-driver mode/write
+  methods in [gpio_ext.h](firmware/hw_layer/drivers/gpio/gpio_ext.h) and
+  [mc33810.cpp](firmware/hw_layer/drivers/gpio/mc33810.cpp).
+- **Trigger:** A live pin reassignment/removal, or cylinder-count reduction,
+  deinitializes an active injector on an external GPIO driver whose mode setter
+  does not turn its output off. EG33 assigns injectors to MC33810 outputs and
+  permits those assignments to change; its storage uses external flash.
+- **Actual:** Deinitialization never writes the inactive level. It requests an
+  unused mode and discards the old pin address. MC33810 inherits the base mode
+  setter, which returns failure without changing the output; that return is
+  ignored. Its direct output and cached command retain the last on state.
+  A queued injection close later updates the logical object, but its pin is
+  now unassigned, so it cannot send an off command to the former driver output.
+  The stopped-output sweep also skips the uninitialized object.
+- **Expected:** Command an output inactive while its old driver address is
+  still available, then release it and handle any remaining event ownership.
+- **Impact:** An injector can remain commanded on after its scheduled pulse
+  ends, risking uncontrolled fuel delivery, flooding or engine damage. Actual
+  current, delivered fuel and the driver's hardware fault response were not
+  measured. Do not infer unlimited coil dwell: MC33810 also has hardware dwell
+  protection, and this finding's concrete example is an injector output.
+- **Severity/confidence:** S2 — High, production source-confirmed, with host
+  reproduction of lost output ownership and the missing electrical write.
+- **Validation:** EG33 F7 firmware builds and links `OutputPin::deInit()`,
+  `Mc33810::writePad()` and `GpioChip::setPadMode()`. Its disassembly confirms
+  deinit calls only the unused-mode path before clearing the address, while
+  the inherited mode setter merely returns -1.
+  `gpio.RemovingActiveInjectorLosesPendingPhysicalTurnOff` runs a real timed
+  pulse, removes its output during the pulse, and verifies that the scheduled
+  close and stopped-output sweep leave the former electrical mock asserted.
+  `gpio.RetainedInjectorPinClosesWithPendingEvent` verifies normal closure
+  with the same pulse when the pin stays assigned. Host execution does not
+  execute SPI or the external driver thread.
+- **Fix direction:** Establish an explicit inactive-before-release invariant
+  for on-chip and external outputs, including active pulses and pin remapping.
 
 ### ECU-046 — Sync loss permits a flash write while a coil is charging
 
@@ -583,6 +658,77 @@ does not establish hardware timing or the physical severity of an outcome.
   timing clears the limiter and restores normal coil charge/discharge.
 - **Fix direction:** Refresh skip arbitration in the common control-update
   path; cover fixed timing and separate cranking-timing branches.
+
+### ECU-054 — Low-RPM wall-film computation uses the wrong exponential fallback
+
+- **Source:** `WallFuelController::onFastCallback()` and `WallFuel::adjust()` in
+  [wall_fuel.cpp](firmware/controllers/algo/wall_fuel.cpp), `expf_taylor_impl()`
+  in [rusefi_math.cpp](firmware/libfirmware/util/src/rusefi_math.cpp), and
+  `InjectionEvent::onTriggerTooth()` in
+  [main_trigger_callback.cpp](firmware/controllers/engine_cycle/main_trigger_callback.cpp).
+- **Trigger:** Wall-film compensation is enabled outside cranking with
+  `rpm * effectiveTau < 60`. A 0.03-second Basic-model time constant at
+  1,900 RPM is a supported calibration and reaches this condition without
+  nonfinite inputs or an unburned invalid tune.
+- **Actual:** The exponent is below -2, where the approximation returns 0.818
+  instead of approaching zero. This overstates retained film and prevents the
+  intended beta-to-alpha clamp. Empty-film fuel demand and later transient
+  corrections jump at the approximation boundary.
+- **Expected:** The exponential approximation remains accurate or conservatively
+  bounded over the controller's entire reachable input range. Alpha decreases
+  continuously as time per cycle increases relative to the evaporation constant.
+- **Impact:** Large transient fueling errors can cause a rich stumble or an
+  incorrect subsequent wall-film subtraction. Exposure requires a short
+  effective time constant relative to RPM; the default calibration is not
+  claimed to hit this boundary in normal running.
+- **Severity/confidence:** S3 — Moderate, reproduced through scheduled outputs.
+- **Validation:** `EcuLogicReview.LowRpmWallFilmUsesWrongExponentialFallback`
+  compares initially empty films at 2,100 and 1,900 RPM with tau 0.03 seconds,
+  beta 0.5, 10 mg requested fuel and a 1 g/s injector without deadtime. The
+  2,100-RPM control agrees with the exponential model within 0.1 ms. At
+  1,900 RPM alpha becomes 0.818 instead of about 0.122, and the real scheduled
+  pulse is 20 ms instead of about 11.4 ms. Both injector callbacks execute and
+  close the output. It does not measure mixture or fuel-film mass on hardware.
+- **Fix direction:** Correct the approximation outside its intended interval
+  or use a bounded full-domain implementation, with tests around the -2
+  boundary and the minimum supported effective time constant.
+
+### ECU-055 — Fuel cuts freeze wall-film state and under-command recovery fuel
+
+- **Source:** `handleFuel()` in
+  [main_trigger_callback.cpp](firmware/controllers/engine_cycle/main_trigger_callback.cpp)
+  returns when `LimpManager::allowInjection()` is false, before each event's
+  `WallFuel::adjust()` can update its film estimate. The model and its per-cycle
+  decay are in [wall_fuel.cpp](firmware/controllers/algo/wall_fuel.cpp).
+- **Trigger:** Wall-film compensation has accumulated a film estimate, then a
+  fuel cut inhibits injection while the engine continues rotating. Fuel is
+  subsequently restored without a stopped-engine reset.
+- **Actual:** Every blocked trigger event leaves both the film mass and the
+  adjustment counter unchanged. On recovery, the controller subtracts fuel
+  release from the pre-cut film, ignoring evaporation during the intervening
+  unfueled cycles. Wall-film compensation therefore commands too little fuel
+  relative to its own decay model.
+- **Expected:** Advance the film model during unfueled cycles while ensuring
+  no fuel is injected. Recovery uses the decayed state and the current request.
+- **Impact:** A lean recovery transient can cause hesitation or misfire after
+  a cut. The physical size depends on real deposition/evaporation and airflow;
+  the host evidence establishes inconsistent model state and commanded pulses.
+- **Severity/confidence:** S3 — Moderate, reproduced. This is distinct from
+  ECU-054's numerical-domain error and ECU-017's duty-protection omission.
+- **Validation:** `EcuLogicReview.FuelCutFreezesWallFilmUntilInjectionResumes`
+  fills the model through 100 real trigger/injector cycles at 3,000 RPM, tau
+  0.5 seconds, beta 0.5 and 10 mg desired fuel. A one-second Lua fuel cut spans
+  25 more trigger events: outputs stay off, no events are queued, and the film
+  estimate remains unchanged. Applying the model's existing alpha to those
+  zero-fuel cycles would leave less than 20% of the original film. Releasing
+  the cut schedules about 10 ms instead of the more than 18 ms required by
+  that decayed estimate; the output closes normally. The test calls the real
+  main trigger callback with controlled phase/RPM, not a crank/cam decoder.
+  Lua is the reproduced cut source; other cuts share the same early return.
+  DFCO instead supplies zero requested mass through the event path and is not
+  claimed to freeze the film in this way.
+- **Fix direction:** Separate fuel-film state advancement from permission to
+  energize injectors, preserving zero delivery during cuts and covering recovery.
 
 ### ECU-038 — Multispark extends trailing-coil dwell through every restrike
 
@@ -858,6 +1004,41 @@ does not establish hardware timing or the physical severity of an outcome.
 - **Fix direction:** Resolve cylinder identity before deriving the angle;
   cover initial readiness and simultaneous-to-sequential transitions.
 
+### ECU-053 — Removing the speed input blocks DFCO's absent-sensor fallback
+
+- **Source:** `deInitVehicleSpeedSensor()` in
+  [init_vehicle_speed_sensor.cpp](firmware/init/sensor/init_vehicle_speed_sensor.cpp)
+  calls `FrequencySensor::deInit()` in
+  [frequency_sensor.cpp](firmware/controllers/sensors/frequency_sensor.cpp),
+  which releases the pin but neither unregisters nor invalidates its provider.
+  `DfcoController::getState()` in
+  [dfco.cpp](firmware/controllers/algo/fuel/dfco.cpp) selects its RPM-rate
+  fallback only when `Sensor::hasSensor(VehicleSpeed)` is false.
+- **Trigger:** State-aware Decel fuel cut is configured, then the pulse VSS
+  input is changed to Unassigned and applied without rebooting. There is no
+  replacement speed provider, and RPM continues falling beyond the configured
+  deceleration threshold.
+- **Actual:** The removed provider remains registered. Its last value remains
+  valid until timeout, then the failed-but-present sensor prevents both valid
+  VSS classification and the absent-VSS fallback. Fuel cut stays disabled.
+- **Expected:** Removing the pulse input vacates its registry slot and discards
+  its sample, allowing the documented no-VSS strategy or a replacement provider.
+- **Impact:** The selected deceleration fuel cut stops working after live input
+  removal; fuel consumption and engine-braking behavior can differ from the
+  same tune after restart. No direct stall or large torque effect is established.
+- **Severity/confidence:** S4 — Low, reproduced; limited configuration transition.
+- **Validation:** `StateAwareDfco.RemovingSpeedInputBlocksAbsentSensorFallback`
+  acquires 36 km/h through real frequency conversion, then establishes Decel
+  classification and fuel cut from falling RPM. Category deinit/init with an
+  unassigned pin leaves the provider registered; after its 500 ms timeout,
+  continued RPM decline no longer cuts fuel. Explicitly unregistering the
+  obsolete provider immediately restores fallback with unchanged RPM history.
+  The test calls the production category functions used by a burn; host builds
+  omit the outer hardware reconfiguration and EXTI pin operations. It observes
+  DFCO's cut decision, not physical injector pulses or vehicle deceleration.
+- **Fix direction:** Pair pulse-provider registration with teardown and
+  invalidation, respecting registry ownership when another provider is present.
+
 ## Fixed findings
 
 | ID | Former defect | Current behavior and regression coverage |
@@ -906,6 +1087,12 @@ does not establish hardware timing or the physical severity of an outcome.
   Whether sensor loss should cut fuel, limit RPM, or preserve propulsion is a
   policy decision; the current source provides no explicit fallback there.
 
+- On-chip output teardown selects input mode with a pull-up. Whether this
+  energizes a former coil/injector control input depends on the board circuit
+  and external pull resistors. Verify electrical behavior on a specific board;
+  ECU-051 establishes the distinct external-driver omission without assuming
+  that on-chip electrical consequence.
+
 ## Candidates narrowed or rejected
 
 - A proposed 100%-secondary staging starvation case is not reachable through
@@ -928,6 +1115,24 @@ does not establish hardware timing or the physical severity of an outcome.
   minimum voltage-span check. A hypothetical NaN throttle path needs an actual
   reachable non-finite source before it warrants a finding; resolved analog
   TPS additionally rejects non-finite values in `filterTps()`.
+
+- A timer-preemption race during trigger-event promotion is not established
+  for normal STM32 EXTI triggering: the trigger interrupt outranks the timer,
+  and the executor's inline cancellation of other pending events is covered.
+  An ADC-trigger variant would need its actual interrupt ordering and an enabled
+  board configuration before a concurrency reproduction supports a finding.
+- Compensated MAP clamps the barometric factor to 0.5..1.5 before division.
+  A hypothetical valid zero baro reading does not create a divide-by-zero path.
+- Flat-shift consumers check its enable flag, so an old diagnostic activation
+  bit after disabling does not by itself demonstrate retained torque reduction.
+
+- A permanent wall-film carryover after a fully observed engine stop is not
+  established: the stopped slow callback resets each event's film mass.
+  ECU-055 instead concerns a still-rotating engine during a fuel cut.
+- The stale VSS registration does not establish a fatal Lua sensor collision:
+  `LuaSensor` checks for an existing provider and raises a recoverable Lua
+  error before the registry's fatal duplicate check. ECU-053 ranks the proved
+  DFCO decision, without claiming an ECU shutdown.
 
 ## Coverage and validation limits
 
@@ -960,32 +1165,102 @@ electrical behavior on an engine. The following checks bound the review.
 - The build regenerates tracked generated files. They remain unstaged, per
   repository guidance; production source is unchanged by this review.
 
-### Current review validation checkpoint
+### Completed review validation
 
-- Baseline `make -C unit_tests -j12` and
-  `build/rusefi_test --gtest_filter='EcuLogicReview.*:LimpRegression.*:InjectorFlowRegression.*'`
-  pass (21 tests, run from `unit_tests/`).
-- After new coverage, `make -C unit_tests -j12` and
-  `build/rusefi_test --gtest_filter='EcuLogicReview.*:IgnitionReview.*:MapSamplingAngle.*'`
-  pass: 36 tests, including the four new defect reproductions and a normal
-  trailing-discharge control. The same selection passes three shuffled runs
-  with seeds 31337–31339. The full normal host suite passes 1,856 tests from
-  304 suites (`build/rusefi_test`). Repeat final validation after further edits.
-- `cd firmware && bash bin/compile.sh config/boards/f407-discovery/meta-info.env -j12`
-  succeeds. The linked ELF contains the `startKnockSampling` action and
-  `KnockThread::ThreadTask`; this verifies feature compilation/linking, not ADC
-  acquisition or runtime timing on a physical ECU.
-- All six optional `KnockSchedulingReview.*` tests pass. The build command is
-  `make -C unit_tests -j12 BUILDDIR=build-knock-review DEPDIR=build-knock-review/.dep KNOCK_SCHEDULING_TEST=yes`.
-  It compiles the real software-knock scheduling branch and substitutes only
-  the hardware driver. Run `build-knock-review/rusefi_test --gtest_filter='KnockSchedulingReview.*'`
-  from `unit_tests/`. This selection also passes three shuffled runs with
-  seeds 31337–31339. The default host suite compiles without software knock.
+- Review scope: production logic in checkout `3ff25e8539a`, with investigation
+  starting from `c43dbed6810`. A final fetch finds `origin/master` at
+  `439833ec0ef`: the checkout is ten commits ahead and 32 behind. The fetched
+  changes were inspected, including the GPPWM NaN fix, ADC host subscriptions,
+  RPM startup coverage and LiveData naming changes. They were not merged.
+  The ranked engine-control paths are unchanged by those upstream logic edits;
+  the already-fixed upstream GPPWM defect is not added to this inventory.
+- `make -C unit_tests -j12` succeeds with GCC and ASan/bounds instrumentation.
+  After all final test edits, **1,875 tests from 304 suites** pass normally
+  and in a separate fresh full shuffled process (seed 31337). Run from
+  `unit_tests/`: `build/rusefi_test`, then
+  `build/rusefi_test --gtest_shuffle --gtest_random_seed=31337`.
+  These runs include all four continuation reproductions and Lua mock cleanup.
+- This expanded selection passes **224 tests in each of three shuffled runs**,
+  seeds 31337–31339, from `unit_tests/`:
 
-- Later focused additions pass: three `EcuLogicReview.LuaReset*` tests;
-  `SensorInit.CustomBaroUsesMapCalibrationInsteadOfBaroEndpoints`;
-  `idle_v2.RestartRetainsPreviousIdleTimingSoftEntryEpoch`; both
-  `HPFP.SyncLossRetainsPendingStartWithInvalidOffTiming` and
-  `HPFP.PendingStartClosesValveWithValidRpm`; and
-  `StorageBoardGate.SyncLossAllowsSettingsWriteDuringActiveDwell`.
-  Final full-suite and shuffled validation remain pending while review continues.
+  ```sh
+  build/rusefi_test --gtest_filter='EcuLogicReview.*:IgnitionReview.*:MapSamplingAngle.*:SensorInit.*:idle_v2.*:HPFP.*:StorageBoardGate.*:LTFT.*:LaunchControl.*:injectionScheduling.*:LimpRegression.*:InjectorFlowRegression.*:gpio.*:Nitrous*:StateAwareDfco.*:fuel.*:LuaHooks.*' --gtest_shuffle --gtest_random_seed=31337 --gtest_repeat=3
+  ```
+
+- The optional software-knock build succeeds:
+
+  ```sh
+  make -C unit_tests -j12 BUILDDIR=build-knock-review DEPDIR=build-knock-review/.dep KNOCK_SCHEDULING_TEST=yes
+  ```
+
+  All **six `KnockSchedulingReview.*` tests** pass three shuffled runs with
+  seeds 31337–31339. Run from `unit_tests/`:
+  `build-knock-review/rusefi_test --gtest_filter='KnockSchedulingReview.*' --gtest_shuffle --gtest_random_seed=31337 --gtest_repeat=3`.
+  This executes real scheduling and a driver-boundary observer; it establishes
+  neither ADC acquisition nor DSP completion. The default suite keeps software
+  knock disabled. Separate dependency directories avoid mixed variant objects.
+- Both targeted firmware builds succeeded earlier in this review, with fresh
+  linked ELFs checked in addition to the script exit status. The continuation
+  changes only tests and documentation; their production source is unchanged:
+
+  ```sh
+  cd firmware
+  bash bin/compile.sh config/boards/f407-discovery/meta-info.env -j12
+  bash bin/compile.sh config/boards/subaru_eg33/meta-info-subaru_eg33_f7_no_bl.env -j12
+  ```
+
+  F407 links the real knock scheduler/driver and HPFP callbacks; its disassembly
+  confirms extra-page burns call the forced-write path. EG33 links MC33810,
+  output deinitialization and the inherited mode setter; disassembly confirms
+  the missing off write. Neither build executes physical I/O or a flash stall.
+- Validation failures were resolved or bounded. HPFP fixture attempts initially
+  used too few trigger teeth; the passing setup uses a 12-minus-1 wheel and
+  satisfies the production shape constraint. The output-removal fixture needed
+  a firing order matching its one-cylinder configuration. Shuffling exposed
+  `SensorInit.Map` consuming a retained static fast-MAP value; fixture
+  invalidation now establishes its intended fallback precondition.
+- The unrestricted **in-process full-suite repeat** is not clean: later
+  iterations retain state in existing GPIO, SENT, CAN queue, K-line, event queue,
+  Lua-sensor and TCU fixtures. Independently running only
+  `EventQueue.simple:gpioext.testGpioExt` with `--gtest_repeat=2` reproduces both
+  failures without any new review test selected. The event test retains its
+  file-static previous value; the GPIO test retains registrations/counters.
+  The Lua sensor-read tests now clear their mocks after a separate fresh
+  full shuffle reproduced the collision. Running only
+  `LuaHooks.TestGetSensorByName:LuaHooks.LuaSensor` reproduced it before that
+  fixture cleanup. The repaired three-test getter/creation selection passes
+  three in-process iterations, and all 22 `LuaHooks.*` cases are included in
+  the 224-case shuffled selection. The other unrelated repeat-state fixtures
+  remain unchanged.
+- The continuation adds four passing reproductions: nitrous second-bank AFR
+  arming, VSS teardown blocking the no-speed DFCO fallback, a wall-film
+  exponential-domain error and frozen wall-film state during a fuel cut.
+  Together with the earlier additions, coverage grows by **24 normal host
+  cases and six optional knock cases**. The added normal cases use real
+  controller transitions and, for the wall-film cases, scheduled injector
+  callbacks; the report identifies mocked inputs and physical limits.
+- Inventory checks confirm 31 active / 24 fixed findings, 55 unique IDs,
+  matching rank/detail order and valid repository links. `git diff --check`
+  passes. All new coverage files are tracked; generated files, artifacts and
+  the ignored local `docs/report.md` draft remain unstaged. The user advanced
+  HEAD during the review; the agent did not commit, push or rewrite history.
+
+### Prioritized remaining coverage
+
+1. Capture actual output levels on an MC33810 board during active output
+   removal, and on F407 during extra-page burns or a pending burn after sync
+   loss. Measure injector closure and coil dwell against scheduled callbacks.
+2. Exercise the real software-knock ADC/DSP driver under overlapping windows
+   and multispark: quantify buffer ownership, length clamping, rejected
+   requests and cylinder attribution through DSP completion.
+3. Verify enabled ADC-trigger interrupt ordering and asynchronous sensor
+   snapshots on the target MCU. Portable host tests do not establish ISR
+   preemption or atomicity of shared multiword timestamps.
+4. Resolve the oil-pressure sensor-loss policy. Dual-bank nitrous arming now
+   has relay-level coverage in ECU-052; solenoid flow and physical mixture
+   remain unmeasured. Measure wall-film recovery transients after cuts and
+   validate the short-time-constant calibration range on hardware.
+5. Replay full crank/cam signals across odd-fire injection-mode changes and
+   rapid restart to quantify ECU-048's phase error and the physical effects
+   of other retained state. Hardware effects remain separate from the
+   demonstrated commands and scheduler states.

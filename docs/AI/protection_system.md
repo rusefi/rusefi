@@ -53,6 +53,21 @@ skip request at exactly Launch RPM use the spark limiter instead, so launch
 can suppress sparks without a launch full-cut code. The launch guide describes
 the activation gates, RPM latch, timing/enrichment effects and live-data fields.
 
+## Nitrous mixture and fuel-permission gates
+
+`NitrousController` evaluates arming inputs in its slow callback. Both slow
+and fast callbacks require injection permission, so a fuel-protection cut
+clears the nitrous relay without waiting for another arming evaluation.
+
+The nitrous maximum-AFR check uses Lambda1 on the gasoline AFR scale. Lambda2
+does not participate, even when cylinders use a second feedback bank: lean or
+invalid second-bank readings leave this gate satisfied when Lambda1 is healthy.
+Native lambda protection also checks only Lambda1, through a separate monitor.
+`NitrousControl.SecondBankAfrDoesNotInhibitRelay` exercises the relay and fuel
+multiplier; `EcuLogicReview.LeanSecondBankDoesNotTriggerLambdaProtection`
+exercises the native protection timer and cut decision. Both use host sensor
+inputs and establish no physical mixture or nitrous-flow measurement.
+
 ## How-To: Adding an Engine Protection Feature
 
 To add a new protection feature (e.g., "Fuel Pressure Protection"), follow this 4-step pattern:

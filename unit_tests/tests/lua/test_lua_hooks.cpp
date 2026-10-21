@@ -451,6 +451,7 @@ TEST(LuaHooks, TestGetSensorByIndex) {
 	// Now test with a value, returns value
 	Sensor::setMockValue(static_cast<SensorType>(10), 33);
 	EXPECT_EQ(testLuaReturnsNumberOrNil(getSensorTestByIndex).value_or(0), 33);
+	Sensor::resetMockValue(static_cast<SensorType>(10));
 }
 
 
@@ -470,6 +471,8 @@ TEST(LuaHooks, TestGetSensorByName) {
 	// Now test with a value, returns value
 	Sensor::setMockValue(SensorType::Clt, 33);
 	EXPECT_EQ(testLuaReturnsNumberOrNil(getSensorTestByName).value_or(0), 33);
+	// This test has no EngineTestHelper to clear the registry on teardown.
+	Sensor::resetMockValue(SensorType::Clt);
 }
 
 TEST(LuaHooks, Table3d) {

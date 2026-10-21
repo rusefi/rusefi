@@ -6,6 +6,7 @@
 #include "injector_model.h"
 #include "gear_detector.h"
 #include "limp_manager.h"
+#include "main_trigger_callback.h"
 #include "knock_logic.h"
 #include "mocks.h"
 #include "spark_logic.h"
@@ -427,6 +428,111 @@ TEST(EcuLogicReview, WallFuelSaturatesInjectorWithoutDutyProtection) {
 	eth.moveTimeForwardUs(49000);
 	eth.executeActions();
 	EXPECT_FALSE(enginePins.injectors[0].getLogicValue());
+}
+
+// ECU-054: supported tau/RPM combinations exceed the exponential helper's domain.
+TEST(EcuLogicReview, LowRpmWallFilmUsesWrongExponentialFallback) {
+	for (int rpm : {2100, 1900}) {
+		SCOPED_TRACE(rpm);
+		EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+		configureReviewPrimaryFuel(0.010f);
+		engineConfiguration->complexWallModel = false;
+		engineConfiguration->wwaeTau = 0.03f;
+		engineConfiguration->wwaeBeta = 0.5f;
+		engine->rpmCalculator.setRpmValue(rpm);
+		engine->periodicFastCallback();
+		auto& controller = engine->module<WallFuelController>().unmock();
+		ASSERT_TRUE(controller.getEnable());
+		ASSERT_FALSE(engine->rpmCalculator.isCranking());
+		ASSERT_FLOAT_EQ(0, engine->injectionEvents.elements[0].getWallFuel().getWallFuel());
+		ASSERT_NEAR(10, engine->engineState.injectionDuration, 0.001f);
+		const float trueAlpha = std::exp(-120.0f / (rpm * 0.03f));
+		// The model limits beta to alpha; both cases have true alpha below 0.5.
+		const float expectedPulseMs = 10 / (1 - trueAlpha);
+		scheduleReviewPrimaryPulse(eth);
+		ASSERT_TRUE(enginePins.injectors[0].getLogicValue());
+		if (rpm == 2100) {
+			// Control inside the approximation's documented -2..0 domain.
+			EXPECT_NEAR(trueAlpha, controller.getAlpha(), 0.01f);
+			EXPECT_NEAR(expectedPulseMs, engine->outputChannels.actualLastInjection, 0.1f);
+		} else {
+			// Below -2 the helper returns 0.818 instead of tending toward zero.
+			EXPECT_FLOAT_EQ(0.818f, controller.getAlpha());
+			EXPECT_FLOAT_EQ(0.5f, controller.getBeta());
+			EXPECT_NEAR(20, engine->outputChannels.actualLastInjection, 0.001f);
+			EXPECT_GT(engine->outputChannels.actualLastInjection, 1.7f * expectedPulseMs);
+		}
+		// Execute the actual scheduled closure; no pulse is left pending.
+		eth.moveTimeForwardUs(21000);
+		eth.executeActions();
+		EXPECT_FALSE(enginePins.injectors[0].getLogicValue());
+		EXPECT_EQ(0, engine->scheduler.size());
+	}
+}
+
+TEST(EcuLogicReview, FuelCutFreezesWallFilmUntilInjectionResumes) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	configureReviewPrimaryFuel(0.010f);
+	engineConfiguration->isIgnitionEnabled = false;
+	engineConfiguration->complexWallModel = false;
+	engineConfiguration->wwaeTau = 0.5f;
+	engineConfiguration->wwaeBeta = 0.5f;
+	engine->periodicFastCallback();
+	auto& controller = engine->module<WallFuelController>().unmock();
+	auto& wall = engine->injectionEvents.elements[0].getWallFuel();
+	auto& limp = engine->module<LimpManager>().unmock();
+	ASSERT_TRUE(controller.getEnable());
+	ASSERT_TRUE(limp.allowInjection());
+	engine->injectionEvents.addFuelEvents();
+	auto passInjectionTooth = [&] {
+		// Geometry is held fixed so this exercises the real fuel-permission gate
+		// and callbacks without depending on a particular crank wheel decoder.
+		engine->injectionEvents.elements[0].injectionStartAngle = 0;
+		mainTriggerCallback(1, getTimeNowNt(), 0, 10);
+		eth.executeActions();
+	};
+	for (int cycle = 0; cycle < 100; cycle++) {
+		passInjectionTooth();
+		eth.moveTimeForwardUs(40000); // 720 degrees at 3000 RPM.
+		eth.executeActions();
+	}
+	ASSERT_NEAR(10, engine->outputChannels.actualLastInjection, 0.01f);
+	ASSERT_FALSE(enginePins.injectors[0].getLogicValue());
+	const float filmBeforeCut = wall.getWallFuel();
+	const int adjustmentsBeforeCut = wall.invocationCounter;
+	ASSERT_GT(filmBeforeCut, 0.060f);
+
+	// ECU-055: trigger events keep arriving during a one-second Lua fuel cut,
+	// but handleFuel returns before the film can decay through zero-fuel cycles.
+	engine->engineState.lua.luaFuelCut = true;
+	limp.updateState(3000, getTimeNowNt());
+	ASSERT_EQ(ClearReason::Lua, limp.allowInjection().reason);
+	float decayedFilm = filmBeforeCut;
+	for (int cycle = 0; cycle < 25; cycle++) {
+		passInjectionTooth();
+		EXPECT_FALSE(enginePins.injectors[0].getLogicValue());
+		EXPECT_EQ(0, engine->scheduler.size());
+		decayedFilm *= controller.getAlpha();
+		eth.moveTimeForwardUs(40000);
+	}
+	EXPECT_EQ(adjustmentsBeforeCut, wall.invocationCounter);
+	EXPECT_FLOAT_EQ(filmBeforeCut, wall.getWallFuel());
+	ASSERT_LT(decayedFilm, 0.2f * filmBeforeCut);
+
+	engine->engineState.lua.luaFuelCut = false;
+	limp.updateState(3000, getTimeNowNt());
+	ASSERT_TRUE(limp.allowInjection());
+	passInjectionTooth();
+	ASSERT_TRUE(enginePins.injectors[0].getLogicValue());
+	const float modelPulseAfterDecayMs = 1000 *
+		(0.010f - (1 - controller.getAlpha()) * decayedFilm) / (1 - controller.getBeta());
+	EXPECT_GT(modelPulseAfterDecayMs, 18);
+	EXPECT_NEAR(10, engine->outputChannels.actualLastInjection, 0.01f);
+	EXPECT_LT(engine->outputChannels.actualLastInjection, 0.6f * modelPulseAfterDecayMs);
+	eth.moveTimeForwardUs(40000);
+	eth.executeActions();
+	EXPECT_FALSE(enginePins.injectors[0].getLogicValue());
+	EXPECT_EQ(0, engine->scheduler.size());
 }
 
 TEST(EcuLogicReview, PercentAccelEnrichmentIsReducedByInjectionModeTwice) {
