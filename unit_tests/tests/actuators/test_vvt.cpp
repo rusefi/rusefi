@@ -48,32 +48,69 @@ struct FakeMap : public ValueProvider3D {
 	}
 };
 
-TEST(Vvt, ActivationDelayRetainsFractionalSeconds) {
+namespace {
+
+void checkActivationDelay(uint16_t delayMs) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	Sensor::setMockValue(SensorType::Clt, 70);
 	engineConfiguration->vvtControlMinClt = 0;
 	engineConfiguration->vvtControlMinRpm = 500;
-	engineConfiguration->vvtActivationDelayMs = 1500;
+	engineConfiguration->vvtActivationDelayMs = delayMs;
+	engineConfiguration->vvtAdvancedModeEnabled = false;
+	engineConfiguration->invertVvtControlIntake = false;
+	engineConfiguration->auxPid[0].pFactor = 1;
+	engineConfiguration->auxPid[0].iFactor = 0;
+	engineConfiguration->auxPid[0].dFactor = 0;
+	engineConfiguration->auxPid[0].offset = 0;
+	engineConfiguration->auxPid[0].minValue = 0;
+	engineConfiguration->auxPid[0].maxValue = 100;
 	engine->rpmCalculator.setRpmValue(1500);
+	engine->triggerCentral.vvtPosition[0][0] = 0;
 
 	FakeMap targetMap;
 	targetMap.setpoint = 20;
 	StrictMock<MockPwm> pwm;
-	EXPECT_CALL(pwm, setSimplePwmDutyCycle(0)).Times(3);
 	VvtController dut(0);
 	dut.init(&targetMap, &pwm);
 
-	advanceTimeUs(900000);
-	dut.onFastCallback();
-	EXPECT_FALSE(dut.getSetpoint());
+	auto checkOutput = [&](bool enabled) {
+		// Fresh feedback lets this test observe the delay gate through real PWM.
+		// Missing cam measurements would keep the output off even after the delay.
+		engine->triggerCentral.vvtPositionUpdateTimer[0][0].reset();
+		EXPECT_CALL(pwm, setSimplePwmDutyCycle(testing::FloatNear(enabled ? 0.2f : 0.0f, 0.00001f)));
+		dut.onFastCallback();
+		EXPECT_EQ(enabled, dut.getSetpoint().Valid);
+		EXPECT_FLOAT_EQ(enabled ? 20.0f : 0.0f, dut.vvtOutput);
+	};
 
-	advanceTimeUs(350000);
-	dut.onFastCallback();
-	EXPECT_FALSE(dut.getSetpoint());
+	if (delayMs > 0) {
+		advanceTimeUs((delayMs - 1) * 1000);
+		checkOutput(false);
+		advanceTimeUs(1000);
+	}
 
-	advanceTimeUs(350000);
-	dut.onFastCallback();
-	EXPECT_EQ(20, dut.getSetpoint().value_or(-1000));
+	// The existing gate is strict: runtime must exceed the configured delay.
+	checkOutput(false);
+	advanceTimeUs(1000);
+	checkOutput(true);
+}
+
+} // namespace
+
+TEST(Vvt, ActivationDelayRetainsFractionalSeconds) {
+	checkActivationDelay(1500);
+}
+
+TEST(Vvt, ActivationDelayRetainsSubsecondDelay) {
+	checkActivationDelay(500);
+}
+
+TEST(Vvt, ActivationDelayHonorsExactSecond) {
+	checkActivationDelay(1000);
+}
+
+TEST(Vvt, ActivationDelayZeroAllowsFirstLaterUpdate) {
+	checkActivationDelay(0);
 }
 
 TEST(VVT, SetpointHysteresisAdvancingCam) {

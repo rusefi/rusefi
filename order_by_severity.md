@@ -1,7 +1,7 @@
 # ECU firmware findings ordered by severity
 
-This report ranks defects that remain in the current firmware. Fixed findings
-are tracked separately below; the active reproductions assert current defects.
+This report ranks 12 defects that remain in the current firmware. The 24 fixed
+findings are tracked separately below; active reproductions assert current defects.
 
 ## Ranking rules
 
@@ -37,9 +37,7 @@ does not establish hardware timing or the physical severity of an outcome.
 | 9 | ECU-013 | S3 — Moderate | Reproduced | Knock response treats retarded timing as hundreds of degrees of advance |
 | 10 | ECU-019 | S3 — Moderate | Reproduced | Percentage acceleration enrichment shrinks with batch/simultaneous injection |
 | 11 | ECU-026 | S3 — Moderate | Reproduced | Predictive MAP substitutes the previous run's estimate after a quick restart |
-| 12 | ECU-021 | S3 — Moderate | Reproduced | VVT activation delay discards fractional seconds |
-| 13 | ECU-007 | S3 — Moderate | Reproduced | DFCO ignition recovery uses a fixed half-second ramp |
-| 14 | ECU-029 | S3 — Moderate | Reproduced | Failed A/C pressure feedback can re-enable a compressor after a pressure cut |
+| 12 | ECU-007 | S3 — Moderate | Reproduced | DFCO ignition recovery uses a fixed half-second ramp |
 
 ### ECU-001 — Invalid wastegate/idle-valve outputs still drive the motor
 
@@ -397,27 +395,6 @@ does not establish hardware timing or the physical severity of an outcome.
   configuration changes; exercise the production static instance through the
   fuel path as follow-up integration coverage.
 
-### ECU-021 — Millisecond VVT startup delay is rounded down to whole seconds
-
-- **Source:** `VvtController::onFastCallback()` in
-  [vvt.cpp](firmware/controllers/actuators/vvt.cpp), and `vvtActivationDelayMs`
-  in [rusefi_config.txt](firmware/integration/rusefi_config.txt).
-- **Trigger:** The configured delay is not an exact multiple of 1,000 ms and
-  the other VVT activation gates permit control.
-- **Actual:** The unsigned integer millisecond setting is divided by integer
-  `MS_PER_SECOND` before comparison to floating-point elapsed seconds. A
-  1,500 ms delay becomes 1 second; any positive delay below 1,000 ms becomes zero.
-- **Expected:** Honor the entire configured delay before diverting oil flow to
-  VVT, as the parameter's description specifies.
-- **Impact:** Cam actuation can begin up to almost one second early during
-  oil-pressure buildup. Startup instability is credible; physical pressure
-  loss or engine damage is not established by these host tests.
-- **Validation:** `VvtActivationDelayTruncatesMillisecondsToWholeSeconds`
-  sets 1,500 ms at 1,500 RPM. The real controller drives zero at 900 ms, then
-  commands 20% PWM at 1,100 ms, still 400 ms before the selected delay expires.
-- **Fix direction:** Compare elapsed milliseconds or use floating-point units
-  conversion. Cover subsecond, fractional-second, exact-second and zero delays.
-
 ### ECU-007 — DFCO timing recovery ignores the selected ramp duration
 
 - **Source:** `DfcoController::getTimingRetard()` in
@@ -438,36 +415,6 @@ does not establish hardware timing or the physical severity of an outcome.
   10 degrees at 250 ms and zero at 500 ms, instead of 15 and 10 degrees.
 - **Fix direction:** Use the configured duration in the interpolation; cover
   short, long and zero ramps and transitions back into DFCO.
-
-### ECU-029 — Failed A/C pressure sensor releases its compressor cut
-
-- **Source:** `AcController::getAcState()` in
-  [ac_control.cpp](firmware/controllers/actuators/ac_control.cpp) applies the
-  configured minimum and maximum refrigerant-pressure checks only inside
-  `if (acPressure.Valid)`. An invalid reading skips both checks and continues
-  to the A/C request. The same function denies A/C when CLT is invalid.
-- **Trigger:** A configured A/C pressure sensor fails or times out after a
-  pressure limit has already turned the compressor off, while A/C remains
-  requested and other permissive inputs are valid.
-- **Actual:** The next slow callback bypasses the existing high-pressure
-  hysteresis state and reasserts the compressor relay even though pressure is
-  unknown. An installation without a pressure sensor may intentionally permit
-  A/C; this finding concerns failure of a previously working sensor.
-- **Expected:** Loss of configured pressure feedback must not release a
-  pressure-protection cut or energize the compressor under unknown pressure.
-- **Impact:** Re-engagement during a high-pressure fault can stress or damage
-  the compressor or refrigerant circuit. The host test observes logical relay
-  state, not physical pressure or clutch operation. If a fan is configured for
-  A/C-pressure demand, its separate invalid-pressure path in
-  [fan_control.cpp](firmware/controllers/modules/fan_control/fan_control.cpp)
-  also removes that fan demand; coolant-temperature demand may still run it.
-- **Validation:** `FailedAcPressureSensorReleasesCompressorPressureCut` starts
-  with valid 250-kPa pressure above a 200-kPa maximum and confirms the relay
-  is off. It then makes the same sensor invalid; the next slow callback turns
-  the relay on with A/C still requested.
-- **Fix direction:** Distinguish an absent optional pressure sensor from a
-  configured sensor that has become invalid, and retain the safe compressor-off
-  state on feedback loss. Cover low- and high-pressure failures and recovery.
 
 ## Fixed findings
 
@@ -494,7 +441,9 @@ does not establish hardware timing or the physical severity of an outcome.
 | ECU-027 | Zero HPFP lobes could leave a configured GDI pump active with a nonfinite fuel request. | Zero lobes now disable GDI pump activation and yield zero quantity and angle requests, even with an assigned valve pin and nonzero pump volume. `HPFP.ZeroLobesDisableConfiguredPump` covers the validator, quantity calculation and active-state gate. |
 | ECU-024 | Ignition schedule rebuild could leave the previously charged coil energized. | Each ignition event retains the physical outputs charged for its pending fire callback, so remapping the event does not redirect discharge. `ignition.ScheduleRebuildTurnsOffPreviouslyChargedCoil` covers a two-coil to single-coil rebuild during dwell. |
 | ECU-015 | A 1% traction spark cut could saturate the hard limiter or produce a 50% soft cut. | Traction percentages are divided by 100 before entering either spark limiter. The `TractionSparkSkip.OnePercent*` and `TenPercent*` tests cover both modes and normalized ratios. |
-| ECU-005 | Invalid fuel pressure could select injection duration, manual mass correction and pressure-dependent deadtime. | Direct duration lookup uses nominal reference pressure when feedback is invalid; manual HPFP correction skips the invalid reading; deadtime uses nominal differential pressure plus MAP for the legacy absolute axis. The three `InjectorModel.InvalidFuelPressure*` tests cover these production paths. |
+| ECU-005 | Invalid fuel pressure could select injection duration, manual mass correction and pressure-dependent deadtime. | Direct duration lookup uses nominal reference pressure when feedback is invalid; manual HPFP correction skips the invalid reading; deadtime uses nominal differential pressure plus MAP for the legacy absolute axis. The three `InjectorModel.InvalidFuelPressure*` tests cover these production paths. `UnavailablePressureUsesReferenceBeforeStateUpdate` covers nominal deadtime before the first sensor update, including the legacy absolute axis; `UnavailablePressureInterpolatesDeadtimeAfterRepeatedUpdates` checks interpolation and pulse duration over repeated updates with compensation disabled or feedback absent/invalid. |
+| ECU-021 | VVT activation delay could discard fractional seconds and start cam actuation early. | Milliseconds are converted to floating-point seconds before comparison with engine runtime. The four `Vvt.ActivationDelay*` tests check zero, subsecond, exact-second and fractional-second delays with fresh cam feedback, verifying both the activation gate and PWM output around the delay boundary. |
+| ECU-029 | Failed A/C pressure feedback could re-enable the compressor after a pressure cut. | An invalid reading with a configured ADC pressure channel keeps the compressor off. `AcPressureTest.FailedPressureFeedbackKeepsCompressorOffAfterCut` covers initially invalid feedback, high/low cuts, failure and recovery; `UnconfiguredPressureSensorDoesNotBlockCompressor` covers the optional-sensor case. Sensor mocks alone do not configure the ADC channel. |
 
 ## Candidates under investigation
 
@@ -546,13 +495,21 @@ electrical behavior on an engine. The following checks bound the review.
   sensor registry and stored values, fuel-pressure compensation, flex fueling,
   nitrous activation, anti-lag, and knock control. Inspection does not mean all
   behavior in these areas is covered.
-- Host `make -j12` succeeds. All 21 remaining `EcuLogicReview.*` tests,
-  the oil-pressure and injector-flow regressions in the review test file, and
-  eight master regressions for fuel pressure, traction spark cut and ignition
-  schedule rebuild pass on GCC with ASan/bounds enabled (31 focused tests).
-  The review tests assert current defects; the regressions assert corrected
-  behavior.
-- The full GCC ASan/bounds suite passes: 1,837 tests from 301 suites. Command:
+- Host `make -j12` succeeds with GCC and ASan/bounds enabled. All 78 focused
+  tests pass: 19 `EcuLogicReview.*` defect reproductions, the oil-pressure and
+  injector-flow regressions, the complete VVT, A/C-pressure, injector-model and
+  traction-spark-skip suites, and the ignition schedule-rebuild regression.
+  Reproductions assert current defects; regressions assert corrected behavior.
+- VVT activation coverage observes PWM with fresh cam feedback immediately
+  before, at and after positive delay boundaries, plus zero delay at and after
+  startup. A/C coverage configures the ADC channel explicitly; sensor mocks
+  alone represent neither sensor wiring nor the configured-failure path.
+- The full GCC ASan/bounds suite passes: 1,851 tests from 303 suites. Command:
   `cd unit_tests && make -j12 && build/rusefi_test`.
-- The build regenerated tracked generated files. They remain unstaged, per
-  repository guidance; no production source has been changed for this review.
+  The 78 focused tests also pass three shuffled runs with seeds 31337–31339
+  (`--gtest_shuffle --gtest_random_seed=31337 --gtest_repeat=3`).
+- Host execution does not exercise software-knock ADC acquisition or establish
+  physical injector/coil/solenoid behavior. The delayed-knock identity finding
+  still needs timing coverage with software knock enabled.
+- The build regenerates tracked generated files. They remain unstaged, per
+  repository guidance; production source is unchanged by this review.

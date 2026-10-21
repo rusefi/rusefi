@@ -186,6 +186,12 @@ namespace {
         engine->engineState.lua.acRequestState = true;
         auto& ac = engine->engineModules.get<AcController>();
 
+        // A configured sensor must be usable even before any pressure cut latches.
+        Sensor::setInvalidMockValue(SensorType::AcPressure);
+        periodicSlowCallback();
+        EXPECT_FALSE(ac->isAcEnabled());
+        EXPECT_FALSE(enginePins.acRelay.getLogicValue());
+
         updateAcPressure(100);
         ASSERT_TRUE(enginePins.acRelay.getLogicValue());
 
@@ -209,6 +215,12 @@ namespace {
         periodicSlowCallback();
         EXPECT_TRUE(ac->acPressureTooLow);
         EXPECT_FALSE(enginePins.acRelay.getLogicValue());
+
+        updateAcPressure(100);
+        EXPECT_FALSE(ac->acPressureTooLow);
+        EXPECT_FALSE(ac->acPressureTooHigh);
+        EXPECT_TRUE(ac->isAcEnabled());
+        EXPECT_TRUE(enginePins.acRelay.getLogicValue());
     }
 
     TEST_F(AcPressureTest, UnconfiguredPressureSensorDoesNotBlockCompressor) {

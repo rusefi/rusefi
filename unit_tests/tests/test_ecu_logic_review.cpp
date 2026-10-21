@@ -1,6 +1,5 @@
 #include "pch.h"
 
-#include "ac_control.h"
 #include "dc_motor.h"
 #include "electronic_throttle_impl.h"
 #include "fuel_math.h"
@@ -12,7 +11,6 @@
 #include "spark_logic.h"
 #include "speed_density_airmass.h"
 #include "stored_value_sensor.h"
-#include "vvt.h"
 
 using ::testing::_;
 using ::testing::Return;
@@ -516,48 +514,6 @@ TEST(EcuLogicReview, CrankingSequentialDutyIsOverreportedAsRunningSimultaneous) 
 	EXPECT_EQ(ClearReason::InjectorDutyCycle, dut.allowInjection().reason);
 }
 
-namespace {
-
-void configureReviewVvt() {
-	Sensor::setMockValue(SensorType::Clt, 70);
-	engineConfiguration->vvtControlMinRpm = 500;
-	engineConfiguration->vvtControlMinClt = 0;
-	engineConfiguration->vvtActivationDelayMs = 0;
-	engineConfiguration->vvtAdvancedModeEnabled = false;
-	engineConfiguration->invertVvtControlIntake = false;
-	engineConfiguration->auxPid[0].pFactor = 1;
-	engineConfiguration->auxPid[0].iFactor = 0;
-	engineConfiguration->auxPid[0].dFactor = 0;
-	engineConfiguration->auxPid[0].offset = 0;
-	engineConfiguration->auxPid[0].minValue = 0;
-	engineConfiguration->auxPid[0].maxValue = 100;
-}
-
-} // namespace
-
-TEST(EcuLogicReview, VvtActivationDelayTruncatesMillisecondsToWholeSeconds) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	configureReviewVvt();
-	engineConfiguration->vvtActivationDelayMs = 1500;
-	engine->rpmCalculator.setRpmValue(1500);
-	StrictMock<MockVp3d> targetMap;
-	StrictMock<MockPwm> pwm;
-	EXPECT_CALL(targetMap, getValue(_, _)).WillRepeatedly(Return(20));
-	VvtController dut(0);
-	dut.init(&targetMap, &pwm);
-	advanceTimeUs(900000);
-	// Keep cam feedback fresh so this test isolates activation-delay rounding.
-	engine->triggerCentral.vvtPositionUpdateTimer[0][0].reset();
-	EXPECT_CALL(pwm, setSimplePwmDutyCycle(0));
-	dut.onFastCallback();
-	advanceTimeUs(200000);
-	ASSERT_NEAR(1.1f, engine->rpmCalculator.getSecondsSinceEngineStart(getTimeNowNt()), 0.001f);
-	// Only 1100 ms have passed, but the requested 1500 ms delay becomes 1 s.
-	EXPECT_CALL(pwm, setSimplePwmDutyCycle(testing::FloatNear(0.2f, 0.00001f)));
-	dut.onFastCallback();
-	EXPECT_FLOAT_EQ(20, dut.vvtOutput);
-}
-
 TEST(EcuLogicReview, PredictiveMapBlendReplaysAfterQuickEngineRestart) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->accelEnrichmentMode = AE_MODE_PREDICTIVE_MAP;
@@ -606,28 +562,4 @@ TEST(InjectorFlowRegression, SecondaryZeroFlowRejectedOnlyWhenStaged) {
 	ASSERT_TRUE(validateConfigOnStartUpOrBurn());
 	engineConfiguration->enableStagedInjection = true;
 	EXPECT_FATAL_ERROR(validateConfigOnStartUpOrBurn());
-}
-
-TEST(EcuLogicReview, FailedAcPressureSensorReleasesCompressorPressureCut) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engineConfiguration->acDelay = 0;
-	engineConfiguration->maxAcRpm = 0;
-	engineConfiguration->maxAcTps = 0;
-	engineConfiguration->maxAcClt = 120;
-	engineConfiguration->minAcPressure = 100;
-	engineConfiguration->maxAcPressure = 200;
-	Sensor::setMockValue(SensorType::Rpm, 1000);
-	Sensor::setMockValue(SensorType::Clt, 80);
-	auto& ac = engine->module<AcController>().unmock();
-	ac.acButtonState = true;
-	Sensor::setMockValue(SensorType::AcPressure, 250);
-	ac.onSlowCallback();
-	ASSERT_TRUE(ac.acPressureTooHigh);
-	ASSERT_FALSE(enginePins.acRelay.getLogicValue());
-
-	Sensor::setInvalidMockValue(SensorType::AcPressure);
-	ASSERT_FALSE(Sensor::get(SensorType::AcPressure));
-	ac.onSlowCallback();
-	EXPECT_TRUE(ac.isAcEnabled());
-	EXPECT_TRUE(enginePins.acRelay.getLogicValue());
 }
