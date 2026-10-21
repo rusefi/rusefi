@@ -1,5 +1,7 @@
+set_prefix "Lambda Monitor"
+
 struct_no_prefix lambda_monitor_s
-	bit lambdaCurrentlyGood
+	uint16_t autoscale lambdaTimeSinceGood;Time since good;"sec", 0.01, 0, 0, 1, 2
+	bit lambdaCurrentlyGood;Good
 	bit lambdaMonitorCut
-	uint16_t autoscale lambdaTimeSinceGood;;"sec", 0.01, 0, 0, 1, 2
 end_struct
