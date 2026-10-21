@@ -69,14 +69,15 @@ public:
 };
 
 // Externally owned buffer, as the engine sniffer uses
-struct TestOwnedBuffer : LogBuffer<64> {
+template <size_t bufferSize = 64>
+struct TestOwnedBuffer : LogBuffer<bufferSize> {
 	void free() override {
 		freeCount++;
 	}
 
 	void fill(const char* text) {
-		len = strlen(text);
-		memcpy(buffer, text, len);
+		this->len = strlen(text);
+		memcpy(this->buffer, text, this->len);
 	}
 
 	int freeCount = 0;
@@ -90,6 +91,34 @@ protected:
 
 	void TearDown() override {
 		resetLoggingForUnitTest();
+	}
+
+	void checkPacketSizeThreshold(const char* boundaryText) {
+		// External buffers reach even a custom board's large byte threshold
+		// before the independent 16-buffer limit stops consolidation.
+		std::string text(scratchBuffer_SIZE - 1, 'y');
+		TestOwnedBuffer<scratchBuffer_SIZE> first;
+		first.fill(text.c_str());
+		TestOwnedBuffer<> boundary;
+		boundary.fill(boundaryText);
+		TestOwnedBuffer<> deferred;
+		deferred.fill("later");
+
+		loggingPostBuffer(&first);
+		loggingPostBuffer(&boundary);
+		loggingPostBuffer(&deferred);
+
+		EXPECT_EQ(text + boundaryText, channel.send());
+		EXPECT_EQ(1, first.freeCount);
+		EXPECT_EQ(1, boundary.freeCount);
+		EXPECT_EQ(0, deferred.freeCount);
+
+		EXPECT_EQ("later", channel.send());
+		EXPECT_EQ(1, deferred.freeCount);
+		EXPECT_EQ("", channel.send());
+		EXPECT_EQ(1, first.freeCount);
+		EXPECT_EQ(1, boundary.freeCount);
+		EXPECT_EQ(1, deferred.freeCount);
 	}
 
 	CaptureTsChannel channel;
@@ -163,21 +192,11 @@ TEST_F(LoggingCentral, atMostSixteenBuffersPerPacket) {
 // once the packet reaches scratchBuffer_SIZE no more buffers are added, but the
 // buffer crossing the threshold is still sent whole
 TEST_F(LoggingCentral, packetSizeThreshold) {
-	std::string text(lineSize - 1, 'y');
-	for (int i = 0; i < 12; i++) {
-		priv::efiPrintfInternal("%s", text.c_str());
-	}
+	checkPacketSizeThreshold("zz");
+}
 
-	size_t perPacket = (scratchBuffer_SIZE + lineSize - 2) / (lineSize - 1);
-	ASSERT_LT(perPacket, maxBuffersPerPacket);
-
-	size_t size;
-	channel.send(&size);
-	EXPECT_EQ(perPacket * (lineSize - 1), size);
-	EXPECT_GE(size, scratchBuffer_SIZE);
-
-	channel.send(&size);
-	EXPECT_EQ((12 - perPacket) * (lineSize - 1), size);
+TEST_F(LoggingCentral, packetSizeThresholdExact) {
+	checkPacketSizeThreshold("z");
 }
 
 TEST_F(LoggingCentral, linesDroppedWhenPoolExhausted) {
@@ -217,7 +236,7 @@ TEST_F(LoggingCentral, sentBuffersAreReleased) {
 }
 
 TEST_F(LoggingCentral, externalBufferSentAndFreed) {
-	TestOwnedBuffer owned;
+	TestOwnedBuffer<> owned;
 	owned.fill("sniffer data");
 
 	efiPrintf("before");
@@ -234,7 +253,7 @@ TEST_F(LoggingCentral, externalBufferSentAndFreed) {
 
 // only 'len' bytes are sent, not the whole storage
 TEST_F(LoggingCentral, externalBufferSendsUsedBytesOnly) {
-	TestOwnedBuffer owned;
+	TestOwnedBuffer<> owned;
 	memset(owned.buffer, 'Q', sizeof(owned.buffer));
 	owned.len = 3;
 
