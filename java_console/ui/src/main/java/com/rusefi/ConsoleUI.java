@@ -23,9 +23,11 @@ import com.rusefi.ui.basic.SingleAsyncJobExecutor;
 import com.rusefi.ui.basic.StatusPanelWithProgressBar;
 import com.rusefi.ui.basic.TuneManagementTab;
 import com.rusefi.ui.console.MainFrame;
+import com.rusefi.ui.console.SavedTab;
 import com.rusefi.ui.obd.ObdCodesPane;
 import com.rusefi.ui.console.TabbedPanel;
 import com.rusefi.ui.engine.EngineSnifferPanel;
+import com.rusefi.ui.logview.LogViewerHost;
 import com.rusefi.ui.lua.LuaScriptPanel;
 import com.rusefi.ui.plugins.ConsoleTabProvider;
 import com.rusefi.ui.util.JustOneInstance;
@@ -81,11 +83,9 @@ import static com.rusefi.ui.util.UiUtils.createOnTopParent;
  */
 public class ConsoleUI {
     private static final Logging log = getLogging(ConsoleUI.class);
-    private static final int DEFAULT_TAB_INDEX = 0;
     private static final String WIKI_URL = "https://wiki.rusefi.com/rusEFI-logs-folder";
     private static final String AUTO_LAUNCH_WIZARD = "auto_launch_wizard";
 
-    public static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
     protected static final String SPEED_KEY = "speed";
     public static final String TITLE = "rusEFI";
@@ -104,6 +104,7 @@ public class ConsoleUI {
      */
     private final Map<Component, ActionListener> tabSelectedListeners = new HashMap<>();
     private GaugesPanel gaugesPanel;
+    private LogViewerHost logViewer;
     private TuningPane tuningPane;
     private Component gaugesTab;
     private Component tuningTab;
@@ -358,17 +359,28 @@ public class ConsoleUI {
         uiContext.DetachedRepositoryINSTANCE.load();
         // Heavy tabs (Lua, Tuning) are lazy-built unless they are the user's last-opened tab, which
         // will be shown immediately on startup — in that case build eagerly (#9715).
-        int savedTabIndex = getConfig().getRoot().getIntProperty(TAB_INDEX, DEFAULT_TAB_INDEX);
+        SavedTab savedTab = SavedTab.read(getConfig().getRoot());
         if (isOffline || !linkManager.isLogViewer()) {
             gaugesPanel = new GaugesPanel(uiContext, getConfig().getRoot().getChild("gauges"));
             gaugesTab = gaugesPanel.getContent();
             tabbedPane.addTab("Gauges", gaugesTab);
 
+            // record a log, then view it: next to the live gauges (SavedTab.LOG_VIEWER_POSITION)
+            logViewer = new LogViewerHost();
+            tabbedPane.addTab(LogViewerHost.TITLE, logViewer);
+            mainFrame.setLogViewerActions(file -> {
+                tabbedPane.selectTab(LogViewerHost.TITLE);
+                logViewer.open(file);
+            }, () -> {
+                tabbedPane.selectTab(LogViewerHost.TITLE);
+                logViewer.chooseAndOpen();
+            });
+
             MessagesPane messagesPane = new MessagesPane(uiContext, getConfig().getRoot().getChild("messages"));
             tabbedPaneAdd("Messages", messagesPane.getContent(), messagesPane.getTabSelectedListener());
 
             int luaIndex = tabbedPane.tabbedPane.getTabCount();
-            if (luaIndex == savedTabIndex) {
+            if (savedTab.is("Lua Scripting", luaIndex)) {
                 LuaScriptPanel luaScriptPanel = new LuaScriptPanel(uiContext, getConfig().getRoot().getChild("lua"));
                 tabbedPaneAdd("Lua Scripting", luaScriptPanel.getPanel(), luaScriptPanel.getTabSelectedListener());
             } else {
@@ -548,7 +560,7 @@ console live data tab is broken #8402
             });
 
             if (!isOffline) {
-                // added after the other tabs so it does not shift their saved TAB_INDEX
+                // the last built-in tab, so a tab index saved by older consoles still finds its tab (SavedTab)
                 tabbedPane.addTab(ObdCodesPane.TITLE, new ObdCodesPane().getContent());
             }
 
@@ -581,7 +593,7 @@ console live data tab is broken #8402
             });
 
             // Build eagerly if Tuning was the user's last-opened tab (shown immediately on startup).
-            if (tuningIndex == savedTabIndex) {
+            if (savedTab.is("Tuning", tuningIndex)) {
                 buildTuning.run();
             }
         }
@@ -609,8 +621,7 @@ console live data tab is broken #8402
 */
 
         if (isOffline || !LinkManager.isLogViewerMode(port)) {
-            if (savedTabIndex < tabbedPane.tabbedPane.getTabCount())
-                tabbedPane.tabbedPane.setSelectedIndex(savedTabIndex);
+            savedTab.select(tabbedPane.tabbedPane);
         }
 
         tabbedPane.tabbedPane.addChangeListener(new ChangeListener() {

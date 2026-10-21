@@ -20,6 +20,7 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
 
 /** Owns the logging menu and recorder lifecycle. Menu/lifecycle methods run on the Swing event thread. */
 final class BinaryLoggingMenu {
@@ -30,9 +31,12 @@ final class BinaryLoggingMenu {
     private final JMenuItem startItem;
     private final JMenuItem stopItem;
     private final JCheckBoxMenuItem saveTuneItem;
+    private final JMenuItem viewLastItem;
     private SwingWorker<byte[], Void> startWorker;
+    private File lastLog;
+    private Consumer<File> viewLogAction;
 
-    BinaryLoggingMenu(UIContext uiContext, Component parent, Icon startIcon, Icon stopIcon) {
+    BinaryLoggingMenu(UIContext uiContext, Component parent, Icon startIcon, Icon stopIcon, Icon viewIcon) {
         this.uiContext = uiContext;
         this.parent = parent;
         menu = new JMenu("Binary Logging");
@@ -56,8 +60,32 @@ final class BinaryLoggingMenu {
         saveTuneItem = new JCheckBoxMenuItem("Save tune", true);
         saveTuneItem.setToolTipText("Embed the starting tune in each data log and save a dated MSQ beside it");
         menu.add(saveTuneItem);
+        menu.addSeparator();
+        viewLastItem = new JMenuItem("View Last Log");
+        viewLastItem.setIcon(viewIcon);
+        viewLastItem.setToolTipText("Open the log recorded last in the Log Viewer tab");
+        viewLastItem.addActionListener(e -> {
+            if (viewLogAction != null && lastLog != null) {
+                viewLogAction.accept(lastLog);
+            }
+        });
+        menu.add(viewLastItem);
 
         refresh();
+    }
+
+    /** What View Last Log does with the recorded file, e.g. open it in the Log Viewer tab. */
+    void setViewLogAction(Consumer<File> viewLogAction) {
+        this.viewLogAction = viewLogAction;
+        refresh();
+    }
+
+    File lastLog() {
+        return lastLog;
+    }
+
+    JMenuItem viewLastItem() {
+        return viewLastItem;
     }
 
     JMenu getMenu() {
@@ -75,6 +103,9 @@ final class BinaryLoggingMenu {
         startItem.setAccelerator(isLogging || isStarting ? null : TOGGLE_LOGGING);
         stopItem.setAccelerator(isLogging || isStarting ? TOGGLE_LOGGING : null);
         saveTuneItem.setEnabled(!isLogging && !isStarting);
+        // a log still being written is not complete yet
+        viewLastItem.setEnabled(viewLogAction != null && lastLog != null && lastLog.isFile()
+                && !isLogging && !isStarting);
     }
 
     private void chooseAndStart() {
@@ -155,8 +186,10 @@ final class BinaryLoggingMenu {
         uiContext.sensorLogger.stop();
     }
 
-    private void start(File file, byte[] tune) {
-        if (!uiContext.sensorLogger.start(file, tune)) {
+    void start(File file, byte[] tune) {
+        if (uiContext.sensorLogger.start(file, tune)) {
+            lastLog = file;
+        } else {
             JOptionPane.showMessageDialog(parent,
                     "No supported output channels are available for binary logging.",
                     "Binary Logging",

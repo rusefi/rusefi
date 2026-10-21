@@ -7,6 +7,7 @@ import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionStatusValue;
 import com.rusefi.ui.LogDownloader;
 import com.rusefi.ui.UIContext;
+import com.rusefi.ui.logview.LogViewerHost;
 import com.rusefi.ui.obd.ObdCodesPane;
 
 import javax.swing.*;
@@ -199,6 +200,9 @@ public class TabbedPanel {
         switch (title) {
             case "Gauges":
                 iconName = "idle";
+                break;
+            case LogViewerHost.TITLE:
+                iconName = "view";
                 break;
             case "Messages":
                 iconName = "message";

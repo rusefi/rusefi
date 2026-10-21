@@ -1,9 +1,9 @@
 package com.rusefi.ui.logview;
 
 import com.devexperts.logging.FileLogger;
-import com.formdev.flatlaf.FlatClientProperties;
 import com.rusefi.logview.CsvLogReader;
 import com.rusefi.logview.LogFiles;
+import com.rusefi.ui.widgets.JoinedButtons;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -19,6 +19,7 @@ import javax.swing.JProgressBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingWorker;
 import javax.swing.TransferHandler;
+import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.JTextComponent;
 import java.awt.BorderLayout;
@@ -43,6 +44,8 @@ import java.util.function.Consumer;
  * grid, cursor) carry over from one log to the next.
  */
 public final class LogViewerHost extends JPanel {
+    /** Title of the console's main tab. */
+    public static final String TITLE = "Log Viewer";
     static final String SUPPORTED = ".mlg or .msl";
 
     private final ChartSettings settings = new ChartSettings();
@@ -173,13 +176,23 @@ public final class LogViewerHost extends JPanel {
     }
 
     private JComponent emptyCard() {
-        JButton openButton = new JButton("Open log…");
-        openButton.putClientProperty(FlatClientProperties.STYLE_CLASS, "primary");
+        JButton openButton = openLogButton("Open log…");
         openButton.addActionListener(e -> chooseAndOpen());
         JLabel title = new JLabel("No data log open");
         title.setFont(title.getFont().deriveFont(Font.BOLD, title.getFont().getSize2D() + 3));
         JLabel hint = ChartToolbar.muted(new JLabel("Drop an " + SUPPORTED + " file here, or"));
-        return centered(title, hint, openButton);
+        return centered(title, hint, new JoinedButtons(openButton));
+    }
+
+    /**
+     * The open-log button of the empty card and the chart toolbar, wrapped in {@link JoinedButtons} like the
+     * console's other toolbar buttons (Edit dashboard, Launch Wizard): outlined, icon, toolbar height.
+     */
+    static JButton openLogButton(String text) {
+        JButton button = new JButton(text, UIManager.getIcon("Tree.openIcon"));
+        button.setIconTextGap(8);
+        button.setToolTipText("Open a data log (" + SUPPORTED + ") - Ctrl+O, or drop a file on the viewer");
+        return button;
     }
 
     private JComponent loadingCard(String fileName) {
@@ -195,6 +208,10 @@ public final class LogViewerHost extends JPanel {
         column.setOpaque(false);
         for (JComponent row : rows) {
             row.setAlignmentX(Component.CENTER_ALIGNMENT);
+            if (row instanceof JoinedButtons) {
+                // BoxLayout would otherwise stretch the button group across the column
+                row.setMaximumSize(row.getPreferredSize());
+            }
             column.add(row);
             column.add(Box.createVerticalStrut(10));
         }
