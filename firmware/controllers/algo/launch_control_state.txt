@@ -1,20 +1,22 @@
+set_prefix "Launch"
+
 struct_no_prefix launch_control_state_s
-  int retardThresholdRpm;Launch: Retard threshold RPM
+	int retardThresholdRpm;Retard threshold RPM
 
-bit launchActivatePinState
-bit isPreLaunchCondition
-	bit isLaunchCondition;Launch Control Triggered
-	bit isSwitchActivated;Launch: isSwitchActivated
-	bit isClutchActivated;Launch: isClutchActivated
-bit isBrakePedalActivated
-	bit isValidInputPin;Launch: isValidInputPin
+	bit launchActivatePinState
+	bit isPreLaunchCondition
+	bit isLaunchCondition;Triggered
+	bit isSwitchActivated;isSwitchActivated
+	bit isClutchActivated;isClutchActivated
+	bit isBrakePedalActivated
+	bit isValidInputPin;isValidInputPin
 
-	bit activateSwitchCondition;Launch: activateSwitchCondition
-bit     rpmLaunchCondition;
-bit     rpmPreLaunchCondition;
-	bit speedCondition;Launch: speedCondition
-	bit tpsCondition;Launch: tpsCondition
+	bit activateSwitchCondition;activateSwitchCondition
+	bit rpmLaunchCondition;
+	bit rpmPreLaunchCondition;
+	bit speedCondition;speedCondition
+	bit tpsCondition;tpsCondition
 	bit luaLaunchState
-	bit isLaunchLatched;Launch: isLaunchLatched
+	bit isLaunchLatched;isLaunchLatched
 
 end_struct
