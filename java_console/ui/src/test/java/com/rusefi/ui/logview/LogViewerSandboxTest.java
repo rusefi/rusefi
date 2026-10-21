@@ -41,6 +41,17 @@ class LogViewerSandboxTest {
         assertTrue(log.sampleCount() > 3000);
     }
 
+    /** Time lookups use binary search, which requires non-decreasing time. */
+    @Test
+    void fixtureTimeNeverDecreases() throws IOException {
+        for (String path : new String[]{"/logview/test-log-binary-1.mlg", "/logview/test-log-1.msl"}) {
+            CsvLogReader log = LogViewerSandbox.load(path);
+            for (int sample = 1; sample < log.sampleCount(); sample++) {
+                assertTrue(log.value(sample, 0) >= log.value(sample - 1, 0), path + " sample " + sample);
+            }
+        }
+    }
+
     @Test
     void timeIsNotASelectableFieldInEitherLogFormat() throws IOException {
         for (String path : new String[]{"/logview/test-log-binary-1.mlg", "/logview/test-log-1.msl"}) {

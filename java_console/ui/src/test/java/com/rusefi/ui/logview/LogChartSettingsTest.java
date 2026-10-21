@@ -1,0 +1,227 @@
+package com.rusefi.ui.logview;
+
+import com.rusefi.logview.CsvLogReader;
+import org.junit.jupiter.api.Test;
+
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class LogChartSettingsTest {
+    private static final int WIDTH = 600;
+    private static final int HEIGHT = 400;
+    private static final int BACKGROUND = 0xff151b26;
+
+    /** Time 0..100 s at 1 ms steps. */
+    private static CsvLogReader denseLog() throws IOException {
+        StringBuilder text = new StringBuilder("Time\tRPM\ns\trpm\n");
+        for (int i = 0; i <= 100_000; i++) {
+            text.append(i / 1000.0).append('\t').append(i % 977).append('\n');
+        }
+        return CsvLogReader.read(new StringReader(text.toString()));
+    }
+
+    private static BufferedImage paint(LogChart chart) {
+        chart.setSize(WIDTH, HEIGHT);
+        BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+        chart.paint(image.createGraphics());
+        return image;
+    }
+
+    /** Non-background pixels inside the plot, below the "Select a field" prompt and above the axis labels. */
+    private static int plotInk(BufferedImage image) {
+        int count = 0;
+        for (int y = 140; y < HEIGHT - 50; y++) {
+            for (int x = 56; x < WIDTH - 24; x++) {
+                if (image.getRGB(x, y) != BACKGROUND) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    @Test
+    void gridIsOffByDefault() throws IOException {
+        CsvLogReader log = denseLog();
+        LogChart chart = new LogChart(log, new boolean[log.fieldCount()]);
+        assertEquals(0, plotInk(paint(chart)));
+    }
+
+    @Test
+    void verticalAndHorizontalGridsToggleIndependently() throws IOException {
+        CsvLogReader log = denseLog();
+        ChartSettings grid = new ChartSettings();
+        LogChart chart = new LogChart(log, new boolean[log.fieldCount()], grid);
+
+        grid.setVertical(true);
+        int vertical = plotInk(paint(chart));
+        assertTrue(vertical > 0);
+
+        grid.setVertical(false);
+        grid.setHorizontal(true);
+        int horizontal = plotInk(paint(chart));
+        assertTrue(horizontal > 0);
+
+        grid.setVertical(true);
+        assertTrue(plotInk(paint(chart)) > Math.max(vertical, horizontal));
+    }
+
+    @Test
+    void moreHorizontalDivisionsDrawMoreLines() throws IOException {
+        CsvLogReader log = denseLog();
+        ChartSettings grid = new ChartSettings();
+        grid.setHorizontal(true);
+        LogChart chart = new LogChart(log, new boolean[log.fieldCount()], grid);
+
+        grid.setHorizontalDivisions(2);
+        int few = plotInk(paint(chart));
+        grid.setHorizontalDivisions(20);
+        assertTrue(plotInk(paint(chart)) > few);
+    }
+
+    @Test
+    void timeSpacingControlsTickDensity() throws IOException {
+        CsvLogReader log = denseLog();
+        ChartSettings grid = new ChartSettings();
+        LogChart chart = new LogChart(log, new boolean[log.fieldCount()], grid);
+        paint(chart);
+
+        grid.setTimeSpacing(ChartSettings.MIN_TIME_SPACING);
+        double dense = chart.timeTickStep();
+        grid.setTimeSpacing(ChartSettings.MAX_TIME_SPACING);
+        assertTrue(chart.timeTickStep() > dense);
+    }
+
+    @Test
+    void sampleLinesOnlyOnceSamplesAreFarEnoughApart() throws IOException {
+        CsvLogReader log = denseLog();
+        LogChart chart = new LogChart(log, new boolean[log.fieldCount()]);
+        paint(chart);
+        assertNull(chart.sampleGridTimes(), "100k samples over ~500 px are too dense");
+
+        chart.timeWindow().show(50, 50.05);
+        List<Double> times = chart.sampleGridTimes();
+        // 1 ms samples across a 50 ms window: one line per sample, roughly 10 px apart.
+        assertEquals(51, times.size());
+        assertEquals(50, times.get(0), 1e-9);
+        assertEquals(50.05, times.get(times.size() - 1), 1e-9);
+    }
+
+    @Test
+    void sampleModeDrawsLinesWhenZoomedIn() throws IOException {
+        CsvLogReader log = denseLog();
+        ChartSettings grid = new ChartSettings();
+        grid.setVertical(true);
+        grid.setVerticalMode(ChartSettings.VerticalMode.SAMPLES);
+        LogChart chart = new LogChart(log, new boolean[log.fieldCount()], grid);
+
+        assertEquals(0, plotInk(paint(chart)), "too dense at full view: no lines");
+        chart.timeWindow().show(50, 50.05);
+        assertTrue(plotInk(paint(chart)) > 0);
+    }
+
+    /** Samples one second apart over 0..10 s, about 50 px apart on screen. */
+    private static CsvLogReader sparseLog() throws IOException {
+        StringBuilder text = new StringBuilder("Time\tRPM\ns\trpm\n");
+        for (int i = 0; i <= 10; i++) {
+            text.append(i).append('\t').append(i * 100).append('\n');
+        }
+        return CsvLogReader.read(new StringReader(text.toString()));
+    }
+
+    private static int moveMouseToTime(LogChart chart, double time) {
+        int left = 54;
+        int right = WIDTH - 22;
+        int x = left + (int) Math.round(time / 10 * (right - left));
+        chart.dispatchEvent(new MouseEvent(chart, MouseEvent.MOUSE_MOVED, 0, 0, x, 200, 0, false));
+        return x;
+    }
+
+    @Test
+    void cursorSnapsToNearestSampleByDefault() throws IOException {
+        CsvLogReader log = sparseLog();
+        LogChart chart = new LogChart(log, new boolean[log.fieldCount()]);
+        paint(chart);
+
+        int mouseX = moveMouseToTime(chart, 3.3);
+        int sampleX = moveMouseToTime(chart, 3);
+        moveMouseToTime(chart, 3.3);
+        assertEquals(sampleX, chart.cursorLineX());
+        assertTrue(mouseX - sampleX > 10, "snapping must visibly move the line");
+    }
+
+    @Test
+    void freeCursorFollowsMouse() throws IOException {
+        CsvLogReader log = sparseLog();
+        ChartSettings settings = new ChartSettings();
+        settings.setSnapCursor(false);
+        boolean[] displayed = new boolean[log.fieldCount()];
+        displayed[1] = true;
+        LogChart chart = new LogChart(log, displayed, settings);
+        paint(chart);
+
+        int mouseX = moveMouseToTime(chart, 3.3);
+        assertEquals(mouseX, chart.cursorLineX());
+        // Painting with the sample marker must not fail.
+        paint(chart);
+    }
+
+    @Test
+    void cursorHiddenOutsidePlot() throws IOException {
+        CsvLogReader log = sparseLog();
+        LogChart chart = new LogChart(log, new boolean[log.fieldCount()]);
+        paint(chart);
+        chart.dispatchEvent(new MouseEvent(chart, MouseEvent.MOUSE_MOVED, 0, 0, 5, 200, 0, false));
+        assertEquals(-1, chart.cursorLineX());
+    }
+
+    @Test
+    void settingsClampToRange() {
+        ChartSettings grid = new ChartSettings();
+        assertFalse(grid.isVertical());
+        assertFalse(grid.isHorizontal());
+        grid.setTimeSpacing(1);
+        assertEquals(ChartSettings.MIN_TIME_SPACING, grid.getTimeSpacing());
+        grid.setTimeSpacing(10_000);
+        assertEquals(ChartSettings.MAX_TIME_SPACING, grid.getTimeSpacing());
+        grid.setHorizontalDivisions(0);
+        assertEquals(ChartSettings.MIN_HORIZONTAL_DIVISIONS, grid.getHorizontalDivisions());
+        grid.setHorizontalDivisions(500);
+        assertEquals(ChartSettings.MAX_HORIZONTAL_DIVISIONS, grid.getHorizontalDivisions());
+    }
+
+    @Test
+    void toolbarUpdatesSettingsAndRepaints() {
+        ChartSettings grid = new ChartSettings();
+        int[] repaints = {0};
+        ChartToolbar toolbar = new ChartToolbar(grid, () -> repaints[0]++);
+        assertFalse(toolbar.verticalMode.isEnabled());
+        assertFalse(toolbar.horizontalDivisions.isEnabled());
+
+        toolbar.verticalBox.doClick();
+        assertTrue(grid.isVertical());
+        assertTrue(toolbar.verticalMode.isEnabled());
+
+        toolbar.verticalMode.setSelectedIndex(ChartSettings.VerticalMode.SAMPLES.ordinal());
+        assertEquals(ChartSettings.VerticalMode.SAMPLES, grid.getVerticalMode());
+        assertFalse(toolbar.timeSpacing.isEnabled(), "spacing does not apply to sample lines");
+
+        toolbar.horizontalBox.doClick();
+        assertTrue(toolbar.horizontalDivisions.isEnabled());
+        toolbar.horizontalDivisions.setValue(8);
+        assertEquals(8, grid.getHorizontalDivisions());
+
+        assertTrue(toolbar.snapCursorBox.isSelected());
+        toolbar.snapCursorBox.doClick();
+        assertFalse(grid.isSnapCursor());
+        assertTrue(repaints[0] >= 5);
+    }
+}

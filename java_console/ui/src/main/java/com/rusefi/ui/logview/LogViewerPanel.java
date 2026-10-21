@@ -49,7 +49,11 @@ public final class LogViewerPanel extends JPanel {
             displayed[field] = name.equalsIgnoreCase("RPM") || name.equalsIgnoreCase("MAP")
                     || name.equalsIgnoreCase("TPS");
         }
-        chart = new LogChart(log, displayed);
+        ChartSettings grid = new ChartSettings();
+        chart = new LogChart(log, displayed, grid);
+        JPanel plotArea = new JPanel(new BorderLayout());
+        plotArea.add(new ChartToolbar(grid, chart::repaint), BorderLayout.NORTH);
+        plotArea.add(chart, BorderLayout.CENTER);
 
         JPanel fields = new JPanel(new BorderLayout(0, 8));
         fields.setBorder(BorderFactory.createEmptyBorder(12, 10, 10, 10));
@@ -88,7 +92,7 @@ public final class LogViewerPanel extends JPanel {
         fields.add(fieldScroll, BorderLayout.CENTER);
         fields.add(new JLabel(log.sampleCount() + " samples"), BorderLayout.SOUTH);
 
-        JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, fields, chart);
+        JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, fields, plotArea);
         split.setResizeWeight(0.15);
         split.setContinuousLayout(true);
         split.setDividerSize(5);

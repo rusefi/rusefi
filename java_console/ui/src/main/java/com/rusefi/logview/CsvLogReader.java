@@ -112,4 +112,42 @@ public final class CsvLogReader {
     public double value(int sample, int field) { return rows[sample][field]; }
     public double minimum(int field) { return minimum[field]; }
     public double maximum(int field) { return maximum[field]; }
+
+    /** First sample at or after {@code time}; {@link #sampleCount()} when none. Time (field 0) must not decrease. */
+    public int firstSampleAtOrAfter(double time) {
+        int low = 0;
+        int high = rows.length;
+        while (low < high) {
+            int middle = (low + high) >>> 1;
+            if (rows[middle][0] < time) {
+                low = middle + 1;
+            } else {
+                high = middle;
+            }
+        }
+        return low;
+    }
+
+    public int nearestSample(double time) {
+        int after = firstSampleAtOrAfter(time);
+        if (after == 0) {
+            return 0;
+        }
+        if (after == rows.length) {
+            return rows.length - 1;
+        }
+        return time - rows[after - 1][0] <= rows[after][0] - time ? after - 1 : after;
+    }
+
+    /** Smallest positive gap between consecutive samples, or 0 if all samples share one time. */
+    public double minimumSampleInterval() {
+        double result = Double.POSITIVE_INFINITY;
+        for (int i = 1; i < rows.length; i++) {
+            double gap = rows[i][0] - rows[i - 1][0];
+            if (gap > 0) {
+                result = Math.min(result, gap);
+            }
+        }
+        return Double.isFinite(result) ? result : 0;
+    }
 }
