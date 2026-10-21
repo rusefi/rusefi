@@ -17,6 +17,10 @@ inputs:
   github_token:
     description: Token with workflow dispatch and run-read permissions
     required: true
+  timeout_seconds:
+    description: Maximum time to wait for the dispatched run to complete
+    required: false
+    default: "1200"
 
 runs:
   using: composite
@@ -28,8 +32,13 @@ runs:
         TARGET_REPOSITORY: ${{ inputs.owner }}/${{ inputs.repo }}
         TARGET_WORKFLOW: ${{ inputs.workflow_file_name }}
         TARGET_REF: ${{ inputs.ref }}
+        TIMEOUT_SECONDS: ${{ inputs.timeout_seconds }}
       run: |
         set -euo pipefail
+        if [[ ! "$TIMEOUT_SECONDS" =~ ^[1-9][0-9]*$ || ${#TIMEOUT_SECONDS} -gt 5 ]] || (( TIMEOUT_SECONDS > 86400 )); then
+          echo "timeout_seconds must be an integer between 1 and 86400" >&2
+          exit 1
+        fi
         # This API version returns workflow_run_id. Never infer a run from a
         # list: another caller may dispatch the same workflow concurrently.
         response=$(gh api --method POST \
@@ -38,4 +47,60 @@ runs:
           -f "ref=$TARGET_REF")
         run_id=$(jq -er '.workflow_run_id | select(type == "number" and . > 0)' <<< "$response")
         echo "Waiting for https://github.com/$TARGET_REPOSITORY/actions/runs/$run_id"
-        gh run watch "$run_id" --repo "$TARGET_REPOSITORY" --exit-status --interval 10
+        deadline=$((SECONDS + TIMEOUT_SECONDS))
+        poll_interval=10
+        while (( SECONDS < deadline )); do
+          # Read only the exact run returned by dispatch. Avoid `gh run watch`,
+          # which also fetches jobs and can fail on that endpoint while the run
+          # itself is still queued or in progress.
+          remaining=$((deadline - SECONDS))
+          if (( remaining <= 0 )); then
+            break
+          fi
+          if run=$(timeout --foreground --kill-after=1s "${remaining}s" gh api \
+            -H 'X-GitHub-Api-Version: 2026-03-10' \
+            "repos/$TARGET_REPOSITORY/actions/runs/$run_id"); then
+            if (( SECONDS >= deadline )); then
+              break
+            fi
+          else
+            read_status=$?
+            if (( read_status == 124 || SECONDS >= deadline )); then
+              break
+            fi
+            echo "Unable to read dispatched run $run_id" >&2
+            exit 1
+          fi
+          status=$(jq -er '.status | select(type == "string")' <<< "$run") || {
+            echo "Invalid status for dispatched run $run_id" >&2
+            exit 1
+          }
+          if [[ "$status" == "completed" ]]; then
+            conclusion=$(jq -r '.conclusion // ""' <<< "$run")
+            if [[ "$conclusion" == "success" ]]; then
+              echo "Dispatched run $run_id completed successfully"
+              exit 0
+            fi
+            echo "Dispatched run $run_id completed with conclusion: ${conclusion:-unknown}" >&2
+            exit 1
+          fi
+          case "$status" in
+            queued|in_progress|waiting|pending|requested) ;;
+            *)
+              echo "Unexpected status for dispatched run $run_id: $status" >&2
+              exit 1
+              ;;
+          esac
+
+          remaining=$((deadline - SECONDS))
+          if (( remaining <= 0 )); then
+            break
+          fi
+          sleep_for=$poll_interval
+          if (( remaining < sleep_for )); then
+            sleep_for=$remaining
+          fi
+          sleep "$sleep_for"
+        done
+        echo "Timed out after ${TIMEOUT_SECONDS}s waiting for dispatched run $run_id" >&2
+        exit 1
