@@ -894,6 +894,8 @@
 #define GAUGE_NAME_WG_POSITION "Wastegate position sensor"
 #define GAUGE_PRECISION_TEMPERATURE_C 1
 #define GAUGE_PRECISION_TEMPERATURE_F 2
+#define GAUGE_S16_TENTHS_MAX 3276.7
+#define GAUGE_S16_TENTHS_MIN -3276.8
 #define GAUGES_DECLARATIONS_FILE "tunerstudio/gauge_declarations.ini"
 #define gear_controller_e_enum "None", "Button Shift", "Automatic", "Generic"
 #define GEAR_DETECTION_DIALOG_NAME "Gear Detection"
@@ -1684,7 +1686,7 @@
 #define show_default_engine_type false
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2811738222
+#define SIGNATURE_HASH 1968515779
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2349,7 +2351,7 @@
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
 #define ts_show_wot_enrichment true
-#define TS_SIGNATURE "rusEFI master.2026.10.20.proteus_f4.2811738222"
+#define TS_SIGNATURE "rusEFI master.2026.10.21.proteus_f4.1968515779"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
