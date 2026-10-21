@@ -34,6 +34,9 @@ public class ConsoleThemeTest {
             assertEquals(new Color(0x16a34a), UIManager.getColor("Console.Status.connected.dot"));
             assertEquals(new Color(0xeef0f3), UIManager.getColor("Console.Readout.background"));
             assertEquals(new Color(0xffffff), UIManager.getColor("Console.Segmented.selectedBackground"));
+            // log viewer plot palette, including a #rrggbbaa colour
+            assertEquals(new Color(0x2563eb), UIManager.getColor("Console.LogChart.light.trace1"));
+            assertEquals(new Color(0x33, 0x41, 0x55, 0x99), UIManager.getColor("Console.LogChart.light.cursor"));
             // [style] classes are stored as maps, so a broken entry shows up as missing
             assertNotNull(UIManager.get("[style]Button.primary"), "Launch Wizard style class");
         } finally {

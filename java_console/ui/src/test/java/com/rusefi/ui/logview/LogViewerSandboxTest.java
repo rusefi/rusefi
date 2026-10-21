@@ -84,7 +84,7 @@ class LogViewerSandboxTest {
         BufferedImage image = new BufferedImage(500, 300, BufferedImage.TYPE_INT_RGB);
         chart.paint(image.createGraphics());
 
-        int labelColor = 0xffc6d1de;
+        int labelColor = chart.palette().label.getRGB();
         int labelPixels = 0;
         for (int y = 255; y < 300; y++) {
             for (int x = 0; x < 500; x++) {

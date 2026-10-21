@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class LogChartSettingsTest {
     private static final int WIDTH = 600;
     private static final int HEIGHT = 400;
-    private static final int BACKGROUND = 0xff151b26;
+    private static final int BACKGROUND = PlotPalette.LIGHT.background.getRGB();
 
     /** Time 0..100 s at 1 ms steps. */
     private static CsvLogReader denseLog() throws IOException {
@@ -184,6 +184,16 @@ class LogChartSettingsTest {
     }
 
     @Test
+    void plotBackgroundFollowsLightDarkSetting() throws IOException {
+        CsvLogReader log = sparseLog();
+        ChartSettings settings = new ChartSettings();
+        LogChart chart = new LogChart(log, new boolean[log.fieldCount()], settings);
+        assertEquals(PlotPalette.LIGHT.background.getRGB(), paint(chart).getRGB(2, 2));
+        settings.setDarkPlot(true);
+        assertEquals(PlotPalette.DARK.background.getRGB(), paint(chart).getRGB(2, 2));
+    }
+
+    @Test
     void settingsClampToRange() {
         ChartSettings grid = new ChartSettings();
         assertFalse(grid.isVertical());
@@ -222,6 +232,11 @@ class LogChartSettingsTest {
         assertTrue(toolbar.snapCursorBox.isSelected());
         toolbar.snapCursorBox.doClick();
         assertFalse(grid.isSnapCursor());
-        assertTrue(repaints[0] >= 5);
+
+        assertTrue(toolbar.lightPlot.isSelected());
+        toolbar.darkPlot.doClick();
+        assertTrue(grid.isDarkPlot());
+        assertFalse(toolbar.lightPlot.isSelected());
+        assertTrue(repaints[0] >= 6);
     }
 }

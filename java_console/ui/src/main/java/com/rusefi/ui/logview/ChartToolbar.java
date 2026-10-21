@@ -1,6 +1,10 @@
 package com.rusefi.ui.logview;
 
+import com.rusefi.ui.widgets.SegmentedControl;
+
+import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
+import javax.swing.JToggleButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
@@ -8,7 +12,7 @@ import javax.swing.JToolBar;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.Box;
 
-/** Grid and cursor controls above the log chart. */
+/** Plot colour, grid and cursor controls above the log chart. */
 final class ChartToolbar extends JToolBar {
     private static final String[] VERTICAL_MODES = {"Time ticks", "Every sample"};
 
@@ -18,6 +22,8 @@ final class ChartToolbar extends JToolBar {
     final JCheckBox horizontalBox = new JCheckBox("Horizontal");
     final JSpinner horizontalDivisions;
     final JCheckBox snapCursorBox = new JCheckBox("Snap cursor to samples");
+    final JToggleButton lightPlot = SegmentedControl.segment("Light");
+    final JToggleButton darkPlot = SegmentedControl.segment("Dark");
     private final ChartSettings grid;
     private final Runnable onChange;
 
@@ -33,6 +39,8 @@ final class ChartToolbar extends JToolBar {
         verticalBox.setSelected(grid.isVertical());
         verticalBox.setToolTipText("Show vertical grid lines");
         verticalMode.setSelectedIndex(grid.getVerticalMode().ordinal());
+        // a toolbar's BoxLayout would otherwise stretch the combo across the free space
+        verticalMode.setMaximumSize(verticalMode.getPreferredSize());
         verticalMode.setToolTipText("<html>Time ticks: a line at each labelled time<br>"
                 + "Every sample: a line at each logged sample, shown once zoomed in far enough</html>");
         timeSpacing.setToolTipText("Approximate distance between time ticks, in pixels ("
@@ -47,6 +55,17 @@ final class ChartToolbar extends JToolBar {
         snapCursorBox.setToolTipText("<html>On: the cursor line jumps to each logged sample<br>"
                 + "Off: the line follows the mouse; values come from the nearest sample, marked with a dot</html>");
 
+        ButtonGroup plotGroup = new ButtonGroup();
+        plotGroup.add(lightPlot);
+        plotGroup.add(darkPlot);
+        (grid.isDarkPlot() ? darkPlot : lightPlot).setSelected(true);
+        lightPlot.setToolTipText("Plot area with a light background");
+        darkPlot.setToolTipText("Plot area with a dark background");
+        SegmentedControl plotMode = new SegmentedControl(lightPlot, darkPlot);
+        plotMode.setMaximumSize(plotMode.getPreferredSize());
+
+        lightPlot.addActionListener(e -> apply());
+        darkPlot.addActionListener(e -> apply());
         verticalBox.addActionListener(e -> apply());
         snapCursorBox.addActionListener(e -> apply());
         verticalMode.addActionListener(e -> apply());
@@ -54,6 +73,9 @@ final class ChartToolbar extends JToolBar {
         horizontalBox.addActionListener(e -> apply());
         horizontalDivisions.addChangeListener(e -> apply());
 
+        add(new JLabel("Plot  "));
+        add(plotMode);
+        addSeparator();
         add(new JLabel("Grid  "));
         add(verticalBox);
         add(verticalMode);
@@ -84,6 +106,7 @@ final class ChartToolbar extends JToolBar {
         grid.setHorizontal(horizontalBox.isSelected());
         grid.setHorizontalDivisions((Integer) horizontalDivisions.getValue());
         grid.setSnapCursor(snapCursorBox.isSelected());
+        grid.setDarkPlot(darkPlot.isSelected());
         updateEnabled();
         onChange.run();
     }

@@ -1,11 +1,12 @@
 package com.rusefi.ui.logview;
 
 import com.rusefi.logview.CsvLogReader;
+import com.rusefi.ui.widgets.ConsoleFonts;
 
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import java.awt.BasicStroke;
-import java.awt.Color;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -26,16 +27,6 @@ import static com.rusefi.config.generated.VariableRegistryValues.GAUGE_NAME_TIME
  * double-click shows the whole log.
  */
 final class LogChart extends JComponent {
-    private static final Color BACKGROUND = new Color(21, 27, 38);
-    private static final Color GRID = new Color(55, 67, 82);
-    private static final Color LABEL = new Color(198, 209, 222);
-    private static final Color HINT = new Color(120, 134, 152);
-    private static final Color SELECTION = new Color(91, 205, 250, 48);
-    private static final Color[] COLORS = {
-            new Color(255, 191, 71), new Color(91, 205, 250), new Color(119, 226, 171),
-            new Color(246, 131, 157), new Color(176, 155, 251), new Color(255, 143, 88),
-            new Color(118, 222, 218), new Color(233, 205, 101)
-    };
     private static final String HELP = "Wheel: zoom  ·  Drag: zoom to range  ·  Right-drag / Shift+wheel: pan  ·  Double-click: whole log";
     /** Each wheel notch scales the visible span by this factor. */
     static final double WHEEL_ZOOM = 1.25;
@@ -74,7 +65,6 @@ final class LogChart extends JComponent {
         // Allow zooming in until only a few samples are visible.
         window = new TimeWindow(fullStart, fullEnd, interval > 0 ? interval * 4 : (fullEnd - fullStart) / 1000);
         setOpaque(true);
-        setBackground(BACKGROUND);
         MouseAdapter mouse = new MouseHandler();
         addMouseListener(mouse);
         addMouseMotionListener(mouse);
@@ -83,6 +73,10 @@ final class LogChart extends JComponent {
 
     TimeWindow timeWindow() {
         return window;
+    }
+
+    PlotPalette palette() {
+        return PlotPalette.of(grid.isDarkPlot());
     }
 
     private double timeAt(int x) {
@@ -164,18 +158,22 @@ final class LogChart extends JComponent {
         super.paintComponent(graphics);
         Graphics2D g = (Graphics2D) graphics.create();
         try {
-            g.setColor(BACKGROUND);
+            PlotPalette palette = palette();
+            g.setColor(palette.background);
             g.fillRect(0, 0, getWidth(), getHeight());
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             int left = 54;
             int right = Math.max(left + 1, getWidth() - 22);
             FontMetrics metrics = g.getFontMetrics();
+            // Fixed-width digits so legend values do not jitter as the cursor moves.
+            Font valueFont = ConsoleFonts.mono(Font.PLAIN, g.getFont().getSize());
+            FontMetrics valueMetrics = g.getFontMetrics(valueFont);
 
-            g.setColor(LABEL);
+            g.setColor(palette.label);
             g.drawString("Selected signals", left, 23);
             int helpWidth = metrics.stringWidth(HELP);
             if (left + metrics.stringWidth("Selected signals") + 24 + helpWidth <= right) {
-                g.setColor(HINT);
+                g.setColor(palette.hint);
                 g.drawString(HELP, right - helpWidth, 23);
             }
             List<Integer> signals = selectedSignals();
@@ -183,16 +181,24 @@ final class LogChart extends JComponent {
             int legendY = 46;
             for (int index = 0; index < signals.size(); index++) {
                 int field = signals.get(index);
-                String label = legendLabel(field, cursorSample);
-                int width = metrics.stringWidth(label) + 32;
+                String name = log.name(field) + " ";
+                String value = legendValue(field, cursorSample);
+                String unit = log.unit(field).isEmpty() ? "" : " " + log.unit(field);
+                int nameWidth = metrics.stringWidth(name);
+                int valueWidth = valueMetrics.stringWidth(value);
+                int width = 19 + nameWidth + valueWidth + metrics.stringWidth(unit) + 13;
                 if (legendX + width > right && legendX > left) {
                     legendX = left;
                     legendY += 19;
                 }
-                g.setColor(COLORS[index % COLORS.length]);
+                g.setColor(palette.trace(index));
                 g.fillRoundRect(legendX, legendY - 10, 13, 5, 4, 4);
-                g.setColor(LABEL);
-                g.drawString(label, legendX + 19, legendY);
+                g.setColor(palette.label);
+                g.drawString(name, legendX + 19, legendY);
+                g.setFont(valueFont);
+                g.drawString(value, legendX + 19 + nameWidth, legendY);
+                g.setFont(metrics.getFont());
+                g.drawString(unit, legendX + 19 + nameWidth + valueWidth, legendY);
                 legendX += width;
             }
             int top = Math.max(68, legendY + 19);
@@ -204,16 +210,16 @@ final class LogChart extends JComponent {
 
             if (grid.isHorizontal()) {
                 // Traces are scaled independently, so these lines mark fractions of each trace's range.
-                g.setColor(GRID);
+                g.setColor(palette.grid);
                 int divisions = grid.getHorizontalDivisions();
                 for (int i = 0; i <= divisions; i++) {
                     int y = top + (bottom - top) * i / divisions;
                     g.drawLine(left, y, right, y);
                 }
             }
-            drawTimeAxis(g, metrics);
+            drawTimeAxis(g, metrics, palette);
             if (signals.isEmpty()) {
-                g.setColor(LABEL);
+                g.setColor(palette.label);
                 g.drawString("Select a field to plot", left + 20, top + 30);
                 return;
             }
@@ -221,18 +227,18 @@ final class LogChart extends JComponent {
             Graphics2D plot = (Graphics2D) g.create();
             try {
                 plot.clipRect(left, top - 1, right - left + 1, bottom - top + 3);
-                plot.setStroke(new BasicStroke(1.5f));
+                plot.setStroke(new BasicStroke(palette.strokeWidth));
                 for (int index = 0; index < signals.size(); index++) {
-                    plot.setColor(COLORS[index % COLORS.length]);
+                    plot.setColor(palette.trace(index));
                     plot.draw(tracePath(signals.get(index)));
                 }
                 if (selectionFrom >= 0 && selectionTo != selectionFrom) {
-                    plot.setColor(SELECTION);
+                    plot.setColor(palette.selection);
                     plot.fillRect(Math.min(selectionFrom, selectionTo), top, Math.abs(selectionTo - selectionFrom), bottom - top);
                 }
                 int cursorLine = cursorLineX();
                 if (cursorLine >= 0) {
-                    plot.setColor(new Color(220, 230, 245, 155));
+                    plot.setColor(palette.cursor);
                     plot.setStroke(new BasicStroke(1));
                     plot.drawLine(cursorLine, top, cursorLine, bottom);
                 }
@@ -243,7 +249,7 @@ final class LogChart extends JComponent {
                         double value = log.value(cursorSample, signals.get(index));
                         if (Double.isFinite(value)) {
                             int y = (int) Math.round(yOf(signals.get(index), value));
-                            plot.setColor(COLORS[index % COLORS.length]);
+                            plot.setColor(palette.trace(index));
                             plot.fillOval(sampleX - 3, y - 3, 7, 7);
                         }
                     }
@@ -256,12 +262,12 @@ final class LogChart extends JComponent {
         }
     }
 
-    private void drawTimeAxis(Graphics2D g, FontMetrics metrics) {
+    private void drawTimeAxis(Graphics2D g, FontMetrics metrics, PlotPalette palette) {
         boolean tickLines = grid.isVertical() && grid.getVerticalMode() == ChartSettings.VerticalMode.TIME_TICKS;
         boolean sampleLines = grid.isVertical() && grid.getVerticalMode() == ChartSettings.VerticalMode.SAMPLES;
         List<Double> sampleTimes = sampleLines ? sampleGridTimes() : null;
         if (sampleTimes != null) {
-            g.setColor(GRID);
+            g.setColor(palette.grid);
             for (double time : sampleTimes) {
                 int x = xOf(time);
                 g.drawLine(x, plotTop, x, plotBottom);
@@ -274,11 +280,11 @@ final class LogChart extends JComponent {
             double time = tick * step;
             int x = xOf(time);
             if (tickLines) {
-                g.setColor(GRID);
+                g.setColor(palette.grid);
                 g.drawLine(x, plotTop, x, plotBottom);
             }
             String text = String.format(Locale.ROOT, "%." + decimals + "f", time);
-            g.setColor(LABEL);
+            g.setColor(palette.label);
             g.drawString(text, x - metrics.stringWidth(text) / 2, plotBottom + 19);
         }
         String timeLabel = GAUGE_NAME_TIME + " (s)";
@@ -289,7 +295,7 @@ final class LogChart extends JComponent {
         if (sampleLines && sampleTimes == null) {
             timeLabel += "  ·  zoom in to see sample lines";
         }
-        g.setColor(LABEL);
+        g.setColor(palette.label);
         g.drawString(timeLabel, (plotLeft + plotRight - metrics.stringWidth(timeLabel)) / 2, plotBottom + 37);
     }
 
@@ -438,12 +444,11 @@ final class LogChart extends JComponent {
         return result;
     }
 
-    private String legendLabel(int field, int sample) {
-        String unit = log.unit(field);
-        String suffix = unit.isEmpty() ? "" : " " + unit;
+    /** Value at the cursor sample, or the whole-log range when there is no cursor. */
+    private String legendValue(int field, int sample) {
         if (sample >= 0 && Double.isFinite(log.value(sample, field))) {
-            return String.format(Locale.ROOT, "%s %.2f%s", log.name(field), log.value(sample, field), suffix);
+            return String.format(Locale.ROOT, "%.2f", log.value(sample, field));
         }
-        return String.format(Locale.ROOT, "%s %.1f–%.1f%s", log.name(field), log.minimum(field), log.maximum(field), suffix);
+        return String.format(Locale.ROOT, "%.1f–%.1f", log.minimum(field), log.maximum(field));
     }
 }

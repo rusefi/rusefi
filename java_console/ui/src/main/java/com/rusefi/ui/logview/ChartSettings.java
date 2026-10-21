@@ -1,6 +1,6 @@
 package com.rusefi.ui.logview;
 
-/** Display options of the log chart: grid lines (both start off) and cursor snapping. */
+/** Display options of the log chart: grid lines (both start off), cursor snapping and plot colours. */
 final class ChartSettings {
     enum VerticalMode {
         /** One line per time-axis tick; spacing follows {@link #getTimeSpacing()}. */
@@ -24,6 +24,16 @@ final class ChartSettings {
     private int timeSpacing = DEFAULT_TIME_SPACING;
     private int horizontalDivisions = DEFAULT_HORIZONTAL_DIVISIONS;
     private boolean snapCursor = true;
+    private boolean darkPlot;
+
+    /** Plot area colours, chosen independently of the console theme; light by default. */
+    boolean isDarkPlot() {
+        return darkPlot;
+    }
+
+    void setDarkPlot(boolean darkPlot) {
+        this.darkPlot = darkPlot;
+    }
 
     /**
      * True: the cursor line jumps to the nearest logged sample. False: it follows the mouse freely;

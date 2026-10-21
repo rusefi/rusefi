@@ -2,6 +2,7 @@ package com.rusefi.ui.logview;
 
 import com.rusefi.logview.BinaryLogReader;
 import com.rusefi.logview.CsvLogReader;
+import com.rusefi.ui.basic.UiHelper;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -24,6 +25,8 @@ public final class LogViewerSandbox {
         CsvLogReader log = load(path);
 
         SwingUtilities.invokeLater(() -> {
+            // the console look: FlatLaf with the rusEFI theme files [tag:console_theme]
+            UiHelper.configureLaf();
             JFrame frame = new JFrame("rusEFI Log Viewer " + path);
             frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             frame.setContentPane(new LogViewerPanel(log));
