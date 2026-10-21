@@ -45,7 +45,7 @@ TEST(fuel, wallWettingTelemetryMass) {
 
 	int matches = 0;
 	MLG::forEachField([&](const MLG::Entries::Field& field) {
-		if (strcmp(field.getName(), "Fuel: wall amount") == 0 || strcmp(field.getName(), "Fuel: wall correction") == 0) {
+		if (strcmp(field.getName(), "Fuel Wall: amount") == 0 || strcmp(field.getName(), "Fuel Wall: correction") == 0) {
 			matches++;
 			EXPECT_STREQ("mg", field.getUnits());
 			EXPECT_EQ(sizeof(float), field.getSize());
@@ -61,7 +61,7 @@ TEST(fuel, wallWettingTelemetryMass) {
 	EXPECT_NEAR(-0.001f, wall.wallFuelCorrection, 1e-7f);
 	EXPECT_NEAR(-1, getOutputValueByName("wallFuelCorrection"), 1e-5f);
 	MLG::forEachField([&](const MLG::Entries::Field& field) {
-		if (strcmp(field.getName(), "Fuel: wall correction") == 0) {
+		if (strcmp(field.getName(), "Fuel Wall: correction") == 0) {
 			EXPECT_NEAR(-1, field.readValueAsDouble(MLG::getUnitTestFieldOffset(field)), 1e-5f);
 		}
 	});
