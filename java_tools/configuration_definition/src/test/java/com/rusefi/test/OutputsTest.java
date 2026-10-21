@@ -139,6 +139,7 @@ public class OutputsTest {
                 "set_prefix \"Idle\"\n" +
                 "bit isBlipping\n" +
                 "uint16_t idleTarget;Target RPM\n" +
+                "float position;Idle: Position\n" +
                 "set_prefix Fan\n" +
                 "float fanDuty\n" +
                 "set_prefix\n" +
@@ -151,6 +152,7 @@ public class OutputsTest {
         assertEquals(
                 "entry = isBlipping, \"Idle: isBlipping\", int,    \"%d\"\n" +
                         "entry = idleTarget, \"Idle: Target RPM\", int,    \"%d\"\n" +
+                        "entry = position, \"Idle: Position\", float,  \"%.3f\"\n" +
                         "entry = fanDuty, \"Fan: fanDuty\", float,  \"%.3f\"\n" +
                         "entry = noPrefix, \"noPrefix\", float,  \"%.3f\"\n", dataLogConsumer.getContent());
 

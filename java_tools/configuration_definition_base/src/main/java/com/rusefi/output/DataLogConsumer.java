@@ -122,8 +122,12 @@ public class DataLogConsumer implements ConfigurationConsumer {
             comment = variableNamePrefixForEmptyComment + unquote(configField.getName());
         }
         String logNamePrefix = configField.getLogNamePrefix();
-        if (!logNamePrefix.isEmpty())
-            comment = logNamePrefix + ": " + comment;
+        if (!logNamePrefix.isEmpty()) {
+            String fullPrefix = logNamePrefix + ": ";
+            // names coming from shared defines like @@GAUGE_NAME_IAC@@ may already carry the prefix
+            if (!comment.regionMatches(true, 0, fullPrefix, 0, fullPrefix.length()))
+                comment = fullPrefix + comment;
+        }
         comment = outputNamePrefix + comment + variableNameSuffix;
         if (comment.length() > MSQ_LENGTH_LIMIT)
             throw new IllegalStateException("[" + comment + "] is too long for log files at " + comment.length() + " limit " + MSQ_LENGTH_LIMIT);
