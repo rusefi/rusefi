@@ -9,12 +9,14 @@ import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.datatransfer.Transferable;
@@ -95,6 +97,13 @@ final class LogChart extends JComponent {
     private int hoveredMenu = -1;
     private final List<Runnable> viewListeners = new ArrayList<>();
     private final VisibleStats stats;
+    private final TraceFocus focus = new TraceFocus();
+    /** Legend item pressed and not yet dragged; releasing it toggles the pin. */
+    private int legendPressField = -1;
+    // markers and card from the last paint, for tests
+    private List<Marker> markers = new ArrayList<>();
+    private Rectangle card;
+    private List<String> cardLines = new ArrayList<>();
 
     /** One plot's area: legend header on top, traces below. */
     static final class Band {
@@ -152,6 +161,8 @@ final class LogChart extends JComponent {
         addMouseMotionListener(mouse);
         addMouseWheelListener(mouse);
         layout.addListener(this::repaint);
+        layout.addListener(() -> focus.retain(layout::isPlotted));
+        focus.addListener(this::repaint);
         setTransferHandler(new ChartTransferHandler());
         // Headless (CI, no display) Swing installs no drop target, and there is no drag and drop to highlight.
         if (getDropTarget() == null) {
@@ -194,6 +205,39 @@ final class LogChart extends JComponent {
     private void fireViewChanged() {
         for (Runnable listener : viewListeners) {
             listener.run();
+        }
+    }
+
+    /** The trace under the pointer in a legend or the Stats table, or the pinned one. */
+    TraceFocus focus() {
+        return focus;
+    }
+
+    List<Marker> markers() {
+        return markers;
+    }
+
+    /** The detail card of the hovered legend item from the last paint, or null. */
+    Rectangle card() {
+        return card;
+    }
+
+    List<String> cardLines() {
+        return cardLines;
+    }
+
+    /** A min or max marker of the focused trace: the point on the trace and the value tag next to it. */
+    static final class Marker {
+        final boolean max;
+        final Point point;
+        final Rectangle tag;
+        final String text;
+
+        Marker(boolean max, Point point, Rectangle tag, String text) {
+            this.max = max;
+            this.point = point;
+            this.tag = tag;
+            this.text = text;
         }
     }
 
@@ -353,6 +397,11 @@ final class LogChart extends JComponent {
             cursorSample = inside ? log.nearestSample(timeAt(event.getX())) : -1;
             LegendItem item = legendAt(event.getX(), event.getY());
             hoveredField = item != null ? item.field : -1;
+            if (item != null) {
+                focus.hover(item.field);
+            } else {
+                focus.clearHover();
+            }
             Band band = bandAt(event.getX(), event.getY());
             hoveredMenu = band != null && band.menu.contains(event.getX(), event.getY()) ? band.plot : -1;
             if (dividerAt(event.getX(), event.getY()) >= 0) {
@@ -370,6 +419,7 @@ final class LogChart extends JComponent {
             if (selectionFrom < 0 && panFromX < 0) {
                 cursorX = cursorSample = -1;
                 hoveredField = hoveredMenu = -1;
+                focus.clearHover();
                 repaint();
                 fireViewChanged();
             }
@@ -402,6 +452,7 @@ final class LogChart extends JComponent {
                 }
                 if (item != null) {
                     dragField = item.field;
+                    legendPressField = item.field;
                     dragFromX = x;
                     dragFromY = y;
                 }
@@ -431,6 +482,7 @@ final class LogChart extends JComponent {
                 if (Math.abs(event.getX() - dragFromX) + Math.abs(event.getY() - dragFromY) >= DRAG_START_PIXELS) {
                     exportingField = dragField;
                     dragField = -1;
+                    legendPressField = -1;
                     getTransferHandler().exportAsDrag(LogChart.this, event, TransferHandler.MOVE);
                 }
                 return;
@@ -448,6 +500,11 @@ final class LogChart extends JComponent {
         public void mouseReleased(MouseEvent event) {
             if (selectionFrom >= 0 && Math.abs(selectionTo - selectionFrom) >= MIN_SELECTION_PIXELS) {
                 window.show(timeAt(selectionFrom), timeAt(selectionTo));
+            }
+            if (legendPressField >= 0) {
+                // a click on a legend item, not a drag: keep its trace highlighted, or stop
+                focus.togglePin(legendPressField);
+                legendPressField = -1;
             }
             selectionFrom = selectionTo = -1;
             panFromX = -1;
@@ -618,6 +675,19 @@ final class LogChart extends JComponent {
             }
             drawTimeAxis(g, metrics, palette, axisTop, sampleTimes);
             drawAddPlotRow(g, metrics, palette);
+            markers = new ArrayList<>();
+            int focused = focus.focused();
+            int focusedPlot = layout.plotOf(focused);
+            if (focusedPlot >= 0 && focusedPlot < bands.size()) {
+                markers = markers(bands.get(focusedPlot).traces, focused, g.getFontMetrics(valueFont));
+                drawMarkers(g, palette, valueFont, focused);
+            }
+            card = null;
+            cardLines = new ArrayList<>();
+            LegendItem hovered = hoveredLegendItem();
+            if (hovered != null) {
+                drawCard(g, hovered, metrics, valueFont, palette);
+            }
         } finally {
             g.dispose();
         }
@@ -647,6 +717,15 @@ final class LogChart extends JComponent {
         for (LegendItem item : band.legend) {
             int baseline = item.bounds.y + 14;
             int x = item.bounds.x;
+            if (item.field == focus.focused()) {
+                Rectangle chip = new Rectangle(item.bounds.x - 6, item.bounds.y, item.bounds.width - 6, item.bounds.height);
+                g.setColor(palette.selection);
+                g.fillRoundRect(chip.x, chip.y, chip.width, chip.height, 8, 8);
+                if (item.field == focus.pinned()) {
+                    g.setColor(palette.accent);
+                    g.drawRoundRect(chip.x, chip.y, chip.width, chip.height, 8, 8);
+                }
+            }
             g.setColor(palette.trace(layout.colors().slot(item.field)));
             g.fillRoundRect(x, baseline - 10, 13, 5, 4, 4);
             g.setColor(palette.label);
@@ -703,9 +782,18 @@ final class LogChart extends JComponent {
         try {
             plot.clipRect(area.x, area.y - 1, area.width + 1, area.height + 3);
             plot.setStroke(new BasicStroke(palette.strokeWidth));
+            int focused = focus.focused();
             for (int field : fields) {
-                plot.setColor(palette.trace(layout.colors().slot(field)));
-                plot.draw(tracePath(field));
+                if (field != focused) {
+                    plot.setColor(traceColor(field, palette));
+                    plot.draw(tracePath(field));
+                }
+            }
+            if (fields.contains(focused)) {
+                // on top of the faded traces, slightly thicker
+                plot.setStroke(new BasicStroke(palette.strokeWidth + 1));
+                plot.setColor(traceColor(focused, palette));
+                plot.draw(tracePath(focused));
             }
             if (selectionFrom >= 0 && selectionTo != selectionFrom) {
                 plot.setColor(palette.selection);
@@ -724,13 +812,171 @@ final class LogChart extends JComponent {
                     double value = log.value(cursorSample, field);
                     if (Double.isFinite(value)) {
                         int y = (int) Math.round(yOf(field, value, area));
-                        plot.setColor(palette.trace(layout.colors().slot(field)));
+                        plot.setColor(traceColor(field, palette));
                         plot.fillOval(sampleX - 3, y - 3, 7, 7);
                     }
                 }
             }
         } finally {
             plot.dispose();
+        }
+    }
+
+    /** Alpha of the traces behind a focused one. */
+    static final int FADED_ALPHA = 60;
+
+    /** A trace's colour: faded while another trace is focused. */
+    Color traceColor(int field, PlotPalette palette) {
+        Color color = palette.trace(layout.colors().slot(field));
+        int focused = focus.focused();
+        if (focused == TraceFocus.NONE || focused == field) {
+            return color;
+        }
+        return new Color(color.getRed(), color.getGreen(), color.getBlue(), FADED_ALPHA);
+    }
+
+    private LegendItem hoveredLegendItem() {
+        for (Band band : bands) {
+            for (LegendItem item : band.legend) {
+                if (item.field == hoveredField) {
+                    return item;
+                }
+            }
+        }
+        return null;
+    }
+
+    private static final int TAG_HEIGHT = 18;
+    private static final int TAG_OFFSET = 14;
+
+    /**
+     * Markers at the visible max and min of {@code field}. The max tag sits above its point and the min tag
+     * below; a tag that would leave the plot goes to the other side, so it never covers a neighbouring plot.
+     */
+    List<Marker> markers(Rectangle area, int field, FontMetrics valueMetrics) {
+        List<Marker> result = new ArrayList<>();
+        TraceStats traceStats = stats.get(field);
+        if (traceStats.isEmpty()) {
+            return result;
+        }
+        for (boolean max : new boolean[]{true, false}) {
+            int sample = max ? traceStats.maxSample : traceStats.minSample;
+            if (!max && sample == traceStats.maxSample) {
+                // a flat trace: one marker is enough
+                continue;
+            }
+            double value = log.value(sample, field);
+            int x = Math.max(area.x, Math.min(area.x + area.width, xOf(log.value(sample, 0))));
+            int y = (int) Math.round(yOf(field, value, area));
+            String text = ValueFormat.format(log, field, value);
+            int width = valueMetrics.stringWidth(text) + 10;
+            int tagX = Math.max(area.x, Math.min(area.x + area.width - width, x - width / 2));
+            int above = y - TAG_OFFSET - TAG_HEIGHT;
+            int below = y + TAG_OFFSET;
+            boolean fitsAbove = above >= area.y;
+            boolean fitsBelow = below + TAG_HEIGHT <= area.y + area.height;
+            int tagY = max ? (fitsAbove || !fitsBelow ? above : below) : (fitsBelow || !fitsAbove ? below : above);
+            tagY = Math.max(area.y, Math.min(area.y + area.height - TAG_HEIGHT, tagY));
+            result.add(new Marker(max, new Point(x, y), new Rectangle(tagX, tagY, width, TAG_HEIGHT), text));
+        }
+        return result;
+    }
+
+    private void drawMarkers(Graphics2D g, PlotPalette palette, Font valueFont, int field) {
+        Color color = palette.trace(layout.colors().slot(field));
+        Color outline = palette.background;
+        g.setFont(valueFont);
+        FontMetrics valueMetrics = g.getFontMetrics();
+        for (Marker marker : markers) {
+            int x = marker.point.x;
+            int y = marker.point.y;
+            // the triangle points at the trace from the tag's side
+            boolean tagAbove = marker.tag.y < y;
+            Polygon triangle = tagAbove
+                    ? new Polygon(new int[]{x - 6, x + 6, x}, new int[]{y - 12, y - 12, y - 3}, 3)
+                    : new Polygon(new int[]{x - 6, x + 6, x}, new int[]{y + 12, y + 12, y + 3}, 3);
+            g.setColor(color);
+            g.fillPolygon(triangle);
+            g.setStroke(new BasicStroke(1));
+            g.setColor(outline);
+            g.drawPolygon(triangle);
+            g.setColor(color);
+            g.fillRoundRect(marker.tag.x, marker.tag.y, marker.tag.width, marker.tag.height, 6, 6);
+            g.setColor(outline);
+            g.drawString(marker.text, marker.tag.x + 5, marker.tag.y + (marker.tag.height + valueMetrics.getAscent() - valueMetrics.getDescent()) / 2);
+        }
+    }
+
+    /** Max, min (with their times) and average of the hovered legend item over the visible window. */
+    private void drawCard(Graphics2D g, LegendItem item, FontMetrics metrics, Font valueFont, PlotPalette palette) {
+        int field = item.field;
+        TraceStats traceStats = stats.get(field);
+        String unit = unitSuffix(field);
+        String title = log.name(field);
+        String range = String.format(Locale.ROOT, "visible %.1f–%.1f s", window.start(), window.end());
+        String[][] rows = traceStats.isEmpty()
+                ? new String[][]{{"", "no values in the visible time", ""}}
+                : new String[][]{
+                {"max", ValueFormat.format(log, field, traceStats.max) + unit,
+                        String.format(Locale.ROOT, "@ %.2f s", log.value(traceStats.maxSample, 0))},
+                {"min", ValueFormat.format(log, field, traceStats.min) + unit,
+                        String.format(Locale.ROOT, "@ %.2f s", log.value(traceStats.minSample, 0))},
+                {"avg", ValueFormat.format(log, field, traceStats.average) + unit, ""}};
+        FontMetrics valueMetrics = g.getFontMetrics(valueFont);
+        Font bold = metrics.getFont().deriveFont(Font.BOLD);
+        int labelWidth = 0;
+        int valueWidth = 0;
+        int timeWidth = 0;
+        for (String[] row : rows) {
+            labelWidth = Math.max(labelWidth, metrics.stringWidth(row[0]));
+            valueWidth = Math.max(valueWidth, valueMetrics.stringWidth(row[1]));
+            timeWidth = Math.max(timeWidth, metrics.stringWidth(row[2]));
+        }
+        int titleWidth = 32 + g.getFontMetrics(bold).stringWidth(title) + 10 + metrics.stringWidth(range);
+        int width = Math.max(titleWidth, 14 + labelWidth + 14 + valueWidth + 18 + timeWidth) + 14;
+        int lineHeight = 21;
+        int height = 34 + rows.length * lineHeight + 4;
+        int x = Math.max(4, Math.min(getWidth() - width - 4, item.bounds.x - 6));
+        int y = item.bounds.y + item.bounds.height + 6;
+        if (y + height > getHeight() - 4) {
+            y = Math.max(4, item.bounds.y - height - 6);
+        }
+        card = new Rectangle(x, y, width, height);
+
+        Color background = ThemedStrip.themed("Console.Card.background", Color.WHITE);
+        g.setColor(new Color(0, 0, 0, 28));
+        g.fillRoundRect(x + 2, y + 3, width, height, 12, 12);
+        // slightly transparent, so the traces underneath stay visible
+        g.setColor(new Color(background.getRed(), background.getGreen(), background.getBlue(), 240));
+        g.fillRoundRect(x, y, width, height, 12, 12);
+        g.setColor(ThemedStrip.themed("Console.Card.borderColor", Color.LIGHT_GRAY));
+        g.drawRoundRect(x, y, width, height, 12, 12);
+        g.setColor(palette.trace(layout.colors().slot(field)));
+        g.fillRoundRect(x + 12, y + 12, 13, 5, 4, 4);
+        Color ink = ThemedStrip.themed("Label.foreground", Color.BLACK);
+        Color muted = ThemedStrip.themed("Console.LogViewer.mutedForeground", Color.GRAY);
+        g.setFont(bold);
+        g.setColor(ink);
+        g.drawString(title, x + 32, y + 19);
+        g.setFont(metrics.getFont());
+        g.setColor(muted);
+        g.drawString(range, x + 32 + g.getFontMetrics(bold).stringWidth(title) + 10, y + 19);
+        cardLines.add(title + " " + range);
+        for (int i = 0; i < rows.length; i++) {
+            int baseline = y + 46 + i * lineHeight;
+            int column = x + 14;
+            g.setFont(metrics.getFont());
+            g.setColor(muted);
+            g.drawString(rows[i][0], column, baseline);
+            column += labelWidth + 14;
+            g.setFont(valueFont);
+            g.setColor(ink);
+            g.drawString(rows[i][1], column, baseline);
+            column += valueWidth + 18;
+            g.setFont(metrics.getFont());
+            g.setColor(muted);
+            g.drawString(rows[i][2], column, baseline);
+            cardLines.add((rows[i][0] + " " + rows[i][1] + " " + rows[i][2]).trim());
         }
     }
 

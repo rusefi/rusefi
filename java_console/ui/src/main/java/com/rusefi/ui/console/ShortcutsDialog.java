@@ -81,6 +81,10 @@ final class ShortcutsDialog extends JDialog {
             "Shift+Space adds it to a new plot. Click and Shift+click do the same.",
             "Mouse on the plots: wheel zooms around the pointer, drag selects a time range to zoom "
                     + "into, right-drag or Shift+wheel pans, double-click shows the whole log.",
+            "Hover a legend item or a Stats row to highlight its trace with markers at its visible min "
+                    + "and max (a legend item also shows a card with max, min and average); click it to keep "
+                    + "the highlight, click again to release it. With the pointer off the plots the legend "
+                    + "shows each signal's visible min–max. Stats (toolbar) lists every plotted signal.",
             "Drag a signal or legend item onto a plot or onto + Add plot; drag a legend item back "
                     + "onto the list to remove it. Drag the gap between plots to resize them; "
                     + "double-click the gap to make all plots the same height.",
