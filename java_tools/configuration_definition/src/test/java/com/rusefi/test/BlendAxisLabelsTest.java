@@ -15,8 +15,10 @@ class BlendAxisLabelsTest {
     @Test
     void ignitionBlendLabels() throws IOException {
         for (int i = 1; i <= 4; i++) {
-            assertLabels("ignAdder" + i + "Bias", "ignAdder" + i + "Table",
-                    "ignBlends" + i, "6");
+            String config = "ignBlends" + i;
+            assertLabelsWithYAxis("ignAdder" + i + "Bias", "ignAdder" + i + "Table", config, "Weight",
+                    "\"RPM\", {" + config + "_yAxisOverride ? bitStringValue(pwmAxisLabels, " + config
+                            + "_yAxisOverride) : bitStringValue(ignBlendLoadLabels, ignLoadSrc)}");
         }
     }
 
@@ -38,17 +40,23 @@ class BlendAxisLabelsTest {
 
     private static void assertLabels(String curve, String table, String config, String defaultAxis)
             throws IOException {
+        assertLabelsWithYAxis(curve, table, config, "bias",
+                "\"RPM\", {bitStringValue(pwmAxisLabels, " + config + "_yAxisOverride ? "
+                        + config + "_yAxisOverride : " + defaultAxis + ")}");
+    }
+
+    private static void assertLabelsWithYAxis(String curve, String table, String config, String weightLabel,
+                                             String yAxisLabel) throws IOException {
         String template = Files.readString(Path.of(
                 ConfigDefinitionTest.FIRMWARE, "tunerstudio", "tunerstudio.template.ini"));
         // Each label must follow its own selector, including the no-override fallback.
-        assertEquals("{bitStringValue(pwmAxisLabels, " + config + "_blendParameter)}, \"bias\"",
+        assertEquals("{bitStringValue(pwmAxisLabels, " + config + "_blendParameter)}, \"" + weightLabel + "\"",
                 property(template, "curve", curve, "columnLabel"), curve);
-        assertEquals("\"RPM\", {bitStringValue(pwmAxisLabels, " + config + "_yAxisOverride ? "
-                        + config + "_yAxisOverride : " + defaultAxis + ")}",
-                property(template, "table", table, "xyLabels"), table);
+        assertEquals(yAxisLabel, property(template, "table", table, "xyLabels"), table);
         // Check the associated bins too, so each label is tied to the right blend instance.
         assertTrue(property(template, "curve", curve, "xBins").startsWith(config + "_blendBins,"), curve);
         assertTrue(property(template, "table", table, "yBins").startsWith(config + "_loadBins,"), table);
+        assertEquals(config + "_table", property(template, "table", table, "zBins"), table);
     }
 
     private static String property(String template, String kind, String name, String property) {
