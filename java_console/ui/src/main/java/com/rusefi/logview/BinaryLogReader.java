@@ -10,10 +10,16 @@ import java.util.List;
 
 import static com.rusefi.config.generated.VariableRegistryValues.GAUGE_NAME_TIME;
 
-/** Reader for version 2 binary operating logs. */
+/**
+ * Reader for version 2 binary operating logs. ECU-written logs (firmware binary_mlg_logging.cpp) carry a
+ * Time field; console-recorded logs (BinarySensorLog) do not, so their time comes from the data blocks'
+ * 16-bit timestamps, as MegaLogViewer reads it.
+ */
 public final class BinaryLogReader {
     private static final int HEADER_SIZE = 24;
     private static final int FIELD_SIZE = 89;
+    /** Data block timestamps count 10 us steps. */
+    static final double SECONDS_PER_TIMESTAMP_STEP = 1e-5;
 
     private BinaryLogReader() {
     }
@@ -49,9 +55,12 @@ public final class BinaryLogReader {
                 timeField = i;
             }
         }
-        if (payloadSize != recordLength || timeField < 0) {
-            throw new IOException("Binary log needs a " + GAUGE_NAME_TIME + " field and matching record length");
+        if (payloadSize != recordLength) {
+            throw new IOException("Binary log record length " + recordLength + " does not match its fields (" + payloadSize + ")");
         }
+        // without a Time field, column 0 is filled from the block timestamps
+        boolean timeFromBlocks = timeField < 0;
+        int columns = timeFromBlocks ? fieldCount + 1 : fieldCount;
 
         byte[] discard = new byte[8192];
         long remaining = dataBegin - descriptorEnd;
@@ -61,9 +70,13 @@ public final class BinaryLogReader {
             remaining -= length;
         }
 
-        String[] names = new String[fieldCount];
-        String[] units = new String[fieldCount];
+        String[] names = new String[columns];
+        String[] units = new String[columns];
         int[] destination = new int[fieldCount];
+        if (timeFromBlocks) {
+            names[0] = GAUGE_NAME_TIME;
+            units[0] = "s";
+        }
         for (int i = 0, next = 1; i < fieldCount; i++) {
             int output = i == timeField ? 0 : next++;
             destination[i] = output;
@@ -73,13 +86,19 @@ public final class BinaryLogReader {
 
         byte[] payload = new byte[recordLength];
         List<double[]> rows = new ArrayList<>();
+        int previousTimestamp = -1;
+        long timestampSteps = 0;
         int blockType;
         while ((blockType = in.read()) != -1) {
             if (blockType != 0) {
                 throw new IOException("Unsupported binary log block type " + blockType);
             }
             in.readUnsignedByte();
-            in.readUnsignedShort();
+            int timestamp = in.readUnsignedShort();
+            if (previousTimestamp >= 0) {
+                timestampSteps += timestampStep(previousTimestamp, timestamp);
+            }
+            previousTimestamp = timestamp;
             in.readFully(payload);
             int checksum = in.readUnsignedByte();
             int sum = 0;
@@ -91,13 +110,24 @@ public final class BinaryLogReader {
             }
 
             ByteBuffer values = ByteBuffer.wrap(payload);
-            double[] row = new double[fieldCount];
+            double[] row = new double[columns];
             for (int i = 0; i < fieldCount; i++) {
                 row[destination[i]] = fields[i].read(values);
+            }
+            if (timeFromBlocks) {
+                row[0] = timestampSteps * SECONDS_PER_TIMESTAMP_STEP;
             }
             rows.add(row);
         }
         return CsvLogReader.fromRows(names, units, rows);
+    }
+
+    /**
+     * 10 us steps between two consecutive block timestamps. The 16-bit counter wraps every 655 ms, so a
+     * longer pause between two records cannot be told apart from a shorter one.
+     */
+    static int timestampStep(int previous, int current) {
+        return (current - previous) & 0xffff;
     }
 
     private static String cString(byte[] source, int offset, int length) {
