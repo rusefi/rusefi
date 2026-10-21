@@ -160,7 +160,7 @@ TEST(GpPwmCoverage, SwitchThresholdEqualityRetainsStateAndReportsActualOutput) {
 	}
 }
 
-TEST(GpPwmCoverage, CharacterizeNaNTableResultBypassingErrorDuty) {
+TEST(GpPwmCoverage, NaNTableResultUsesErrorDutyAndRecovers) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	GppwmChannel ch;
 	gppwm_channel cfg{};
@@ -168,13 +168,53 @@ TEST(GpPwmCoverage, CharacterizeNaNTableResultBypassingErrorDuty) {
 	cfg.loadAxis = GPPWM_Tps;
 	cfg.dutyIfError = 21;
 	StrictMock<MockVp3d> table;
-	ch.init(false, nullptr, nullptr, &table, &cfg);
+	StrictMock<MockPwm> pwm;
+	ch.init(true, &pwm, nullptr, &table, &cfg);
 	Sensor::setMockValue(SensorType::Rpm, 1200);
 	Sensor::setMockValue(SensorType::Tps1, 35);
-	EXPECT_CALL(table, getValue(1200, 35)).WillOnce(Return(NAN));
+	{
+		InSequence sequence;
+		EXPECT_CALL(table, getValue(1200, 35)).WillOnce(Return(NAN));
+		EXPECT_CALL(table, getValue(1200, 35)).WillOnce(Return(NAN));
+		EXPECT_CALL(pwm, setSimplePwmDutyCycle(0.21f));
+		EXPECT_CALL(table, getValue(1200, 35)).WillOnce(Return(75));
+		EXPECT_CALL(pwm, setSimplePwmDutyCycle(0.75f));
+	}
 
-	// Known bad behavior, deliberately captured before a separate fix (TDB):
-	// getOutput checks the fallback duty for NaN instead of the table result.
-	// A fix should change this expectation to the configured error duty, 21.
-	EXPECT_TRUE(std::isnan(ch.getOutput(0).Result));
+	// Invalid interpolation uses the configured fallback and retains valid axes.
+	auto result = ch.getOutput(0);
+	EXPECT_FLOAT_EQ(21, result.Result);
+	EXPECT_FLOAT_EQ(1200, result.X);
+	EXPECT_FLOAT_EQ(35, result.Y);
+	EXPECT_FLOAT_EQ(21, ch.update(0).Result);
+	EXPECT_FLOAT_EQ(75, ch.update(0).Result);
+}
+
+TEST(GpPwmCoverage, NaNTableResultAppliesErrorDutyToSwitchHysteresis) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	GppwmChannel ch;
+	gppwm_channel cfg{};
+	cfg.rpmAxis = GPPWM_Rpm;
+	cfg.loadAxis = GPPWM_Tps;
+	cfg.onAboveDuty = 50;
+	cfg.offBelowDuty = 40;
+	cfg.dutyIfError = 30;
+	StrictMock<MockVp3d> table;
+	StrictMock<MockOutputPin> pin;
+	ch.init(false, nullptr, &pin, &table, &cfg);
+	Sensor::setMockValue(SensorType::Rpm, 1200);
+	Sensor::setMockValue(SensorType::Tps1, 35);
+	{
+		InSequence sequence;
+		EXPECT_CALL(table, getValue(1200, 35)).WillOnce(Return(75));
+		EXPECT_CALL(pin, setValue(1, false));
+		EXPECT_CALL(table, getValue(1200, 35)).WillOnce(Return(NAN));
+		EXPECT_CALL(pin, setValue(0, false));
+		EXPECT_CALL(table, getValue(1200, 35)).WillOnce(Return(75));
+		EXPECT_CALL(pin, setValue(1, false));
+	}
+	EXPECT_FLOAT_EQ(100, ch.update(0).Result);
+	// NaN must not leave an already-on output latched when error duty is below off.
+	EXPECT_FLOAT_EQ(0, ch.update(0).Result);
+	EXPECT_FLOAT_EQ(100, ch.update(0).Result);
 }
