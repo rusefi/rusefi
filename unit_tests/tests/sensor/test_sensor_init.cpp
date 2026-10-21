@@ -377,6 +377,36 @@ TEST(SensorInit, Map) {
 	EXPECT_FLOAT_EQ(75, Sensor::getOrZero(SensorType::Map));
 }
 
+TEST(SensorInit, MapMpx4250Calibration) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
+	engineConfiguration->map.sensor.type = MT_MPX4250A;
+	engineConfiguration->mapErrorDetectionTooLow = 5;
+	engineConfiguration->mapErrorDetectionTooHigh = 300;
+	initMap();
+
+	auto slowMap = const_cast<Sensor*>(Sensor::getSensorOfType(SensorType::MapSlow));
+	ASSERT_NE(nullptr, slowMap);
+	// Do not let a previous test's averaged value mask the slow MAP fallback.
+	getMapAvg(0).invalidate();
+
+	// #3329 / #3328: MapCfg must associate each voltage with its pressure.
+	// These known preset points catch the former {v1, v2, map1, map2} ordering.
+	struct Sample { float volts; float kpa; };
+	for (auto sample : {Sample{0.204f, 20}, Sample{2.55f, 135}, Sample{4.896f, 250}}) {
+		SCOPED_TRACE(sample.volts);
+		EXPECT_POINT_VALID(slowMap, sample.volts, sample.kpa);
+		auto combined = Sensor::get(SensorType::Map);
+		ASSERT_TRUE(combined.Valid);
+		EXPECT_NEAR(sample.kpa, combined.Value, EPS2D);
+
+		// Fast sampling uses the same configured voltage-to-pressure converter.
+		auto fastMap = getMapAvg(0).submit(sample.volts);
+		ASSERT_TRUE(fastMap.Valid);
+		EXPECT_NEAR(sample.kpa, fastMap.Value, EPS2D);
+	}
+}
+
 namespace {
 
 class MapSensorReconfiguration : public testing::Test {
