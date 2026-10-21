@@ -50,6 +50,8 @@ public class GaugeConsumer implements ConfigurationConsumer {
     }
 
     private String handle(ConfigField configField, String prefix, String humanNamePrefix, String variableNameSuffix) {
+        if (configField.isUnusedField())
+            return "";
         String comment = getHumanGaugeName("", humanNamePrefix, "", configField, variableNameSuffix);
         comment = ConfigFieldImpl.unquote(comment);
         if (!prefix.isEmpty() && humanNamePrefix.isEmpty()) {
