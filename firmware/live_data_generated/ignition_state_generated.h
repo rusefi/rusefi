@@ -165,56 +165,44 @@ struct ignition_state_s {
 	offset 32 bit 31 */
 	bool unusedBit_11_31 : 1 {};
 	/**
+	 * offset 36
+	 */
+	float loadForIgnitionTableDot = (float)0;
+	/**
 	 * Trailing spark deg
 	 * units: deg
-	 * offset 36
+	 * offset 40
 	 */
 	scaled_channel<int16_t, 100, 1> trailingSparkAngle = (int16_t)0;
 	/**
-	 * offset 38
+	 * offset 42
 	 */
 	int16_t rpmForIgnitionTableDot = (int16_t)0;
 	/**
 	 * RPM for Idle table
-	 * offset 40
+	 * offset 44
 	 */
 	int16_t rpmForIgnitionIdleTableDot = (int16_t)0;
 	/**
-	 * need 4 byte alignment
-	 * units: units
-	 * offset 42
-	 */
-	uint8_t alignmentFill_at_42[2] = {};
-	/**
-	 * offset 44
-	 */
-	float loadForIgnitionTableDot = (float)0;
-	/**
 	 * Idle: Timing adjustment
 	 * units: deg
-	 * offset 48
+	 * offset 46
 	 */
 	scaled_channel<int16_t, 100, 1> timingPidCorrection = (int16_t)0;
 	/**
 	 * DFCO: Timing retard
 	 * units: deg
-	 * offset 50
+	 * offset 48
 	 */
 	scaled_channel<int16_t, 100, 1> dfcoTimingRetard = (int16_t)0;
 	/**
 	 * Traction: timing correction
 	 * units: deg
-	 * offset 52
+	 * offset 50
 	 */
 	scaled_channel<int16_t, 50, 1> tractionAdvanceDrop = (int16_t)0;
-	/**
-	 * need 4 byte alignment
-	 * units: units
-	 * offset 54
-	 */
-	uint8_t alignmentFill_at_54[2] = {};
 };
-static_assert(sizeof(ignition_state_s) == 56);
+static_assert(sizeof(ignition_state_s) == 52);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/ignition/ignition_state.txt

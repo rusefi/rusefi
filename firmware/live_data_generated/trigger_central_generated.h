@@ -57,149 +57,133 @@ struct trigger_central_s {
 	 */
 	uint8_t mapVvt_min_point_counter = (uint8_t)0;
 	/**
-	 * need 4 byte alignment
-	 * units: units
 	 * offset 39
 	 */
-	uint8_t alignmentFill_at_39[1] = {};
+	uint8_t triggerIgnoredToothCount = (uint8_t)0;
 	/**
 	 * offset 40
 	 */
 	uint32_t temp_mapVvt_index = (uint32_t)0;
 	/**
-	 * offset 44
-	 */
-	float mapVvt_CycleDelta = (float)0;
-	/**
 	 * Sync: TDC Engine Phase
 	 * units: deg
-	 * offset 48
+	 * offset 44
 	 */
 	float currentEngineDecodedPhase = (float)0;
 	/**
 	 * Sync: trigger angle error
 	 * units: deg
-	 * offset 52
+	 * offset 48
 	 */
 	float triggerToothAngleError = (float)0;
 	/**
-	 * offset 56
-	 */
-	uint8_t triggerIgnoredToothCount = (uint8_t)0;
-	/**
-	 * need 4 byte alignment
-	 * units: units
-	 * offset 57
-	 */
-	uint8_t alignmentFill_at_57[3] = {};
-	/**
 	 * Sync: MAP: prev angle
 	 * units: deg
-	 * offset 60
+	 * offset 52
 	 */
 	angle_t mapCamPrevToothAngle = (angle_t)0;
 	/**
-	offset 64 bit 0 */
+	offset 56 bit 0 */
 	bool isDecodingMapCam : 1 {};
 	/**
-	offset 64 bit 1 */
-	bool unusedBit_19_1 : 1 {};
+	offset 56 bit 1 */
+	bool unusedBit_16_1 : 1 {};
 	/**
-	offset 64 bit 2 */
-	bool unusedBit_19_2 : 1 {};
+	offset 56 bit 2 */
+	bool unusedBit_16_2 : 1 {};
 	/**
-	offset 64 bit 3 */
-	bool unusedBit_19_3 : 1 {};
+	offset 56 bit 3 */
+	bool unusedBit_16_3 : 1 {};
 	/**
-	offset 64 bit 4 */
-	bool unusedBit_19_4 : 1 {};
+	offset 56 bit 4 */
+	bool unusedBit_16_4 : 1 {};
 	/**
-	offset 64 bit 5 */
-	bool unusedBit_19_5 : 1 {};
+	offset 56 bit 5 */
+	bool unusedBit_16_5 : 1 {};
 	/**
-	offset 64 bit 6 */
-	bool unusedBit_19_6 : 1 {};
+	offset 56 bit 6 */
+	bool unusedBit_16_6 : 1 {};
 	/**
-	offset 64 bit 7 */
-	bool unusedBit_19_7 : 1 {};
+	offset 56 bit 7 */
+	bool unusedBit_16_7 : 1 {};
 	/**
-	offset 64 bit 8 */
-	bool unusedBit_19_8 : 1 {};
+	offset 56 bit 8 */
+	bool unusedBit_16_8 : 1 {};
 	/**
-	offset 64 bit 9 */
-	bool unusedBit_19_9 : 1 {};
+	offset 56 bit 9 */
+	bool unusedBit_16_9 : 1 {};
 	/**
-	offset 64 bit 10 */
-	bool unusedBit_19_10 : 1 {};
+	offset 56 bit 10 */
+	bool unusedBit_16_10 : 1 {};
 	/**
-	offset 64 bit 11 */
-	bool unusedBit_19_11 : 1 {};
+	offset 56 bit 11 */
+	bool unusedBit_16_11 : 1 {};
 	/**
-	offset 64 bit 12 */
-	bool unusedBit_19_12 : 1 {};
+	offset 56 bit 12 */
+	bool unusedBit_16_12 : 1 {};
 	/**
-	offset 64 bit 13 */
-	bool unusedBit_19_13 : 1 {};
+	offset 56 bit 13 */
+	bool unusedBit_16_13 : 1 {};
 	/**
-	offset 64 bit 14 */
-	bool unusedBit_19_14 : 1 {};
+	offset 56 bit 14 */
+	bool unusedBit_16_14 : 1 {};
 	/**
-	offset 64 bit 15 */
-	bool unusedBit_19_15 : 1 {};
+	offset 56 bit 15 */
+	bool unusedBit_16_15 : 1 {};
 	/**
-	offset 64 bit 16 */
-	bool unusedBit_19_16 : 1 {};
+	offset 56 bit 16 */
+	bool unusedBit_16_16 : 1 {};
 	/**
-	offset 64 bit 17 */
-	bool unusedBit_19_17 : 1 {};
+	offset 56 bit 17 */
+	bool unusedBit_16_17 : 1 {};
 	/**
-	offset 64 bit 18 */
-	bool unusedBit_19_18 : 1 {};
+	offset 56 bit 18 */
+	bool unusedBit_16_18 : 1 {};
 	/**
-	offset 64 bit 19 */
-	bool unusedBit_19_19 : 1 {};
+	offset 56 bit 19 */
+	bool unusedBit_16_19 : 1 {};
 	/**
-	offset 64 bit 20 */
-	bool unusedBit_19_20 : 1 {};
+	offset 56 bit 20 */
+	bool unusedBit_16_20 : 1 {};
 	/**
-	offset 64 bit 21 */
-	bool unusedBit_19_21 : 1 {};
+	offset 56 bit 21 */
+	bool unusedBit_16_21 : 1 {};
 	/**
-	offset 64 bit 22 */
-	bool unusedBit_19_22 : 1 {};
+	offset 56 bit 22 */
+	bool unusedBit_16_22 : 1 {};
 	/**
-	offset 64 bit 23 */
-	bool unusedBit_19_23 : 1 {};
+	offset 56 bit 23 */
+	bool unusedBit_16_23 : 1 {};
 	/**
-	offset 64 bit 24 */
-	bool unusedBit_19_24 : 1 {};
+	offset 56 bit 24 */
+	bool unusedBit_16_24 : 1 {};
 	/**
-	offset 64 bit 25 */
-	bool unusedBit_19_25 : 1 {};
+	offset 56 bit 25 */
+	bool unusedBit_16_25 : 1 {};
 	/**
-	offset 64 bit 26 */
-	bool unusedBit_19_26 : 1 {};
+	offset 56 bit 26 */
+	bool unusedBit_16_26 : 1 {};
 	/**
-	offset 64 bit 27 */
-	bool unusedBit_19_27 : 1 {};
+	offset 56 bit 27 */
+	bool unusedBit_16_27 : 1 {};
 	/**
-	offset 64 bit 28 */
-	bool unusedBit_19_28 : 1 {};
+	offset 56 bit 28 */
+	bool unusedBit_16_28 : 1 {};
 	/**
-	offset 64 bit 29 */
-	bool unusedBit_19_29 : 1 {};
+	offset 56 bit 29 */
+	bool unusedBit_16_29 : 1 {};
 	/**
-	offset 64 bit 30 */
-	bool unusedBit_19_30 : 1 {};
+	offset 56 bit 30 */
+	bool unusedBit_16_30 : 1 {};
 	/**
-	offset 64 bit 31 */
-	bool unusedBit_19_31 : 1 {};
+	offset 56 bit 31 */
+	bool unusedBit_16_31 : 1 {};
 	/**
-	 * offset 68
+	 * offset 60
 	 */
 	uint32_t triggerElapsedUs = (uint32_t)0;
 };
-static_assert(sizeof(trigger_central_s) == 72);
+static_assert(sizeof(trigger_central_s) == 64);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/trigger/trigger_central.txt

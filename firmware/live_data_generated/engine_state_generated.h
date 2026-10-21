@@ -215,15 +215,16 @@ struct engine_state_s {
 	/**
 	 * offset 93
 	 */
-	int8_t smartChipState = (int8_t)0;
+	int8_t smartChipRestartCounter = (int8_t)0;
 	/**
 	 * offset 94
 	 */
-	int8_t smartChipRestartCounter = (int8_t)0;
+	int8_t smartChipAliveCounter = (int8_t)0;
 	/**
+	 * "Ignition: overcharge warnings"
 	 * offset 95
 	 */
-	int8_t smartChipAliveCounter = (int8_t)0;
+	uint8_t dwellOverChargeCounter = (uint8_t)0;
 	/**
 	offset 96 bit 0 */
 	bool startStopPhysicalState : 1 {};
@@ -396,30 +397,19 @@ struct engine_state_s {
 	 */
 	uint8_t dwellUnderChargeCounter = (uint8_t)0;
 	/**
-	 * "Ignition: overcharge warnings"
-	 * offset 144
-	 */
-	uint8_t dwellOverChargeCounter = (uint8_t)0;
-	/**
-	 * need 4 byte alignment
-	 * units: units
-	 * offset 145
-	 */
-	uint8_t alignmentFill_at_145[3] = {};
-	/**
 	 * "Ignition: Dwell deviation"
 	 * units: %
-	 * offset 148
+	 * offset 144
 	 */
 	float dwellActualRatio = (float)0;
 	/**
 	 * STFT: Bank
 	 * units: %
-	 * offset 152
+	 * offset 148
 	 */
 	float stftCorrection[FT_BANK_COUNT] = {};
 };
-static_assert(sizeof(engine_state_s) == 160);
+static_assert(sizeof(engine_state_s) == 156);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt
