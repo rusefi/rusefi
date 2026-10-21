@@ -3991,6 +3991,26 @@
          0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
 </constant>
         <constant name="targetAfrBlends2_yAxisOverride">"Zero"</constant>
+        <constant cols="8" digits="2" name="targetMixtureAdder1Display" rows="8" units="{useLambdaOnInterface ? &quot;lambda&quot; : &quot;AFR (gasoline scale)&quot;}">
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+</constant>
+        <constant cols="8" digits="2" name="targetMixtureAdder2Display" rows="8" units="{useLambdaOnInterface ? &quot;lambda&quot; : &quot;AFR (gasoline scale)&quot;}">
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+</constant>
         <constant digits="3" name="tChargeAirCoefMax" units="">0.902</constant>
         <constant digits="3" name="tChargeAirCoefMin" units="">0.098</constant>
         <constant digits="1" name="tChargeAirDecrLimit" units="deg/sec">12.5</constant>
@@ -5461,8 +5481,8 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20261020" nPages="1" signature="rusEFI master.2026.10.21.f407-discovery.36106438" version="5.0"/>
-    <bibliography author="rusEFI 20261020" writeDate="date"/>
+    <versionInfo firmwareInfo="20261021" nPages="1" signature="rusEFI master.2026.10.21.f407-discovery.3369294999" version="5.0"/>
+    <bibliography author="rusEFI 20261021" writeDate="date"/>
     <settings/>
     <userComments/>
 </msq>
