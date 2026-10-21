@@ -370,7 +370,8 @@ public class MainFrame {
         menuBar.add(actionsMenu);
 
         binaryLoggingMenu = new BinaryLoggingMenu(consoleUI.uiContext, frame.getFrame(),
-                loadMenuIcon("player-play"), loadMenuIcon("player-stop"), loadMenuIcon("view"));
+                loadMenuIcon("player-play"), loadMenuIcon("player-stop"), loadMenuIcon("view"),
+                getConfig().getRoot().getChild("binary_logging"));
         menuBar.add(binaryLoggingMenu.getMenu());
 
         menuBar.add(new MenuBarDivider());
