@@ -7,19 +7,22 @@ import java.util.List;
 /**
  * Stacked plots and the signals in each. A signal is in at most one plot; colours come from
  * {@link TraceColors}, so a signal keeps its colour when other signals or plots change.
- * New signals go to the active plot. There is always at least one plot.
+ * New signals go to the active plot. There is always at least one plot. Each plot has a height weight;
+ * plots share the chart height in proportion to their weights.
  */
 final class PlotLayout {
     static final int MAX_PLOTS = 8;
 
     private final TraceColors colors;
     private final List<List<Integer>> plots = new ArrayList<>();
+    private final List<Double> weights = new ArrayList<>();
     private final List<Runnable> listeners = new ArrayList<>();
     private int active;
 
     PlotLayout(int fieldCount) {
         colors = new TraceColors(fieldCount);
         plots.add(new ArrayList<>());
+        weights.add(1.0);
     }
 
     /** One plot holding the given fields, in field order. */
@@ -108,10 +111,67 @@ final class PlotLayout {
             return;
         }
         if (canAddPlot()) {
-            plots.add(new ArrayList<>());
-            active = plots.size() - 1;
+            appendPlot();
         }
         addTo(field, active);
+    }
+
+    /** Moves a field to another plot, keeping its colour; an unplotted field is added there. */
+    void moveTo(int field, int plot) {
+        int from = plotOf(field);
+        if (from == plot) {
+            return;
+        }
+        if (from < 0) {
+            addTo(field, plot);
+            return;
+        }
+        plots.get(from).remove(Integer.valueOf(field));
+        plots.get(plot).add(field);
+        changed();
+    }
+
+    /** Moves a field to a new plot below the others, which becomes active; to the active plot when full. */
+    void moveToNewPlot(int field) {
+        if (!canAddPlot()) {
+            moveTo(field, active);
+            return;
+        }
+        int from = plotOf(field);
+        appendPlot();
+        if (from < 0) {
+            addTo(field, active);
+            return;
+        }
+        plots.get(from).remove(Integer.valueOf(field));
+        plots.get(active).add(field);
+        changed();
+    }
+
+    private void appendPlot() {
+        plots.add(new ArrayList<>());
+        weights.add(1.0);
+        active = plots.size() - 1;
+    }
+
+    double weight(int plot) {
+        return weights.get(plot);
+    }
+
+    /** Sets the plots' height weights, e.g. their pixel heights after the user dragged a divider. */
+    void setWeights(double[] newWeights) {
+        for (int plot = 0; plot < newWeights.length && plot < weights.size(); plot++) {
+            weights.set(plot, Math.max(newWeights[plot], 1e-6));
+        }
+        changed();
+    }
+
+    /** Gives every plot the same height. */
+    void resetWeights() {
+        for (int plot = 0; plot < weights.size(); plot++) {
+            weights.set(plot, 1.0);
+        }
+        changed();
     }
 
     void remove(int field) {
@@ -135,8 +195,7 @@ final class PlotLayout {
     /** Adds an empty plot below the others and makes it active. */
     void addPlot() {
         if (canAddPlot()) {
-            plots.add(new ArrayList<>());
-            active = plots.size() - 1;
+            appendPlot();
             changed();
         }
     }
@@ -153,6 +212,7 @@ final class PlotLayout {
         for (int field : plots.remove(plot)) {
             colors.remove(field);
         }
+        weights.remove(plot);
         if (active > plot || active == plots.size()) {
             active--;
         }
@@ -166,6 +226,7 @@ final class PlotLayout {
             return;
         }
         Collections.swap(plots, plot, target);
+        Collections.swap(weights, plot, target);
         if (active == plot) {
             active = target;
         } else if (active == target) {

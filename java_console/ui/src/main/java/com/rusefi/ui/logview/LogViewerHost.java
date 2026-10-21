@@ -148,10 +148,18 @@ public final class LogViewerHost extends JPanel {
         repaint();
     }
 
-    /** Drops land on the deepest component, so every non-text component accepts log files. */
+    /**
+     * Drops land on the deepest component, so every non-text component accepts log files. Components that
+     * already drag signals (chart, signal list) keep their handler, which passes log files on to this one.
+     */
     private void acceptDrops(Component component) {
         if (component instanceof JComponent && !(component instanceof JTextComponent)) {
-            ((JComponent) component).setTransferHandler(fileDrop);
+            JComponent target = (JComponent) component;
+            if (target.getTransferHandler() instanceof SignalTransfer.Handler) {
+                ((SignalTransfer.Handler) target.getTransferHandler()).setFileDrop(fileDrop);
+            } else {
+                target.setTransferHandler(fileDrop);
+            }
         }
         if (component instanceof Container) {
             for (Component child : ((Container) component).getComponents()) {

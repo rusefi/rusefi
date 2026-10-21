@@ -109,6 +109,54 @@ class PlotLayoutTest {
     }
 
     @Test
+    void moveToKeepsTheColour() {
+        PlotLayout layout = new PlotLayout(10);
+        layout.add(1);
+        layout.add(2);
+        layout.addPlot();
+        int slot = layout.colors().slot(2);
+        layout.moveTo(2, 1);
+        assertEquals(Collections.singletonList(1), layout.fields(0));
+        assertEquals(Collections.singletonList(2), layout.fields(1));
+        assertEquals(slot, layout.colors().slot(2));
+        layout.moveTo(5, 0);
+        assertEquals(Arrays.asList(1, 5), layout.fields(0), "an unplotted signal is added");
+    }
+
+    @Test
+    void moveToNewPlotKeepsTheColour() {
+        PlotLayout layout = new PlotLayout(10);
+        layout.add(1);
+        layout.add(2);
+        int slot = layout.colors().slot(2);
+        layout.moveToNewPlot(2);
+        assertEquals(2, layout.plotCount());
+        assertEquals(1, layout.activePlot());
+        assertEquals(Collections.singletonList(2), layout.fields(1));
+        assertEquals(slot, layout.colors().slot(2));
+        layout.moveToNewPlot(7);
+        assertEquals(Collections.singletonList(7), layout.fields(2), "an unplotted signal gets its own plot");
+    }
+
+    @Test
+    void heightWeightsFollowTheirPlots() {
+        PlotLayout layout = new PlotLayout(10);
+        layout.addPlot();
+        layout.addPlot();
+        layout.setWeights(new double[]{100, 200, 300});
+        layout.move(2, -1);
+        assertEquals(300, layout.weight(1), 1e-9);
+        assertEquals(200, layout.weight(2), 1e-9);
+        layout.removePlot(0);
+        assertEquals(300, layout.weight(0), 1e-9);
+        layout.addPlot();
+        assertEquals(1, layout.weight(2), 1e-9);
+        layout.resetWeights();
+        assertEquals(1, layout.weight(0), 1e-9);
+        assertEquals(1, layout.weight(1), 1e-9);
+    }
+
+    @Test
     void listenersHearChanges() {
         PlotLayout layout = new PlotLayout(10);
         int[] changes = {0};

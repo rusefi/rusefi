@@ -141,10 +141,27 @@ class LogViewerHostTest {
     void dropsAreAcceptedOnTheChartAndSignalList() throws Exception {
         LogViewerHost host = host();
         openAndWait(host, copy("/logview/test-log-1.msl", "a.msl"));
-        assertSame(host.fileDropHandler(), host.currentPanel().chart().getTransferHandler());
-        assertSame(host.fileDropHandler(), host.currentPanel().fieldList().getTransferHandler());
+        // the chart and list keep their signal handlers, which pass log files on to the host
+        SignalTransfer.Handler chartHandler = (SignalTransfer.Handler) host.currentPanel().chart().getTransferHandler();
+        SignalTransfer.Handler listHandler = (SignalTransfer.Handler) host.currentPanel().fieldList().getTransferHandler();
+        assertSame(host.fileDropHandler(), chartHandler.fileDrop());
+        assertSame(host.fileDropHandler(), listHandler.fileDrop());
         // the search field keeps text drops
         assertFalse(host.currentPanel().searchField().getTransferHandler() == host.fileDropHandler());
+    }
+
+    @Test
+    void logFileDroppedOnTheChartStillOpens() throws Exception {
+        LogViewerHost host = host();
+        openAndWait(host, copy("/logview/test-log-1.msl", "first.msl"));
+        File second = copy("/logview/test-log-binary-1.mlg", "second.mlg");
+        LogChart chart = host.currentPanel().chart();
+        boolean[] accepted = new boolean[1];
+        SwingUtilities.invokeAndWait(() -> accepted[0] = chart.getTransferHandler()
+                .importData(new TransferHandler.TransferSupport(chart, files(second))));
+        assertTrue(accepted[0]);
+        waitUntilLoaded(host);
+        assertTrue(host.currentPanel().statusBar().fileLabel.getText().startsWith("second.mlg"));
     }
 
     @Test
@@ -157,7 +174,11 @@ class LogViewerHostTest {
     }
 
     private static boolean drop(LogViewerHost host, File file) {
-        Transferable files = new Transferable() {
+        return host.fileDropHandler().importData(new TransferHandler.TransferSupport(host, files(file)));
+    }
+
+    private static Transferable files(File file) {
+        return new Transferable() {
             @Override
             public DataFlavor[] getTransferDataFlavors() {
                 return new DataFlavor[]{DataFlavor.javaFileListFlavor};
@@ -173,7 +194,6 @@ class LogViewerHostTest {
                 return Collections.singletonList(file);
             }
         };
-        return host.fileDropHandler().importData(new TransferHandler.TransferSupport(host, files));
     }
 
     private static <T> T find(java.awt.Container container, Class<T> type) {

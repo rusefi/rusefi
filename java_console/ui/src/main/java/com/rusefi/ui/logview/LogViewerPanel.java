@@ -8,6 +8,7 @@ import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.DefaultListModel;
+import javax.swing.DropMode;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -31,6 +32,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -42,8 +44,8 @@ import static com.rusefi.ui.logview.ThemedStrip.themed;
 
 /**
  * Log viewer: a searchable signal list on the left (click or Space adds a signal to the active plot,
- * Shift+click or Shift+Space to a new plot; a dot shows its trace colour), the stacked plots with their
- * toolbar on the right, and a status strip below. [tag:console_theme]
+ * Shift+click or Shift+Space to a new plot, or drag it onto a plot; a dot shows its trace colour), the
+ * stacked plots with their toolbar on the right, and a status strip below. [tag:console_theme]
  */
 public final class LogViewerPanel extends JPanel {
     private static final int SIDEBAR_WIDTH = 280;
@@ -163,6 +165,9 @@ public final class LogViewerPanel extends JPanel {
         heading.add(search, BorderLayout.SOUTH);
         sidebar.add(heading, BorderLayout.NORTH);
 
+        fieldList.setDragEnabled(true);
+        fieldList.setDropMode(DropMode.ON);
+        fieldList.setTransferHandler(new ListTransferHandler());
         fieldList.setCellRenderer(new SignalRenderer());
         fieldList.setFixedCellHeight(28);
         fieldList.setToolTipText("");
@@ -265,6 +270,29 @@ public final class LogViewerPanel extends JPanel {
     }
 
     /** Small rounded count badge, like the Gauges RPM readout. */
+    /** Drags a signal out of the list onto a plot; a trace dragged back onto the list is removed. */
+    final class ListTransferHandler extends SignalTransfer.Handler {
+        @Override
+        protected Transferable createTransferable(JComponent component) {
+            Integer field = fieldList.getSelectedValue();
+            return field == null ? null : SignalTransfer.of(field);
+        }
+
+        @Override
+        boolean canImportSignal(TransferSupport support) {
+            return true;
+        }
+
+        @Override
+        boolean importSignal(TransferSupport support, int field) {
+            if (!layout.isPlotted(field)) {
+                return false;
+            }
+            layout.remove(field);
+            return true;
+        }
+    }
+
     private static final class Chip extends JLabel {
         Chip(String text) {
             super(text);

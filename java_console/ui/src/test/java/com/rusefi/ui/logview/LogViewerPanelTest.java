@@ -4,6 +4,7 @@ import com.rusefi.logview.CsvLogReader;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.JList;
+import javax.swing.TransferHandler;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.io.StringReader;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class LogViewerPanelTest {
@@ -58,6 +60,22 @@ class LogViewerPanelTest {
         // a plain click goes to the active (new) plot
         panel.toggle(3);
         assertEquals(1, layout.plotOf(3));
+    }
+
+    @Test
+    void listDragsTheSelectedSignalAndRemovesTracesDroppedOnIt() throws IOException {
+        LogViewerPanel panel = new LogViewerPanel(log(), null);
+        LogViewerPanel.ListTransferHandler handler = (LogViewerPanel.ListTransferHandler) panel.fieldList().getTransferHandler();
+        assertTrue(panel.fieldList().getDragEnabled());
+
+        panel.fieldList().setSelectedValue(2, false);
+        assertEquals(2, SignalTransfer.field(handler.createTransferable(panel.fieldList())));
+
+        // RPM is plotted by default; dragging its legend item back onto the list removes it
+        assertTrue(handler.importData(new TransferHandler.TransferSupport(panel.fieldList(), SignalTransfer.of(1))));
+        assertFalse(panel.chart().plotLayout().isPlotted(1));
+        assertFalse(handler.importData(new TransferHandler.TransferSupport(panel.fieldList(), SignalTransfer.of(3))),
+                "an unplotted signal dropped on the list changes nothing");
     }
 
     /** Row renderers must lay themselves out: validate() does nothing without a native peer. */

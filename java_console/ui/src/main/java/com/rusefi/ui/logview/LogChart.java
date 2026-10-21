@@ -7,14 +7,20 @@ import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
+import javax.swing.TransferHandler;
 import java.awt.BasicStroke;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.datatransfer.Transferable;
+import java.awt.dnd.DropTargetAdapter;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -22,13 +28,16 @@ import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.TooManyListenersException;
 
 import static com.rusefi.config.generated.VariableRegistryValues.GAUGE_NAME_TIME;
 
 /**
  * Stacked time plots from a {@link PlotLayout}, sharing one time axis, zoom, range selection and cursor.
- * Each plot has a header with its legend (hover a legend item for x to remove it) and a ⋯ menu; the row
- * below the time axis adds a plot. Clicking a plot makes it active, so new signals go there.
+ * Each plot has a header with its legend (hover a legend item for x to remove it, drag it to another plot)
+ * and a ⋯ menu; the row below the time axis adds a plot, and signals can be dropped on a plot or on that
+ * row. Dragging the gap between two plots resizes them, double-clicking it makes all plots equal.
+ * Clicking a plot makes it active, so new signals go there.
  * Wheel zooms around the pointer, drag selects a range to zoom into, right-drag or Shift+wheel pans,
  * double-click shows the whole log.
  */
@@ -51,6 +60,10 @@ final class LogChart extends JComponent {
     private static final int MENU_WIDTH = 24;
     private static final int CLOSE_WIDTH = 14;
     private static final int MIN_TRACE_HEIGHT = 20;
+    /** Drag distance before a pressed legend item starts a drag and drop. */
+    private static final int DRAG_START_PIXELS = 5;
+    static final int NO_TARGET = -1;
+    static final int ADD_ROW_TARGET = -2;
 
     private final CsvLogReader log;
     private final PlotLayout layout;
@@ -63,6 +76,17 @@ final class LogChart extends JComponent {
     private int plotRight = LEFT + 1;
     private List<Band> bands = new ArrayList<>();
     private Rectangle addPlotRow = new Rectangle();
+    /** Gaps between neighbouring plots; dragging one resizes the two plots. */
+    private List<Rectangle> dividers = new ArrayList<>();
+    private int resizing = -1;
+    private int resizeFromY;
+    private int[] resizeHeights;
+    private int dragField = -1;
+    private int dragFromX;
+    private int dragFromY;
+    private int exportingField = -1;
+    /** Plot under a signal dragged over the chart, {@link #ADD_ROW_TARGET}, or {@link #NO_TARGET}. */
+    private int dropTarget = NO_TARGET;
     private int selectionFrom = -1;
     private int selectionTo = -1;
     private int panFromX = -1;
@@ -127,6 +151,22 @@ final class LogChart extends JComponent {
         addMouseMotionListener(mouse);
         addMouseWheelListener(mouse);
         layout.addListener(this::repaint);
+        setTransferHandler(new ChartTransferHandler());
+        try {
+            getDropTarget().addDropTargetListener(new DropTargetAdapter() {
+                @Override
+                public void dragExit(DropTargetEvent event) {
+                    setDropTarget(NO_TARGET);
+                }
+
+                @Override
+                public void drop(DropTargetDropEvent event) {
+                    setDropTarget(NO_TARGET);
+                }
+            });
+        } catch (TooManyListenersException e) {
+            // the highlight then clears on the next drop instead of on exit
+        }
     }
 
     TimeWindow timeWindow() {
@@ -161,6 +201,65 @@ final class LogChart extends JComponent {
 
     Rectangle addPlotRow() {
         return addPlotRow;
+    }
+
+    List<Rectangle> dividers() {
+        return dividers;
+    }
+
+    int dropTarget() {
+        return dropTarget;
+    }
+
+    private void setDropTarget(int target) {
+        if (target != dropTarget) {
+            dropTarget = target;
+            repaint();
+        }
+    }
+
+    /** Where a signal dropped at {@code point} goes: a plot index, {@link #ADD_ROW_TARGET} or {@link #NO_TARGET}. */
+    int dropTargetAt(Point point) {
+        if (point == null) {
+            return NO_TARGET;
+        }
+        Rectangle row = new Rectangle(addPlotRow);
+        row.grow(0, 6);
+        if (row.contains(point) && layout.canAddPlot()) {
+            return ADD_ROW_TARGET;
+        }
+        for (Band band : bands) {
+            Rectangle area = band.header.union(band.traces);
+            if (point.y >= area.y && point.y < area.y + area.height) {
+                return band.plot;
+            }
+        }
+        return NO_TARGET;
+    }
+
+    /** Puts a dropped signal into the plot under {@code point}, or into a new plot on the add row. */
+    boolean dropSignal(int field, Point point) {
+        int target = dropTargetAt(point);
+        setDropTarget(NO_TARGET);
+        if (target == ADD_ROW_TARGET) {
+            layout.moveToNewPlot(field);
+            return true;
+        }
+        if (target >= 0) {
+            layout.moveTo(field, target);
+            layout.setActive(target);
+            return true;
+        }
+        return false;
+    }
+
+    private int dividerAt(int x, int y) {
+        for (int i = 0; i < dividers.size(); i++) {
+            if (dividers.get(i).contains(x, y)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private double timeAt(int x) {
@@ -198,7 +297,8 @@ final class LogChart extends JComponent {
 
     private boolean onControl(int x, int y) {
         Band band = bandAt(x, y);
-        return addPlotRow.contains(x, y) || legendAt(x, y) != null || (band != null && band.menu.contains(x, y));
+        return addPlotRow.contains(x, y) || legendAt(x, y) != null || dividerAt(x, y) >= 0
+                || (band != null && band.menu.contains(x, y));
     }
 
     /** Menu behind a plot's ⋯ button. */
@@ -230,8 +330,12 @@ final class LogChart extends JComponent {
             hoveredField = item != null ? item.field : -1;
             Band band = bandAt(event.getX(), event.getY());
             hoveredMenu = band != null && band.menu.contains(event.getX(), event.getY()) ? band.plot : -1;
-            setCursor(onControl(event.getX(), event.getY())
-                    ? Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) : Cursor.getDefaultCursor());
+            if (dividerAt(event.getX(), event.getY()) >= 0) {
+                setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
+            } else {
+                setCursor(onControl(event.getX(), event.getY())
+                        ? Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) : Cursor.getDefaultCursor());
+            }
             repaint();
             viewListener.run();
         }
@@ -261,6 +365,21 @@ final class LogChart extends JComponent {
                     hoveredField = -1;
                     return;
                 }
+                int divider = dividerAt(x, y);
+                if (divider >= 0) {
+                    resizing = divider;
+                    resizeFromY = y;
+                    resizeHeights = new int[bands.size()];
+                    for (int i = 0; i < bands.size(); i++) {
+                        resizeHeights[i] = bands.get(i).header.height + bands.get(i).traces.height;
+                    }
+                    return;
+                }
+                if (item != null) {
+                    dragField = item.field;
+                    dragFromX = x;
+                    dragFromY = y;
+                }
                 Band band = bandAt(x, y);
                 if (band == null) {
                     return;
@@ -279,6 +398,18 @@ final class LogChart extends JComponent {
 
         @Override
         public void mouseDragged(MouseEvent event) {
+            if (resizing >= 0) {
+                resize(event.getY() - resizeFromY);
+                return;
+            }
+            if (dragField >= 0) {
+                if (Math.abs(event.getX() - dragFromX) + Math.abs(event.getY() - dragFromY) >= DRAG_START_PIXELS) {
+                    exportingField = dragField;
+                    dragField = -1;
+                    getTransferHandler().exportAsDrag(LogChart.this, event, TransferHandler.MOVE);
+                }
+                return;
+            }
             if (selectionFrom >= 0) {
                 selectionTo = Math.max(plotLeft, Math.min(plotRight, event.getX()));
             } else if (panFromX >= 0) {
@@ -295,14 +426,20 @@ final class LogChart extends JComponent {
             }
             selectionFrom = selectionTo = -1;
             panFromX = -1;
+            resizing = -1;
+            dragField = -1;
             repaint();
             viewListener.run();
         }
 
         @Override
         public void mouseClicked(MouseEvent event) {
-            if (SwingUtilities.isLeftMouseButton(event) && event.getClickCount() == 2
-                    && !onControl(event.getX(), event.getY())) {
+            if (!SwingUtilities.isLeftMouseButton(event) || event.getClickCount() != 2) {
+                return;
+            }
+            if (dividerAt(event.getX(), event.getY()) >= 0) {
+                layout.resetWeights();
+            } else if (!onControl(event.getX(), event.getY())) {
                 window.reset();
                 repaint();
                 viewListener.run();
@@ -322,7 +459,53 @@ final class LogChart extends JComponent {
         }
     }
 
-    /** Lays out each plot's legend, then splits the height between the plots. */
+    /** Moves divider {@link #resizing} by {@code delta} pixels, keeping both neighbouring plots usable. */
+    private void resize(int delta) {
+        int upper = resizing;
+        int lower = resizing + 1;
+        if (lower >= resizeHeights.length) {
+            return;
+        }
+        int pair = resizeHeights[upper] + resizeHeights[lower];
+        int minUpper = bands.get(upper).header.height + MIN_TRACE_HEIGHT;
+        int minLower = bands.get(lower).header.height + MIN_TRACE_HEIGHT;
+        int newUpper = Math.max(minUpper, Math.min(pair - minLower, resizeHeights[upper] + delta));
+        double[] heights = new double[resizeHeights.length];
+        for (int i = 0; i < heights.length; i++) {
+            heights[i] = resizeHeights[i];
+        }
+        heights[upper] = newUpper;
+        heights[lower] = pair - newUpper;
+        layout.setWeights(heights);
+    }
+
+    /** Exports legend drags; accepts signals on a plot or the add row, and passes log files to the host. */
+    private final class ChartTransferHandler extends SignalTransfer.Handler {
+        @Override
+        protected Transferable createTransferable(JComponent component) {
+            return exportingField >= 0 ? SignalTransfer.of(exportingField) : null;
+        }
+
+        @Override
+        protected void exportDone(JComponent source, Transferable data, int action) {
+            exportingField = -1;
+            setDropTarget(NO_TARGET);
+        }
+
+        @Override
+        boolean canImportSignal(TransferSupport support) {
+            int target = support.isDrop() ? dropTargetAt(support.getDropLocation().getDropPoint()) : NO_TARGET;
+            setDropTarget(target);
+            return target != NO_TARGET;
+        }
+
+        @Override
+        boolean importSignal(TransferSupport support, int field) {
+            return support.isDrop() && dropSignal(field, support.getDropLocation().getDropPoint());
+        }
+    }
+
+    /** Lays out each plot's legend, then splits the height between the plots by their weights. */
     private List<Band> layoutBands(FontMetrics metrics, FontMetrics valueMetrics) {
         int plots = layout.plotCount();
         int legendRight = plotRight - MENU_WIDTH - 6;
@@ -351,10 +534,15 @@ final class LogChart extends JComponent {
         }
 
         int bottom = getHeight() - ADD_ROW_HEIGHT - AXIS_HEIGHT;
-        int bandHeight = Math.max(1, (bottom - TOP - PLOT_GAP * (plots - 1)) / plots);
+        int available = Math.max(plots, bottom - TOP - PLOT_GAP * (plots - 1));
+        double totalWeight = 0;
+        for (int plot = 0; plot < plots; plot++) {
+            totalWeight += layout.weight(plot);
+        }
         List<Band> result = new ArrayList<>();
         int top = TOP;
         for (int plot = 0; plot < plots; plot++) {
+            int bandHeight = (int) Math.round(available * layout.weight(plot) / totalWeight);
             int headerHeight = HEADER_PADDING + lineCounts.get(plot) * LEGEND_LINE;
             int traceHeight = Math.max(MIN_TRACE_HEIGHT, bandHeight - headerHeight);
             Rectangle header = new Rectangle(plotLeft, top, plotRight - plotLeft, headerHeight);
@@ -388,6 +576,12 @@ final class LogChart extends JComponent {
             plotLeft = LEFT;
             plotRight = Math.max(LEFT + 1, getWidth() - RIGHT_MARGIN);
             bands = layoutBands(metrics, valueMetrics);
+            dividers = new ArrayList<>();
+            for (int i = 0; i + 1 < bands.size(); i++) {
+                Rectangle upper = bands.get(i).traces;
+                int y = upper.y + upper.height;
+                dividers.add(new Rectangle(plotLeft - 14, y, plotRight - plotLeft + 14, bands.get(i + 1).header.y - y));
+            }
             Band last = bands.get(bands.size() - 1);
             int axisTop = last.traces.y + last.traces.height;
             addPlotRow = new Rectangle(plotLeft, axisTop + AXIS_HEIGHT, plotRight - plotLeft, ADD_ROW_HEIGHT - 6);
@@ -416,6 +610,13 @@ final class LogChart extends JComponent {
         if (stacked && band.plot == layout.activePlot()) {
             g.setColor(palette.accent);
             g.fillRoundRect(plotLeft - 12, band.header.y, 3, area.y + area.height - band.header.y, 3, 3);
+        }
+        if (band.plot == dropTarget) {
+            Rectangle target = band.header.union(area);
+            g.setColor(palette.selection);
+            g.fillRoundRect(target.x - 6, target.y - 2, target.width + 12, target.height + 4, 8, 8);
+            g.setColor(palette.accent);
+            g.drawRoundRect(target.x - 6, target.y - 2, target.width + 12, target.height + 4, 8, 8);
         }
 
         for (LegendItem item : band.legend) {
@@ -525,12 +726,18 @@ final class LogChart extends JComponent {
 
     private void drawAddPlotRow(Graphics2D g, FontMetrics metrics, PlotPalette palette) {
         Rectangle row = addPlotRow;
-        g.setColor(palette.grid);
+        boolean target = dropTarget == ADD_ROW_TARGET;
+        if (target) {
+            g.setColor(palette.selection);
+            g.fillRoundRect(row.x, row.y, row.width, row.height, 8, 8);
+        }
+        g.setColor(target ? palette.accent : palette.grid);
         g.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 1, new float[]{4, 4}, 0));
         g.drawRoundRect(row.x, row.y, row.width, row.height, 8, 8);
         g.setStroke(new BasicStroke(1));
-        String text = layout.canAddPlot() ? "+  Add plot" : "Maximum of " + PlotLayout.MAX_PLOTS + " plots";
-        g.setColor(palette.hint);
+        String text = !layout.canAddPlot() ? "Maximum of " + PlotLayout.MAX_PLOTS + " plots"
+                : target ? "Drop to show it in a new plot" : "+  Add plot  (or drop a signal here)";
+        g.setColor(target ? palette.label : palette.hint);
         g.drawString(text, row.x + (row.width - metrics.stringWidth(text)) / 2,
                 row.y + (row.height + metrics.getAscent() - metrics.getDescent()) / 2);
     }
