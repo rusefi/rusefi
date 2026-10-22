@@ -124,4 +124,24 @@ class StatsPanelTest {
         panel.toggle(2);
         assertEquals("Plot signals to see their statistics", panel.statsPanel().footer.getText());
     }
+
+    /** A long signal name stays on one line: shortened with "…", the unit kept while there is room. */
+    @Test
+    void longSignalNamesStayOnOneLine() {
+        StatsPanel.SignalCell cell = new StatsPanel.SignalCell();
+        cell.set(new TraceDot(), "Intake Air IAT", "deg C", new java.awt.Font("Dialog", java.awt.Font.PLAIN, 12),
+                java.awt.Color.BLACK, java.awt.Color.GRAY, java.awt.Color.WHITE);
+        String[] wide = cell.shown(400);
+        assertEquals("Intake Air IAT", wide[0]);
+        assertEquals("deg C", wide[1]);
+
+        String[] medium = cell.shown(130);
+        assertTrue(medium[0].endsWith("…"), medium[0]);
+        assertEquals("deg C", medium[1], "the unit stays while the name keeps some room");
+
+        String[] narrow = cell.shown(80);
+        assertTrue(narrow[0].endsWith("…"), narrow[0]);
+        assertEquals("", narrow[1], "then the unit is left out");
+        assertEquals("Intake Air IAT (deg C)", cell.getToolTipText(), "the tooltip has it all");
+    }
 }
