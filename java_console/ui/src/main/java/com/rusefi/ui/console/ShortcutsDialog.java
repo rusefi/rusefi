@@ -130,6 +130,7 @@ final class ShortcutsDialog extends JDialog {
             "Alt+F  File menu; then L loads a tune, S saves a tune, X exits.",
             "Alt+A  Actions menu.",
             "Alt+B  Binary Logging menu.",
+            "Alt+T  Tools menu; then M opens Messages, E opens Engine Sniffer.",
             "F1     Open this Shortcuts window from the main Console.",
             "Alt reveals underlined menu/button letters on platforms using Alt mnemonics.",
             "Tab / Shift+Tab moves between controls; Space activates a focused button.",
