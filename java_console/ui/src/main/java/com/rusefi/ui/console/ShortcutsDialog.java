@@ -90,6 +90,15 @@ final class ShortcutsDialog extends JDialog {
                     + "and dragging a flag moves it. The pill above the time axis shows both times and the time "
                     + "between them, the legend each signal's change (Δ), and statistics cover A–B. "
                     + "Esc (with the plots focused) or the plot ⋯ menu clears A and B.",
+            "Keys on the plots (click them first to give them focus):",
+            "Left / Right       Step the cursor one sample (Shift: 10 samples); the view follows it.",
+            "Ctrl+Left / Right  Pan by half the visible time.",
+            "+ / -              Zoom in / out around the cursor (main keyboard or numpad).",
+            "Home / End         Cursor to the first / last sample.",
+            "0                  Whole log.",
+            "A / B              Put measurement cursor A or B at the cursor (turns Measure on).",
+            "Esc                Clear A and B; pressed again, release the highlighted trace.",
+            "The cursor set by keys stays until the mouse moves over the plots.",
             "Drag a signal or legend item onto a plot or onto + Add plot; drag a legend item back "
                     + "onto the list to remove it. Drag the gap between plots to resize them; "
                     + "double-click the gap to make all plots the same height.",
