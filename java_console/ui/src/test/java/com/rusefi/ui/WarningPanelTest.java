@@ -30,7 +30,7 @@ public class WarningPanelTest {
         });
     }
 
-    /** The console's Record button sits at the right end of the strip, after the warnings and log controls. */
+    /** The console's logging button sits at the right end of the strip, after the warnings and log controls. */
     @Test
     public void recordButtonFromTheConsoleSitsAtTheRight() throws Exception {
         SwingUtilities.invokeAndWait(() -> {

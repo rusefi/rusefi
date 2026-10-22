@@ -28,7 +28,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/** The top bar's Record / Stop button. */
+/** The status strips' Start Data Logging / Stop Logging button. */
 class RecordButtonTest {
     private interface Body {
         void run() throws Exception;
@@ -110,7 +110,7 @@ class RecordButtonTest {
 
             when(context.sensorLogger.isLogging()).thenReturn(true);
             logging.start(recording, null);
-            assertEquals("00:00  ·  2 KB", button.getText());
+            assertEquals("Stop Logging  ·  00:00  ·  2 KB", button.getText());
             assertTrue(button.getToolTipText().contains("drive.mlg"));
 
             doAnswer(invocation -> {
@@ -157,6 +157,20 @@ class RecordButtonTest {
 
             BinaryLoggingMenu afterRestart = new BinaryLoggingMenu(context(), null, null, null, null, settings);
             assertFalse(new RecordButton(afterRestart).isVisible(), "the choice is kept in the console config");
+        });
+    }
+
+    @Test
+    void theLabelIsNeverCutOff() throws Exception {
+        withConnection(ConnectionStatusValue.NOT_CONNECTED, () -> {
+            RecordButton button = new RecordButton(menu(context()));
+            assertEquals("Start Data Logging", button.getText());
+            int textWidth = button.getFontMetrics(button.getFont()).stringWidth(RecordButton.IDLE);
+            assertTrue(button.getPreferredSize().width > textWidth + button.getIcon().getIconWidth());
+            assertEquals(button.getPreferredSize(), button.getMinimumSize(), "a squeezed layout cannot shrink it");
+
+            button.setText("Starting…");
+            assertTrue(button.getPreferredSize().width > textWidth, "a shorter label keeps the width");
         });
     }
 

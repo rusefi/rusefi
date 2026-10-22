@@ -57,7 +57,7 @@ public class UIContext {
     }
 
     public SensorLogger sensorLogger = new SensorLogger(this::getBinaryProtocol);
-    /** Makes a Record / Stop button for a tab's status strip; set by MainFrame, none before that. */
+    /** Makes a Start Data Logging / Stop Logging button for a tab's status strip; set by MainFrame. */
     public Supplier<JComponent> recordButtonFactory = () -> null;
 
     public IniFileState iniFileState = new IniFileState(this);
