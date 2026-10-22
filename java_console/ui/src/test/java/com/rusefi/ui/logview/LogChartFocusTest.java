@@ -155,11 +155,11 @@ class LogChartFocusTest {
     }
 
     /**
-     * BUG (reproduction): the card always opens under the hovered legend item, at the top left of the plot, so a max
-     * at the start of the visible time is hidden under it.
+     * The card opens under the hovered legend item, at the top left of the plot; a max at the start of the visible
+     * time would be hidden there, so the card moves to a spot that keeps the markers visible.
      */
     @Test
-    void cardCoversAMaxAtTheStart() throws IOException {
+    void cardKeepsAMaxAtTheStartVisible() throws IOException {
         StringBuilder text = new StringBuilder("Time\tVBatt\ns\tV\n");
         for (int i = 0; i <= 100; i++) {
             text.append(i / 10.0).append('\t').append(14 - i * 0.02).append('\n');
@@ -175,7 +175,23 @@ class LogChartFocusTest {
         assertTrue(max.max);
         Rectangle card = chart.card();
         assertNotNull(card);
-        assertTrue(card.intersects(max.tag), "BUG: the card " + card + " hides the max tag " + max.tag);
+        for (LogChart.Marker marker : chart.markers()) {
+            assertFalse(card.intersects(marker.tag), "the card " + card + " leaves the tag " + marker.tag + " visible");
+            assertFalse(card.contains(marker.point), "and the marked point");
+        }
+        assertTrue(new Rectangle(0, 0, WIDTH, HEIGHT).contains(card), "inside the chart");
+    }
+
+    /** With nothing in the way the card stays in its usual place, under the legend item. */
+    @Test
+    void cardStaysUnderTheLegendItemWhenNothingIsInTheWay() throws IOException {
+        LogChart chart = chart();
+        move(chart, legendName(chart, 1));
+        paint(chart);
+        Rectangle card = chart.card();
+        LogChart.LegendItem rpm = chart.bands().get(0).legend.get(0);
+        assertEquals(rpm.bounds.y + rpm.bounds.height + 6, card.y, "RPM peaks at the right: the usual spot is clear");
+        assertEquals(Math.max(4, rpm.bounds.x - 6), card.x);
     }
 
     @Test
