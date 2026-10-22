@@ -114,7 +114,8 @@ final class SignalSections {
                 }
             }
         }
-        addSection(rows, PLOTTED, Kind.PLOTTED, plotted, searching, collapsed, false);
+        // always there (0 while nothing is plotted), so the sidebar keeps its shape; hidden only by a search
+        addSection(rows, PLOTTED, Kind.PLOTTED, plotted, searching, collapsed, !searching);
 
         Map<String, Integer> fieldOfLabel = fieldOfLabel(log);
         List<String> listNames = new ArrayList<>();
