@@ -19,6 +19,11 @@ final class PlotLayout {
     private final List<Double> weights = new ArrayList<>();
     /** Per plot: signals with the same unit share one scale (the default). */
     private final List<Boolean> sameUnitShared = new ArrayList<>();
+    /** Per plot: the unit the user chose for the left / right y axis, or null for automatic. */
+    private final List<String> leftAxisUnit = new ArrayList<>();
+    private final List<String> rightAxisUnit = new ArrayList<>();
+    /** A right axis choice of no axis at all. */
+    static final String NO_AXIS = "";
     private final List<Runnable> listeners = new ArrayList<>();
     private int active;
 
@@ -27,6 +32,8 @@ final class PlotLayout {
         plots.add(new ArrayList<>());
         weights.add(1.0);
         sameUnitShared.add(true);
+        leftAxisUnit.add(null);
+        rightAxisUnit.add(null);
     }
 
     /** One plot holding the given fields, in field order. */
@@ -156,6 +163,8 @@ final class PlotLayout {
         plots.add(new ArrayList<>());
         weights.add(1.0);
         sameUnitShared.add(true);
+        leftAxisUnit.add(null);
+        rightAxisUnit.add(null);
         active = plots.size() - 1;
     }
 
@@ -232,6 +241,8 @@ final class PlotLayout {
         }
         weights.remove(plot);
         sameUnitShared.remove(plot);
+        leftAxisUnit.remove(plot);
+        rightAxisUnit.remove(plot);
         if (active > plot || active == plots.size()) {
             active--;
         }
@@ -247,6 +258,8 @@ final class PlotLayout {
         Collections.swap(plots, plot, target);
         Collections.swap(weights, plot, target);
         Collections.swap(sameUnitShared, plot, target);
+        Collections.swap(leftAxisUnit, plot, target);
+        Collections.swap(rightAxisUnit, plot, target);
         if (active == plot) {
             active = target;
         } else if (active == target) {
@@ -264,6 +277,26 @@ final class PlotLayout {
             sameUnitShared.set(plot, shared);
             changed();
         }
+    }
+
+    /** The unit chosen for a plot's left axis, or null for automatic. */
+    String leftAxisUnit(int plot) {
+        return leftAxisUnit.get(plot);
+    }
+
+    /** The unit chosen for a plot's right axis, {@link #NO_AXIS} for none, or null for automatic. */
+    String rightAxisUnit(int plot) {
+        return rightAxisUnit.get(plot);
+    }
+
+    void setLeftAxisUnit(int plot, String unit) {
+        leftAxisUnit.set(plot, unit);
+        changed();
+    }
+
+    void setRightAxisUnit(int plot, String unit) {
+        rightAxisUnit.set(plot, unit);
+        changed();
     }
 
     int plottedCount() {

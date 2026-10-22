@@ -6,6 +6,7 @@ import com.rusefi.ui.widgets.ConsoleFonts;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.AbstractAction;
+import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.KeyStroke;
 import javax.swing.JColorChooser;
@@ -43,6 +44,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.Locale;
@@ -207,6 +211,8 @@ final class LogChart extends JComponent {
         });
         setFocusable(true);
         bindKeys();
+        // registers with the tooltip manager; getToolTipText answers only over the y axes
+        setToolTipText("");
         setOpaque(true);
         MouseAdapter mouse = new MouseHandler();
         addMouseListener(mouse);
@@ -703,6 +709,43 @@ final class LogChart extends JComponent {
         menu.add(customItem);
     }
 
+    /**
+     * "Left axis ▸" / "Right axis ▸": Automatic, (right only) None, then the plot's units. A unit fixes that side;
+     * the unit on the other side cannot be picked. Off while the plot scales every signal separately, when the
+     * axis follows the highlighted trace instead.
+     */
+    JMenu axisMenu(int plot, boolean left) {
+        JMenu axis = new JMenu(left ? "Left axis" : "Right axis");
+        boolean shared = layout.isSameUnitShared(plot);
+        axis.setEnabled(shared);
+        axis.setToolTipText(shared ? "Which unit's scale this axis shows"
+                : "With separate scales the axis shows the highlighted trace's scale, on the left");
+        String chosen = left ? layout.leftAxisUnit(plot) : layout.rightAxisUnit(plot);
+        String other = left ? layout.rightAxisUnit(plot) : leftAxisUnit(plot);
+        ButtonGroup group = new ButtonGroup();
+        List<String> keys = new ArrayList<>();
+        keys.add(null);
+        if (!left) {
+            keys.add(PlotLayout.NO_AXIS);
+        }
+        keys.addAll(unitsIn(plot));
+        for (String key : keys) {
+            String text = key == null ? "Automatic" : PlotLayout.NO_AXIS.equals(key) ? "None" : unitLabel(key);
+            JRadioButtonMenuItem item = new JRadioButtonMenuItem(text, java.util.Objects.equals(key, chosen));
+            item.setEnabled(key == null || PlotLayout.NO_AXIS.equals(key) || !key.equals(other));
+            item.addActionListener(e -> {
+                if (left) {
+                    layout.setLeftAxisUnit(plot, key);
+                } else {
+                    layout.setRightAxisUnit(plot, key);
+                }
+            });
+            group.add(item);
+            axis.add(item);
+        }
+        return axis;
+    }
+
     /** Menu behind a plot's ⋯ button. */
     JPopupMenu plotMenu(int plot) {
         JPopupMenu menu = new JPopupMenu();
@@ -732,6 +775,8 @@ final class LogChart extends JComponent {
                 + "values can be compared; off scales every signal to its own range");
         sameUnit.addActionListener(e -> layout.setSameUnitShared(plot, sameUnit.isSelected()));
         menu.add(sameUnit);
+        menu.add(axisMenu(plot, true));
+        menu.add(axisMenu(plot, false));
         menu.addSeparator();
         JMenuItem clear = new JMenuItem("Clear plot");
         clear.setToolTipText("Removes all signals from this plot and keeps the plot");
@@ -1705,51 +1750,143 @@ final class LogChart extends JComponent {
         return focused != TraceFocus.NONE && layout.plotOf(focused) == band.plot ? focused : -1;
     }
 
-    /**
-     * The signal whose scale the plot's left axis shows: one with the unit of the plot's first signal - the
-     * highlighted trace when it has that unit, else the first signal; -1 for an empty plot. The left axis keeps
-     * its unit, so the grid does not jump as traces are highlighted.
-     */
-    int leftAxisField(Band band) {
-        List<Integer> fields = layout.fields(band.plot);
-        if (fields.isEmpty()) {
-            return -1;
+    /** The units (unit keys) of a plot's signals, in plot order. */
+    List<String> unitsIn(int plot) {
+        Set<String> units = new LinkedHashSet<>();
+        for (int field : layout.fields(plot)) {
+            units.add(unitKey(field));
         }
-        int highlighted = highlightedIn(band);
-        return highlighted >= 0 && unitKey(highlighted).equals(unitKey(fields.get(0))) ? highlighted : fields.get(0);
+        return new ArrayList<>(units);
+    }
+
+    /** How a unit key reads in menus: the unit, or the signal's name for a signal without one. */
+    String unitLabel(String key) {
+        return key.startsWith("#") ? log.name(Integer.parseInt(key.substring(1))) : key;
     }
 
     /**
-     * The signal whose scale the plot's right axis shows, when the plot has a second unit: the highlighted trace
-     * when its unit is not the left one, else the first signal of the second unit; -1 with a single unit. With
-     * three or more units the right axis follows the highlighted trace.
+     * The unit on a plot's left axis while the plot shares scales by unit: the one chosen in the plot menu when it
+     * is plotted, else the first unit (skipping one chosen for the right); null with sharing off or no signals.
      */
-    int rightAxisField(Band band) {
-        List<Integer> fields = layout.fields(band.plot);
-        if (fields.isEmpty()) {
-            return -1;
+    String leftAxisUnit(int plot) {
+        List<String> units = unitsIn(plot);
+        if (!layout.isSameUnitShared(plot) || units.isEmpty()) {
+            return null;
         }
-        String left = unitKey(fields.get(0));
+        String chosen = layout.leftAxisUnit(plot);
+        if (chosen != null && units.contains(chosen)) {
+            return chosen;
+        }
+        String right = layout.rightAxisUnit(plot);
+        for (String unit : units) {
+            if (!unit.equals(right)) {
+                return unit;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * The unit on a plot's right axis while the plot shares scales by unit: the one chosen in the plot menu (or
+     * none), else with two units the other one, with three or more the highlighted trace's unit when it is not
+     * the left one, otherwise the second unit; null with sharing off, a single unit or None chosen.
+     */
+    String rightAxisUnit(Band band) {
+        int plot = band.plot;
+        String left = leftAxisUnit(plot);
+        String chosen = layout.rightAxisUnit(plot);
+        if (left == null || PlotLayout.NO_AXIS.equals(chosen)) {
+            return null;
+        }
+        List<String> others = unitsIn(plot);
+        others.remove(left);
+        if (chosen != null && others.contains(chosen)) {
+            return chosen;
+        }
+        if (others.isEmpty()) {
+            return null;
+        }
         int highlighted = highlightedIn(band);
-        if (highlighted >= 0 && !unitKey(highlighted).equals(left)) {
+        if (others.size() >= 2 && highlighted >= 0 && others.contains(unitKey(highlighted))) {
+            return unitKey(highlighted);
+        }
+        return others.get(0);
+    }
+
+    /** The signal whose scale shows for a unit: the highlighted trace when it has that unit, else the first. */
+    private int fieldFor(Band band, String unit) {
+        int highlighted = highlightedIn(band);
+        if (highlighted >= 0 && unitKey(highlighted).equals(unit)) {
             return highlighted;
         }
-        for (int field : fields) {
-            if (!unitKey(field).equals(left)) {
+        for (int field : layout.fields(band.plot)) {
+            if (unitKey(field).equals(unit)) {
                 return field;
             }
         }
         return -1;
     }
 
-    /** True when some plot has two or more units, so the chart keeps room for a right axis. */
+    /**
+     * The signal whose scale the plot's left axis shows: sharing scales by unit, a signal of the left unit
+     * ({@link #leftAxisUnit}); with sharing off, every signal has its own scale, so only the highlighted trace's
+     * scale is shown, always on the left; -1 for none.
+     */
+    int leftAxisField(Band band) {
+        if (!layout.isSameUnitShared(band.plot)) {
+            return highlightedIn(band);
+        }
+        String unit = leftAxisUnit(band.plot);
+        return unit == null ? -1 : fieldFor(band, unit);
+    }
+
+    /** The signal whose scale the plot's right axis shows ({@link #rightAxisUnit}), or -1. */
+    int rightAxisField(Band band) {
+        String unit = rightAxisUnit(band);
+        return unit == null ? -1 : fieldFor(band, unit);
+    }
+
+    /**
+     * The title above an axis: the unit, named after the signal ("VBatt · V") when signals of that unit in the
+     * plot are on different scales, so one signal's numbers are not read against another trace.
+     */
+    String axisTitle(Band band, int field) {
+        String unit = log.unit(field);
+        if (unit.isEmpty()) {
+            return log.name(field);
+        }
+        double[] scale = range(field);
+        for (int other : layout.fields(band.plot)) {
+            if (other != field && unit.equals(log.unit(other)) && !Arrays.equals(range(other), scale)) {
+                return log.name(field) + " · " + unit;
+            }
+        }
+        return unit;
+    }
+
+    /** Over a y axis: its whole title and which scale it is (the axis title may be shortened); else none. */
+    @Override
+    public String getToolTipText(MouseEvent event) {
+        int x = event.getX();
+        int y = event.getY();
+        for (Band band : bands) {
+            if (y < band.header.y || y > band.traces.y + band.traces.height) {
+                continue;
+            }
+            int field = x < plotLeft - 4 ? leftAxisField(band) : x > plotRight + 4 ? rightAxisField(band) : -1;
+            if (field >= 0) {
+                return "Scale of " + log.name(field) + " (" + axisTitle(band, field) + ")";
+            }
+        }
+        return null;
+    }
+
+    /** True when some plot can show a right axis, so the chart keeps room for its labels. */
     private boolean anyRightAxis() {
         for (int plot = 0; plot < layout.plotCount(); plot++) {
-            List<Integer> fields = layout.fields(plot);
-            for (int field : fields) {
-                if (!unitKey(field).equals(unitKey(fields.get(0)))) {
-                    return true;
-                }
+            if (layout.isSameUnitShared(plot) && !PlotLayout.NO_AXIS.equals(layout.rightAxisUnit(plot))
+                    && unitsIn(plot).size() >= 2) {
+                return true;
             }
         }
         return false;
@@ -1815,12 +1952,19 @@ final class LogChart extends JComponent {
             y = Math.max(band.traces.y + small.getAscent() - small.getDescent(), Math.min(band.traces.y + band.traces.height, y));
             g.drawString(text, left ? edge - small.stringWidth(text) : edge, y);
         }
+        String title = axisTitle(band, field);
+        int room = left ? edge - 2 : getWidth() - edge - 2;
         String unit = log.unit(field);
-        if (!unit.isEmpty()) {
-            int room = left ? edge - 2 : getWidth() - edge - 2;
-            String shown = StatsPanel.SignalCell.shorten(unit, small, room);
-            g.drawString(shown, left ? edge - small.stringWidth(shown) : edge, band.traces.y - 6);
+        String shown;
+        if (title.endsWith(" · " + unit) && !unit.isEmpty()) {
+            // shorten the signal name, keep the unit
+            String suffix = " · " + unit;
+            shown = StatsPanel.SignalCell.shorten(title.substring(0, title.length() - suffix.length()), small,
+                    Math.max(small.stringWidth("W…"), room - small.stringWidth(suffix))) + suffix;
+        } else {
+            shown = StatsPanel.SignalCell.shorten(title, small, room);
         }
+        g.drawString(shown, left ? Math.max(2, edge - small.stringWidth(shown)) : edge, band.traces.y - 6);
         g.setFont(font);
     }
 
