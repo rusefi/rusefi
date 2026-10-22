@@ -8,7 +8,8 @@ import java.util.List;
  * Stacked plots and the signals in each. A signal is in at most one plot; colours come from
  * {@link TraceColors}, so a signal keeps its colour when other signals or plots change.
  * New signals go to the active plot. There is always at least one plot. Each plot has a height weight;
- * plots share the chart height in proportion to their weights.
+ * plots share the chart height in proportion to their weights. In each plot, signals with the same unit share
+ * one scale unless the plot scales them separately.
  */
 final class PlotLayout {
     static final int MAX_PLOTS = 8;
@@ -16,6 +17,8 @@ final class PlotLayout {
     private final TraceColors colors;
     private final List<List<Integer>> plots = new ArrayList<>();
     private final List<Double> weights = new ArrayList<>();
+    /** Per plot: signals with the same unit share one scale (the default). */
+    private final List<Boolean> sameUnitShared = new ArrayList<>();
     private final List<Runnable> listeners = new ArrayList<>();
     private int active;
 
@@ -23,6 +26,7 @@ final class PlotLayout {
         colors = new TraceColors(fieldCount);
         plots.add(new ArrayList<>());
         weights.add(1.0);
+        sameUnitShared.add(true);
     }
 
     /** One plot holding the given fields, in field order. */
@@ -151,6 +155,7 @@ final class PlotLayout {
     private void appendPlot() {
         plots.add(new ArrayList<>());
         weights.add(1.0);
+        sameUnitShared.add(true);
         active = plots.size() - 1;
     }
 
@@ -226,6 +231,7 @@ final class PlotLayout {
             colors.remove(field);
         }
         weights.remove(plot);
+        sameUnitShared.remove(plot);
         if (active > plot || active == plots.size()) {
             active--;
         }
@@ -240,12 +246,24 @@ final class PlotLayout {
         }
         Collections.swap(plots, plot, target);
         Collections.swap(weights, plot, target);
+        Collections.swap(sameUnitShared, plot, target);
         if (active == plot) {
             active = target;
         } else if (active == target) {
             active = plot;
         }
         changed();
+    }
+
+    boolean isSameUnitShared(int plot) {
+        return sameUnitShared.get(plot);
+    }
+
+    void setSameUnitShared(int plot, boolean shared) {
+        if (sameUnitShared.get(plot) != shared) {
+            sameUnitShared.set(plot, shared);
+            changed();
+        }
     }
 
     int plottedCount() {

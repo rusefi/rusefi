@@ -178,7 +178,7 @@ class LogChartSettingsTest {
     }
 
     private static int moveMouseToTime(LogChart chart, double time) {
-        int left = 54;
+        int left = LogChart.LEFT;
         int right = WIDTH - 22;
         int x = left + (int) Math.round(time / 10 * (right - left));
         chart.dispatchEvent(new MouseEvent(chart, MouseEvent.MOUSE_MOVED, 0, 0, x, 200, 0, false));
