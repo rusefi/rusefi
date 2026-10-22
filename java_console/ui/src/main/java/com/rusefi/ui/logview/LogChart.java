@@ -5,6 +5,9 @@ import com.rusefi.ui.widgets.ConsoleFonts;
 
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JColorChooser;
+import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
@@ -29,6 +32,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.Locale;
 import java.util.TooManyListenersException;
 
@@ -100,6 +104,16 @@ final class LogChart extends JComponent {
     private final TraceFocus focus = new TraceFocus();
     /** Legend item pressed and not yet dragged; releasing it toggles the pin. */
     private int legendPressField = -1;
+    /** Legend item whose colour mark is under the pointer, or -1. */
+    private int hoveredSwatch = -1;
+    /** Legend item right-pressed, for its menu on release unless the press became a pan. */
+    private LegendItem legendRightPress;
+    private int rightPressX;
+    private SignalColors signalColors = new SignalColors();
+    private final List<Runnable> colorListeners = new ArrayList<>();
+    /** Asks for a custom colour (signal name, current colour); null when cancelled. Replaced in tests. */
+    BiFunction<String, Color, Color> customColorPrompt = (label, initial) ->
+            JColorChooser.showDialog(this, "Colour of " + label, initial);
     // markers and card from the last paint, for tests
     private List<Marker> markers = new ArrayList<>();
     private Rectangle card;
@@ -370,6 +384,109 @@ final class LogChart extends JComponent {
                 || (band != null && band.menu.contains(x, y));
     }
 
+    /** Shares the user's signal colours, e.g. those of the viewer host, kept from one log to the next. */
+    void setSignalColors(SignalColors signalColors) {
+        this.signalColors = signalColors;
+        repaint();
+    }
+
+    SignalColors signalColors() {
+        return signalColors;
+    }
+
+    /** Called after the user changes a signal's colour, e.g. to repaint the signal list. */
+    void addColorListener(Runnable listener) {
+        colorListeners.add(listener);
+    }
+
+    private void colorsChanged() {
+        repaint();
+        for (Runnable listener : colorListeners) {
+            listener.run();
+        }
+    }
+
+    /** The colour mark of a legend item (and a little around it), which opens the colour picker. */
+    static Rectangle colorMark(LegendItem item) {
+        return new Rectangle(item.bounds.x - 4, item.bounds.y, 21, item.bounds.height);
+    }
+
+    /** The colour picker, shown under a legend item's colour mark. */
+    JPopupMenu colorMenu(int field) {
+        JPopupMenu menu = new JPopupMenu();
+        fillColorMenu(menu, field);
+        return menu;
+    }
+
+    /** Right-click menu of a legend item. */
+    JPopupMenu legendMenu(int field) {
+        JPopupMenu menu = new JPopupMenu();
+        JMenuItem remove = new JMenuItem("Remove from plot");
+        remove.addActionListener(e -> layout.remove(field));
+        menu.add(remove);
+        menu.addSeparator();
+        menu.add(colorSubmenu(field));
+        return menu;
+    }
+
+    /** "Colour ▸" with the colour picker, for a signal's right-click menu; its icon shows the colour. */
+    JMenu colorSubmenu(int field) {
+        JMenu colour = new JMenu("Colour");
+        Color shown = shownColor(field);
+        if (shown != null) {
+            TraceDot dot = new TraceDot();
+            dot.set(shown, shown.darker());
+            colour.setIcon(dot);
+        }
+        fillColorMenu(colour, field);
+        return colour;
+    }
+
+    /** The colour the signal has now: its choice, or its automatic colour while plotted; else null. */
+    private Color shownColor(int field) {
+        Color chosen = signalColors.resolve(log.name(field), palette());
+        if (chosen != null || !layout.isPlotted(field)) {
+            return chosen;
+        }
+        return palette().trace(layout.colors().slot(field));
+    }
+
+    /** Swatches, then Automatic and Custom…, in a popup or a submenu. */
+    private void fillColorMenu(JComponent menu, int field) {
+        String label = log.name(field);
+        int chosen = signalColors.swatch(label);
+        Color custom = signalColors.custom(label);
+        int current = chosen >= 0 ? chosen
+                : custom == null && layout.isPlotted(field) ? layout.colors().slot(field) : -1;
+        menu.add(new SwatchGrid(palette(), current, swatch -> {
+            signalColors.setSwatch(label, swatch);
+            colorsChanged();
+        }));
+        if (menu instanceof JMenu) {
+            ((JMenu) menu).addSeparator();
+        } else {
+            ((JPopupMenu) menu).addSeparator();
+        }
+        JCheckBoxMenuItem automatic = new JCheckBoxMenuItem("Automatic", chosen < 0 && custom == null);
+        automatic.setToolTipText("The colour the viewer gives the signal");
+        automatic.addActionListener(e -> {
+            signalColors.setAutomatic(label);
+            colorsChanged();
+        });
+        menu.add(automatic);
+        JCheckBoxMenuItem customItem = new JCheckBoxMenuItem("Custom…", custom != null);
+        customItem.setToolTipText("Any colour; it stays the same on the light and dark plot");
+        customItem.addActionListener(e -> {
+            Color shown = shownColor(field);
+            Color picked = customColorPrompt.apply(label, shown != null ? shown : palette().trace(0));
+            if (picked != null) {
+                signalColors.setCustom(label, picked);
+                colorsChanged();
+            }
+        });
+        menu.add(customItem);
+    }
+
     /** Menu behind a plot's ⋯ button. */
     JPopupMenu plotMenu(int plot) {
         JPopupMenu menu = new JPopupMenu();
@@ -402,6 +519,7 @@ final class LogChart extends JComponent {
             cursorSample = inside ? log.nearestSample(timeAt(event.getX())) : -1;
             LegendItem item = legendAt(event.getX(), event.getY());
             hoveredField = item != null ? item.field : -1;
+            hoveredSwatch = item != null && colorMark(item).contains(event.getX(), event.getY()) ? item.field : -1;
             if (item != null) {
                 focus.hover(item.field);
             } else {
@@ -423,7 +541,7 @@ final class LogChart extends JComponent {
         public void mouseExited(MouseEvent event) {
             if (selectionFrom < 0 && panFromX < 0) {
                 cursorX = cursorSample = -1;
-                hoveredField = hoveredMenu = -1;
+                hoveredField = hoveredMenu = hoveredSwatch = -1;
                 focus.clearHover();
                 repaint();
                 fireViewChanged();
@@ -443,6 +561,10 @@ final class LogChart extends JComponent {
                 if (item != null && item.close.contains(x, y)) {
                     layout.remove(item.field);
                     hoveredField = -1;
+                    return;
+                }
+                if (item != null && colorMark(item).contains(x, y)) {
+                    colorMenu(item.field).show(LogChart.this, item.bounds.x - 6, item.bounds.y + item.bounds.height + 2);
                     return;
                 }
                 int divider = dividerAt(x, y);
@@ -474,6 +596,8 @@ final class LogChart extends JComponent {
             } else if (SwingUtilities.isRightMouseButton(event) || SwingUtilities.isMiddleMouseButton(event)) {
                 panFromX = x;
                 panFromStart = window.start();
+                legendRightPress = SwingUtilities.isRightMouseButton(event) ? legendAt(x, y) : null;
+                rightPressX = x;
             }
         }
 
@@ -503,6 +627,13 @@ final class LogChart extends JComponent {
 
         @Override
         public void mouseReleased(MouseEvent event) {
+            LegendItem rightPressed = legendRightPress;
+            legendRightPress = null;
+            if (rightPressed != null && SwingUtilities.isRightMouseButton(event)
+                    && Math.abs(event.getX() - rightPressX) < DRAG_START_PIXELS) {
+                // a right-click on a legend item, not a right-drag pan
+                legendMenu(rightPressed.field).show(LogChart.this, event.getX(), event.getY());
+            }
             if (selectionFrom >= 0 && Math.abs(selectionTo - selectionFrom) >= MIN_SELECTION_PIXELS) {
                 window.show(timeAt(selectionFrom), timeAt(selectionTo));
             }
@@ -731,8 +862,13 @@ final class LogChart extends JComponent {
                     g.drawRoundRect(chip.x, chip.y, chip.width, chip.height, 8, 8);
                 }
             }
-            g.setColor(palette.trace(layout.colors().slot(item.field)));
+            g.setColor(colorOf(item.field, palette));
             g.fillRoundRect(x, baseline - 10, 13, 5, 4, 4);
+            if (item.field == hoveredSwatch) {
+                // the colour mark opens the colour picker
+                g.setColor(palette.accent);
+                g.drawRoundRect(x - 4, baseline - 14, 21, 13, 6, 6);
+            }
             g.setColor(palette.label);
             g.drawString(log.name(item.field) + " ", x + 19, baseline);
             g.setFont(valueFont);
@@ -830,9 +966,15 @@ final class LogChart extends JComponent {
     /** Alpha of the traces behind a focused one. */
     static final int FADED_ALPHA = 60;
 
+    /** A plotted signal's colour: the user's choice ({@link SignalColors}), else its automatic palette slot. */
+    Color colorOf(int field, PlotPalette palette) {
+        Color chosen = signalColors.resolve(log.name(field), palette);
+        return chosen != null ? chosen : palette.trace(layout.colors().slot(field));
+    }
+
     /** A trace's colour: faded while another trace is focused. */
     Color traceColor(int field, PlotPalette palette) {
-        Color color = palette.trace(layout.colors().slot(field));
+        Color color = colorOf(field, palette);
         int focused = focus.focused();
         if (focused == TraceFocus.NONE || focused == field) {
             return color;
@@ -888,7 +1030,7 @@ final class LogChart extends JComponent {
     }
 
     private void drawMarkers(Graphics2D g, PlotPalette palette, Font valueFont, int field) {
-        Color color = palette.trace(layout.colors().slot(field));
+        Color color = colorOf(field, palette);
         Color outline = palette.background;
         g.setFont(valueFont);
         FontMetrics valueMetrics = g.getFontMetrics();
@@ -956,7 +1098,7 @@ final class LogChart extends JComponent {
         g.fillRoundRect(x, y, width, height, 12, 12);
         g.setColor(ThemedStrip.themed("Console.Card.borderColor", Color.LIGHT_GRAY));
         g.drawRoundRect(x, y, width, height, 12, 12);
-        g.setColor(palette.trace(layout.colors().slot(field)));
+        g.setColor(colorOf(field, palette));
         g.fillRoundRect(x + 12, y + 12, 13, 5, 4, 4);
         Color ink = ThemedStrip.themed("Label.foreground", Color.BLACK);
         Color muted = ThemedStrip.themed("Console.LogViewer.mutedForeground", Color.GRAY);

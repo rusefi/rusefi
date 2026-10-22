@@ -154,16 +154,22 @@ public final class LogViewerPanel extends JPanel {
         this(log, fileName, settings, lists, new SidebarState(), null, onOpen);
     }
 
+    LogViewerPanel(CsvLogReader log, String fileName, ChartSettings settings, SignalLists lists,
+                   SidebarState state, IniFileModel ini, Consumer<Component> onOpen) {
+        this(log, fileName, settings, lists, state, new SignalColors(), ini, onOpen);
+    }
+
     /**
      * @param settings chart options, shared so they carry over when another log is opened
      * @param lists    Common and the user's signal lists, shared by every log
      * @param state    open sections and the Hide switches, shared by every log
+     * @param colors   the colours the user chose for signals, shared by every log
      * @param ini      the ECU's .ini for grouping the signals, or null to group them by name
      * @param onOpen   action of the toolbar's Open button, given the button (e.g. to show a menu under it),
      *                 or null for no button
      */
     LogViewerPanel(CsvLogReader log, String fileName, ChartSettings settings, SignalLists lists,
-                   SidebarState state, IniFileModel ini, Consumer<Component> onOpen) {
+                   SidebarState state, SignalColors colors, IniFileModel ini, Consumer<Component> onOpen) {
         super(new BorderLayout());
         this.log = log;
         this.settings = settings;
@@ -173,6 +179,7 @@ public final class LogViewerPanel extends JPanel {
         layout = PlotLayout.single(log.fieldCount(), new boolean[log.fieldCount()]);
         categories = SignalCategories.of(log, ini);
         chart = new LogChart(log, layout, settings);
+        chart.setSignalColors(colors);
         layout.addListener(() -> {
             // the Plotted section follows the plots
             filter(search.getText());
@@ -189,6 +196,10 @@ public final class LogViewerPanel extends JPanel {
             statsPanel.table.repaint();
         }, onOpen);
         layout.addListener(statsPanel::refresh);
+        chart.addColorListener(() -> {
+            fieldList.repaint();
+            statsPanel.table.repaint();
+        });
         chart.addViewListener(statsPanel::refreshValues);
         toolbar.statsButton.addActionListener(e -> setStatsVisible(toolbar.statsButton.isSelected()));
         statsSplit.setResizeWeight(1);
@@ -449,6 +460,7 @@ public final class LogViewerPanel extends JPanel {
             newPlot.addActionListener(e -> addToNewPlot(field));
             menu.add(newPlot);
             menu.addSeparator();
+            menu.add(chart.colorSubmenu(field));
             JMenu addTo = new JMenu("Add to list");
             for (String list : listNames()) {
                 JCheckBoxMenuItem item = new JCheckBoxMenuItem(list, labels(list).contains(log.name(field)));
@@ -920,7 +932,7 @@ public final class LogViewerPanel extends JPanel {
             int field = row.field;
             boolean plotted = layout.isPlotted(field);
             if (plotted) {
-                Color trace = chart.palette().trace(layout.colors().slot(field));
+                Color trace = chart.colorOf(field, chart.palette());
                 // a darker outline keeps pale dark-plot colours visible on the light list
                 dot.set(trace, trace.darker());
             } else {
