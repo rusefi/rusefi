@@ -70,7 +70,7 @@ class LogViewerPanelTest {
         // drag gestures need a display; CI runs headless, where the panel must still build
         assertEquals(!GraphicsEnvironment.isHeadless(), panel.fieldList().getDragEnabled());
 
-        panel.fieldList().setSelectedValue(2, false);
+        selectSignal(panel, 2);
         assertEquals(2, SignalTransfer.field(handler.createTransferable(panel.fieldList())));
 
         // RPM is plotted by default; dragging its legend item back onto the list removes it
@@ -80,12 +80,24 @@ class LogViewerPanelTest {
                 "an unplotted signal dropped on the list changes nothing");
     }
 
+    /** Selects the first list row showing {@code field}. */
+    static void selectSignal(LogViewerPanel panel, int field) {
+        for (int index = 0; index < panel.fieldList().getModel().getSize(); index++) {
+            if (panel.fieldList().getModel().getElementAt(index).field == field) {
+                panel.fieldList().setSelectedIndex(index);
+                return;
+            }
+        }
+        throw new AssertionError("no row for field " + field);
+    }
+
     /** Row renderers must lay themselves out: validate() does nothing without a native peer. */
     @Test
     void signalRowPaintsWithoutAWindow() throws IOException {
         LogViewerPanel panel = new LogViewerPanel(log(), null);
-        JList<Integer> list = panel.fieldList();
-        Component row = list.getCellRenderer().getListCellRendererComponent(list, 1, 0, false, false);
+        JList<SignalSections.Row> list = panel.fieldList();
+        Component row = list.getCellRenderer().getListCellRendererComponent(list,
+                SignalSections.Row.signal(SignalSections.PLOTTED, 1), 0, false, false);
         row.setBounds(0, 0, 260, 28);
         BufferedImage image = new BufferedImage(260, 28, BufferedImage.TYPE_INT_RGB);
         row.paint(image.createGraphics());
