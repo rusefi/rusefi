@@ -134,6 +134,11 @@ collection and the backup write. Increasing it suppresses gap detection for
 longer; it does not shorten flash stalls or change the hardware watchdog,
 engine-running write deferral, or ignition-off diagnostic grace period.
 
+`writeToFlashNowImpl()` measures the complete save with a local native-time
+timestamp and prints `BURN TOOK <duration>ms` when the elapsed milliseconds
+exceed 5000, including failed saves. The logging threshold remains five
+seconds regardless of the board's watchdog grace period.
+
 `readConfiguration()` reads the first copy, validates CRC + version + size,
 falls back to the backup copy on any failure. `readFromFlash()` then maps the
 result: `CrcFailed`/`NotFound`/`Failed`/`NotSupported` -> full reset to
