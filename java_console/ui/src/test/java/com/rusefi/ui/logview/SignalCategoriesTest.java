@@ -113,7 +113,8 @@ class SignalCategoriesTest {
     void iniCategoriesMergeIntoFriendlyGroups() {
         assertEquals(Group.SENSORS, SignalCategories.iniGroup("Sensors - Extra 2"));
         assertEquals(Group.RAW, SignalCategories.iniGroup("Sensors - Raw"));
-        assertEquals(Group.FUEL, SignalCategories.iniGroup("AE / Transient fueling"));
+        assertNull(SignalCategories.iniGroup("AE / Transient fueling"), "an overview of other subsystems' inputs");
+        assertEquals(Group.FUEL, SignalCategories.iniGroup("Acceleration Enrichment"));
         assertEquals(Group.FUEL, SignalCategories.iniGroup("Fuel: math"));
         assertEquals(Group.THROTTLE, SignalCategories.iniGroup("Etb PID"));
         assertEquals(Group.THROTTLE, SignalCategories.iniGroup("Throttle Body (incl. ETB)"));
@@ -135,10 +136,26 @@ class SignalCategoriesTest {
                         {"Fueling", new String[]{"injectorLag"}},
                 });
         SignalCategories categories = SignalCategories.of(log, ini);
-        assertEquals(Group.SENSORS, categories.group(1), "CLT: Sensors before acceleration enrichment");
+        assertEquals(Group.SENSORS, categories.group(1), "CLT: Sensors; the AE overview page is ignored");
         assertEquals(Group.KNOCK, categories.group(2), "the .ini places a name no rule knows");
         assertEquals(Group.OTHER, categories.group(3), "category without a friendly group: rules, then Other");
         assertEquals(Group.FUEL, categories.group(4));
+    }
+
+    /** As in the generated .ini: the AE overview page also shows RPM, CLT, TPS and MAP. */
+    @Test
+    void theAeOverviewPageDoesNotPullInputsIntoFuel() throws IOException {
+        CsvLogReader log = log("CLT", "TPS", "MAP");
+        IniFileModel ini = ini(
+                new String[][]{{"coolant", "CLT"}, {"TPSValue", "TPS"}, {"MAPValue", "MAP"}},
+                new Object[][]{
+                        {"Throttle Body (incl. ETB)", new String[]{"TPSValue"}},
+                        {"AE / Transient fueling", new String[]{"coolant", "TPSValue", "MAPValue"}},
+                });
+        SignalCategories categories = SignalCategories.of(log, ini);
+        assertEquals(Group.SENSORS, categories.group(1), "only on the overview page: the rules decide");
+        assertEquals(Group.THROTTLE, categories.group(2));
+        assertEquals(Group.SENSORS, categories.group(3));
     }
 
     @Test

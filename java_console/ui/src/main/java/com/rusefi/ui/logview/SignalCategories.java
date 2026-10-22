@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
  * the field empty, console recordings write "Others"), so the groups come from the ECU's .ini when one is
  * available: log label to channel through [Datalog], channel to the gauge categories that show it. Those ~35
  * developer-facing categories are merged into friendly groups; a channel in several categories takes the
- * first group in {@link Group} order (so CLT lands in Sensors, not in acceleration enrichment). Signals the
+ * first group in {@link Group} order. Signals the
  * .ini cannot place, or every signal when there is no .ini, are placed by name rules, else in Other.
  */
 final class SignalCategories {
@@ -65,14 +65,18 @@ final class SignalCategories {
             {"vehicleSpeedKph", "Vehicle Speed"},
     };
 
-    /** .ini gauge category name (lower case) prefixes, first match wins. */
+    /**
+     * .ini gauge category name (lower case) prefixes, first match wins. Overview pages that gather other
+     * subsystems' inputs say nothing about a signal and are left out: "AE / Transient fueling" shows RPM, CLT,
+     * TPS and MAP, which would otherwise all land in Fuel.
+     */
     private static final Object[][] INI_GROUPS = {
+            {"ae /", null},
             {"sensors - raw", Group.RAW},
             {"debug", Group.RAW},
             {"test bench", Group.RAW},
             {"sensors", Group.SENSORS},
             {"fuel", Group.FUEL},
-            {"ae /", Group.FUEL},
             {"acceleration enrichment", Group.FUEL},
             {"gdi", Group.FUEL},
             {"ignition", Group.IGNITION},

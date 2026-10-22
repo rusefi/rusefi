@@ -1,6 +1,8 @@
 package com.rusefi.ui.logview;
 
 import com.devexperts.logging.FileLogger;
+import com.devexperts.logging.Logging;
+import com.opensr5.ini.IniFileModel;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.logview.CsvLogReader;
 import com.rusefi.logview.LogFiles;
@@ -51,6 +53,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import static com.devexperts.logging.Logging.getLogging;
 
 /**
  * Hosts the log viewer and opens logs: the recent logs on the empty card, the toolbar's Open menu, Ctrl+O,
@@ -58,12 +63,15 @@ import java.util.function.Consumer;
  * stays. Chart settings (plot colours, grid, cursor) carry over from one log to the next.
  */
 public final class LogViewerHost extends JPanel {
+    private static final Logging log = getLogging(LogViewerHost.class);
     /** Title of the console's main tab. */
     public static final String TITLE = "Log Viewer";
     static final String SUPPORTED = ".mlg or .msl";
 
     private final ChartSettings settings = new ChartSettings();
     private final SignalLists lists;
+    private final SidebarState sidebar;
+    private Supplier<IniFileModel> iniSupplier = () -> null;
     private final TransferHandler fileDrop = new FileDropHandler();
     private Consumer<String> titleListener = name -> {
     };
@@ -96,6 +104,7 @@ public final class LogViewerHost extends JPanel {
         lists = new SignalLists(config.getChild("lists"));
         // lists are saved as they change, like the recent logs, in case the console is killed
         lists.addListener(() -> configSaver.run());
+        sidebar = new SidebarState(config.getChild("sidebar"));
         directory = logsFolder;
         setPreferredSize(new Dimension(1400, 840));
         KeyStroke open = KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK);
@@ -128,6 +137,14 @@ public final class LogViewerHost extends JPanel {
         }
     }
 
+    /**
+     * The ECU's .ini (or null) at the time a log opens, which groups its signals by the .ini's gauge
+     * categories; without one they are grouped by name.
+     */
+    public void setIniSupplier(Supplier<IniFileModel> iniSupplier) {
+        this.iniSupplier = iniSupplier;
+    }
+
     /** Receives the file name of each log shown, e.g. for the window title. */
     public void setTitleListener(Consumer<String> titleListener) {
         this.titleListener = titleListener;
@@ -152,9 +169,19 @@ public final class LogViewerHost extends JPanel {
     }
 
     public void showLog(CsvLogReader log, String fileName) {
-        current = new LogViewerPanel(log, fileName, settings, lists, this::showOpenMenu);
+        current = new LogViewerPanel(log, fileName, settings, lists, sidebar, currentIni(), this::showOpenMenu);
         setContent(current);
         titleListener.accept(fileName);
+    }
+
+    private IniFileModel currentIni() {
+        try {
+            return iniSupplier.get();
+        } catch (RuntimeException e) {
+            // the .ini only refines the grouping: open the log anyway
+            log.warn("No .ini for the log viewer: " + e);
+            return null;
+        }
     }
 
     public void chooseAndOpen() {
