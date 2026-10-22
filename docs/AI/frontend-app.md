@@ -251,9 +251,11 @@ tune field can highlight its pin; double-clicking an assigned pin can open
 the corresponding Tuning field. It listens to the working image, so this
 navigation also reflects unburned edits.
 
-An initial setup wizard can be shown when it is enabled and incomplete.
-Its appearance is conditional on session and UI settings, rather than a
-separate startup executable.
+The [setup wizard](frontend-app-wizard.md) configures a connected ECU and
+burns each completed step with an ECU-backed progress flag. It can launch
+automatically when supported steps are incomplete, or from **Launch Wizard**.
+The wizard guide covers launch settings, step order, sensor calibration,
+output tests, and the standalone VIN prompt used during startup.
 
 Lua Scripting has a separate write path from ordinary tune edits. Its
 [`LuaScriptPanel`](../../java_console/ui/src/main/java/com/rusefi/ui/lua/LuaScriptPanel.java)
