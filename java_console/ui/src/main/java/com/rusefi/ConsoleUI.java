@@ -26,6 +26,7 @@ import com.rusefi.ui.console.MainFrame;
 import com.rusefi.ui.console.SavedTab;
 import com.rusefi.ui.obd.ObdCodesPane;
 import com.rusefi.ui.console.TabbedPanel;
+import com.rusefi.ui.console.ToolTabs;
 import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.logview.LogViewerHost;
 import com.rusefi.ui.lua.LuaScriptPanel;
@@ -360,12 +361,14 @@ public class ConsoleUI {
         // Heavy tabs (Lua, Tuning) are lazy-built unless they are the user's last-opened tab, which
         // will be shown immediately on startup — in that case build eagerly (#9715).
         SavedTab savedTab = SavedTab.read(getConfig().getRoot());
+        // developer tabs opened from the Tools menu instead of always sitting in the tab row
+        ToolTabs toolTabs = new ToolTabs(tabbedPane);
         if (isOffline || !linkManager.isLogViewer()) {
             gaugesPanel = new GaugesPanel(uiContext, getConfig().getRoot().getChild("gauges"));
             gaugesTab = gaugesPanel.getContent();
             tabbedPane.addTab("Gauges", gaugesTab);
 
-            // record a log, then view it: next to the live gauges (SavedTab.LOG_VIEWER_POSITION)
+            // record a log, then view it: near the live gauges, after Tuning which is inserted between them
             logViewer = new LogViewerHost(getConfig().getRoot().getChild("log_viewer"));
             logViewer.setConfigSaver(() -> getConfig().save());
             logViewer.setIniSupplier(() -> uiContext.iniFileState.getIniFileModel());
@@ -379,7 +382,7 @@ public class ConsoleUI {
             }, logViewer::recordingStopped);
 
             MessagesPane messagesPane = new MessagesPane(uiContext, getConfig().getRoot().getChild("messages"));
-            tabbedPaneAdd("Messages", messagesPane.getContent(), messagesPane.getTabSelectedListener());
+            toolTabAdd(toolTabs, "Messages", messagesPane.getContent(), messagesPane.getTabSelectedListener());
 
             int luaIndex = tabbedPane.tabbedPane.getTabCount();
             if (savedTab.is("Lua Scripting", luaIndex)) {
@@ -397,8 +400,9 @@ public class ConsoleUI {
         }
 
         if (UiProperties.isEngineSnifferEnabled()) {
-            tabbedPaneAdd("Engine Sniffer", engineSnifferPanel.getPanel(), engineSnifferPanel.getTabSelectedListener());
+            toolTabAdd(toolTabs, "Engine Sniffer", engineSnifferPanel.getPanel(), engineSnifferPanel.getTabSelectedListener());
         }
+        mainFrame.setToolTabs(toolTabs);
 
 
 
@@ -491,7 +495,9 @@ console live data tab is broken #8402
                 updateOutputPollingForSelectedTab();
             };
 
-            int tuningIndex = tabbedPane.tabbedPane.getTabCount();
+            // second, right after Gauges; built here because it needs the Pinout and Device objects
+            int tuningIndex = gaugesTab != null ? tabbedPane.tabbedPane.indexOfComponent(gaugesTab) + 1
+                : tabbedPane.tabbedPane.getTabCount();
             tuningTab = new InitOnFirstPaintPanel() {
                 @Override
                 protected JPanel createContent() {
@@ -501,7 +507,7 @@ console live data tab is broken #8402
                     return wrapper;
                 }
             }.getContent();
-            tabbedPane.addTab("Tuning", tuningTab);
+            tabbedPane.insertTab("Tuning", tuningTab, tuningIndex);
             // Until Tuning is built, the menu actions build it on first click then delegate; once
             // built, buildTuning re-points the menu at the real actions.
             mainFrame.setTuneActions(
@@ -623,6 +629,12 @@ console live data tab is broken #8402
 */
 
         if (isOffline || !LinkManager.isLogViewerMode(port)) {
+            // a tool tab that was open and selected at exit opens again
+            for (String title : toolTabs.getTitles()) {
+                if (savedTab.is(title, -1)) {
+                    toolTabs.open(title);
+                }
+            }
             savedTab.select(tabbedPane.tabbedPane);
         }
 
@@ -829,6 +841,14 @@ console live data tab is broken #8402
     private void tabbedPaneAdd(String title, JComponent component, ActionListener tabSelectedListener) {
         tabSelectedListeners.put(component, tabSelectedListener);
         tabbedPane.addTab(title, component);
+    }
+
+    /**
+     * Registers a Tools menu tab with its activation listener; the tab is added only when opened
+     */
+    private void toolTabAdd(ToolTabs toolTabs, String title, JComponent component, ActionListener tabSelectedListener) {
+        tabSelectedListeners.put(component, tabSelectedListener);
+        toolTabs.register(title, component);
     }
 
     private void updateOutputPollingForSelectedTab() {

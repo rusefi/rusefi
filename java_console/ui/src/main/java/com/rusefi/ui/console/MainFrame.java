@@ -216,6 +216,7 @@ public class MainFrame {
     private JMenuItem checkEcuUpdateItem;
     private JMenuItem updateEcuItem;
     private BinaryLoggingMenu binaryLoggingMenu;
+    private JMenu toolsMenu;
     private ShortcutsDialog shortcutsDialog;
     private TitleBarPanel titleBarPanel;
     private Runnable updateEcuAction;
@@ -377,6 +378,12 @@ public class MainFrame {
         // the tabs' status strips each get a Start Data Logging / Stop Logging button driven by this menu
         consoleUI.uiContext.recordButtonFactory = () -> new RecordButton(binaryLoggingMenu);
 
+        // filled by setToolTabs(); hidden while there is nothing to open
+        toolsMenu = new JMenu("Tools");
+        toolsMenu.setMnemonic(KeyEvent.VK_T);
+        toolsMenu.setVisible(false);
+        menuBar.add(toolsMenu);
+
         menuBar.add(new MenuBarDivider());
 
         // The F1 badge replaces the accelerator text, so F1 is bound on the root pane instead
@@ -453,6 +460,20 @@ public class MainFrame {
         openLogItem.setEnabled(true);
         binaryLoggingMenu.setViewLogAction(viewLog);
         binaryLoggingMenu.addRecordingStoppedListener(recordingStopped);
+    }
+
+    /** One Tools menu item per tab kept out of the main tab row; choosing it opens that tab. */
+    public void setToolTabs(ToolTabs toolTabs) {
+        toolsMenu.removeAll();
+        for (String title : toolTabs.getTitles()) {
+            JMenuItem item = new JMenuItem(title);
+            item.setIcon(TabbedPanel.loadTabIcon(title));
+            item.setMnemonic(title.charAt(0));
+            item.setToolTipText("Open the " + title + " tab");
+            item.addActionListener(e -> toolTabs.open(title));
+            toolsMenu.add(item);
+        }
+        toolsMenu.setVisible(toolsMenu.getItemCount() > 0);
     }
 
     public void setExitRequestHandler(Runnable exitRequestHandler) {
@@ -1030,6 +1051,8 @@ public class MainFrame {
         loadTuneItem.setEnabled(applicationActionsAllowed && loadAction != null && loadAction.isEnabled());
         saveTuneItem.setEnabled(applicationActionsAllowed && saveAction != null && saveAction.isEnabled());
         updateSoftwareItem.setEnabled(applicationActionsAllowed && updateSoftwareAvailable);
+        // DevicePane disables these tabs while flashing; a tab opened now would miss that
+        toolsMenu.setEnabled(applicationActionsAllowed);
         BinaryProtocol bp = consoleUI.uiContext.getBinaryProtocol();
         boolean firmwareConnectionReady = isFirmwareUpdateConnectionReady(ConnectionStatusLogic.INSTANCE.getValue());
         checkEcuUpdateItem.setEnabled(applicationActionsAllowed

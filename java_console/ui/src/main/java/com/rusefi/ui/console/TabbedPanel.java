@@ -130,9 +130,43 @@ public class TabbedPanel {
     }
 
     public void addTab(String title, Component component) {
+        insertTab(title, component, tabbedPane.getTabCount());
+    }
+
+    public void insertTab(String title, Component component, int index) {
         Icon icon = loadTabIcon(title);
-        tabbedPane.addTab(title, icon, component);
-        tabbedPane.setTabComponentAt(tabbedPane.indexOfComponent(component), new TabTitle(tabbedPane, component, title, icon));
+        tabbedPane.insertTab(title, icon, component, null, index);
+        tabbedPane.setTabComponentAt(index, new TabTitle(tabbedPane, component, title, icon));
+    }
+
+    /** Adds a tab at the end of the row with an already built title, such as {@link #createClosableTitle}. */
+    void addTab(String title, Component component, Component tabTitle) {
+        tabbedPane.addTab(title, loadTabIcon(title), component);
+        tabbedPane.setTabComponentAt(tabbedPane.indexOfComponent(component), tabTitle);
+    }
+
+    /**
+     * Tab title with a close button. Build it once per tab content: each TabTitle listens to the
+     * pane for as long as the pane lives.
+     */
+    JComponent createClosableTitle(String title, Component content, Runnable onClose) {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEADING, 0, 0));
+        panel.setOpaque(false);
+        panel.add(new TabTitle(tabbedPane, content, title, loadTabIcon(title)));
+        JButton close = new JButton();
+        Icon closeIcon = UIManager.getIcon("TabbedPane.closeIcon");
+        if (closeIcon != null) {
+            close.setIcon(closeIcon);
+        } else {
+            close.setText("×");
+        }
+        close.setToolTipText("Close " + title + " (reopen it from the Tools menu)");
+        close.setBorder(BorderFactory.createEmptyBorder(0, 6, 0, 0));
+        close.setContentAreaFilled(false);
+        close.setFocusable(false);
+        close.addActionListener(e -> onClose.run());
+        panel.add(close);
+        return panel;
     }
 
     /**
