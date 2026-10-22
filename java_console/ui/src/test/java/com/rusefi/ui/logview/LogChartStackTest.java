@@ -12,6 +12,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -144,6 +145,22 @@ class LogChartStackTest {
         item(second, "Remove plot").doClick();
         assertEquals(1, layout.plotCount());
         assertFalse(item(chart.plotMenu(0), "Remove plot").isEnabled(), "the last plot stays");
+    }
+
+    @Test
+    void clearPlotEmptiesItAndKeepsThePlot() throws IOException {
+        PlotLayout layout = twoPlots();
+        LogChart chart = chart(layout);
+        List<Integer> first = new ArrayList<>(layout.fields(0));
+        assertFalse(first.isEmpty());
+        item(chart.plotMenu(0), "Clear plot").doClick();
+        assertEquals(2, layout.plotCount(), "the plot stays");
+        assertTrue(layout.fields(0).isEmpty());
+        for (int field : first) {
+            assertFalse(layout.isPlotted(field));
+        }
+        assertEquals(Arrays.asList(3), layout.fields(1), "the other plot keeps its signals");
+        assertFalse(item(chart.plotMenu(0), "Clear plot").isEnabled(), "nothing left to clear");
     }
 
     @Test
