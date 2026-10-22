@@ -464,6 +464,9 @@ public final class LogViewerPanel extends JPanel {
             menu.add(newPlot);
             menu.addSeparator();
             menu.add(chart.colorSubmenu(field));
+            if (plotted) {
+                menu.add(chart.scaleSubmenu(field));
+            }
             JMenu addTo = new JMenu("Add to list");
             for (String list : listNames()) {
                 JCheckBoxMenuItem item = new JCheckBoxMenuItem(list, labels(list).contains(log.name(field)));

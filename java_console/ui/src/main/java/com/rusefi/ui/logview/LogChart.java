@@ -10,7 +10,12 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.KeyStroke;
 import javax.swing.JColorChooser;
 import javax.swing.JMenu;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import java.awt.BasicStroke;
@@ -20,6 +25,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
@@ -61,8 +67,15 @@ final class LogChart extends JComponent {
     /** A drag shorter than this many pixels is a click, not a range selection. */
     static final int MIN_SELECTION_PIXELS = 5;
 
-    private static final int LEFT = 54;
+    /** Left of the plots: room for the y axis labels. */
+    static final int LEFT = 64;
+    /** Gap between the y axis labels and the plot (the active-plot bar sits in it). */
+    private static final int AXIS_LABEL_GAP = 16;
     private static final int RIGHT_MARGIN = 22;
+    /** Right of the plots when a plot has a second unit: room for the right y axis labels. */
+    static final int RIGHT_AXIS_MARGIN = 58;
+    /** Gap between the plot and the right y axis labels. */
+    private static final int RIGHT_AXIS_GAP = 8;
     private static final int TOP = 8;
     private static final int AXIS_HEIGHT = 46;
     private static final int ADD_ROW_HEIGHT = 30;
@@ -123,6 +136,11 @@ final class LogChart extends JComponent {
     private LegendItem legendRightPress;
     private int rightPressX;
     private SignalColors signalColors = new SignalColors();
+    private SignalScales signalScales = new SignalScales();
+    /** Statistics of the visible time only (not A–B), for signals scaled to the visible time. */
+    private final VisibleStats windowStats;
+    /** Asks for a custom scale (signal name, current {min, max}); null when cancelled. Replaced in tests. */
+    BiFunction<String, double[], double[]> customScalePrompt = this::askCustomScale;
     private final List<Runnable> colorListeners = new ArrayList<>();
     /** Asks for a custom colour (signal name, current colour); null when cancelled. Replaced in tests. */
     BiFunction<String, Color, Color> customColorPrompt = (label, initial) ->
@@ -182,6 +200,7 @@ final class LogChart extends JComponent {
         // Allow zooming in until only a few samples are visible.
         window = new TimeWindow(fullStart, fullEnd, interval > 0 ? interval * 4 : (fullEnd - fullStart) / 1000);
         stats = new VisibleStats(log, window, cursors);
+        windowStats = new VisibleStats(log, window);
         cursors.addListener(() -> {
             repaint();
             fireViewChanged();
@@ -622,6 +641,7 @@ final class LogChart extends JComponent {
         menu.add(remove);
         menu.addSeparator();
         menu.add(colorSubmenu(field));
+        menu.add(scaleSubmenu(field));
         return menu;
     }
 
@@ -707,6 +727,12 @@ final class LogChart extends JComponent {
             menu.add(clearCursors);
             menu.addSeparator();
         }
+        JCheckBoxMenuItem sameUnit = new JCheckBoxMenuItem("Same unit, same scale", layout.isSameUnitShared(plot));
+        sameUnit.setToolTipText("Signals with the same unit (e.g. CLT and IAT in °C) share one scale, so their "
+                + "values can be compared; off scales every signal to its own range");
+        sameUnit.addActionListener(e -> layout.setSameUnitShared(plot, sameUnit.isSelected()));
+        menu.add(sameUnit);
+        menu.addSeparator();
         JMenuItem clear = new JMenuItem("Clear plot");
         clear.setToolTipText("Removes all signals from this plot and keeps the plot");
         clear.setEnabled(!layout.fields(plot).isEmpty());
@@ -1023,7 +1049,7 @@ final class LogChart extends JComponent {
             Font valueFont = ConsoleFonts.mono(Font.PLAIN, g.getFont().getSize());
             FontMetrics valueMetrics = g.getFontMetrics(valueFont);
             plotLeft = LEFT;
-            plotRight = Math.max(LEFT + 1, getWidth() - RIGHT_MARGIN);
+            plotRight = Math.max(LEFT + 1, getWidth() - (anyRightAxis() ? RIGHT_AXIS_MARGIN : RIGHT_MARGIN));
             bands = layoutBands(metrics, valueMetrics);
             dividers = new ArrayList<>();
             for (int i = 0; i + 1 < bands.size(); i++) {
@@ -1124,15 +1150,24 @@ final class LogChart extends JComponent {
             g.fillOval(dotsX + dot * 6, dotsY, 3, 3);
         }
 
+        List<double[]> ticks = axisTicks(band);
         if (grid.isHorizontal()) {
-            // Traces are scaled independently, so these lines mark fractions of each trace's range.
             g.setColor(palette.grid);
-            int divisions = grid.getHorizontalDivisions();
-            for (int i = 0; i <= divisions; i++) {
-                int y = area.y + area.height * i / divisions;
-                g.drawLine(plotLeft, y, plotRight, y);
+            if (ticks.isEmpty()) {
+                int divisions = grid.getHorizontalDivisions();
+                for (int i = 0; i <= divisions; i++) {
+                    int y = area.y + area.height * i / divisions;
+                    g.drawLine(plotLeft, y, plotRight, y);
+                }
+            } else {
+                // the lines mark the axis values of the trace the axis shows
+                for (double[] tick : ticks) {
+                    g.drawLine(plotLeft, (int) Math.round(tick[1]), plotRight, (int) Math.round(tick[1]));
+                }
             }
         }
+        drawYAxis(g, band, leftAxisField(band), ticks, true, palette);
+        drawYAxis(g, band, rightAxisField(band), rightAxisTicks(band), false, palette);
         g.setColor(palette.grid);
         if (sampleTimes != null) {
             for (double time : sampleTimes) {
@@ -1455,11 +1490,338 @@ final class LogChart extends JComponent {
         return grid.isSnapCursor() ? xOf(log.value(cursorSample, 0)) : cursorX;
     }
 
-    /** Screen y of {@code value} inside {@code area}; each field is scaled to its own whole-log range. */
+    /** Screen y of {@code value} of {@code field} inside {@code area}, on the field's scale ({@link #range}). */
     private double yOf(int field, double value, Rectangle area) {
-        double min = log.minimum(field);
-        double range = log.maximum(field) - min;
-        return area.y + (1 - (range == 0 ? 0.5 : (value - min) / range)) * area.height;
+        return yOf(value, range(field), area);
+    }
+
+    /** Screen y of {@code value} on a {min, max} scale inside {@code area}; a flat scale puts it in the middle. */
+    private static double yOf(double value, double[] range, Rectangle area) {
+        double span = range[1] - range[0];
+        return area.y + (1 - (span == 0 ? 0.5 : (value - range[0]) / span)) * area.height;
+    }
+
+    /**
+     * The {min, max} a field's trace is scaled to: its own range ({@link #ownRange}), or, while its plot shares
+     * scales by unit (the default), the range of the signals with the same unit it is comparable with
+     * ({@link #sharedClusters}), so they can be compared directly.
+     */
+    double[] range(int field) {
+        int plot = layout.plotOf(field);
+        String unit = log.unit(field);
+        if (plot < 0 || unit.isEmpty() || !layout.isSameUnitShared(plot) || !sharesScale(field)) {
+            return ownRange(field);
+        }
+        List<Integer> sameUnit = new ArrayList<>();
+        for (int other : layout.fields(plot)) {
+            if (unit.equals(log.unit(other)) && sharesScale(other)) {
+                sameUnit.add(other);
+            }
+        }
+        for (List<Integer> cluster : sharedClusters(sameUnit)) {
+            if (cluster.contains(field)) {
+                return union(cluster);
+            }
+        }
+        return ownRange(field);
+    }
+
+    /** A shared scale must leave every signal on it at least this fraction of the plot height. */
+    static final double MIN_SHARED_FRACTION = 0.25;
+
+    /**
+     * Splits signals with the same unit into groups that share a scale: a group keeps a signal only while that
+     * signal's own span is at least {@link #MIN_SHARED_FRACTION} of the group's combined span, so a shared scale
+     * never squashes a trace into a flat line (CLT and IAT share; a 0.04 V and a 0.8 V signal do not). Signals left
+     * out form groups of their own the same way.
+     */
+    List<List<Integer>> sharedClusters(List<Integer> fields) {
+        List<List<Integer>> clusters = new ArrayList<>();
+        List<Integer> remaining = new ArrayList<>(fields);
+        while (!remaining.isEmpty()) {
+            List<Integer> cluster = new ArrayList<>(remaining);
+            while (cluster.size() > 1) {
+                double[] combined = union(cluster);
+                double combinedSpan = combined[1] - combined[0];
+                int worst = -1;
+                double worstFraction = Double.POSITIVE_INFINITY;
+                for (int field : cluster) {
+                    double[] own = ownRange(field);
+                    double fraction = combinedSpan > 0 ? (own[1] - own[0]) / combinedSpan : 1;
+                    if (!(fraction >= worstFraction)) {
+                        worst = field;
+                        worstFraction = fraction;
+                    }
+                }
+                if (worstFraction >= MIN_SHARED_FRACTION) {
+                    break;
+                }
+                cluster.remove(Integer.valueOf(worst));
+            }
+            clusters.add(cluster);
+            remaining.removeAll(cluster);
+        }
+        return clusters;
+    }
+
+    private double[] union(List<Integer> fields) {
+        double[] range = {Double.NaN, Double.NaN};
+        for (int field : fields) {
+            double[] own = ownRange(field);
+            range = new double[]{min(range[0], own[0]), max(range[1], own[1])};
+        }
+        return range;
+    }
+
+    /** Whether a field joins a shared scale by unit: not with a custom range, which the user fixed. */
+    private boolean sharesScale(int field) {
+        return signalScales.mode(log.name(field)) != SignalScales.Mode.CUSTOM;
+    }
+
+    /**
+     * A field's range by itself, as the user chose ({@link SignalScales}): its whole-log minimum and maximum
+     * (default), those of the visible time (empty there: the whole log), or a custom range.
+     */
+    private double[] ownRange(int field) {
+        String label = log.name(field);
+        switch (signalScales.mode(label)) {
+            case CUSTOM:
+                return signalScales.custom(label);
+            case VISIBLE: {
+                TraceStats visible = windowStats.get(field);
+                if (!visible.isEmpty()) {
+                    return new double[]{visible.min, visible.max};
+                }
+                break;
+            }
+            default:
+                break;
+        }
+        return new double[]{log.minimum(field), log.maximum(field)};
+    }
+
+    /** Shares the user's signal scales, e.g. those of the viewer host, kept from one log to the next. */
+    void setSignalScales(SignalScales signalScales) {
+        this.signalScales = signalScales;
+        repaint();
+    }
+
+    SignalScales signalScales() {
+        return signalScales;
+    }
+
+    /** "Scale ▸" with Whole log, Visible time and Custom…, for a plotted signal's right-click menu. */
+    JMenu scaleSubmenu(int field) {
+        String label = log.name(field);
+        SignalScales.Mode mode = signalScales.mode(label);
+        JMenu scale = new JMenu("Scale");
+        JRadioButtonMenuItem whole = new JRadioButtonMenuItem("Whole log", mode == SignalScales.Mode.WHOLE_LOG);
+        whole.setToolTipText("From the lowest to the highest value in the log; stays put while zooming");
+        whole.addActionListener(e -> {
+            signalScales.setWholeLog(label);
+            scalesChanged();
+        });
+        JRadioButtonMenuItem visible = new JRadioButtonMenuItem("Visible time", mode == SignalScales.Mode.VISIBLE);
+        visible.setToolTipText("From the lowest to the highest value on screen; rescales while zooming and panning");
+        visible.addActionListener(e -> {
+            signalScales.setVisible(label);
+            scalesChanged();
+        });
+        double[] custom = signalScales.custom(label);
+        JRadioButtonMenuItem fixed = new JRadioButtonMenuItem(custom == null ? "Custom…"
+                : String.format(Locale.ROOT, "Custom (%s–%s)…", ValueFormat.format(log, field, custom[0]),
+                ValueFormat.format(log, field, custom[1])), mode == SignalScales.Mode.CUSTOM);
+        fixed.setToolTipText("A fixed range you enter, e.g. lambda 0.7–1.3; kept for this signal in every log");
+        fixed.addActionListener(e -> {
+            double[] picked = customScalePrompt.apply(label, range(field));
+            if (picked != null) {
+                signalScales.setCustom(label, picked);
+            }
+            // the radio item toggled itself; rebuild from the stored choice either way
+            scalesChanged();
+        });
+        scale.add(whole);
+        scale.add(visible);
+        scale.add(fixed);
+        return scale;
+    }
+
+    private void scalesChanged() {
+        repaint();
+        fireViewChanged();
+    }
+
+    /** Asks for a custom {min, max}: a small dialog with both fields filled in from the current scale. */
+    private double[] askCustomScale(String label, double[] current) {
+        JTextField min = new JTextField(trim(current[0]), 8);
+        JTextField max = new JTextField(trim(current[1]), 8);
+        JPanel fields = new JPanel(new GridLayout(2, 2, 8, 6));
+        fields.add(new JLabel("Bottom (min)"));
+        fields.add(min);
+        fields.add(new JLabel("Top (max)"));
+        fields.add(max);
+        if (JOptionPane.showConfirmDialog(this, fields, "Scale of " + label, JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE) != JOptionPane.OK_OPTION) {
+            return null;
+        }
+        try {
+            double bottom = Double.parseDouble(min.getText().trim().replace(',', '.'));
+            double top = Double.parseDouble(max.getText().trim().replace(',', '.'));
+            if (Double.isFinite(bottom) && Double.isFinite(top) && bottom < top) {
+                return new double[]{bottom, top};
+            }
+        } catch (NumberFormatException ignored) {
+            // reported below
+        }
+        JOptionPane.showMessageDialog(this, "Enter two numbers, the bottom below the top.", "Scale of " + label,
+                JOptionPane.WARNING_MESSAGE);
+        return null;
+    }
+
+    /** A number without needless trailing zeros, for editing. */
+    private static String trim(double value) {
+        String text = String.format(Locale.ROOT, "%.6f", value);
+        return text.contains(".") ? text.replaceAll("0+$", "").replaceAll("\\.$", "") : text;
+    }
+
+    /** The smaller value, ignoring a missing (NaN) one. */
+    private static double min(double a, double b) {
+        return Double.isNaN(a) ? b : Double.isNaN(b) ? a : Math.min(a, b);
+    }
+
+    private static double max(double a, double b) {
+        return Double.isNaN(a) ? b : Double.isNaN(b) ? a : Math.max(a, b);
+    }
+
+    /** Signals of a unit share an axis side; signals without a unit each count as a unit of their own. */
+    private String unitKey(int field) {
+        String unit = log.unit(field);
+        return unit.isEmpty() ? "#" + field : unit;
+    }
+
+    /** The highlighted trace (hovered or pinned in the legend, the Stats panel or by keys) if it is in the plot. */
+    private int highlightedIn(Band band) {
+        int focused = focus.focused();
+        return focused != TraceFocus.NONE && layout.plotOf(focused) == band.plot ? focused : -1;
+    }
+
+    /**
+     * The signal whose scale the plot's left axis shows: one with the unit of the plot's first signal - the
+     * highlighted trace when it has that unit, else the first signal; -1 for an empty plot. The left axis keeps
+     * its unit, so the grid does not jump as traces are highlighted.
+     */
+    int leftAxisField(Band band) {
+        List<Integer> fields = layout.fields(band.plot);
+        if (fields.isEmpty()) {
+            return -1;
+        }
+        int highlighted = highlightedIn(band);
+        return highlighted >= 0 && unitKey(highlighted).equals(unitKey(fields.get(0))) ? highlighted : fields.get(0);
+    }
+
+    /**
+     * The signal whose scale the plot's right axis shows, when the plot has a second unit: the highlighted trace
+     * when its unit is not the left one, else the first signal of the second unit; -1 with a single unit. With
+     * three or more units the right axis follows the highlighted trace.
+     */
+    int rightAxisField(Band band) {
+        List<Integer> fields = layout.fields(band.plot);
+        if (fields.isEmpty()) {
+            return -1;
+        }
+        String left = unitKey(fields.get(0));
+        int highlighted = highlightedIn(band);
+        if (highlighted >= 0 && !unitKey(highlighted).equals(left)) {
+            return highlighted;
+        }
+        for (int field : fields) {
+            if (!unitKey(field).equals(left)) {
+                return field;
+            }
+        }
+        return -1;
+    }
+
+    /** True when some plot has two or more units, so the chart keeps room for a right axis. */
+    private boolean anyRightAxis() {
+        for (int plot = 0; plot < layout.plotCount(); plot++) {
+            List<Integer> fields = layout.fields(plot);
+            for (int field : fields) {
+                if (!unitKey(field).equals(unitKey(fields.get(0)))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /** {value, screen y} of the left axis ticks, which the horizontal grid lines follow. */
+    List<double[]> axisTicks(Band band) {
+        return ticks(band, leftAxisField(band));
+    }
+
+    List<double[]> rightAxisTicks(Band band) {
+        return ticks(band, rightAxisField(band));
+    }
+
+    /**
+     * {value, screen y} of the ticks of a signal's scale in a plot: round values about
+     * {@code grid.getHorizontalDivisions()} apart; none for no signal or a signal without values.
+     */
+    private List<double[]> ticks(Band band, int field) {
+        List<double[]> ticks = new ArrayList<>();
+        if (field < 0) {
+            return ticks;
+        }
+        double[] range = range(field);
+        if (!Double.isFinite(range[0]) || !Double.isFinite(range[1])) {
+            return ticks;
+        }
+        if (range[1] == range[0]) {
+            ticks.add(new double[]{range[0], yOf(range[0], range, band.traces)});
+            return ticks;
+        }
+        // the configured divisions, fewer in a short plot so labels stay apart
+        int intervals = Math.max(1, Math.min(grid.getHorizontalDivisions(), band.traces.height / MIN_TICK_PIXELS));
+        double step = nearestNiceStep((range[1] - range[0]) / intervals);
+        for (double value = Math.ceil(range[0] / step) * step; value <= range[1] + step * 1e-9; value += step) {
+            // round away binary noise such as 0.30000000000000004
+            double tick = Math.round(value / step) * step;
+            ticks.add(new double[]{tick, yOf(tick, range, band.traces)});
+        }
+        return ticks;
+    }
+
+    /**
+     * One y axis of a plot: tick values, then the unit above them, in the colour of the trace they belong to;
+     * on the left, right-aligned against the plot, or on the right, left-aligned after it.
+     */
+    private void drawYAxis(Graphics2D g, Band band, int field, List<double[]> ticks, boolean left,
+                           PlotPalette palette) {
+        if (field < 0 || ticks.isEmpty()) {
+            return;
+        }
+        Font font = g.getFont();
+        g.setFont(font.deriveFont(font.getSize2D() - 1));
+        FontMetrics small = g.getFontMetrics();
+        double step = ticks.size() > 1 ? ticks.get(1)[0] - ticks.get(0)[0] : 0;
+        int decimals = step > 0 ? Math.max(0, (int) -Math.floor(Math.log10(step) + 1e-9)) : log.digits(field);
+        int edge = left ? plotLeft - AXIS_LABEL_GAP : plotRight + RIGHT_AXIS_GAP;
+        g.setColor(colorOf(field, palette));
+        for (double[] tick : ticks) {
+            String text = String.format(Locale.ROOT, "%." + decimals + "f", tick[0]);
+            int y = (int) Math.round(tick[1]) + (small.getAscent() - small.getDescent()) / 2;
+            // keep the top and bottom labels inside the plot
+            y = Math.max(band.traces.y + small.getAscent() - small.getDescent(), Math.min(band.traces.y + band.traces.height, y));
+            g.drawString(text, left ? edge - small.stringWidth(text) : edge, y);
+        }
+        String unit = log.unit(field);
+        if (!unit.isEmpty()) {
+            int room = left ? edge - 2 : getWidth() - edge - 2;
+            String shown = StatsPanel.SignalCell.shorten(unit, small, room);
+            g.drawString(shown, left ? edge - small.stringWidth(shown) : edge, band.traces.y - 6);
+        }
+        g.setFont(font);
     }
 
     /** Seconds between time-axis ticks, chosen so ticks are roughly the configured spacing apart. */
@@ -1500,6 +1862,24 @@ final class LogChart extends JComponent {
     }
 
     /** Smallest 1, 2 or 5 times a power of ten that is at least {@code rough}. */
+    /** Pixels between y axis labels at least. */
+    private static final int MIN_TICK_PIXELS = 28;
+
+    /** The 1, 2 or 5 × 10^n step nearest to {@code rough} (by ratio), so ticks are close to the asked count. */
+    static double nearestNiceStep(double rough) {
+        if (!(rough > 0) || !Double.isFinite(rough)) {
+            return 1;
+        }
+        double magnitude = Math.pow(10, Math.floor(Math.log10(rough)));
+        double best = magnitude;
+        for (double nice : new double[]{1, 2, 5, 10}) {
+            if (Math.abs(Math.log(nice * magnitude / rough)) < Math.abs(Math.log(best / rough))) {
+                best = nice * magnitude;
+            }
+        }
+        return best;
+    }
+
     static double niceStep(double rough) {
         if (!(rough > 0) || !Double.isFinite(rough)) {
             return 1;
@@ -1525,6 +1905,7 @@ final class LogChart extends JComponent {
         int first = Math.max(0, log.firstSampleAtOrAfter(window.start()) - 1);
         int last = Math.min(log.sampleCount() - 1, log.firstSampleAtOrAfter(window.end()));
         double scale = (plotRight - plotLeft) / window.span();
+        double[] range = range(field);
         ColumnPath column = new ColumnPath(path);
         for (int sample = first; sample <= last; sample++) {
             double value = log.value(sample, field);
@@ -1533,7 +1914,7 @@ final class LogChart extends JComponent {
                 continue;
             }
             double x = plotLeft + (log.value(sample, 0) - window.start()) * scale;
-            column.add(x, yOf(field, value, area));
+            column.add(x, yOf(value, range, area));
         }
         column.flush();
         return path;

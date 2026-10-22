@@ -43,7 +43,7 @@ class LogChartNavigationTest {
     }
 
     private static int plotLeft() {
-        return 54;
+        return LogChart.LEFT;
     }
 
     private static int plotRight() {
@@ -68,11 +68,13 @@ class LogChartNavigationTest {
         LogChart chart = paintedChart(denseLog(), false);
         TimeWindow window = chart.timeWindow();
         int x = xAtFraction(0.25);
-        double anchor = window.start() + 0.25 * window.span();
+        // the fraction of the plot width at that whole pixel
+        double fraction = (x - plotLeft()) / (double) (plotRight() - plotLeft());
+        double anchor = window.start() + fraction * window.span();
 
         wheel(chart, x, -1, 0);
         assertEquals(100 / LogChart.WHEEL_ZOOM, window.span(), 1e-9);
-        assertEquals(anchor, window.start() + 0.25 * window.span(), 1e-6);
+        assertEquals(anchor, window.start() + fraction * window.span(), 1e-6);
 
         wheel(chart, x, 1, 0);
         assertTrue(window.isFull());
