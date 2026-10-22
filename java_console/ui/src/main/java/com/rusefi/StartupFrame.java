@@ -208,7 +208,7 @@ public class StartupFrame {
         asyncJobExecutor.addOnJobInProgressFinishedListener(this::onLiveConnectionJobFinished);
         asyncJobExecutor.addOnJobInProgressFinishedListener(() -> SwingUtilities.invokeLater(() ->
             setStartupFirmwareUpdateInProgress(false)));
-        String title = UiProperties.getWhiteLabel() + " console " + Launcher.CONSOLE_VERSION;
+        String title = UiProperties.getDisplayName() + " " + Launcher.CONSOLE_VERSION;
         log.info(title);
         noPortsMessage.setForeground(Color.red);
         status = new StatusAnimation(new StatusAnimation.StatusConsumer() {
@@ -381,7 +381,7 @@ public class StartupFrame {
         selector.setJobExecutor(asyncJobExecutor);
 
         JButton openTunerStudio = new JButton("Open TunerStudio");
-        setToolTip(openTunerStudio, "Launch TunerStudio and close this console so the serial port is released");
+        setToolTip(openTunerStudio, "Launch TunerStudio and close " + UiProperties.getDisplayName() + " so the serial port is released");
         openTunerStudio.addActionListener(e -> {
             if (TunerStudioHelper.launchTunerStudio(frame)) {
                 frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
@@ -750,7 +750,7 @@ public class StartupFrame {
 
         if (simulator != null) {
             JComponent simulatorRow = simulator instanceof AbstractButton
-                ? new Banner(Banner.Kind.INFO, new JLabel("Try the console without an ECU"), (JComponent) simulator)
+                ? new Banner(Banner.Kind.INFO, new JLabel("Try " + UiProperties.getDisplayName() + " without an ECU"), (JComponent) simulator)
                 : new Banner(Banner.Kind.INFO, (JComponent) simulator, null);
             startupCard.addRow(simulatorRow, 12);
         }
@@ -783,7 +783,7 @@ public class StartupFrame {
             footer.add(linkRow);
             footer.add(Box.createVerticalStrut(2));
         }
-        JLabel version = new JLabel("Console " + Launcher.CONSOLE_VERSION);
+        JLabel version = new JLabel(UiProperties.getDisplayName() + " " + Launcher.CONSOLE_VERSION);
         version.setForeground(muted);
         version.setAlignmentX(Component.CENTER_ALIGNMENT);
         footer.add(version);
@@ -918,7 +918,7 @@ public class StartupFrame {
         // Reuse this maximized splash frame for the console
         log.info("connect: handing off splash frame to ConsoleUI");
         prepareForHandoff();
-        LoadingOverlay.show(frame, "Loading console…", LogoHelper.createLogoLabel());
+        LoadingOverlay.show(frame, "Loading " + UiProperties.getDisplayName() + "…", LogoHelper.createLogoLabel());
         SwingUtilities.invokeLater(() ->
             new ConsoleUI(uiContext, selectedPort.port, selectedPort.type, alreadyConnected,
                 frame, unsupportedEcuHost, connectivityContext));
@@ -940,7 +940,7 @@ public class StartupFrame {
         offlineConsoleOpen = true;
         // Shared teardown-without-dispose; keeps the scanner alive for later auto-connect.
         prepareForHandoff();
-        LoadingOverlay.show(frame, "Loading console…", LogoHelper.createLogoLabel());
+        LoadingOverlay.show(frame, "Loading " + UiProperties.getDisplayName() + "…", LogoHelper.createLogoLabel());
         SwingUtilities.invokeLater(() ->
             new ConsoleUI(uiContext, ini, image, frame, unsupportedEcuHost, connectivityContext));
     }
@@ -1150,7 +1150,7 @@ public class StartupFrame {
         connectButton.setText("Connect");
         updateConnectButtonState();
         portsComboBox.getComboPorts().setEnabled(true);
-        String launchingMsg = "Connected to " + target.port + " — launching console…";
+        String launchingMsg = "Connected to " + target.port + " — launching " + UiProperties.getDisplayName() + "…";
         noPortsMessage.setForeground(Color.darkGray);
         noPortsMessage.setText(launchingMsg);
         noPortsMessage.setVisible(true);
@@ -1352,7 +1352,7 @@ public class StartupFrame {
             autoConnectedPort = savedPort;
             startupUpdateActions.setSplashLinkManager(lm);
             noPortsMessage.setForeground(Color.darkGray);
-            noPortsMessage.setText("Connected to " + savedPort.port + " — click Connect to open console");
+            noPortsMessage.setText("Connected to " + savedPort.port + " — click Connect to open " + UiProperties.getDisplayName());
             noPortsMessage.setVisible(true);
         });
     }

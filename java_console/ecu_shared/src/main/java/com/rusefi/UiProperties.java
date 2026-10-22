@@ -26,6 +26,15 @@ public class UiProperties {
         return ConnectionAndMeta.getWhiteLabel(PropertiesHolder.INSTANCE.getProperties());
     }
 
+    /** Visible product name; only the default technical white-label gets display casing. */
+    public static String displayName(String whiteLabel) {
+        return ConnectionAndMeta.isDefaultWhitelabel(whiteLabel) ? "rusEFI tuner" : whiteLabel + " tuner";
+    }
+
+    public static String getDisplayName() {
+        return displayName(getWhiteLabel());
+    }
+
     public static String getUpdateHelpUrl() {
         return PropertiesHolder.getUpdateHelpUrl("https://wiki.rusefi.com/HOWTO-Update-Firmware");
     }

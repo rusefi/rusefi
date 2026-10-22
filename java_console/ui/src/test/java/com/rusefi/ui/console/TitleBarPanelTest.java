@@ -1,11 +1,23 @@
 package com.rusefi.ui.console;
 
+import com.rusefi.UiProperties;
 import org.junit.jupiter.api.Test;
+
+import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class TitleBarPanelTest {
+    @Test
+    public void titleBarDisplaysTheConfiguredProductName() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            TitleBarPanel panel = new TitleBarPanel();
+            assertEquals(UiProperties.getDisplayName(), ((JLabel) panel.getComponent(0)).getText());
+        });
+    }
+
     @Test
     public void firmwareLabelShowsBoardBranchAndDate() {
         assertEquals("uaefi_pro · master.2026.08.13",

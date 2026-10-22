@@ -741,7 +741,7 @@ public class MainFrame {
         ));
 
         URLLabel link = new URLLabel(
-            "You're running rusEFI from an extracted bundle. Install Universal Updater for automatic console and ECU firmware updates.",
+            "You're running " + UiProperties.getDisplayName() + " from an extracted bundle. Use the " + UiProperties.getDisplayName() + " installer for automatic software and ECU firmware updates.",
             installerUrl
         );
         link.setFont(link.getFont().deriveFont(Font.BOLD));
@@ -1015,7 +1015,7 @@ public class MainFrame {
     }
 
     private void setTitle() {
-        String consoleVersion = "Console " + Launcher.CONSOLE_VERSION;
+        String consoleVersion = UiProperties.getDisplayName() + " " + Launcher.CONSOLE_VERSION;
         String frameTitle;
         // the title bar shows the same state as short labels; the full text stays in its tooltip
         java.util.List<String> chips;

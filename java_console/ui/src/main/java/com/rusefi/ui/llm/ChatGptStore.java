@@ -100,7 +100,7 @@ final class ChatGptStore implements Closeable {
         }
     }
 
-    private static void protect(Path path, boolean directory) throws IOException {
+    static void protect(Path path, boolean directory) throws IOException {
         PosixFileAttributeView posix = Files.getFileAttributeView(path, PosixFileAttributeView.class, LinkOption.NOFOLLOW_LINKS);
         if (posix != null) {
             posix.setPermissions(PosixFilePermissions.fromString(directory ? "rwx------" : "rw-------"));
