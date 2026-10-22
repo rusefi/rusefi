@@ -63,6 +63,7 @@ public final class LogViewerHost extends JPanel {
     static final String SUPPORTED = ".mlg or .msl";
 
     private final ChartSettings settings = new ChartSettings();
+    private final SignalLists lists;
     private final TransferHandler fileDrop = new FileDropHandler();
     private Consumer<String> titleListener = name -> {
     };
@@ -92,6 +93,9 @@ public final class LogViewerHost extends JPanel {
         super(new BorderLayout());
         this.config = config;
         this.logsFolder = logsFolder;
+        lists = new SignalLists(config.getChild("lists"));
+        // lists are saved as they change, like the recent logs, in case the console is killed
+        lists.addListener(() -> configSaver.run());
         directory = logsFolder;
         setPreferredSize(new Dimension(1400, 840));
         KeyStroke open = KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK);
@@ -148,7 +152,7 @@ public final class LogViewerHost extends JPanel {
     }
 
     public void showLog(CsvLogReader log, String fileName) {
-        current = new LogViewerPanel(log, fileName, settings, this::showOpenMenu);
+        current = new LogViewerPanel(log, fileName, settings, lists, this::showOpenMenu);
         setContent(current);
         titleListener.accept(fileName);
     }

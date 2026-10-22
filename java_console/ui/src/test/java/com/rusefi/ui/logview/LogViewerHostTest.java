@@ -305,6 +305,23 @@ class LogViewerHostTest {
     }
 
     @Test
+    void signalListsCarryOverAndAreSavedAsTheyChange() throws Exception {
+        LogViewerHost host = host();
+        int[] saves = {0};
+        host.setConfigSaver(() -> saves[0]++);
+        openAndWait(host, copy("/logview/test-log-1.msl", "first.msl"));
+        int afterOpen = saves[0];
+        SwingUtilities.invokeAndWait(() -> {
+            host.currentPanel().namePrompt = (title, initial) -> "Mine";
+            host.currentPanel().newList(1);
+        });
+        assertTrue(saves[0] > afterOpen, "saved without waiting for the console to exit");
+
+        openAndWait(host, copy("/logview/test-log-binary-1.mlg", "second.mlg"));
+        assertEquals(java.util.Collections.singletonList("Mine"), host.currentPanel().lists().customNames());
+    }
+
+    @Test
     void droppedLogFileOpens() throws Exception {
         LogViewerHost host = host();
         File log = copy("/logview/test-log-binary-1.mlg", "dropped.mlg");

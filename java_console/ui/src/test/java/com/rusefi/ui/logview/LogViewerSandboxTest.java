@@ -64,8 +64,7 @@ class LogViewerSandboxTest {
             for (int index = 0; index < list.getModel().getSize(); index++) {
                 SignalSections.Row row = list.getModel().getElementAt(index);
                 assertNotEquals(0, row.field, path);
-                boolean userList = row.section.equals(SignalSections.PLOTTED) || row.section.equals(SignalSections.COMMON);
-                if (row.isHeading() && !userList) {
+                if (row.isHeading() && row.kind == SignalSections.Kind.GROUP) {
                     inGroups += row.count;
                 }
             }

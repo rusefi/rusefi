@@ -131,6 +131,7 @@ final class SignalCategories {
 
     private final Group[] groups;
     private final List<Integer> common = new ArrayList<>();
+    private final List<String> defaultCommonLabels = new ArrayList<>();
 
     private SignalCategories(Group[] groups) {
         this.groups = groups;
@@ -165,12 +166,15 @@ final class SignalCategories {
         }
         SignalCategories categories = new SignalCategories(groups);
         for (String[] signal : COMMON) {
+            String label = signal[1];
             for (int field = 1; field < log.fieldCount(); field++) {
                 if (matches(signal, channels[field], log.name(field)) && !categories.common.contains(field)) {
                     categories.common.add(field);
+                    label = log.name(field);
                     break;
                 }
             }
+            categories.defaultCommonLabels.add(label);
         }
         return categories;
     }
@@ -214,5 +218,13 @@ final class SignalCategories {
     /** The Common signals present in the log, in the default order. */
     List<Integer> common() {
         return common;
+    }
+
+    /**
+     * Labels of the default Common signals as this log names them, or the usual label of those it lacks: what
+     * Common holds once edited, so signals of other logs are not dropped.
+     */
+    List<String> defaultCommonLabels() {
+        return defaultCommonLabels;
     }
 }
