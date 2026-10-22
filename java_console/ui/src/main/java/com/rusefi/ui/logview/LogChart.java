@@ -379,12 +379,17 @@ final class LogChart extends JComponent {
         JMenuItem down = new JMenuItem("Move down");
         down.setEnabled(plot < layout.plotCount() - 1);
         down.addActionListener(e -> layout.move(plot, 1));
+        JMenuItem clear = new JMenuItem("Clear plot");
+        clear.setToolTipText("Removes all signals from this plot and keeps the plot");
+        clear.setEnabled(!layout.fields(plot).isEmpty());
+        clear.addActionListener(e -> layout.clearPlot(plot));
         JMenuItem remove = new JMenuItem("Remove plot");
         remove.setEnabled(layout.canRemovePlot());
         remove.addActionListener(e -> layout.removePlot(plot));
         menu.add(up);
         menu.add(down);
         menu.addSeparator();
+        menu.add(clear);
         menu.add(remove);
         return menu;
     }

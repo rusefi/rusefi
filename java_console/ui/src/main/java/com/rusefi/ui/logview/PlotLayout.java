@@ -200,6 +200,19 @@ final class PlotLayout {
         }
     }
 
+    /** Removes every trace of the plot, which stays (empty) in its place. */
+    void clearPlot(int plot) {
+        List<Integer> fields = plots.get(plot);
+        if (fields.isEmpty()) {
+            return;
+        }
+        for (int field : fields) {
+            colors.remove(field);
+        }
+        fields.clear();
+        changed();
+    }
+
     boolean canRemovePlot() {
         return plots.size() > 1;
     }
