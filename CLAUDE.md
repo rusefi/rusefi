@@ -314,6 +314,16 @@ installs no `DropTarget` (`getDropTarget()` returns null after
 `HeadlessException`. Guard such calls, and reproduce CI locally with
 `JAVA_TOOL_OPTIONS=-Djava.awt.headless=true ./gradlew :ui:test`.
 
+### Swing clicks on drag-enabled components
+
+AWT sends no `MOUSE_CLICKED` once the pointer moved between press and
+release, and `DragSource.getDragThreshold()` can be as small as 2 px
+(measured on a Windows desktop), so on a drag-enabled `JList` a slightly
+moving click starts drag and drop and never reaches the component as a
+click. Act on release within a few pixels of the press, and treat a drag
+dropped back on its origin row as a click (see `LogViewerPanel.rowMouse`
+and `dropOnList`).
+
 ### Native Swing screenshots under WSLg
 
 Xvfb without a window manager verifies shaped-window input but cannot reveal

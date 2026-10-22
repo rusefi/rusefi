@@ -88,7 +88,9 @@ class LogViewerPanelTest {
     /** The centre of the first list row showing {@code field}, with the list laid out. */
     private static java.awt.Point rowCentre(LogViewerPanel panel, int field) {
         JList<SignalSections.Row> list = panel.fieldList();
-        list.setSize(260, 2000);
+        if (list.getWidth() == 0) {
+            list.setSize(260, list.getPreferredSize().height);
+        }
         for (int index = 0; index < list.getModel().getSize(); index++) {
             if (list.getModel().getElementAt(index).field == field) {
                 java.awt.Rectangle cell = list.getCellBounds(index, index);
@@ -121,27 +123,57 @@ class LogViewerPanelTest {
         }
     }
 
-    /**
-     * BUG (reproduction): AWT sends no MOUSE_CLICKED when the pointer moved between press and release, so a click
-     * that wobbles by a pixel or two adds nothing.
-     */
+    /** AWT sends no MOUSE_CLICKED when the pointer moved between press and release; the click still counts. */
     @Test
-    void clickThatMovesAPixelDoesNotPlot() throws IOException {
+    void clickThatMovesAPixelStillPlots() throws IOException {
         LogViewerPanel panel = new LogViewerPanel(log(), null);
         java.awt.Point at = rowCentre(panel, 2);
         java.awt.Point wobble = new java.awt.Point(at.x + 2, at.y + 1);
         mouse(panel, MouseEvent.MOUSE_PRESSED, at, 1);
         mouse(panel, MouseEvent.MOUSE_DRAGGED, wobble, 1);
         mouse(panel, MouseEvent.MOUSE_RELEASED, wobble, 1);
-        assertEquals("none plotted", panel.plottedLabel().getText(), "BUG: the wobbly click is lost");
+        assertEquals("1 plotted", panel.plottedLabel().getText());
+        assertTrue(panel.chart().plotLayout().isPlotted(2));
     }
 
     /**
-     * BUG (reproduction): plotting a signal adds a row to Plotted above it, so the list shifts under the pointer and
-     * the second click of a double-click (or a quick second click) lands on the signal that moved there.
+     * The drag threshold can be 2 px: a slightly moving click then starts a drag and drop. Dropped back on the row it
+     * came from, it is the click it was meant to be.
      */
     @Test
-    void secondClickLandsOnTheRowThatMovedUnderThePointer() throws IOException {
+    void dragDroppedBackOnItsRowIsAClick() throws IOException {
+        LogViewerPanel panel = new LogViewerPanel(log(), null);
+        LogViewerPanel.ListTransferHandler handler = (LogViewerPanel.ListTransferHandler) panel.fieldList().getTransferHandler();
+        selectSignal(panel, 2);
+        int origin = panel.fieldList().getSelectedIndex();
+        handler.createTransferable(panel.fieldList());
+        assertTrue(panel.dropOnList(2, origin));
+        assertTrue(panel.chart().plotLayout().isPlotted(2));
+
+        selectSignal(panel, 3);
+        handler.createTransferable(panel.fieldList());
+        assertFalse(panel.dropOnList(3, panel.fieldList().getSelectedIndex() + 1),
+                "dropped on another row, an unplotted signal changes nothing");
+        assertFalse(panel.chart().plotLayout().isPlotted(3));
+    }
+
+    @Test
+    void aDragIsNotAClick() throws IOException {
+        LogViewerPanel panel = new LogViewerPanel(log(), null);
+        java.awt.Point at = rowCentre(panel, 2);
+        java.awt.Point away = new java.awt.Point(at.x + 40, at.y + 30);
+        mouse(panel, MouseEvent.MOUSE_PRESSED, at, 1);
+        mouse(panel, MouseEvent.MOUSE_DRAGGED, away, 1);
+        mouse(panel, MouseEvent.MOUSE_RELEASED, away, 1);
+        assertEquals("none plotted", panel.plottedLabel().getText(), "dragging a signal is drag and drop");
+    }
+
+    /**
+     * Plotting a signal adds a row to Plotted above it, so the list shifts under the pointer: the second click of a
+     * double-click is ignored instead of landing on the signal that moved there (or undoing the first).
+     */
+    @Test
+    void doubleClickPlotsOnce() throws IOException {
         LogViewerPanel panel = new LogViewerPanel(log(), null);
         java.awt.Point at = rowCentre(panel, 2);
         for (int clickCount = 1; clickCount <= 2; clickCount++) {
@@ -151,7 +183,36 @@ class LogViewerPanelTest {
         }
         PlotLayout layout = panel.chart().plotLayout();
         assertTrue(layout.isPlotted(2), "the first click plotted CLT");
-        assertTrue(layout.isPlotted(1), "BUG: the second click plotted RPM, which moved under the pointer");
+        assertFalse(layout.isPlotted(1), "the second click does not plot RPM, which moved under the pointer");
+        assertEquals("1 plotted", panel.plottedLabel().getText());
+    }
+
+    /** Where the list can scroll, it scrolls by the row added to Plotted, keeping the clicked row in place. */
+    @Test
+    void clickedRowStaysUnderThePointer() throws IOException {
+        LogViewerPanel panel = new LogViewerPanel(log(), null);
+        JList<SignalSections.Row> list = panel.fieldList();
+        javax.swing.JViewport viewport = (javax.swing.JViewport) list.getParent();
+        // a viewport shorter than the list: the default sections and the groups of three signals
+        list.setSize(260, list.getPreferredSize().height);
+        viewport.setSize(260, 3 * list.getFixedCellHeight());
+        viewport.setViewPosition(new java.awt.Point(0, 0));
+        java.awt.Point at = rowCentre(panel, 2);
+        int onScreen = at.y - viewport.getViewPosition().y;
+
+        mouse(panel, MouseEvent.MOUSE_PRESSED, at, 1);
+        mouse(panel, MouseEvent.MOUSE_RELEASED, at, 1);
+        assertTrue(panel.chart().plotLayout().isPlotted(2));
+        int index = -1;
+        for (int i = 0; i < list.getModel().getSize(); i++) {
+            SignalSections.Row row = list.getModel().getElementAt(i);
+            if (row.field == 2 && row.section.equals(SignalSections.COMMON)) {
+                index = i;
+            }
+        }
+        java.awt.Rectangle cell = list.getCellBounds(index, index);
+        assertEquals(onScreen, cell.y + cell.height / 2 - viewport.getViewPosition().y,
+                "the clicked CLT row did not move on screen");
     }
 
     /** Selects the first list row showing {@code field}. */

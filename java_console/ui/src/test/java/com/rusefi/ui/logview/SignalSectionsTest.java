@@ -106,8 +106,16 @@ class SignalSectionsTest {
         int plottedBefore = panel.chart().plotLayout().plottedCount();
         int common = indexOf(panel, "v " + SignalSections.COMMON);
         Rectangle heading = panel.fieldList().getCellBounds(common, common);
-        panel.fieldList().dispatchEvent(new MouseEvent(panel.fieldList(), MouseEvent.MOUSE_CLICKED, 0, 0,
-                heading.x + 20, heading.y + heading.height / 2, 1, false, MouseEvent.BUTTON1));
+        for (int id : new int[]{MouseEvent.MOUSE_PRESSED, MouseEvent.MOUSE_RELEASED}) {
+            MouseEvent event = new MouseEvent(panel.fieldList(), id, 0,
+                    id == MouseEvent.MOUSE_PRESSED ? MouseEvent.BUTTON1_DOWN_MASK : 0,
+                    heading.x + 20, heading.y + heading.height / 2, 1, false, MouseEvent.BUTTON1);
+            if (id == MouseEvent.MOUSE_PRESSED) {
+                panel.rowMouse.mousePressed(event);
+            } else {
+                panel.rowMouse.mouseReleased(event);
+            }
+        }
         assertTrue(indexOf(panel, "> " + SignalSections.COMMON) >= 0);
         assertEquals(plottedBefore, panel.chart().plotLayout().plottedCount(), "a heading is not a signal");
 

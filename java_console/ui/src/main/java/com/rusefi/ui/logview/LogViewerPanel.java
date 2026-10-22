@@ -25,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
+import javax.swing.JViewport;
 import javax.swing.KeyStroke;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
@@ -45,6 +46,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.datatransfer.Transferable;
+import java.awt.dnd.DragSource;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -71,6 +73,10 @@ public final class LogViewerPanel extends JPanel {
     private static final int SIDEBAR_WIDTH = 280;
     /** Width at the right end of a list heading that opens its menu (the "⋯"). */
     private static final int MENU_HOT_WIDTH = 28;
+    /** Pointer movement in pixels that still counts as a click; see {@link #clickSlop}. */
+    private static final int CLICK_SLOP = 5;
+    /** Row a signal is being dragged from in this list, or -1. */
+    private int listDragOrigin = -1;
 
     private final CsvLogReader log;
     private final PlotLayout layout;
@@ -298,41 +304,100 @@ public final class LogViewerPanel extends JPanel {
         return sidebar;
     }
 
-    /** Clicks on the signal list's rows: plot a signal, open or close a section, the menus. */
+    /**
+     * Clicks on the signal list's rows: plot a signal, open or close a section, the menus. A click acts on release
+     * when the pointer stayed near the press, not on MOUSE_CLICKED, which AWT drops after the slightest movement;
+     * a longer move is a drag (drag and drop). The second click of a double-click is ignored, so it neither undoes
+     * the first nor hits another row.
+     */
     final MouseAdapter rowMouse = new MouseAdapter() {
-        @Override
-        public void mouseClicked(MouseEvent event) {
-            int index = rowAt(event.getPoint());
-            if (index < 0 || !SwingUtilities.isLeftMouseButton(event)) {
-                return;
-            }
-            SignalSections.Row row = rows.get(index);
-            Rectangle cell = fieldList.getCellBounds(index, index);
-            if (row.isHeading() && row.kind == SignalSections.Kind.LIST
-                    && event.getX() >= cell.x + cell.width - MENU_HOT_WIDTH) {
-                listMenu(row.section).show(fieldList, cell.x + cell.width - MENU_HOT_WIDTH, cell.y + cell.height);
-            } else if (row.isHeading()) {
-                toggleSection(row.section);
-            } else if (!row.isSignal()) {
-                return;
-            } else if (event.isShiftDown()) {
-                addToNewPlot(row.field);
-            } else {
-                toggle(row.field);
-            }
-        }
+        private int pressedIndex = -1;
+        private Point pressedAt;
 
         // the popup trigger is on press on some systems and on release on others
         @Override
         public void mousePressed(MouseEvent event) {
-            showRowMenu(event);
+            pressedIndex = -1;
+            if (showRowMenu(event)) {
+                return;
+            }
+            if (SwingUtilities.isLeftMouseButton(event)) {
+                pressedIndex = rowAt(event.getPoint());
+                pressedAt = event.getPoint();
+            }
         }
 
         @Override
         public void mouseReleased(MouseEvent event) {
-            showRowMenu(event);
+            int index = pressedIndex;
+            pressedIndex = -1;
+            if (showRowMenu(event) || index < 0 || !SwingUtilities.isLeftMouseButton(event)
+                    || event.getClickCount() > 1 || pressedAt.distance(event.getPoint()) > clickSlop()) {
+                return;
+            }
+            clickRow(index, event);
         }
     };
+
+    /**
+     * How far the pointer may move between press and release and still click: at least the drag threshold, and
+     * never less than a few pixels, since the threshold can be as small as 2 px.
+     */
+    private static int clickSlop() {
+        try {
+            return Math.max(CLICK_SLOP, DragSource.getDragThreshold());
+        } catch (RuntimeException headless) {
+            return CLICK_SLOP;
+        }
+    }
+
+    private void clickRow(int index, MouseEvent event) {
+        SignalSections.Row row = rows.get(index);
+        Rectangle cell = fieldList.getCellBounds(index, index);
+        if (row.isHeading() && row.kind == SignalSections.Kind.LIST
+                && event.getX() >= cell.x + cell.width - MENU_HOT_WIDTH) {
+            listMenu(row.section).show(fieldList, cell.x + cell.width - MENU_HOT_WIDTH, cell.y + cell.height);
+            return;
+        }
+        if (row.isHeading()) {
+            toggleSection(row.section);
+            return;
+        }
+        if (!row.isSignal()) {
+            return;
+        }
+        if (event.isShiftDown()) {
+            addToNewPlot(row.field);
+        } else {
+            toggle(row.field);
+        }
+        keepUnderPointer(row, index);
+    }
+
+    /**
+     * Plotting a signal adds (or removes) its row in Plotted above, which shifts the rows below; scrolls by the
+     * same amount, where the list can scroll, so the clicked row stays under the pointer for the next click.
+     */
+    private void keepUnderPointer(SignalSections.Row clicked, int oldIndex) {
+        JViewport viewport = (JViewport) SwingUtilities.getAncestorOfClass(JViewport.class, fieldList);
+        if (viewport == null) {
+            return;
+        }
+        for (int index = 0; index < rows.size(); index++) {
+            SignalSections.Row row = rows.get(index);
+            if (row.field == clicked.field && row.section.equals(clicked.section)) {
+                int shift = fieldList.getCellBounds(index, index).y - fieldList.getCellBounds(oldIndex, oldIndex).y;
+                if (shift != 0) {
+                    // the list's size follows its rows only after layout, so size it now for the clamp below
+                    fieldList.setSize(fieldList.getWidth(), fieldList.getPreferredSize().height);
+                    Point view = viewport.getViewPosition();
+                    int maxY = Math.max(0, fieldList.getHeight() - viewport.getExtentSize().height);
+                    viewport.setViewPosition(new Point(view.x, Math.max(0, Math.min(maxY, view.y + shift))));
+                }
+                return;
+            }
+        }
+    }
 
     JList<SignalSections.Row> fieldList() {
         return fieldList;
@@ -351,19 +416,20 @@ public final class LogViewerPanel extends JPanel {
         return index >= 0 && fieldList.getCellBounds(index, index).contains(point) ? index : -1;
     }
 
-    private void showRowMenu(MouseEvent event) {
+    /** Shows the row's menu for a popup trigger; true if the event was one. */
+    private boolean showRowMenu(MouseEvent event) {
         if (!event.isPopupTrigger()) {
-            return;
+            return false;
         }
         int index = rowAt(event.getPoint());
-        if (index < 0) {
-            return;
+        if (index >= 0) {
+            fieldList.setSelectedIndex(index);
+            JPopupMenu menu = rowMenu(rows.get(index));
+            if (menu != null) {
+                menu.show(fieldList, event.getX(), event.getY());
+            }
         }
-        fieldList.setSelectedIndex(index);
-        JPopupMenu menu = rowMenu(rows.get(index));
-        if (menu != null) {
-            menu.show(fieldList, event.getX(), event.getY());
-        }
+        return true;
     }
 
     /** The right-click menu of a row: list actions for a list heading, signal actions otherwise. */
@@ -706,7 +772,16 @@ public final class LogViewerPanel extends JPanel {
         @Override
         protected Transferable createTransferable(JComponent component) {
             SignalSections.Row row = fieldList.getSelectedValue();
-            return row == null || !row.isSignal() ? null : SignalTransfer.of(row.field);
+            if (row == null || !row.isSignal()) {
+                return null;
+            }
+            listDragOrigin = fieldList.getSelectedIndex();
+            return SignalTransfer.of(row.field);
+        }
+
+        @Override
+        protected void exportDone(JComponent source, Transferable data, int action) {
+            listDragOrigin = -1;
         }
 
         @Override
@@ -716,17 +791,33 @@ public final class LogViewerPanel extends JPanel {
 
         @Override
         boolean importSignal(TransferSupport support, int field) {
-            String list = support.isDrop() ? listAt(((JList.DropLocation) support.getDropLocation()).getIndex()) : null;
-            if (list != null) {
-                addToList(list, field);
-                return true;
-            }
-            if (!layout.isPlotted(field)) {
-                return false;
-            }
-            layout.remove(field);
+            return dropOnList(field, support.isDrop() ? ((JList.DropLocation) support.getDropLocation()).getIndex() : -1);
+        }
+    }
+
+    /**
+     * A signal dropped on the list at a row: back on the row it was dragged from, it was a click that moved past the
+     * drag threshold (2 px on some systems) and toggles the signal; on a list it is copied there; elsewhere a
+     * plotted trace leaves its plot.
+     */
+    boolean dropOnList(int field, int index) {
+        if (listDragOrigin >= 0 && index == listDragOrigin) {
+            int origin = listDragOrigin;
+            SignalSections.Row row = rows.get(origin);
+            toggle(field);
+            keepUnderPointer(row, origin);
             return true;
         }
+        String list = listAt(index);
+        if (list != null) {
+            addToList(list, field);
+            return true;
+        }
+        if (!layout.isPlotted(field)) {
+            return false;
+        }
+        layout.remove(field);
+        return true;
     }
 
     /** The list whose heading or member is at a row, or null. */
