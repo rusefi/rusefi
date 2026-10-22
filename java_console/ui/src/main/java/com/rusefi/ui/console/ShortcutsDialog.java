@@ -86,6 +86,10 @@ final class ShortcutsDialog extends JDialog {
                     + "and max (a legend item also shows a card with max, min and average); click it to keep "
                     + "the highlight, click again to release it. With the pointer off the plots the legend "
                     + "shows each signal's visible min–max. Stats (toolbar) lists every plotted signal.",
+            "Measure (toolbar): click a plot to place cursor A, then B; later clicks move the nearer one "
+                    + "and dragging a flag moves it. The pill above the time axis shows both times and the time "
+                    + "between them, the legend each signal's change (Δ), and statistics cover A–B. "
+                    + "Esc (with the plots focused) or the plot ⋯ menu clears A and B.",
             "Drag a signal or legend item onto a plot or onto + Add plot; drag a legend item back "
                     + "onto the list to remove it. Drag the gap between plots to resize them; "
                     + "double-click the gap to make all plots the same height.",

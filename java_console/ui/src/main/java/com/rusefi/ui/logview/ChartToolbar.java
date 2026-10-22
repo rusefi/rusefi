@@ -26,7 +26,8 @@ import java.util.function.Consumer;
 
 /**
  * Toolbar above the log chart, styled like the Gauges toolbar: Open, plot colours, a Grid button that
- * opens the grid options, the cursor Snap / Free switch and the Stats toggle. [tag:console_theme]
+ * opens the grid options, the cursor Snap / Free switch, the Measure (A/B cursors) and Stats toggles.
+ * [tag:console_theme]
  */
 final class ChartToolbar extends ThemedStrip {
     final JToggleButton lightPlot = SegmentedControl.segment("Light");
@@ -36,6 +37,7 @@ final class ChartToolbar extends ThemedStrip {
     final JToggleButton snapCursor = SegmentedControl.segment("Snap");
     final JToggleButton freeCursor = SegmentedControl.segment("Free");
     /** Shows the statistics table; the viewer panel listens to it. */
+    final JToggleButton measureButton = new JToggleButton("Measure");
     final JToggleButton statsButton = new JToggleButton("Stats");
 
     // grid options, shown in a popup under the Grid button
@@ -111,6 +113,12 @@ final class ChartToolbar extends ThemedStrip {
         add(new SegmentedControl(snapCursor, freeCursor));
         add(Box.createHorizontalStrut(JoinedButtons.ROW_GAP));
         // a light accent tint when on, instead of the toolbar buttons' heavy grey [tag:console_theme]
+        measureButton.putClientProperty(FlatClientProperties.STYLE_CLASS, "viewToggle");
+        measureButton.setToolTipText("<html>Measure between two points: click a plot to place cursor A, then B "
+                + "(later clicks move the nearer one).<br>Shows the time between them and each signal's change; "
+                + "statistics cover A–B. Drag a flag to move it, Esc clears.</html>");
+        add(new JoinedButtons(measureButton));
+        add(Box.createHorizontalStrut(JoinedButtons.ROW_GAP));
         statsButton.putClientProperty(FlatClientProperties.STYLE_CLASS, "viewToggle");
         statsButton.setToolTipText("Show the value at the cursor and the min, max and average over the "
                 + "visible time of every plotted signal");

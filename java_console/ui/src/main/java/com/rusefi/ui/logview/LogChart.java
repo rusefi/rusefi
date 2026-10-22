@@ -5,7 +5,9 @@ import com.rusefi.ui.widgets.ConsoleFonts;
 
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
+import javax.swing.AbstractAction;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.KeyStroke;
 import javax.swing.JColorChooser;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
@@ -22,10 +24,13 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Stroke;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -104,6 +109,12 @@ final class LogChart extends JComponent {
     private final TraceFocus focus = new TraceFocus();
     /** Legend item pressed and not yet dragged; releasing it toggles the pin. */
     private int legendPressField = -1;
+    /** The A and B measurement cursors; see {@link #setMeasuring}. */
+    private final MeasureCursors cursors = new MeasureCursors();
+    /** While on, a click on a plot places or moves a measurement cursor. */
+    private boolean measuring;
+    /** The cursor whose flag is being dragged, or null. */
+    private MeasureCursors.Which draggingCursor;
     /** Legend item whose colour mark is under the pointer, or -1. */
     private int hoveredSwatch = -1;
     /** Legend item right-pressed, for its menu on release unless the press became a pan. */
@@ -168,7 +179,19 @@ final class LogChart extends JComponent {
         double interval = log.minimumSampleInterval();
         // Allow zooming in until only a few samples are visible.
         window = new TimeWindow(fullStart, fullEnd, interval > 0 ? interval * 4 : (fullEnd - fullStart) / 1000);
-        stats = new VisibleStats(log, window);
+        stats = new VisibleStats(log, window, cursors);
+        cursors.addListener(() -> {
+            repaint();
+            fireViewChanged();
+        });
+        setFocusable(true);
+        getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "clearCursors");
+        getActionMap().put("clearCursors", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                cursors.clear();
+            }
+        });
         setOpaque(true);
         MouseAdapter mouse = new MouseHandler();
         addMouseListener(mouse);
@@ -275,6 +298,51 @@ final class LogChart extends JComponent {
             return Double.NaN;
         }
         return grid.isSnapCursor() ? log.value(cursorSample, 0) : timeAt(cursorX);
+    }
+
+    MeasureCursors cursors() {
+        return cursors;
+    }
+
+    boolean isMeasuring() {
+        return measuring;
+    }
+
+    /** Measure mode (the toolbar's Measure button): clicks place A, then B. Turning it off removes them. */
+    void setMeasuring(boolean measuring) {
+        this.measuring = measuring;
+        if (!measuring) {
+            cursors.clear();
+        }
+        repaint();
+    }
+
+    /** The time a click at {@code x} stands for: the nearest sample's while the cursor snaps. */
+    private double cursorTimeAt(int x) {
+        double time = timeAt(x);
+        return grid.isSnapCursor() ? log.value(log.nearestSample(time), 0) : time;
+    }
+
+    /** The draggable flag of a measurement cursor at the top of the plots, or null when not shown. */
+    Rectangle cursorFlag(MeasureCursors.Which which) {
+        if (!cursors.has(which) || bands.isEmpty()) {
+            return null;
+        }
+        int x = xOf(cursors.time(which));
+        if (!insidePlot(x)) {
+            return null;
+        }
+        return new Rectangle(x - FLAG_SIZE / 2, bands.get(0).traces.y, FLAG_SIZE, FLAG_SIZE);
+    }
+
+    private MeasureCursors.Which cursorFlagAt(int x, int y) {
+        for (MeasureCursors.Which which : MeasureCursors.Which.values()) {
+            Rectangle flag = cursorFlag(which);
+            if (flag != null && flag.contains(x, y)) {
+                return which;
+            }
+        }
+        return null;
     }
 
     /** Plot areas from the last paint, top to bottom. */
@@ -496,6 +564,21 @@ final class LogChart extends JComponent {
         JMenuItem down = new JMenuItem("Move down");
         down.setEnabled(plot < layout.plotCount() - 1);
         down.addActionListener(e -> layout.move(plot, 1));
+        if (measuring || !cursors.isEmpty()) {
+            JMenuItem zoom = new JMenuItem("Zoom to A–B");
+            zoom.setEnabled(cursors.isRange() && cursors.end() > cursors.start());
+            zoom.addActionListener(e -> {
+                window.show(cursors.start(), cursors.end());
+                repaint();
+                fireViewChanged();
+            });
+            JMenuItem clearCursors = new JMenuItem("Clear A/B");
+            clearCursors.setEnabled(!cursors.isEmpty());
+            clearCursors.addActionListener(e -> cursors.clear());
+            menu.add(zoom);
+            menu.add(clearCursors);
+            menu.addSeparator();
+        }
         JMenuItem clear = new JMenuItem("Clear plot");
         clear.setToolTipText("Removes all signals from this plot and keeps the plot");
         clear.setEnabled(!layout.fields(plot).isEmpty());
@@ -503,9 +586,9 @@ final class LogChart extends JComponent {
         JMenuItem remove = new JMenuItem("Remove plot");
         remove.setEnabled(layout.canRemovePlot());
         remove.addActionListener(e -> layout.removePlot(plot));
-        menu.add(up);
-        menu.add(down);
-        menu.addSeparator();
+        menu.insert(up, 0);
+        menu.insert(down, 1);
+        menu.insert(new JPopupMenu.Separator(), 2);
         menu.add(clear);
         menu.add(remove);
         return menu;
@@ -529,6 +612,8 @@ final class LogChart extends JComponent {
             hoveredMenu = band != null && band.menu.contains(event.getX(), event.getY()) ? band.plot : -1;
             if (dividerAt(event.getX(), event.getY()) >= 0) {
                 setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
+            } else if (cursorFlagAt(event.getX(), event.getY()) != null) {
+                setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
             } else {
                 setCursor(onControl(event.getX(), event.getY())
                         ? Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) : Cursor.getDefaultCursor());
@@ -552,7 +637,13 @@ final class LogChart extends JComponent {
         public void mousePressed(MouseEvent event) {
             int x = event.getX();
             int y = event.getY();
+            // focus for Esc, which clears the measurement cursors
+            requestFocusInWindow();
             if (SwingUtilities.isLeftMouseButton(event)) {
+                draggingCursor = cursorFlagAt(x, y);
+                if (draggingCursor != null) {
+                    return;
+                }
                 if (addPlotRow.contains(x, y)) {
                     layout.addPlot();
                     return;
@@ -603,6 +694,10 @@ final class LogChart extends JComponent {
 
         @Override
         public void mouseDragged(MouseEvent event) {
+            if (draggingCursor != null) {
+                cursors.set(draggingCursor, cursorTimeAt(Math.max(plotLeft, Math.min(plotRight, event.getX()))));
+                return;
+            }
             if (resizing >= 0) {
                 resize(event.getY() - resizeFromY);
                 return;
@@ -634,8 +729,16 @@ final class LogChart extends JComponent {
                 // a right-click on a legend item, not a right-drag pan
                 legendMenu(rightPressed.field).show(LogChart.this, event.getX(), event.getY());
             }
+            if (draggingCursor != null) {
+                draggingCursor = null;
+                return;
+            }
             if (selectionFrom >= 0 && Math.abs(selectionTo - selectionFrom) >= MIN_SELECTION_PIXELS) {
                 window.show(timeAt(selectionFrom), timeAt(selectionTo));
+            } else if (selectionFrom >= 0 && measuring) {
+                // a click, not a range: place A, then B, then move the nearer one
+                int x = selectionFrom;
+                cursors.place(cursorTimeAt(x), distanceTo(MeasureCursors.Which.A, x), distanceTo(MeasureCursors.Which.B, x));
             }
             if (legendPressField >= 0) {
                 // a click on a legend item, not a drag: keep its trace highlighted, or stop
@@ -810,6 +913,7 @@ final class LogChart extends JComponent {
                 paintBand(g, band, palette, metrics, valueFont, sampleTimes);
             }
             drawTimeAxis(g, metrics, palette, axisTop, sampleTimes);
+            drawMeasureCursors(g, metrics, palette, axisTop);
             drawAddPlotRow(g, metrics, palette);
             markers = new ArrayList<>();
             int focused = focus.focused();
@@ -1116,7 +1220,9 @@ final class LogChart extends JComponent {
         TraceStats traceStats = stats.get(field);
         String unit = unitSuffix(field);
         String title = log.name(field);
-        String range = String.format(Locale.ROOT, "visible %.1f–%.1f s", window.start(), window.end());
+        String range = stats.isBetweenCursors()
+                ? String.format(Locale.ROOT, "A–B %.2f–%.2f s", stats.rangeStart(), stats.rangeEnd())
+                : String.format(Locale.ROOT, "visible %.1f–%.1f s", window.start(), window.end());
         String[][] rows = traceStats.isEmpty()
                 ? new String[][]{{"", "no values in the visible time", ""}}
                 : new String[][]{
@@ -1367,9 +1473,104 @@ final class LogChart extends JComponent {
      * visible time window, so the legend summarises what is on screen.
      */
     String legendValue(int field, int sample) {
-        if (sample >= 0) {
-            return ValueFormat.format(log, field, log.value(sample, field));
+        String value = sample >= 0 ? ValueFormat.format(log, field, log.value(sample, field))
+                : ValueFormat.range(log, field, stats.get(field));
+        return cursors.isRange() ? value + "  Δ" + delta(field) : value;
+    }
+
+    /** B minus A of a signal, signed: "+820", "-0.12". */
+    String delta(int field) {
+        double a = log.value(log.nearestSample(cursors.time(MeasureCursors.Which.A)), field);
+        double b = log.value(log.nearestSample(cursors.time(MeasureCursors.Which.B)), field);
+        double difference = b - a;
+        if (!Double.isFinite(difference)) {
+            return ValueFormat.NONE;
         }
-        return ValueFormat.range(log, field, stats.get(field));
+        return (difference >= 0 ? "+" : "") + ValueFormat.format(log, field, difference);
+    }
+
+    /** A cursor's value of a signal at its nearest sample. */
+    double valueAt(MeasureCursors.Which which, int field) {
+        return log.value(log.nearestSample(cursors.time(which)), field);
+    }
+
+    private double distanceTo(MeasureCursors.Which which, int x) {
+        return cursors.has(which) ? Math.abs(xOf(cursors.time(which)) - x) : Double.POSITIVE_INFINITY;
+    }
+
+    /** "A 12.40 s   B 13.15 s   Δt 0.75 s", or the one cursor that is set. */
+    String measureText() {
+        StringBuilder text = new StringBuilder();
+        for (MeasureCursors.Which which : MeasureCursors.Which.values()) {
+            if (cursors.has(which)) {
+                text.append(text.length() == 0 ? "" : "   ")
+                        .append(String.format(Locale.ROOT, "%s %.2f s", which, cursors.time(which)));
+            }
+        }
+        if (cursors.isRange()) {
+            double span = cursors.end() - cursors.start();
+            text.append(String.format(Locale.ROOT, span < 1 ? "   Δt %.3f s" : "   Δt %.2f s", span));
+        }
+        return text.toString();
+    }
+
+    private static final int FLAG_SIZE = 16;
+
+    /**
+     * The A and B cursors: dashed lines through every plot, the time between them tinted, a lettered flag on
+     * each (dragged to move it) and a pill above the time axis with their times and the time between them.
+     */
+    private void drawMeasureCursors(Graphics2D g, FontMetrics metrics, PlotPalette palette, int axisTop) {
+        if (cursors.isEmpty() || bands.isEmpty()) {
+            return;
+        }
+        if (cursors.isRange()) {
+            int from = Math.max(plotLeft, xOf(cursors.start()));
+            int to = Math.min(plotRight, xOf(cursors.end()));
+            if (to > from) {
+                g.setColor(palette.selection);
+                for (Band band : bands) {
+                    g.fillRect(from, band.traces.y, to - from, band.traces.height);
+                }
+            }
+        }
+        Stroke previous = g.getStroke();
+        Font font = g.getFont();
+        g.setFont(font.deriveFont(Font.BOLD, font.getSize2D() - 1));
+        FontMetrics flagMetrics = g.getFontMetrics();
+        for (MeasureCursors.Which which : MeasureCursors.Which.values()) {
+            Rectangle flag = cursorFlag(which);
+            if (flag == null) {
+                continue;
+            }
+            int x = flag.x + flag.width / 2;
+            g.setColor(palette.accent);
+            g.setStroke(new BasicStroke(1.2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 1, new float[]{5, 4}, 0));
+            for (Band band : bands) {
+                g.drawLine(x, band.traces.y, x, band.traces.y + band.traces.height);
+            }
+            g.setStroke(previous);
+            g.fillRoundRect(flag.x, flag.y, flag.width, flag.height, 5, 5);
+            g.setColor(palette.background);
+            String letter = which.name();
+            g.drawString(letter, x - flagMetrics.stringWidth(letter) / 2,
+                    flag.y + (flag.height + flagMetrics.getAscent() - flagMetrics.getDescent()) / 2);
+        }
+        g.setFont(font);
+
+        String text = measureText();
+        int width = metrics.stringWidth(text) + 20;
+        int height = metrics.getHeight() + 6;
+        double middle = cursors.isRange() ? (cursors.start() + cursors.end()) / 2
+                : cursors.time(cursors.has(MeasureCursors.Which.A) ? MeasureCursors.Which.A : MeasureCursors.Which.B);
+        int x = Math.max(plotLeft, Math.min(plotRight - width, xOf(middle) - width / 2));
+        int y = axisTop - height - 4;
+        Color background = ThemedStrip.themed("Console.Card.background", Color.WHITE);
+        g.setColor(new Color(background.getRed(), background.getGreen(), background.getBlue(), 235));
+        g.fillRoundRect(x, y, width, height, height, height);
+        g.setColor(palette.accent);
+        g.drawRoundRect(x, y, width, height, height, height);
+        g.setColor(ThemedStrip.themed("Label.foreground", Color.BLACK));
+        g.drawString(text, x + 10, y + (height + metrics.getAscent() - metrics.getDescent()) / 2);
     }
 }

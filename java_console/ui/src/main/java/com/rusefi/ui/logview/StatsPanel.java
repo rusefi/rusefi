@@ -8,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
@@ -33,7 +34,11 @@ import static com.rusefi.ui.logview.ThemedStrip.themed;
  */
 final class StatsPanel extends JPanel {
     static final int DEFAULT_WIDTH = 400;
+    /** Room for the A, B and Δ columns. */
+    static final int MEASURE_WIDTH = 480;
     static final String[] COLUMNS = {"Signal", "Cursor", "Min", "Max", "Avg"};
+    /** While both measurement cursors are set: their values and the change instead of the cursor column. */
+    static final String[] MEASURE_COLUMNS = {"Signal", "A", "B", "Δ", "Min", "Max", "Avg"};
 
     private final LogChart chart;
     private final StatsModel model = new StatsModel();
@@ -87,15 +92,9 @@ final class StatsPanel extends JPanel {
         table.setRowSelectionAllowed(false);
         table.setBackground(background);
         table.getTableHeader().setReorderingAllowed(false);
-        table.getColumnModel().getColumn(0).setPreferredWidth(150);
-        for (int column = 1; column < COLUMNS.length; column++) {
-            table.getColumnModel().getColumn(column).setPreferredWidth(60);
-        }
-        HeaderRenderer header = new HeaderRenderer();
-        for (int column = 0; column < COLUMNS.length; column++) {
-            table.getColumnModel().getColumn(column).setHeaderRenderer(header);
-        }
+        setUpColumns();
         table.setDefaultRenderer(Object.class, new CellRenderer());
+        chart.cursors().addListener(this::cursorsChanged);
         // hovering a row highlights its trace on the plots, a click keeps it highlighted
         table.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
@@ -136,6 +135,50 @@ final class StatsPanel extends JPanel {
         refresh();
     }
 
+    /** The columns shown: with A and B set, their values and the change replace the cursor column. */
+    String[] columns() {
+        // the table asks while it is built, before the chart is set
+        return chart != null && chart.cursors().isRange() ? MEASURE_COLUMNS : COLUMNS;
+    }
+
+    private void setUpColumns() {
+        boolean measuring = table.getColumnCount() > COLUMNS.length;
+        table.getColumnModel().getColumn(0).setPreferredWidth(measuring ? 120 : 150);
+        for (int column = 1; column < table.getColumnCount(); column++) {
+            table.getColumnModel().getColumn(column).setPreferredWidth(measuring ? 52 : 60);
+        }
+        HeaderRenderer header = new HeaderRenderer();
+        for (int column = 0; column < table.getColumnCount(); column++) {
+            table.getColumnModel().getColumn(column).setHeaderRenderer(header);
+        }
+    }
+
+    private void cursorsChanged() {
+        if (table.getColumnCount() != columns().length) {
+            model.fireTableStructureChanged();
+            setUpColumns();
+            widenForMeasureColumns();
+        }
+        refreshValues();
+    }
+
+    /** Makes room for the A, B and Δ columns when the panel is narrower; never narrows it. */
+    private void widenForMeasureColumns() {
+        if (!chart.cursors().isRange()) {
+            return;
+        }
+        setPreferredSize(new Dimension(Math.max(getPreferredSize().width, MEASURE_WIDTH), 100));
+        if (getParent() instanceof JSplitPane && getWidth() > 0 && getWidth() < MEASURE_WIDTH) {
+            JSplitPane split = (JSplitPane) getParent();
+            split.setDividerLocation(Math.max(0, split.getWidth() - split.getDividerSize() - MEASURE_WIDTH));
+        }
+    }
+
+    /** Right padding of a value cell: tighter while the seven measure columns share the width. */
+    private int cellRightPadding() {
+        return table.getColumnCount() > COLUMNS.length ? 6 : 12;
+    }
+
     /** Rebuilds the rows after the plots change. */
     void refresh() {
         model.rows = rows(chart.plotLayout());
@@ -152,12 +195,13 @@ final class StatsPanel extends JPanel {
     }
 
     private void refreshFooter() {
-        TimeWindow window = chart.timeWindow();
+        VisibleStats stats = chart.visibleStats();
         footer.setText(model.rows.isEmpty()
                 ? "Plot signals to see their statistics"
-                : String.format(Locale.ROOT, "<html>Min, max and avg over the visible %.2f–%.2f s<br>"
+                : String.format(Locale.ROOT, "<html>Min, max and avg %s %.2f–%.2f s<br>"
                 + "Hover a row to highlight its trace; click to keep it highlighted</html>",
-                window.start(), window.end()));
+                stats.isBetweenCursors() ? "between A and B," : "over the visible",
+                stats.rangeStart(), stats.rangeEnd()));
     }
 
     /** Plot headings only when several plots are stacked. */
@@ -200,12 +244,12 @@ final class StatsPanel extends JPanel {
 
         @Override
         public int getColumnCount() {
-            return COLUMNS.length;
+            return columns().length;
         }
 
         @Override
         public String getColumnName(int column) {
-            return COLUMNS[column];
+            return columns()[column];
         }
 
         @Override
@@ -218,15 +262,26 @@ final class StatsPanel extends JPanel {
                 return row;
             }
             CsvLogReader log = chart.log();
-            if (column == 1) {
-                int sample = chart.cursorSample();
-                return sample < 0 ? ValueFormat.NONE : ValueFormat.format(log, row.field, log.value(sample, row.field));
+            String name = getColumnName(column);
+            switch (name) {
+                case "Cursor": {
+                    int sample = chart.cursorSample();
+                    return sample < 0 ? ValueFormat.NONE : ValueFormat.format(log, row.field, log.value(sample, row.field));
+                }
+                case "A":
+                case "B":
+                    return ValueFormat.format(log, row.field,
+                            chart.valueAt(MeasureCursors.Which.valueOf(name), row.field));
+                case "Δ":
+                    return chart.delta(row.field);
+                default:
+                    break;
             }
             TraceStats stats = chart.visibleStats().get(row.field);
             if (stats.isEmpty()) {
                 return ValueFormat.NONE;
             }
-            double value = column == 2 ? stats.min : column == 3 ? stats.max : stats.average;
+            double value = name.equals("Min") ? stats.min : name.equals("Max") ? stats.max : stats.average;
             return ValueFormat.format(log, row.field, value);
         }
     }
@@ -246,7 +301,8 @@ final class StatsPanel extends JPanel {
             setHorizontalAlignment(column == 0 ? SwingConstants.LEFT : SwingConstants.RIGHT);
             setBorder(BorderFactory.createCompoundBorder(
                     BorderFactory.createMatteBorder(0, 0, 1, 0, themed("Separator.foreground", Color.LIGHT_GRAY)),
-                    BorderFactory.createEmptyBorder(6, column == 0 ? 12 : 4, 6, 12)));
+                    BorderFactory.createEmptyBorder(6, column == 0 ? 12 : 4, 6,
+                            column == 0 || table.getColumnCount() <= COLUMNS.length ? 12 : 6)));
             return this;
         }
     }
@@ -261,7 +317,7 @@ final class StatsPanel extends JPanel {
             Row row = model.rows.get(rowIndex);
             Color muted = themed("Console.LogViewer.mutedForeground", Color.GRAY);
             setIcon(null);
-            setBorder(BorderFactory.createEmptyBorder(0, column == 0 ? 12 : 4, 0, 12));
+            setBorder(BorderFactory.createEmptyBorder(0, column == 0 ? 12 : 4, 0, column == 0 ? 12 : cellRightPadding()));
             boolean rowFocused = !row.isHeading() && row.field == chart.focus().focused();
             boolean pinned = !row.isHeading() && row.field == chart.focus().pinned();
             setBackground(rowFocused ? themed("Console.LogViewer.chipBackground", table.getBackground()) : table.getBackground());
