@@ -163,7 +163,7 @@ public class EngineSnifferPanel {
         });
 
         mainPanel.add(chartPanel, BorderLayout.CENTER);
-        mainPanel.add(new WarningPanel(config).getPanel(config), BorderLayout.SOUTH);
+        mainPanel.add(new WarningPanel(config, uiContext).getPanel(config), BorderLayout.SOUTH);
     }
 
     private void setPaused(JButton pauseButton, boolean isPaused) {

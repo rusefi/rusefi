@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
  * too, keyed by path and checked against the file's size and time, so the list can show it without reading
  * the files.
  */
-final class RecentLogs {
+public final class RecentLogs {
     static final int LIMIT = 10;
     /** Config key of the logs opened from other folders, newest first, separated by {@link #SEPARATOR}. */
     static final String KEY = "recent_logs";
@@ -109,7 +109,7 @@ final class RecentLogs {
     }
 
     /** "17.0 s", "2 min 15 s", "1 h 05 min"; empty when unknown. */
-    static String duration(double seconds) {
+    public static String duration(double seconds) {
         if (!(seconds >= 0) || !Double.isFinite(seconds)) {
             return "";
         }
@@ -156,7 +156,7 @@ final class RecentLogs {
         durations.getConfig().keySet().retainAll(keep);
     }
 
-    static String size(long bytes) {
+    public static String size(long bytes) {
         if (bytes < 1024) {
             return bytes + " B";
         }

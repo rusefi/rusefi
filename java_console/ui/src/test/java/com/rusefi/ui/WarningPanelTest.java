@@ -30,6 +30,36 @@ public class WarningPanelTest {
         });
     }
 
+    /** The console's Record button sits at the right end of the strip, after the warnings and log controls. */
+    @Test
+    public void recordButtonFromTheConsoleSitsAtTheRight() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            UIContext uiContext = new UIContext();
+            uiContext.recordButtonFactory = () -> new JButton("Record");
+            JPanel strip = new WarningPanel(new Node(), uiContext).getPanel(null);
+            JButton record = findButton(strip, "Record");
+            assertNotNull(record);
+            JButton clear = findButton(strip, "Clear warning");
+            strip.setSize(1200, 50);
+            layoutAll(strip);
+            int recordX = javax.swing.SwingUtilities.convertPoint(record, 0, 0, strip).x;
+            int clearX = javax.swing.SwingUtilities.convertPoint(clear, 0, 0, strip).x;
+            assertTrue(recordX > 1000, "right end: " + recordX);
+            assertTrue(recordX > clearX);
+
+            assertNull(findButton(new WarningPanel(new Node()).getPanel(null), "Record"), "no console, no button");
+        });
+    }
+
+    private static void layoutAll(java.awt.Container container) {
+        container.doLayout();
+        for (java.awt.Component child : container.getComponents()) {
+            if (child instanceof java.awt.Container) {
+                layoutAll((java.awt.Container) child);
+            }
+        }
+    }
+
     private static JButton findButton(java.awt.Container container, String text) {
         for (java.awt.Component child : container.getComponents()) {
             if (child instanceof JButton && text.equals(((JButton) child).getText())) {

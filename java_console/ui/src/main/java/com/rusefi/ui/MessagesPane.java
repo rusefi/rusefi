@@ -48,7 +48,7 @@ public class MessagesPane {
         JPanel statsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
         statsPanel.add(new RpmLabel(uiContext).getContent());
-        statsPanel.add(new WarningPanel(config).getPanel(config));
+        statsPanel.add(new WarningPanel(config, uiContext).getPanel(config));
 
         content.add(statsPanel, BorderLayout.SOUTH);
 

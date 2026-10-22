@@ -37,8 +37,8 @@ class BinaryLoggingMenuTest {
                 UIContext context = mock(UIContext.class);
                 context.sensorLogger = mock(SensorLogger.class);
                 BinaryLoggingMenu logging = new BinaryLoggingMenu(context, null, null, null, null, new Node());
-                JMenuItem start = logging.getMenu().getItem(0);
-                JMenuItem stop = logging.getMenu().getItem(1);
+                JMenuItem start = logging.startItem();
+                JMenuItem stop = logging.stopItem();
                 KeyStroke toggle = KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK);
 
                 assertFalse(start.isEnabled());
@@ -107,7 +107,7 @@ class BinaryLoggingMenuTest {
             when(context.sensorLogger.getLastRecordingSeconds()).thenReturn(12.5);
             BinaryLoggingMenu logging = new BinaryLoggingMenu(context, null, null, null, null, new Node());
             List<String> stopped = new ArrayList<>();
-            logging.setRecordingStoppedAction((file, seconds) -> stopped.add(file.getName() + " " + seconds));
+            logging.addRecordingStoppedListener((file, seconds) -> stopped.add(file.getName() + " " + seconds));
 
             logging.stop();
             assertTrue(stopped.isEmpty(), "nothing was recording");

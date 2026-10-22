@@ -374,6 +374,8 @@ public class MainFrame {
                 loadMenuIcon("player-play"), loadMenuIcon("player-stop"), loadMenuIcon("view"),
                 getConfig().getRoot().getChild("binary_logging"));
         menuBar.add(binaryLoggingMenu.getMenu());
+        // the tabs' status strips each get a Record / Stop button driven by this menu
+        consoleUI.uiContext.recordButtonFactory = () -> new RecordButton(binaryLoggingMenu);
 
         menuBar.add(new MenuBarDivider());
 
@@ -450,7 +452,7 @@ public class MainFrame {
         openLogItem.addActionListener(e -> chooseAndOpen.run());
         openLogItem.setEnabled(true);
         binaryLoggingMenu.setViewLogAction(viewLog);
-        binaryLoggingMenu.setRecordingStoppedAction(recordingStopped);
+        binaryLoggingMenu.addRecordingStoppedListener(recordingStopped);
     }
 
     public void setExitRequestHandler(Runnable exitRequestHandler) {

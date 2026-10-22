@@ -10,8 +10,10 @@ import com.rusefi.sensor_logs.SensorLogger;
 import com.rusefi.ui.wizard.WizardStepDescriptor;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.JComponent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -55,6 +57,8 @@ public class UIContext {
     }
 
     public SensorLogger sensorLogger = new SensorLogger(this::getBinaryProtocol);
+    /** Makes a Record / Stop button for a tab's status strip; set by MainFrame, none before that. */
+    public Supplier<JComponent> recordButtonFactory = () -> null;
 
     public IniFileState iniFileState = new IniFileState(this);
     public GaugesPanel.DetachedRepository DetachedRepositoryINSTANCE = new GaugesPanel.DetachedRepository(this);
