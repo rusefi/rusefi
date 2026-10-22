@@ -51,6 +51,15 @@ class SignalSectionsTest {
     }
 
     @Test
+    void plottedIsShownWithZeroWhileNothingIsPlotted() throws IOException {
+        CsvLogReader log = log();
+        List<String> rows = describe(rows(log, new PlotLayout(log.fieldCount()), "", true, false,
+                SignalSections.defaultCollapsed()));
+        assertEquals("v Plotted 0", rows.get(0));
+        assertEquals("v Common 2", rows.get(1));
+    }
+
+    @Test
     void zeroAndConstantAreHiddenSeparately() throws IOException {
         CsvLogReader log = log();
         assertEquals(1, SignalSections.zeroCount(log));
