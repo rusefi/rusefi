@@ -27,7 +27,7 @@ public class WarningPanel {
     static final String NO_WARNINGS = "No active warnings";
     private static final String WARNING = "WARNING";
     private static final String ERROR = "firmware error";
-    private final JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 14, 0)) {
+    private final JPanel panel = new JPanel(new BorderLayout()) {
         @Override
         protected void paintComponent(Graphics g) {
             g.setColor(themed("Console.StatusBar.background", getBackground()));
@@ -48,10 +48,32 @@ public class WarningPanel {
         }
     });
 
+    /** Warnings and log controls on the left; the strip's own controls (e.g. Record) on the right. */
+    private final JPanel left = new JPanel(new FlowLayout(FlowLayout.LEFT, 14, 0));
+
     public WarningPanel(Node config) {
+        this(config, (JComponent) null);
+    }
+
+    /** With the console's Record / Stop button at the right end, when the console provides one. */
+    public WarningPanel(Node config, UIContext uiContext) {
+        this(config, uiContext.recordButtonFactory.get());
+    }
+
+    private WarningPanel(Node config, JComponent trailing) {
         panel.setBorder(BorderFactory.createEmptyBorder(8, 2, 8, 2));
+        left.setOpaque(false);
+        panel.add(left, BorderLayout.CENTER);
+        if (trailing != null) {
+            // its own column on the right: a wider button grows into free space and moves nothing else
+            JPanel right = new JPanel(new GridBagLayout());
+            right.setOpaque(false);
+            right.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, JoinedButtons.ROW_END_INSET));
+            right.add(trailing);
+            panel.add(right, BorderLayout.EAST);
+        }
         label.setIconTextGap(10);
-        panel.add(label);
+        left.add(label);
 
         clear();
 
@@ -89,8 +111,8 @@ public class WarningPanel {
         });
 
         // same outlined style as the toolbar buttons (Edit dashboard)
-        panel.add(new JoinedButtons(reset));
-        panel.add(divider());
+        left.add(new JoinedButtons(reset));
+        left.add(divider());
         // todo: only display label if logs are being recorded
         // the dot is drawn in its label's colour, so it gets its own label: green dot, normal text
         JPanel logRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
@@ -102,13 +124,13 @@ public class WarningPanel {
             }
         });
         logRow.add(new JLabel(LOG_INFO_TEXT));
-        panel.add(logRow);
-        panel.add(divider());
+        left.add(logRow);
+        left.add(divider());
         Component logSize = new LogSizeControl(config).getContent();
         if (logSize instanceof JComponent) {
             ((JComponent) logSize).setOpaque(false);
         }
-        panel.add(logSize);
+        left.add(logSize);
     }
 
     private void showWarning(String message) {

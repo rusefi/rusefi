@@ -97,7 +97,7 @@ public class GaugesPanel {
         showLayout();
         content.add(layoutArea, BorderLayout.CENTER);
 
-        content.add(new WarningPanel(config).getPanel(config), BorderLayout.SOUTH);
+        content.add(new WarningPanel(config, uiContext).getPanel(config), BorderLayout.SOUTH);
     }
 
     @NotNull

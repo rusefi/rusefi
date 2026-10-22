@@ -19,6 +19,8 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
@@ -29,19 +31,26 @@ final class BinaryLoggingMenu {
     private static final KeyStroke TOGGLE_LOGGING = KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK);
     /** Path of the last recording, kept in the console config so View Last Log works after a restart. */
     static final String LAST_LOG = "last_log";
+    /** Whether the status strips show the Record / Stop button; on unless the user turns it off. */
+    static final String SHOW_RECORD_BUTTON = "show_record_button";
     private final UIContext uiContext;
     private final Node settings;
     private final Component parent;
     private final JMenu menu;
     private final JMenuItem startItem;
+    private final JMenuItem startAsItem;
     private final JMenuItem stopItem;
     private final JCheckBoxMenuItem saveTuneItem;
     private final JMenuItem viewLastItem;
+    private final JCheckBoxMenuItem showRecordButtonItem;
     private SwingWorker<byte[], Void> startWorker;
     private File lastLog;
     private Consumer<File> viewLogAction;
-    private BiConsumer<File, Double> recordingStoppedAction = (file, seconds) -> {
-    };
+    private final List<BiConsumer<File, Double>> recordingStoppedListeners = new ArrayList<>();
+    private final List<Runnable> stateListeners = new ArrayList<>();
+    /** When the current recording started, for the elapsed time shown while recording. */
+    private long recordingSince;
+    private File logsFolder = new File(FileLogger.DIR);
 
     /** @param settings where the last recording's path is kept; saved with the console config on exit */
     BinaryLoggingMenu(UIContext uiContext, Component parent, Icon startIcon, Icon stopIcon, Icon viewIcon,
@@ -56,9 +65,14 @@ final class BinaryLoggingMenu {
 
         startItem = new JMenuItem("Start");
         startItem.setIcon(startIcon);
-        startItem.setToolTipText("Start a binary data log (Ctrl+S)");
-        startItem.addActionListener(e -> chooseAndStart());
+        startItem.setToolTipText("Record a data log into the rusEFI logs folder (Ctrl+S)");
+        startItem.addActionListener(e -> startNow());
         menu.add(startItem);
+
+        startAsItem = new JMenuItem("Start As…");
+        startAsItem.setToolTipText("Choose the data log's file, then record");
+        startAsItem.addActionListener(e -> chooseAndStart());
+        menu.add(startAsItem);
 
         stopItem = new JMenuItem("Stop");
         stopItem.setIcon(stopIcon);
@@ -82,16 +96,30 @@ final class BinaryLoggingMenu {
             }
         });
         menu.add(viewLastItem);
+        menu.addSeparator();
+        showRecordButtonItem = new JCheckBoxMenuItem("Show Record Button",
+                settings.getBoolProperty(SHOW_RECORD_BUTTON, true));
+        showRecordButtonItem.setToolTipText("Show the Record / Stop button in the status bar at the bottom");
+        showRecordButtonItem.addActionListener(e -> {
+            settings.setBoolProperty(SHOW_RECORD_BUTTON, showRecordButtonItem.isSelected());
+            refresh();
+        });
+        menu.add(showRecordButtonItem);
 
         refresh();
     }
 
-    /** What View Last Log does with the recorded file, e.g. open it in the Log Viewer tab. */
     /** Told the file and duration (seconds, NaN if unknown) of each recording that stops. */
-    void setRecordingStoppedAction(BiConsumer<File, Double> recordingStoppedAction) {
-        this.recordingStoppedAction = recordingStoppedAction;
+    void addRecordingStoppedListener(BiConsumer<File, Double> listener) {
+        recordingStoppedListeners.add(listener);
     }
 
+    /** Called whenever starting, recording or the connection changes what the menu offers. */
+    void addStateListener(Runnable listener) {
+        stateListeners.add(listener);
+    }
+
+    /** What View Last Log does with the recorded file, e.g. open it in the Log Viewer tab. */
     void setViewLogAction(Consumer<File> viewLogAction) {
         this.viewLogAction = viewLogAction;
         refresh();
@@ -105,6 +133,61 @@ final class BinaryLoggingMenu {
         return viewLastItem;
     }
 
+    JMenuItem startItem() {
+        return startItem;
+    }
+
+    JMenuItem startAsItem() {
+        return startAsItem;
+    }
+
+    JMenuItem stopItem() {
+        return stopItem;
+    }
+
+    JCheckBoxMenuItem showRecordButtonItem() {
+        return showRecordButtonItem;
+    }
+
+    boolean isRecordButtonShown() {
+        return showRecordButtonItem.isSelected();
+    }
+
+    boolean isRecording() {
+        return uiContext.sensorLogger.isLogging();
+    }
+
+    /** Saving the tune before the recording starts. */
+    boolean isStarting() {
+        return startWorker != null;
+    }
+
+    boolean canStart() {
+        return startItem.isEnabled();
+    }
+
+    /** Milliseconds since the current recording started. */
+    long recordingMillis() {
+        return isRecording() ? System.currentTimeMillis() - recordingSince : 0;
+    }
+
+    /** Starts recording at once, or stops the recording or pending start: the Record button and Ctrl+S. */
+    void toggle() {
+        if (isRecording() || isStarting()) {
+            stop();
+            refresh();
+        } else if (canStart()) {
+            startNow();
+        }
+    }
+
+    /** Opens a log in the Log Viewer, e.g. from the notification after a recording stops. */
+    void view(File file) {
+        if (viewLogAction != null) {
+            viewLogAction.accept(file);
+        }
+    }
+
     JMenu getMenu() {
         return menu;
     }
@@ -115,6 +198,7 @@ final class BinaryLoggingMenu {
         boolean isStarting = startWorker != null;
         startItem.setText(isStarting ? "Starting..." : "Start");
         startItem.setEnabled(isConnected && !isLogging && !isStarting);
+        startAsItem.setEnabled(startItem.isEnabled());
         stopItem.setEnabled(isLogging || isStarting);
         // Only one item owns the accelerator at a time, including while saving the tune.
         startItem.setAccelerator(isLogging || isStarting ? null : TOGGLE_LOGGING);
@@ -123,16 +207,37 @@ final class BinaryLoggingMenu {
         // a log still being written is not complete yet
         viewLastItem.setEnabled(viewLogAction != null && lastLog != null && lastLog.isFile()
                 && !isLogging && !isStarting);
+        for (Runnable listener : stateListeners) {
+            listener.run();
+        }
+    }
+
+    /** The file a quick start records into: the rusEFI logs folder, named by date and time. */
+    File defaultFile() {
+        return new File(logsFolder, "rusEFI_outputChannels_" + FileLogger.getDate() + ".mlg").getAbsoluteFile();
+    }
+
+    void setLogsFolderForTests(File folder) {
+        logsFolder = folder;
+    }
+
+    JCheckBoxMenuItem saveTuneItem() {
+        return saveTuneItem;
+    }
+
+    /** Records into {@link #defaultFile()} without asking. */
+    void startNow() {
+        logsFolder.mkdirs();
+        startFile(defaultFile());
     }
 
     private void chooseAndStart() {
-        FileLogger.createFolderIfNeeded();
-        JFileChooser chooser = new JFileChooser(new File(FileLogger.DIR));
+        logsFolder.mkdirs();
+        JFileChooser chooser = new JFileChooser(logsFolder);
         chooser.setDialogTitle("Save data Log");
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         chooser.setFileFilter(new FileNameExtensionFilter("Binary log files (.mlg)", "mlg"));
-        chooser.setSelectedFile(new File(FileLogger.DIR,
-                "rusEFI_outputChannels_" + FileLogger.getDate() + ".mlg").getAbsoluteFile());
+        chooser.setSelectedFile(defaultFile());
         if (chooser.showSaveDialog(parent) != JFileChooser.APPROVE_OPTION) {
             return;
         }
@@ -145,7 +250,11 @@ final class BinaryLoggingMenu {
                 JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
             return;
         }
+        startFile(file);
+    }
 
+    /** Saves the tune first when Save tune is checked, then records into {@code file}. */
+    private void startFile(File file) {
         if (!saveTuneItem.isSelected()) {
             start(file, null);
             return;
@@ -203,13 +312,17 @@ final class BinaryLoggingMenu {
         boolean wasLogging = uiContext.sensorLogger.isLogging();
         uiContext.sensorLogger.stop();
         if (wasLogging && lastLog != null) {
-            recordingStoppedAction.accept(lastLog, uiContext.sensorLogger.getLastRecordingSeconds());
+            double seconds = uiContext.sensorLogger.getLastRecordingSeconds();
+            for (BiConsumer<File, Double> listener : recordingStoppedListeners) {
+                listener.accept(lastLog, seconds);
+            }
         }
     }
 
     void start(File file, byte[] tune) {
         if (uiContext.sensorLogger.start(file, tune)) {
             lastLog = file;
+            recordingSince = System.currentTimeMillis();
             settings.setProperty(LAST_LOG, file.getAbsolutePath());
         } else {
             JOptionPane.showMessageDialog(parent,
