@@ -27,7 +27,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | stepper | 400 | 280 | dual H-bridge stepping | 676 | 780 | REVIEW PROXY +104; partial proxy: 26 unknown, 6 indirect, recursion |
 | firmware | storage manager | 1200 | 1032 | SD extra-page burn | 660 | 764 | REVIEW PROXY +104, PROXY BELOW REVIEWED; partial proxy: 29 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | 104 | normal watchdog sleep | 552 | 656 | REVIEW PROXY +104; partial proxy: 21 unknown, 2 indirect, recursion |
-| firmware | TunerStudio | 1200 | 824 | normal communication | 1324 | 1444 | REVIEW PROXY +120; partial proxy: 64 unknown, 37 indirect, recursion |
+| firmware | TunerStudio | 1200 | 824 | normal communication | 1324 | 1436 | REVIEW PROXY +112; partial proxy: 64 unknown, 37 indirect, recursion |
 | firmware | USB mass storage | 256 | 240 | SD block read | 756 | 860 | REVIEW PROXY +104; partial proxy: 28 unknown, 5 indirect, recursion |
 | bootloader | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | bootloader | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
@@ -84,7 +84,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | stepper | 400 | 220 | normal startup positioning | 652 | 668 | REVIEW PROXY +16; partial proxy: 16 unknown, 6 indirect, recursion |
 | firmware | storage manager | 400 | 308 | internal-flash tune burn | 628 | 644 | REVIEW PROXY +16; partial proxy: 18 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | 112 | normal watchdog sleep | 528 | 544 | REVIEW PROXY +16; partial proxy: 12 unknown, 2 indirect, recursion |
-| firmware | TunerStudio | 1200 | 804 | normal tune burn | 1244 | 1316 | REVIEW PROXY +72; partial proxy: 53 unknown, 35 indirect, recursion |
+| firmware | TunerStudio | 1200 | 804 | normal tune burn | 1244 | 1332 | REVIEW PROXY +88; partial proxy: 53 unknown, 35 indirect, recursion |
 | bootloader | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | bootloader | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
 | bootloader | LED | 256 | - | - | - | 80 | NOT REVIEWED: 3 unknown |
@@ -102,8 +102,8 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | 200 | luaD_rawrunprotected | ext/lua/ldo.c:135:5 |
 | firmware | 192 | f_parser | ext/lua/ldo.c:999:13 |
 | firmware | 192 | luaH_newkey | ext/lua/ltable.c:665:13 |
+| firmware | 184 | TunerstudioThread::ThreadTask() | console/binary/tunerstudio.cpp:892:6 |
 | firmware | 176 | i2cScan(int) | hw_layer/drivers/i2c/i2c.cpp:281:13 |
-| firmware | 168 | TunerstudioThread::ThreadTask() | console/binary/tunerstudio.cpp:892:6 |
 | bootloader | 256 | XcpPacketReceivedHook | ../hw_layer/openblt/hooks.c:366:32 |
 | bootloader | 128 | HardFault_Handler_C | ../hw_layer/main_hardfault.c:49:6 |
 | bootloader | 128 | MemManage_Handler_C | ../hw_layer/main_hardfault.c:120:6 |
@@ -137,12 +137,12 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | main/process | 1536 | - | - | - | 1284 | NOT REVIEWED: 71 unknown, 32 indirect, recursion |
 | firmware | MAX3185x | 400 | - | - | - | 868 | NOT REVIEWED: 28 unknown, 2 indirect, recursion |
 | firmware | PCA9685 | 784 | - | - | - | 772 | NOT REVIEWED: 23 unknown, 4 indirect, recursion |
-| firmware | SD/MMC | 1600 | - | - | - | 1932 | NOT REVIEWED: 55 unknown, 22 indirect, recursion |
+| firmware | SD/MMC | 1600 | - | - | - | 1932 | NOT REVIEWED: 56 unknown, 22 indirect, recursion |
 | firmware | software knock | 400 | - | - | - | 740 | NOT REVIEWED: 25 unknown, 2 indirect, recursion |
 | firmware | stepper | 400 | - | - | - | 788 | NOT REVIEWED: 26 unknown, 6 indirect, recursion |
 | firmware | storage manager | 1200 | - | - | - | 772 | NOT REVIEWED: 29 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | - | - | - | 664 | NOT REVIEWED: 21 unknown, 2 indirect, recursion |
-| firmware | TunerStudio | 1200 | - | - | - | 1428 | NOT REVIEWED: 64 unknown, 38 indirect, recursion |
+| firmware | TunerStudio | 1200 | - | - | - | 1436 | NOT REVIEWED: 65 unknown, 38 indirect, recursion |
 | firmware | USB mass storage | 256 | - | - | - | 868 | NOT REVIEWED: 28 unknown, 5 indirect, recursion |
 | bootloader | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | bootloader | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
@@ -196,12 +196,12 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | main/process | 1536 | - | - | - | 1324 | NOT REVIEWED: 62 unknown, 32 indirect, recursion |
 | firmware | MAX3185x | 400 | - | - | - | 852 | NOT REVIEWED: 20 unknown, 2 indirect, recursion |
 | firmware | PCA9685 | 816 | - | - | - | 756 | NOT REVIEWED: 15 unknown, 4 indirect, recursion |
-| firmware | SD/MMC | 1600 | - | - | - | 1916 | NOT REVIEWED: 46 unknown, 22 indirect, recursion |
+| firmware | SD/MMC | 1600 | - | - | - | 1916 | NOT REVIEWED: 47 unknown, 22 indirect, recursion |
 | firmware | software knock | 400 | - | - | - | 732 | NOT REVIEWED: 18 unknown, 2 indirect, recursion |
 | firmware | stepper | 400 | - | - | - | 772 | NOT REVIEWED: 17 unknown, 6 indirect, recursion |
 | firmware | storage manager | 1200 | - | - | - | 748 | NOT REVIEWED: 20 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | - | - | - | 648 | NOT REVIEWED: 13 unknown, 2 indirect, recursion |
-| firmware | TunerStudio | 1200 | - | - | - | 1436 | NOT REVIEWED: 54 unknown, 38 indirect, recursion |
+| firmware | TunerStudio | 1200 | - | - | - | 1420 | NOT REVIEWED: 55 unknown, 38 indirect, recursion |
 | firmware | USB mass storage | 2048 | - | - | - | 852 | NOT REVIEWED: 20 unknown, 5 indirect, recursion |
 | bootloader | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | bootloader | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
