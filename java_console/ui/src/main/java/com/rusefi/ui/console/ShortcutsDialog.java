@@ -18,7 +18,7 @@ final class ShortcutsDialog extends JDialog {
             "CONNECTION AND BINARY LOGGING",
             "Ctrl+R  Connect / reconnect to the ECU.",
             "Ctrl+D  Disconnect from the ECU.",
-            "Ctrl+S  Start or stop recording a data log (the Record button in the status bar).",
+            "Ctrl+S  Start or stop recording a data log (Start Data Logging / Stop Logging in the status bar).",
             "        Starting records at once into the rusEFI logs folder and requires a",
             "        connected ECU; Logging > Start As… chooses the file instead.",
             "        If Save tune is checked, recording starts after the tune is saved.",

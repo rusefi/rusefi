@@ -55,7 +55,7 @@ public class WarningPanel {
         this(config, (JComponent) null);
     }
 
-    /** With the console's Record / Stop button at the right end, when the console provides one. */
+    /** With the console's data logging button at the right end, when the console provides one. */
     public WarningPanel(Node config, UIContext uiContext) {
         this(config, uiContext.recordButtonFactory.get());
     }

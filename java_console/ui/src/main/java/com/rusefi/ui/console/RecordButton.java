@@ -27,13 +27,16 @@ import java.io.IOException;
 import java.util.Locale;
 
 /**
- * Record / Stop button at the right end of the tabs' status strips: one click (or Ctrl+S) starts a data log in
- * the rusEFI logs folder and stops it again. While recording it shows a pulsing red stop square with the
- * elapsed time and the file size; after a recording stops, a notification offers to view it. Logging > Show
- * Record Button hides it. [tag:console_theme]
+ * Start Data Logging / Stop Logging button at the right end of the tabs' status strips: one click (or Ctrl+S)
+ * starts a data log in the rusEFI logs folder and stops it again. While recording it shows a pulsing red stop
+ * square with the elapsed time and the file size; after a recording stops, a notification offers to view it.
+ * Logging > Show Data Logging Button hides it. [tag:console_theme]
  */
 final class RecordButton extends JButton {
-    static final String IDLE = "Record";
+    static final String IDLE = "Start Data Logging";
+    static final String STOP = "Stop Logging";
+    /** Room for text that renders a little wider than measured, e.g. with fractional display scaling. */
+    private static final int TEXT_SLACK = 4;
     private static final int TICK_MILLIS = 500;
     private static final int NOTICE_MILLIS = 8000;
 
@@ -63,12 +66,23 @@ final class RecordButton extends JButton {
     public Dimension getPreferredSize() {
         Dimension size = super.getPreferredSize();
         size.height = JoinedButtons.HEIGHT;
+        // never narrower than the idle label, so "Starting…" does not shrink it and the label is never cut off
+        Insets insets = getInsets();
+        int idleWidth = insets.left + insets.right + icon.getIconWidth() + getIconTextGap()
+                + getFontMetrics(getFont()).stringWidth(IDLE);
+        size.width = Math.max(size.width, idleWidth) + TEXT_SLACK;
         if (logging != null && logging.isRecording()) {
             // grow only while recording, so the button does not jitter as the numbers change
             recordingWidth = Math.max(recordingWidth, size.width);
             size.width = recordingWidth;
         }
         return size;
+    }
+
+    /** As wide as preferred: a squeezed layout would otherwise cut the label off ("Recor…"). */
+    @Override
+    public Dimension getMinimumSize() {
+        return getPreferredSize();
     }
 
     void refresh(boolean tick) {
@@ -81,7 +95,8 @@ final class RecordButton extends JButton {
             icon.recording = true;
             icon.dim = tick && !icon.dim;
             File file = logging.lastLog();
-            setText(elapsed(logging.recordingMillis()) + "  ·  " + RecentLogs.size(file == null ? 0 : file.length()));
+            setText(STOP + "  ·  " + elapsed(logging.recordingMillis()) + "  ·  "
+                    + RecentLogs.size(file == null ? 0 : file.length()));
             setForeground(themed("Console.Status.disconnected.foreground", Color.RED));
             setToolTipText("Recording " + (file == null ? "" : file.getName()) + " - click to stop (Ctrl+S)");
             setEnabled(true);
@@ -94,7 +109,7 @@ final class RecordButton extends JButton {
             setForeground(UIManager.getColor("Button.foreground"));
             setEnabled(logging.isStarting() || logging.canStart());
             setToolTipText(logging.isStarting() ? "Saving the tune before recording - click to cancel (Ctrl+S)"
-                    : isEnabled() ? "Record a data log into the rusEFI logs folder (Ctrl+S)"
+                    : isEnabled() ? "Start recording a data log into the rusEFI logs folder (Ctrl+S)"
                     : "Connect to an ECU to record a data log");
         }
         revalidate();

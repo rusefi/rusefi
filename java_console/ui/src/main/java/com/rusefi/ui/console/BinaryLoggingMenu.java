@@ -31,7 +31,7 @@ final class BinaryLoggingMenu {
     private static final KeyStroke TOGGLE_LOGGING = KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK);
     /** Path of the last recording, kept in the console config so View Last Log works after a restart. */
     static final String LAST_LOG = "last_log";
-    /** Whether the status strips show the Record / Stop button; on unless the user turns it off. */
+    /** Whether the status strips show the Start Data Logging / Stop Logging button; on unless turned off. */
     static final String SHOW_RECORD_BUTTON = "show_record_button";
     private final UIContext uiContext;
     private final Node settings;
@@ -97,9 +97,9 @@ final class BinaryLoggingMenu {
         });
         menu.add(viewLastItem);
         menu.addSeparator();
-        showRecordButtonItem = new JCheckBoxMenuItem("Show Record Button",
+        showRecordButtonItem = new JCheckBoxMenuItem("Show Data Logging Button",
                 settings.getBoolProperty(SHOW_RECORD_BUTTON, true));
-        showRecordButtonItem.setToolTipText("Show the Record / Stop button in the status bar at the bottom");
+        showRecordButtonItem.setToolTipText("Show the Start Data Logging / Stop Logging button in the status bar at the bottom");
         showRecordButtonItem.addActionListener(e -> {
             settings.setBoolProperty(SHOW_RECORD_BUTTON, showRecordButtonItem.isSelected());
             refresh();
@@ -171,7 +171,7 @@ final class BinaryLoggingMenu {
         return isRecording() ? System.currentTimeMillis() - recordingSince : 0;
     }
 
-    /** Starts recording at once, or stops the recording or pending start: the Record button and Ctrl+S. */
+    /** Starts recording at once, or stops the recording or pending start: the logging button and Ctrl+S. */
     void toggle() {
         if (isRecording() || isStarting()) {
             stop();
