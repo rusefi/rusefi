@@ -11,16 +11,20 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * The newest data logs: those in the rusEFI logs folder (where Binary Logging records) and those opened from
- * elsewhere, which are remembered in the console config.
+ * elsewhere, which are remembered in the console config. The duration of every opened log is cached there
+ * too, keyed by path and checked against the file's size and time, so the list can show it without reading
+ * the files.
  */
 final class RecentLogs {
     static final int LIMIT = 10;
@@ -40,16 +44,24 @@ final class RecentLogs {
         /** When the log was recorded: from the file name when it has a date, otherwise the file time. */
         final LocalDateTime recorded;
         final long size;
+        /** Seconds from the first to the last sample, or NaN until the log has been opened once. */
+        final double duration;
 
-        Entry(File file, LocalDateTime recorded, long size) {
+        Entry(File file, LocalDateTime recorded, long size, double duration) {
             this.file = file;
             this.recorded = recorded;
             this.size = size;
+            this.duration = duration;
         }
     }
 
     /** Up to {@link #LIMIT} logs from the folder and the remembered files, newest first; missing files are skipped. */
     static List<Entry> find(File folder, List<File> remembered) {
+        return find(folder, remembered, new Node());
+    }
+
+    /** As {@link #find(File, List)}, with the durations cached in {@code durations}. */
+    static List<Entry> find(File folder, List<File> remembered, Node durations) {
         Map<String, File> files = new LinkedHashMap<>();
         File[] inFolder = folder.listFiles((dir, name) -> LogFiles.isSupported(name));
         if (inFolder != null) {
@@ -63,7 +75,7 @@ final class RecentLogs {
         List<Entry> entries = new ArrayList<>();
         for (File file : files.values()) {
             if (file.isFile()) {
-                entries.add(new Entry(file.getAbsoluteFile(), recorded(file), file.length()));
+                entries.add(new Entry(file.getAbsoluteFile(), recorded(file), file.length(), duration(durations, file)));
             }
         }
         entries.sort(Comparator.comparing((Entry entry) -> entry.recorded).reversed());
@@ -94,6 +106,54 @@ final class RecentLogs {
             return "Yesterday " + TIME.format(recorded);
         }
         return DATE.format(recorded);
+    }
+
+    /** "17.0 s", "2 min 15 s", "1 h 05 min"; empty when unknown. */
+    static String duration(double seconds) {
+        if (!(seconds >= 0) || !Double.isFinite(seconds)) {
+            return "";
+        }
+        if (seconds < 60) {
+            return String.format(Locale.ROOT, "%.1f s", seconds);
+        }
+        long whole = Math.round(seconds);
+        if (whole < 3600) {
+            return String.format(Locale.ROOT, "%d min %02d s", whole / 60, whole % 60);
+        }
+        return String.format(Locale.ROOT, "%d h %02d min", whole / 3600, (whole % 3600) / 60);
+    }
+
+    /** Caches a log's duration under its path, with the file's size and time to detect a changed file. */
+    static void rememberDuration(Node durations, File file, double seconds) {
+        if (Double.isFinite(seconds)) {
+            durations.setProperty(file.getAbsolutePath(),
+                    file.length() + ";" + file.lastModified() + ";" + seconds);
+        }
+    }
+
+    /** The cached duration, or NaN when unknown or the file has changed since. */
+    static double duration(Node durations, File file) {
+        String[] cached = durations.getProperty(file.getAbsolutePath(), "").split(";");
+        if (cached.length != 3) {
+            return Double.NaN;
+        }
+        try {
+            if (Long.parseLong(cached[0]) != file.length() || Long.parseLong(cached[1]) != file.lastModified()) {
+                return Double.NaN;
+            }
+            return Double.parseDouble(cached[2]);
+        } catch (NumberFormatException corrupt) {
+            return Double.NaN;
+        }
+    }
+
+    /** Keeps the cached durations of the listed logs only, so the cache stays as small as the list. */
+    static void pruneDurations(Node durations, List<Entry> entries) {
+        Set<String> keep = new HashSet<>();
+        for (Entry entry : entries) {
+            keep.add(entry.file.getAbsolutePath());
+        }
+        durations.getConfig().keySet().retainAll(keep);
     }
 
     static String size(long bytes) {

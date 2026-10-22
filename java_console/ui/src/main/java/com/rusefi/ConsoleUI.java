@@ -367,6 +367,7 @@ public class ConsoleUI {
 
             // record a log, then view it: next to the live gauges (SavedTab.LOG_VIEWER_POSITION)
             logViewer = new LogViewerHost(getConfig().getRoot().getChild("log_viewer"));
+            logViewer.setConfigSaver(() -> getConfig().save());
             tabbedPane.addTab(LogViewerHost.TITLE, logViewer);
             mainFrame.setLogViewerActions(file -> {
                 tabbedPane.selectTab(LogViewerHost.TITLE);
@@ -374,7 +375,7 @@ public class ConsoleUI {
             }, () -> {
                 tabbedPane.selectTab(LogViewerHost.TITLE);
                 logViewer.chooseAndOpen();
-            });
+            }, logViewer::recordingStopped);
 
             MessagesPane messagesPane = new MessagesPane(uiContext, getConfig().getRoot().getChild("messages"));
             tabbedPaneAdd("Messages", messagesPane.getContent(), messagesPane.getTabSelectedListener());

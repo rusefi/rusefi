@@ -98,6 +98,28 @@ class BinaryLoggingMenuTest {
     }
 
     @Test
+    void stopReportsTheRecordingAndItsDuration(@TempDir Path folder) throws Exception {
+        File recording = Files.createFile(folder.resolve("drive.mlg")).toFile();
+        SwingUtilities.invokeAndWait(() -> {
+            UIContext context = mock(UIContext.class);
+            context.sensorLogger = mock(SensorLogger.class);
+            when(context.sensorLogger.start(recording, null)).thenReturn(true);
+            when(context.sensorLogger.getLastRecordingSeconds()).thenReturn(12.5);
+            BinaryLoggingMenu logging = new BinaryLoggingMenu(context, null, null, null, null, new Node());
+            List<String> stopped = new ArrayList<>();
+            logging.setRecordingStoppedAction((file, seconds) -> stopped.add(file.getName() + " " + seconds));
+
+            logging.stop();
+            assertTrue(stopped.isEmpty(), "nothing was recording");
+
+            when(context.sensorLogger.isLogging()).thenReturn(true);
+            logging.start(recording, null);
+            logging.stop();
+            assertEquals(Collections.singletonList("drive.mlg 12.5"), stopped);
+        });
+    }
+
+    @Test
     void deletedLastLogIsNotOffered(@TempDir Path folder) throws Exception {
         Node settings = new Node();
         settings.setProperty(BinaryLoggingMenu.LAST_LOG, folder.resolve("deleted.mlg").toString());

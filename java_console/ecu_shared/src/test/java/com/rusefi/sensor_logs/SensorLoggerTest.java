@@ -22,6 +22,7 @@ import java.util.BitSet;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -159,6 +160,41 @@ class SensorLoggerTest {
         assertEquals(1, data.remaining(), "One checksum byte should follow the only log row");
         data.get();
         assertFalse(data.hasRemaining(), "Only the generation-matched full snapshot should be logged");
+    }
+
+    /** The duration a log viewer reads from the rows, known at stop without reading the file. */
+    @Test
+    void recordingDurationRunsFromTheFirstToTheLastRow() throws Exception {
+        BinaryProtocol protocol = mock(BinaryProtocol.class);
+        IniFileModel ini = mock(IniFileModel.class);
+        ScalarIniField rpm = new ScalarIniField("rpm", 0, "RPM", FieldType.UINT16, 1, "0", 0);
+        Map<String, IniField> outputChannels = new LinkedHashMap<>();
+        outputChannels.put("rpm", rpm);
+        when(protocol.getIniFileNullable()).thenReturn(ini);
+        when(ini.getAllOutputChannels()).thenReturn(outputChannels);
+        when(ini.getGauges()).thenReturn(Collections.emptyMap());
+        when(ini.getOutputChannel("rpm")).thenReturn(rpm);
+
+        AtomicLong now = new AtomicLong(1000);
+        SensorLogger logger = new SensorLogger(() -> protocol, now::get);
+        assertTrue(Double.isNaN(logger.getLastRecordingSeconds()), "nothing recorded yet");
+        try {
+            assertTrue(logger.start(tempDir.resolve("timed.mlg").toFile()));
+            SensorCentral sensorCentral = SensorCentral.getInstance();
+            long generation = sensorCentral.getOutputChannelDemand().getGeneration();
+            byte[] response = {0, 0, 3, -24};
+            BitSet valid = new BitSet(response.length - 1);
+            valid.set(0, response.length - 1);
+            for (long time : new long[]{1000, 1100, 3350}) {
+                now.set(time);
+                sensorCentral.grabSensorValues(new OutputChannelSnapshot(
+                        response, valid, Collections.emptySet(), generation, true), ini, null);
+            }
+            assertTrue(Double.isNaN(logger.getLastRecordingSeconds()), "known once the recording stops");
+        } finally {
+            logger.stop();
+        }
+        assertEquals(2.35, logger.getLastRecordingSeconds(), 1e-9);
     }
 
     private static String readFieldName(ByteBuffer data, int index) {

@@ -24,6 +24,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JProgressBar;
 import javax.swing.KeyStroke;
 import javax.swing.ListCellRenderer;
+import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.TransferHandler;
 import javax.swing.UIManager;
@@ -74,6 +75,8 @@ public final class LogViewerHost extends JPanel {
     private File currentFile;
     private SwingWorker<CsvLogReader, Void> loading;
     private JList<RecentLogs.Entry> recentList;
+    private Runnable configSaver = () -> {
+    };
 
     /** A viewer that remembers nothing between runs, e.g. the sandbox. */
     public LogViewerHost() {
@@ -100,6 +103,25 @@ public final class LogViewerHost extends JPanel {
             }
         });
         setContent(emptyCard());
+    }
+
+    /**
+     * Writes the config to disk. Called right after a log opens or a recording stops, so remembered logs and
+     * durations survive the console being killed; normally the console saves only on exit.
+     */
+    public void setConfigSaver(Runnable configSaver) {
+        this.configSaver = configSaver;
+    }
+
+    /** A recording that just stopped: its duration is known without reading the file, so it is listed at once. */
+    public void recordingStopped(File file, double seconds) {
+        RecentLogs.rememberDuration(durations(), file, seconds);
+        RecentLogs.pruneDurations(durations(), recentEntries());
+        configSaver.run();
+        if (current == null && loading == null) {
+            // the empty card is showing: list the new recording
+            setContent(emptyCard());
+        }
     }
 
     /** Receives the file name of each log shown, e.g. for the window title. */
@@ -160,9 +182,14 @@ public final class LogViewerHost extends JPanel {
                 }
                 loading = null;
                 try {
-                    showLog(get(), file.getName());
+                    CsvLogReader log = get();
+                    showLog(log, file.getName());
                     currentFile = file.getAbsoluteFile();
                     RecentLogs.remember(config, file);
+                    // the list shows the duration of every log opened once, without reading the file again
+                    RecentLogs.rememberDuration(durations(), file, log.maximum(0) - log.minimum(0));
+                    RecentLogs.pruneDurations(durations(), recentEntries());
+                    configSaver.run();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 } catch (ExecutionException e) {
@@ -222,7 +249,11 @@ public final class LogViewerHost extends JPanel {
     }
 
     List<RecentLogs.Entry> recentEntries() {
-        return RecentLogs.find(logsFolder, RecentLogs.remembered(config));
+        return RecentLogs.find(logsFolder, RecentLogs.remembered(config), durations());
+    }
+
+    private Node durations() {
+        return config.getChild("durations");
     }
 
     /** The newest logs, newest first; a click opens one. */
@@ -294,21 +325,28 @@ public final class LogViewerHost extends JPanel {
         return section;
     }
 
-    private static final int RECENT_WIDTH = 600;
+    private static final int RECENT_WIDTH = 680;
 
-    /** Date, file name and size of a recent log. */
-    private static final class RecentRenderer extends JPanel implements ListCellRenderer<RecentLogs.Entry> {
+    /** Date, file name, duration (once the log has been opened) and size of a recent log. */
+    static final class RecentRenderer extends JPanel implements ListCellRenderer<RecentLogs.Entry> {
         private final JLabel when = new JLabel();
         private final JLabel name = new JLabel();
-        private final JLabel size = new JLabel();
+        final JLabel duration = new JLabel("", SwingConstants.RIGHT);
+        final JLabel size = new JLabel("", SwingConstants.RIGHT);
+        private final JPanel details = new JPanel(new BorderLayout(12, 0));
 
         RecentRenderer() {
             super(new BorderLayout(12, 0));
             setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 12));
             when.setPreferredSize(new Dimension(120, 20));
+            duration.setPreferredSize(new Dimension(90, 20));
+            size.setPreferredSize(new Dimension(70, 20));
+            details.setOpaque(false);
+            details.add(duration, BorderLayout.WEST);
+            details.add(size, BorderLayout.EAST);
             add(when, BorderLayout.WEST);
             add(name, BorderLayout.CENTER);
-            add(size, BorderLayout.EAST);
+            add(details, BorderLayout.EAST);
         }
 
         @Override
@@ -319,6 +357,8 @@ public final class LogViewerHost extends JPanel {
             when.setForeground(muted);
             name.setText(entry.file.getName());
             name.setForeground(list.getForeground());
+            duration.setText(RecentLogs.duration(entry.duration));
+            duration.setForeground(muted);
             size.setText(RecentLogs.size(entry.size));
             size.setForeground(muted);
             setToolTipText(entry.file.getAbsolutePath());
@@ -327,11 +367,13 @@ public final class LogViewerHost extends JPanel {
             return this;
         }
 
-        // Like DefaultListCellRenderer: lay out when sized (validate() needs a native peer)
+        // Like DefaultListCellRenderer: lay out when sized (validate() needs a native peer and is
+        // disabled below), including the nested duration/size panel
         @Override
         public void setBounds(int x, int y, int width, int height) {
             super.setBounds(x, y, width, height);
             doLayout();
+            details.doLayout();
         }
 
         @Override
@@ -353,8 +395,10 @@ public final class LogViewerHost extends JPanel {
         List<RecentLogs.Entry> entries = recentEntries();
         LocalDate today = LocalDate.now();
         for (RecentLogs.Entry entry : entries) {
+            String duration = RecentLogs.duration(entry.duration);
+            String details = (duration.isEmpty() ? "" : duration + ", ") + RecentLogs.size(entry.size);
             JCheckBoxMenuItem item = new JCheckBoxMenuItem(RecentLogs.when(entry.recorded, today) + "     "
-                    + entry.file.getName(), entry.file.equals(currentFile));
+                    + entry.file.getName() + "   (" + details + ")", entry.file.equals(currentFile));
             item.setToolTipText(entry.file.getAbsolutePath());
             item.addActionListener(e -> open(entry.file));
             menu.add(item);

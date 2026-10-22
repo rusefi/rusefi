@@ -2,6 +2,8 @@ package com.rusefi.ui.logview;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.rusefi.core.preferences.storage.Node;
+import com.rusefi.logview.CsvLogReader;
+import com.rusefi.logview.LogFiles;
 import com.rusefi.ui.widgets.JoinedButtons;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -151,6 +153,63 @@ class LogViewerHostTest {
     }
 
     @Test
+    void externalLogDurationIsCachedOnFirstOpen(@TempDir Path logs) throws Exception {
+        Node config = new Node();
+        File outside = copy("/logview/test-log-1.msl", "track.msl");
+        CsvLogReader expected = LogFiles.read(outside);
+        LogViewerHost first = host(config, logs.toFile());
+        assertTrue(Double.isNaN(first.recentEntries().isEmpty() ? Double.NaN : first.recentEntries().get(0).duration));
+        openAndWait(first, outside);
+
+        LogViewerHost afterRestart = host(config, logs.toFile());
+        RecentLogs.Entry entry = afterRestart.recentList().getModel().getElementAt(0);
+        assertEquals(expected.maximum(0) - expected.minimum(0), entry.duration, 1e-9);
+        assertEquals("13.2 s", RecentLogs.duration(entry.duration));
+        assertTrue(((JMenuItem) afterRestart.openMenu().getComponent(0)).getText().endsWith("track.msl   (13.2 s, 14.3 MB)"),
+                ((JMenuItem) afterRestart.openMenu().getComponent(0)).getText());
+    }
+
+    /** Rows lay themselves out, including the nested duration/size panel: validate() is disabled in renderers. */
+    @Test
+    void recentRowShowsDurationAndSize(@TempDir Path logs) throws Exception {
+        Node config = new Node();
+        File outside = copy("/logview/test-log-1.msl", "track.msl");
+        openAndWait(host(config, logs.toFile()), outside);
+        JList<RecentLogs.Entry> list = host(config, logs.toFile()).recentList();
+        LogViewerHost.RecentRenderer row = (LogViewerHost.RecentRenderer) list.getCellRenderer()
+                .getListCellRendererComponent(list, list.getModel().getElementAt(0), 0, false, false);
+        row.setBounds(0, 0, 680, 32);
+        assertEquals("13.2 s", row.duration.getText());
+        assertEquals("14.3 MB", row.size.getText());
+        assertTrue(row.duration.getWidth() > 0 && row.size.getWidth() > 0, "both columns laid out");
+    }
+
+    @Test
+    void stoppedRecordingIsListedWithItsDurationAndSaved(@TempDir Path logs) throws Exception {
+        Node config = new Node();
+        int[] saves = {0};
+        LogViewerHost host = host(config, logs.toFile());
+        host.setConfigSaver(() -> saves[0]++);
+        File recording = Files.write(logs.resolve("rusEFI_outputChannels_2026-10-22_10_53_57_557.mlg"), new byte[100]).toFile();
+
+        SwingUtilities.invokeAndWait(() -> host.recordingStopped(recording, 12.1));
+        assertEquals(1, saves[0], "written to disk at once");
+        RecentLogs.Entry entry = host.recentList().getModel().getElementAt(0);
+        assertEquals(recording.getAbsoluteFile(), entry.file);
+        assertEquals(12.1, entry.duration, 1e-9, "the empty card lists it with its duration");
+        assertEquals(12.1, host(config, logs.toFile()).recentEntries().get(0).duration, 1e-9, "after a restart");
+    }
+
+    @Test
+    void openingALogSavesTheConfig() throws Exception {
+        LogViewerHost host = host();
+        int[] saves = {0};
+        host.setConfigSaver(() -> saves[0]++);
+        openAndWait(host, copy("/logview/test-log-1.msl", "a.msl"));
+        assertEquals(1, saves[0]);
+    }
+
+    @Test
     void openMenuListsRecentLogsWithTheOpenOneTicked(@TempDir Path logs) throws Exception {
         Files.copy(getClass().getResourceAsStream("/logview/test-log-binary-1.mlg"),
                 logs.resolve("rusEFI_outputChannels_2026-10-21_19_44_54_929.mlg"));
@@ -168,7 +227,7 @@ class LogViewerHostTest {
         assertEquals(4, items.size(), "two recent logs, Browse…, Open logs folder");
         JCheckBoxMenuItem openOne = null;
         for (JMenuItem item : items.subList(0, 2)) {
-            if (item.getText().endsWith("track.msl")) {
+            if (item.getText().contains("track.msl")) {
                 openOne = (JCheckBoxMenuItem) item;
             }
         }
