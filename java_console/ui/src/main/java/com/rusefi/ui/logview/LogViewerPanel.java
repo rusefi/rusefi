@@ -2,6 +2,7 @@ package com.rusefi.ui.logview;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.icons.FlatSearchIcon;
+import com.opensr5.ini.IniFileModel;
 import com.rusefi.logview.CsvLogReader;
 
 import javax.swing.AbstractAction;
@@ -54,7 +55,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -122,9 +122,7 @@ public final class LogViewerPanel extends JPanel {
             JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION;
     Consumer<String> messages = message -> JOptionPane.showMessageDialog(this, message, "Signal lists",
             JOptionPane.WARNING_MESSAGE);
-    private final Set<String> collapsed = SignalSections.defaultCollapsed();
-    private boolean hideZero = true;
-    private boolean hideConstant = false;
+    private final SidebarState state;
     final JCheckBox hideZeroBox = new JCheckBox();
     final JCheckBox hideConstantBox = new JCheckBox();
     private final JLabel plottedLabel = ChartToolbar.muted(new JLabel());
@@ -145,18 +143,26 @@ public final class LogViewerPanel extends JPanel {
         this(log, fileName, new ChartSettings(), new SignalLists(), null);
     }
 
+    LogViewerPanel(CsvLogReader log, String fileName, ChartSettings settings, SignalLists lists,
+                   Consumer<Component> onOpen) {
+        this(log, fileName, settings, lists, new SidebarState(), null, onOpen);
+    }
+
     /**
      * @param settings chart options, shared so they carry over when another log is opened
      * @param lists    Common and the user's signal lists, shared by every log
+     * @param state    open sections and the Hide switches, shared by every log
+     * @param ini      the ECU's .ini for grouping the signals, or null to group them by name
      * @param onOpen   action of the toolbar's Open button, given the button (e.g. to show a menu under it),
      *                 or null for no button
      */
     LogViewerPanel(CsvLogReader log, String fileName, ChartSettings settings, SignalLists lists,
-                   Consumer<Component> onOpen) {
+                   SidebarState state, IniFileModel ini, Consumer<Component> onOpen) {
         super(new BorderLayout());
         this.log = log;
         this.settings = settings;
         this.lists = lists;
+        this.state = state;
         boolean[] initial = new boolean[log.fieldCount()];
         for (int field = 1; field < log.fieldCount(); field++) {
             String name = log.name(field);
@@ -164,7 +170,7 @@ public final class LogViewerPanel extends JPanel {
                     || name.equalsIgnoreCase("TPS");
         }
         layout = PlotLayout.single(log.fieldCount(), initial);
-        categories = SignalCategories.of(log, null);
+        categories = SignalCategories.of(log, ini);
         chart = new LogChart(log, layout, settings);
         layout.addListener(() -> {
             // the Plotted section follows the plots
@@ -231,13 +237,14 @@ public final class LogViewerPanel extends JPanel {
         });
 
         String stillFound = "<br>they stay in Plotted and the lists and are found by search</html>";
-        setUpFilterBox(hideZeroBox, "Hide zero signals", SignalSections.zeroCount(log), hideZero,
+        setUpFilterBox(hideZeroBox, "Hide zero signals", SignalSections.zeroCount(log), state.hideZero(),
                 "<html>Leave signals that are 0 for the whole log (mostly unused features) out of the groups;"
-                        + stillFound, selected -> hideZero = selected);
-        setUpFilterBox(hideConstantBox, "Hide constant signals", SignalSections.constantCount(log), hideConstant,
+                        + stillFound, state::setHideZero);
+        setUpFilterBox(hideConstantBox, "Hide constant signals", SignalSections.constantCount(log),
+                state.hideConstant(),
                 "<html>Leave signals that hold one other value for the whole log out of the groups.<br>"
                         + "These can matter: an active error, the detected gear, the firmware version;"
-                        + stillFound, selected -> hideConstant = selected);
+                        + stillFound, state::setHideConstant);
         JPanel filterBoxes = new JPanel(new GridLayout(0, 1, 0, 2));
         filterBoxes.setOpaque(false);
         filterBoxes.add(hideZeroBox);
@@ -508,7 +515,7 @@ public final class LogViewerPanel extends JPanel {
             return;
         }
         lists.create(name);
-        collapsed.remove(name);
+        state.setCollapsed(name, false);
         if (field >= 0) {
             addToList(name, field);
         } else {
@@ -522,9 +529,7 @@ public final class LogViewerPanel extends JPanel {
             return;
         }
         lists.rename(list, name);
-        if (collapsed.remove(list)) {
-            collapsed.add(name);
-        }
+        state.rename(list, name);
         filter(search.getText());
     }
 
@@ -533,7 +538,7 @@ public final class LogViewerPanel extends JPanel {
             return;
         }
         lists.delete(list);
-        collapsed.remove(list);
+        state.forget(list);
         filter(search.getText());
     }
 
@@ -553,9 +558,7 @@ public final class LogViewerPanel extends JPanel {
 
     /** Opens a collapsed section or collapses an open one. */
     void toggleSection(String section) {
-        if (!collapsed.remove(section)) {
-            collapsed.add(section);
-        }
+        state.setCollapsed(section, !state.isCollapsed(section));
         filter(search.getText());
     }
 
@@ -635,8 +638,8 @@ public final class LogViewerPanel extends JPanel {
     private void filter(String query) {
         SignalSections.Row selected = fieldList.getSelectedValue();
         rows.clear();
-        for (SignalSections.Row row : SignalSections.rows(log, layout, categories, lists, query, hideZero,
-                hideConstant, collapsed)) {
+        for (SignalSections.Row row : SignalSections.rows(log, layout, categories, lists, query,
+                state.hideZero(), state.hideConstant(), state::isCollapsed)) {
             rows.addElement(row);
         }
         if (selected != null) {

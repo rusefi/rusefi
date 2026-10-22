@@ -368,6 +368,7 @@ public class ConsoleUI {
             // record a log, then view it: next to the live gauges (SavedTab.LOG_VIEWER_POSITION)
             logViewer = new LogViewerHost(getConfig().getRoot().getChild("log_viewer"));
             logViewer.setConfigSaver(() -> getConfig().save());
+            logViewer.setIniSupplier(() -> uiContext.iniFileState.getIniFileModel());
             tabbedPane.addTab(LogViewerHost.TITLE, logViewer);
             mainFrame.setLogViewerActions(file -> {
                 tabbedPane.selectTab(LogViewerHost.TITLE);

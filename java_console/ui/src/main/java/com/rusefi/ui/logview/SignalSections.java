@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * Rows of the signal list: a heading per section with its members below unless collapsed. Sections are
@@ -97,10 +98,10 @@ final class SignalSections {
      * @param query         search text; while searching every matching signal is shown, sections expanded
      * @param hideZero      leave signals that are 0 for the whole log out of the groups
      * @param hideConstant  leave signals that hold another single value out of the groups
-     * @param collapsed     section titles whose members are hidden
+     * @param collapsed     whether a section (by title) hides its members
      */
     static List<Row> rows(CsvLogReader log, PlotLayout layout, SignalCategories categories, SignalLists lists,
-                          String query, boolean hideZero, boolean hideConstant, Set<String> collapsed) {
+                          String query, boolean hideZero, boolean hideConstant, Predicate<String> collapsed) {
         String needle = query.trim().toLowerCase(Locale.ROOT);
         boolean searching = !needle.isEmpty();
         List<Row> rows = new ArrayList<>();
@@ -171,11 +172,11 @@ final class SignalSections {
 
     /** Empty sections are left out unless kept. */
     private static void addSection(List<Row> rows, String title, Kind kind, List<Row> members, boolean searching,
-                                   Set<String> collapsed, boolean keepEmpty) {
+                                   Predicate<String> collapsed, boolean keepEmpty) {
         if (members.isEmpty() && !keepEmpty) {
             return;
         }
-        boolean expanded = searching || !collapsed.contains(title);
+        boolean expanded = searching || !collapsed.test(title);
         rows.add(Row.heading(title, kind, members.size(), expanded));
         if (expanded) {
             rows.addAll(members);

@@ -1,6 +1,10 @@
 package com.rusefi.ui.logview;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import com.opensr5.ini.DatalogEntry;
+import com.opensr5.ini.GaugeCategoryModel;
+import com.opensr5.ini.GaugeModel;
+import com.opensr5.ini.IniFileModel;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.logview.CsvLogReader;
 import com.rusefi.logview.LogFiles;
@@ -33,7 +37,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,6 +48,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class LogViewerHostTest {
     @TempDir
@@ -318,7 +326,49 @@ class LogViewerHostTest {
         assertTrue(saves[0] > afterOpen, "saved without waiting for the console to exit");
 
         openAndWait(host, copy("/logview/test-log-binary-1.mlg", "second.mlg"));
-        assertEquals(java.util.Collections.singletonList("Mine"), host.currentPanel().lists().customNames());
+        assertEquals(Collections.singletonList("Mine"), host.currentPanel().lists().customNames());
+    }
+
+    @Test
+    void sidebarStateIsKeptInTheViewerConfig() throws Exception {
+        Node config = new Node();
+        LogViewerHost host = host(config, new File("."));
+        openAndWait(host, copy("/logview/test-log-1.msl", "first.msl"));
+        SwingUtilities.invokeAndWait(() -> host.currentPanel().hideConstantBox.doClick());
+        assertTrue(new SidebarState(config.getChild("sidebar")).hideConstant(), "saved with the console config");
+    }
+
+    @Test
+    void theEcuIniGroupsTheSignals() throws Exception {
+        LogViewerHost host = host();
+        IniFileModel ini = mock(IniFileModel.class);
+        GaugeModel gauge = mock(GaugeModel.class);
+        when(gauge.getChannel()).thenReturn("oddChannel");
+        Map<String, GaugeCategoryModel> categories = new LinkedHashMap<>();
+        categories.put("Knock", new GaugeCategoryModel("Knock", Collections.singletonList(gauge)));
+        when(ini.getGaugeCategories()).thenReturn(categories);
+        // a name no rule places: the .ini's [Datalog] gives its channel, a Knock gauge shows that channel
+        when(ini.getDatalogEntries()).thenReturn(Collections.singletonList(new DatalogEntry("oddChannel", "RPM")));
+        host.setIniSupplier(() -> ini);
+        openAndWait(host, copy("/logview/test-log-1.msl", "first.msl"));
+        CsvLogReader log = host.currentPanel().chart().log();
+        int rpm = -1;
+        for (int field = 1; field < log.fieldCount(); field++) {
+            if (log.name(field).equals("RPM")) {
+                rpm = field;
+            }
+        }
+        assertEquals(SignalCategories.Group.KNOCK, host.currentPanel().categories().group(rpm));
+    }
+
+    @Test
+    void aFailingIniSupplierDoesNotStopTheLogOpening() throws Exception {
+        LogViewerHost host = host();
+        host.setIniSupplier(() -> {
+            throw new IllegalStateException("no ECU");
+        });
+        openAndWait(host, copy("/logview/test-log-1.msl", "first.msl"));
+        assertNotNull(host.currentPanel(), "grouped by name instead");
     }
 
     @Test
