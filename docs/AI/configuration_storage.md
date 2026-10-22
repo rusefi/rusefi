@@ -121,6 +121,19 @@ link-time stubs so reboot paths still work.
 5. `storageWrite(EFI_SETTINGS_BACKUP_RECORD_ID, ...)` - second copy. Some
    MCUs lack room for it; `NotSupported` for the backup is not a failure.
 
+The "gap in time" watchdog ignores gaps for `EFI_LINEAR_TIME_BURN_GRACE_SEC`
+seconds after `suspendLinearTimeWatcher()`, defaulting to 5 seconds. Boards
+with slow saves can override it at compile time in `board.mk`, for example:
+
+```make
+DDEFS += -DEFI_LINEAR_TIME_BURN_GRACE_SEC=10
+```
+
+Size this period for the complete save, including extra-page MFS garbage
+collection and the backup write. Increasing it suppresses gap detection for
+longer; it does not shorten flash stalls or change the hardware watchdog,
+engine-running write deferral, or ignition-off diagnostic grace period.
+
 `readConfiguration()` reads the first copy, validates CRC + version + size,
 falls back to the backup copy on any failure. `readFromFlash()` then maps the
 result: `CrcFailed`/`NotFound`/`Failed`/`NotSupported` -> full reset to

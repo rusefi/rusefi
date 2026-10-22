@@ -461,6 +461,12 @@ void Engine::setConfig() {
 	injectEngineReferences();
 }
 
+#ifndef EFI_LINEAR_TIME_BURN_GRACE_SEC
+// Boards with slow storage/garbage collection can override this in board.mk.
+// The grace period starts at suspendLinearTimeWatcher(), before the whole settings save.
+#define EFI_LINEAR_TIME_BURN_GRACE_SEC 5
+#endif
+
 /**
  * This code asserts that we do not have unexpected gaps in time flow with the exception of internal flash burn.
  */
@@ -468,7 +474,7 @@ static void assertTimeIsLinear() {
 #if ! EFI_UNIT_TEST
 	static efitimems_t mostRecentMs = 0;
 	efitimems_t msNow = getTimeNowMs();
-	if (engineConfiguration->watchOutForLinearTime && engine->configBurnTimer.hasElapsedSec(5)) {
+	if (engineConfiguration->watchOutForLinearTime && engine->configBurnTimer.hasElapsedSec(EFI_LINEAR_TIME_BURN_GRACE_SEC)) {
 		if (mostRecentMs != 0) {
 			efitimems_t gapInMs = msNow - mostRecentMs;
 			// todo: lower gapInMs threshold?
