@@ -167,6 +167,8 @@ class LogChartFocusTest {
     @Test
     void statsRowsFocusAndPinToo() throws IOException {
         LogViewerPanel panel = new LogViewerPanel(log(), null);
+        panel.toggle(1);
+        panel.toggle(2);
         StatsPanel stats = panel.statsPanel();
         LogChart chart = panel.chart();
         int row = -1;

@@ -37,8 +37,11 @@ class LogViewerPanelTest {
     @Test
     void togglingSignalsUpdatesCountAndKeepsColours() throws IOException {
         LogViewerPanel panel = new LogViewerPanel(log(), "test.msl");
-        assertEquals("1 plotted", panel.plottedLabel().getText());
+        assertEquals("none plotted", panel.plottedLabel().getText(), "a log opens with an empty plot");
+        assertEquals(1, panel.chart().plotLayout().plotCount());
 
+        panel.toggle(1);
+        assertEquals("1 plotted", panel.plottedLabel().getText());
         panel.toggle(3);
         panel.toggle(2);
         assertEquals("3 plotted", panel.plottedLabel().getText());
@@ -52,6 +55,7 @@ class LogViewerPanelTest {
     @Test
     void shiftClickPutsASignalInANewPlot() throws IOException {
         LogViewerPanel panel = new LogViewerPanel(log(), null);
+        panel.toggle(1);
         panel.addToNewPlot(2);
         PlotLayout layout = panel.chart().plotLayout();
         assertEquals(2, layout.plotCount());
@@ -73,7 +77,8 @@ class LogViewerPanelTest {
         selectSignal(panel, 2);
         assertEquals(2, SignalTransfer.field(handler.createTransferable(panel.fieldList())));
 
-        // RPM is plotted by default; dragging its legend item back onto the list removes it
+        // dragging a plotted signal's legend item back onto the list removes it
+        panel.toggle(1);
         assertTrue(handler.importData(new TransferHandler.TransferSupport(panel.fieldList(), SignalTransfer.of(1))));
         assertFalse(panel.chart().plotLayout().isPlotted(1));
         assertFalse(handler.importData(new TransferHandler.TransferSupport(panel.fieldList(), SignalTransfer.of(3))),

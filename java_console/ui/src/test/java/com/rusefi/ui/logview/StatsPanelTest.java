@@ -29,7 +29,9 @@ class StatsPanelTest {
 
     private static LogViewerPanel panel() throws IOException {
         LogViewerPanel panel = new LogViewerPanel(log(), "test.msl");
-        // RPM and TPS start plotted (default selection); add CLT to a second plot
+        // RPM and TPS in the first plot, CLT in a second
+        panel.toggle(1);
+        panel.toggle(2);
         panel.addToNewPlot(3);
         return panel;
     }
