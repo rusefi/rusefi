@@ -30,6 +30,7 @@ import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -115,6 +116,7 @@ final class LogChart extends JComponent {
     private boolean measuring;
     /** The cursor whose flag is being dragged, or null. */
     private MeasureCursors.Which draggingCursor;
+    private final List<Runnable> measuringListeners = new ArrayList<>();
     /** Legend item whose colour mark is under the pointer, or -1. */
     private int hoveredSwatch = -1;
     /** Legend item right-pressed, for its menu on release unless the press became a pan. */
@@ -185,13 +187,7 @@ final class LogChart extends JComponent {
             fireViewChanged();
         });
         setFocusable(true);
-        getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "clearCursors");
-        getActionMap().put("clearCursors", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                cursors.clear();
-            }
-        });
+        bindKeys();
         setOpaque(true);
         MouseAdapter mouse = new MouseHandler();
         addMouseListener(mouse);
@@ -310,11 +306,143 @@ final class LogChart extends JComponent {
 
     /** Measure mode (the toolbar's Measure button): clicks place A, then B. Turning it off removes them. */
     void setMeasuring(boolean measuring) {
+        boolean changed = this.measuring != measuring;
         this.measuring = measuring;
         if (!measuring) {
             cursors.clear();
         }
         repaint();
+        if (changed) {
+            for (Runnable listener : measuringListeners) {
+                listener.run();
+            }
+        }
+    }
+
+    /** Called when Measure turns on or off, including from the A / B keys, e.g. to update the toolbar. */
+    void addMeasuringListener(Runnable listener) {
+        measuringListeners.add(listener);
+    }
+
+    /** Keys samples move per step with Shift held. */
+    static final int FAST_STEP = 10;
+    /** Window span factor of one zoom key press: two wheel notches. */
+    static final double KEY_ZOOM = WHEEL_ZOOM * WHEEL_ZOOM;
+
+    /**
+     * Keys while the plots have focus (a click on them gives it): the arrows step the cursor sample by sample
+     * (Shift: {@link #FAST_STEP}), Ctrl+arrows pan half the visible time, + / - zoom around the cursor, Home / End
+     * go to the first / last sample, 0 shows the whole log, A / B drop a measurement cursor at the cursor and Esc
+     * clears A and B, then the pinned trace. Listed in ShortcutsDialog.
+     */
+    private void bindKeys() {
+        bindKey("stepLeft", () -> stepCursor(-1), KeyEvent.VK_LEFT, 0);
+        bindKey("stepRight", () -> stepCursor(1), KeyEvent.VK_RIGHT, 0);
+        bindKey("fastLeft", () -> stepCursor(-FAST_STEP), KeyEvent.VK_LEFT, InputEvent.SHIFT_DOWN_MASK);
+        bindKey("fastRight", () -> stepCursor(FAST_STEP), KeyEvent.VK_RIGHT, InputEvent.SHIFT_DOWN_MASK);
+        bindKey("panLeft", () -> panBy(-0.5), KeyEvent.VK_LEFT, InputEvent.CTRL_DOWN_MASK);
+        bindKey("panRight", () -> panBy(0.5), KeyEvent.VK_RIGHT, InputEvent.CTRL_DOWN_MASK);
+        bindKey("zoomIn", () -> zoomByKey(1 / KEY_ZOOM), KeyEvent.VK_PLUS, 0);
+        bindKey("zoomIn", null, KeyEvent.VK_EQUALS, 0);
+        bindKey("zoomIn", null, KeyEvent.VK_EQUALS, InputEvent.SHIFT_DOWN_MASK);
+        bindKey("zoomIn", null, KeyEvent.VK_ADD, 0);
+        bindKey("zoomOut", () -> zoomByKey(KEY_ZOOM), KeyEvent.VK_MINUS, 0);
+        bindKey("zoomOut", null, KeyEvent.VK_SUBTRACT, 0);
+        bindKey("first", () -> moveCursorTo(0), KeyEvent.VK_HOME, 0);
+        bindKey("last", () -> moveCursorTo(log.sampleCount() - 1), KeyEvent.VK_END, 0);
+        bindKey("wholeLog", () -> {
+            window.reset();
+            viewChanged();
+        }, KeyEvent.VK_0, 0);
+        bindKey("wholeLog", null, KeyEvent.VK_NUMPAD0, 0);
+        bindKey("dropA", () -> dropCursor(MeasureCursors.Which.A), KeyEvent.VK_A, 0);
+        bindKey("dropB", () -> dropCursor(MeasureCursors.Which.B), KeyEvent.VK_B, 0);
+        bindKey("escape", () -> {
+            if (!cursors.isEmpty()) {
+                cursors.clear();
+            } else if (focus.pinned() != TraceFocus.NONE) {
+                focus.togglePin(focus.pinned());
+            }
+        }, KeyEvent.VK_ESCAPE, 0);
+    }
+
+    /** Binds a key while the plots have focus; a null action reuses the one already named. */
+    private void bindKey(String name, Runnable action, int key, int modifiers) {
+        getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(key, modifiers), name);
+        if (action != null) {
+            getActionMap().put(name, new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent event) {
+                    action.run();
+                }
+            });
+        }
+    }
+
+    /** Runs a key's action, as pressing it with the plots focused does; for tests. */
+    void pressKeyForTests(int key, int modifiers) {
+        Object name = getInputMap(WHEN_FOCUSED).get(KeyStroke.getKeyStroke(key, modifiers));
+        getActionMap().get(name).actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, ""));
+    }
+
+    /** The sample a key moves from: the cursor's, else the one in the middle of the visible time. */
+    private int keyboardStart() {
+        return cursorSample >= 0 ? cursorSample : log.nearestSample((window.start() + window.end()) / 2);
+    }
+
+    private void stepCursor(int samples) {
+        if (cursorSample < 0) {
+            moveCursorTo(keyboardStart());
+            return;
+        }
+        moveCursorTo(cursorSample + samples);
+    }
+
+    /**
+     * Puts the cursor on a sample, scrolling the view to keep it visible. It stays there until the pointer
+     * moves over the plots.
+     */
+    private void moveCursorTo(int sample) {
+        int clamped = Math.max(0, Math.min(log.sampleCount() - 1, sample));
+        double time = log.value(clamped, 0);
+        if (time < window.start()) {
+            window.pan(time - window.start());
+        } else if (time > window.end()) {
+            window.pan(time - window.end());
+        }
+        cursorSample = clamped;
+        cursorX = xOf(time);
+        viewChanged();
+    }
+
+    private void panBy(double spans) {
+        window.pan(spans * window.span());
+        if (cursorSample >= 0) {
+            cursorX = xOf(log.value(cursorSample, 0));
+        }
+        viewChanged();
+    }
+
+    private void zoomByKey(double factor) {
+        double anchor = cursorSample >= 0 ? log.value(cursorSample, 0) : (window.start() + window.end()) / 2;
+        window.zoom(anchor, factor);
+        if (cursorSample >= 0) {
+            cursorX = xOf(log.value(cursorSample, 0));
+        }
+        viewChanged();
+    }
+
+    /** Drops cursor A or B at the cursor (turning Measure on), or in the middle of the view without one. */
+    private void dropCursor(MeasureCursors.Which which) {
+        if (!measuring) {
+            setMeasuring(true);
+        }
+        cursors.set(which, log.value(keyboardStart(), 0));
+    }
+
+    private void viewChanged() {
+        repaint();
+        fireViewChanged();
     }
 
     /** The time a click at {@code x} stands for: the nearest sample's while the cursor snaps. */
