@@ -163,13 +163,8 @@ public final class LogViewerPanel extends JPanel {
         this.settings = settings;
         this.lists = lists;
         this.state = state;
-        boolean[] initial = new boolean[log.fieldCount()];
-        for (int field = 1; field < log.fieldCount(); field++) {
-            String name = log.name(field);
-            initial[field] = name.equalsIgnoreCase("RPM") || name.equalsIgnoreCase("MAP")
-                    || name.equalsIgnoreCase("TPS");
-        }
-        layout = PlotLayout.single(log.fieldCount(), initial);
+        // a log opens with an empty plot: the user picks what to see (Plot all on a list plots a set at once)
+        layout = PlotLayout.single(log.fieldCount(), new boolean[log.fieldCount()]);
         categories = SignalCategories.of(log, ini);
         chart = new LogChart(log, layout, settings);
         layout.addListener(() -> {

@@ -220,8 +220,8 @@ class SignalListsTest {
         lists.setMembers("Mixed", Arrays.asList("CLT", "Knock: count", "Fuel: injector lag"));
         LogViewerPanel panel = panel(lists);
         PlotLayout layout = panel.chart().plotLayout();
+        panel.toggle(RPM);
         assertEquals(1, layout.plotCount());
-        assertTrue(layout.isPlotted(RPM));
 
         panel.plotAll("Mixed");
         assertEquals(2, layout.plotCount(), "the active plot holds RPM: a new plot");
@@ -237,9 +237,6 @@ class SignalListsTest {
         lists.setMembers("Pair", Arrays.asList("Knock: count", "Fuel: injector lag"));
         LogViewerPanel panel = panel(lists);
         PlotLayout layout = panel.chart().plotLayout();
-        for (int field : new ArrayList<>(layout.fields(0))) {
-            layout.remove(field);
-        }
         panel.plotAll("Pair");
         assertEquals(1, layout.plotCount());
         assertEquals(Arrays.asList(KNOCK, LAG), layout.fields(0));
