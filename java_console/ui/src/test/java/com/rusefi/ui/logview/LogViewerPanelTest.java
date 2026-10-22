@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class LogViewerPanelTest {
-    /** Samples one second apart over 0..20 s; RPM is plotted by default. */
+    /** Samples one second apart over 0..20 s; a log opens with nothing plotted. */
     private static CsvLogReader log() throws IOException {
         StringBuilder text = new StringBuilder("Time\tRPM\tCLT\tIAT\ns\trpm\tC\tC\n");
         for (int i = 0; i <= 20; i++) {
@@ -83,6 +83,75 @@ class LogViewerPanelTest {
         assertFalse(panel.chart().plotLayout().isPlotted(1));
         assertFalse(handler.importData(new TransferHandler.TransferSupport(panel.fieldList(), SignalTransfer.of(3))),
                 "an unplotted signal dropped on the list changes nothing");
+    }
+
+    /** The centre of the first list row showing {@code field}, with the list laid out. */
+    private static java.awt.Point rowCentre(LogViewerPanel panel, int field) {
+        JList<SignalSections.Row> list = panel.fieldList();
+        list.setSize(260, 2000);
+        for (int index = 0; index < list.getModel().getSize(); index++) {
+            if (list.getModel().getElementAt(index).field == field) {
+                java.awt.Rectangle cell = list.getCellBounds(index, index);
+                return new java.awt.Point(cell.x + cell.width / 2, cell.y + cell.height / 2);
+            }
+        }
+        throw new AssertionError("no row for field " + field);
+    }
+
+    /**
+     * Sends what AWT would deliver to the list's row handler (called directly: headless Swing's own list handler
+     * throws on a mouse press).
+     */
+    private static void mouse(LogViewerPanel panel, int id, java.awt.Point at, int clickCount) {
+        int modifiers = id == MouseEvent.MOUSE_RELEASED || id == MouseEvent.MOUSE_CLICKED ? 0 : MouseEvent.BUTTON1_DOWN_MASK;
+        MouseEvent event = new MouseEvent(panel.fieldList(), id, 0, modifiers, at.x, at.y, clickCount, false,
+                MouseEvent.BUTTON1);
+        switch (id) {
+            case MouseEvent.MOUSE_PRESSED:
+                panel.rowMouse.mousePressed(event);
+                break;
+            case MouseEvent.MOUSE_DRAGGED:
+                panel.rowMouse.mouseDragged(event);
+                break;
+            case MouseEvent.MOUSE_RELEASED:
+                panel.rowMouse.mouseReleased(event);
+                break;
+            default:
+                panel.rowMouse.mouseClicked(event);
+        }
+    }
+
+    /**
+     * BUG (reproduction): AWT sends no MOUSE_CLICKED when the pointer moved between press and release, so a click
+     * that wobbles by a pixel or two adds nothing.
+     */
+    @Test
+    void clickThatMovesAPixelDoesNotPlot() throws IOException {
+        LogViewerPanel panel = new LogViewerPanel(log(), null);
+        java.awt.Point at = rowCentre(panel, 2);
+        java.awt.Point wobble = new java.awt.Point(at.x + 2, at.y + 1);
+        mouse(panel, MouseEvent.MOUSE_PRESSED, at, 1);
+        mouse(panel, MouseEvent.MOUSE_DRAGGED, wobble, 1);
+        mouse(panel, MouseEvent.MOUSE_RELEASED, wobble, 1);
+        assertEquals("none plotted", panel.plottedLabel().getText(), "BUG: the wobbly click is lost");
+    }
+
+    /**
+     * BUG (reproduction): plotting a signal adds a row to Plotted above it, so the list shifts under the pointer and
+     * the second click of a double-click (or a quick second click) lands on the signal that moved there.
+     */
+    @Test
+    void secondClickLandsOnTheRowThatMovedUnderThePointer() throws IOException {
+        LogViewerPanel panel = new LogViewerPanel(log(), null);
+        java.awt.Point at = rowCentre(panel, 2);
+        for (int clickCount = 1; clickCount <= 2; clickCount++) {
+            mouse(panel, MouseEvent.MOUSE_PRESSED, at, clickCount);
+            mouse(panel, MouseEvent.MOUSE_RELEASED, at, clickCount);
+            mouse(panel, MouseEvent.MOUSE_CLICKED, at, clickCount);
+        }
+        PlotLayout layout = panel.chart().plotLayout();
+        assertTrue(layout.isPlotted(2), "the first click plotted CLT");
+        assertTrue(layout.isPlotted(1), "BUG: the second click plotted RPM, which moved under the pointer");
     }
 
     /** Selects the first list row showing {@code field}. */
