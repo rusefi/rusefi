@@ -1060,6 +1060,56 @@ final class LogChart extends JComponent {
         }
     }
 
+    /**
+     * Where the card goes: under its legend item as usual, unless that hides a min/max marker; then the first
+     * clear spot of: slid right past the markers, the top right, the bottom left or right of the plot. With no
+     * clear spot it stays in the usual place.
+     */
+    private Rectangle placeCard(LegendItem item, int width, int height) {
+        int x = Math.max(4, Math.min(getWidth() - width - 4, item.bounds.x - 6));
+        int y = item.bounds.y + item.bounds.height + 6;
+        if (y + height > getHeight() - 4) {
+            y = Math.max(4, item.bounds.y - height - 6);
+        }
+        Rectangle usual = new Rectangle(x, y, width, height);
+        List<Rectangle> obstacles = new ArrayList<>();
+        for (Marker marker : markers) {
+            Rectangle tag = new Rectangle(marker.tag);
+            tag.grow(4, 4);
+            obstacles.add(tag);
+            // the triangle, on either side of the point
+            obstacles.add(new Rectangle(marker.point.x - 8, marker.point.y - 14, 16, 28));
+        }
+        int pastMarkers = x;
+        for (Rectangle obstacle : obstacles) {
+            if (obstacle.intersects(usual)) {
+                pastMarkers = Math.max(pastMarkers, obstacle.x + obstacle.width + 8);
+            }
+        }
+        int right = getWidth() - width - 4;
+        Rectangle traces = item.bounds;
+        for (Band band : bands) {
+            if (band.legend.contains(item)) {
+                traces = band.traces;
+            }
+        }
+        int bottom = traces.y + traces.height - height - 4;
+        Rectangle[] candidates = {
+                usual,
+                new Rectangle(pastMarkers, y, width, height),
+                new Rectangle(right, y, width, height),
+                new Rectangle(x, bottom, width, height),
+                new Rectangle(right, bottom, width, height),
+        };
+        Rectangle chart = new Rectangle(0, 0, getWidth(), getHeight());
+        for (Rectangle candidate : candidates) {
+            if (chart.contains(candidate) && obstacles.stream().noneMatch(candidate::intersects)) {
+                return candidate;
+            }
+        }
+        return usual;
+    }
+
     /** Max, min (with their times) and average of the hovered legend item over the visible window. */
     private void drawCard(Graphics2D g, LegendItem item, FontMetrics metrics, Font valueFont, PlotPalette palette) {
         int field = item.field;
@@ -1089,12 +1139,9 @@ final class LogChart extends JComponent {
         int width = Math.max(titleWidth, 14 + labelWidth + 14 + valueWidth + 18 + timeWidth) + 14;
         int lineHeight = 21;
         int height = 34 + rows.length * lineHeight + 4;
-        int x = Math.max(4, Math.min(getWidth() - width - 4, item.bounds.x - 6));
-        int y = item.bounds.y + item.bounds.height + 6;
-        if (y + height > getHeight() - 4) {
-            y = Math.max(4, item.bounds.y - height - 6);
-        }
-        card = new Rectangle(x, y, width, height);
+        card = placeCard(item, width, height);
+        int x = card.x;
+        int y = card.y;
 
         Color background = ThemedStrip.themed("Console.Card.background", Color.WHITE);
         g.setColor(new Color(0, 0, 0, 28));
