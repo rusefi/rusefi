@@ -202,6 +202,7 @@ public final class LogViewerPanel extends JPanel {
         });
         chart.addViewListener(statsPanel::refreshValues);
         toolbar.statsButton.addActionListener(e -> setStatsVisible(toolbar.statsButton.isSelected()));
+        toolbar.measureButton.addActionListener(e -> chart.setMeasuring(toolbar.measureButton.isSelected()));
         statsSplit.setResizeWeight(1);
         statsSplit.setContinuousLayout(true);
         statsSplit.setDividerSize(5);
