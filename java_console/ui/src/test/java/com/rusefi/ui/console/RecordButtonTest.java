@@ -94,7 +94,7 @@ class RecordButtonTest {
             verify(context.sensorLogger).start(any(File.class), isNull());
             File recording = logging.lastLog();
             assertEquals(logs.toFile().getAbsoluteFile(), recording.getParentFile());
-            assertTrue(recording.getName().startsWith("rusEFI_outputChannels_") && recording.getName().endsWith(".mlg"));
+            assertTrue(recording.getName().matches("rusEFI_\\d{4}-\\d{2}-\\d{2}_\\d{2}_\\d{2}_\\d{2}_\\d{3}\\.mlg"), recording.getName());
         });
     }
 

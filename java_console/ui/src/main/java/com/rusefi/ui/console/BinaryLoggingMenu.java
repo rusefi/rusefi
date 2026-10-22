@@ -214,7 +214,7 @@ final class BinaryLoggingMenu {
 
     /** The file a quick start records into: the rusEFI logs folder, named by date and time. */
     File defaultFile() {
-        return new File(logsFolder, "rusEFI_outputChannels_" + FileLogger.getDate() + ".mlg").getAbsoluteFile();
+        return new File(logsFolder, "rusEFI_" + FileLogger.getDate() + ".mlg").getAbsoluteFile();
     }
 
     void setLogsFolderForTests(File folder) {
