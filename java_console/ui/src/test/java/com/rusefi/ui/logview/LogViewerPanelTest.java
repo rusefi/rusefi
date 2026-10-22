@@ -97,7 +97,7 @@ class LogViewerPanelTest {
         LogViewerPanel panel = new LogViewerPanel(log(), null);
         JList<SignalSections.Row> list = panel.fieldList();
         Component row = list.getCellRenderer().getListCellRendererComponent(list,
-                SignalSections.Row.signal(SignalSections.PLOTTED, 1), 0, false, false);
+                SignalSections.Row.signal(SignalSections.PLOTTED, SignalSections.Kind.PLOTTED, 1), 0, false, false);
         row.setBounds(0, 0, 260, 28);
         BufferedImage image = new BufferedImage(260, 28, BufferedImage.TYPE_INT_RGB);
         row.paint(image.createGraphics());

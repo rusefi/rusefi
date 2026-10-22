@@ -32,8 +32,8 @@ class SignalSectionsTest {
 
     private static List<SignalSections.Row> rows(CsvLogReader log, PlotLayout layout, String query,
                                                  boolean hideZero, boolean hideConstant, Set<String> collapsed) {
-        return SignalSections.rows(log, layout, SignalCategories.of(log, null), query, hideZero, hideConstant,
-                collapsed);
+        return SignalSections.rows(log, layout, SignalCategories.of(log, null), new SignalLists(), query, hideZero,
+                hideConstant, collapsed);
     }
 
     @Test

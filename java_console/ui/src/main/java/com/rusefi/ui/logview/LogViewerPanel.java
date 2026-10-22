@@ -9,6 +9,12 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import javax.swing.DropMode;
 import javax.swing.Icon;
 import javax.swing.JComponent;
@@ -34,6 +40,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.GraphicsEnvironment;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
@@ -41,9 +49,15 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import static com.rusefi.ui.logview.ThemedStrip.themed;
 
@@ -55,6 +69,8 @@ import static com.rusefi.ui.logview.ThemedStrip.themed;
  */
 public final class LogViewerPanel extends JPanel {
     private static final int SIDEBAR_WIDTH = 280;
+    /** Width at the right end of a list heading that opens its menu (the "⋯"). */
+    private static final int MENU_HOT_WIDTH = 28;
 
     private final CsvLogReader log;
     private final PlotLayout layout;
@@ -69,7 +85,12 @@ public final class LogViewerPanel extends JPanel {
             }
             SignalSections.Row row = rows.get(index);
             if (row.isHeading()) {
-                return row.expanded ? "Click to collapse" : "Click to expand";
+                String toggle = row.expanded ? "Click to collapse" : "Click to expand";
+                return row.kind == SignalSections.Kind.LIST
+                        ? toggle + " · ⋯ or right-click: list actions · drop a signal here to add it" : toggle;
+            }
+            if (row.isMissing()) {
+                return row.label + " is not in this log · right-click to remove it from " + row.section;
             }
             int field = row.field;
             String unit = log.unit(field);
@@ -77,9 +98,10 @@ public final class LogViewerPanel extends JPanel {
                     + (SignalSections.isZero(log, field) ? " · always 0 in this log"
                     : SignalSections.isConstant(log, field) ? " · constant in this log" : "");
             if (layout.isPlotted(field)) {
-                return name + " · in " + plotName(layout.plotOf(field)) + " · click to remove";
+                return name + " · in " + plotName(layout.plotOf(field)) + " · click to remove · right-click: lists";
             }
-            return name + " · click to add to " + plotName(layout.activePlot()) + " · Shift+click: new plot";
+            return name + " · click to add to " + plotName(layout.activePlot())
+                    + " · Shift+click: new plot · right-click: lists";
         }
 
         // Always fit the sidebar: a long name is shortened with "…" instead of pushing units under the scrollbar.
@@ -90,6 +112,16 @@ public final class LogViewerPanel extends JPanel {
     };
     private final JTextField search = new JTextField();
     private final SignalCategories categories;
+    private final SignalLists lists;
+    /** Asks for a list name (dialog title, initial text); null when cancelled. Replaced in tests. */
+    BiFunction<String, String, String> namePrompt = (title, initial) ->
+            (String) JOptionPane.showInputDialog(this, "List name:", title, JOptionPane.PLAIN_MESSAGE, null, null,
+                    initial);
+    /** Asks to go ahead with the given question. Replaced in tests. */
+    Predicate<String> confirm = question -> JOptionPane.showConfirmDialog(this, question, "Signal lists",
+            JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION;
+    Consumer<String> messages = message -> JOptionPane.showMessageDialog(this, message, "Signal lists",
+            JOptionPane.WARNING_MESSAGE);
     private final Set<String> collapsed = SignalSections.defaultCollapsed();
     private boolean hideZero = true;
     private boolean hideConstant = false;
@@ -110,18 +142,21 @@ public final class LogViewerPanel extends JPanel {
     }
 
     public LogViewerPanel(CsvLogReader log, String fileName) {
-        this(log, fileName, new ChartSettings(), null);
+        this(log, fileName, new ChartSettings(), new SignalLists(), null);
     }
 
     /**
      * @param settings chart options, shared so they carry over when another log is opened
+     * @param lists    Common and the user's signal lists, shared by every log
      * @param onOpen   action of the toolbar's Open button, given the button (e.g. to show a menu under it),
      *                 or null for no button
      */
-    LogViewerPanel(CsvLogReader log, String fileName, ChartSettings settings, Consumer<Component> onOpen) {
+    LogViewerPanel(CsvLogReader log, String fileName, ChartSettings settings, SignalLists lists,
+                   Consumer<Component> onOpen) {
         super(new BorderLayout());
         this.log = log;
         this.settings = settings;
+        this.lists = lists;
         boolean[] initial = new boolean[log.fieldCount()];
         for (int field = 1; field < log.fieldCount(); field++) {
             String name = log.name(field);
@@ -195,7 +230,7 @@ public final class LogViewerPanel extends JPanel {
             @Override public void changedUpdate(DocumentEvent event) { filter(search.getText()); }
         });
 
-        String stillFound = "<br>they stay in Plotted and Common and are found by search</html>";
+        String stillFound = "<br>they stay in Plotted and the lists and are found by search</html>";
         setUpFilterBox(hideZeroBox, "Hide zero signals", SignalSections.zeroCount(log), hideZero,
                 "<html>Leave signals that are 0 for the whole log (mostly unused features) out of the groups;"
                         + stillFound, selected -> hideZero = selected);
@@ -229,17 +264,35 @@ public final class LogViewerPanel extends JPanel {
         fieldList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent event) {
-                int index = fieldList.locationToIndex(event.getPoint());
-                if (index >= 0 && fieldList.getCellBounds(index, index).contains(event.getPoint())) {
-                    SignalSections.Row row = rows.get(index);
-                    if (row.isHeading()) {
-                        toggleSection(row.section);
-                    } else if (event.isShiftDown()) {
-                        addToNewPlot(row.field);
-                    } else {
-                        toggle(row.field);
-                    }
+                int index = rowAt(event.getPoint());
+                if (index < 0 || !SwingUtilities.isLeftMouseButton(event)) {
+                    return;
                 }
+                SignalSections.Row row = rows.get(index);
+                Rectangle cell = fieldList.getCellBounds(index, index);
+                if (row.isHeading() && row.kind == SignalSections.Kind.LIST
+                        && event.getX() >= cell.x + cell.width - MENU_HOT_WIDTH) {
+                    listMenu(row.section).show(fieldList, cell.x + cell.width - MENU_HOT_WIDTH, cell.y + cell.height);
+                } else if (row.isHeading()) {
+                    toggleSection(row.section);
+                } else if (!row.isSignal()) {
+                    return;
+                } else if (event.isShiftDown()) {
+                    addToNewPlot(row.field);
+                } else {
+                    toggle(row.field);
+                }
+            }
+
+            // the popup trigger is on press on some systems and on release on others
+            @Override
+            public void mousePressed(MouseEvent event) {
+                showRowMenu(event);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent event) {
+                showRowMenu(event);
             }
         });
         fieldList.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "togglePlot");
@@ -253,7 +306,7 @@ public final class LogViewerPanel extends JPanel {
                 }
                 if (row.isHeading()) {
                     toggleSection(row.section);
-                } else {
+                } else if (row.isSignal()) {
                     toggle(row.field);
                 }
             }
@@ -263,7 +316,7 @@ public final class LogViewerPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent event) {
                 SignalSections.Row row = fieldList.getSelectedValue();
-                if (row != null && !row.isHeading()) {
+                if (row != null && row.isSignal()) {
                     addToNewPlot(row.field);
                 }
             }
@@ -282,6 +335,220 @@ public final class LogViewerPanel extends JPanel {
 
     SignalCategories categories() {
         return categories;
+    }
+
+    SignalLists lists() {
+        return lists;
+    }
+
+    private int rowAt(Point point) {
+        int index = fieldList.locationToIndex(point);
+        return index >= 0 && fieldList.getCellBounds(index, index).contains(point) ? index : -1;
+    }
+
+    private void showRowMenu(MouseEvent event) {
+        if (!event.isPopupTrigger()) {
+            return;
+        }
+        int index = rowAt(event.getPoint());
+        if (index < 0) {
+            return;
+        }
+        fieldList.setSelectedIndex(index);
+        JPopupMenu menu = rowMenu(rows.get(index));
+        if (menu != null) {
+            menu.show(fieldList, event.getX(), event.getY());
+        }
+    }
+
+    /** The right-click menu of a row: list actions for a list heading, signal actions otherwise. */
+    JPopupMenu rowMenu(SignalSections.Row row) {
+        if (row.isHeading()) {
+            return row.kind == SignalSections.Kind.LIST ? listMenu(row.section) : null;
+        }
+        JPopupMenu menu = new JPopupMenu();
+        if (row.isSignal()) {
+            int field = row.field;
+            boolean plotted = layout.isPlotted(field);
+            JMenuItem plot = new JMenuItem(plotted ? "Remove from plot" : "Add to " + plotName(layout.activePlot()));
+            plot.addActionListener(e -> toggle(field));
+            menu.add(plot);
+            JMenuItem newPlot = new JMenuItem("Add to new plot");
+            newPlot.setEnabled(!plotted);
+            newPlot.addActionListener(e -> addToNewPlot(field));
+            menu.add(newPlot);
+            menu.addSeparator();
+            JMenu addTo = new JMenu("Add to list");
+            for (String list : listNames()) {
+                JCheckBoxMenuItem item = new JCheckBoxMenuItem(list, labels(list).contains(log.name(field)));
+                item.setToolTipText(item.isSelected() ? "In " + list + " · click to remove" : "Copy it to " + list);
+                item.addActionListener(e -> {
+                    if (item.isSelected()) {
+                        addToList(list, field);
+                    } else {
+                        removeFromList(list, log.name(field));
+                    }
+                });
+                addTo.add(item);
+            }
+            addTo.addSeparator();
+            JMenuItem newList = new JMenuItem("New list…");
+            newList.addActionListener(e -> newList(field));
+            addTo.add(newList);
+            menu.add(addTo);
+        }
+        if (row.kind == SignalSections.Kind.LIST) {
+            String label = row.isMissing() ? row.label : log.name(row.field);
+            JMenuItem remove = new JMenuItem("Remove from " + row.section);
+            remove.addActionListener(e -> removeFromList(row.section, label));
+            menu.add(remove);
+        }
+        return menu;
+    }
+
+    /** The ⋯ / right-click menu of a list heading. */
+    JPopupMenu listMenu(String list) {
+        boolean common = SignalSections.COMMON.equals(list);
+        JPopupMenu menu = new JPopupMenu();
+        List<Integer> present = presentFields(list);
+        JMenuItem plotAll = new JMenuItem("Plot all");
+        plotAll.setToolTipText("Adds the list's signals to a new plot");
+        plotAll.setEnabled(present.stream().anyMatch(field -> !layout.isPlotted(field)));
+        plotAll.addActionListener(e -> plotAll(list));
+        menu.add(plotAll);
+        menu.addSeparator();
+        JMenuItem rename = new JMenuItem("Rename…");
+        rename.setEnabled(!common);
+        rename.addActionListener(e -> renameList(list));
+        menu.add(rename);
+        if (common) {
+            JMenuItem reset = new JMenuItem("Reset to defaults");
+            reset.setEnabled(lists.isCommonEdited());
+            reset.addActionListener(e -> {
+                lists.resetCommon();
+                filter(search.getText());
+            });
+            menu.add(reset);
+        } else {
+            JMenuItem delete = new JMenuItem("Delete list");
+            delete.addActionListener(e -> deleteList(list));
+            menu.add(delete);
+        }
+        menu.addSeparator();
+        JMenuItem newList = new JMenuItem("New list…");
+        newList.addActionListener(e -> newList(-1));
+        menu.add(newList);
+        return menu;
+    }
+
+    private List<String> listNames() {
+        List<String> names = new ArrayList<>();
+        names.add(SignalSections.COMMON);
+        names.addAll(lists.customNames());
+        return names;
+    }
+
+    /** A list's labels; Common's defaults while it is not edited, so the first edit starts from them. */
+    List<String> labels(String list) {
+        List<String> members = lists.members(list);
+        return members != null ? members : new ArrayList<>(categories.defaultCommonLabels());
+    }
+
+    /** A list's signals that are in this log, in list order. */
+    private List<Integer> presentFields(String list) {
+        Map<String, Integer> fieldOfLabel = SignalSections.fieldOfLabel(log);
+        List<Integer> fields = new ArrayList<>();
+        for (String label : labels(list)) {
+            Integer field = fieldOfLabel.get(label);
+            if (field != null) {
+                fields.add(field);
+            }
+        }
+        return fields;
+    }
+
+    /** Copies a signal to a list (the end); nothing if it is already there. */
+    void addToList(String list, int field) {
+        List<String> labels = labels(list);
+        if (!labels.contains(log.name(field))) {
+            labels.add(log.name(field));
+            lists.setMembers(list, labels);
+        }
+        filter(search.getText());
+    }
+
+    void removeFromList(String list, String label) {
+        List<String> labels = labels(list);
+        labels.remove(label);
+        lists.setMembers(list, labels);
+        filter(search.getText());
+    }
+
+    /** Adds the list's unplotted signals to a new plot, or to the active plot while it is empty. */
+    void plotAll(String list) {
+        boolean intoActive = layout.fields(layout.activePlot()).isEmpty();
+        for (int field : presentFields(list)) {
+            if (layout.isPlotted(field)) {
+                continue;
+            }
+            if (intoActive) {
+                layout.add(field);
+            } else {
+                // the new plot becomes the active one, where the rest follow
+                addToNewPlot(field);
+                intoActive = true;
+            }
+        }
+    }
+
+    /** Makes a list, holding the given signal unless it is -1. */
+    void newList(int field) {
+        String name = askListName("New list", "", null);
+        if (name == null) {
+            return;
+        }
+        lists.create(name);
+        collapsed.remove(name);
+        if (field >= 0) {
+            addToList(name, field);
+        } else {
+            filter(search.getText());
+        }
+    }
+
+    void renameList(String list) {
+        String name = askListName("Rename list", list, list);
+        if (name == null || name.equals(list)) {
+            return;
+        }
+        lists.rename(list, name);
+        if (collapsed.remove(list)) {
+            collapsed.add(name);
+        }
+        filter(search.getText());
+    }
+
+    void deleteList(String list) {
+        if (!confirm.test("Delete the list \"" + list + "\"? Its signals stay in their groups.")) {
+            return;
+        }
+        lists.delete(list);
+        collapsed.remove(list);
+        filter(search.getText());
+    }
+
+    /** A valid, trimmed list name, or null when cancelled or refused (with a message). */
+    private String askListName(String title, String initial, String current) {
+        String name = namePrompt.apply(title, initial);
+        if (name == null) {
+            return null;
+        }
+        String problem = lists.problem(name, current);
+        if (problem != null) {
+            messages.accept(problem);
+            return null;
+        }
+        return name.trim();
     }
 
     /** Opens a collapsed section or collapses an open one. */
@@ -368,14 +635,15 @@ public final class LogViewerPanel extends JPanel {
     private void filter(String query) {
         SignalSections.Row selected = fieldList.getSelectedValue();
         rows.clear();
-        for (SignalSections.Row row : SignalSections.rows(log, layout, categories, query, hideZero, hideConstant,
-                collapsed)) {
+        for (SignalSections.Row row : SignalSections.rows(log, layout, categories, lists, query, hideZero,
+                hideConstant, collapsed)) {
             rows.addElement(row);
         }
         if (selected != null) {
             for (int index = 0; index < rows.size(); index++) {
                 SignalSections.Row row = rows.get(index);
-                if (row.field == selected.field && row.section.equals(selected.section)) {
+                if (row.field == selected.field && row.section.equals(selected.section)
+                        && Objects.equals(row.label, selected.label)) {
                     fieldList.setSelectedIndex(index);
                     break;
                 }
@@ -385,7 +653,7 @@ public final class LogViewerPanel extends JPanel {
     }
 
     /**
-     * Signals listed in the groups (each signal is in exactly one; Plotted and Common are copies) out of all
+     * Signals listed in the groups (each signal is in exactly one; Plotted and the lists are copies) out of all
      * signals: what is left after hiding zero or constant signals, or searching.
      */
     private void updateCount() {
@@ -393,8 +661,7 @@ public final class LogViewerPanel extends JPanel {
         int listed = 0;
         for (int index = 0; index < rows.size(); index++) {
             SignalSections.Row row = rows.get(index);
-            if (row.isHeading() && !row.section.equals(SignalSections.PLOTTED)
-                    && !row.section.equals(SignalSections.COMMON)) {
+            if (row.isHeading() && row.kind == SignalSections.Kind.GROUP) {
                 listed += row.count;
             }
         }
@@ -430,12 +697,15 @@ public final class LogViewerPanel extends JPanel {
         return countChip;
     }
 
-    /** Drags a signal out of the list onto a plot; a trace dragged back onto the list is removed. */
+    /**
+     * Drags a signal out of the list onto a plot. A signal dropped on a list's heading or members is copied to
+     * that list; a trace dragged back onto the rest of the list is removed from its plot.
+     */
     final class ListTransferHandler extends SignalTransfer.Handler {
         @Override
         protected Transferable createTransferable(JComponent component) {
             SignalSections.Row row = fieldList.getSelectedValue();
-            return row == null || row.isHeading() ? null : SignalTransfer.of(row.field);
+            return row == null || !row.isSignal() ? null : SignalTransfer.of(row.field);
         }
 
         @Override
@@ -445,12 +715,26 @@ public final class LogViewerPanel extends JPanel {
 
         @Override
         boolean importSignal(TransferSupport support, int field) {
+            String list = support.isDrop() ? listAt(((JList.DropLocation) support.getDropLocation()).getIndex()) : null;
+            if (list != null) {
+                addToList(list, field);
+                return true;
+            }
             if (!layout.isPlotted(field)) {
                 return false;
             }
             layout.remove(field);
             return true;
         }
+    }
+
+    /** The list whose heading or member is at a row, or null. */
+    String listAt(int index) {
+        if (index < 0 || index >= rows.size()) {
+            return null;
+        }
+        SignalSections.Row row = rows.get(index);
+        return row.kind == SignalSections.Kind.LIST ? row.section : null;
     }
 
     /** Small rounded count badge, like the Gauges RPM readout. */
@@ -522,14 +806,26 @@ public final class LogViewerPanel extends JPanel {
                 name.setText((row.expanded ? "▾  " : "▸  ") + row.section.toUpperCase(Locale.ROOT));
                 name.setFont(list.getFont().deriveFont(Font.BOLD, list.getFont().getSize2D() - 1));
                 name.setForeground(muted);
-                unit.setText(String.format(Locale.ROOT, "%,d", row.count));
+                // a list heading ends with its menu button (MENU_HOT_WIDTH)
+                unit.setText(String.format(Locale.ROOT, row.kind == SignalSections.Kind.LIST ? "%,d    ⋯" : "%,d",
+                        row.count));
                 unit.setFont(list.getFont().deriveFont(list.getFont().getSize2D() - 1));
                 unit.setForeground(muted);
                 return this;
             }
-            int field = row.field;
             setBorder(BorderFactory.createEmptyBorder(0, 16, 0, 8));
             name.setIcon(dot);
+            if (row.isMissing()) {
+                dot.set(null, new Color(muted.getRed(), muted.getGreen(), muted.getBlue(), 50));
+                name.setText(row.label);
+                name.setFont(list.getFont());
+                name.setForeground(muted);
+                unit.setText("not in this log");
+                unit.setFont(list.getFont().deriveFont(Font.ITALIC));
+                unit.setForeground(muted);
+                return this;
+            }
+            int field = row.field;
             boolean plotted = layout.isPlotted(field);
             if (plotted) {
                 Color trace = chart.palette().trace(layout.colors().slot(field));
