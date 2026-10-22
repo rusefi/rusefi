@@ -4,7 +4,9 @@ import com.rusefi.logview.CsvLogReader;
 import com.rusefi.ui.widgets.ConsoleFonts;
 
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -18,6 +20,10 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -286,8 +292,87 @@ final class StatsPanel extends JPanel {
         }
     }
 
-    private static String escape(String text) {
-        return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+    /**
+     * A signal cell on one line: trace dot, name, then the unit in the muted colour. When the column is too narrow
+     * the name is shortened with "…" first, then the unit is left out; the tooltip has the whole name.
+     */
+    static final class SignalCell extends JComponent {
+        private static final int LEFT = 12;
+        private static final int RIGHT = 12;
+        private static final int GAP = 9;
+        /** Name width kept before the unit is left out. */
+        private static final int MIN_NAME = 40;
+        private Icon dot;
+        private String name = "";
+        private String unit = "";
+        private Color ink = Color.BLACK;
+        private Color muted = Color.GRAY;
+        private Color background = Color.WHITE;
+
+        void set(Icon dot, String name, String unit, Font font, Color ink, Color muted, Color background) {
+            this.dot = dot;
+            this.name = name;
+            this.unit = unit;
+            this.ink = ink;
+            this.muted = muted;
+            this.background = background;
+            setFont(font);
+            setToolTipText(unit.isEmpty() ? name : name + " (" + unit + ")");
+        }
+
+        /** The name and unit as drawn in a cell {@code width} wide: {name, unit}, unit empty when left out. */
+        String[] shown(int width) {
+            FontMetrics metrics = getFontMetrics(getFont());
+            int available = width - LEFT - (dot == null ? 0 : dot.getIconWidth() + GAP) - RIGHT;
+            String unitText = unit.isEmpty() ? "" : "  " + unit;
+            int unitWidth = metrics.stringWidth(unitText);
+            if (metrics.stringWidth(name) + unitWidth <= available) {
+                return new String[]{name, unit};
+            }
+            if (!unit.isEmpty() && available - unitWidth >= MIN_NAME) {
+                return new String[]{shorten(name, metrics, available - unitWidth), unit};
+            }
+            return new String[]{shorten(name, metrics, available), ""};
+        }
+
+        static String shorten(String text, FontMetrics metrics, int width) {
+            if (metrics.stringWidth(text) <= width) {
+                return text;
+            }
+            String ellipsis = "…";
+            int end = text.length();
+            while (end > 0 && metrics.stringWidth(text.substring(0, end).trim() + ellipsis) > width) {
+                end--;
+            }
+            return text.substring(0, end).trim() + ellipsis;
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g.create();
+            try {
+                g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+                g2.setColor(background);
+                g2.fillRect(0, 0, getWidth(), getHeight());
+                int x = LEFT;
+                if (dot != null) {
+                    dot.paintIcon(this, g2, x, (getHeight() - dot.getIconHeight()) / 2);
+                    x += dot.getIconWidth() + GAP;
+                }
+                g2.setFont(getFont());
+                FontMetrics metrics = g2.getFontMetrics();
+                int baseline = (getHeight() + metrics.getAscent() - metrics.getDescent()) / 2;
+                String[] shown = shown(getWidth());
+                g2.setColor(ink);
+                g2.drawString(shown[0], x, baseline);
+                if (!shown[1].isEmpty()) {
+                    g2.setColor(muted);
+                    g2.drawString("  " + shown[1], x + metrics.stringWidth(shown[0]), baseline);
+                }
+            } finally {
+                g2.dispose();
+            }
+        }
     }
 
     private static final class HeaderRenderer extends DefaultTableCellRenderer {
@@ -309,6 +394,7 @@ final class StatsPanel extends JPanel {
 
     private final class CellRenderer extends DefaultTableCellRenderer {
         private final TraceDot dot = new TraceDot();
+        private final SignalCell signalCell = new SignalCell();
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused,
@@ -333,13 +419,9 @@ final class StatsPanel extends JPanel {
                 Color trace = chart.colorOf(row.field, chart.palette());
                 // a darker outline keeps pale dark-plot colours visible on the light panel
                 dot.set(trace, trace.darker());
-                setIcon(dot);
-                setIconTextGap(9);
-                String unit = log.unit(row.field);
-                // the unit in the muted colour, after the name
-                setText(unit.isEmpty() ? log.name(row.field) : String.format("<html>%s&nbsp;&nbsp;<font color='#%06x'>%s</font></html>",
-                        escape(log.name(row.field)), muted.getRGB() & 0xffffff, escape(unit)));
-                setToolTipText(unit.isEmpty() ? log.name(row.field) : log.name(row.field) + " (" + unit + ")");
+                signalCell.set(dot, log.name(row.field), log.unit(row.field), getFont(), table.getForeground(), muted,
+                        getBackground());
+                return signalCell;
             } else {
                 setFont(ConsoleFonts.mono(pinned ? Font.BOLD : Font.PLAIN, table.getFont().getSize()));
             }
