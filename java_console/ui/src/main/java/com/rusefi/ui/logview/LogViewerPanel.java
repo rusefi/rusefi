@@ -263,40 +263,7 @@ public final class LogViewerPanel extends JPanel {
         fieldList.setFixedCellHeight(28);
         fieldList.setToolTipText("");
         fieldList.setBackground(sidebar.getBackground());
-        fieldList.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent event) {
-                int index = rowAt(event.getPoint());
-                if (index < 0 || !SwingUtilities.isLeftMouseButton(event)) {
-                    return;
-                }
-                SignalSections.Row row = rows.get(index);
-                Rectangle cell = fieldList.getCellBounds(index, index);
-                if (row.isHeading() && row.kind == SignalSections.Kind.LIST
-                        && event.getX() >= cell.x + cell.width - MENU_HOT_WIDTH) {
-                    listMenu(row.section).show(fieldList, cell.x + cell.width - MENU_HOT_WIDTH, cell.y + cell.height);
-                } else if (row.isHeading()) {
-                    toggleSection(row.section);
-                } else if (!row.isSignal()) {
-                    return;
-                } else if (event.isShiftDown()) {
-                    addToNewPlot(row.field);
-                } else {
-                    toggle(row.field);
-                }
-            }
-
-            // the popup trigger is on press on some systems and on release on others
-            @Override
-            public void mousePressed(MouseEvent event) {
-                showRowMenu(event);
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent event) {
-                showRowMenu(event);
-            }
-        });
+        fieldList.addMouseListener(rowMouse);
         fieldList.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "togglePlot");
         fieldList.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "togglePlot");
         fieldList.getActionMap().put("togglePlot", new AbstractAction() {
@@ -330,6 +297,42 @@ public final class LogViewerPanel extends JPanel {
         sidebar.add(fieldScroll, BorderLayout.CENTER);
         return sidebar;
     }
+
+    /** Clicks on the signal list's rows: plot a signal, open or close a section, the menus. */
+    final MouseAdapter rowMouse = new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent event) {
+            int index = rowAt(event.getPoint());
+            if (index < 0 || !SwingUtilities.isLeftMouseButton(event)) {
+                return;
+            }
+            SignalSections.Row row = rows.get(index);
+            Rectangle cell = fieldList.getCellBounds(index, index);
+            if (row.isHeading() && row.kind == SignalSections.Kind.LIST
+                    && event.getX() >= cell.x + cell.width - MENU_HOT_WIDTH) {
+                listMenu(row.section).show(fieldList, cell.x + cell.width - MENU_HOT_WIDTH, cell.y + cell.height);
+            } else if (row.isHeading()) {
+                toggleSection(row.section);
+            } else if (!row.isSignal()) {
+                return;
+            } else if (event.isShiftDown()) {
+                addToNewPlot(row.field);
+            } else {
+                toggle(row.field);
+            }
+        }
+
+        // the popup trigger is on press on some systems and on release on others
+        @Override
+        public void mousePressed(MouseEvent event) {
+            showRowMenu(event);
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent event) {
+            showRowMenu(event);
+        }
+    };
 
     JList<SignalSections.Row> fieldList() {
         return fieldList;
