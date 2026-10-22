@@ -850,8 +850,12 @@ final class LogChart extends JComponent {
             g.drawRoundRect(target.x - 6, target.y - 2, target.width + 12, target.height + 4, 8, 8);
         }
 
+        // the colour bar is centred on the capital-letter height of the legend text
+        int capHeight = (int) Math.round(metrics.getFont().createGlyphVector(g.getFontRenderContext(), "H")
+                .getVisualBounds().getHeight());
         for (LegendItem item : band.legend) {
             int baseline = item.bounds.y + 14;
+            int barY = baseline - (capHeight + LEGEND_BAR_HEIGHT + 1) / 2;
             int x = item.bounds.x;
             if (item.field == focus.focused()) {
                 Rectangle chip = new Rectangle(item.bounds.x - 6, item.bounds.y, item.bounds.width - 6, item.bounds.height);
@@ -863,11 +867,11 @@ final class LogChart extends JComponent {
                 }
             }
             g.setColor(colorOf(item.field, palette));
-            g.fillRoundRect(x, baseline - 10, 13, 5, 4, 4);
+            g.fillRoundRect(x, barY, 13, LEGEND_BAR_HEIGHT, 4, 4);
             if (item.field == hoveredSwatch) {
                 // the colour mark opens the colour picker
                 g.setColor(palette.accent);
-                g.drawRoundRect(x - 4, baseline - 14, 21, 13, 6, 6);
+                g.drawRoundRect(x - 4, barY - 4, 21, LEGEND_BAR_HEIGHT + 8, 6, 6);
             }
             g.setColor(palette.label);
             g.drawString(log.name(item.field) + " ", x + 19, baseline);
@@ -962,6 +966,8 @@ final class LogChart extends JComponent {
             plot.dispose();
         }
     }
+
+    private static final int LEGEND_BAR_HEIGHT = 5;
 
     /** Alpha of the traces behind a focused one. */
     static final int FADED_ALPHA = 60;
