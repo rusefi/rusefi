@@ -40,6 +40,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Locale;
+import java.util.function.Consumer;
 
 import static com.rusefi.ui.logview.ThemedStrip.themed;
 
@@ -97,9 +98,10 @@ public final class LogViewerPanel extends JPanel {
 
     /**
      * @param settings chart options, shared so they carry over when another log is opened
-     * @param onOpen   action of the toolbar's Open button, or null for no button
+     * @param onOpen   action of the toolbar's Open button, given the button (e.g. to show a menu under it),
+     *                 or null for no button
      */
-    LogViewerPanel(CsvLogReader log, String fileName, ChartSettings settings, Runnable onOpen) {
+    LogViewerPanel(CsvLogReader log, String fileName, ChartSettings settings, Consumer<Component> onOpen) {
         super(new BorderLayout());
         this.log = log;
         this.settings = settings;

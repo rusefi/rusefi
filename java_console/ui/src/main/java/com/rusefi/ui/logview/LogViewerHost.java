@@ -1,6 +1,7 @@
 package com.rusefi.ui.logview;
 
 import com.devexperts.logging.FileLogger;
+import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.logview.CsvLogReader;
 import com.rusefi.logview.LogFiles;
 import com.rusefi.ui.widgets.JoinedButtons;
@@ -9,22 +10,31 @@ import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JProgressBar;
 import javax.swing.KeyStroke;
+import javax.swing.ListCellRenderer;
 import javax.swing.SwingWorker;
 import javax.swing.TransferHandler;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.JTextComponent;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagLayout;
@@ -32,16 +42,19 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
 /**
- * Hosts the log viewer and opens logs: the Open button, Ctrl+O, or dropping a file anywhere on the
- * viewer. Files load in the background; on failure the previous log stays. Chart settings (plot colours,
- * grid, cursor) carry over from one log to the next.
+ * Hosts the log viewer and opens logs: the recent logs on the empty card, the toolbar's Open menu, Ctrl+O,
+ * or dropping a file anywhere on the viewer. Files load in the background; on failure the previous log
+ * stays. Chart settings (plot colours, grid, cursor) carry over from one log to the next.
  */
 public final class LogViewerHost extends JPanel {
     /** Title of the console's main tab. */
@@ -54,12 +67,29 @@ public final class LogViewerHost extends JPanel {
     };
     private Consumer<String> errorReporter = message ->
             JOptionPane.showMessageDialog(this, message, "Open log", JOptionPane.ERROR_MESSAGE);
-    private File directory = new File(FileLogger.DIR);
+    private final Node config;
+    private final File logsFolder;
+    private File directory;
     private LogViewerPanel current;
+    private File currentFile;
     private SwingWorker<CsvLogReader, Void> loading;
+    private JList<RecentLogs.Entry> recentList;
 
+    /** A viewer that remembers nothing between runs, e.g. the sandbox. */
     public LogViewerHost() {
+        this(new Node(), new File(FileLogger.DIR));
+    }
+
+    /** @param config where logs opened from other folders are remembered; saved with the console config */
+    public LogViewerHost(Node config) {
+        this(config, new File(FileLogger.DIR));
+    }
+
+    LogViewerHost(Node config, File logsFolder) {
         super(new BorderLayout());
+        this.config = config;
+        this.logsFolder = logsFolder;
+        directory = logsFolder;
         setPreferredSize(new Dimension(1400, 840));
         KeyStroke open = KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK);
         getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(open, "openLog");
@@ -90,8 +120,13 @@ public final class LogViewerHost extends JPanel {
         return loading != null;
     }
 
+    /** The recent-logs list of the empty card, or null while a log is shown. */
+    JList<RecentLogs.Entry> recentList() {
+        return recentList;
+    }
+
     public void showLog(CsvLogReader log, String fileName) {
-        current = new LogViewerPanel(log, fileName, settings, this::chooseAndOpen);
+        current = new LogViewerPanel(log, fileName, settings, this::showOpenMenu);
         setContent(current);
         titleListener.accept(fileName);
     }
@@ -126,6 +161,8 @@ public final class LogViewerHost extends JPanel {
                 loading = null;
                 try {
                     showLog(get(), file.getName());
+                    currentFile = file.getAbsoluteFile();
+                    RecentLogs.remember(config, file);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 } catch (ExecutionException e) {
@@ -181,7 +218,173 @@ public final class LogViewerHost extends JPanel {
         JLabel title = new JLabel("No data log open");
         title.setFont(title.getFont().deriveFont(Font.BOLD, title.getFont().getSize2D() + 3));
         JLabel hint = ChartToolbar.muted(new JLabel("Drop an " + SUPPORTED + " file here, or"));
-        return centered(title, hint, new JoinedButtons(openButton));
+        return centered(title, hint, new JoinedButtons(openButton), recentLogs());
+    }
+
+    List<RecentLogs.Entry> recentEntries() {
+        return RecentLogs.find(logsFolder, RecentLogs.remembered(config));
+    }
+
+    /** The newest logs, newest first; a click opens one. */
+    private JComponent recentLogs() {
+        List<RecentLogs.Entry> entries = recentEntries();
+        JLabel heading = new JLabel("RECENT LOGS");
+        heading.setFont(heading.getFont().deriveFont(Font.BOLD, heading.getFont().getSize2D() - 1));
+        heading.setForeground(ThemedStrip.themed("Console.LogViewer.mutedForeground", Color.GRAY));
+        JPanel section = new JPanel(new BorderLayout(0, 6));
+        section.setOpaque(false);
+        section.setBorder(BorderFactory.createEmptyBorder(14, 0, 0, 0));
+        section.add(heading, BorderLayout.NORTH);
+        if (entries.isEmpty()) {
+            recentList = null;
+            section.add(ChartToolbar.muted(new JLabel("Logs you record with Binary Logging > Start appear here")),
+                    BorderLayout.CENTER);
+            return section;
+        }
+        DefaultListModel<RecentLogs.Entry> model = new DefaultListModel<>();
+        for (RecentLogs.Entry entry : entries) {
+            model.addElement(entry);
+        }
+        JList<RecentLogs.Entry> list = new JList<>(model);
+        list.setCellRenderer(new RecentRenderer());
+        list.setFixedCellHeight(32);
+        list.setFixedCellWidth(RECENT_WIDTH);
+        list.setVisibleRowCount(entries.size());
+        list.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        list.setBorder(BorderFactory.createLineBorder(ThemedStrip.themed("Separator.foreground", Color.LIGHT_GRAY)));
+        list.setToolTipText("");
+        // the row under the pointer is highlighted and opens on click
+        MouseAdapter mouse = new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent event) {
+                int index = list.locationToIndex(event.getPoint());
+                if (index >= 0 && list.getCellBounds(index, index).contains(event.getPoint())) {
+                    list.setSelectedIndex(index);
+                } else {
+                    list.clearSelection();
+                }
+            }
+
+            @Override
+            public void mouseExited(MouseEvent event) {
+                list.clearSelection();
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent event) {
+                int index = list.locationToIndex(event.getPoint());
+                if (index >= 0 && list.getCellBounds(index, index).contains(event.getPoint())) {
+                    open(model.get(index).file);
+                }
+            }
+        };
+        list.addMouseListener(mouse);
+        list.addMouseMotionListener(mouse);
+        list.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "openRecent");
+        list.getActionMap().put("openRecent", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                if (list.getSelectedValue() != null) {
+                    open(list.getSelectedValue().file);
+                }
+            }
+        });
+        recentList = list;
+        section.add(list, BorderLayout.CENTER);
+        return section;
+    }
+
+    private static final int RECENT_WIDTH = 600;
+
+    /** Date, file name and size of a recent log. */
+    private static final class RecentRenderer extends JPanel implements ListCellRenderer<RecentLogs.Entry> {
+        private final JLabel when = new JLabel();
+        private final JLabel name = new JLabel();
+        private final JLabel size = new JLabel();
+
+        RecentRenderer() {
+            super(new BorderLayout(12, 0));
+            setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 12));
+            when.setPreferredSize(new Dimension(120, 20));
+            add(when, BorderLayout.WEST);
+            add(name, BorderLayout.CENTER);
+            add(size, BorderLayout.EAST);
+        }
+
+        @Override
+        public Component getListCellRendererComponent(JList<? extends RecentLogs.Entry> list, RecentLogs.Entry entry,
+                                                      int index, boolean selected, boolean focused) {
+            Color muted = ThemedStrip.themed("Console.LogViewer.mutedForeground", Color.GRAY);
+            when.setText(RecentLogs.when(entry.recorded, LocalDate.now()));
+            when.setForeground(muted);
+            name.setText(entry.file.getName());
+            name.setForeground(list.getForeground());
+            size.setText(RecentLogs.size(entry.size));
+            size.setForeground(muted);
+            setToolTipText(entry.file.getAbsolutePath());
+            setBackground(selected ? ThemedStrip.themed("Console.LogViewer.chipBackground", list.getSelectionBackground())
+                    : list.getBackground());
+            return this;
+        }
+
+        // Like DefaultListCellRenderer: lay out when sized (validate() needs a native peer)
+        @Override
+        public void setBounds(int x, int y, int width, int height) {
+            super.setBounds(x, y, width, height);
+            doLayout();
+        }
+
+        @Override
+        public void invalidate() {
+        }
+
+        @Override
+        public void validate() {
+        }
+
+        @Override
+        public void revalidate() {
+        }
+    }
+
+    /** The toolbar's Open menu: recent logs (the open one ticked), Browse… and the logs folder. */
+    JPopupMenu openMenu() {
+        JPopupMenu menu = new JPopupMenu();
+        List<RecentLogs.Entry> entries = recentEntries();
+        LocalDate today = LocalDate.now();
+        for (RecentLogs.Entry entry : entries) {
+            JCheckBoxMenuItem item = new JCheckBoxMenuItem(RecentLogs.when(entry.recorded, today) + "     "
+                    + entry.file.getName(), entry.file.equals(currentFile));
+            item.setToolTipText(entry.file.getAbsolutePath());
+            item.addActionListener(e -> open(entry.file));
+            menu.add(item);
+        }
+        if (entries.isEmpty()) {
+            JMenuItem none = new JMenuItem("No recent logs");
+            none.setEnabled(false);
+            menu.add(none);
+        }
+        menu.addSeparator();
+        JMenuItem browse = new JMenuItem("Browse…");
+        browse.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
+        browse.addActionListener(e -> chooseAndOpen());
+        menu.add(browse);
+        JMenuItem folder = new JMenuItem("Open logs folder");
+        folder.setEnabled(logsFolder.isDirectory() && Desktop.isDesktopSupported()
+                && Desktop.getDesktop().isSupported(Desktop.Action.OPEN));
+        folder.addActionListener(e -> {
+            try {
+                Desktop.getDesktop().open(logsFolder);
+            } catch (IOException | RuntimeException failure) {
+                errorReporter.accept("Could not open the logs folder: " + failure.getMessage());
+            }
+        });
+        menu.add(folder);
+        return menu;
+    }
+
+    private void showOpenMenu(Component button) {
+        openMenu().show(button, 0, button.getHeight() + 4);
     }
 
     /**
