@@ -22,6 +22,7 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.function.Consumer;
 
 /**
  * Toolbar above the log chart, styled like the Gauges toolbar: Open, plot colours, a Grid button that
@@ -30,7 +31,7 @@ import java.awt.Insets;
 final class ChartToolbar extends ThemedStrip {
     final JToggleButton lightPlot = SegmentedControl.segment("Light");
     final JToggleButton darkPlot = SegmentedControl.segment("Dark");
-    final JButton openButton = LogViewerHost.openLogButton("Open…");
+    final JButton openButton = LogViewerHost.openLogButton("Open  ▾");
     final JButton gridButton = new JButton();
     final JToggleButton snapCursor = SegmentedControl.segment("Snap");
     final JToggleButton freeCursor = SegmentedControl.segment("Free");
@@ -54,8 +55,8 @@ final class ChartToolbar extends ThemedStrip {
         this(settings, onChange, null);
     }
 
-    /** @param onOpen action of an Open button at the start of the toolbar, or null for no button */
-    ChartToolbar(ChartSettings settings, Runnable onChange, Runnable onOpen) {
+    /** @param onOpen action of the Open button at the start of the toolbar, given the button, or null for none */
+    ChartToolbar(ChartSettings settings, Runnable onChange, Consumer<Component> onOpen) {
         super(new FlowLayout(FlowLayout.LEFT, JoinedButtons.ROW_GAP, 0), "Console.Toolbar.background", false);
         this.settings = settings;
         this.onChange = onChange;
@@ -98,7 +99,7 @@ final class ChartToolbar extends ThemedStrip {
         horizontalDivisions.addChangeListener(e -> apply());
 
         if (onOpen != null) {
-            openButton.addActionListener(e -> onOpen.run());
+            openButton.addActionListener(e -> onOpen.accept(openButton));
             add(new JoinedButtons(openButton));
             add(Box.createHorizontalStrut(JoinedButtons.ROW_GAP));
         }

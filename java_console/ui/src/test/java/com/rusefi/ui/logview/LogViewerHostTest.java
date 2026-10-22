@@ -1,19 +1,29 @@
 package com.rusefi.ui.logview;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.widgets.JoinedButtons;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Rectangle;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -84,6 +94,109 @@ class LogViewerHostTest {
         assertTrue(host.currentPanel().statusBar().fileLabel.getText().startsWith("drive.mlg  ·  220 samples"));
         assertEquals(Collections.singletonList("drive.mlg"), titles);
         assertTrue(errors.isEmpty(), errors.toString());
+    }
+
+    private LogViewerHost host(Node config, File logsFolder) throws Exception {
+        AtomicReference<LogViewerHost> host = new AtomicReference<>();
+        SwingUtilities.invokeAndWait(() -> {
+            LogViewerHost created = new LogViewerHost(config, logsFolder);
+            created.setErrorReporter(errors::add);
+            host.set(created);
+        });
+        return host.get();
+    }
+
+    @Test
+    void emptyCardListsRecentLogsAndOpensOnClick(@TempDir Path logs) throws Exception {
+        Files.copy(getClass().getResourceAsStream("/logview/test-log-binary-1.mlg"),
+                logs.resolve("rusEFI_outputChannels_2026-10-21_19_44_54_929.mlg"));
+        Files.copy(getClass().getResourceAsStream("/logview/test-log-1.msl"),
+                logs.resolve("rusEFI_outputChannels_2026-10-20_08_00_00_000.msl"));
+        LogViewerHost host = host(new Node(), logs.toFile());
+        JList<RecentLogs.Entry> list = host.recentList();
+        assertEquals(2, list.getModel().getSize());
+        assertEquals("rusEFI_outputChannels_2026-10-21_19_44_54_929.mlg", list.getModel().getElementAt(0).file.getName());
+
+        // offscreen the list is never laid out; give it the size it has in a window
+        list.setSize(list.getPreferredSize());
+        Rectangle row = list.getCellBounds(0, 0);
+        SwingUtilities.invokeAndWait(() -> list.dispatchEvent(new MouseEvent(list, MouseEvent.MOUSE_CLICKED, 0, 0,
+                row.x + 20, row.y + row.height / 2, 1, false, MouseEvent.BUTTON1)));
+        waitUntilLoaded(host);
+        assertTrue(host.currentPanel().statusBar().fileLabel.getText().startsWith("rusEFI_outputChannels_2026-10-21"));
+    }
+
+    @Test
+    void emptyLogsFolderExplainsWhereLogsComeFrom(@TempDir Path logs) throws Exception {
+        LogViewerHost host = host(new Node(), logs.toFile());
+        assertNull(host.recentList());
+        JLabel hint = null;
+        for (JLabel label : all(host, JLabel.class)) {
+            if (label.getText().startsWith("Logs you record")) {
+                hint = label;
+            }
+        }
+        assertNotNull(hint);
+    }
+
+    @Test
+    void logsOpenedFromElsewhereAreRememberedAcrossRestarts(@TempDir Path logs) throws Exception {
+        Node config = new Node();
+        File outside = copy("/logview/test-log-1.msl", "track.msl");
+        LogViewerHost first = host(config, logs.toFile());
+        openAndWait(first, outside);
+
+        LogViewerHost afterRestart = host(config, logs.toFile());
+        assertEquals(outside.getAbsoluteFile(), afterRestart.recentList().getModel().getElementAt(0).file);
+    }
+
+    @Test
+    void openMenuListsRecentLogsWithTheOpenOneTicked(@TempDir Path logs) throws Exception {
+        Files.copy(getClass().getResourceAsStream("/logview/test-log-binary-1.mlg"),
+                logs.resolve("rusEFI_outputChannels_2026-10-21_19_44_54_929.mlg"));
+        File outside = copy("/logview/test-log-1.msl", "track.msl");
+        LogViewerHost host = host(new Node(), logs.toFile());
+        openAndWait(host, outside);
+
+        JPopupMenu menu = host.openMenu();
+        List<JMenuItem> items = new ArrayList<>();
+        for (Component component : menu.getComponents()) {
+            if (component instanceof JMenuItem) {
+                items.add((JMenuItem) component);
+            }
+        }
+        assertEquals(4, items.size(), "two recent logs, Browse…, Open logs folder");
+        JCheckBoxMenuItem openOne = null;
+        for (JMenuItem item : items.subList(0, 2)) {
+            if (item.getText().endsWith("track.msl")) {
+                openOne = (JCheckBoxMenuItem) item;
+            }
+        }
+        assertNotNull(openOne);
+        assertTrue(openOne.isSelected(), "the open log is ticked");
+        assertEquals("Browse…", items.get(2).getText());
+        assertEquals("Open logs folder", items.get(3).getText());
+    }
+
+    @Test
+    void openMenuWithoutLogsSaysSo(@TempDir Path logs) throws Exception {
+        LogViewerHost host = host(new Node(), logs.toFile());
+        JMenuItem first = (JMenuItem) host.openMenu().getComponent(0);
+        assertEquals("No recent logs", first.getText());
+        assertFalse(first.isEnabled());
+    }
+
+    private static <T> List<T> all(Container container, Class<T> type) {
+        List<T> found = new ArrayList<>();
+        for (Component child : container.getComponents()) {
+            if (type.isInstance(child)) {
+                found.add(type.cast(child));
+            }
+            if (child instanceof Container) {
+                found.addAll(all((Container) child, type));
+            }
+        }
+        return found;
     }
 
     /** Open buttons look like the console's other toolbar buttons (Edit dashboard): outlined, not blue. */
