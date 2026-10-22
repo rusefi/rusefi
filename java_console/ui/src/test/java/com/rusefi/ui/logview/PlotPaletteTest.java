@@ -79,6 +79,32 @@ class PlotPaletteTest {
         }
     }
 
+    /** CIEDE2000 difference between a picker-only swatch and every other swatch. */
+    private static final double MIN_SWATCH_DIFFERENCE = 10;
+
+    /**
+     * The four picker-only swatches are chosen by the user, never assigned automatically: readable on the plot and
+     * clearly different from every other swatch, with a looser difference than the automatic traces.
+     */
+    @Test
+    void pickerSwatchesAreReadableAndDistinct() {
+        for (boolean dark : new boolean[]{false, true}) {
+            PlotPalette palette = palette(dark);
+            String mode = dark ? "dark" : "light";
+            for (int i = PlotPalette.TRACE_COUNT; i < PlotPalette.SWATCH_COUNT; i++) {
+                double contrast = ColorMetrics.contrast(palette.trace(i), palette.background);
+                assertTrue(contrast >= MIN_TRACE_CONTRAST, mode + " swatch " + (i + 1) + " contrast " + contrast);
+                for (int j = 0; j < PlotPalette.SWATCH_COUNT; j++) {
+                    if (j != i) {
+                        double difference = ColorMetrics.deltaE2000(palette.trace(i), palette.trace(j));
+                        assertTrue(difference >= MIN_SWATCH_DIFFERENCE,
+                                mode + " swatches " + (i + 1) + " and " + (j + 1) + ": " + difference);
+                    }
+                }
+            }
+        }
+    }
+
     /** The checks above run on the Java constants; the theme file must hold the same colours. */
     @Test
     void themeFileMatchesConstants() throws IOException {
@@ -100,7 +126,7 @@ class PlotPaletteTest {
         assertColor(theme, prefix + "cursor", palette.cursor);
         assertColor(theme, prefix + "selection", palette.selection);
         assertColor(theme, prefix + "accent", palette.accent);
-        for (int i = 0; i < PlotPalette.TRACE_COUNT; i++) {
+        for (int i = 0; i < PlotPalette.SWATCH_COUNT; i++) {
             assertColor(theme, prefix + "trace" + (i + 1), palette.trace(i));
         }
     }

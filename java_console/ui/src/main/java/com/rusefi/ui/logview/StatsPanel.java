@@ -274,7 +274,7 @@ final class StatsPanel extends JPanel {
                 setBackground(themed("Console.LogViewer.chipBackground", table.getBackground()));
             } else if (column == 0) {
                 CsvLogReader log = chart.log();
-                Color trace = chart.palette().trace(chart.plotLayout().colors().slot(row.field));
+                Color trace = chart.colorOf(row.field, chart.palette());
                 // a darker outline keeps pale dark-plot colours visible on the light panel
                 dot.set(trace, trace.darker());
                 setIcon(dot);

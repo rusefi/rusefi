@@ -71,6 +71,7 @@ public final class LogViewerHost extends JPanel {
     private final ChartSettings settings = new ChartSettings();
     private final SignalLists lists;
     private final SidebarState sidebar;
+    private final SignalColors colors;
     private Supplier<IniFileModel> iniSupplier = () -> null;
     private final TransferHandler fileDrop = new FileDropHandler();
     private Consumer<String> titleListener = name -> {
@@ -105,6 +106,9 @@ public final class LogViewerHost extends JPanel {
         // lists are saved as they change, like the recent logs, in case the console is killed
         lists.addListener(() -> configSaver.run());
         sidebar = new SidebarState(config.getChild("sidebar"));
+        colors = new SignalColors(config.getChild("colors"));
+        // saved as they change, like the lists
+        colors.addListener(() -> configSaver.run());
         directory = logsFolder;
         setPreferredSize(new Dimension(1400, 840));
         KeyStroke open = KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK);
@@ -169,7 +173,8 @@ public final class LogViewerHost extends JPanel {
     }
 
     public void showLog(CsvLogReader log, String fileName) {
-        current = new LogViewerPanel(log, fileName, settings, lists, sidebar, currentIni(), this::showOpenMenu);
+        current = new LogViewerPanel(log, fileName, settings, lists, sidebar, colors, currentIni(),
+                this::showOpenMenu);
         setContent(current);
         titleListener.accept(fileName);
     }
