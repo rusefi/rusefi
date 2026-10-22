@@ -38,6 +38,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -435,18 +436,21 @@ public class MainFrame {
     }
 
     /**
-     * Enables File > Open Data Log… and Binary Logging > View Last Log.
+     * Enables File > Open Data Log… and Binary Logging > View Last Log, and reports stopped recordings.
      *
-     * @param viewLog       shows a log file in the Log Viewer tab
-     * @param chooseAndOpen shows the Log Viewer tab and its file chooser
+     * @param viewLog          shows a log file in the Log Viewer tab
+     * @param chooseAndOpen    shows the Log Viewer tab and its file chooser
+     * @param recordingStopped told each stopped recording's file and duration in seconds
      */
-    public void setLogViewerActions(Consumer<File> viewLog, Runnable chooseAndOpen) {
+    public void setLogViewerActions(Consumer<File> viewLog, Runnable chooseAndOpen,
+                                    BiConsumer<File, Double> recordingStopped) {
         for (ActionListener old : openLogItem.getActionListeners()) {
             openLogItem.removeActionListener(old);
         }
         openLogItem.addActionListener(e -> chooseAndOpen.run());
         openLogItem.setEnabled(true);
         binaryLoggingMenu.setViewLogAction(viewLog);
+        binaryLoggingMenu.setRecordingStoppedAction(recordingStopped);
     }
 
     public void setExitRequestHandler(Runnable exitRequestHandler) {

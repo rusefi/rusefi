@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /** Owns the logging menu and recorder lifecycle. Menu/lifecycle methods run on the Swing event thread. */
@@ -39,6 +40,8 @@ final class BinaryLoggingMenu {
     private SwingWorker<byte[], Void> startWorker;
     private File lastLog;
     private Consumer<File> viewLogAction;
+    private BiConsumer<File, Double> recordingStoppedAction = (file, seconds) -> {
+    };
 
     /** @param settings where the last recording's path is kept; saved with the console config on exit */
     BinaryLoggingMenu(UIContext uiContext, Component parent, Icon startIcon, Icon stopIcon, Icon viewIcon,
@@ -84,6 +87,11 @@ final class BinaryLoggingMenu {
     }
 
     /** What View Last Log does with the recorded file, e.g. open it in the Log Viewer tab. */
+    /** Told the file and duration (seconds, NaN if unknown) of each recording that stops. */
+    void setRecordingStoppedAction(BiConsumer<File, Double> recordingStoppedAction) {
+        this.recordingStoppedAction = recordingStoppedAction;
+    }
+
     void setViewLogAction(Consumer<File> viewLogAction) {
         this.viewLogAction = viewLogAction;
         refresh();
@@ -192,7 +200,11 @@ final class BinaryLoggingMenu {
         if (pending != null) {
             pending.cancel(false);
         }
+        boolean wasLogging = uiContext.sensorLogger.isLogging();
         uiContext.sensorLogger.stop();
+        if (wasLogging && lastLog != null) {
+            recordingStoppedAction.accept(lastLog, uiContext.sensorLogger.getLastRecordingSeconds());
+        }
     }
 
     void start(File file, byte[] tune) {

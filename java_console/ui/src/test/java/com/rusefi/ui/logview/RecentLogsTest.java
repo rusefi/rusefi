@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RecentLogsTest {
     @TempDir
@@ -76,6 +77,40 @@ class RecentLogsTest {
         assertEquals("512 B", RecentLogs.size(512));
         assertEquals("640 KB", RecentLogs.size(640 * 1024));
         assertEquals("1.2 MB", RecentLogs.size(1258291));
+    }
+
+    @Test
+    void durations() {
+        assertEquals("", RecentLogs.duration(Double.NaN), "unknown: nothing shown");
+        assertEquals("17.0 s", RecentLogs.duration(17.023));
+        assertEquals("2 min 15 s", RecentLogs.duration(135.2));
+        assertEquals("1 h 05 min", RecentLogs.duration(3900));
+    }
+
+    @Test
+    void durationIsCachedUntilTheFileChanges() throws IOException {
+        Node durations = new Node();
+        File file = log(folder, "track.msl", 100);
+        assertTrue(Double.isNaN(RecentLogs.duration(durations, file)), "never opened");
+
+        RecentLogs.rememberDuration(durations, file, 13.2);
+        assertEquals(13.2, RecentLogs.duration(durations, file), 1e-9);
+        assertEquals(13.2, RecentLogs.find(folder.toFile(), Collections.emptyList(), durations).get(0).duration, 1e-9);
+
+        // re-recorded under the same name: the old duration no longer applies
+        Files.write(file.toPath(), new byte[250]);
+        assertTrue(Double.isNaN(RecentLogs.duration(durations, file)));
+    }
+
+    @Test
+    void cacheKeepsOnlyListedLogs() throws IOException {
+        Node durations = new Node();
+        File listed = log(folder, "kept.mlg", 10);
+        RecentLogs.rememberDuration(durations, listed, 5);
+        RecentLogs.rememberDuration(durations, new File(folder.toFile(), "deleted.mlg"), 7);
+        RecentLogs.pruneDurations(durations, RecentLogs.find(folder.toFile(), Collections.emptyList(), durations));
+        assertEquals(1, durations.getConfig().size());
+        assertEquals(5, RecentLogs.duration(durations, listed), 1e-9);
     }
 
     @Test
