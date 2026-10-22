@@ -1,6 +1,6 @@
-# rusEFI console frontend
+# rusEFI tuner frontend
 
-The rusEFI console is a Java/Swing application. End users run a native `.exe` launcher
+rusEFI tuner is a Java/Swing application. End users run a native `.exe` launcher
 (created with [launch4j](http://launch4j.sourceforge.net/), see the `misc/console_launcher`
 folder), which is just a thin wrapper that locates a JRE and starts the bundled JAR.
 
@@ -38,6 +38,12 @@ logged; a failure while creating a tab does not prevent later providers from add
 - `rusefi_updater.exe` (configured by `misc/console_launcher/rusefi_updater.xml`) is a launch4j
   wrapper. It does **not** wrap the JAR (`<dontWrapJar>true</dontWrapJar>`); instead it `chdir`s
   into the `console` directory and runs `console/rusefi_console.jar`.
+- The **rusEFI tuner** Windows installer provides desktop and Start menu entries
+  with the new product name. Its installed launchers retain the technical filenames
+  `rusEFI-Grab-Fresh-And-Update-ECU.exe` and `rusEFI-Update-ECU.exe`;
+  `installation.properties` selects the launcher for relaunch.
+- The default visible product name is **rusEFI tuner**; configured white labels
+  display as **\<brand\> tuner**. Technical JAR names and saved settings are unchanged.
 - `console/rusefi_console.jar`'s manifest `Main-Class` points at `com.rusefi.Launcher`.
 - `com.rusefi.Launcher#main` is invoked with empty args. The single merged launcher handles both
   the auto-update flow and the console UI; there is no longer a separate "basic UI" entry point

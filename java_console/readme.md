@@ -1,12 +1,12 @@
-# rusEFI console
+# rusEFI tuner
 
-rusEFI frontend applications is historically known as rusEFI console.
+The rusEFI tuner is the beginner-friendly application for connecting to an ECU, initial setup, monitoring, calibration, and firmware updates.
 
 * firmware update
 * wizard for one-time initial setup
 * on-going monitoring and calibration
 
-Here we have source code for rusEFI console: while [TunerStudio](http://www.tunerstudio.com/index.php/products/tuner-studio) is the primary calibration frontend application we need secondary app for firmware update and some advanced troubleshooting. One day we shall combine but not yet :(
+For advanced calibration workflows, [TunerStudio](http://www.tunerstudio.com/index.php/products/tuner-studio) is also available.
 
 ## Windows PCAN
 

@@ -3,6 +3,7 @@ package com.rusefi.ui.console;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.rusefi.core.RusEfiSignature;
 import com.rusefi.core.SignatureHelper;
+import com.rusefi.UiProperties;
 import com.rusefi.ui.widgets.ConsoleFonts;
 
 import javax.swing.*;
@@ -16,7 +17,7 @@ import java.util.List;
  * Colours come from the Console.TitleBar.* keys in the theme files [tag:console_theme].
  */
 class TitleBarPanel extends JPanel {
-    private final JLabel name = caption(new JLabel("rusEFI Console"));
+    private final JLabel name = caption(new JLabel(UiProperties.getDisplayName()));
     private final JLabel version = caption(new JLabel());
     private final JPanel chips = new JPanel(new FlowLayout(FlowLayout.CENTER, 6, 0));
 

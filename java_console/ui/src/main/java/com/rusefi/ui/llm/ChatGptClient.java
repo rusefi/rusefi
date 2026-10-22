@@ -527,7 +527,7 @@ public final class ChatGptClient implements Closeable {
                     "resource", RESOURCE, "state", state, "nonce", nonce,
                     "code_challenge_method", "S256", "code_challenge", Base64.getUrlEncoder().withoutPadding()
                             .encodeToString(MessageDigest.getInstance("SHA-256").digest(verifier.getBytes(StandardCharsets.US_ASCII))));
-            if (clientId.isEmpty()) { query += "&" + form("agent_name_hint", "rusEFI Updater"); }
+            if (clientId.isEmpty()) { query += "&" + form("agent_name_hint", com.rusefi.UiProperties.getDisplayName()); }
             return URI.create(ISSUER + "/api/accounts/authorize?" + query);
         }
 

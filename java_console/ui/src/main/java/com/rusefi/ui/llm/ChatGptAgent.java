@@ -17,7 +17,7 @@ import static com.rusefi.ui.llm.ChatGptClient.*;
 final class ChatGptAgent {
     // Never log prompts, reply text or tool arguments; tool names, counts and sizes only.
     private static final com.devexperts.logging.Logging log = com.devexperts.logging.Logging.getLogging(ChatGptAgent.class);
-    static final String INSTRUCTIONS = "You are the rusEFI troubleshooting assistant in rusEFI Console. "
+    static final String INSTRUCTIONS = "You are the troubleshooting assistant in " + com.rusefi.UiProperties.getDisplayName() + ". "
             + "Use the read-only tools to collect evidence from the connected ECU before drawing conclusions. "
             + "Prefer diagnostic_snapshot or read_live_values when correlating faults and several live readings: their channels share one completed host poll and sample ID, not an atomic ECU measurement. "
             + "Missing channels are not zero or proof of healthy operation; last/recent error codes and counters may describe past events, not active faults. "

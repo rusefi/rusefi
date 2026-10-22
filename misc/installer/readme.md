@@ -6,7 +6,7 @@ This directory contains branded Windows installers for rusEFI bundles:
 
 | Product | Project | Bundle input |
 |---------|---------|--------------|
-| rusEFI Universal | `universal/universal-updater.install4j` | `rusefi_bundle_universal/rusefi.snapshot.universal` |
+| rusEFI tuner | `universal/universal-updater.install4j` | `rusefi_bundle_universal/rusefi.snapshot.universal` |
 | uaEFI | `uaefi/uaefi-updater.install4j` | `rusefi_bundle_uaefi/rusefi.snapshot.uaefi` |
 
 ## Scope
@@ -69,6 +69,19 @@ console-exe-file=../<Product>-Update-ECU.exe
 ```
 
 ## Product identity and versions
+
+The universal installer is distributed as **rusEFI tuner**. Its desktop shortcut
+is **rusEFI tuner**, with **rusEFI tuner** and **rusEFI tuner - Update ECU** Start
+menu entries. These display names are independent of the installed filenames:
+`rusEFI-Grab-Fresh-And-Update-ECU.exe` and `rusEFI-Update-ECU.exe` remain unchanged,
+as do `rusefi_updater.exe` in extracted bundles and `console/rusefi_console.jar`.
+
+The `shortName` determines the installer download filename, for example
+`rusEFI_tuner_windows-x64_1_0_0_3.exe`. Keep published download links aligned with
+the generated filename; old URLs need a redirect or compatibility copy if retained.
+
+Renaming a product must preserve its existing `applicationId`; changing it would
+create a separate installation rather than upgrade the existing product.
 
 Every installer needs its own install4j `applicationId`. Never copy an ID from another product: Windows and install4j will otherwise treat both products as the same installation.
 

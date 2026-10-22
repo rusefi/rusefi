@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="11.0.5" transformSequenceNumber="11">
   <directoryPresets config="../../../../../bundles/rusefi_bundle_universal/rusefi.snapshot.universal" />
-  <application name="rusEFI Universal Updater" applicationId="5936-1408-7724-2651" mediaDir="." shortName="rusEFI Universal Updater" version="1.0.0.2" allPathsRelative="true" macVolumeId="9af7b89f15108498">
+  <application name="rusEFI tuner" applicationId="5936-1408-7724-2651" mediaDir="." shortName="rusEFI tuner" version="1.0.0.3" allPathsRelative="true" macVolumeId="9af7b89f15108498">
     <jreBundles jdkProviderId="Zulu" release="17/17.0.14" />
   </application>
   <files>
@@ -11,11 +11,11 @@
     </mountPoints>
     <entries>
       <fileEntry mountPoint="2" file="./installation.properties" />
-      <dirEntry mountPoint="1" file="../../../../bundles/rusefi_bundle_universal/rusefi.snapshot.universal" />
+      <dirEntry mountPoint="1" file="../../../../../bundles/rusefi_bundle_universal/rusefi.snapshot.universal" />
     </entries>
   </files>
   <launchers>
-    <launcher name="rusEFI-Grab-Fresh-And-Update-ECU" id="3">
+    <launcher name="rusEFI tuner" id="3">
       <executable name="rusEFI-Grab-Fresh-And-Update-ECU" iconSet="true" executableMode="gui" workingDirectory="console" executionLevel="requireAdministrator" />
       <java mainClass="com.rusefi.Launcher" arguments="basic-ui">
         <classPath>
@@ -29,7 +29,7 @@
         <file path="./rusefi-256.png" />
       </iconImageFiles>
     </launcher>
-    <launcher name="rusEFI-Update-ECU" id="4">
+    <launcher name="rusEFI tuner - Update ECU" id="4">
       <executable name="rusEFI-Update-ECU" iconSet="true" executableMode="gui" workingDirectory="console" executionLevel="requireAdministrator" />
       <java mainClass="com.rusefi.Launcher">
         <classPath>
@@ -94,7 +94,7 @@
               <action id="11" beanClass="com.install4j.runtime.beans.actions.desktop.CreateProgramGroupAction" actionElevationType="elevated" rollbackBarrierExitCode="0" />
               <action id="12" beanClass="com.install4j.runtime.beans.actions.desktop.RegisterAddRemoveAction" actionElevationType="elevated" rollbackBarrierExitCode="0">
                 <serializedBean>
-                  <property name="itemName" type="string">rusEFI Updater</property>
+                  <property name="itemName" type="string">rusEFI tuner</property>
                 </serializedBean>
               </action>
               <action id="13" beanClass="com.install4j.runtime.beans.actions.desktop.CreateDesktopLinkAction" actionElevationType="elevated" rollbackBarrierExitCode="0">
@@ -104,7 +104,7 @@
                       <string>rusEFI-Grab-Fresh-And-Update-ECU</string>
                     </object>
                   </property>
-                  <property name="name" type="string">${compiler:sys.fullName}</property>
+                  <property name="name" type="string">rusEFI tuner</property>
                   <property name="runAsAdministrator" type="boolean" value="true" />
                 </serializedBean>
               </action>
