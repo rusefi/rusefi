@@ -154,6 +154,30 @@ class LogChartFocusTest {
         assertEquals("avg 3500 rpm", lines.get(3));
     }
 
+    /**
+     * BUG (reproduction): the card always opens under the hovered legend item, at the top left of the plot, so a max
+     * at the start of the visible time is hidden under it.
+     */
+    @Test
+    void cardCoversAMaxAtTheStart() throws IOException {
+        StringBuilder text = new StringBuilder("Time\tVBatt\ns\tV\n");
+        for (int i = 0; i <= 100; i++) {
+            text.append(i / 10.0).append('\t').append(14 - i * 0.02).append('\n');
+        }
+        PlotLayout layout = new PlotLayout(2);
+        layout.add(1);
+        LogChart chart = new LogChart(CsvLogReader.read(new StringReader(text.toString())), layout, new ChartSettings());
+        paint(chart);
+        move(chart, legendName(chart, 1));
+        paint(chart);
+
+        LogChart.Marker max = chart.markers().get(0);
+        assertTrue(max.max);
+        Rectangle card = chart.card();
+        assertNotNull(card);
+        assertTrue(card.intersects(max.tag), "BUG: the card " + card + " hides the max tag " + max.tag);
+    }
+
     @Test
     void pinnedTraceWithoutHoverHasMarkersButNoCard() throws IOException {
         LogChart chart = chart();
