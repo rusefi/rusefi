@@ -53,16 +53,27 @@ class LogViewerSandboxTest {
         for (String path : new String[]{"/logview/test-log-binary-1.mlg", "/logview/test-log-1.msl"}) {
             CsvLogReader log = LogViewerSandbox.load(path);
             LogViewerPanel panel = new LogViewerPanel(log);
-            JList<?> list = panel.fieldList();
+            JList<SignalSections.Row> list = panel.fieldList();
 
-            assertEquals(log.fieldCount() - 1, list.getModel().getSize(), path);
-            for (int index = 0; index < list.getModel().getSize(); index++) {
-                assertNotEquals(0, list.getModel().getElementAt(index), path);
+            // with zero and constant signals shown, every signal but Time is in exactly one group
+            panel.hideZeroBox.doClick();
+            if (panel.hideConstantBox.isSelected()) {
+                panel.hideConstantBox.doClick();
             }
+            int inGroups = 0;
+            for (int index = 0; index < list.getModel().getSize(); index++) {
+                SignalSections.Row row = list.getModel().getElementAt(index);
+                assertNotEquals(0, row.field, path);
+                boolean userList = row.section.equals(SignalSections.PLOTTED) || row.section.equals(SignalSections.COMMON);
+                if (row.isHeading() && !userList) {
+                    inGroups += row.count;
+                }
+            }
+            assertEquals(log.fieldCount() - 1, inGroups, path);
 
             panel.searchField().setText(GAUGE_NAME_TIME);
             for (int index = 0; index < list.getModel().getSize(); index++) {
-                assertNotEquals(0, list.getModel().getElementAt(index), path);
+                assertNotEquals(0, list.getModel().getElementAt(index).field, path);
             }
         }
     }

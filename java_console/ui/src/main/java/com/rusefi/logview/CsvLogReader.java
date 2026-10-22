@@ -133,6 +133,8 @@ public final class CsvLogReader {
     public double value(int sample, int field) { return rows[sample][field]; }
     public double minimum(int field) { return minimum[field]; }
     public double maximum(int field) { return maximum[field]; }
+    /** True when the field never changes in this log (or has no values): most logged channels do not. */
+    public boolean isConstant(int field) { return !(maximum[field] > minimum[field]); }
     /** Decimals to show for this field's values; see {@link #displayDigits}. */
     public int digits(int field) { return digits[field]; }
 
