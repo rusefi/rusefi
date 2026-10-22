@@ -104,7 +104,7 @@ public class GenericFieldsPanel extends AbstractWizardStep {
         content.add(centerWrapper, BorderLayout.CENTER);
 
         saveButton = new JButton("Save and Continue");
-        stylePrimaryAction(saveButton);
+        styleConfirmAction(saveButton);
         saveButton.addActionListener(e -> onSave());
 
         connectionStatusLabel.setHorizontalAlignment(SwingConstants.CENTER);

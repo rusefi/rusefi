@@ -45,6 +45,7 @@ public class VeTableWizardStep extends AbstractWizardStep {
             "Apply and Continue",
             "Skip"
         );
+        styleConfirmAction(inner.getApplyButton());
 
         panel.removeAll();
         panel.add(inner, BorderLayout.CENTER);

@@ -82,6 +82,11 @@ public class VeTableGeneratorPanel extends JPanel {
         }
     }
 
+    /** Allows the embedding workflow to style its confirmation action. */
+    public JButton getApplyButton() {
+        return applyButton;
+    }
+
     // ---- questionnaire ----
 
     private JPanel buildQuestionnairePanel() {

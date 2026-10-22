@@ -79,9 +79,9 @@ public class WizardContainer extends JPanel {
         headerPanel.add(wizardTitle, BorderLayout.NORTH);
         headerPanel.add(progressPanel, BorderLayout.CENTER);
 
-        AbstractWizardStep.stylePrimaryAction(cancelButton);
+        AbstractWizardStep.styleNegativeAction(cancelButton);
         cancelButton.addActionListener(e -> exitWizard());
-        AbstractWizardStep.stylePrimaryAction(dontShowAgainButton);
+        AbstractWizardStep.styleNegativeAction(dontShowAgainButton);
         dontShowAgainButton.setVisible(false);
         dontShowAgainButton.addActionListener(e -> {
             if (onDontShowAgain != null) {
@@ -134,6 +134,7 @@ public class WizardContainer extends JPanel {
         debugPanel.add(refreshButton);
 
         JButton resetButton = new JButton("Reset All");
+        AbstractWizardStep.styleNegativeAction(resetButton);
         resetButton.addActionListener(e -> resetAllFlags());
         debugPanel.add(resetButton);
     }
@@ -312,7 +313,7 @@ public class WizardContainer extends JPanel {
         AbstractWizardStep.styleTitle(doneLabel);
         completionPanel.add(doneLabel);
         JButton doneButton = new JButton("Return to Console");
-        AbstractWizardStep.stylePrimaryAction(doneButton);
+        AbstractWizardStep.styleConfirmAction(doneButton);
         doneButton.addActionListener(e -> exitWizard());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridy = 1;

@@ -85,7 +85,7 @@ public class FiringOrderPanel extends AbstractWizardStep {
                     label += " (" + EXAMPLES.get(exampleKey) + ")";
                 }
                 JButton button = new JButton(label);
-                stylePrimaryAction(button);
+                styleConfirmAction(button);
                 button.setAlignmentX(Component.CENTER_ALIGNMENT);
                 button.setMaximumSize(button.getPreferredSize());
                 button.addActionListener(e -> fireCompleted(new WizardStepResult("firingOrder", order)));

@@ -70,7 +70,7 @@ public class CrankTriggerPanel extends AbstractWizardStep {
         card.add(dialogWidget.getContentPane(), gbc);
 
         JButton saveButton = new JButton("Save and Continue");
-        stylePrimaryAction(saveButton);
+        styleConfirmAction(saveButton);
         saveButton.addActionListener(e -> {
             if (workingImage != null) {
                 fireCompleted(new WizardStepResult(workingImage.clone()));

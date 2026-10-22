@@ -1,5 +1,6 @@
 package com.rusefi.ui.wizard;
 
+import com.formdev.flatlaf.FlatClientProperties;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.field.EnumIniField;
@@ -72,6 +73,18 @@ public abstract class AbstractWizardStep implements WizardStep {
         styleButton(button);
         button.setMargin(new Insets(9, 18, 9, 18));
         button.setFont(button.getFont().deriveFont(Font.BOLD));
+    }
+
+    protected static void styleConfirmAction(JButton button) {
+        stylePrimaryAction(button);
+        button.putClientProperty(FlatClientProperties.STYLE_CLASS, "wizardConfirm");
+        button.setIcon(WizardStyle.ActionIcon.CONFIRM);
+    }
+
+    protected static void styleNegativeAction(JButton button) {
+        stylePrimaryAction(button);
+        button.putClientProperty(FlatClientProperties.STYLE_CLASS, "wizardNegative");
+        button.setIcon(WizardStyle.ActionIcon.CANCEL);
     }
 
     /** Returns {@code value} with surrounding INI quotes removed, or unchanged if not quoted. */

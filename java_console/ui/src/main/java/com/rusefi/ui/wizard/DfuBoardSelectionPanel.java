@@ -70,8 +70,8 @@ public final class DfuBoardSelectionPanel extends JPanel {
         selection.add(status, BorderLayout.SOUTH);
         card.add(selection, BorderLayout.CENTER);
 
-        AbstractWizardStep.styleButton(cancel);
-        AbstractWizardStep.stylePrimaryAction(confirm);
+        AbstractWizardStep.styleNegativeAction(cancel);
+        AbstractWizardStep.styleConfirmAction(confirm);
         cancel.setFont(bodyFont);
         confirm.setFont(bodyFont.deriveFont(Font.BOLD));
         confirm.setEnabled(false);

@@ -38,6 +38,11 @@ Again**. Manual and standalone launches offer **Exit Wizard**. Exiting does
 not undo completed uploads. The full-wizard preferences do not suppress
 standalone prompts, which have their own catalog predicates.
 
+Confirmation actions use green buttons with checkmarks. Cancel, Exit Wizard,
+Don't Show Again, and destructive actions use red buttons with crosses. Skips,
+Back, and other secondary controls remain neutral; disabled actions use the
+theme's disabled appearance.
+
 [`StartupFrame`](../../java_console/ui/src/main/java/com/rusefi/StartupFrame.java)
 hosts a compact `WizardContainer` for standalone prompts after connecting,
 before handing off to the main Console. It does not run the full numbered
@@ -220,6 +225,8 @@ the explicitly assembled panels against catalog order.
 covers save/exit continuation, prompt deduplication, disconnection, and queued
 completion. [LaunchWizardHighlightTest](../../java_console/ui/src/test/java/com/rusefi/LaunchWizardHighlightTest.java)
 covers the manual launch button's presentation.
+`WizardButtonStyleTest` checks action colours and icons across setup and
+standalone panels, interaction states, and disabled actions using the Console theme.
 
 Run focused tests from the repository root:
 

@@ -113,7 +113,7 @@ public class TpsPanel extends AbstractWizardStep {
         gbc.gridy++;
         gbc.insets = new Insets(0, 0, 0, 0);
         JPanel actions = new JPanel(new BorderLayout());
-        nextButton.setFont(nextButton.getFont().deriveFont(Font.BOLD));
+        styleConfirmAction(nextButton);
         actions.add(nextButton, BorderLayout.EAST);
         card.add(actions, gbc);
 

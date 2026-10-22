@@ -110,7 +110,7 @@ public class OutputAssignmentPanel extends AbstractWizardStep {
 
         card.add(rows, BorderLayout.CENTER);
 
-        saveButton.setFont(saveButton.getFont().deriveFont(Font.BOLD));
+        styleConfirmAction(saveButton);
         saveButton.addActionListener(e -> saveAndContinue());
         statusLabel.setForeground(Color.RED);
         enableBenchTests.addActionListener(e -> updateActions());

@@ -47,7 +47,7 @@ public class UiHelper {
     }
 
     // Lets tests remove the console theme so it does not leak into other tests in the same JVM.
-    static void unregisterThemeForUnitTest() {
+    public static void unregisterThemeForUnitTest() {
         if (themeRegistered) {
             FlatLaf.unregisterCustomDefaultsSource(THEME_PACKAGE, UiHelper.class.getClassLoader());
             themeRegistered = false;

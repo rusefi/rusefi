@@ -54,7 +54,7 @@ public class DisplacementPanel extends AbstractWizardStep {
         error.setForeground(Color.RED);
         card.add(error, c);
         c.gridy++;
-        stylePrimaryAction(save);
+        styleConfirmAction(save);
         save.setEnabled(false);
         card.add(save, c);
         content.add(card);

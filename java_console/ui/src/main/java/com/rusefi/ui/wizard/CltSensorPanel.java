@@ -284,7 +284,7 @@ public class CltSensorPanel extends AbstractWizardStep {
 
     private JPanel buildActions() {
         JPanel panel = new JPanel(new BorderLayout());
-        nextButton.setFont(nextButton.getFont().deriveFont(Font.BOLD));
+        styleConfirmAction(nextButton);
         panel.add(nextButton, BorderLayout.EAST);
         return panel;
     }

@@ -108,6 +108,7 @@ public class NumberOfCylindersPanel extends AbstractWizardStep {
                     }
                 });
             } else {
+                styleConfirmAction(button);
                 button.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
