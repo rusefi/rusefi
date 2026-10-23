@@ -13,7 +13,7 @@ import java.util.function.Predicate;
 
 /**
  * Rows of the signal list: a heading per section with its members below unless collapsed. Sections are
- * Plotted (always first), the lists ({@link SignalLists}: Common, then the user's), then the
+ * Plotted (always first; Histogram, with its X, Y and Z, while the Histogram view is shown), the lists ({@link SignalLists}: Common, then the user's), then the
  * {@link SignalCategories.Group}s. A signal is listed in every section it belongs to: plotting it or putting
  * it in a list does not take it out of its group. Flat signals (one value for the whole log) can be left out
  * of the groups, separately for zero signals, mostly unused features, and constant ones at another value,
@@ -23,10 +23,13 @@ import java.util.function.Predicate;
  */
 final class SignalSections {
     static final String PLOTTED = "Plotted";
+    /** Takes Plotted's place while the Histogram view is shown: its X, Y and Z signals. */
+    static final String HISTOGRAM = "Histogram";
     static final String COMMON = "Common";
 
     enum Kind {
         PLOTTED,
+        HISTOGRAM,
         /** Common or a user list. */
         LIST,
         GROUP
@@ -102,20 +105,40 @@ final class SignalSections {
      */
     static List<Row> rows(CsvLogReader log, PlotLayout layout, SignalCategories categories, SignalLists lists,
                           String query, boolean hideZero, boolean hideConstant, Predicate<String> collapsed) {
+        return rows(log, layout, null, categories, lists, query, hideZero, hideConstant, collapsed);
+    }
+
+    /**
+     * @param histogramFields the histogram's X, Y and Z signals while the Histogram view is shown, listed first
+     *                        in place of Plotted (the plots are not on screen then); null for the timeline
+     */
+    static List<Row> rows(CsvLogReader log, PlotLayout layout, int[] histogramFields, SignalCategories categories,
+                          SignalLists lists, String query, boolean hideZero, boolean hideConstant,
+                          Predicate<String> collapsed) {
         String needle = query.trim().toLowerCase(Locale.ROOT);
         boolean searching = !needle.isEmpty();
         List<Row> rows = new ArrayList<>();
 
-        List<Row> plotted = new ArrayList<>();
-        for (int plot = 0; plot < layout.plotCount(); plot++) {
-            for (int field : layout.fields(plot)) {
+        if (histogramFields != null) {
+            List<Row> axes = new ArrayList<>();
+            for (int field : histogramFields) {
                 if (matches(log.name(field), needle)) {
-                    plotted.add(Row.signal(PLOTTED, Kind.PLOTTED, field));
+                    axes.add(Row.signal(HISTOGRAM, Kind.HISTOGRAM, field));
                 }
             }
+            addSection(rows, HISTOGRAM, Kind.HISTOGRAM, axes, searching, collapsed, !searching);
+        } else {
+            List<Row> plotted = new ArrayList<>();
+            for (int plot = 0; plot < layout.plotCount(); plot++) {
+                for (int field : layout.fields(plot)) {
+                    if (matches(log.name(field), needle)) {
+                        plotted.add(Row.signal(PLOTTED, Kind.PLOTTED, field));
+                    }
+                }
+            }
+            // always there (0 while nothing is plotted), so the sidebar keeps its shape; hidden only by a search
+            addSection(rows, PLOTTED, Kind.PLOTTED, plotted, searching, collapsed, !searching);
         }
-        // always there (0 while nothing is plotted), so the sidebar keeps its shape; hidden only by a search
-        addSection(rows, PLOTTED, Kind.PLOTTED, plotted, searching, collapsed, !searching);
 
         Map<String, Integer> fieldOfLabel = fieldOfLabel(log);
         List<String> listNames = new ArrayList<>();

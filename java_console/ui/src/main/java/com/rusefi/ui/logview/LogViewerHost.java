@@ -2,6 +2,7 @@ package com.rusefi.ui.logview;
 
 import com.devexperts.logging.FileLogger;
 import com.devexperts.logging.Logging;
+import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.logview.CsvLogReader;
@@ -73,7 +74,9 @@ public final class LogViewerHost extends JPanel {
     private final SidebarState sidebar;
     private final SignalColors colors;
     private final SignalScales scales;
+    private final HistogramSettings histogramSettings;
     private Supplier<IniFileModel> iniSupplier = () -> null;
+    private Supplier<ConfigurationImage> tuneSupplier = () -> null;
     private final TransferHandler fileDrop = new FileDropHandler();
     private Consumer<String> titleListener = name -> {
     };
@@ -112,6 +115,7 @@ public final class LogViewerHost extends JPanel {
         colors.addListener(() -> configSaver.run());
         scales = new SignalScales(config.getChild("scales"));
         scales.addListener(() -> configSaver.run());
+        histogramSettings = new HistogramSettings(config.getChild("histogram"));
         directory = logsFolder;
         setPreferredSize(new Dimension(1400, 840));
         KeyStroke open = KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK);
@@ -152,6 +156,17 @@ public final class LogViewerHost extends JPanel {
         this.iniSupplier = iniSupplier;
     }
 
+    /**
+     * The working tune (or null), read when the histogram bins by a tune table's axes; it is read each time, so
+     * the bins follow tune edits and connecting.
+     */
+    public void setTuneSupplier(Supplier<ConfigurationImage> tuneSupplier) {
+        this.tuneSupplier = tuneSupplier;
+        if (current != null) {
+            current.setTuneSupplier(tuneSupplier);
+        }
+    }
+
     /** Receives the file name of each log shown, e.g. for the window title. */
     public void setTitleListener(Consumer<String> titleListener) {
         this.titleListener = titleListener;
@@ -179,6 +194,12 @@ public final class LogViewerHost extends JPanel {
         current = new LogViewerPanel(log, fileName, settings, lists, sidebar, colors, currentIni(),
                 this::showOpenMenu);
         current.chart().setSignalScales(scales);
+        current.setHistogramSettings(histogramSettings);
+        current.setTuneSupplier(tuneSupplier);
+        // the next log opens in the view the last one was left in
+        if (histogramSettings.isHistogramView()) {
+            current.setHistogramView(true);
+        }
         setContent(current);
         titleListener.accept(fileName);
     }

@@ -103,6 +103,20 @@ final class ShortcutsDialog extends JDialog {
                     + "onto the list to remove it. Drag the gap between plots to resize them; "
                     + "double-click the gap to make all plots the same height.",
             "",
+            "LOG VIEWER: HISTOGRAM",
+            "Timeline / Histogram (toolbar) switches views. In the Histogram view a click on a signal in the "
+                    + "list puts it on the highlighted axis (X, Y or Z); dragging it onto an axis works too.",
+            "Keys on the table (click it first to give it focus):",
+            "Arrow keys         Move the selected cell; Up is the next higher Y bin.",
+            "Shift+arrows       Extend the selection to a block; Shift+click does the same.",
+            "Enter              Show the selected cell on the timeline (as does a double-click):",
+            "                   its stays are shaded and Previous / Next step through them.",
+            "Ctrl+C             Copy the selected cells (or the whole table), tab-separated, for a",
+            "                   TunerStudio table; Ctrl+Shift+C copies them with their axis values.",
+            "Ctrl+A             Select all cells.",
+            "Esc                Clear the selection.",
+            "Right-click the table for the same actions; click the legend to change the colours.",
+            "",
             "COMMAND INPUT",
             "Ctrl+Enter  Send the command text (each line is sent separately).",
             "In a single-line command field, Enter also sends the command and Up/Down "

@@ -129,6 +129,9 @@ final class LogChart extends JComponent {
     private int legendPressField = -1;
     /** The A and B measurement cursors; see {@link #setMeasuring}. */
     private final MeasureCursors cursors = new MeasureCursors();
+    /** Shaded time spans; see {@link #setHighlights}. */
+    private List<double[]> highlights = new ArrayList<>();
+    private int currentHighlight = -1;
     /** While on, a click on a plot places or moves a measurement cursor. */
     private boolean measuring;
     /** The cursor whose flag is being dragged, or null. */
@@ -323,6 +326,34 @@ final class LogChart extends JComponent {
 
     MeasureCursors cursors() {
         return cursors;
+    }
+
+    /**
+     * Shades time spans on every plot, e.g. the stays in a histogram cell, the current one stronger; an empty
+     * list clears them.
+     *
+     * @param spans   {start, end, ...} in seconds
+     * @param current the span drawn stronger, or -1
+     */
+    void setHighlights(List<double[]> spans, int current) {
+        highlights = new ArrayList<>(spans);
+        currentHighlight = current;
+        repaint();
+    }
+
+    List<double[]> highlights() {
+        return highlights;
+    }
+
+    int currentHighlight() {
+        return currentHighlight;
+    }
+
+    /** Brings a time span into view with as much again on either side, so what led to it and followed shows. */
+    void reveal(double from, double to) {
+        double pad = Math.max(to - from, window.span() * 0.02);
+        window.show(from - pad, to + pad);
+        viewChanged();
     }
 
     boolean isMeasuring() {
@@ -1132,6 +1163,26 @@ final class LogChart extends JComponent {
         }
     }
 
+    /** The highlighted spans behind the traces: each at least 2 px wide, the current one edged in the accent. */
+    private void paintHighlights(Graphics2D g, Rectangle area, PlotPalette palette) {
+        for (int i = 0; i < highlights.size(); i++) {
+            double[] span = highlights.get(i);
+            if (span[1] < window.start() || span[0] > window.end()) {
+                continue;
+            }
+            int left = xOf(span[0]);
+            int width = Math.max(2, xOf(span[1]) - left);
+            g.setColor(palette.selection);
+            g.fillRect(left, area.y, width, area.height);
+            if (i == currentHighlight) {
+                g.fillRect(left, area.y, width, area.height);
+                g.setColor(palette.accent);
+                g.drawLine(left, area.y, left, area.y + area.height);
+                g.drawLine(left + width, area.y, left + width, area.y + area.height);
+            }
+        }
+    }
+
     private void paintBand(Graphics2D g, Band band, PlotPalette palette, FontMetrics metrics, Font valueFont,
                            List<Double> sampleTimes) {
         Rectangle area = band.traces;
@@ -1238,6 +1289,7 @@ final class LogChart extends JComponent {
         Graphics2D plot = (Graphics2D) g.create();
         try {
             plot.clipRect(area.x, area.y - 1, area.width + 1, area.height + 3);
+            paintHighlights(plot, area, palette);
             plot.setStroke(new BasicStroke(palette.strokeWidth));
             int focused = focus.focused();
             for (int field : fields) {
