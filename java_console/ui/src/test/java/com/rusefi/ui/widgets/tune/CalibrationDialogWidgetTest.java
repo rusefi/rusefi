@@ -366,12 +366,55 @@ public class CalibrationDialogWidgetTest {
     }
 
     /**
-     * Reproduction: LTFT trims live on TS page 0x0200, but the calibration dialog renders every
-     * table from the main settings image, so the LTFT table shows main-page bytes at the
-     * trim offsets instead of the learned trims.
+     * LTFT trims live on TS page 0x0200, outside the main settings image: the table must show
+     * the values read from that page, read-only, not main-page bytes at the trim offsets.
      */
     @Test
-    public void tableOnSecondaryPageShowsMainPageBytes() {
+    public void tableOnSecondaryPageReadsItsOwnPage() {
+        IniFileModel iniFileModel = ltftTableIni();
+        ConfigurationImage mainPage = ltftMainPage();
+        byte[] mainBefore = mainPage.getContent().clone();
+        List<int[]> requests = new ArrayList<>();
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        widget.setPageReaderForUnitTest((pageIndex, offset, size, onResult) -> {
+            requests.add(new int[]{pageIndex, offset, size});
+            ConfigurationImage trims = new ConfigurationImage(new byte[size]);
+            trims.getByteBuffer(0, 4).putFloat(0.125f);
+            onResult.accept(trims.getContent());
+        });
+        try {
+            widget.update("ltftBank1Tbl", iniFileModel, mainPage);
+
+            assertEquals(1, requests.size());
+            assertArrayEquals(new int[]{0x0200, 0, 4}, requests.get(0));
+            JTable table = findTable(widget.getContentPane());
+            assertNotNull(table, "LTFT table should be rendered");
+            assertEquals("12.5", table.getValueAt(0, 1));
+            assertFalse(table.isCellEditable(0, 1), "Secondary-page table must be read-only");
+            assertArrayEquals(mainBefore, widget.getWorkingImage().getContent(), "Main page untouched");
+        } finally {
+            widget.destroy();
+        }
+    }
+
+    @Test
+    public void tableOnSecondaryPageWithoutEcuShowsNoValues() {
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        widget.setPageReaderForUnitTest((pageIndex, offset, size, onResult) -> onResult.accept(null));
+        try {
+            widget.update("ltftBank1Tbl", ltftTableIni(), ltftMainPage());
+
+            JTable table = findTable(widget.getContentPane());
+            assertNotNull(table);
+            assertEquals(0, table.getRowCount(), "No main-page bytes may be shown as trims");
+            assertNotNull(findLabel(widget.getContentPane(), "Connect to the ECU to view this table"));
+        } finally {
+            widget.destroy();
+        }
+    }
+
+    private static IniFileModel ltftTableIni() {
         IniFileModel iniFileModel = mock(IniFileModel.class);
         when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
         when(iniFileModel.getDialogs()).thenReturn(Collections.emptyMap());
@@ -388,24 +431,31 @@ public class CalibrationDialogWidgetTest {
         when(iniFileModel.findIniField("veRpmBins")).thenReturn(java.util.Optional.of(xBinsField));
         when(iniFileModel.findIniField("veLoadBins")).thenReturn(java.util.Optional.of(yBinsField));
         when(iniFileModel.findIniField("ltft_table_bank1")).thenReturn(java.util.Optional.of(ltftField));
+        return iniFileModel;
+    }
 
+    private static ConfigurationImage ltftMainPage() {
         // main settings page: an unrelated setting happens to occupy the trim's offset
         ConfigurationImage mainPage = new ConfigurationImage(new byte[200]);
         mainPage.getByteBuffer(0, 4).putFloat(50.0f);
         mainPage.getByteBuffer(100, 4).putFloat(650);
         mainPage.getByteBuffer(104, 4).putFloat(10);
+        return mainPage;
+    }
 
-        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
-        try {
-            widget.update("ltftBank1Tbl", iniFileModel, mainPage);
-
-            JTable table = findTable(widget.getContentPane());
-            assertNotNull(table, "LTFT table should be rendered");
-            // BUG: 50.0 from the main page, scaled by 100, is shown as the trim
-            assertEquals("5000", table.getValueAt(0, 1));
-        } finally {
-            widget.destroy();
+    private static JLabel findLabel(Container container, String text) {
+        for (Component component : container.getComponents()) {
+            if (component instanceof JLabel && text.equals(((JLabel) component).getText())) {
+                return (JLabel) component;
+            }
+            if (component instanceof Container) {
+                JLabel nested = findLabel((Container) component, text);
+                if (nested != null) {
+                    return nested;
+                }
+            }
         }
+        return null;
     }
 
     private static JTable findTable(Container container) {

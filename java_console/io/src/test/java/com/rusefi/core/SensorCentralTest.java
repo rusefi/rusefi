@@ -444,12 +444,11 @@ public class SensorCentralTest {
     }
 
     /**
-     * Reproduction: trim channels are sent as a multiplier (1.0 = no correction) with
-     * scale 100 and translate -1, which TunerStudio shows as (1.0 - 1) * 100 = 0 %.
-     * The console ignores translate and shows 100 %.
+     * Trim channels are sent as a multiplier (1.0 = no correction) with scale 100 and
+     * translate -1, which TunerStudio shows as (1.0 - 1) * 100 = 0 %.
      */
     @Test
-    void outputChannelTranslateIsIgnored() throws Throwable {
+    void outputChannelTranslateIsAppliedBeforeScale() throws Throwable {
         String text = "[OutputChannels]\n"
             + "ltftCorrection1 = scalar, F32, 0, \"%\", 100.0, -1.0\n";
         IniFileModel ini = IniFileReaderUtil.readIniFile(IniFileReaderUtil.read(
@@ -460,8 +459,10 @@ public class SensorCentralTest {
         byte[] response = new byte[5];
         ByteBuffer.wrap(response, 1, 4).order(ByteOrder.LITTLE_ENDIAN).putFloat(1.0f);
 
-        // BUG: expected 0 %
-        assertEquals(100.0, ISensorHolder.readFieldValue(response, "ltftCorrection1", field), 1e-9);
+        assertEquals(0.0, ISensorHolder.readFieldValue(response, "ltftCorrection1", field), 1e-9);
+
+        ByteBuffer.wrap(response, 1, 4).order(ByteOrder.LITTLE_ENDIAN).putFloat(1.05f);
+        assertEquals(5.0, ISensorHolder.readFieldValue(response, "ltftCorrection1", field), 1e-4);
     }
 
 }
