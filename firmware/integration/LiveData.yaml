@@ -288,6 +288,9 @@ Usages:
     java: LongTermFuelTrim.java
     folder: controllers
     prepend: integration/rusefi_config_shared.txt
+    # [tag:ltft_sd_state] Bit offsets are relative to the generated state, not the EngineModule base.
+    constexpr: "static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock())"
+    conditional_compilation: "EFI_LTFT_CONTROL"
 
   - name: short_term_fuel_trim_state
     cppFileName: short_term_fuel_trim

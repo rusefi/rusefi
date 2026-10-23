@@ -60,6 +60,16 @@ iterate all), mutability, naming universe, and flash layout.
 
 ## Sharp edges
 
+- **TunerStudio exposure does not imply SD logging.** `LiveDataProcessor` registers
+  `SdCardFieldsContent` only for entries with `constexpr:`. An entry with only
+  `engineModule:` generates output lookups but no SD fields; an entry with neither
+  still generates TunerStudio channels and datalog entries.
+  [tag:ltft_sd_state] The LTFT fragment maps all 13 channels through its generated
+  state subobject, guarded by `EFI_LTFT_CONTROL`. `LtftSdLoggingTest` checks the
+  production inputs; `unitTestLog.ltftHeaderAndPayload` checks emitted values.
+  When mapping a module with multiple inheritance, use its generated state
+  subobject as the expression: bit offsets are relative to that state, not the
+  complete module. Keep the expression guarded by the module's feature flag.
 - **Dead generated file**: `value_lookup_generated.cpp` (switch-based getter + string-compare
   setter) is still emitted by `GetConfigValueConsumer` (first `-field_lookup_file` argument)
   but is NOT in any `.mk` — only the table variant + `value_lookup.cpp` are compiled. Both
