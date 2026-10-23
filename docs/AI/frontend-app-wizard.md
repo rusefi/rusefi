@@ -34,14 +34,20 @@ wizard is not already showing before opening it.
 | ECU `wizard*` fields | Persist completion of individual steps independently of the Console preferences. |
 
 An automatically launched full wizard offers **Cancel** and **Don't Show
-Again**. Manual and standalone launches offer **Exit Wizard**. Exiting does
+Again** at the top right of the header. Manual and standalone launches offer
+**Exit Wizard** there. Exiting does
 not undo completed uploads. The full-wizard preferences do not suppress
 standalone prompts, which have their own catalog predicates.
 
-Confirmation actions use green buttons with checkmarks. Cancel, Exit Wizard,
-Don't Show Again, and destructive actions use red buttons with crosses. Skips,
-Back, and other secondary controls remain neutral; disabled actions use the
-theme's disabled appearance.
+Every step advances from the footer. Its right side shows the step's own Skip,
+only on steps that can be skipped, and a blue primary **Continue**. The steps
+keep their listeners and enabled rules (`WizardStep.getContinueButton`,
+`getSkipButton`). Cylinders and Firing Order save on a single click of a
+choice, so they show a footer hint instead of Continue. Those choices are
+outlined in the accent colour (`wizardChoice` style) because a click saves.
+Cylinder counts 7, 9 and 16 only show a message, so they are greyed out
+(`wizardChoiceMuted`). Exit actions are neutral. The firmware dialogs below
+keep green confirmation and red cancel or destructive buttons.
 
 [`StartupFrame`](../../java_console/ui/src/main/java/com/rusefi/StartupFrame.java)
 hosts a compact `WizardContainer` for standalone prompts after connecting,
@@ -90,12 +96,12 @@ rows still require their progress flag to exist in the active INI.
 |---|---|---|
 | [Cylinders](../../java_console/ui/src/main/java/com/rusefi/ui/wizard/NumberOfCylindersPanel.java) | `wizardNumberOfCylinders` | Writes `cylindersCount` and `twoStroke`. The 7, 9, and 16 buttons display an informational overlay instead of completing the step. |
 | [Firing Order](../../java_console/ui/src/main/java/com/rusefi/ui/wizard/FiringOrderPanel.java) | `wizardFiringOrder` | Filters the INI's `firingOrder` choices by cylinder count. One- and two-cylinder selections use implicit orders and hide this step. |
-| [Base VE Table](../../java_console/ui/src/main/java/com/rusefi/ui/wizard/VeTableWizardStep.java) | `wizardVeTable` | Embeds `VeTableGeneratorPanel`; Apply supplies a modified image, while Skip keeps the current table. Both complete the step. |
+| [Base VE Table](../../java_console/ui/src/main/java/com/rusefi/ui/wizard/VeTableWizardStep.java) | `wizardVeTable` | Embeds `VeTableGeneratorPanel`; Continue applies the generated preview as a modified image, while Skip keeps the current table. The wizard moves the panel's apply and close buttons into its footer. Both complete the step. |
 | [Engine Displacement](../../java_console/ui/src/main/java/com/rusefi/ui/wizard/DisplacementPanel.java) | `wizardDisplacement` | Requires confirmation of total `displacement` in litres, greater than 0 and no more than 65. Checks that the value remains valid after INI encoding. |
 | [MAP Sensor](../../java_console/ui/src/main/java/com/rusefi/ui/wizard/MapSensorTypePanel.java) | `wizardMapSensorType` | Selects `map_sensor_hwChannel` and `map_sensor_type`; Custom also edits the two voltage/pressure calibration points. |
 | [TPS](../../java_console/ui/src/main/java/com/rusefi/ui/wizard/TpsPanel.java) | `wizardTps` | Selects `tps1_1AdcChannel` and closed/WOT endpoints (`tpsMin`, `tpsMax`), entered manually or captured from live voltage. |
 | [CLT Sensor](../../java_console/ui/src/main/java/com/rusefi/ui/wizard/CltSensorPanel.java) | `wizardCltSensor` | Selects `clt_adcChannel` and an INI thermistor preset or three custom temperature/resistance points, with optional pull-up and linear-mode controls. |
-| [Crank Trigger](../../java_console/ui/src/main/java/com/rusefi/ui/wizard/CrankTriggerPanel.java) | `wizardCrankTrigger` | Embeds the INI `trigger_primary` dialog through `CalibrationDialogWidget`; saves edits or accepts Skip / Use Default. |
+| [Crank Trigger](../../java_console/ui/src/main/java/com/rusefi/ui/wizard/CrankTriggerPanel.java) | `wizardCrankTrigger` | Embeds the INI `trigger_primary` dialog through `CalibrationDialogWidget`; saves edits on Continue, or keeps the current settings on Skip. |
 | [Cam Trigger](../../java_console/ui/src/main/java/com/rusefi/ui/wizard/CamTriggerPanel.java) | `wizardCamTrigger` | Embeds the INI `trigger_cams` dialog with the same save/skip behavior. |
 | [Ignition Outputs](../../java_console/ui/src/main/java/com/rusefi/ui/wizard/OutputAssignmentPanel.java) | `wizardIgnitionOutputs` | Edits `ignitionPins1`, `ignitionPins2`, etc. for the configured cylinder count; offers per-output bench tests. |
 | Injector Outputs (`OutputAssignmentPanel`) | `wizardInjectorOutputs` | Edits `injectionPins1`, `injectionPins2`, etc. with the same assignment and test workflow. |
@@ -225,8 +231,10 @@ the explicitly assembled panels against catalog order.
 covers save/exit continuation, prompt deduplication, disconnection, and queued
 completion. [LaunchWizardHighlightTest](../../java_console/ui/src/test/java/com/rusefi/LaunchWizardHighlightTest.java)
 covers the manual launch button's presentation.
-`WizardButtonStyleTest` checks action colours and icons across setup and
-standalone panels, interaction states, and disabled actions using the Console theme.
+`WizardButtonStyleTest` checks the footer Continue and Skip of every setup and
+standalone step, the one-click choice styles, the fixed header and footer
+layout across launch modes, and the firmware dialogs' colours using the
+Console theme.
 
 Run focused tests from the repository root:
 

@@ -56,9 +56,11 @@ class DisplacementPanelTest {
             panel.onShow();
             assertEquals("wizardDisplacement", panel.getWizardFlagFieldName());
             JTextField input = (JTextField) find(panel.getPanel(), c -> "displacement".equals(c.getName()));
-            JButton save = (JButton) find(panel.getPanel(), c -> c instanceof JButton);
-            assertEquals("Save and Continue", save.getText());
-            assertNull(find(panel.getPanel(), c -> c instanceof JButton && ((JButton) c).getText().contains("Skip")));
+            JButton save = panel.getContinueButton();
+            assertEquals("Continue", save.getText());
+            assertNull(panel.getSkipButton());
+            assertNull(find(panel.getPanel(), c -> c instanceof JButton && "Continue".equals(((JButton) c).getText())),
+                "Continue is shown in the wizard footer");
             assertEquals(2, Double.parseDouble(input.getText()), 0.001);
             assertNull(saved.get());
             input.setText("");
@@ -84,7 +86,7 @@ class DisplacementPanelTest {
             panel.setOnStepCompleted(saved::set);
             panel.onShow();
             when(f.bp.getControllerConfiguration()).thenReturn(null);
-            JButton save = (JButton) find(panel.getPanel(), c -> c instanceof JButton);
+            JButton save = panel.getContinueButton();
             save.doClick();
             assertFalse(save.isEnabled());
             assertNull(saved.get());

@@ -21,6 +21,8 @@ import java.util.function.Consumer;
  */
 public abstract class AbstractWizardStep implements WizardStep {
     protected static final String INVALID_SENTINEL = "INVALID";
+    static final String CONTINUE_TEXT = "Continue";
+    static final String SKIP_TEXT = "Skip";
 
     private final String title;
     private final String wizardFlagFieldName;
@@ -70,9 +72,45 @@ public abstract class AbstractWizardStep implements WizardStep {
     }
 
     protected static void stylePrimaryAction(JButton button) {
-        styleButton(button);
         button.setMargin(new Insets(9, 18, 9, 18));
         button.setFont(button.getFont().deriveFont(Font.BOLD));
+    }
+
+    /** Neutral button in the wizard footer, e.g. Skip or Exit Wizard; footer buttons share one size. */
+    static void styleFooterAction(JButton button) {
+        button.setMargin(new Insets(7, 16, 7, 16));
+    }
+
+    /** The footer's Continue: the console's blue primary button, worded the same on every step. */
+    protected static void styleContinueAction(JButton button) {
+        button.setText(CONTINUE_TEXT);
+        styleFooterAction(button);
+        button.putClientProperty(FlatClientProperties.STYLE_CLASS, "primary");
+        button.setIcon(WizardStyle.ActionIcon.NEXT);
+        button.setHorizontalTextPosition(SwingConstants.LEADING);
+    }
+
+    /**
+     * A choice that saves and advances on a single click, e.g. a cylinder count: outlined in the accent
+     * colour so it reads as an action. The successor of #10481's green confirmation for these buttons.
+     */
+    protected static void styleChoiceAction(JButton button) {
+        stylePrimaryAction(button);
+        button.putClientProperty(FlatClientProperties.STYLE_CLASS, "wizardChoice");
+    }
+
+    /** A choice the wizard cannot save (it only explains why), greyed out but still clickable. */
+    protected static void styleUnsupportedChoice(JButton button, String tooltip) {
+        stylePrimaryAction(button);
+        button.setFont(button.getFont().deriveFont(Font.PLAIN));
+        button.putClientProperty(FlatClientProperties.STYLE_CLASS, "wizardChoiceMuted");
+        button.setToolTipText(tooltip);
+    }
+
+    protected static void styleSkipAction(JButton button, String tooltip) {
+        button.setText(SKIP_TEXT);
+        button.setToolTipText(tooltip);
+        styleFooterAction(button);
     }
 
     protected static void styleConfirmAction(JButton button) {
