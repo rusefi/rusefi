@@ -100,7 +100,7 @@ class ScatterViewTest {
 
         panel.setView(HistogramSettings.TIMELINE);
         assertTrue(panel.statusBar().isVisible());
-        assertEquals(SignalSections.PLOTTED, panel.fieldList().getModel().getElementAt(0).section);
+        assertEquals(SignalSections.plotTitle(0), panel.fieldList().getModel().getElementAt(0).section);
     }
 
     @Test

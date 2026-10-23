@@ -102,6 +102,9 @@ public final class LogViewerPanel extends JPanel {
             SignalSections.Row row = rows.get(index);
             if (row.isHeading()) {
                 String toggle = row.expanded ? "Click to collapse" : "Click to expand";
+                if (row.kind == SignalSections.Kind.PLOTTED) {
+                    return toggle + " · drop a signal here to move it to " + row.section.toLowerCase(Locale.ROOT);
+                }
                 return row.kind == SignalSections.Kind.LIST
                         ? toggle + " · ⋯ or right-click: list actions · drop a signal here to add it" : toggle;
             }
@@ -225,7 +228,7 @@ public final class LogViewerPanel extends JPanel {
         chart = new LogChart(log, layout, settings);
         chart.setSignalColors(colors);
         layout.addListener(() -> {
-            // the Plotted section follows the plots
+            // the plot sections follow the plots
             filter(search.getText());
             updatePlottedLabel();
         });
@@ -301,7 +304,7 @@ public final class LogViewerPanel extends JPanel {
             @Override public void changedUpdate(DocumentEvent event) { filter(search.getText()); }
         });
 
-        String hiddenWhere = "<br>also while searching; they stay in Plotted and the lists</html>";
+        String hiddenWhere = "<br>also while searching; they stay in the plots and the lists</html>";
         setUpFilterBox(hideZeroBox, "Hide zero signals", SignalSections.zeroCount(log), state.hideZero(),
                 "<html>Leave signals that are 0 for the whole log (mostly unused features) out of the groups;"
                         + hiddenWhere, state::setHideZero);
@@ -445,7 +448,7 @@ public final class LogViewerPanel extends JPanel {
     }
 
     /**
-     * Plotting a signal adds (or removes) its row in Plotted above, which shifts the rows below; scrolls by the
+     * Plotting a signal adds (or removes) its row in a plot section above, which shifts the rows below; scrolls by the
      * same amount, where the list can scroll, so the clicked row stays under the pointer for the next click.
      */
     private void keepUnderPointer(SignalSections.Row clicked, int oldIndex) {
@@ -826,7 +829,7 @@ public final class LogViewerPanel extends JPanel {
         }
         ((CardLayout) views.getLayout()).show(views, view);
         boolean timeline = TIMELINE.equals(view);
-        // the other views have their own status strip; their X, Y and Z replace Plotted in the sidebar
+        // the other views have their own status strip; their X, Y and Z replace the plot sections in the sidebar
         statusBar.setVisible(timeline);
         plottedLabel.setVisible(timeline);
         filter(search.getText());
@@ -945,7 +948,7 @@ public final class LogViewerPanel extends JPanel {
     }
 
     /**
-     * Signals listed in the groups (each signal is in exactly one; Plotted and the lists are copies) out of all
+     * Signals listed in the groups (each signal is in exactly one; the plots and the lists are copies) out of all
      * signals: what is left after hiding zero or constant signals, or searching.
      */
     private void updateCount() {
@@ -1022,8 +1025,8 @@ public final class LogViewerPanel extends JPanel {
 
     /**
      * A signal dropped on the list at a row: back on the row it was dragged from, it was a click that moved past the
-     * drag threshold (2 px on some systems) and toggles the signal; on a list it is copied there; elsewhere a
-     * plotted trace leaves its plot.
+     * drag threshold (2 px on some systems) and toggles the signal; on a list it is copied there; on a plot section
+     * it moves to that plot (or is added there); elsewhere a plotted trace leaves its plot.
      */
     boolean dropOnList(int field, int index) {
         if (listDragOrigin >= 0 && index == listDragOrigin) {
@@ -1042,6 +1045,11 @@ public final class LogViewerPanel extends JPanel {
             addToList(list, field);
             return true;
         }
+        int plot = plotAt(index);
+        if (plot >= 0) {
+            layout.moveTo(field, plot);
+            return true;
+        }
         if (!layout.isPlotted(field)) {
             return false;
         }
@@ -1056,6 +1064,15 @@ public final class LogViewerPanel extends JPanel {
         }
         SignalSections.Row row = rows.get(index);
         return row.kind == SignalSections.Kind.LIST ? row.section : null;
+    }
+
+    /** The plot whose section heading or member is at a row, or -1. */
+    int plotAt(int index) {
+        if (index < 0 || index >= rows.size()) {
+            return -1;
+        }
+        SignalSections.Row row = rows.get(index);
+        return row.kind == SignalSections.Kind.PLOTTED ? SignalSections.plotOf(row.section) : -1;
     }
 
     /** Small rounded count badge, like the Gauges RPM readout. */
@@ -1081,11 +1098,26 @@ public final class LogViewerPanel extends JPanel {
         }
     }
 
+    /** The plots (or a view's axes), the lists, the groups: kinds of sections a line separates in the sidebar. */
+    static int zone(SignalSections.Row row) {
+        switch (row.kind) {
+            case PLOTTED:
+            case HISTOGRAM:
+                return 0;
+            case LIST:
+                return 1;
+            default:
+                return 2;
+        }
+    }
+
     /** A section heading (arrow, title, count) or a signal (trace dot, name, unit) indented under it. */
     private final class SignalRenderer extends JPanel implements ListCellRenderer<SignalSections.Row> {
         private final TraceDot dot = new TraceDot();
         private final JLabel name = new JLabel(dot, SwingConstants.LEADING);
         private final JLabel unit = new JLabel();
+        /** A line above the heading: the first of the lists, or of the groups, below the plots. */
+        private boolean divider;
 
         SignalRenderer() {
             super(new BorderLayout(8, 0));
@@ -1108,6 +1140,15 @@ public final class LogViewerPanel extends JPanel {
         }
 
         @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            if (divider) {
+                g.setColor(themed("Console.LogViewer.sectionDivider", Color.LIGHT_GRAY));
+                g.fillRect(2, 1, getWidth() - 10, 1);
+            }
+        }
+
+        @Override
         public void validate() {
         }
 
@@ -1121,6 +1162,7 @@ public final class LogViewerPanel extends JPanel {
             Color muted = themed("Console.LogViewer.mutedForeground", Color.GRAY);
             setBackground(selected ? themed("Console.LogViewer.chipBackground", list.getSelectionBackground())
                     : list.getBackground());
+            divider = row.isHeading() && index > 0 && zone(list.getModel().getElementAt(index - 1)) != zone(row);
             if (row.isHeading()) {
                 setBorder(BorderFactory.createEmptyBorder(6, 2, 0, 8));
                 name.setIcon(null);
@@ -1158,7 +1200,7 @@ public final class LogViewerPanel extends JPanel {
             boolean flat = log.isConstant(field);
             name.setText(log.name(field));
             name.setFont(list.getFont().deriveFont(plotted ? Font.BOLD : Font.PLAIN));
-            // flat signals (in Plotted, Common, search or when not hidden) are muted and give their value
+            // flat signals (in a plot, Common, search or when not hidden) are muted and give their value
             name.setForeground(flat && !plotted ? muted : list.getForeground());
             unit.setText(flat ? flatText(field) : log.unit(field));
             unit.setFont(flat ? list.getFont().deriveFont(Font.ITALIC) : list.getFont());

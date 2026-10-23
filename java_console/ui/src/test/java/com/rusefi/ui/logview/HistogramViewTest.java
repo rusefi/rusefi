@@ -302,7 +302,7 @@ class HistogramViewTest {
         LogViewerPanel panel = new LogViewerPanel(log(), "test.msl");
         panel.chart().plotLayout().clearPlot(0); // the test starts from an empty plot
         panel.toggle(1);
-        assertEquals(SignalSections.PLOTTED, panel.fieldList().getModel().getElementAt(0).section);
+        assertEquals(SignalSections.plotTitle(0), panel.fieldList().getModel().getElementAt(0).section);
         assertTrue(panel.plottedLabel().isVisible());
 
         panel.setHistogramView(true);
@@ -318,7 +318,7 @@ class HistogramViewTest {
         assertEquals(5, panel.fieldList().getModel().getElementAt(3).field, "the section follows the axes");
 
         panel.setHistogramView(false);
-        assertEquals(SignalSections.PLOTTED, panel.fieldList().getModel().getElementAt(0).section);
+        assertEquals(SignalSections.plotTitle(0), panel.fieldList().getModel().getElementAt(0).section);
         assertEquals(1, panel.fieldList().getModel().getElementAt(1).field, "the plotted signal is back");
     }
 

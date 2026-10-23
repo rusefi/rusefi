@@ -42,12 +42,12 @@ class SignalSectionsTest {
         PlotLayout layout = new PlotLayout(log.fieldCount());
         layout.add(2);
         assertEquals(java.util.Arrays.asList(
-                "v Plotted 1", "  2",
+                "v Plot 1 1", "  2",
                 "v Common 2", "  1", "  2",
                 "> Sensors 2",
                 "> Fuel 1"),
                 describe(rows(log, layout, "", true, false, SignalSections.defaultCollapsed())),
-                "CLT is in Plotted, Common and Sensors; the zero knock count is hidden, the constant lag is not");
+                "CLT is in Plot 1, Common and Sensors; the zero knock count is hidden, the constant lag is not");
     }
 
     @Test
@@ -55,8 +55,28 @@ class SignalSectionsTest {
         CsvLogReader log = log();
         List<String> rows = describe(rows(log, new PlotLayout(log.fieldCount()), "", true, false,
                 SignalSections.defaultCollapsed()));
-        assertEquals("v Plotted 0", rows.get(0));
+        assertEquals("v Plot 1 0", rows.get(0));
         assertEquals("v Common 2", rows.get(1));
+    }
+
+    @Test
+    void eachPlotHasItsSection() throws IOException {
+        CsvLogReader log = log();
+        PlotLayout layout = new PlotLayout(log.fieldCount());
+        layout.add(1);
+        layout.addToNewPlot(2);
+        layout.addPlot();
+        List<String> rows = describe(rows(log, layout, "", true, false, SignalSections.defaultCollapsed()));
+        assertEquals(java.util.Arrays.asList("v Plot 1 1", "  1", "v Plot 2 1", "  2", "v Plot 3 0", "v Common 2"),
+                rows.subList(0, 6), "an empty plot keeps its section");
+
+        assertEquals(java.util.Arrays.asList("v Plot 2 1", "  2"),
+                describe(rows(log, layout, "clt", true, false, SignalSections.defaultCollapsed())).subList(0, 2),
+                "a search leaves out the plots without a match");
+
+        assertEquals(1, SignalSections.plotOf("Plot 2"));
+        assertEquals(-1, SignalSections.plotOf("Plotted"));
+        assertEquals(-1, SignalSections.plotOf("Plot x"));
     }
 
     @Test

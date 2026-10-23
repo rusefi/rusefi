@@ -72,6 +72,31 @@ class LogViewerPanelTest {
     }
 
     @Test
+    void aSignalDroppedOnAPlotSectionMovesThere() throws IOException {
+        LogViewerPanel panel = new LogViewerPanel(log(), null);
+        panel.chart().plotLayout().clearPlot(0); // the test starts from an empty plot
+        panel.toggle(1);
+        panel.addToNewPlot(2);
+        PlotLayout layout = panel.chart().plotLayout();
+        int plot1 = headingIndex(panel, SignalSections.plotTitle(0));
+        assertTrue(panel.dropOnList(2, plot1));
+        assertEquals(0, layout.plotOf(2), "moved to plot 1");
+
+        assertTrue(panel.dropOnList(3, headingIndex(panel, SignalSections.plotTitle(1))));
+        assertEquals(1, layout.plotOf(3), "an unplotted signal is added there");
+    }
+
+    private static int headingIndex(LogViewerPanel panel, String section) {
+        for (int index = 0; index < panel.fieldList().getModel().getSize(); index++) {
+            SignalSections.Row row = panel.fieldList().getModel().getElementAt(index);
+            if (row.isHeading() && row.section.equals(section)) {
+                return index;
+            }
+        }
+        throw new AssertionError("no heading " + section);
+    }
+
+    @Test
     void shiftClickPutsASignalInANewPlot() throws IOException {
         LogViewerPanel panel = new LogViewerPanel(log(), null);
         panel.chart().plotLayout().clearPlot(0); // the test starts from an empty plot
@@ -250,13 +275,34 @@ class LogViewerPanelTest {
         throw new AssertionError("no row for field " + field);
     }
 
+    /** A line above the first list heading and the first group heading separates them from the plots. */
+    @Test
+    void aLineSeparatesThePlotsTheListsAndTheGroups() throws IOException {
+        LogViewerPanel panel = new LogViewerPanel(log(), null);
+        panel.chart().plotLayout().addPlot();
+        JList<SignalSections.Row> list = panel.fieldList();
+        java.util.List<String> lined = new java.util.ArrayList<>();
+        for (int index = 0; index < list.getModel().getSize(); index++) {
+            SignalSections.Row row = list.getModel().getElementAt(index);
+            Component cell = list.getCellRenderer().getListCellRendererComponent(list, row, index, false, false);
+            cell.setBounds(0, 0, 260, 28);
+            BufferedImage image = new BufferedImage(260, 28, BufferedImage.TYPE_INT_RGB);
+            cell.paint(image.createGraphics());
+            if (image.getRGB(130, 1) != image.getRGB(130, 4)) {
+                lined.add(row.section);
+            }
+        }
+        assertEquals(java.util.Arrays.asList(SignalSections.COMMON, "Sensors"), lined,
+                "not between Plot 1 and Plot 2, nor between two groups");
+    }
+
     /** Row renderers must lay themselves out: validate() does nothing without a native peer. */
     @Test
     void signalRowPaintsWithoutAWindow() throws IOException {
         LogViewerPanel panel = new LogViewerPanel(log(), null);
         JList<SignalSections.Row> list = panel.fieldList();
         Component row = list.getCellRenderer().getListCellRendererComponent(list,
-                SignalSections.Row.signal(SignalSections.PLOTTED, SignalSections.Kind.PLOTTED, 1), 0, false, false);
+                SignalSections.Row.signal(SignalSections.plotTitle(0), SignalSections.Kind.PLOTTED, 1), 0, false, false);
         row.setBounds(0, 0, 260, 28);
         BufferedImage image = new BufferedImage(260, 28, BufferedImage.TYPE_INT_RGB);
         row.paint(image.createGraphics());

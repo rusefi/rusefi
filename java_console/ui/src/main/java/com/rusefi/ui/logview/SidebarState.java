@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 /**
  * What the signal sidebar remembers from one log to the next and across console runs: which sections are open
  * and the Hide zero / Hide constant switches. Sections are kept as changes from their defaults (groups closed,
- * Plotted and the lists open), so a group added in a later version starts closed like the others. Saved with
+ * the plots and the lists open), so a group added in a later version starts closed like the others. Saved with
  * the console config on exit.
  */
 final class SidebarState {

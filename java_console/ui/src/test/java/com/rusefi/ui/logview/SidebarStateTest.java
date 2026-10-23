@@ -21,7 +21,7 @@ class SidebarStateTest {
     void defaultsAreGroupsClosedListsOpenZeroHidden() {
         SidebarState state = new SidebarState();
         assertTrue(state.isCollapsed("Sensors"));
-        assertFalse(state.isCollapsed(SignalSections.PLOTTED));
+        assertFalse(state.isCollapsed(SignalSections.plotTitle(0)));
         assertFalse(state.isCollapsed(SignalSections.COMMON));
         assertFalse(state.isCollapsed("My list"));
         assertTrue(state.hideZero());
