@@ -79,11 +79,15 @@ class SignalSectionsTest {
     }
 
     @Test
-    void searchShowsMatchesExpandedIncludingConstant() throws IOException {
+    void searchShowsMatchesExpandedAndKeepsTheHideFilters() throws IOException {
         CsvLogReader log = log();
+        PlotLayout none = new PlotLayout(log.fieldCount());
         assertEquals(java.util.Arrays.asList("v Knock 1", "  3"),
-                describe(rows(log, new PlotLayout(log.fieldCount()), "knock", true, true,
-                        SignalSections.defaultCollapsed())));
+                describe(rows(log, none, "knock", false, false, SignalSections.defaultCollapsed())));
+        assertFalse(describe(rows(log, none, "knock", true, false, SignalSections.defaultCollapsed()))
+                .contains("v Knock 1"), "the zero knock count stays hidden while searching");
+        assertFalse(describe(rows(log, none, "lag", false, true, SignalSections.defaultCollapsed()))
+                .contains("v Fuel 1"), "the constant lag stays hidden while searching");
     }
 
     @Test
@@ -146,6 +150,9 @@ class SignalSectionsTest {
 
         panel.searchField().setText("knock");
         assertEquals("1 / 4", panel.countChip().getText(), "search matches");
+
+        panel.hideZeroBox.doClick();
+        assertEquals("0 / 4", panel.countChip().getText(), "Hide zero signals applies while searching");
     }
 
     private static int indexOf(LogViewerPanel panel, String headingPrefix) {

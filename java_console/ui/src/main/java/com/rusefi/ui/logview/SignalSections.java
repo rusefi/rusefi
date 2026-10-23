@@ -17,8 +17,8 @@ import java.util.function.Predicate;
  * {@link SignalCategories.Group}s. A signal is listed in every section it belongs to: plotting it or putting
  * it in a list does not take it out of its group. Flat signals (one value for the whole log) can be left out
  * of the groups, separately for zero signals, mostly unused features, and constant ones at another value,
- * which can matter (an active error, the detected gear, the firmware version). Hidden signals stay in Plotted
- * and the lists and in search results. A member of a user list that the log does not have is shown as
+ * which can matter (an active error, the detected gear, the firmware version), also while searching. Hidden
+ * signals stay in Plotted and the lists. A member of a user list that the log does not have is shown as
  * missing; Common lists only the signals the log has.
  */
 final class SignalSections {
@@ -100,7 +100,7 @@ final class SignalSections {
     }
 
     /**
-     * @param query         search text; while searching every matching signal is shown, sections expanded
+     * @param query         search text; while searching the matching signals are shown, sections expanded
      * @param hideZero      leave signals that are 0 for the whole log out of the groups
      * @param hideConstant  leave signals that hold another single value out of the groups
      * @param collapsed     whether a section (by title) hides its members
@@ -180,8 +180,7 @@ final class SignalSections {
         for (SignalCategories.Group group : SignalCategories.Group.values()) {
             List<Row> members = new ArrayList<>();
             for (int field = 1; field < log.fieldCount(); field++) {
-                boolean shown = searching
-                        || !(hideZero && isZero(log, field)) && !(hideConstant && isConstant(log, field));
+                boolean shown = !(hideZero && isZero(log, field)) && !(hideConstant && isConstant(log, field));
                 if (categories.group(field) == group && shown && matches(log.name(field), needle)) {
                     members.add(Row.signal(group.title, Kind.GROUP, field));
                 }
