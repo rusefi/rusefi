@@ -50,6 +50,7 @@ class HistogramTimelineTest {
     private static LogViewerPanel panel(HistogramSettings settings, IniFileModel ini) throws IOException {
         LogViewerPanel panel = new LogViewerPanel(log(), "test.msl", new ChartSettings(), new SignalLists(),
                 new SidebarState(), ini, null);
+        panel.chart().plotLayout().clearPlot(0); // the test starts from an empty plot
         panel.setHistogramSettings(settings);
         panel.setHistogramView(true);
         return panel;

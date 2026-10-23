@@ -37,6 +37,7 @@ class HistogramViewTest {
 
     private static LogViewerPanel histogramPanel(HistogramSettings settings) throws IOException {
         LogViewerPanel panel = new LogViewerPanel(log(), "test.msl");
+        panel.chart().plotLayout().clearPlot(0); // the test starts from an empty plot
         panel.setHistogramSettings(settings);
         panel.setHistogramView(true);
         return panel;
@@ -299,6 +300,7 @@ class HistogramViewTest {
     @Test
     void sidebarListsTheHistogramSignalsInsteadOfThePlotted() throws IOException {
         LogViewerPanel panel = new LogViewerPanel(log(), "test.msl");
+        panel.chart().plotLayout().clearPlot(0); // the test starts from an empty plot
         panel.toggle(1);
         assertEquals(SignalSections.PLOTTED, panel.fieldList().getModel().getElementAt(0).section);
         assertTrue(panel.plottedLabel().isVisible());
@@ -405,6 +407,7 @@ class HistogramViewTest {
             text.append('\n');
         }
         LogViewerPanel panel = new LogViewerPanel(CsvLogReader.read(new StringReader(text.toString())), null);
+        panel.chart().plotLayout().clearPlot(0); // the test starts from an empty plot
         panel.setHistogramView(true);
         return panel.histogram();
     }

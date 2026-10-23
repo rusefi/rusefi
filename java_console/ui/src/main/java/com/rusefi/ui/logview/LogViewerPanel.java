@@ -67,6 +67,8 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import static com.rusefi.config.generated.VariableRegistryValues.GAUGE_NAME_RPM;
+import static com.rusefi.config.generated.VariableRegistryValues.GAUGE_NAME_TPS;
 import static com.rusefi.ui.logview.ThemedStrip.themed;
 
 /**
@@ -81,6 +83,8 @@ public final class LogViewerPanel extends JPanel {
     private static final int MENU_HOT_WIDTH = 28;
     /** Pointer movement in pixels that still counts as a click; see {@link #clickSlop}. */
     private static final int CLICK_SLOP = 5;
+    /** Signals plotted when a log opens, matched by name, those the log has. */
+    private static final String[] DEFAULT_PLOTTED = {GAUGE_NAME_RPM, GAUGE_NAME_TPS};
     /** Row a signal is being dragged from in this list, or -1. */
     private int listDragOrigin = -1;
 
@@ -214,8 +218,8 @@ public final class LogViewerPanel extends JPanel {
         this.lists = lists;
         this.state = state;
         this.onOpen = onOpen;
-        // a log opens with an empty plot: the user picks what to see (Plot all on a list plots a set at once)
-        layout = PlotLayout.single(log.fieldCount(), new boolean[log.fieldCount()]);
+        // a log opens with RPM and TPS plotted when it has them; the user picks the rest
+        layout = PlotLayout.single(log.fieldCount(), defaultPlotted(log));
         categories = SignalCategories.of(log, ini);
         this.ini = ini;
         chart = new LogChart(log, layout, settings);
@@ -873,6 +877,20 @@ public final class LogViewerPanel extends JPanel {
         }
         plotArea.revalidate();
         plotArea.repaint();
+    }
+
+    /** The signals a log opens with: RPM and TPS, those of them it has. */
+    static boolean[] defaultPlotted(CsvLogReader log) {
+        boolean[] plotted = new boolean[log.fieldCount()];
+        for (String name : DEFAULT_PLOTTED) {
+            for (int field = 0; field < log.fieldCount(); field++) {
+                if (log.name(field).equalsIgnoreCase(name)) {
+                    plotted[field] = true;
+                    break;
+                }
+            }
+        }
+        return plotted;
     }
 
     JLabel plottedLabel() {

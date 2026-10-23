@@ -31,8 +31,10 @@ class SignalColorsTest {
     }
 
     private static LogViewerPanel panel(SignalColors colors) throws IOException {
-        return new LogViewerPanel(log(), null, new ChartSettings(), new SignalLists(), new SidebarState(), colors,
-                null, null);
+        LogViewerPanel panel = new LogViewerPanel(log(), null, new ChartSettings(), new SignalLists(),
+                new SidebarState(), colors, null, null);
+        panel.chart().plotLayout().clearPlot(0); // the test starts from an empty plot
+        return panel;
     }
 
     private static SwatchGrid grid(Component[] components) {
