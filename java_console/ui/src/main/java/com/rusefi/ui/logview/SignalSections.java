@@ -25,6 +25,8 @@ final class SignalSections {
     static final String PLOTTED = "Plotted";
     /** Takes Plotted's place while the Histogram view is shown: its X, Y and Z signals. */
     static final String HISTOGRAM = "Histogram";
+    /** The same for the Scatter view. */
+    static final String SCATTER = "Scatter";
     static final String COMMON = "Common";
 
     enum Kind {
@@ -115,6 +117,14 @@ final class SignalSections {
     static List<Row> rows(CsvLogReader log, PlotLayout layout, int[] histogramFields, SignalCategories categories,
                           SignalLists lists, String query, boolean hideZero, boolean hideConstant,
                           Predicate<String> collapsed) {
+        return rows(log, layout, histogramFields, HISTOGRAM, categories, lists, query, hideZero, hideConstant,
+                collapsed);
+    }
+
+    /** @param axesTitle the title of the axes section: {@link #HISTOGRAM} or {@link #SCATTER} */
+    static List<Row> rows(CsvLogReader log, PlotLayout layout, int[] histogramFields, String axesTitle,
+                          SignalCategories categories, SignalLists lists, String query, boolean hideZero,
+                          boolean hideConstant, Predicate<String> collapsed) {
         String needle = query.trim().toLowerCase(Locale.ROOT);
         boolean searching = !needle.isEmpty();
         List<Row> rows = new ArrayList<>();
@@ -123,10 +133,10 @@ final class SignalSections {
             List<Row> axes = new ArrayList<>();
             for (int field : histogramFields) {
                 if (matches(log.name(field), needle)) {
-                    axes.add(Row.signal(HISTOGRAM, Kind.HISTOGRAM, field));
+                    axes.add(Row.signal(axesTitle, Kind.HISTOGRAM, field));
                 }
             }
-            addSection(rows, HISTOGRAM, Kind.HISTOGRAM, axes, searching, collapsed, !searching);
+            addSection(rows, axesTitle, Kind.HISTOGRAM, axes, searching, collapsed, !searching);
         } else {
             List<Row> plotted = new ArrayList<>();
             for (int plot = 0; plot < layout.plotCount(); plot++) {

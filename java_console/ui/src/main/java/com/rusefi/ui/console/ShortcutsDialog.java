@@ -117,6 +117,22 @@ final class ShortcutsDialog extends JDialog {
             "Esc                Clear the selection.",
             "Right-click the table for the same actions; click the legend to change the colours.",
             "",
+            "LOG VIEWER: SCATTER",
+            "Scatter (toolbar) shows every record as a point by X and Y, coloured by time spent, by Z or by when it "
+                    + "was logged. Signals go on the axes as in the Histogram view; Recipes set up common plots "
+                    + "(knock, lambda vs target). Layout: Side by side shows two plots together: the toolbar and the signal list act "
+                    + "on the one last clicked (outlined).",
+            "Mouse on the plot:",
+            "Hover              The point's values in the status strip.",
+            "Click / drag       Pick a point / select the points in a box.",
+            "Double-click       A point: show it on the timeline. An empty spot: the whole plot.",
+            "Wheel              Zoom around the pointer (Shift: X only, Ctrl: Y only); right-drag pans.",
+            "Right-click        Show on timeline, zoom to the box, hide its points or keep only them.",
+            "Keys on the plot (click it first to give it focus):",
+            "Enter              Show the picked point or the box's points on the timeline.",
+            "Esc                Clear the selection.",
+            "0                  The whole plot.",
+            "",
             "COMMAND INPUT",
             "Ctrl+Enter  Send the command text (each line is sent separately).",
             "In a single-line command field, Enter also sends the command and Up/Down "

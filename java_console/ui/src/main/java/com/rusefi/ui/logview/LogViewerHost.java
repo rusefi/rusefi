@@ -75,6 +75,7 @@ public final class LogViewerHost extends JPanel {
     private final SignalColors colors;
     private final SignalScales scales;
     private final HistogramSettings histogramSettings;
+    private final HistogramSettings scatterSettings;
     private Supplier<IniFileModel> iniSupplier = () -> null;
     private Supplier<ConfigurationImage> tuneSupplier = () -> null;
     private final TransferHandler fileDrop = new FileDropHandler();
@@ -116,6 +117,7 @@ public final class LogViewerHost extends JPanel {
         scales = new SignalScales(config.getChild("scales"));
         scales.addListener(() -> configSaver.run());
         histogramSettings = new HistogramSettings(config.getChild("histogram"));
+        scatterSettings = new HistogramSettings(config.getChild("scatter"));
         directory = logsFolder;
         setPreferredSize(new Dimension(1400, 840));
         KeyStroke open = KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK);
@@ -195,10 +197,12 @@ public final class LogViewerHost extends JPanel {
                 this::showOpenMenu);
         current.chart().setSignalScales(scales);
         current.setHistogramSettings(histogramSettings);
+        current.setScatterSettings(scatterSettings);
         current.setTuneSupplier(tuneSupplier);
         // the next log opens in the view the last one was left in
-        if (histogramSettings.isHistogramView()) {
-            current.setHistogramView(true);
+        String view = histogramSettings.view();
+        if (HistogramSettings.HISTOGRAM.equals(view) || HistogramSettings.SCATTER.equals(view)) {
+            current.setView(view);
         }
         setContent(current);
         titleListener.accept(fileName);

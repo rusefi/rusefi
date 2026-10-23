@@ -44,7 +44,7 @@ import static com.rusefi.ui.logview.ThemedStrip.themed;
  * than the thin-data limit are hatched, or left empty when thin cells are hidden. A click selects a cell; a click
  * on the legend opens the colour settings. [tag:console_theme]
  */
-final class HistogramTable extends JComponent {
+final class HistogramTable extends JComponent implements ColourScale {
     private static final int PAD = 12;
     private static final int GAP = 2;
     private static final int MIN_CELL_WIDTH = 30;
@@ -326,12 +326,23 @@ final class HistogramTable extends JComponent {
         return histogram;
     }
 
-    Mixture mixture() {
+    @Override
+    public Mixture mixture() {
         return mixture;
     }
 
     HistogramSettings.Mode mode() {
         return mode;
+    }
+
+    @Override
+    public boolean showsValues() {
+        return mode.isValue();
+    }
+
+    @Override
+    public String zUnit() {
+        return mixture != Mixture.NONE ? mixture.unit : histogram.log.unit(histogram.zField);
     }
 
     void setLegendListener(Consumer<Rectangle> legendListener) {
@@ -442,53 +453,27 @@ final class HistogramTable extends JComponent {
                 }
             }
         }
-        double min = Double.POSITIVE_INFINITY;
-        double max = Double.NEGATIVE_INFINITY;
-        for (int i = 0; i < count; i++) {
-            min = Math.min(min, values[i]);
-            max = Math.max(max, values[i]);
-        }
-        boolean robust = colors.range() == HistogramColors.Range.ROBUST && count >= HistogramColors.ROBUST_MIN_CELLS;
-        if (!mode.isValue()) {
-            // occupancy starts from nothing; a manual range is for values, not seconds or records
-            scaleLow = 0;
-            scaleHigh = robust ? HistogramColors.quantile(values, count, HistogramColors.ROBUST_HIGH) : max;
-            scaleCentre = Double.NaN;
-        } else {
-            if (colors.range() == HistogramColors.Range.MANUAL && colors.manualHigh() > colors.manualLow()) {
-                scaleLow = colors.manualLow() * mixture.factor;
-                scaleHigh = colors.manualHigh() * mixture.factor;
-            } else if (robust) {
-                scaleLow = HistogramColors.quantile(values, count, HistogramColors.ROBUST_LOW);
-                scaleHigh = HistogramColors.quantile(values, count, HistogramColors.ROBUST_HIGH);
-            } else {
-                scaleLow = min;
-                scaleHigh = max;
-            }
-            scaleCentre = Double.NaN;
-            if (isDiverging()) {
-                double centre = Double.isFinite(colors.centre()) ? colors.centre() * mixture.factor
-                        : mixture != Mixture.NONE ? mixture.stoich : (scaleLow + scaleHigh) / 2;
-                // the same colour change per unit on both sides of the centre
-                double half = Math.max(Math.abs(centre - scaleLow), Math.abs(scaleHigh - centre));
-                scaleCentre = centre;
-                scaleLow = centre - half;
-                scaleHigh = centre + half;
-            }
-        }
-        clippedLow = count > 0 && min < scaleLow - 1e-12;
-        clippedHigh = count > 0 && max > scaleHigh + 1e-12;
+        // occupancy (Time, Count) starts from nothing; a manual range is for values, not seconds or records
+        HistogramColors.Scale scale = colors.scale(values, count, mode.isValue(), mixture.factor, mixture.stoich);
+        scaleLow = scale.low;
+        scaleHigh = scale.high;
+        scaleCentre = scale.centre;
+        clippedLow = scale.clippedLow;
+        clippedHigh = scale.clippedHigh;
     }
 
-    double scaleLow() {
+    @Override
+    public double scaleLow() {
         return scaleLow;
     }
 
-    double scaleHigh() {
+    @Override
+    public double scaleHigh() {
         return scaleHigh;
     }
 
-    double scaleCentre() {
+    @Override
+    public double scaleCentre() {
         return scaleCentre;
     }
 

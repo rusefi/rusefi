@@ -109,9 +109,10 @@ public final class LogViewerPanel extends JPanel {
             String name = log.name(field) + (unit.isEmpty() ? "" : " (" + unit + ")")
                     + (SignalSections.isZero(log, field) ? " · always 0 in this log"
                     : SignalSections.isConstant(log, field) ? " · constant in this log" : "");
-            if (histogramShown) {
-                char axis = histogram.axisOf(field);
-                String put = " · click to put it on " + Character.toUpperCase(histogram.activeAxis())
+            SignalStrip strip = activeStrip();
+            if (strip != null) {
+                char axis = strip.axisOf(field);
+                String put = " · click to put it on " + Character.toUpperCase(strip.activeAxis())
                         + ", or drag it onto an axis";
                 return axis != 0 ? name + " · on " + Character.toUpperCase(axis) + put : name + put;
             }
@@ -156,18 +157,25 @@ public final class LogViewerPanel extends JPanel {
     private final JPanel plotArea = new JPanel(new BorderLayout());
     /** Chart and Stats panel side by side while the Stats panel is shown. */
     private final JSplitPane statsSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-    /** The timeline (toolbar, plots, Stats) or the histogram, right of the sidebar. */
+    /** The timeline (toolbar, plots, Stats), the histogram or the scatter plot, right of the sidebar. */
     private final JPanel views = new JPanel(new CardLayout());
-    private static final String TIMELINE = "timeline";
-    private static final String HISTOGRAM = "histogram";
+    private static final String TIMELINE = HistogramSettings.TIMELINE;
+    private static final String HISTOGRAM = HistogramSettings.HISTOGRAM;
+    private static final String SCATTER = HistogramSettings.SCATTER;
     private final Consumer<Component> onOpen;
+    /** The histogram's options, and which view was shown last. */
     private HistogramSettings histogramSettings = new HistogramSettings();
-    /** Built the first time the Histogram view is shown. */
+    private HistogramSettings scatterSettings = new HistogramSettings();
+    /** Built the first time each view is shown. */
     private HistogramView histogram;
-    private boolean histogramShown;
-    /** Timeline / Histogram switches: one in the timeline toolbar, one in the histogram's. */
-    private final JToggleButton[] timelineSegments = new JToggleButton[2];
-    private final JToggleButton[] histogramSegments = new JToggleButton[2];
+    private ScatterView scatter;
+    private String shownView = TIMELINE;
+    /** The view "Back" returns to after Show on timeline. */
+    private String returnView = HISTOGRAM;
+    /** Timeline / Histogram / Scatter switches: one in each view's toolbar. */
+    private final JToggleButton[] timelineSegments = new JToggleButton[3];
+    private final JToggleButton[] histogramSegments = new JToggleButton[3];
+    private final JToggleButton[] scatterSegments = new JToggleButton[3];
     /** A histogram cell's stays, above the plots, after "Show on timeline". */
     private final VisitsBar visitsBar;
 
@@ -241,7 +249,7 @@ public final class LogViewerPanel extends JPanel {
         statsSplit.setContinuousLayout(true);
         statsSplit.setDividerSize(5);
         statsSplit.setBorder(BorderFactory.createEmptyBorder());
-        visitsBar = new VisitsBar(chart, () -> setHistogramView(true));
+        visitsBar = new VisitsBar(chart, () -> setView(returnView));
         JPanel top = new JPanel(new BorderLayout());
         top.add(toolbar, BorderLayout.NORTH);
         top.add(visitsBar, BorderLayout.SOUTH);
@@ -333,8 +341,8 @@ public final class LogViewerPanel extends JPanel {
                 }
                 if (row.isHeading()) {
                     toggleSection(row.section);
-                } else if (row.isSignal() && histogramShown) {
-                    histogram.assignToActiveAxis(row.field);
+                } else if (row.isSignal() && activeStrip() != null) {
+                    activeStrip().assignToActiveAxis(row.field);
                 } else if (row.isSignal()) {
                     toggle(row.field);
                 }
@@ -420,8 +428,8 @@ public final class LogViewerPanel extends JPanel {
         if (!row.isSignal()) {
             return;
         }
-        if (histogramShown) {
-            histogram.assignToActiveAxis(row.field);
+        if (activeStrip() != null) {
+            activeStrip().assignToActiveAxis(row.field);
             return;
         }
         if (event.isShiftDown()) {
@@ -712,22 +720,28 @@ public final class LogViewerPanel extends JPanel {
         return statsPanel.getParent() == statsSplit;
     }
 
-    /** The Timeline / Histogram switch; {@code segments} receives its two toggles. */
+    /** The Timeline / Histogram / Scatter switch; {@code segments} receives its three toggles. */
     private JComponent viewSwitch(JToggleButton[] segments) {
         JToggleButton timeline = SegmentedControl.segment("Timeline");
         JToggleButton histogramSegment = SegmentedControl.segment("Histogram");
+        JToggleButton scatterSegment = SegmentedControl.segment("Scatter");
         timeline.setToolTipText("Signals over time");
         histogramSegment.setToolTipText("A signal binned by two others, e.g. lambda by RPM and MAP: "
                 + "where the engine ran and what it read there");
+        scatterSegment.setToolTipText("Every record as a point by two signals, coloured by time spent or a third: "
+                + "how signals relate, and where events like knock happen");
         ButtonGroup group = new ButtonGroup();
         group.add(timeline);
         group.add(histogramSegment);
+        group.add(scatterSegment);
         timeline.setSelected(true);
-        timeline.addActionListener(e -> setHistogramView(false));
-        histogramSegment.addActionListener(e -> setHistogramView(true));
+        timeline.addActionListener(e -> setView(TIMELINE));
+        histogramSegment.addActionListener(e -> setView(HISTOGRAM));
+        scatterSegment.addActionListener(e -> setView(SCATTER));
         segments[0] = timeline;
         segments[1] = histogramSegment;
-        return new SegmentedControl(timeline, histogramSegment);
+        segments[2] = scatterSegment;
+        return new SegmentedControl(timeline, histogramSegment, scatterSegment);
     }
 
     /** The working tune (or null), read when the histogram bins by a tune table's axes. */
@@ -740,34 +754,77 @@ public final class LogViewerPanel extends JPanel {
         this.histogramSettings = histogramSettings;
     }
 
+    /** Where the scatter plot remembers its signals, filters and options; shared by every log. */
+    void setScatterSettings(HistogramSettings scatterSettings) {
+        this.scatterSettings = scatterSettings;
+    }
+
     boolean isHistogramView() {
-        return histogramShown;
+        return HISTOGRAM.equals(shownView);
+    }
+
+    String shownView() {
+        return shownView;
     }
 
     HistogramView histogram() {
         return histogram;
     }
 
-    /** Shows the histogram or the timeline right of the sidebar; the histogram is built when first shown. */
+    ScatterView scatter() {
+        return scatter;
+    }
+
+    /** The shown view's axes and filters (Histogram or Scatter), or null on the timeline. */
+    SignalStrip activeStrip() {
+        return HISTOGRAM.equals(shownView) && histogram != null ? histogram.strip
+                : SCATTER.equals(shownView) && scatter != null ? scatter.strip() : null;
+    }
+
+    /** Shows the histogram or the timeline right of the sidebar. */
     void setHistogramView(boolean show) {
-        if (show && histogram == null) {
-            // the sidebar's Histogram section follows the axes
+        setView(show ? HISTOGRAM : TIMELINE);
+    }
+
+    /**
+     * Shows a view right of the sidebar ({@link HistogramSettings#TIMELINE}, {@code HISTOGRAM} or {@code SCATTER});
+     * the histogram and the scatter plot are built when first shown.
+     */
+    void setView(String view) {
+        if (HISTOGRAM.equals(view) && histogram == null) {
+            // the sidebar's axes section follows the axes
             histogram = new HistogramView(log, histogramSettings, chart.cursors(), viewSwitch(histogramSegments),
                     onOpen, () -> filter(search.getText()), () -> ini, () -> tuneSupplier.get());
             histogram.setTimelineAction(this::showOnTimeline);
             views.add(histogram, HISTOGRAM);
         }
-        histogramShown = show;
-        histogramSettings.setHistogramView(show);
-        for (JToggleButton[] segments : new JToggleButton[][]{timelineSegments, histogramSegments}) {
+        if (SCATTER.equals(view) && scatter == null) {
+            scatter = new ScatterView(log, scatterSettings, settings, chart.cursors(), viewSwitch(scatterSegments),
+                    onOpen, () -> filter(search.getText()));
+            scatter.setTimelineAction(this::showOnTimeline);
+            // Light / Dark is one setting for the timeline and the scatter plot
+            scatter.setOnDarkChanged(() -> {
+                (settings.isDarkPlot() ? toolbar.darkPlot : toolbar.lightPlot).setSelected(true);
+                chart.repaint();
+            });
+            views.add(scatter, SCATTER);
+        }
+        if (SCATTER.equals(view)) {
+            scatter.syncDark();
+        }
+        shownView = view;
+        histogramSettings.setView(view);
+        int index = TIMELINE.equals(view) ? 0 : HISTOGRAM.equals(view) ? 1 : 2;
+        for (JToggleButton[] segments : new JToggleButton[][]{timelineSegments, histogramSegments, scatterSegments}) {
             if (segments[0] != null) {
-                segments[show ? 1 : 0].setSelected(true);
+                segments[index].setSelected(true);
             }
         }
-        ((CardLayout) views.getLayout()).show(views, show ? HISTOGRAM : TIMELINE);
-        // the histogram has its own status strip; its X, Y and Z replace Plotted in the sidebar
-        statusBar.setVisible(!show);
-        plottedLabel.setVisible(!show);
+        ((CardLayout) views.getLayout()).show(views, view);
+        boolean timeline = TIMELINE.equals(view);
+        // the other views have their own status strip; their X, Y and Z replace Plotted in the sidebar
+        statusBar.setVisible(timeline);
+        plottedLabel.setVisible(timeline);
         filter(search.getText());
         revalidate();
         repaint();
@@ -778,17 +835,23 @@ public final class LogViewerPanel extends JPanel {
     }
 
     /**
-     * Shows a histogram cell's stays on the timeline: shaded, the longest in view, with the bar to step through
-     * them. An empty timeline first gets the histogram's X, Y and Z, one plot each, so there is something to see.
+     * Shows stays (a histogram cell's, the scatter plot's selection) on the timeline: shaded, the longest in view,
+     * with the bar to step through them and back to the view they came from. An empty timeline first gets that
+     * view's X, Y and Z, one plot each, so there is something to see.
      */
-    void showOnTimeline(String cell, List<double[]> stays) {
-        setHistogramView(false);
-        if (layout.plottedCount() == 0 && histogram != null) {
-            layout.add(histogram.field('x'));
-            layout.addToNewPlot(histogram.field('y'));
-            layout.addToNewPlot(histogram.field('z'));
+    void showOnTimeline(String what, List<double[]> stays) {
+        SignalStrip strip = activeStrip();
+        returnView = TIMELINE.equals(shownView) ? returnView : shownView;
+        visitsBar.setBackLabel(SCATTER.equals(returnView) ? "Back to scatter" : "Back to histogram");
+        setView(TIMELINE);
+        if (layout.plottedCount() == 0 && strip != null) {
+            layout.add(strip.field('x'));
+            layout.addToNewPlot(strip.field('y'));
+            if (strip.field('z') != strip.field('x') && strip.field('z') != strip.field('y')) {
+                layout.addToNewPlot(strip.field('z'));
+            }
         }
-        visitsBar.show(cell, stays);
+        visitsBar.show(what, stays);
     }
 
     /** Shows the Stats panel to the right of the plots (resizable), or the plots alone. */
@@ -843,9 +906,10 @@ public final class LogViewerPanel extends JPanel {
     private void filter(String query) {
         SignalSections.Row selected = fieldList.getSelectedValue();
         rows.clear();
-        int[] histogramFields = histogramShown
-                ? new int[]{histogram.field('x'), histogram.field('y'), histogram.field('z')} : null;
-        for (SignalSections.Row row : SignalSections.rows(log, layout, histogramFields, categories, lists, query,
+        SignalStrip strip = activeStrip();
+        int[] axisFields = strip != null ? new int[]{strip.field('x'), strip.field('y'), strip.field('z')} : null;
+        String axesTitle = SCATTER.equals(shownView) ? SignalSections.SCATTER : SignalSections.HISTOGRAM;
+        for (SignalSections.Row row : SignalSections.rows(log, layout, axisFields, axesTitle, categories, lists, query,
                 state.hideZero(), state.hideConstant(), state::isCollapsed)) {
             rows.addElement(row);
         }
@@ -947,8 +1011,8 @@ public final class LogViewerPanel extends JPanel {
         if (listDragOrigin >= 0 && index == listDragOrigin) {
             int origin = listDragOrigin;
             SignalSections.Row row = rows.get(origin);
-            if (histogramShown) {
-                histogram.assignToActiveAxis(field);
+            if (activeStrip() != null) {
+                activeStrip().assignToActiveAxis(field);
                 return true;
             }
             toggle(field);
@@ -1081,7 +1145,7 @@ public final class LogViewerPanel extends JPanel {
             unit.setText(flat ? flatText(field) : log.unit(field));
             unit.setFont(flat ? list.getFont().deriveFont(Font.ITALIC) : list.getFont());
             unit.setForeground(muted);
-            char axis = histogramShown ? histogram.axisOf(field) : 0;
+            char axis = activeStrip() != null ? activeStrip().axisOf(field) : 0;
             if (axis != 0) {
                 // the histogram's signals are marked with their axis instead of their unit
                 unit.setText(Character.toUpperCase(axis) + " axis");

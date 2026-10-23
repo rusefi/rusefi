@@ -47,12 +47,66 @@ final class HistogramSettings {
         this.node = node;
     }
 
+    static final String TIMELINE = "timeline";
+    static final String HISTOGRAM = "histogram";
+    static final String SCATTER = "scatter";
+
+    /** The view shown last: {@link #TIMELINE}, {@link #HISTOGRAM} or {@link #SCATTER}. */
+    String view() {
+        String view = node.getProperty("view", "");
+        if (view.isEmpty()) {
+            return node.getBoolProperty("histogram_view", false) ? HISTOGRAM : TIMELINE;
+        }
+        return view;
+    }
+
+    void setView(String view) {
+        node.setProperty("view", view);
+    }
+
     boolean isHistogramView() {
-        return node.getBoolProperty("histogram_view", false);
+        return HISTOGRAM.equals(view());
     }
 
     void setHistogramView(boolean histogram) {
-        node.setBoolProperty("histogram_view", histogram);
+        setView(histogram ? HISTOGRAM : TIMELINE);
+    }
+
+    /** Settings kept under these, e.g. the scatter view's second plot. */
+    HistogramSettings child(String name) {
+        return new HistogramSettings(node.getChild(name));
+    }
+
+    /** Scatter: one plot, or two side by side. */
+    int plots() {
+        return node.getIntProperty("plots", 1) == 2 ? 2 : 1;
+    }
+
+    void setPlots(int plots) {
+        node.setProperty("plots", plots == 2 ? 2 : 1);
+    }
+
+    /** Scatter: colour by density or by Z. */
+    ScatterPlot.ColourBy colourBy() {
+        try {
+            return ScatterPlot.ColourBy.valueOf(node.getProperty("colour_by", ScatterPlot.ColourBy.DENSITY.name()));
+        } catch (IllegalArgumentException e) {
+            return ScatterPlot.ColourBy.DENSITY;
+        }
+    }
+
+    void setColourBy(ScatterPlot.ColourBy colourBy) {
+        node.setProperty("colour_by", colourBy.name());
+    }
+
+    /** Scatter: the recipe applied last (its guide lines and fade level apply while its signals are on the axes). */
+    String recipe() {
+        String recipe = node.getProperty("recipe", "");
+        return recipe.isEmpty() ? null : recipe;
+    }
+
+    void setRecipe(String recipe) {
+        node.setProperty("recipe", recipe == null ? "" : recipe);
     }
 
     /**
