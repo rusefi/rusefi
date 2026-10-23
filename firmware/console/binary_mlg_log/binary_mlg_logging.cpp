@@ -67,9 +67,10 @@ static const uint16_t recordLength = computeFieldsRecordLength();
 // which is why mmc_card.cpp opens log files with FA_CREATE_ALWAYS (truncate).
 size_t writeFileHeader(Writer& outBuffer) {
 	size_t writen = 0;
-	char buffer[Types::Header::Size];
+	// Binary header bytes must represent the full 0..255 range, independent of char signedness.
+	uint8_t buffer[Types::Header::Size];
 	// File format: MLVLG\0
-	strncpy(buffer, "MLVLG", 6);
+	memcpy(buffer, "MLVLG", 6);
 
 	// Format version = 02
 	buffer[6] = 0;
@@ -104,7 +105,7 @@ size_t writeFileHeader(Writer& outBuffer) {
 	buffer[22] = fieldsCount >> 8;
 	buffer[23] = fieldsCount;
 
-	outBuffer.write(buffer, Types::Header::Size);
+	outBuffer.write(reinterpret_cast<const char*>(buffer), Types::Header::Size);
 	writen += Types::Header::Size;
 
 	// Write the actual logger fields, offset by header size (24)

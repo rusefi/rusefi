@@ -67,6 +67,28 @@ std::string readFirstLine(const std::string& path) {
 
 extern bool useNdJSONFiles;
 
+TEST(unitTestLog, binaryHeaderMatchesEmittedRecord) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	CaptureWriter header;
+	MLG::writeFileHeader(header);
+	CaptureWriter record;
+	MLG::writeSdBlock(record);
+	ASSERT_GE(header.bytes.size(), 24u);
+	ASSERT_GE(record.bytes.size(), 5u);
+	auto readUnsignedBE = [&](size_t offset, size_t size) {
+		size_t value = 0;
+		for (size_t i = 0; i < size; i++) {
+			value = (value << 8) | static_cast<unsigned char>(header.bytes[offset + i]);
+		}
+		return value;
+	};
+	// Decode the wire header independently, including bytes with their high bit set.
+	EXPECT_EQ(header.bytes.size(), readUnsignedBE(16, 4));
+	// A data block has a four-byte prefix and a one-byte checksum outside the payload.
+	EXPECT_EQ(record.bytes.size() - 5, readUnsignedBE(20, 2));
+	EXPECT_EQ((header.bytes.size() - 24) / 89, readUnsignedBE(22, 2));
+}
+
 TEST(unitTestLog, generatedOutputConversions) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	auto& misfire = engine->module<MisfireController>().unmock();
