@@ -1,8 +1,12 @@
 package com.rusefi.ui.wizard;
 
+import com.formdev.flatlaf.FlatClientProperties;
+
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Path2D;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -32,8 +36,8 @@ final class WizardProgressPanel extends JPanel {
     private static final int SCROLL_AMOUNT = 160;
     private static final int DRAG_THRESHOLD = 4;
 
-    private final JButton previous = new JButton("<");
-    private final JButton next = new JButton(">");
+    private final JButton previous = new JButton("‹");
+    private final JButton next = new JButton("›");
     private final JPanel track = new JPanel();
     private final JScrollPane scrollPane = new JScrollPane(track,
         ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) {
@@ -63,6 +67,11 @@ final class WizardProgressPanel extends JPanel {
         next.setToolTipText("Scroll to later setup steps");
         previous.getAccessibleContext().setAccessibleName("Scroll to earlier setup steps");
         next.getAccessibleContext().setAccessibleName("Scroll to later setup steps");
+        for (JButton arrow : new JButton[]{previous, next}) {
+            arrow.putClientProperty(FlatClientProperties.BUTTON_TYPE, FlatClientProperties.BUTTON_TYPE_TOOLBAR_BUTTON);
+            arrow.setFont(arrow.getFont().deriveFont(Font.BOLD, arrow.getFont().getSize2D() * 1.6f));
+            arrow.setForeground(WizardStyle.muted());
+        }
         previous.setVisible(false);
         next.setVisible(false);
         previous.addActionListener(e -> scrollBy(-SCROLL_AMOUNT));
@@ -102,7 +111,7 @@ final class WizardProgressPanel extends JPanel {
             pill.addMouseMotionListener(dragHandler);
             pills.add(pill);
             if (i > 0) {
-                track.add(Box.createHorizontalStrut(8));
+                track.add(new Connector());
             }
             track.add(pill);
         }
@@ -119,10 +128,34 @@ final class WizardProgressPanel extends JPanel {
     private JButton createPill(Item item) {
         String status = item.state == State.COMPLETED ? "Done" :
             item.state == State.CURRENT ? "Current" : "Upcoming";
-        JButton pill = new JButton("<html><center><b>" + item.number + ". " + item.title
-            + "</b><br>" + status + "</center></html>");
+        JButton pill = new JButton(item.title, new StepIcon(item)) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                if (isEnabled() && (getModel().isRollover() || getModel().isPressed())) {
+                    Graphics2D g2 = (Graphics2D) g.create();
+                    try {
+                        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                        g2.setColor(WizardStyle.color("Console.TitleBar.chipBackground", new Color(0xeef0f3)));
+                        g2.fillRoundRect(0, 0, getWidth(), getHeight() - 2, WizardStyle.ARC, WizardStyle.ARC);
+                    } finally {
+                        g2.dispose();
+                    }
+                }
+                super.paintComponent(g);
+            }
+        };
         pill.setHorizontalAlignment(SwingConstants.CENTER);
-        pill.setMargin(new Insets(7, 12, 7, 12));
+        pill.setIconTextGap(8);
+        pill.setRolloverEnabled(true);
+        // disabled pills (current and upcoming) take their text colour from the button style
+        if (item.state == State.CURRENT) {
+            pill.setFont(pill.getFont().deriveFont(Font.BOLD));
+            pill.putClientProperty(FlatClientProperties.STYLE, "disabledText: " + hex(WizardStyle.accentText()));
+        } else if (item.state == State.UPCOMING) {
+            pill.putClientProperty(FlatClientProperties.STYLE, "disabledText: " + hex(WizardStyle.muted()));
+        } else {
+            pill.setForeground(WizardStyle.text());
+        }
         pill.setEnabled(item.state == State.COMPLETED);
         pill.setFocusable(item.state == State.COMPLETED);
         if (item.state == State.COMPLETED) {
@@ -239,7 +272,96 @@ final class WizardProgressPanel extends JPanel {
         }
     }
 
+    private static String hex(Color color) {
+        return String.format("#%06x", color.getRGB() & 0xffffff);
+    }
+
+    /** Thin line joining neighbouring steps. */
+    private static final class Connector extends JComponent {
+        private static final Dimension SIZE = new Dimension(12, 1);
+
+        @Override
+        public Dimension getPreferredSize() {
+            return SIZE;
+        }
+
+        @Override
+        public Dimension getMaximumSize() {
+            return new Dimension(SIZE.width, Integer.MAX_VALUE);
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            g.setColor(WizardStyle.separator());
+            int y = (getHeight() - 2) / 2;
+            g.drawLine(2, y, getWidth() - 3, y);
+        }
+    }
+
+    /** Step marker: a green tick when done, a filled accent number when current, an outlined number otherwise. */
+    private static final class StepIcon implements Icon {
+        private static final int SIZE = 22;
+        private final Item item;
+
+        private StepIcon(Item item) {
+            this.item = item;
+        }
+
+        @Override
+        public void paintIcon(Component c, Graphics g, int x, int y) {
+            Graphics2D g2 = (Graphics2D) g.create();
+            try {
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+                g2.translate(x, y);
+                Ellipse2D circle = new Ellipse2D.Float(0.5f, 0.5f, SIZE - 1, SIZE - 1);
+                if (item.state == State.COMPLETED) {
+                    g2.setColor(WizardStyle.successBackground());
+                    g2.fill(circle);
+                    g2.setColor(WizardStyle.success());
+                    g2.setStroke(new BasicStroke(2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+                    Path2D check = new Path2D.Float();
+                    check.moveTo(6.5, 11.5);
+                    check.lineTo(9.5, 14.5);
+                    check.lineTo(15.5, 8);
+                    g2.draw(check);
+                    return;
+                }
+                Color numberColor;
+                if (item.state == State.CURRENT) {
+                    g2.setColor(WizardStyle.accent());
+                    g2.fill(circle);
+                    numberColor = Color.WHITE;
+                } else {
+                    g2.setColor(WizardStyle.border());
+                    g2.draw(circle);
+                    numberColor = WizardStyle.muted();
+                }
+                g2.setColor(numberColor);
+                g2.setFont(c.getFont().deriveFont(Font.BOLD, c.getFont().getSize2D() * 0.85f));
+                FontMetrics fm = g2.getFontMetrics();
+                String number = String.valueOf(item.number);
+                g2.drawString(number, (SIZE - fm.stringWidth(number)) / 2f,
+                    (SIZE + fm.getAscent() - fm.getDescent()) / 2f);
+            } finally {
+                g2.dispose();
+            }
+        }
+
+        @Override
+        public int getIconWidth() {
+            return SIZE;
+        }
+
+        @Override
+        public int getIconHeight() {
+            return SIZE;
+        }
+    }
+
+    /** Padding around a step, an accent underline under the current one and a focus ring. */
     private static final class PillBorder extends AbstractBorder {
+        private static final int UNDERLINE = 2;
         private final State state;
 
         private PillBorder(State state) {
@@ -251,15 +373,14 @@ final class WizardProgressPanel extends JPanel {
             Graphics2D g2 = (Graphics2D) g.create();
             try {
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                Color color = state == State.CURRENT ? WizardStyle.accent() :
-                    state == State.COMPLETED ? WizardStyle.success() : WizardStyle.border();
-                g2.setColor(color);
-                g2.setStroke(new BasicStroke(state == State.CURRENT ? 2f : 1f));
-                g2.drawRoundRect(x + 1, y + 1, width - 3, height - 3, WizardStyle.ARC, WizardStyle.ARC);
+                if (state == State.CURRENT) {
+                    g2.setColor(WizardStyle.accent());
+                    g2.fillRect(x + 4, y + height - UNDERLINE, width - 8, UNDERLINE);
+                }
                 if (c.hasFocus()) {
                     g2.setColor(WizardStyle.focus());
                     g2.setStroke(new BasicStroke(2f));
-                    g2.drawRoundRect(x + 3, y + 3, width - 7, height - 7, WizardStyle.ARC - 2, WizardStyle.ARC - 2);
+                    g2.drawRoundRect(x + 1, y + 1, width - 3, height - 5, WizardStyle.ARC, WizardStyle.ARC);
                 }
             } finally {
                 g2.dispose();
@@ -268,7 +389,7 @@ final class WizardProgressPanel extends JPanel {
 
         @Override
         public Insets getBorderInsets(Component c) {
-            return new Insets(3, 3, 3, 3);
+            return new Insets(8, 6, 8 + UNDERLINE, 8);
         }
     }
 }

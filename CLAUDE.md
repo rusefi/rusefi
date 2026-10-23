@@ -539,6 +539,9 @@ shared file: FlatLaf's built-in `FlatLightLaf.properties` assigns most of them a
 look settings there rather than as `UIManager.put` calls, so they follow the active theme.
 Java's logical `Font.MONOSPACED` renders as Courier New on Windows; use `ConsoleFonts.mono()` for
 monospaced console text. Toolbar controls share `JoinedButtons.HEIGHT` so a row lines up.
+For a rounded panel, set a `FlatLineBorder` with an arc: `FlatPanelUI` then paints the background
+rounded too. Do not also set `FlatClientProperties.STYLE` (`arc`) on the panel, because applying a
+style drops a border set earlier (see `WizardStyle.styleRounded`).
 
 ## Java Version Constants
 

@@ -5,6 +5,8 @@ import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.ui.UIContext;
+import com.rusefi.ui.widgets.SegmentedControl;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -59,45 +61,56 @@ public class NumberOfCylindersPanel extends AbstractWizardStep {
             }
         });
 
+        JPanel card = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.insets = new Insets(20, 20, 20, 20);
-        gbc.anchor = GridBagConstraints.CENTER;
-
-        JLabel label = new JLabel("How many cylinders?");
-        styleTitle(label);
-        mainPanel.add(label, gbc);
+        gbc.weightx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(0, 0, 5, 0);
+        card.add(WizardStyle.sectionLabel("CYLINDER SETUP"), gbc);
 
         gbc.gridy++;
-        JToggleButton fourStroke = new JToggleButton("4 Stroke", true);
-        JToggleButton twoStroke = new JToggleButton("2 Stroke");
-        styleButton(fourStroke);
-        styleButton(twoStroke);
-        scale(fourStroke, 1.2f);
-        scale(twoStroke, 1.2f);
-        fourStroke.setMargin(new Insets(9, 18, 9, 18));
-        twoStroke.setMargin(new Insets(9, 18, 9, 18));
+        card.add(WizardStyle.cardTitle("How many cylinders?"), gbc);
+
+        gbc.gridy++;
+        gbc.insets = new Insets(0, 0, 22, 0);
+        card.add(WizardStyle.description("Pick the engine cycle, then click the number of cylinders."), gbc);
+
+        gbc.gridy++;
+        gbc.insets = new Insets(0, 0, 6, 0);
+        card.add(WizardStyle.sectionLabel("ENGINE CYCLE"), gbc);
+
+        gbc.gridy++;
+        gbc.insets = new Insets(0, 0, 20, 0);
+        gbc.fill = GridBagConstraints.NONE;
+        JToggleButton fourStroke = SegmentedControl.segment("4 Stroke");
+        JToggleButton twoStroke = SegmentedControl.segment("2 Stroke");
+        fourStroke.setSelected(true);
         ButtonGroup strokeGroup = new ButtonGroup();
         strokeGroup.add(fourStroke);
         strokeGroup.add(twoStroke);
-        JPanel strokePanel = new JPanel(new GridLayout(1, 2, 10, 0));
-        strokePanel.add(fourStroke);
-        strokePanel.add(twoStroke);
-        mainPanel.add(strokePanel, gbc);
+        card.add(new SegmentedControl(fourStroke, twoStroke), gbc);
 
         gbc.gridy++;
+        gbc.insets = new Insets(0, 0, 6, 0);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        card.add(WizardStyle.sectionLabel("CYLINDER COUNT"), gbc);
+
+        gbc.gridy++;
+        gbc.insets = new Insets(0, 0, 0, 0);
         JPanel buttonsPanel = new JPanel(new GridLayout(3, 4, 10, 10));
         int[] options = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 16};
 
         for (int option : options) {
             JButton button = new JButton(String.valueOf(option));
             scale(button, 1.5f);
-            stylePrimaryAction(button);
             buttonsPanel.add(button);
 
             boolean isGotcha = option == 7 || option == 9 || option == 16;
             if (isGotcha) {
+                styleUnsupportedChoice(button, "Not supported by the setup wizard");
                 button.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -108,7 +121,7 @@ public class NumberOfCylindersPanel extends AbstractWizardStep {
                     }
                 });
             } else {
-                styleConfirmAction(button);
+                styleChoiceAction(button);
                 button.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -126,7 +139,13 @@ public class NumberOfCylindersPanel extends AbstractWizardStep {
             }
         }
 
-        mainPanel.add(buttonsPanel, gbc);
+        card.add(buttonsPanel, gbc);
+
+        gbc.gridy++;
+        gbc.insets = new Insets(10, 0, 0, 0);
+        card.add(WizardStyle.description("Greyed-out counts are not supported by the setup wizard."), gbc);
+        WizardStyle.styleCard(card, 24, 28);
+        mainPanel.add(card);
     }
 
     static WizardStepResult createResult(IniFileModel ini, ConfigurationImage image, int cylinders, boolean twoStroke) {
@@ -147,6 +166,11 @@ public class NumberOfCylindersPanel extends AbstractWizardStep {
         int x = (layeredPane.getWidth() - w) / 2;
         int y = (layeredPane.getHeight() - h) / 2;
         overlayPanel.setBounds(x, y, w, h);
+    }
+
+    @Override
+    public String getFooterHint() {
+        return "Click the number of cylinders to save it and continue.";
     }
 
     @Override

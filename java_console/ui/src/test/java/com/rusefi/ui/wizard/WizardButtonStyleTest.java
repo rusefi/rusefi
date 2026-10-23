@@ -52,68 +52,85 @@ class WizardButtonStyleTest {
     }
 
     @Test
-    void confirmationAndExitHaveDistinctColoursAndIcons() throws Exception {
-        SwingUtilities.invokeAndWait(() -> {
-            UIContext context = new UIContext();
-            JButton confirm = button(new NumberOfCylindersPanel(context).getPanel(), "4");
-            JButton exit = button(new WizardContainer(context), "Exit Wizard");
-
-            assertConfirm(confirm);
-            assertNegative(exit);
-            assertNotEquals(confirm.getBackground(), exit.getBackground());
-            assertNotEquals(confirm.getIcon(), exit.getIcon());
-        });
-    }
-
-    @Test
-    void everySetupStepStylesItsConfirmationIncludingEmbeddedVeAndStandaloneFields() throws Exception {
+    void everySetupStepAdvancesWithOneFooterContinueIncludingEmbeddedVeAndStandaloneFields() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
             UIContext context = context();
-            assertConfirm(button(new NumberOfCylindersPanel(context).getPanel(), "4"));
-            assertConfirm(button(new FiringOrderPanel(context, 4).getPanel(), "1-3-4-2 (typical inline 4)"));
-            assertConfirm(button(new DisplacementPanel(context).getPanel(), "Save and Continue"));
-            assertConfirm(button(new MapSensorTypePanel(context).getPanel(), "Next"));
-            assertConfirm(button(new TpsPanel(context).getPanel(), "Next"));
-            assertConfirm(button(new CltSensorPanel(context).getPanel(), "Next"));
-            assertConfirm(button(new CrankTriggerPanel(context).getPanel(), "Save and Continue"));
-            assertConfirm(button(new CamTriggerPanel(context).getPanel(), "Save and Continue"));
+            assertFooterContinue(new DisplacementPanel(context));
+            assertFooterContinue(new MapSensorTypePanel(context));
+            assertFooterContinue(new TpsPanel(context));
+            assertFooterContinue(new CltSensorPanel(context));
+            assertFooterContinue(new CrankTriggerPanel(context));
+            assertFooterContinue(new CamTriggerPanel(context));
             for (OutputAssignmentPanel.OutputType type : OutputAssignmentPanel.OutputType.values()) {
-                assertConfirm(button(new OutputAssignmentPanel(context, type).getPanel(), "Save and Continue"));
+                assertFooterContinue(new OutputAssignmentPanel(context, type));
             }
-            assertConfirm(button(new InjectorFlowPanel(context).getPanel(), "Continue"));
-            assertConfirm(button(new GenericFieldsPanel(context, "VIN", "", Collections.singletonList("vin"), null)
-                .getPanel(), "Save and Continue"));
+            assertFooterContinue(new InjectorFlowPanel(context));
+            assertFooterContinue(new GenericFieldsPanel(context, "VIN", "", Collections.singletonList("vin"), null));
             VeTableWizardStep ve = new VeTableWizardStep(context);
             ve.onShow();
-            assertConfirm(button(ve.getPanel(), "Apply and Continue"));
-            assertFalse(button(ve.getPanel(), "Apply and Continue").isEnabled(), "no generated preview to apply");
-            assertNeutral(button(ve.getPanel(), "Skip"));
+            assertFooterContinue(ve);
+            assertFalse(ve.getContinueButton().isEnabled(), "no generated preview to apply");
             assertNeutral(button(ve.getPanel(), "Generate Preview"));
         });
     }
 
     @Test
-    void skipsAndSecondaryControlsStayNeutral() throws Exception {
+    void skippableStepsOfferOneNeutralFooterSkip() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
             UIContext context = context();
-            assertNeutral(button(new CrankTriggerPanel(context).getPanel(), "Skip / Use Default"));
-            assertNeutral(button(new CamTriggerPanel(context).getPanel(), "Skip / Use Default"));
-            assertNeutral(button(new TpsPanel(context).getPanel(), "Grab"));
-            assertNeutral(button(new NumberOfCylindersPanel(context).getPanel(), "7"));
+            VeTableWizardStep ve = new VeTableWizardStep(context);
+            ve.onShow();
+            for (WizardStep step : new WizardStep[]{new CrankTriggerPanel(context), new CamTriggerPanel(context), ve}) {
+                JButton skip = step.getSkipButton();
+                assertNotNull(skip, step.getTitle());
+                assertEquals(AbstractWizardStep.SKIP_TEXT, skip.getText());
+                assertNeutral(skip);
+                assertNull(findButton(step.getPanel(), AbstractWizardStep.SKIP_TEXT), "skip belongs in the footer");
+            }
+            assertNull(new DisplacementPanel(context).getSkipButton());
         });
     }
 
     @Test
-    void exitKeepsItsRoleAcrossLaunchModesAndCompletionIsGreen() throws Exception {
+    void oneClickChoicesStandOutAndExplainHowToContinue() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            UIContext context = context();
+            NumberOfCylindersPanel cylinders = new NumberOfCylindersPanel(context);
+            FiringOrderPanel firingOrder = new FiringOrderPanel(context, 4);
+            for (WizardStep step : new WizardStep[]{cylinders, firingOrder}) {
+                assertNull(step.getContinueButton(), step.getTitle());
+                assertNotNull(step.getFooterHint(), step.getTitle());
+            }
+            // #10481: a click on these saves immediately, so they read as actions; 7, 9 and 16 only explain
+            assertEquals("wizardChoice", button(cylinders.getPanel(), "4").getClientProperty(FlatClientProperties.STYLE_CLASS));
+            assertEquals("wizardChoiceMuted", button(cylinders.getPanel(), "7").getClientProperty(FlatClientProperties.STYLE_CLASS));
+            assertEquals("wizardChoice", button(firingOrder.getPanel(), "1-3-4-2 (typical inline 4)")
+                .getClientProperty(FlatClientProperties.STYLE_CLASS));
+            assertNeutral(button(new TpsPanel(context).getPanel(), "Grab"));
+        });
+    }
+
+    @Test
+    void footerActionsKeepTheirPlaceAcrossLaunchModes() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
             WizardContainer container = new WizardContainer(context());
             container.startWizard(true);
-            assertNegative(button(container, "Cancel"));
-            assertNegative(button(container, "Don't Show Again"));
-            assertConfirm(button(container, "Return to Console"));
-            container.startSingleStep(new NumberOfCylindersPanel(context()));
-            assertNegative(button(container, "Exit Wizard"));
+            assertNeutral(button(container, "Don't Show Again"));
+            assertNull(button(container, "Cancel").getClientProperty(FlatClientProperties.STYLE_CLASS));
+            assertEquals("primary", button(container, "Return to Console").getClientProperty(FlatClientProperties.STYLE_CLASS));
+            assertEquals(BorderLayout.EAST, container.getExitPanelConstraintForTests());
+            assertEquals(BorderLayout.EAST, container.getNavigationConstraintForTests());
+
+            GenericFieldsPanel vin = new GenericFieldsPanel(context(), "VIN", "", Collections.singletonList("vin"), null);
+            container.startSingleStep(vin);
+            assertNull(button(container, "Exit Wizard").getClientProperty(FlatClientProperties.STYLE_CLASS));
             assertFalse(button(container, "Don't Show Again").isVisible());
+            assertEquals(Collections.singletonList(vin.getContinueButton()), container.getNavigationForTests());
+            assertEquals(BorderLayout.EAST, container.getExitPanelConstraintForTests());
+
+            container.startSingleStep(new NumberOfCylindersPanel(context()));
+            assertTrue(container.getNavigationForTests().isEmpty());
+            assertEquals(new NumberOfCylindersPanel(context()).getFooterHint(), container.getFooterHintForTests());
         });
     }
 
@@ -202,6 +219,16 @@ class WizardButtonStyleTest {
         assertEquals(new Color(0xb91c1c), button.getBackground(), button.getText());
         assertEquals(Color.WHITE, button.getForeground());
         assertSame(WizardStyle.ActionIcon.CANCEL, button.getIcon());
+    }
+
+    private static void assertFooterContinue(WizardStep step) {
+        JButton next = step.getContinueButton();
+        assertNotNull(next, step.getTitle());
+        assertEquals(AbstractWizardStep.CONTINUE_TEXT, next.getText(), step.getTitle());
+        assertEquals("primary", next.getClientProperty(FlatClientProperties.STYLE_CLASS), step.getTitle());
+        assertSame(WizardStyle.ActionIcon.NEXT, next.getIcon());
+        assertNull(findButton(step.getPanel(), AbstractWizardStep.CONTINUE_TEXT),
+            step.getTitle() + ": Continue belongs in the footer, not the card");
     }
 
     private static void assertNeutral(JButton button) {

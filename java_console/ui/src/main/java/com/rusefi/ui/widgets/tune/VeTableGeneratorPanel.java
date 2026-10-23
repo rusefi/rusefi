@@ -45,6 +45,8 @@ public class VeTableGeneratorPanel extends JPanel {
     private JTabbedPane previewTabs;
     private JLabel statusLabel;
     private JButton applyButton;
+    private JButton closeButton;
+    private JPanel actionBar;
 
     private double[][] proposedVe;
 
@@ -85,6 +87,17 @@ public class VeTableGeneratorPanel extends JPanel {
     /** Allows the embedding workflow to style its confirmation action. */
     public JButton getApplyButton() {
         return applyButton;
+    }
+
+    public JButton getCloseButton() {
+        return closeButton;
+    }
+
+    /** Takes the apply and close buttons out of this panel and hides its note row, for a host that places them itself. */
+    public void detachActions() {
+        actionBar.remove(applyButton);
+        actionBar.remove(closeButton);
+        actionBar.setVisible(false);
     }
 
     // ---- questionnaire ----
@@ -217,20 +230,20 @@ public class VeTableGeneratorPanel extends JPanel {
         applyButton.setEnabled(false);
         applyButton.addActionListener(e -> onApply());
 
-        JButton discardBtn = new JButton(closeLabel);
-        discardBtn.addActionListener(e -> onClose.run());
+        closeButton = new JButton(closeLabel);
+        closeButton.addActionListener(e -> onClose.run());
 
         JLabel note = new JLabel("Apply schedules ECU RAM upload; use Burn to ECU for flash persistence.");
         note.setFont(note.getFont().deriveFont(Font.ITALIC, note.getFont().getSize() - 1f));
 
-        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 4));
-        buttons.add(note);
-        buttons.add(applyButton);
-        buttons.add(discardBtn);
+        actionBar = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 4));
+        actionBar.add(note);
+        actionBar.add(applyButton);
+        actionBar.add(closeButton);
 
         JPanel south = new JPanel(new BorderLayout());
         south.add(statusLabel, BorderLayout.NORTH);
-        south.add(buttons,     BorderLayout.SOUTH);
+        south.add(actionBar,   BorderLayout.SOUTH);
         return south;
     }
 
