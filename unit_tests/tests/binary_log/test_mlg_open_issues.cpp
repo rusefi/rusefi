@@ -154,7 +154,7 @@ TEST(MlgOpenIssues, SdHeaderHasNoStartingTuneBlock) {
 	EXPECT_EQ(header.bytes.size(), dataOffset);
 }
 
-TEST(MlgOpenIssues, SdOmitsLtftAndMisfireFields) {
+TEST(MlgOpenIssues, SdIncludesLtftButOmitsMisfireFields) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	CaptureWriter header;
 	MLG::writeFileHeader(header);
@@ -166,24 +166,28 @@ TEST(MlgOpenIssues, SdOmitsLtftAndMisfireFields) {
 		std::string name = header.bytes.substr(24 + 89 * i + 1, 34);
 		names.insert(name.substr(0, name.find('\0')));
 	}
-	// Issue 6: these INI fields have no SD source wiring even in the full host build.
 	EXPECT_EQ(1u, names.count("STFT: Bank 1"));
 	EXPECT_EQ(1u, names.count("STFT: Bank 2"));
-	for (const char* missing : {"LTFT: Bank 1", "LTFT: Bank 2", "LTFT learning: hits",
-		"Misfire: total count", "Misfire: EMA baseline"}) {
+	// LTFT source wiring exposes both bank corrections and the learning counter.
+	for (const char* present : {"LTFT: Bank 1", "LTFT: Bank 2", "LTFT: learning: hits"}) {
+		EXPECT_EQ(1u, names.count(present)) << present;
+	}
+	// Issue 6: misfire fields still have no SD source wiring.
+	for (const char* missing : {"Misfire: total count", "Misfire: EMA baseline"}) {
 		EXPECT_EQ(0u, names.count(missing)) << missing;
 	}
 }
 
-TEST(MlgOpenIssues, LuaOmitsLtftAndIteratedTrims) {
+TEST(MlgOpenIssues, LuaIncludesLtftCounterButOmitsIteratedTrims) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engine->module<LongTermFuelTrim>()->ltftCntHit = 42;
 	engine->module<LongTermFuelTrim>()->ltftCorrection[0] = 1.05f;
 	engine->engineState.stftCorrection[0] = 0.95f;
 	engine->module<MisfireController>().unmock().misfireEmaUs = 1250;
 	EXPECT_NEAR(1.25f, getOutputValueByName("misfireEmaUs"), 0.00001f);
-	// Issue 6: LTFT lacks source wiring; STFT arrays are excluded from Lua lookup.
-	for (const char* missing : {"ltftCntHit", "ltftCorrection1", "ltftCorrection2",
+	EXPECT_FLOAT_EQ(42.0f, getOutputValueByName("ltftCntHit"));
+	// Issue 6: iterated LTFT and STFT arrays are still excluded from Lua lookup.
+	for (const char* missing : {"ltftCorrection1", "ltftCorrection2",
 		"stftCorrection1", "stftCorrection2"}) {
 		EXPECT_FLOAT_EQ(static_cast<float>(EFI_ERROR_CODE), getOutputValueByName(missing)) << missing;
 	}
