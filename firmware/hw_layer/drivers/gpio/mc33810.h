@@ -134,6 +134,7 @@ struct Mc33810 : public GpioChip, public mc33810_state_s {
 	mc33810_coil_state 		coil_state;
 	uint8_t					active_coil_idx;	/* zero based, used as index of spark[] array */
 	uint8_t					spark_fault_mask;	/* 4 LSB bits are not used */
+	uint8_t					spark_fired_mask;	/* coils commanded to fire at least once, 4 LSB bits are not used */
 	efitick_t				spartStart[MC33810_IGN_OUTPUTS];
 	int						spark_sync_err;
 
