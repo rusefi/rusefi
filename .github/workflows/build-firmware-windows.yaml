@@ -14,7 +14,7 @@ jobs:
 
       - uses: ./.github/actions/setup-java
 
-      - uses: carlosperate/arm-none-eabi-gcc-action@v1.14.0
+      - uses: carlosperate/arm-none-eabi-gcc-action@v1.14.1
         with:
           release: '14.2.Rel1'
 
