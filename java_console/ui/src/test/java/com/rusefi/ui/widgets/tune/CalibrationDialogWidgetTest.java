@@ -364,6 +364,65 @@ public class CalibrationDialogWidgetTest {
         }
         assertTrue(foundLabel, "Should find table title label when updating by key");
     }
+
+    /**
+     * Reproduction: LTFT trims live on TS page 0x0200, but the calibration dialog renders every
+     * table from the main settings image, so the LTFT table shows main-page bytes at the
+     * trim offsets instead of the learned trims.
+     */
+    @Test
+    public void tableOnSecondaryPageShowsMainPageBytes() {
+        IniFileModel iniFileModel = mock(IniFileModel.class);
+        when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
+        when(iniFileModel.getDialogs()).thenReturn(Collections.emptyMap());
+
+        TableModel tableModel = new TableModel("ltftBank1Tbl", "ltftBank1Map", "Long Term Fuel Trim Bank 1",
+                null, "RPM", "Load", "veRpmBins", null, true, "veLoadBins", null, true, "ltft_table_bank1",
+                null, null, null, null);
+        when(iniFileModel.getTable("ltftBank1Tbl")).thenReturn(tableModel);
+
+        ArrayIniField xBinsField = new ArrayIniField("veRpmBins", 100, FieldType.FLOAT, 1, 1, "RPM", 1, "0", "18000", "0");
+        ArrayIniField yBinsField = new ArrayIniField("veLoadBins", 104, FieldType.FLOAT, 1, 1, "kPa", 1, "0", "650", "0");
+        ArrayIniField ltftField = new ArrayIniField("ltft_table_bank1", 0, FieldType.FLOAT, 1, 1, "%", 100, "-35", "35", "1");
+        ltftField.setPageIndex(0x0200);
+        when(iniFileModel.findIniField("veRpmBins")).thenReturn(java.util.Optional.of(xBinsField));
+        when(iniFileModel.findIniField("veLoadBins")).thenReturn(java.util.Optional.of(yBinsField));
+        when(iniFileModel.findIniField("ltft_table_bank1")).thenReturn(java.util.Optional.of(ltftField));
+
+        // main settings page: an unrelated setting happens to occupy the trim's offset
+        ConfigurationImage mainPage = new ConfigurationImage(new byte[200]);
+        mainPage.getByteBuffer(0, 4).putFloat(50.0f);
+        mainPage.getByteBuffer(100, 4).putFloat(650);
+        mainPage.getByteBuffer(104, 4).putFloat(10);
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        try {
+            widget.update("ltftBank1Tbl", iniFileModel, mainPage);
+
+            JTable table = findTable(widget.getContentPane());
+            assertNotNull(table, "LTFT table should be rendered");
+            // BUG: 50.0 from the main page, scaled by 100, is shown as the trim
+            assertEquals("5000", table.getValueAt(0, 1));
+        } finally {
+            widget.destroy();
+        }
+    }
+
+    private static JTable findTable(Container container) {
+        for (Component component : container.getComponents()) {
+            if (component instanceof JTable) {
+                return (JTable) component;
+            }
+            if (component instanceof Container) {
+                JTable nested = findTable((Container) component);
+                if (nested != null) {
+                    return nested;
+                }
+            }
+        }
+        return null;
+    }
+
     @Test
     public void testCommandButtonAndPanelTitle() {
         IniFileModel iniFileModel = mock(IniFileModel.class);
