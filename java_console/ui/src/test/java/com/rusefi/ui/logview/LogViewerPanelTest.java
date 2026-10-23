@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class LogViewerPanelTest {
-    /** Samples one second apart over 0..20 s; a log opens with nothing plotted. */
+    /** Samples one second apart over 0..20 s; a log opens with RPM plotted (it has no TPS). */
     private static CsvLogReader log() throws IOException {
         StringBuilder text = new StringBuilder("Time\tRPM\tCLT\tIAT\ns\trpm\tC\tC\n");
         for (int i = 0; i <= 20; i++) {
@@ -37,9 +37,12 @@ class LogViewerPanelTest {
     @Test
     void togglingSignalsUpdatesCountAndKeepsColours() throws IOException {
         LogViewerPanel panel = new LogViewerPanel(log(), "test.msl");
-        assertEquals("none plotted", panel.plottedLabel().getText(), "a log opens with an empty plot");
+        assertEquals("1 plotted", panel.plottedLabel().getText(), "a log opens with RPM plotted");
+        assertTrue(panel.chart().plotLayout().isPlotted(1));
         assertEquals(1, panel.chart().plotLayout().plotCount());
 
+        panel.toggle(1);
+        assertEquals("none plotted", panel.plottedLabel().getText());
         panel.toggle(1);
         assertEquals("1 plotted", panel.plottedLabel().getText());
         panel.toggle(3);
@@ -53,8 +56,25 @@ class LogViewerPanelTest {
     }
 
     @Test
+    void aLogOpensWithRpmAndTpsPlottedWhenItHasThem() throws IOException {
+        String text = "Time\tCLT\tTPS\tRPM\ns\tC\t%\trpm\n0\t80\t10\t900\n1\t81\t20\t1200\n";
+        LogViewerPanel panel = new LogViewerPanel(CsvLogReader.read(new StringReader(text)), null);
+        PlotLayout layout = panel.chart().plotLayout();
+        assertEquals("2 plotted", panel.plottedLabel().getText());
+        assertTrue(layout.isPlotted(2), "TPS");
+        assertTrue(layout.isPlotted(3), "RPM");
+        assertFalse(layout.isPlotted(1), "CLT");
+        assertEquals(1, layout.plotCount(), "both in one plot");
+
+        String neither = "Time\tCLT\ns\tC\n0\t80\n1\t81\n";
+        LogViewerPanel empty = new LogViewerPanel(CsvLogReader.read(new StringReader(neither)), null);
+        assertEquals("none plotted", empty.plottedLabel().getText(), "a log without them opens with an empty plot");
+    }
+
+    @Test
     void shiftClickPutsASignalInANewPlot() throws IOException {
         LogViewerPanel panel = new LogViewerPanel(log(), null);
+        panel.chart().plotLayout().clearPlot(0); // the test starts from an empty plot
         panel.toggle(1);
         panel.addToNewPlot(2);
         PlotLayout layout = panel.chart().plotLayout();
@@ -70,6 +90,7 @@ class LogViewerPanelTest {
     @Test
     void listDragsTheSelectedSignalAndRemovesTracesDroppedOnIt() throws IOException {
         LogViewerPanel panel = new LogViewerPanel(log(), null);
+        panel.chart().plotLayout().clearPlot(0); // the test starts from an empty plot
         LogViewerPanel.ListTransferHandler handler = (LogViewerPanel.ListTransferHandler) panel.fieldList().getTransferHandler();
         // drag gestures need a display; CI runs headless, where the panel must still build
         assertEquals(!GraphicsEnvironment.isHeadless(), panel.fieldList().getDragEnabled());
@@ -127,6 +148,7 @@ class LogViewerPanelTest {
     @Test
     void clickThatMovesAPixelStillPlots() throws IOException {
         LogViewerPanel panel = new LogViewerPanel(log(), null);
+        panel.chart().plotLayout().clearPlot(0); // the test starts from an empty plot
         java.awt.Point at = rowCentre(panel, 2);
         java.awt.Point wobble = new java.awt.Point(at.x + 2, at.y + 1);
         mouse(panel, MouseEvent.MOUSE_PRESSED, at, 1);
@@ -160,6 +182,7 @@ class LogViewerPanelTest {
     @Test
     void aDragIsNotAClick() throws IOException {
         LogViewerPanel panel = new LogViewerPanel(log(), null);
+        panel.chart().plotLayout().clearPlot(0); // the test starts from an empty plot
         java.awt.Point at = rowCentre(panel, 2);
         java.awt.Point away = new java.awt.Point(at.x + 40, at.y + 30);
         mouse(panel, MouseEvent.MOUSE_PRESSED, at, 1);
@@ -175,6 +198,7 @@ class LogViewerPanelTest {
     @Test
     void doubleClickPlotsOnce() throws IOException {
         LogViewerPanel panel = new LogViewerPanel(log(), null);
+        panel.chart().plotLayout().clearPlot(0); // the test starts from an empty plot
         java.awt.Point at = rowCentre(panel, 2);
         for (int clickCount = 1; clickCount <= 2; clickCount++) {
             mouse(panel, MouseEvent.MOUSE_PRESSED, at, clickCount);

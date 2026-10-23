@@ -247,6 +247,7 @@ class YAxisTest {
     @Test
     void theLegendAndSignalMenusOfferTheScale() throws IOException {
         LogViewerPanel panel = new LogViewerPanel(log(), null);
+        panel.chart().plotLayout().clearPlot(0); // the test starts from an empty plot
         panel.toggle(RPM);
         boolean inLegend = false;
         for (java.awt.Component item : panel.chart().legendMenu(RPM).getComponents()) {

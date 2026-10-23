@@ -198,6 +198,7 @@ class MeasureCursorsTest {
     @Test
     void statsPanelShowsAAndBAndTheChange() throws IOException {
         LogViewerPanel panel = new LogViewerPanel(log(), null);
+        panel.chart().plotLayout().clearPlot(0); // the test starts from an empty plot
         panel.toggle(1);
         StatsPanel stats = panel.statsPanel();
         assertEquals(Arrays.asList(StatsPanel.COLUMNS), columnNames(stats));

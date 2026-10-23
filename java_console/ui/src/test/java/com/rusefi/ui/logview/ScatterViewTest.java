@@ -42,6 +42,7 @@ class ScatterViewTest {
 
     private static LogViewerPanel panel(HistogramSettings settings) throws IOException {
         LogViewerPanel panel = new LogViewerPanel(log(), "test.msl");
+        panel.chart().plotLayout().clearPlot(0); // the test starts from an empty plot
         panel.setScatterSettings(settings);
         panel.setView(HistogramSettings.SCATTER);
         return panel;

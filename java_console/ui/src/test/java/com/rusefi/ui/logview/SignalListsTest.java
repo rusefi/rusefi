@@ -35,6 +35,7 @@ class SignalListsTest {
 
     private static LogViewerPanel panel(SignalLists lists) throws IOException {
         LogViewerPanel panel = new LogViewerPanel(log(), null, new ChartSettings(), lists, null);
+        panel.chart().plotLayout().clearPlot(0); // the test starts from an empty plot
         panel.messages = message -> {
             throw new AssertionError("unexpected message: " + message);
         };
