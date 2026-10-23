@@ -705,6 +705,21 @@ static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {
 	{engine->shiftTorqueReductionController.trqRedTimeXaxisValue, "TrqRed: trqRedTimeXaxisValue", "", 0},
 	{engine->shiftTorqueReductionController.trqRedIgnRetXaxisValue, "TrqRed: trqRedIgnRetXaxisValue", "", 0},
 #endif
+#if EFI_LTFT_CONTROL
+	{static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()).ltftCntHit, "LTFT: learning: hits", "cnt", 0},
+	{static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()).ltftCntMiss, "LTFT: learning: miss", "cnt", 0},
+	{static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()).ltftCntDeadband, "LTFT: learning: in deadband", "cnt", 0},
+	{static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()), 12, 0, "LTFT: learning", ""},
+	{static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()), 12, 1, "LTFT: correcting", ""},
+	{static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()), 12, 2, "LTFT: saving", ""},
+	{static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()), 12, 3, "LTFT: loading calibration", ""},
+	{static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()), 12, 4, "LTFT: loading calibration error", ""},
+	{static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()), 12, 5, "LTFT: page refresh frag", ""},
+	{static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()).ltftCorrection[0], "LTFT: Bank 1", "%", 1, "none", 100.0f, -1.0f},
+	{static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()).ltftCorrection[1], "LTFT: Bank 2", "%", 1, "none", 100.0f, -1.0f},
+	{static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()).ltftAccummulatedCorrection[0], "LTFT: Total Bank 1", "%", 1, "none", 100.0f},
+	{static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()).ltftAccummulatedCorrection[1], "LTFT: Total Bank 2", "%", 1, "none", 100.0f},
+#endif
 #if EFI_PROD_CODE && (BOARD_ADS7128_COUNT > 0)
 	{ads7128getLiveData(0)->adcRaw[0], "ADS7128: RAW 1", "", 0},
 	{ads7128getLiveData(0)->adcRaw[1], "ADS7128: RAW 2", "", 0},

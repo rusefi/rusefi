@@ -1702,6 +1702,35 @@ float getOutputValueByHash(const int hash) {
 		case -432387355:
 			return engine->module<RollingLaunchControl>()->rollingLaunchRampElapsed;
 #endif
+#if EFI_LTFT_CONTROL
+// ltftCntHit
+		case -1524938551:
+			return static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()).ltftCntHit;
+// ltftCntMiss
+		case 1216815136:
+			return static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()).ltftCntMiss;
+// ltftCntDeadband
+		case -867443033:
+			return static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()).ltftCntDeadband;
+// ltftLearning
+		case -956659985:
+			return static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()).ltftLearning;
+// ltftCorrecting
+		case 1932317231:
+			return static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()).ltftCorrecting;
+// ltftSavePending
+		case 462682515:
+			return static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()).ltftSavePending;
+// ltftLoadPending
+		case 875027108:
+			return static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()).ltftLoadPending;
+// ltftLoadError
+		case -1080581591:
+			return static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()).ltftLoadError;
+// ltftPageRefreshFlag
+		case -345968219:
+			return static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()).ltftPageRefreshFlag;
+#endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 // etb1etbCurrentTarget
 		case -1044288778:
