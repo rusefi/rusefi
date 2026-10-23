@@ -175,7 +175,7 @@ void SensorChecker::onSlowCallback() {
 	// car (one false count per burn). configBurnTimer is reset at the start of each burn; the 5s
 	// window matches watchOutForLinearTime (see engine.cpp) and covers the burn plus ADC re-settle.
 	bool shouldCheck = m_ignitionIsOn
-		&& m_timeSinceIgnOff.hasElapsedSec(5)
+		&& m_timeSinceIgnOn.hasElapsedSec(5)
 		&& engine->configBurnTimer.hasElapsedSec(5);
 	m_analogSensorsShouldWork = shouldCheck;
 	if (!shouldCheck) {
@@ -272,8 +272,8 @@ void SensorChecker::onSlowCallback() {
 void SensorChecker::onIgnitionStateChanged(bool ignitionOn) {
 	m_ignitionIsOn = ignitionOn;
 
-	if (!ignitionOn) {
-		// timer keeps track of how long since the state was turned to on (ie, how long ago was it last off)
-		m_timeSinceIgnOff.reset();
+	if (ignitionOn) {
+		// timer keeps track of how long since the state was turned to on
+		m_timeSinceIgnOn.reset();
 	}
 }

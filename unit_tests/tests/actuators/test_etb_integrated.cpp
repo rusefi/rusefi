@@ -182,7 +182,8 @@ TEST(etb, intermittentTps) {
 	// Tell the sensor checker that the ignition is on
 	engine->module<SensorChecker>()->onIgnitionStateChanged(true);
 	engine->module<SensorChecker>()->onSlowCallback();
-	advanceTimeUs(MS2US(1000));
+	// checks start 5 seconds after ignition on
+	advanceTimeUs(MS2US(6000));
 	engine->module<SensorChecker>()->onSlowCallback();
 	// todo: fix me https://github.com/rusefi/rusefi/issues/5233
 	// EXPECT_EQ( 3,  recentWarnings.getCount()) << "intermittentTps";
