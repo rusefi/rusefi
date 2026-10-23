@@ -126,6 +126,14 @@ final class ChartToolbar extends ThemedStrip {
         updateControls();
     }
 
+    /** Puts the Timeline / Histogram switch at the start of the toolbar, after Open. */
+    void addViewSwitch(Component viewSwitch) {
+        // Open and its gap come first when the toolbar has them
+        int index = openButton.getParent() != null ? 2 : 0;
+        add(viewSwitch, index);
+        add(Box.createHorizontalStrut(JoinedButtons.ROW_GAP), index + 1);
+    }
+
     private void buildGridPanel() {
         gridPanel.setBorder(BorderFactory.createEmptyBorder(10, 12, 10, 12));
         ButtonGroup modeGroup = new ButtonGroup();
