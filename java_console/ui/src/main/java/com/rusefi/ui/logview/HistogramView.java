@@ -11,7 +11,6 @@ import com.rusefi.ui.widgets.SegmentedControl;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -20,7 +19,6 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
@@ -29,31 +27,20 @@ import javax.swing.JSplitPane;
 import javax.swing.JToggleButton;
 import javax.swing.KeyStroke;
 import javax.swing.SpinnerNumberModel;
-import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
-import java.awt.RenderingHints;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -95,15 +82,19 @@ final class HistogramView extends JPanel {
     final JCheckBox hideThinBox = new JCheckBox("Hide them");
     private final JPopupMenu binsPopup = new JPopupMenu();
 
-    final AxisSlot[] slots = new AxisSlot[3];
-    final JButton swapButton = new JButton("Swap X ↔ Y");
-    final JPanel banner = new Banner();
-    final JLabel bannerText = new JLabel();
-    final JLabel bannerDetail = ChartToolbar.muted(new JLabel());
-    final JButton excludeButton = fullLabel("Exclude them");
-    final JButton keepButton = fullLabel("Keep");
-    final JPanel filterRow = new JPanel(new WrapLayout(FlowLayout.LEFT, 6, 4));
-    final JButton addFilterButton = new JButton("+ Add filter");
+    /** The axes, the saturation warning and the filters above the table. */
+    final SignalStrip strip;
+    // the strip's parts, named as the tests know them
+    final SignalStrip.AxisSlot[] slots;
+    final JButton swapButton;
+    final JPanel banner;
+    final JLabel bannerText;
+    final JButton excludeButton;
+    final JButton keepButton;
+    final JPanel filterRow;
+    final JButton addFilterButton;
+    final JLabel mixtureMissingLabel;
+    final JLabel binsNoticeLabel;
 
     final JLabel recordsLabel = new JLabel();
     final JLabel hiddenLabel = ChartToolbar.muted(new JLabel());
@@ -113,25 +104,12 @@ final class HistogramView extends JPanel {
     private BiConsumer<String, List<double[]>> timelineAction = (cell, stays) -> {
     };
 
-    /** Edits a filter: dialog title and the filter to start from (null for a new one); null when cancelled. */
-    BiFunction<String, HistogramFilter, HistogramFilter> filterPrompt = this::promptFilter;
-
-    private final int[] fields = new int[3];
-    /** Per axis: picked by default rather than by the user, so not remembered. */
-    private final boolean[] automatic = new boolean[3];
-    final JLabel mixtureMissingLabel = new JLabel("No lambda or AFR signal in this log: pick a Z signal");
-    final JLabel binsNoticeLabel = new JLabel();
+    static final String MIXTURE_MISSING = "No lambda or AFR signal in this log: pick a Z signal";
     private final Supplier<IniFileModel> iniSource;
     private final Supplier<ConfigurationImage> tuneSource;
     /** Why the bins table is not used, or null. */
     private String binsProblem;
     private JPanel binsPanel;
-    private char activeAxis = 'z';
-    private final List<HistogramFilter> filters;
-    /** Z signals whose saturation warning was answered with Keep, for this log. */
-    private final Set<String> keptSaturation = new HashSet<>();
-    private String saturationSignal;
-    private HistogramSignals.Saturation saturation;
 
     /**
      * @param cursors          the timeline's A and B cursors, for the A–B range
@@ -151,8 +129,21 @@ final class HistogramView extends JPanel {
         this.onSignalsChanged = onSignalsChanged;
         this.iniSource = ini;
         this.tuneSource = tune;
-        filters = settings.filters();
-        pickSignals();
+        // a new signal starts the selection afresh
+        strip = new SignalStrip(log, settings, this::automaticPick, "histogram", this::recompute, () -> {
+            table.clearSelection();
+            onSignalsChanged.run();
+        });
+        slots = strip.slots;
+        swapButton = strip.swapButton;
+        banner = strip.banner;
+        bannerText = strip.bannerText;
+        excludeButton = strip.excludeButton;
+        keepButton = strip.keepButton;
+        filterRow = strip.filterRow;
+        addFilterButton = strip.addFilterButton;
+        mixtureMissingLabel = strip.zNoticeLabel;
+        binsNoticeLabel = strip.noticeLabel;
 
         columnsSpinner = new JSpinner(new SpinnerNumberModel(settings.columns(), HistogramAxis.MIN_BINS,
                 HistogramAxis.MAX_BINS, 1));
@@ -164,7 +155,7 @@ final class HistogramView extends JPanel {
         add(toolbar(viewSwitch, onOpen), BorderLayout.NORTH);
         JPanel main = new JPanel(new BorderLayout());
         main.setBackground(themed("Console.LogViewer.sidebar.background", Color.WHITE));
-        main.add(controls(), BorderLayout.NORTH);
+        main.add(strip, BorderLayout.NORTH);
         table.setBorder(BorderFactory.createEmptyBorder());
         main.add(table, BorderLayout.CENTER);
         tableArea.add(main, BorderLayout.CENTER);
@@ -197,29 +188,17 @@ final class HistogramView extends JPanel {
     // ---- signals ----
 
     /**
-     * The signals the user picked where this log has them, otherwise RPM, MAP and the measured lambda (never a
-     * target), or the first other signals.
+     * The histogram's pick for an axis the user did not set: the bins table's (or VE table's) axis signals, else
+     * RPM and MAP; for Z the measured lambda (never a target).
      */
-    private void pickSignals() {
-        for (int i = 0; i < 3; i++) {
-            int field = HistogramSignals.byName(log, settings.signal(AXES[i]));
-            automatic[i] = field < 0;
-            if (field < 0 && i < 2) {
-                field = tableSignal(i);
-            }
-            if (field < 0) {
-                field = i == 0 ? HistogramSignals.find(log, HistogramSignals.X_NAMES)
-                        : i == 1 ? HistogramSignals.find(log, HistogramSignals.Y_NAMES)
-                        : HistogramSignals.findMixture(log);
-            }
-            for (int j = 0; j < i; j++) {
-                if (fields[j] == field) {
-                    field = -1;
-                }
-            }
-            fields[i] = field >= 0 ? field : HistogramSignals.fallbackExcept(log,
-                    i == 2 ? HistogramSignals.Z_EXCLUDED : null, java.util.Arrays.copyOf(fields, i));
+    private int automaticPick(int axis) {
+        int field = axis < 2 ? tableSignal(axis) : -1;
+        if (field >= 0) {
+            return field;
         }
+        return axis == 0 ? HistogramSignals.find(log, HistogramSignals.X_NAMES)
+                : axis == 1 ? HistogramSignals.find(log, HistogramSignals.Y_NAMES)
+                : HistogramSignals.findMixture(log);
     }
 
     /**
@@ -259,7 +238,7 @@ final class HistogramView extends JPanel {
     /** Takes a tune table's axes as the bins (null: even bins), with its axis signals where not picked by hand. */
     void setBinsTable(String tableName) {
         settings.setBinsTable(tableName);
-        pickSignals();
+        strip.pickSignals();
         table.clearSelection();
         recompute();
         onSignalsChanged.run();
@@ -267,177 +246,62 @@ final class HistogramView extends JPanel {
 
     /** Z was picked automatically and is no lambda or AFR: the log has no measured mixture. */
     boolean isMixtureMissing() {
-        return automatic[2] && HistogramTable.Mixture.of(log, fields[2], false) == HistogramTable.Mixture.NONE;
+        return strip.isAutomatic(2)
+                && HistogramTable.Mixture.of(log, field('z'), false) == HistogramTable.Mixture.NONE;
     }
 
+    // the strip's signals and filters, for the sidebar and the tests
+
     int field(char axis) {
-        return fields[axisIndex(axis)];
+        return strip.field(axis);
     }
 
     char activeAxis() {
-        return activeAxis;
+        return strip.activeAxis();
     }
 
-    /** The axis a field is on ('x', 'y', 'z'), or 0. */
     char axisOf(int field) {
-        for (int i = 0; i < 3; i++) {
-            if (fields[i] == field) {
-                return AXES[i];
-            }
-        }
-        return 0;
-    }
-
-    private static int axisIndex(char axis) {
-        return axis == 'x' ? 0 : axis == 'y' ? 1 : 2;
+        return strip.axisOf(field);
     }
 
     void setActiveAxis(char axis) {
-        activeAxis = axis;
-        slots[axisIndex(axis)].setSelected(true);
+        strip.setActiveAxis(axis);
     }
 
-    /** A signal clicked in the sidebar goes on the highlighted axis. */
     void assignToActiveAxis(int field) {
-        assign(activeAxis, field);
+        strip.assignToActiveAxis(field);
     }
 
-    /** Puts a signal on an axis; a signal already on another axis trades places with it. */
     void assign(char axis, int field) {
-        int index = axisIndex(axis);
-        if (fields[index] == field) {
-            return;
-        }
-        char other = axisOf(field);
-        if (other != 0) {
-            // trading places is the user's choice for both axes
-            int otherIndex = axisIndex(other);
-            fields[otherIndex] = fields[index];
-            automatic[otherIndex] = false;
-            settings.setSignal(other, log.name(fields[otherIndex]));
-        }
-        fields[index] = field;
-        automatic[index] = false;
-        settings.setSignal(axis, log.name(field));
-        table.clearSelection();
-        recompute();
-        onSignalsChanged.run();
+        strip.assign(axis, field);
     }
 
     void swapXY() {
-        assign('x', fields[1]);
+        strip.swapXY();
     }
 
-    // ---- filters ----
-
     List<HistogramFilter> filters() {
-        return new ArrayList<>(filters);
+        return strip.filters();
     }
 
     void addFilter(HistogramFilter filter) {
-        filters.add(filter);
-        filtersChanged();
-    }
-
-    void replaceFilter(int index, HistogramFilter filter) {
-        filters.set(index, filter);
-        filtersChanged();
+        strip.addFilter(filter);
     }
 
     void removeFilter(int index) {
-        filters.remove(index);
-        filtersChanged();
+        strip.removeFilter(index);
     }
 
     void toggleFilter(int index) {
-        filters.set(index, filters.get(index).withEnabled(!filters.get(index).enabled));
-        filtersChanged();
-    }
-
-    private void filtersChanged() {
-        settings.setFilters(filters);
-        recompute();
-    }
-
-    private HistogramFilter promptFilter(String title, HistogramFilter initial) {
-        HistogramFilterEditor editor = new HistogramFilterEditor(log, initial, field('x'), field('y'), field('z'));
-        // typing goes straight to the signal search
-        editor.search.addAncestorListener(new javax.swing.event.AncestorListener() {
-            @Override
-            public void ancestorAdded(javax.swing.event.AncestorEvent event) {
-                editor.search.requestFocusInWindow();
-            }
-
-            @Override
-            public void ancestorRemoved(javax.swing.event.AncestorEvent event) {
-            }
-
-            @Override
-            public void ancestorMoved(javax.swing.event.AncestorEvent event) {
-            }
-        });
-        while (JOptionPane.showConfirmDialog(this, editor, title, JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION) {
-            HistogramFilter filter = editor.filter();
-            if (filter != null) {
-                return filter;
-            }
-            JOptionPane.showMessageDialog(this, "The value must be a number.", title, JOptionPane.WARNING_MESSAGE);
-        }
-        return null;
-    }
-
-    void newFilter() {
-        HistogramFilter filter = filterPrompt.apply("Add filter", null);
-        if (filter != null) {
-            addFilter(filter);
-        }
+        strip.toggleFilter(index);
     }
 
     void editFilter(int index) {
-        HistogramFilter old = filters.get(index);
-        HistogramFilter filter = filterPrompt.apply("Edit filter", old);
-        if (filter != null) {
-            replaceFilter(index, filter.withEnabled(old.enabled));
-        }
+        strip.editFilter(index);
     }
 
-    /** The saturation warning is shown: Z has a pile of readings at a limit and no filter for it yet. */
     boolean isSaturationWarningShown() {
-        return banner.isVisible();
-    }
-
-    void excludeSaturated() {
-        if (saturation != null) {
-            addFilter(saturation.filter(saturationSignal));
-        }
-    }
-
-    void keepSaturated() {
-        keptSaturation.add(saturationSignal);
-        updateBanner();
-    }
-
-    private void updateBanner() {
-        String zName = log.name(field('z'));
-        if (!zName.equals(saturationSignal)) {
-            saturationSignal = zName;
-            saturation = HistogramSignals.saturation(log, field('z'));
-        }
-        boolean show = saturation != null && !keptSaturation.contains(zName)
-                && filters.stream().noneMatch(f -> f.signal.equals(zName) && f.condition == saturation.filter(zName).condition
-                && f.value == saturation.value);
-        if (show) {
-            bannerText.setText(String.format(Locale.ROOT, "%s reads exactly %s in %,d records (%.1f%%)", zName,
-                    ValueFormat.format(log, field('z'), saturation.value), saturation.records, saturation.share * 100));
-            bannerDetail.setText(String.format(Locale.ROOT, "That looks like the sensor's %s limit, not real readings",
-                    saturation.low ? "lower" : "upper"));
-            // a narrow window shortens the text, never the buttons: the whole message stays in the tooltip
-            banner.setToolTipText(bannerText.getText() + ". " + bannerDetail.getText() + ".");
-            bannerText.setToolTipText(banner.getToolTipText());
-            bannerDetail.setToolTipText(banner.getToolTipText());
-        }
-        banner.setVisible(show);
+        return strip.isSaturationWarningShown();
     }
 
     // ---- computing ----
@@ -448,7 +312,7 @@ final class HistogramView extends JPanel {
 
     /** Bins the log again after a change of signals, filters, range, bins or how cells are shown. */
     void recompute() {
-        boolean[] hidden = HistogramFilter.hidden(log, filters);
+        boolean[] hidden = HistogramFilter.hidden(log, strip.filters());
         double start = isBetweenCursors() ? cursors.start() : Double.NaN;
         double end = isBetweenCursors() ? cursors.end() : Double.NaN;
         TuneTables.Bins tableBins = null;
@@ -473,12 +337,8 @@ final class HistogramView extends JPanel {
         table.set(histogram, settings.mode(), HistogramTable.Mixture.of(log, field('z'), settings.showAfr()),
                 settings.minTime(), settings.hideThin(), colors);
         colorsButton.setText("Colours  ▾");
-        for (int i = 0; i < 3; i++) {
-            slots[i].setSignal(fields[i]);
-        }
-        mixtureMissingLabel.setVisible(isMixtureMissing());
-        rebuildFilterRow();
-        updateBanner();
+        strip.setZNotice(isMixtureMissing() ? MIXTURE_MISSING : null);
+        strip.refresh();
         recordsLabel.setText(String.format(Locale.ROOT, "%,d records used", histogram.usedRecords));
         hiddenLabel.setText(String.format(Locale.ROOT, "%,d hidden by filters", histogram.hiddenRecords));
         timeLabel.setText(duration(histogram.totalTime) + " of data"
@@ -509,14 +369,15 @@ final class HistogramView extends JPanel {
             String[] channels = {tableBins.xChannel, tableBins.yChannel};
             for (int i = 0; i < 2 && notice == null; i++) {
                 int expected = TuneTables.logField(log, ini(), channels[i]);
-                if (expected >= 0 && expected != fields[i]) {
-                    notice = String.format(Locale.ROOT, "%s is %s, but the %s's %s axis is %s", AXES[i] == 'x' ? "X" : "Y",
-                            log.name(fields[i]), tableBins.title, AXES[i] == 'x' ? "X" : "Y", log.name(expected));
+                int actual = strip.field(SignalStrip.AXES[i]);
+                if (expected >= 0 && expected != actual) {
+                    String axis = i == 0 ? "X" : "Y";
+                    notice = String.format(Locale.ROOT, "%s is %s, but the %s's %s axis is %s", axis,
+                            log.name(actual), tableBins.title, axis, log.name(expected));
                 }
             }
         }
-        binsNoticeLabel.setText(notice == null ? "" : notice);
-        binsNoticeLabel.setVisible(notice != null);
+        strip.setNotice(notice);
     }
 
     boolean isBinsNoticeShown() {
@@ -711,8 +572,7 @@ final class HistogramView extends JPanel {
             modes.add(button);
             modeButtons[mode.ordinal()] = button;
         }
-        bar.add(ChartToolbar.muted(new JLabel("Show")));
-        bar.add(new SegmentedControl(modeButtons));
+        bar.add(ChartToolbar.labelled("Show", new SegmentedControl(modeButtons)));
         bar.add(Box.createHorizontalStrut(JoinedButtons.ROW_GAP));
 
         ButtonGroup units = new ButtonGroup();
@@ -730,8 +590,7 @@ final class HistogramView extends JPanel {
             settings.setShowAfr(true);
             recompute();
         });
-        bar.add(ChartToolbar.muted(new JLabel("Units")));
-        bar.add(new SegmentedControl(lambdaButton, afrButton));
+        bar.add(ChartToolbar.labelled("Units", new SegmentedControl(lambdaButton, afrButton)));
         bar.add(Box.createHorizontalStrut(JoinedButtons.ROW_GAP));
 
         ButtonGroup range = new ButtonGroup();
@@ -741,8 +600,7 @@ final class HistogramView extends JPanel {
         wholeLogButton.setToolTipText("Every record of the log");
         wholeLogButton.addActionListener(e -> recompute());
         betweenCursorsButton.addActionListener(e -> recompute());
-        bar.add(ChartToolbar.muted(new JLabel("Range")));
-        bar.add(new SegmentedControl(wholeLogButton, betweenCursorsButton));
+        bar.add(ChartToolbar.labelled("Range", new SegmentedControl(wholeLogButton, betweenCursorsButton)));
         bar.add(Box.createHorizontalStrut(JoinedButtons.ROW_GAP));
         updateRangeButton();
 
@@ -876,270 +734,16 @@ final class HistogramView extends JPanel {
         }
     }
 
-    /** Axes, the saturation warning and the filters, above the table. */
-    private JComponent controls() {
-        JPanel axes = new JPanel(new WrapLayout(FlowLayout.LEFT, 6, 4));
-        axes.setOpaque(false);
-        ButtonGroup group = new ButtonGroup();
-        for (int i = 0; i < 3; i++) {
-            char axis = AXES[i];
-            AxisSlot slot = new AxisSlot(axis);
-            slot.addActionListener(e -> activeAxis = axis);
-            group.add(slot);
-            slots[i] = slot;
-            axes.add(new JoinedButtons(slot));
-        }
-        slots[2].setSelected(true);
-        swapButton.setToolTipText("Swap the X and Y signals");
-        swapButton.addActionListener(e -> swapXY());
-        axes.add(new JoinedButtons(swapButton));
-        axes.add(Box.createHorizontalStrut(6));
-        mixtureMissingLabel.setForeground(themed("Console.Banner.warning.accent", new Color(0xb7791f)));
-        mixtureMissingLabel.setFont(mixtureMissingLabel.getFont().deriveFont(Font.BOLD));
-        mixtureMissingLabel.setVisible(false);
-        axes.add(mixtureMissingLabel);
-        binsNoticeLabel.setForeground(themed("Console.Banner.warning.accent", new Color(0xb7791f)));
-        binsNoticeLabel.setFont(binsNoticeLabel.getFont().deriveFont(Font.BOLD));
-        binsNoticeLabel.setVisible(false);
-        axes.add(binsNoticeLabel);
-        axes.add(ChartToolbar.muted(new JLabel("Click a signal in the list to put it on the highlighted axis, "
-                + "or drag it onto an axis")));
-
-        // the message on two short lines that may shorten; the buttons always keep their full labels
-        banner.setLayout(new GridBagLayout());
-        banner.setBorder(BorderFactory.createEmptyBorder(8, 12, 8, 8));
-        banner.setVisible(false);
-        bannerText.setForeground(themed("Label.foreground", Color.BLACK));
-        bannerText.setFont(bannerText.getFont().deriveFont(Font.BOLD));
-        JPanel message = new JPanel(new GridLayout(0, 1, 0, 2)) {
-            @Override
-            public Dimension getMinimumSize() {
-                return new Dimension(0, getPreferredSize().height);
-            }
-        };
-        message.setOpaque(false);
-        message.add(bannerText);
-        message.add(bannerDetail);
-        excludeButton.putClientProperty(FlatClientProperties.STYLE_CLASS, "primary");
-        excludeButton.setToolTipText("Add a filter that leaves these readings out");
-        excludeButton.addActionListener(e -> excludeSaturated());
-        keepButton.setToolTipText("Keep them and hide this warning");
-        keepButton.addActionListener(e -> keepSaturated());
-        GridBagConstraints text = new GridBagConstraints();
-        text.weightx = 1;
-        text.fill = GridBagConstraints.HORIZONTAL;
-        text.anchor = GridBagConstraints.WEST;
-        banner.add(message, text);
-        GridBagConstraints button = new GridBagConstraints();
-        button.insets = new Insets(0, 12, 0, 0);
-        banner.add(excludeButton, button);
-        button.insets = new Insets(0, 6, 0, 0);
-        banner.add(keepButton, button);
-
-        filterRow.setOpaque(false);
-        addFilterButton.setToolTipText("Leave records out of the histogram by a signal's value or rate of change");
-        addFilterButton.addActionListener(e -> newFilter());
-
-        JPanel column = new JPanel();
-        column.setLayout(new BoxLayout(column, BoxLayout.Y_AXIS));
-        column.setOpaque(false);
-        column.setBorder(BorderFactory.createEmptyBorder(10, 12, 4, 12));
-        for (JComponent row : new JComponent[]{axes, banner, filterRow}) {
-            row.setAlignmentX(Component.LEFT_ALIGNMENT);
-            column.add(row);
-            column.add(Box.createVerticalStrut(8));
-        }
-        return column;
-    }
-
-    private void rebuildFilterRow() {
-        filterRow.removeAll();
-        JLabel title = ChartToolbar.muted(new JLabel("FILTERS"));
-        title.setFont(title.getFont().deriveFont(Font.BOLD, title.getFont().getSize2D() - 1));
-        filterRow.add(title);
-        for (int i = 0; i < filters.size(); i++) {
-            filterRow.add(new FilterChip(i, filters.get(i)));
-        }
-        filterRow.add(new JoinedButtons(addFilterButton));
-        filterRow.revalidate();
-        filterRow.repaint();
-    }
-
     private JComponent statusStrip() {
-        ThemedStrip strip = new ThemedStrip(new BorderLayout(), "Console.StatusBar.background", true);
-        strip.setBorder(BorderFactory.createEmptyBorder(7, 12, 7, 12));
+        ThemedStrip bar = new ThemedStrip(new BorderLayout(), "Console.StatusBar.background", true);
+        bar.setBorder(BorderFactory.createEmptyBorder(7, 12, 7, 12));
         JPanel left = new JPanel(new FlowLayout(FlowLayout.LEFT, 14, 0));
         left.setOpaque(false);
         left.add(recordsLabel);
         left.add(hiddenLabel);
         left.add(timeLabel);
-        strip.add(left, BorderLayout.CENTER);
-        strip.add(selectedLabel, BorderLayout.EAST);
-        return strip;
-    }
-
-    /** One axis: its letter and signal; selected when a sidebar click goes to it; takes dropped signals. */
-    final class AxisSlot extends JToggleButton {
-        final char axis;
-
-        AxisSlot(char axis) {
-            this.axis = axis;
-            putClientProperty(FlatClientProperties.STYLE_CLASS, "viewToggle");
-            setTransferHandler(new SignalTransfer.Handler() {
-                @Override
-                boolean canImportSignal(TransferSupport support) {
-                    return true;
-                }
-
-                @Override
-                boolean importSignal(TransferSupport support, int field) {
-                    assign(axis, field);
-                    setActiveAxis(axis);
-                    return true;
-                }
-            });
-        }
-
-        void setSignal(int field) {
-            String unit = log.unit(field);
-            setText("<html><b>" + Character.toUpperCase(axis) + "</b>&nbsp;&nbsp;" + escape(log.name(field)) + "</html>");
-            setToolTipText(log.name(field) + (unit.isEmpty() ? "" : " (" + unit + ")") + " on "
-                    + Character.toUpperCase(axis) + " · highlighted: a click on a signal in the list puts it here; "
-                    + "or drag a signal onto it");
-        }
-    }
-
-    /** A button no layout shrinks below its preferred size, so its label is never cut to "…". */
-    static JButton fullLabel(String text) {
-        return new JButton(text) {
-            @Override
-            public Dimension getMinimumSize() {
-                return getPreferredSize();
-            }
-        };
-    }
-
-    private static String escape(String text) {
-        return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
-    }
-
-    /** A filter as a pill: click switches it on or off, right-click or double-click edits or removes it. */
-    final class FilterChip extends JToggleButton {
-        final int index;
-
-        FilterChip(int index, HistogramFilter filter) {
-            this.index = index;
-            int hidden = filter.field(log) < 0 ? 0 : filter.count(log);
-            String hold = filter.holdLabel();
-            setText(filter.label() + (hold.isEmpty() ? "" : "  " + hold)
-                    + (filter.field(log) < 0 ? "  · not in this log" : String.format(Locale.ROOT, "  −%,d", hidden)));
-            setSelected(filter.enabled);
-            setForeground(filter.enabled ? themed("Console.Banner.info.accent", new Color(0x1d4ed8))
-                    : themed("Console.LogViewer.mutedForeground", Color.GRAY));
-            setContentAreaFilled(false);
-            setBorderPainted(false);
-            setFocusPainted(false);
-            setBorder(BorderFactory.createEmptyBorder(5, 24, 5, 12));
-            setToolTipText("<html>" + escape(filter.toString()) + String.format(Locale.ROOT,
-                    "<br>Hides %,d records on its own · click to switch %s · right-click to edit or remove</html>",
-                    hidden, filter.enabled ? "off" : "on"));
-            addActionListener(e -> toggleFilter(index));
-            addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent event) {
-                    menu(event);
-                }
-
-                @Override
-                public void mouseReleased(MouseEvent event) {
-                    menu(event);
-                }
-
-                private void menu(MouseEvent event) {
-                    if (event.isPopupTrigger()) {
-                        chipMenu(index).show(FilterChip.this, event.getX(), event.getY());
-                    }
-                }
-            });
-        }
-
-        @Override
-        public Dimension getPreferredSize() {
-            Dimension size = super.getPreferredSize();
-            size.height = JoinedButtons.HEIGHT - 6;
-            return size;
-        }
-
-        @Override
-        protected void paintComponent(Graphics graphics) {
-            Graphics2D g = (Graphics2D) graphics.create();
-            try {
-                g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                boolean on = isSelected();
-                int arc = getHeight();
-                g.setColor(on ? themed("Console.Banner.info.background", new Color(0xeef4ff))
-                        : themed("Console.Card.background", Color.WHITE));
-                g.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, arc, arc);
-                g.setColor(on ? themed("Console.Banner.info.borderColor", new Color(0xc9dafb))
-                        : themed("Separator.foreground", Color.LIGHT_GRAY));
-                g.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, arc, arc);
-                Color accent = themed("Console.Banner.info.accent", new Color(0x1d4ed8));
-                Color muted = themed("Console.LogViewer.mutedForeground", Color.GRAY);
-                int d = 8;
-                int cx = 11;
-                int cy = (getHeight() - d) / 2;
-                if (on) {
-                    g.setColor(accent);
-                    g.fillOval(cx, cy, d, d);
-                } else {
-                    g.setColor(muted);
-                    g.setStroke(new BasicStroke(1.5f));
-                    g.drawOval(cx, cy, d, d);
-                }
-            } finally {
-                g.dispose();
-            }
-            super.paintComponent(graphics);
-        }
-    }
-
-    JPopupMenu chipMenu(int index) {
-        JPopupMenu menu = new JPopupMenu();
-        JMenuItem toggle = new JMenuItem(filters.get(index).enabled ? "Switch off" : "Switch on");
-        toggle.addActionListener(e -> toggleFilter(index));
-        menu.add(toggle);
-        JMenuItem edit = new JMenuItem("Edit…");
-        edit.addActionListener(e -> editFilter(index));
-        menu.add(edit);
-        JMenuItem remove = new JMenuItem("Remove");
-        remove.addActionListener(e -> removeFilter(index));
-        menu.add(remove);
-        return menu;
-    }
-
-    /** The warning strip's rounded background and border, in the theme's warning banner colours. */
-    private static final class Banner extends JPanel {
-        Banner() {
-            setOpaque(false);
-        }
-
-        @Override
-        public Dimension getMaximumSize() {
-            return new Dimension(Integer.MAX_VALUE, getPreferredSize().height);
-        }
-
-        @Override
-        protected void paintComponent(Graphics graphics) {
-            Graphics2D g = (Graphics2D) graphics.create();
-            try {
-                g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g.setColor(themed("Console.Banner.warning.background", new Color(0xfff8e6)));
-                g.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 10, 10);
-                g.setColor(themed("Console.Banner.warning.borderColor", new Color(0xf3dca7)));
-                g.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 10, 10);
-            } finally {
-                g.dispose();
-            }
-        }
+        bar.add(left, BorderLayout.CENTER);
+        bar.add(selectedLabel, BorderLayout.EAST);
+        return bar;
     }
 }

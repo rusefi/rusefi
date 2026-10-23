@@ -15,6 +15,8 @@ final class HistogramSignals {
     static final double SATURATION_SHARE = 0.01;
     /** ...and in at least this many records, so a short log's single low reading does not count. */
     static final int SATURATION_RECORDS = 20;
+    /** More than this share at one value is the signal resting there, not a sensor stuck at its limit. */
+    static final double SATURATION_MAX_SHARE = 0.5;
 
     static final String[] X_NAMES = {"RPM", "Engine Speed"};
     static final String[] Y_NAMES = {"MAP", "Engine load", "Load", "TPS"};
@@ -168,8 +170,9 @@ final class HistogramSignals {
                 atNextHigh += value == nextHigh ? 1 : 0;
             }
         }
-        boolean lowPiled = isPile(atMin, atNextLow, finite);
-        boolean highPiled = isPile(atMax, atNextHigh, finite);
+        // 0 is a signal's "off" (no knock, engine stopped), not a sensor limit
+        boolean lowPiled = min != 0 && isPile(atMin, atNextLow, finite);
+        boolean highPiled = max != 0 && isPile(atMax, atNextHigh, finite);
         if (!lowPiled && !highPiled) {
             return null;
         }
@@ -178,8 +181,12 @@ final class HistogramSignals {
         return new Saturation(low ? min : max, low, records, (double) records / finite);
     }
 
-    /** Readings at an end are a pile when there are many of them, and several times those on the next value. */
+    /**
+     * Readings at an end are a pile when there are many of them, and several times those on the next value; but
+     * not when they are most of the log, which is a signal's resting state (no knock, no fuel cut).
+     */
     private static boolean isPile(int atEnd, int atNext, int finite) {
-        return atEnd >= SATURATION_RECORDS && atEnd >= finite * SATURATION_SHARE && atEnd >= 5 * atNext;
+        return atEnd >= SATURATION_RECORDS && atEnd >= finite * SATURATION_SHARE && atEnd >= 5 * atNext
+                && atEnd <= finite * SATURATION_MAX_SHARE;
     }
 }

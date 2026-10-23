@@ -72,7 +72,9 @@ final class HistogramFilterEditor extends JPanel {
     private final List<Integer> ordered;
     private final Set<Integer> suggested;
     final List<QuickFilter> quickFilters;
-    final JComboBox<HistogramFilter.Condition> condition = new JComboBox<>(HistogramFilter.Condition.values());
+    /** The conditions on one signal: a box filter comes from a box on the scatter plot, not from this dialog. */
+    final JComboBox<HistogramFilter.Condition> condition = new JComboBox<>(java.util.Arrays.stream(
+            HistogramFilter.Condition.values()).filter(c -> !c.isBox()).toArray(HistogramFilter.Condition[]::new));
     final JTextField value = new JTextField(7);
     final JTextField value2 = new JTextField(7);
     private final JLabel and = ChartToolbar.muted(new JLabel("and"));

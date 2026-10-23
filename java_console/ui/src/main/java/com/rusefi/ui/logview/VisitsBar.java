@@ -106,6 +106,12 @@ final class VisitsBar extends ThemedStrip {
         return current;
     }
 
+    /** "Back to histogram" or "Back to scatter": where the stays came from. */
+    void setBackLabel(String label) {
+        backButton.setText(label);
+        backButton.setToolTipText(label + "; the shading stays until you clear it");
+    }
+
     void clear() {
         visits = new ArrayList<>();
         current = -1;

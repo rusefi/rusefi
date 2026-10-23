@@ -43,14 +43,14 @@ final class HistogramColorsPanel extends JPanel {
      *                       rebuild the panel
      * @param onValueChange  after a value changes: recolour only
      */
-    HistogramColorsPanel(HistogramColors colors, String zSignal, HistogramTable table, Runnable onLayoutChange,
+    HistogramColorsPanel(HistogramColors colors, String zSignal, ColourScale table, Runnable onLayoutChange,
                          Runnable onValueChange) {
         super(new GridBagLayout());
         this.colors = colors;
         this.factor = table.mixture().factor;
         setBorder(BorderFactory.createEmptyBorder(10, 12, 10, 12));
         // Time and Count ignore the manual range and centre
-        boolean values = table.mode().isValue();
+        boolean values = table.showsValues();
 
         JLabel title = new JLabel("Colours for " + zSignal);
         title.setFont(title.getFont().deriveFont(Font.BOLD));
@@ -150,9 +150,8 @@ final class HistogramColorsPanel extends JPanel {
         addRow(null, resetButton);
     }
 
-    private static String unit(HistogramTable table) {
-        HistogramTable.Mixture mixture = table.mixture();
-        return mixture != HistogramTable.Mixture.NONE ? mixture.unit : table.histogram().log.unit(table.histogram().zField);
+    private static String unit(ColourScale table) {
+        return table.zUnit();
     }
 
     private static JSpinner spinner(double value, double step) {

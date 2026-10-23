@@ -143,7 +143,7 @@ class HistogramViewTest {
         HistogramView view = histogramPanel(new HistogramSettings()).histogram();
         HistogramFilter throttle = new HistogramFilter("TPS", HistogramFilter.Condition.CHANGING, 100, Double.NaN,
                 0.3, true);
-        view.filterPrompt = (title, initial) -> {
+        view.strip.filterPrompt = (title, initial) -> {
             assertNull(initial);
             return throttle;
         };
@@ -152,13 +152,13 @@ class HistogramViewTest {
         // the chip row: title, the chip, Add filter
         assertEquals(3, view.filterRow.getComponentCount());
 
-        view.filterPrompt = (title, initial) -> {
+        view.strip.filterPrompt = (title, initial) -> {
             assertEquals(throttle, initial);
             return HistogramFilter.of("CLT", HistogramFilter.Condition.AT_MOST, 70);
         };
         view.editFilter(0);
         assertEquals("CLT", view.filters().get(0).signal);
-        view.filterPrompt = (title, initial) -> null;
+        view.strip.filterPrompt = (title, initial) -> null;
         view.editFilter(0);
         assertEquals("CLT", view.filters().get(0).signal, "cancel keeps the filter");
     }

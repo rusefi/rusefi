@@ -105,6 +105,16 @@ class HistogramFilterTest {
         assertEquals(HistogramFilter.of("Lambda 1", HistogramFilter.Condition.AT_MOST, 0.68),
                 saturation.filter("Lambda 1"));
         assertNull(HistogramSignals.saturation(log, 2), "every RPM value appears once");
+
+        // knock retard: 0 most of the time, or a few times, is "no knock", not a sensor limit
+        StringBuilder knock = new StringBuilder("Time\tKnock: Retard\tPressure\ns\tdeg\tkPa\n");
+        for (int i = 0; i < 1000; i++) {
+            knock.append(i / 100.0).append('\t').append(i % 3 == 0 ? 0 : 1 + i % 5 * 0.1)
+                    .append('\t').append(i < 600 ? 250 : 100 + i * 0.01).append('\n');
+        }
+        CsvLogReader knockLog = CsvLogReader.read(new StringReader(knock.toString()));
+        assertNull(HistogramSignals.saturation(knockLog, 1), "a pile at 0");
+        assertNull(HistogramSignals.saturation(knockLog, 2), "60% at one value is where the signal rests");
     }
 
     @Test

@@ -171,6 +171,70 @@ final class HistogramColors {
         return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
     }
 
+    /** The values at a palette's ends and centre, and whether shown values lie beyond the ends. */
+    static final class Scale {
+        final double low;
+        final double high;
+        /** The diverging palette's centre, or NaN. */
+        final double centre;
+        final boolean clippedLow;
+        final boolean clippedHigh;
+
+        Scale(double low, double high, double centre, boolean clippedLow, boolean clippedHigh) {
+            this.low = low;
+            this.high = high;
+            this.centre = centre;
+            this.clippedLow = clippedLow;
+            this.clippedHigh = clippedHigh;
+        }
+    }
+
+    /**
+     * The colour scale for the shown values (the first {@code count}): Auto from the lowest to the highest, No
+     * outliers from the 5th to the 95th percentile (all of them below {@link #ROBUST_MIN_CELLS}), or Manual. For
+     * occupancy ({@code values} false: seconds or counts) the scale starts at 0 and the manual range and centre do
+     * not apply. The diverging palette centres on the entered value, else stoichiometric, else the middle, with the
+     * same span on both sides.
+     *
+     * @param factor  logged unit to shown unit, for the manual range and centre
+     * @param stoich  stoichiometric in the shown unit, or NaN when Z is not a mixture
+     */
+    Scale scale(double[] shown, int count, boolean values, double factor, double stoich) {
+        double min = Double.POSITIVE_INFINITY;
+        double max = Double.NEGATIVE_INFINITY;
+        for (int i = 0; i < count; i++) {
+            min = Math.min(min, shown[i]);
+            max = Math.max(max, shown[i]);
+        }
+        boolean robust = range() == Range.ROBUST && count >= ROBUST_MIN_CELLS;
+        double low;
+        double high;
+        double centre = Double.NaN;
+        if (!values) {
+            low = 0;
+            high = robust ? quantile(shown, count, ROBUST_HIGH) : max;
+        } else {
+            if (range() == Range.MANUAL && manualHigh() > manualLow()) {
+                low = manualLow() * factor;
+                high = manualHigh() * factor;
+            } else if (robust) {
+                low = quantile(shown, count, ROBUST_LOW);
+                high = quantile(shown, count, ROBUST_HIGH);
+            } else {
+                low = min;
+                high = max;
+            }
+            if (palette() == Palette.DIVERGING) {
+                centre = Double.isFinite(centre()) ? centre() * factor
+                        : Double.isFinite(stoich) ? stoich : (low + high) / 2;
+                double half = Math.max(Math.abs(centre - low), Math.abs(high - centre));
+                low = centre - half;
+                high = centre + half;
+            }
+        }
+        return new Scale(low, high, centre, count > 0 && min < low - 1e-12, count > 0 && max > high + 1e-12);
+    }
+
     /** The {@code fraction} quantile (0..1) of the values, by linear interpolation; NaN for none. */
     static double quantile(double[] values, int count, double fraction) {
         if (count == 0) {

@@ -105,8 +105,8 @@ final class ChartToolbar extends ThemedStrip {
             add(new JoinedButtons(openButton));
             add(Box.createHorizontalStrut(JoinedButtons.ROW_GAP));
         }
-        add(muted(new JLabel("Plot")));
-        add(new SegmentedControl(lightPlot, darkPlot));
+        // right after the view switch, as in the Scatter view's toolbar, so it stays put when switching views
+        add(labelled("Plot", new SegmentedControl(lightPlot, darkPlot)));
         add(new JoinedButtons(gridButton));
         add(Box.createHorizontalStrut(JoinedButtons.ROW_GAP));
         add(muted(new JLabel("Cursor")));
@@ -193,6 +193,15 @@ final class ChartToolbar extends ThemedStrip {
         panel.add(spinner);
         panel.add(muted(new JLabel(unit)));
         return panel;
+    }
+
+    /** A muted label and its control as one piece, so a wrapping toolbar never puts them on different lines. */
+    static JPanel labelled(String text, Component control) {
+        JPanel pair = new JPanel(new FlowLayout(FlowLayout.LEFT, JoinedButtons.ROW_GAP, 0));
+        pair.setOpaque(false);
+        pair.add(muted(new JLabel(text)));
+        pair.add(control);
+        return pair;
     }
 
     static JLabel muted(JLabel label) {
