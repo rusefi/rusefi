@@ -301,15 +301,15 @@ public final class LogViewerPanel extends JPanel {
             @Override public void changedUpdate(DocumentEvent event) { filter(search.getText()); }
         });
 
-        String stillFound = "<br>they stay in Plotted and the lists and are found by search</html>";
+        String hiddenWhere = "<br>also while searching; they stay in Plotted and the lists</html>";
         setUpFilterBox(hideZeroBox, "Hide zero signals", SignalSections.zeroCount(log), state.hideZero(),
                 "<html>Leave signals that are 0 for the whole log (mostly unused features) out of the groups;"
-                        + stillFound, state::setHideZero);
+                        + hiddenWhere, state::setHideZero);
         setUpFilterBox(hideConstantBox, "Hide constant signals", SignalSections.constantCount(log),
                 state.hideConstant(),
                 "<html>Leave signals that hold one other value for the whole log out of the groups.<br>"
                         + "These can matter: an active error, the detected gear, the firmware version;"
-                        + stillFound, state::setHideConstant);
+                        + hiddenWhere, state::setHideConstant);
         JPanel filterBoxes = new JPanel(new GridLayout(0, 1, 0, 2));
         filterBoxes.setOpaque(false);
         filterBoxes.add(hideZeroBox);
