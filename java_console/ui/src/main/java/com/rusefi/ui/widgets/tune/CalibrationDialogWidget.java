@@ -156,6 +156,65 @@ public class CalibrationDialogWidget {
         }
     }
 
+    /** Reads a field's bytes from a TS page other than the main settings page; delivers null on failure. */
+    interface PageReader {
+        void read(int pageIndex, int offset, int size, Consumer<byte[]> onResult);
+    }
+
+    private PageReader pageReader = this::readFromEcuPage;
+
+    void setPageReaderForUnitTest(PageReader pageReader) {
+        this.pageReader = pageReader;
+    }
+
+    private void readFromEcuPage(int pageIndex, int offset, int size, Consumer<byte[]> onResult) {
+        BinaryProtocol bp = uiContext.getBinaryProtocol();
+        if (bp == null) {
+            onResult.accept(null);
+            return;
+        }
+        uiContext.getLinkManager().submit(() -> {
+            byte[] data = bp.readFromPage(pageIndex, offset, size);
+            SwingUtilities.invokeLater(() -> onResult.accept(data));
+        });
+    }
+
+    /**
+     * The working image holds only the main settings page. Tables whose values live on another
+     * TS page (LTFT trims on 0x0200) are read from the ECU and shown read-only: drawing them from
+     * the working image would show, and on edit overwrite, main-page settings at the same offsets.
+     */
+    private JComponent createTableView(IniFileModel iniFileModel, TableModel table, Runnable notifyEdit) {
+        Optional<IniField> valuesField = iniFileModel.findIniField(table.getZBinsConstant());
+        if (!valuesField.isPresent() || valuesField.get().getPageIndex() == 0) {
+            TuningTableView view = new TuningTableView(table.getTitle());
+            view.displayTable(iniFileModel, table.getTableId(), workingImage);
+            view.setOnEdit(notifyEdit);
+            return view.getContent();
+        }
+
+        IniField field = valuesField.get();
+        TuningTableView view = new TuningTableView(table.getTitle(), true);
+        JLabel status = new JLabel("Reading from ECU...");
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(status, BorderLayout.NORTH);
+        panel.add(view.getContent(), BorderLayout.CENTER);
+        ConfigurationImage axisImage = workingImage;
+        pageReader.read(field.getPageIndex(), field.getOffset(), field.getSize(), data -> {
+            if (data == null) {
+                status.setText("Connect to the ECU to view this table");
+                return;
+            }
+            byte[] page = new byte[field.getOffset() + data.length];
+            System.arraycopy(data, 0, page, field.getOffset(), data.length);
+            view.displayTable(iniFileModel, table.getTableId(), new ConfigurationImage(page), axisImage);
+            panel.remove(status);
+            panel.revalidate();
+            panel.repaint();
+        });
+        return panel;
+    }
+
     public CalibrationDialogWidget(UIContext uiContext) {
         this.uiContext = uiContext;
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
@@ -316,10 +375,7 @@ public class CalibrationDialogWidget {
                     veToolbar.add(genVeBtn);
                     body.add(veToolbar);
                 }
-                TuningTableView tuningTableView = new TuningTableView(table.getTitle());
-                tuningTableView.displayTable(iniFileModel, table.getTableId(), workingImage);
-                tuningTableView.setOnEdit(notifyEdit);
-                body.add(tuningTableView.getContent());
+                body.add(createTableView(iniFileModel, table, notifyEdit));
             } else {
                 CurveModel curve = iniFileModel.getCurves().get(key);
                 if (curve != null) {
@@ -657,10 +713,7 @@ public class CalibrationDialogWidget {
         TableModel table = iniFileModel.getTable(panel.getPanelName());
         if (table != null) {
             viewportPane.fillWidth = true;
-            TuningTableView tuningTableView = new TuningTableView(table.getTitle());
-            tuningTableView.displayTable(iniFileModel, table.getTableId(), workingImage);
-            tuningTableView.setOnEdit(notifyEdit);
-            JComponent content = tuningTableView.getContent();
+            JComponent content = createTableView(iniFileModel, table, notifyEdit);
             if ("veTableTbl".equals(table.getTableId())) {
                 final IniFileModel capturedIni = iniFileModel;
                 JButton genVeBtn = new JButton("Generate base VE...");
