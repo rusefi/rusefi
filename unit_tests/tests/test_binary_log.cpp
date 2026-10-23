@@ -65,7 +65,7 @@ TEST(BinaryLogField, Value) {
 	memset(buffer, 0xAA, sizeof(buffer));
 
 	// Should write 4 bytes
-	EXPECT_EQ(4u, lf.writeData(buffer, nullptr));
+	EXPECT_EQ(4u, lf.writeData(buffer));
 
 	// Check that big endian data was written, and bytes after weren't touched
 	EXPECT_THAT(buffer, ElementsAre(0x00, 0xbc, 0x61, 0x4e, 0xAA, 0xAA));
@@ -76,7 +76,7 @@ TEST(BinaryLogField, FloatDisplayScale) {
 	Field field(grams, "Fuel mass", "mg", 3, "none", 1000);
 	// [tag:live_data_output_scale] The log reader converts grams to mg using the header, not payload writes.
 	EXPECT_FLOAT_EQ(1000, field.getMultiplier());
-	EXPECT_DOUBLE_EQ(125, field.readValueAsDouble(nullptr));
+	EXPECT_DOUBLE_EQ(125, field.readValueAsDouble());
 	StrictMock<MockWriter> writer;
 	EXPECT_CALL(writer, write(_, 89)).WillOnce([](const char* buffer, size_t count) {
 		EXPECT_EQ(0x44, static_cast<unsigned char>(buffer[46]));
@@ -87,7 +87,7 @@ TEST(BinaryLogField, FloatDisplayScale) {
 	});
 	field.writeHeader(writer);
 	char data[sizeof(float)];
-	EXPECT_EQ(sizeof(float), field.writeData(data, nullptr));
+	EXPECT_EQ(sizeof(float), field.writeData(data));
 	EXPECT_THAT(data, ElementsAre(0x3e, 0, 0, 0));
 	EXPECT_FLOAT_EQ(0.125f, grams);
 }
@@ -118,12 +118,12 @@ TEST(BinaryLogField, FloatTranslation) {
 	for (float raw : {0.95f, 1.0f, 1.05f}) {
 		trim = raw;
 		char data[sizeof(float)];
-		ASSERT_EQ(sizeof(data), field.writeData(data, nullptr));
+		ASSERT_EQ(sizeof(data), field.writeData(data));
 		EXPECT_FLOAT_EQ(raw, readBigEndianFloat(data));
 		double expected = (static_cast<double>(raw) - 1) * 100;
 		EXPECT_NEAR(expected, (readBigEndianFloat(data) + readBigEndianFloat(header + 50))
 			* readBigEndianFloat(header + 46), 0.00001);
-		EXPECT_NEAR(expected, field.readValueAsDouble(nullptr), 0.00001);
+		EXPECT_NEAR(expected, field.readValueAsDouble(), 0.00001);
 	}
 }
 
@@ -142,7 +142,7 @@ TEST(BinaryLogField, PackedTranslation) {
 	for (int raw : {-20, 0, 20}) {
 		packed = raw / 10.0f;
 		char data[sizeof(int16_t)];
-		ASSERT_EQ(sizeof(data), field.writeData(data, nullptr));
+		ASSERT_EQ(sizeof(data), field.writeData(data));
 		int decodedRaw = (static_cast<unsigned char>(data[0]) << 8) | static_cast<unsigned char>(data[1]);
 		if (decodedRaw >= 0x8000) {
 			decodedRaw -= 0x10000;
@@ -151,7 +151,7 @@ TEST(BinaryLogField, PackedTranslation) {
 		double expected = (raw + 100) / 10.0;
 		EXPECT_NEAR(expected, (decodedRaw + readBigEndianFloat(header + 50))
 			* readBigEndianFloat(header + 46), 0.00001);
-		EXPECT_NEAR(expected, field.readValueAsDouble(nullptr), 0.00001);
+		EXPECT_NEAR(expected, field.readValueAsDouble(), 0.00001);
 	}
 }
 
@@ -181,7 +181,7 @@ TEST(BinaryLogField, ReadersApplyTranslation) {
 			return count;
 		});
 		fields[i].writeHeader(writer);
-		position += fields[i].writeData(payload + position, nullptr);
+		position += fields[i].writeData(payload + position);
 	}
 	ASSERT_EQ(sizeof(payload), position);
 	const char recordHeader[4] = {};

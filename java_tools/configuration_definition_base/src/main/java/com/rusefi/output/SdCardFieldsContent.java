@@ -39,7 +39,7 @@ public class SdCardFieldsContent {
             output.write(additionalHeaders);
         }
         output.write("static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {\n" +
-                "\t{packedTime, GAUGE_NAME_TIME, \"sec\", 3},\n");
+                "\t{MLG_SOURCE(packedTime), GAUGE_NAME_TIME, \"sec\", 3},\n");
         output.write(content);
         output.write("};\n");
     }
@@ -111,7 +111,7 @@ public class SdCardFieldsContent {
                 throw new IllegalStateException(humanName + " seems broken: " + currentPosition + " vs " + structureStartingTsPosition);
             return
                 "\t{" +
-                (isPtr ? "*" : "") + expression +
+                "MLG_SOURCE(" + (isPtr ? "*" : "") + expression + ")" +
                 ", " + offsetWithinCurrentStructure +
                 ", " + perFieldWithStructuresIterator.bitState.get() + ", "
                 + humanName +
@@ -133,7 +133,7 @@ public class SdCardFieldsContent {
             }
             return
                 "\t{" +
-                expression + (isPtr ? "->" : ".") + name +
+                "MLG_SOURCE(" + expression + (isPtr ? "->" : ".") + name + ")" +
                 ", "
                 + humanName +
                 ", " +

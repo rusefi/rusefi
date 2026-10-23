@@ -69,21 +69,21 @@ iterate all), mutability, naming universe, and flash layout.
   When mapping a module with multiple inheritance, use its generated state
   subobject as the expression: bit offsets are relative to that state, not the
   complete module. Keep the expression guarded by the module's feature flag.
-- **SD mappings require stable storage.** [tag:live_data_sd_mapping]
-  The additional mappings cover antilag, nitrous, fuel pump, main relay, TPS
-  acceleration enrichment, closed-loop idle, SENT, STFT, VVL, rotational idle,
-  injector deadtime autotune, rolling launch, burst knock, engine state machine,
-  and WOT enrichment. These states live inline in `Engine` or its module list.
-  With the current generator, `constexpr:` supplies both SD addresses and Lua
-  expressions, taking precedence over `engineModule:` when both are present.
-  Throttle model, HPFP, A/C and misfire remain without SD mappings: their mockable
-  modules use heap storage on hosts, and Lua must retain runtime module lookup.
-  Separate SD-only conditions and Lua access paths require generator support.
-  TCU, wideband diagnostics and the example fragment also have no SD mapping.
+- **SD and Lua can have different storage requirements.** [tag:live_data_sd_mapping]
+  When an entry has both `constexpr:` and `engineModule:`, the former supplies SD
+  addresses and the latter supplies runtime Lua lookups. The optional
+  `sd_conditional_compilation:` adds a restriction to the common
+  `conditional_compilation:` for SD only. Throttle model, HPFP, A/C and misfire
+  use `EFI_PROD_CODE` here because their mockable modules live in heap storage
+  on hosts. Their Lua lookups continue to follow module replacements.
+  `LiveDataSdCoverageTest` checks the 19 added fragment mappings;
+  `unitTestLog.stableLiveDataMappings` checks emitted host values, and
+  `unitTestLog.sdMappingsPreserveMockedLuaLookups` checks runtime lookup behavior.
+  TCU, wideband diagnostics and the example fragment have no SD mapping.
   TCU selects its controller at runtime; wideband state needs timeout/permission
   refresh independently of TunerStudio reads before a direct mapping is useful.
   STFT input errors are mapped, but its enum state/bin fields remain excluded
-  by the enum filter. The existing `FULL_SD_LOGS` gate still applies to antilag.
+  by the enum filter. Existing `FULL_SD_LOGS` gates still apply to A/C and antilag.
 - **Dead generated file**: `value_lookup_generated.cpp` (switch-based getter + string-compare
   setter) is still emitted by `GetConfigValueConsumer` (first `-field_lookup_file` argument)
   but is NOT in any `.mk` — only the table variant + `value_lookup.cpp` are compiled. Both

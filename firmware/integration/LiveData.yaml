@@ -12,8 +12,10 @@
 #
 # technical debt: see docs_enums.mk where all the .txt files should be mentioned as well :(
 #
-# [tag:live_data_sd_mapping] Stable inline state uses constexpr for both SD and Lua.
-# Cast to the generated state subobject so bit offsets exclude the EngineModule base.
+# [tag:live_data_sd_mapping] SD expressions address the generated state subobject:
+# bit offsets do not include a module's polymorphic EngineModule base. Use
+# engineModule for module-backed state; SD and Lua then read the active module.
+# SD sources are constant addresses in firmware and lazy accessors on hosts.
 Usages:
 #  output_channels always goes first at least because it has protocol version at well-known offset
   - name: output_channels
@@ -41,16 +43,14 @@ Usages:
     folder: controllers/engine_cycle
     prepend: integration/rusefi_config_shared.txt
     output_name: knock
-    constexpr: "engine->module<KnockController>()"
-    isPtr: true
+    engineModule: KnockController
 
   - name: prime_injection
     cppFileName: prime_injection
     java: PrimeController.java
     folder: controllers/engine_cycle
     prepend: integration/rusefi_config_shared.txt
-    constexpr: "engine->module<PrimeController>()"
-    isPtr: true
+    engineModule: PrimeController
 
   - name: tcu_controller
     java: TcuController.java
@@ -59,11 +59,15 @@ Usages:
     conditional_compilation: "EFI_TCU"
 
   - name: throttle_model
+    engineModule: ThrottleModel
+    conditional_compilation: "EFI_ENGINE_CONTROL"
     java: ThrottleModel.java
     folder: controllers/math
     output_name: throttle_model
 
   - name: high_pressure_fuel_pump
+    engineModule: HpfpController
+    conditional_compilation: "EFI_HPFP && EFI_ENGINE_CONTROL"
     java: HighPressureFuelPump.java
     folder: controllers/engine_cycle
     output_name: hpfp
@@ -74,7 +78,7 @@ Usages:
     prepend: integration/rusefi_config_shared.txt
     constexpr: "engine->module<InjectorModelPrimary>()"
     isPtr: true
-    # working around unmock() in simulator
+    # IInjectorModel does not expose injector_model_s on hosts.
     conditional_compilation: "EFI_PROD_CODE && EFI_IDLE_CONTROL"
 
   - name: launch_control_state
@@ -105,8 +109,7 @@ Usages:
     folder: controllers/actuators
     prepend: integration/rusefi_config_shared.txt
     output_name: boost
-    constexpr: "engine->module<BoostController>()"
-    isPtr: true
+    engineModule: BoostController
     conditional_compilation: "EFI_ENGINE_CONTROL && EFI_BOOST_CONTROL"
 
   - name: ac_control
@@ -118,7 +121,6 @@ Usages:
     conditional_compilation: "FULL_SD_LOGS"
 
   - name: nitrous_control_state
-    constexpr: "static_cast<nitrous_control_state_s&>(engine->module<NitrousController>().unmock())"
     java: NitrousControl.java
     folder: controllers/algo
     prepend: integration/rusefi_config_shared.txt
@@ -135,7 +137,6 @@ Usages:
     isPtr: true
 
   - name: fuel_pump_control
-    constexpr: "static_cast<fuel_pump_control_s&>(engine->module<FuelPumpController>().unmock())"
     cppFileName: fuel_pump
     java: FuelPump.java
     folder: controllers/modules/fuel_pump
@@ -143,7 +144,7 @@ Usages:
     engineModule: FuelPumpController
 
   - name: main_relay
-    constexpr: "static_cast<main_relay_s&>(engine->module<MainRelayController>().unmock())"
+    engineModule: MainRelayController
     java: MainRelay.java
     folder: controllers/actuators
     output_name: mainRelay
@@ -161,7 +162,7 @@ Usages:
     constexpr: "engine->engineState"
 
   - name: tps_accel_state
-    constexpr: "static_cast<tps_accel_state_s&>(engine->module<TpsAccelEnrichment>().unmock())"
+    engineModule: TpsAccelEnrichment
     cppFileName: accel_enrichment
     java: TpsAccelState.java
     folder: controllers/algo
@@ -226,10 +227,9 @@ Usages:
     java: IdleState.java
     folder: controllers/actuators
     prepend: integration/rusefi_config_shared.txt
-    constexpr: "engine->module<IdleController>().unmock()"
+    engineModule: IdleController
     output_name: idle
-# working around unmock() in simulator
-    conditional_compilation: "EFI_PROD_CODE && EFI_IDLE_CONTROL"
+    conditional_compilation: "EFI_IDLE_CONTROL"
 
   - name: electronic_throttle
     java: ElectronicThrottle.java
@@ -266,8 +266,7 @@ Usages:
   - name: vvt
     java: VvtState.java
     folder: controllers/actuators
-    constexpr: "engine->module<VvtController1>()"
-    isPtr: true
+    engineModule: VvtController1
     conditional_compilation: "EFI_VVT_PID"
 
   - name: lambda_monitor
@@ -300,11 +299,11 @@ Usages:
     folder: controllers
     prepend: integration/rusefi_config_shared.txt
     # [tag:ltft_sd_state] Bit offsets are relative to the generated state, not the EngineModule base.
-    constexpr: "static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock())"
+    engineModule: LongTermFuelTrim
     conditional_compilation: "EFI_LTFT_CONTROL"
 
   - name: short_term_fuel_trim_state
-    constexpr: "static_cast<short_term_fuel_trim_state_s&>(engine->module<ShortTermFuelTrim>().unmock())"
+    engineModule: ShortTermFuelTrim
     conditional_compilation: "EFI_ENGINE_CONTROL"
     cppFileName: short_term_fuel_trim
     java: ShortTermFuelTrim.java
@@ -312,7 +311,6 @@ Usages:
     prepend: integration/rusefi_config_shared.txt
 
   - name: vvl_controller_state
-    constexpr: "static_cast<vvl_controller_state_s&>(engine->module<VvlController>().unmock())"
     java: VvlController.java
     folder: controllers/modules/vvl_controller
     prepend: integration/rusefi_config_shared.txt
@@ -329,14 +327,12 @@ Usages:
     conditional_compilation: "ROTATIONAL_IDLE_CONTROLLER"
 
   - name: injector_deadtime_autotune_state
-    constexpr: "static_cast<injector_deadtime_autotune_state_s&>(engine->module<InjectorDeadtimeAutotune>().unmock())"
     java: InjectorDeadtimeAutotune.java
     folder: controllers/modules/injector_deadtime_autotune
     engineModule: InjectorDeadtimeAutotune
     conditional_compilation: "EFI_ENGINE_CONTROL"
 
   - name: rolling_launch_state
-    constexpr: "static_cast<rolling_launch_state_s&>(engine->module<RollingLaunchControl>().unmock())"
     java: RollingLaunch.java
     folder: controllers/modules/rolling_launch
     prepend: integration/rusefi_config_shared.txt
@@ -345,7 +341,6 @@ Usages:
     conditional_compilation: "EFI_LAUNCH_CONTROL"
 
   - name: burst_knock_state
-    constexpr: "static_cast<burst_knock_state_s&>(engine->module<BurstKnock>().unmock())"
     java: BurstKnock.java
     folder: controllers/modules/burst_knock
     prepend: integration/rusefi_config_shared.txt
@@ -353,7 +348,6 @@ Usages:
     engineModule: BurstKnock
 
   - name: engine_state_machine_state
-    constexpr: "static_cast<engine_state_machine_state_s&>(engine->module<EngineStateMachine>().unmock())"
     java: EngineStateMachine.java
     folder: controllers/modules/engine_state_machine
     prepend: integration/rusefi_config_shared.txt
@@ -361,7 +355,6 @@ Usages:
     engineModule: EngineStateMachine
 
   - name: wot_enrichment_state
-    constexpr: "static_cast<wot_enrichment_state_s&>(engine->module<WotEnrichment>().unmock())"
     java: WotEnrichment.java
     folder: controllers/modules/wot_enrichment
     prepend: integration/rusefi_config_shared.txt

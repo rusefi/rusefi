@@ -154,7 +154,7 @@ TEST(MlgOpenIssues, SdHeaderHasNoStartingTuneBlock) {
 	EXPECT_EQ(header.bytes.size(), dataOffset);
 }
 
-TEST(MlgOpenIssues, SdIncludesLtftButOmitsMisfireFields) {
+TEST(MlgOpenIssues, SdIncludesLtftAndMisfireFields) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	CaptureWriter header;
 	MLG::writeFileHeader(header);
@@ -172,9 +172,9 @@ TEST(MlgOpenIssues, SdIncludesLtftButOmitsMisfireFields) {
 	for (const char* present : {"LTFT: Bank 1", "LTFT: Bank 2", "LTFT: learning: hits"}) {
 		EXPECT_EQ(1u, names.count(present)) << present;
 	}
-	// Issue 6: misfire fields still have no SD source wiring.
-	for (const char* missing : {"Misfire: total count", "Misfire: EMA baseline"}) {
-		EXPECT_EQ(0u, names.count(missing)) << missing;
+	// Mockable module fields are available in host logs as well as firmware.
+	for (const char* present : {"Misfire: total count", "Misfire: EMA baseline"}) {
+		EXPECT_EQ(1u, names.count(present)) << present;
 	}
 }
 

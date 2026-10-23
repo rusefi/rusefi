@@ -2,37 +2,92 @@
 
 #include <cstdint>
 #include <cstring>
+#include <type_traits>
 
 #include <rusefi/scaled_channel.h>
 
 #include "writer.h"
 #include "mlg_types.h"
 
-// For unit tests we are manipulating with storage in runtime so consteval is not possible.
-// In prod builds we have engine and configs as global instances so all addresses to read data from
-// must be known compile-time. If consteval fails then some runtime logic made its way into LogField and that moves
-// LogField instance into RAM which is correct from code perspective but incorrect intent-wise and consume code and RAM
-// for no real reason.
-#if defined(EFI_UNIT_TEST) && EFI_UNIT_TEST
+// Direct-reference constructors also support local values in unit tests.
+#if EFI_UNIT_TEST
 #define LOG_FIELD_CONSTNESS_SPECIFIER_METHODS constexpr
-#define LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE const
 #else
 #define LOG_FIELD_CONSTNESS_SPECIFIER_METHODS consteval
-#define LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE const constinit
 #endif
+#define LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE const constinit
+
+// [tag:live_data_sd_mapping] Resolve generated sources at compile time on the ECU,
+// and at each read on hosts, where Engine instances and mocks can be replaced.
+#define MLG_SOURCE(...) ::MLG::Entries::makeSource<[]() -> auto& { return (__VA_ARGS__); }>()
 
 namespace MLG::Entries {
 using namespace MLG;
 
+class FieldSource {
+public:
+	constexpr explicit FieldSource(const void* address) : m_address(address) {}
+#if !EFI_PROD_CODE
+	constexpr explicit FieldSource(const void* (*resolve)()) : m_address(nullptr), m_resolve(resolve) {}
+#endif
+
+	constexpr const void* get() const {
+#if !EFI_PROD_CODE
+		if (m_resolve) {
+			return m_resolve();
+		}
+#endif
+		return m_address;
+	}
+
+private:
+	const void* m_address;
+#if !EFI_PROD_CODE
+	const void* (*m_resolve)() = nullptr;
+#endif
+};
+
+// Retain the value type for metadata generation without evaluating the source.
+template<typename T>
+struct Source : FieldSource {
+	using FieldSource::FieldSource;
+};
+
+template<typename T>
+constexpr const void* fieldAddress(const T& value) {
+	return &value;
+}
+
+template<typename T, int Mult, int Div>
+constexpr const void* fieldAddress(const scaled_channel<T, Mult, Div>& value) {
+	return value.getFirstByteAddr();
+}
+
+template<auto Getter>
+consteval auto makeSource() {
+	static_assert(std::is_lvalue_reference_v<decltype(Getter())>);
+	using T = std::remove_cvref_t<decltype(Getter())>;
+#if EFI_PROD_CODE
+	return Source<T>{fieldAddress(Getter())};
+#else
+	return Source<T>{+[]() -> const void* { return fieldAddress(Getter()); }};
+#endif
+}
+
 class Field {
 public:
+	template<typename T, typename... Args>
+		requires (!std::is_base_of_v<FieldSource, T>)
+	LOG_FIELD_CONSTNESS_SPECIFIER_METHODS Field(T& value, Args... args)
+		: Field(Source<std::remove_cv_t<T>>{fieldAddress(value)}, args...) {}
+
 	// Scaled channels, memcpys data directly and describes format in header
 	template <typename TValue, int TMult, int TDiv>
-	LOG_FIELD_CONSTNESS_SPECIFIER_METHODS Field(const scaled_channel<TValue, TMult, TDiv>& toRead,
+	LOG_FIELD_CONSTNESS_SPECIFIER_METHODS Field(Source<scaled_channel<TValue, TMult, TDiv>> source,
 			   const char* name, const char* units, int8_t digits, const char* category = "none", float multiplier = 1, float translation = 0)
 		: m_multiplier(float(TDiv) / TMult * multiplier)
 		, m_translation(translation)
-		, m_addr(toRead.getFirstByteAddr())
+		, m_source(source)
 		, m_type_id(static_cast<std::underlying_type_t<Types::Field::Scalar>>(Types::Field::resolveBuiltInNumberType<TValue>()))
 		, m_digits(digits)
 		, m_size(Types::Field::sizeForType<Types::Field::resolveBuiltInNumberType<TValue>()>())
@@ -49,11 +104,11 @@ public:
 	// [tag:live_data_output_scale] engineering = (raw + translation) * multiplier.
 	// The header stores the conversion, including raw packed offsets; writeData keeps storage unchanged.
 	template <typename TValue, typename = typename std::enable_if<std::is_arithmetic_v<TValue>>::type>
-	LOG_FIELD_CONSTNESS_SPECIFIER_METHODS Field(TValue& toRead,
+	LOG_FIELD_CONSTNESS_SPECIFIER_METHODS Field(Source<TValue> source,
 			   const char* name, const char* units, int8_t digits, const char* category = "none", float multiplier = 1, float translation = 0)
 		: m_multiplier(multiplier)
 		, m_translation(translation)
-		, m_addr(&toRead)
+		, m_source(source)
 		, m_type_id(static_cast<std::underlying_type_t<Types::Field::Scalar>>(Types::Field::resolveBuiltInNumberType<TValue>()))
 		, m_digits(digits)
 		, m_size(Types::Field::sizeForType<Types::Field::resolveBuiltInNumberType<TValue>()>())
@@ -69,7 +124,7 @@ public:
 	// Bit channel
 	template <typename TValue>
 	LOG_FIELD_CONSTNESS_SPECIFIER_METHODS Field(
-		TValue& toRead,
+		Source<TValue> source,
 		const uint32_t bitsBlockOffset,
 		const uint8_t bitNumber,
 		const char* name,
@@ -77,7 +132,7 @@ public:
 		const char* category = "none"
 	): m_multiplier(1)
 		, m_translation(0)
-		, m_addr(&toRead)
+		, m_source(source)
 		, m_type_id(static_cast<std::underlying_type_t<Types::Field::Scalar>>(Types::Field::Scalar::U08))
 		, m_digits(0)
 		, m_size(1)
@@ -87,11 +142,11 @@ public:
 		, m_isBitField(true)
 		, m_bitsBlockOffset(bitsBlockOffset)
 		, m_bitNumber(bitNumber)
-    {
-    }
+	{
+	}
 
 	constexpr size_t getSize() const { return m_size; }
-	constexpr const void* getAddr() const { return m_addr; }
+	constexpr const void* getAddr() const { return m_source.get(); }
 	constexpr const char* getName() const { return m_name; }
 	constexpr const char* getUnits() const { return m_units; }
 	constexpr const char* getCategory() const { return m_category; }
@@ -102,20 +157,19 @@ public:
 	constexpr bool isBitField() const { return m_isBitField; }
 
 	// Reads the field's current value, applies translation/scale or bit extraction, and returns it as a double.
-	// 'offset' has the same semantics as in writeData (unit-test engine pointer correction).
-	double readValueAsDouble(void* offset) const {
+	double readValueAsDouble() const {
 		using namespace Types::Field;
 		if (m_isBitField) {
-			const char* const bitsBlockAddr = static_cast<const char*>(m_addr) + m_bitsBlockOffset;
+			const char* const bitsBlockAddr = static_cast<const char*>(getAddr()) + m_bitsBlockOffset;
 			const char* const byteWithBitAddr = bitsBlockAddr + m_bitNumber / 8;
 			unsigned char byteWithBit = 0;
-			memcpy_swapend(&byteWithBit, byteWithBitAddr, 1, offset);
+			memcpy_swapend(&byteWithBit, byteWithBitAddr, 1);
 			const uint8_t bitNumberInByte = m_bitNumber % 8;
 			return (byteWithBit & (1 << bitNumberInByte)) ? 1.0 : 0.0;
 		}
 		uint8_t raw[8] = {0};
 		// Note: writeData swaps endianness for the binary log; here we want native value.
-		const char* src = static_cast<const char*>(m_addr) + reinterpret_cast<uintptr_t>(offset);
+		const char* src = static_cast<const char*>(getAddr());
 		for (size_t i = 0; i < m_size; i++) {
 			raw[i] = static_cast<uint8_t>(src[i]);
 		}
@@ -179,16 +233,16 @@ public:
 
 	// Write the field's data to the buffer.
 	// Returns the number of bytes written.
-	size_t writeData(char* buffer, void *offset) const {
+	size_t writeData(char* buffer) const {
 		if (m_isBitField) {
-			const char* const bitsBlockAddr = static_cast<const char*>(m_addr) + m_bitsBlockOffset;
+			const char* const bitsBlockAddr = static_cast<const char*>(getAddr()) + m_bitsBlockOffset;
 			const char* const byteWithBitAddr = bitsBlockAddr + m_bitNumber / 8;
 			unsigned char byteWithBit = 0;
-			memcpy_swapend(&byteWithBit, byteWithBitAddr, m_size, offset);
+			memcpy_swapend(&byteWithBit, byteWithBitAddr, m_size);
 			const uint8_t bitNumberInByte = m_bitNumber % 8;
 			buffer[0] = static_cast<char>(static_cast<bool>(byteWithBit & (1 << bitNumberInByte)));
 		} else {
-			memcpy_swapend(buffer, m_addr, m_size, offset);
+			memcpy_swapend(buffer, getAddr(), m_size);
 		}
 
 		return m_size;
@@ -196,22 +250,22 @@ public:
 
 private:
 
-	static void memcpy_swapend(void* dest, const void* src, size_t const size, void *offset) {
+	static void memcpy_swapend(void* dest, const void* src, size_t const size) {
 		const char* src2 = reinterpret_cast<const char*>(src);
 		char* dest2 = reinterpret_cast<char*>(dest);
 		for (size_t i = 0; i < size; i++) {
 			// Endian swap - copy the end to the beginning
-			dest2[i] = src2[size - 1 - i + (uint64_t)offset];
+			dest2[i] = src2[size - 1 - i];
 		}
 	}
 
 	static void copyFloat(char* buffer, float value) {
-		memcpy_swapend(buffer, &value, sizeof(float), nullptr);
+		memcpy_swapend(buffer, &value, sizeof(float));
 	}
 
 	const float m_multiplier;
 	const float m_translation;
-	const void* const m_addr;
+	const FieldSource m_source;
 	const uint8_t m_type_id;
 	const int8_t m_digits;
 	const uint8_t m_size;

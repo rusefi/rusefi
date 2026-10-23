@@ -10,8 +10,35 @@ import java.util.List;
 
 import static com.rusefi.AssertCompatibility.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class LiveDataProcessorTest {
+    @Test
+    public void moduleLoggingSource() throws IOException {
+        String yaml = "Usages:\n"
+                + "  - name: sample\n"
+                + "    java: Sample.java\n"
+                + "    folder: test\n"
+                + "    engineModule: SampleModule\n"
+                + "    constexpr: engine->module<SampleModule>().unmock()\n"
+                + "    conditional_compilation: EFI_SAMPLE\n";
+        TestFileCaptor captor = new TestFileCaptor();
+        LiveDataProcessor processor = new LiveDataProcessor("test", fileName ->
+                new StringReader("struct_no_prefix sample_s\n"
+                        + "float value;Sample value;\n"
+                        + "bit enabled\n"
+                        + "end_struct\n"), captor, "");
+        processor.handleYaml(LiveDataProcessor.getStringObjectMap(new StringReader(yaml)));
+        String sd = captor.fileCapture.get(SdCardFieldsContent.SD_CARD_OUTPUT_FILE_NAME).sb.toString();
+        String lua = captor.fileCapture.get(LiveDataProcessor.getOutputLookupFileName()).sb.toString();
+        assertTrue(sd.contains("#if EFI_SAMPLE\n"), sd);
+        assertTrue(sd.contains("MLG_SOURCE(static_cast<sample_s&>(*engine->module<SampleModule>()).value)"), sd);
+        assertTrue(sd.contains("MLG_SOURCE(static_cast<sample_s&>(*engine->module<SampleModule>())), 4, 0,"), sd);
+        assertFalse(sd.contains("unmock()"), sd);
+        assertTrue(lua.contains("return engine->module<SampleModule>()->value;"), lua);
+
+    }
+
     @Test
     public void everyFragmentUsesIniConversion() throws IOException {
         // [tag:live_data_output_scale] Every fragment uses the same INI conversion without YAML flags.
@@ -35,8 +62,8 @@ public class LiveDataProcessorTest {
 
         String sd = captor.fileCapture.get(SdCardFieldsContent.SD_CARD_OUTPUT_FILE_NAME).sb.toString();
         String lua = captor.fileCapture.get(LiveDataProcessor.getOutputLookupFileName()).sb.toString();
-        assertTrue(sd.contains("{engine->scaled.scaledMass, \"scaled mass\", \"mg\", 3, \"none\", 1000.0f, -1.0f}"), sd);
-        assertTrue(sd.contains("{engine->legacy.legacyMass, \"legacy mass\", \"mg\", 3, \"none\", 1000.0f, -1.0f}"), sd);
+        assertTrue(sd.contains("{MLG_SOURCE(engine->scaled.scaledMass), \"scaled mass\", \"mg\", 3, \"none\", 1000.0f, -1.0f}"), sd);
+        assertTrue(sd.contains("{MLG_SOURCE(engine->legacy.legacyMass), \"legacy mass\", \"mg\", 3, \"none\", 1000.0f, -1.0f}"), sd);
         assertTrue(lua.contains("return (engine->scaled.scaledMass + -1.0f) * 1000.0f;"), lua);
         assertTrue(lua.contains("return (engine->legacy.legacyMass + -1.0f) * 1000.0f;"), lua);
     }
@@ -276,24 +303,24 @@ public class LiveDataProcessorTest {
                 "#include <wb.h>\n" +
                 "#endif\n" +
                 "static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {\n" +
-                "\t{packedTime, GAUGE_NAME_TIME, \"sec\", 3},\n" +
-                "\t{engine->outputChannels.oootempC, \"Temperature\", \"C\", 0},\n" +
-                "\t{engine->outputChannels.oooesr, \"ESR\", \"ohm\", 0},\n" +
-                "\t{engine->outputChannels.lua.fuelMult, \"Lua: Fuel mult\", \"\", 0},\n" +
-                "\t{engine->outputChannels, 8, 0, \"lua.clutchUpState\", \"\"},\n" +
-                "\t{engine->outputChannels, 8, 1, \"lua.brakePedalState\", \"\"},\n" +
-                "\t{engine->outputChannels, 8, 2, \"lua.disableDecelerationFuelCutOff\", \"\"},\n" +
-                "\t{engine->outputChannels, 8, 3, \"lua.torqueReductionState\", \"\"},\n" +
-                "\t{engine->zutputChannels.zoooTC, \"Temature\", \"C\", 0},\n" +
+                "\t{MLG_SOURCE(packedTime), GAUGE_NAME_TIME, \"sec\", 3},\n" +
+                "\t{MLG_SOURCE(engine->outputChannels.oootempC), \"Temperature\", \"C\", 0},\n" +
+                "\t{MLG_SOURCE(engine->outputChannels.oooesr), \"ESR\", \"ohm\", 0},\n" +
+                "\t{MLG_SOURCE(engine->outputChannels.lua.fuelMult), \"Lua: Fuel mult\", \"\", 0},\n" +
+                "\t{MLG_SOURCE(engine->outputChannels), 8, 0, \"lua.clutchUpState\", \"\"},\n" +
+                "\t{MLG_SOURCE(engine->outputChannels), 8, 1, \"lua.brakePedalState\", \"\"},\n" +
+                "\t{MLG_SOURCE(engine->outputChannels), 8, 2, \"lua.disableDecelerationFuelCutOff\", \"\"},\n" +
+                "\t{MLG_SOURCE(engine->outputChannels), 8, 3, \"lua.torqueReductionState\", \"\"},\n" +
+                "\t{MLG_SOURCE(engine->zutputChannels.zoooTC), \"Temature\", \"C\", 0},\n" +
                 "#if WB_THINGY\n" +
-                "\t{engine->wbo1.tempC, \"wb1WBO: Temperature\", \"C\", 0, \"cate\"},\n" +
-                "\t{engine->wbo1, 4, 0, \"wb1bitName1\", \"\"},\n" +
-                "\t{engine->wbo1, 4, 1, \"wb1bitName2\", \"\"},\n" +
-                "\t{engine->wbo1.esr, \"wb1WBO: ESR\", \"ohm\", 0},\n" +
-                "\t{engine->wbo2.tempC, \"wb2WBO: Temperature\", \"C\", 0, \"cate\"},\n" +
-                "\t{engine->wbo2, 4, 0, \"wb2bitName1\", \"\"},\n" +
-                "\t{engine->wbo2, 4, 1, \"wb2bitName2\", \"\"},\n" +
-                "\t{engine->wbo2.esr, \"wb2WBO: ESR\", \"ohm\", 0},\n" +
+                "\t{MLG_SOURCE(engine->wbo1.tempC), \"wb1WBO: Temperature\", \"C\", 0, \"cate\"},\n" +
+                "\t{MLG_SOURCE(engine->wbo1), 4, 0, \"wb1bitName1\", \"\"},\n" +
+                "\t{MLG_SOURCE(engine->wbo1), 4, 1, \"wb1bitName2\", \"\"},\n" +
+                "\t{MLG_SOURCE(engine->wbo1.esr), \"wb1WBO: ESR\", \"ohm\", 0},\n" +
+                "\t{MLG_SOURCE(engine->wbo2.tempC), \"wb2WBO: Temperature\", \"C\", 0, \"cate\"},\n" +
+                "\t{MLG_SOURCE(engine->wbo2), 4, 0, \"wb2bitName1\", \"\"},\n" +
+                "\t{MLG_SOURCE(engine->wbo2), 4, 1, \"wb2bitName2\", \"\"},\n" +
+                "\t{MLG_SOURCE(engine->wbo2.esr), \"wb2WBO: ESR\", \"ohm\", 0},\n" +
                 "#endif\n" +
                 "};\n",
             destinationFolder + SdCardFieldsContent.SD_CARD_OUTPUT_FILE_NAME);
