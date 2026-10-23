@@ -40,26 +40,26 @@ public class SdCardFieldsGeneratorTest {
                 "\tuint16_t autoscale speedToRpmRatio;@@GAUGE_NAME_GEAR_RATIO@@;\"value\",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0\n" +
                 "end_struct";
 
-        processAndAssert(test, "\t{test->reference.internalMcuTemperature, \"internalMcuTemperature\", \"\", 0},\n" +
-            "\t{test->reference.RPMValue, \"hello\", \"RPM\", 2, \"myCategory\"},\n" +
-            "\t{test->reference.fu2elAdd, \"Lua: Fuel add\", \"g\", 3},\n" +
-            "\t{test->reference.fue2lMult, \"Lua: Fuel mult\", \"\", 0},\n" +
-            "\t{test->reference.rpmAcceleration, \"dRPM\", \"RPM/s\", 2},\n" +
-            "\t{test->reference.lua.fuelMult, \"Lua: Fuel mult\", \"\", 0},\n" +
-            "\t{test->reference, 24, 0, \"lua.clutchUpState\", \"\"},\n" +
-            "\t{test->reference, 24, 1, \"lua.brakePedalState\", \"\"},\n" +
-            "\t{test->reference, 24, 2, \"lua.disableDecelerationFuelCutOff\", \"\"},\n" +
-            "\t{test->reference, 24, 3, \"lua.torqueReductionState\", \"\"},\n" +
-            "\t{test->reference.speedToRpmRatio, \"ra\", \"value\", 0},\n", actor, false);
+        processAndAssert(test, "\t{MLG_SOURCE(test->reference.internalMcuTemperature), \"internalMcuTemperature\", \"\", 0},\n" +
+            "\t{MLG_SOURCE(test->reference.RPMValue), \"hello\", \"RPM\", 2, \"myCategory\"},\n" +
+            "\t{MLG_SOURCE(test->reference.fu2elAdd), \"Lua: Fuel add\", \"g\", 3},\n" +
+            "\t{MLG_SOURCE(test->reference.fue2lMult), \"Lua: Fuel mult\", \"\", 0},\n" +
+            "\t{MLG_SOURCE(test->reference.rpmAcceleration), \"dRPM\", \"RPM/s\", 2},\n" +
+            "\t{MLG_SOURCE(test->reference.lua.fuelMult), \"Lua: Fuel mult\", \"\", 0},\n" +
+            "\t{MLG_SOURCE(test->reference), 24, 0, \"lua.clutchUpState\", \"\"},\n" +
+            "\t{MLG_SOURCE(test->reference), 24, 1, \"lua.brakePedalState\", \"\"},\n" +
+            "\t{MLG_SOURCE(test->reference), 24, 2, \"lua.disableDecelerationFuelCutOff\", \"\"},\n" +
+            "\t{MLG_SOURCE(test->reference), 24, 3, \"lua.torqueReductionState\", \"\"},\n" +
+            "\t{MLG_SOURCE(test->reference.speedToRpmRatio), \"ra\", \"value\", 0},\n", actor, false);
     }
 
     @Test
     public void bitAndAlignment() {
-        String expectedOutput = "\t{test->reference.RPMValue, \"feee\", \"RPM\", 2},\n" +
-            "\t{test->reference, 4, 0, \"sd_logging_internal\", \"\"},\n" +
-            "\t{test->reference.Value, \"feee\", \"RPM\", 2},\n" +
-            "\t{test->reference, 12, 0, \"sd_logging2\", \"\"},\n" +
-            "\t{test->reference, 12, 1, \"sd_logging3\", \"\"},\n";
+        String expectedOutput = "\t{MLG_SOURCE(test->reference.RPMValue), \"feee\", \"RPM\", 2},\n" +
+            "\t{MLG_SOURCE(test->reference), 4, 0, \"sd_logging_internal\", \"\"},\n" +
+            "\t{MLG_SOURCE(test->reference.Value), \"feee\", \"RPM\", 2},\n" +
+            "\t{MLG_SOURCE(test->reference), 12, 0, \"sd_logging2\", \"\"},\n" +
+            "\t{MLG_SOURCE(test->reference), 12, 1, \"sd_logging3\", \"\"},\n";
 
         processAndAssert("struct_no_prefix output_channels_s\n" +
                 "uint16_t autoscale RPMValue;feee;\"RPM\",1, 0, 0, 8000, 2\n" +
@@ -76,10 +76,10 @@ public class SdCardFieldsGeneratorTest {
     public void array() {
         processAndAssert("struct_no_prefix output_channels_s\n" +
                 "uint16_t[4 iterate] recentErrorCode;;\"error\", 1, 0, 0, 0, 0\n" +
-                "end_struct", "\t{test->reference.recentErrorCode[0], \"recentErrorCode 1\", \"error\", 0},\n" +
-                "\t{test->reference.recentErrorCode[1], \"recentErrorCode 2\", \"error\", 0},\n" +
-                "\t{test->reference.recentErrorCode[2], \"recentErrorCode 3\", \"error\", 0},\n" +
-                "\t{test->reference.recentErrorCode[3], \"recentErrorCode 4\", \"error\", 0},\n", readerState -> {
+                "end_struct", "\t{MLG_SOURCE(test->reference.recentErrorCode[0]), \"recentErrorCode 1\", \"error\", 0},\n" +
+                "\t{MLG_SOURCE(test->reference.recentErrorCode[1]), \"recentErrorCode 2\", \"error\", 0},\n" +
+                "\t{MLG_SOURCE(test->reference.recentErrorCode[2]), \"recentErrorCode 3\", \"error\", 0},\n" +
+                "\t{MLG_SOURCE(test->reference.recentErrorCode[3]), \"recentErrorCode 4\", \"error\", 0},\n", readerState -> {
 
         }, false);
     }
@@ -93,7 +93,7 @@ public class SdCardFieldsGeneratorTest {
                         "\tpid_status_s[2 iterate] vvtStatus\n" +
                         "\tpid_status_s alternatorStatus\n" +
                         "end_struct",
-                "\t{test->reference->alternatorStatus.pTerm, \"alternatorStatus.pTerm\", \"\", 2},\n",
+                "\t{MLG_SOURCE(test->reference->alternatorStatus.pTerm), \"alternatorStatus.pTerm\", \"\", 2},\n",
                 readerState -> {
 
                 }, true);

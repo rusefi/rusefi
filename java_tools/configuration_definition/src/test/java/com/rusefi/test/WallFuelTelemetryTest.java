@@ -67,8 +67,8 @@ class WallFuelTelemetryTest {
         }
         assertTrue(lookup.contains("return engine->injectionEvents.elements[0].getWallFuel().wallFuelCorrection * 1000.0f;"));
         assertTrue(lookup.contains("return engine->injectionEvents.elements[0].getWallFuel().wallFuel * 1000.0f;"));
-        assertTrue(sd.contains("engine->injectionEvents.elements[0].getWallFuel().wallFuelCorrection, \"Fuel Wall: correction\", \"mg\", 3, \"none\", 1000.0f"));
-        assertTrue(sd.contains("engine->injectionEvents.elements[0].getWallFuel().wallFuel, \"Fuel Wall: amount\", \"mg\", 3, \"none\", 1000.0f"));
+        assertTrue(sd.contains("MLG_SOURCE(engine->injectionEvents.elements[0].getWallFuel().wallFuelCorrection), \"Fuel Wall: correction\", \"mg\", 3, \"none\", 1000.0f"));
+        assertTrue(sd.contains("MLG_SOURCE(engine->injectionEvents.elements[0].getWallFuel().wallFuel), \"Fuel Wall: amount\", \"mg\", 3, \"none\", 1000.0f"));
 
         // TODO: fix
         //String header = files.get(Path.of("live_data_generated", "wall_fuel_state_generated.h").toString()).toString();
