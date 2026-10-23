@@ -100,7 +100,8 @@ class SignalListsTest {
         assertNotNull(lists.problem("  ", null));
         assertNotNull(lists.problem("trigger", null), "names are compared ignoring case");
         assertNotNull(lists.problem("common", null));
-        assertNotNull(lists.problem("Plotted", null));
+        assertNotNull(lists.problem("plot 2", null), "a plot's section");
+        assertNull(lists.problem("Plotter", null));
         assertNotNull(lists.problem("Sensors", null), "a group title");
         assertNotNull(lists.problem("a|b", null), "the config separator");
         assertNull(lists.problem("Trigger", "Trigger"), "renaming a list to itself");
@@ -289,7 +290,8 @@ class SignalListsTest {
         List<String> rows = describe(panel);
         assertEquals("Trigger", panel.listAt(rows.indexOf("Trigger 0")), "a list heading");
         assertEquals(SignalSections.COMMON, panel.listAt(rows.indexOf("Common 2") + 1), "a list member");
-        assertNull(panel.listAt(rows.indexOf("Plotted 1")), "elsewhere a dropped trace leaves its plot");
+        assertNull(panel.listAt(rows.indexOf("Plot 1 0")), "a plot section is not a list");
+        assertEquals(-1, panel.plotAt(rows.indexOf("Common 2")), "elsewhere a dropped trace leaves its plot");
     }
 
     @Test

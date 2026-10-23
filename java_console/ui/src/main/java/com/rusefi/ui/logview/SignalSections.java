@@ -13,17 +13,18 @@ import java.util.function.Predicate;
 
 /**
  * Rows of the signal list: a heading per section with its members below unless collapsed. Sections are
- * Plotted (always first; Histogram, with its X, Y and Z, while the Histogram view is shown), the lists ({@link SignalLists}: Common, then the user's), then the
+ * Plot 1, Plot 2... with each plot's signals (always first; Histogram, with its X, Y and Z, while the Histogram view is shown), the lists ({@link SignalLists}: Common, then the user's), then the
  * {@link SignalCategories.Group}s. A signal is listed in every section it belongs to: plotting it or putting
  * it in a list does not take it out of its group. Flat signals (one value for the whole log) can be left out
  * of the groups, separately for zero signals, mostly unused features, and constant ones at another value,
  * which can matter (an active error, the detected gear, the firmware version), also while searching. Hidden
- * signals stay in Plotted and the lists. A member of a user list that the log does not have is shown as
+ * signals stay in the plots and the lists. A member of a user list that the log does not have is shown as
  * missing; Common lists only the signals the log has.
  */
 final class SignalSections {
-    static final String PLOTTED = "Plotted";
-    /** Takes Plotted's place while the Histogram view is shown: its X, Y and Z signals. */
+    /** Title prefix of the plot sections: Plot 1, Plot 2... */
+    static final String PLOT = "Plot";
+    /** Takes the plot sections' place while the Histogram view is shown: its X, Y and Z signals. */
     static final String HISTOGRAM = "Histogram";
     /** The same for the Scatter view. */
     static final String SCATTER = "Scatter";
@@ -90,7 +91,27 @@ final class SignalSections {
     private SignalSections() {
     }
 
-    /** Group sections start collapsed; Plotted and the lists start open. */
+    /** The section of a plot (0-based). */
+    static String plotTitle(int plot) {
+        return PLOT + " " + (plot + 1);
+    }
+
+    /** The plot (0-based) a section title names, or -1. */
+    static int plotOf(String title) {
+        String prefix = PLOT + " ";
+        if (title.length() <= prefix.length() || !title.regionMatches(true, 0, prefix, 0, prefix.length())) {
+            return -1;
+        }
+        String number = title.substring(prefix.length());
+        for (int index = 0; index < number.length(); index++) {
+            if (!Character.isDigit(number.charAt(index))) {
+                return -1;
+            }
+        }
+        return number.length() > 3 ? -1 : Integer.parseInt(number) - 1;
+    }
+
+    /** Group sections start collapsed; the plots and the lists start open. */
     static Set<String> defaultCollapsed() {
         Set<String> collapsed = new LinkedHashSet<>();
         for (SignalCategories.Group group : SignalCategories.Group.values()) {
@@ -112,7 +133,7 @@ final class SignalSections {
 
     /**
      * @param histogramFields the histogram's X, Y and Z signals while the Histogram view is shown, listed first
-     *                        in place of Plotted (the plots are not on screen then); null for the timeline
+     *                        in place of the plot sections (the plots are not on screen then); null for the timeline
      */
     static List<Row> rows(CsvLogReader log, PlotLayout layout, int[] histogramFields, SignalCategories categories,
                           SignalLists lists, String query, boolean hideZero, boolean hideConstant,
@@ -138,16 +159,17 @@ final class SignalSections {
             }
             addSection(rows, axesTitle, Kind.HISTOGRAM, axes, searching, collapsed, !searching);
         } else {
-            List<Row> plotted = new ArrayList<>();
             for (int plot = 0; plot < layout.plotCount(); plot++) {
+                String title = plotTitle(plot);
+                List<Row> plotted = new ArrayList<>();
                 for (int field : layout.fields(plot)) {
                     if (matches(log.name(field), needle)) {
-                        plotted.add(Row.signal(PLOTTED, Kind.PLOTTED, field));
+                        plotted.add(Row.signal(title, Kind.PLOTTED, field));
                     }
                 }
+                // shown while empty, like the plot on screen, so signals can be dropped on it; hidden only by a search
+                addSection(rows, title, Kind.PLOTTED, plotted, searching, collapsed, !searching);
             }
-            // always there (0 while nothing is plotted), so the sidebar keeps its shape; hidden only by a search
-            addSection(rows, PLOTTED, Kind.PLOTTED, plotted, searching, collapsed, !searching);
         }
 
         Map<String, Integer> fieldOfLabel = fieldOfLabel(log);

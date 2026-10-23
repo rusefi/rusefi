@@ -111,7 +111,10 @@ final class SignalLists {
         if (trimmed.contains(SEPARATOR)) {
             return "A list name cannot contain " + SEPARATOR + ".";
         }
-        List<String> taken = new ArrayList<>(Arrays.asList(SignalSections.PLOTTED, SignalSections.COMMON));
+        if (SignalSections.plotOf(trimmed) >= 0) {
+            return "\"" + trimmed + "\" is the name of a plot's section.";
+        }
+        List<String> taken = new ArrayList<>(Arrays.asList(SignalSections.COMMON));
         for (SignalCategories.Group group : SignalCategories.Group.values()) {
             taken.add(group.title);
         }
