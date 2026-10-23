@@ -1,14 +1,20 @@
 package com.rusefi.core;
 
+import com.opensr5.ini.IniFileMetaInfo;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.ImmutableIniFileModel;
 import com.opensr5.ini.IniFileModelMocks;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.config.FieldType;
+import com.rusefi.ini.reader.IniFileReaderUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayInputStream;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -435,6 +441,27 @@ public class SensorCentralTest {
         // Removing a listener that was never added should not throw
         SensorCentral.SensorListener listener = value -> {};
         assertDoesNotThrow(() -> sensorCentral.removeListener("nonExistentSensor", listener));
+    }
+
+    /**
+     * Reproduction: trim channels are sent as a multiplier (1.0 = no correction) with
+     * scale 100 and translate -1, which TunerStudio shows as (1.0 - 1) * 100 = 0 %.
+     * The console ignores translate and shows 100 %.
+     */
+    @Test
+    void outputChannelTranslateIsIgnored() throws Throwable {
+        String text = "[OutputChannels]\n"
+            + "ltftCorrection1 = scalar, F32, 0, \"%\", 100.0, -1.0\n";
+        IniFileModel ini = IniFileReaderUtil.readIniFile(IniFileReaderUtil.read(
+            new ByteArrayInputStream(text.getBytes(StandardCharsets.US_ASCII))),
+            "translate.ini", mock(IniFileMetaInfo.class));
+        IniField field = ini.getOutputChannel("ltftCorrection1");
+
+        byte[] response = new byte[5];
+        ByteBuffer.wrap(response, 1, 4).order(ByteOrder.LITTLE_ENDIAN).putFloat(1.0f);
+
+        // BUG: expected 0 %
+        assertEquals(100.0, ISensorHolder.readFieldValue(response, "ltftCorrection1", field), 1e-9);
     }
 
 }
