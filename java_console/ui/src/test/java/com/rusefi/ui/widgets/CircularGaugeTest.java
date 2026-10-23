@@ -106,6 +106,92 @@ class CircularGaugeTest {
         assertEquals(progress, rgb(render(gauge, 400, 400), 70, 150));
     }
 
+    @Test
+    void reusesUnchangedArtworkAndInvalidatesForVisualChanges() {
+        CircularGauge gauge = gauge(0, 100, 80, 0);
+        gauge.setValue(50);
+        render(gauge, 200, 200);
+        render(gauge, 200, 200);
+        assertEquals(1, gauge.getArtworkRenderCountForTests());
+        gauge.setTitle("Updated title");
+        render(gauge, 200, 200);
+        assertEquals(2, gauge.getArtworkRenderCountForTests());
+        gauge.setUnitString("rpm");
+        render(gauge, 200, 200);
+        assertEquals(3, gauge.getArtworkRenderCountForTests());
+        gauge.setValue(60);
+        render(gauge, 200, 200);
+        assertEquals(4, gauge.getArtworkRenderCountForTests());
+        render(gauge, 250, 250);
+        assertEquals(5, gauge.getArtworkRenderCountForTests());
+        BufferedImage image = new BufferedImage(500, 500, BufferedImage.TYPE_INT_ARGB_PRE);
+        Graphics2D scaled = image.createGraphics();
+        scaled.scale(2, 2);
+        gauge.paint(scaled);
+        scaled.dispose();
+        assertEquals(6, gauge.getArtworkRenderCountForTests());
+        gauge.setHighDangerValue(100);
+        render(gauge, 250, 250);
+        assertEquals(7, gauge.getArtworkRenderCountForTests());
+    }
+
+    @Test
+    void fractionalDeviceOriginAndHalfPixelCenterMatchVectorPainting() {
+        CircularGauge gauge = gauge(0, 100, 80, 0);
+        gauge.setValue(55);
+        gauge.setSize(201, 200);
+        for (double[] transform : new double[][] {{1.25, 1.25, 0.3, 0.6}, {1.25, 1.5, 0.4, 0.2}}) {
+            for (int[] clip : new int[][] {{0, 0, 350, 360}, {35, 48, 83, 76}}) {
+                BufferedImage cached = new BufferedImage(400, 400, BufferedImage.TYPE_INT_ARGB_PRE);
+                BufferedImage vector = new BufferedImage(400, 400, BufferedImage.TYPE_INT_ARGB_PRE);
+                Graphics2D cachedGraphics = cached.createGraphics();
+                Graphics2D vectorGraphics = vector.createGraphics();
+                for (Graphics2D graphics : new Graphics2D[] {cachedGraphics, vectorGraphics}) {
+                    graphics.scale(transform[0], transform[1]);
+                    graphics.translate(transform[2], transform[3]);
+                    graphics.setClip(clip[0], clip[1], clip[2], clip[3]);
+                }
+                gauge.paint(cachedGraphics);
+                gauge.paintVectorForTests(vectorGraphics);
+                cachedGraphics.dispose();
+                vectorGraphics.dispose();
+                assertArrayEquals(
+                    cached.getRGB(0, 0, 400, 400, null, 0, 400),
+                    vector.getRGB(0, 0, 400, 400, null, 0, 400),
+                    "Fractional-origin cached rendering must preserve direct vector pixels and partial clips: "
+                        + pixelDifferenceSummary(cached, vector));
+            }
+        }
+    }
+
+    @Test
+    void zoneChangesInvalidateArtworkEvenWhenDisplayedValueDoesNotChange() {
+        CircularGauge gauge = gauge(0, 100, 80, 0);
+        gauge.setValue(79.9);
+        render(gauge, 400, 400);
+        assertEquals("80", gauge.getDisplayText());
+        assertEquals(CircularGauge.Zone.NORMAL, gauge.getZone());
+        gauge.setValue(80);
+        BufferedImage danger = render(gauge, 400, 400);
+        assertEquals("80", gauge.getDisplayText());
+        assertEquals(2, gauge.getArtworkRenderCountForTests());
+        assertEquals(CircularGauge.DANGER_FILL.getRGB() & 0xFFFFFF, rgb(danger, 70, 150));
+    }
+
+    @Test
+    void oversizedDeviceTransformsUseVectorFallbackWithoutAllocatingHugeRasters() {
+        CircularGauge gauge = gauge(0, 100, 80, 0);
+        gauge.setSize(200, 200);
+        for (int i = 0; i < 2; i++) {
+            BufferedImage image = new BufferedImage(8, 8, BufferedImage.TYPE_INT_ARGB_PRE);
+            Graphics2D graphics = image.createGraphics();
+            graphics.scale(25, 25);
+            gauge.paint(graphics);
+            graphics.dispose();
+        }
+        assertEquals(2, gauge.getArtworkRenderCountForTests(), "Oversized targets must bypass the raster cache");
+    }
+
     private static GaugeModel model(double min, double max, double lowDanger, double lowWarning,
                                     double highWarning, double highDanger, int decimals) {
         return new GaugeModel("ZoneTestGauge", "zoneTestChannel",
@@ -208,5 +294,43 @@ class CircularGaugeTest {
 
     private static int rgb(BufferedImage image, int x, int y) {
         return image.getRGB(x, y) & 0xFFFFFF;
+    }
+
+    private static String pixelDifferenceSummary(BufferedImage first, BufferedImage second) {
+        int differences = 0;
+        int alphaDifferences = 0;
+        int maxRgbDifference = 0;
+        int maxDifferenceX = -1;
+        int maxDifferenceY = -1;
+        int minX = first.getWidth();
+        int minY = first.getHeight();
+        int maxX = -1;
+        int maxY = -1;
+        for (int y = 0; y < first.getHeight(); y++) {
+            for (int x = 0; x < first.getWidth(); x++) {
+                int a = first.getRGB(x, y);
+                int b = second.getRGB(x, y);
+                if (a != b) {
+                    differences++;
+                    minX = Math.min(minX, x);
+                    minY = Math.min(minY, y);
+                    maxX = Math.max(maxX, x);
+                    maxY = Math.max(maxY, y);
+                    if ((a >>> 24) != (b >>> 24)) {
+                        alphaDifferences++;
+                    }
+                    int rgbDifference = Math.max(Math.abs(((a >>> 16) & 0xff) - ((b >>> 16) & 0xff)),
+                        Math.max(Math.abs(((a >>> 8) & 0xff) - ((b >>> 8) & 0xff)), Math.abs((a & 0xff) - (b & 0xff))));
+                    if (rgbDifference > maxRgbDifference) {
+                        maxRgbDifference = rgbDifference;
+                        maxDifferenceX = x;
+                        maxDifferenceY = y;
+                    }
+                }
+            }
+        }
+        return "differentPixels=" + differences + ", alphaDifferences=" + alphaDifferences
+            + ", maxRgbDifference=" + maxRgbDifference + " at " + maxDifferenceX + "," + maxDifferenceY
+            + ", bounds=" + minX + "," + minY + ".." + maxX + "," + maxY;
     }
 }

@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -33,6 +34,211 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class CalibrationDialogWidgetTest {
+
+    @Test
+    public void viewportRepaintsReuseDecorativeMosaic() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+            try {
+                JPanel viewport = widget.getViewportPane();
+                viewport.setSize(600, 400);
+                viewport.doLayout();
+                BufferedImage target = new BufferedImage(600, 400, BufferedImage.TYPE_INT_ARGB);
+                Graphics2D graphics = target.createGraphics();
+                try {
+                    viewport.paint(graphics);
+                    int firstPaint = widget.getViewportBackgroundRenderCountForTests();
+                    viewport.paint(graphics);
+                    assertEquals(firstPaint, widget.getViewportBackgroundRenderCountForTests(),
+                        "An unchanged viewport repaint should reuse its decorative mosaic");
+                    viewport.setSize(620, 400);
+                    viewport.doLayout();
+                    viewport.paint(graphics);
+                    assertEquals(firstPaint + 1, widget.getViewportBackgroundRenderCountForTests(),
+                        "Resizing invalidates the cached mosaic");
+                    int afterResize = widget.getViewportBackgroundRenderCountForTests();
+                    JComponent frame = widget.getPanelFrame();
+                    Rectangle originalFrameBounds = frame.getBounds();
+                    frame.setBounds(originalFrameBounds.x + 1, originalFrameBounds.y,
+                        originalFrameBounds.width, originalFrameBounds.height);
+                    viewport.paint(graphics);
+                    assertEquals(afterResize + 1, widget.getViewportBackgroundRenderCountForTests(),
+                        "Changing frame bounds invalidates the cached unused-area mask");
+                    frame.setBounds(originalFrameBounds);
+                    viewport.paint(graphics);
+                    assertEquals(afterResize + 2, widget.getViewportBackgroundRenderCountForTests(),
+                        "Restoring frame bounds invalidates the cached unused-area mask");
+                    afterResize = widget.getViewportBackgroundRenderCountForTests();
+                    graphics.setClip(0, 0, 90, 80);
+                    viewport.setBackground(new Color(20, 30, 40));
+                    viewport.paint(graphics);
+                    assertEquals(afterResize + 1, widget.getViewportBackgroundRenderCountForTests(),
+                        "A small dirty clip after a background change uses the vector path");
+                    int afterSmallClip = widget.getViewportBackgroundRenderCountForTests();
+                    viewport.paint(graphics);
+                    assertEquals(afterSmallClip + 1, widget.getViewportBackgroundRenderCountForTests(),
+                        "Repeated small dirty clips keep using the vector path");
+                    graphics.setClip(null);
+                    viewport.paint(graphics);
+                    assertEquals(afterSmallClip + 2, widget.getViewportBackgroundRenderCountForTests(),
+                        "The next full paint rebuilds the cache with the new background");
+                    int beforeTranslation = widget.getViewportBackgroundRenderCountForTests();
+                    graphics.translate(17, 25);
+                    viewport.paint(graphics);
+                    viewport.paint(graphics);
+                    assertEquals(beforeTranslation, widget.getViewportBackgroundRenderCountForTests(),
+                        "Ordinary translated child painting reuses the device-aligned cache");
+                    graphics.setTransform(new java.awt.geom.AffineTransform());
+                    graphics.scale(1.25, 1.25);
+                    graphics.translate(17, 25);
+                    viewport.paint(graphics);
+                    int afterScaledPaint = widget.getViewportBackgroundRenderCountForTests();
+                    assertEquals(beforeTranslation + 1, afterScaledPaint,
+                        "A fractional device phase gets its own raster");
+                    viewport.paint(graphics);
+                    assertEquals(afterScaledPaint, widget.getViewportBackgroundRenderCountForTests(),
+                        "A fractional HiDPI transform builds once and then reuses its cache");
+                } finally {
+                    graphics.dispose();
+                }
+            } finally {
+                widget.destroy();
+            }
+        });
+    }
+
+    @Test
+    public void tallViewportCachesOnlyItsVisibleScrolledExtent() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+            try {
+                JPanel dialogViewport = widget.getViewportPane();
+                JViewport scrollingViewport = new JViewport();
+                scrollingViewport.setView(dialogViewport);
+                scrollingViewport.setExtentSize(new Dimension(400, 300));
+                scrollingViewport.setViewSize(new Dimension(600, 5_000));
+                scrollingViewport.setViewPosition(new Point(0, 1_200));
+                scrollingViewport.setSize(400, 300);
+                BufferedImage target = new BufferedImage(400, 300, BufferedImage.TYPE_INT_ARGB);
+                Graphics2D graphics = target.createGraphics();
+                try {
+                    scrollingViewport.paint(graphics);
+                    int firstPaint = widget.getViewportBackgroundRenderCountForTests();
+                    assertTrue(firstPaint > 0, "A tall view should cache its visible viewport extent");
+                    assertTrue(widget.getViewportBackgroundCachePixelsForTests() <= 400L * 300L,
+                        "The raster is bounded by the visible JViewport extent, not the 5,000-pixel view");
+                    assertTrue(widget.getViewportBackgroundCellRenderCountForTests() < 500,
+                        "Raster work should be bounded by the visible viewport rather than the tall component");
+                    scrollingViewport.paint(graphics);
+                    assertEquals(firstPaint, widget.getViewportBackgroundRenderCountForTests(),
+                        "The same scrolled extent reuses the raster");
+                    scrollingViewport.setViewPosition(new Point(0, 1_500));
+                    scrollingViewport.paint(graphics);
+                    int scrolledPaint = widget.getViewportBackgroundRenderCountForTests();
+                    assertEquals(firstPaint + 1, scrolledPaint,
+                        "Scrolling rebuilds a bounded raster for the new visible logical origin");
+                    scrollingViewport.paint(graphics);
+                    assertEquals(scrolledPaint, widget.getViewportBackgroundRenderCountForTests(),
+                        "Repainting after scrolling reuses the newly anchored raster");
+                } finally {
+                    graphics.dispose();
+                }
+            } finally {
+                widget.destroy();
+            }
+        });
+    }
+
+    @Test
+    public void translatedCacheBlitTracksCurrentIntegerDeviceOrigin() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            CalibrationDialogWidget reused = new CalibrationDialogWidget(new UIContext());
+            CalibrationDialogWidget fresh = new CalibrationDialogWidget(new UIContext());
+            try {
+                JPanel reusedViewport = reused.getViewportPane();
+                JPanel freshViewport = fresh.getViewportPane();
+                reusedViewport.setSize(400, 300);
+                freshViewport.setSize(400, 300);
+                reusedViewport.doLayout();
+                freshViewport.doLayout();
+                BufferedImage initial = paintAtTranslation(reusedViewport, 17, 25);
+                BufferedImage reusedAtOffset = paintAtTranslation(reusedViewport, 21, 30);
+                BufferedImage freshAtOffset = paintAtTranslation(freshViewport, 21, 30);
+                assertNotEquals(Arrays.hashCode(initial.getRGB(0, 0, 500, 400, null, 0, 500)),
+                    Arrays.hashCode(reusedAtOffset.getRGB(0, 0, 500, 400, null, 0, 500)),
+                    "Different target positions should have different pixels");
+                assertArrayEquals(reusedAtOffset.getRGB(0, 0, 500, 400, null, 0, 500),
+                    freshAtOffset.getRGB(0, 0, 500, 400, null, 0, 500),
+                    "A reused cache must match a fresh render at the same translated origin");
+            } finally {
+                reused.destroy();
+                fresh.destroy();
+            }
+        });
+    }
+
+    @Test
+    public void nonOpaqueViewportDoesNotFlattenMosaicOverTransparentTarget() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+            try {
+                JPanel viewport = widget.getViewportPane();
+                viewport.setOpaque(false);
+                viewport.setSize(400, 300);
+                viewport.doLayout();
+                BufferedImage target = new BufferedImage(400, 300, BufferedImage.TYPE_INT_ARGB);
+                Graphics2D graphics = target.createGraphics();
+                try {
+                    viewport.paint(graphics);
+                } finally {
+                    graphics.dispose();
+                }
+                assertTrue(((target.getRGB(0, 0) >>> 24) & 0xff) < 255,
+                    "A nonopaque viewport must preserve transparency outside its framed form");
+            } finally {
+                widget.destroy();
+            }
+        });
+    }
+
+    @Test
+    public void fourKViewportReusesBoundedRaster() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+            try {
+                JPanel viewport = widget.getViewportPane();
+                viewport.setSize(3_840, 2_160);
+                viewport.doLayout();
+                BufferedImage target = new BufferedImage(3_840, 2_160, BufferedImage.TYPE_INT_RGB);
+                Graphics2D graphics = target.createGraphics();
+                try {
+                    viewport.paint(graphics);
+                    int firstPaint = widget.getViewportBackgroundRenderCountForTests();
+                    assertTrue(widget.getViewportBackgroundCachePixelsForTests() <= 16_777_216L,
+                        "4K cache remains within the physical-pixel cap");
+                    viewport.paint(graphics);
+                    assertEquals(firstPaint, widget.getViewportBackgroundRenderCountForTests(),
+                        "An ordinary 4K viewport remains within the bounded raster limit");
+                } finally {
+                    graphics.dispose();
+                }
+            } finally {
+                widget.destroy();
+            }
+        });
+    }
+
+    private static BufferedImage paintAtTranslation(JPanel viewport, int x, int y) {
+        BufferedImage target = new BufferedImage(500, 400, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = target.createGraphics();
+        try {
+            graphics.translate(x, y);
+            viewport.paint(graphics);
+        } finally {
+            graphics.dispose();
+        }
+        return target;
+    }
 
     /** Issue #10352: dialog fields referencing individual gear voltages. */
     @Test

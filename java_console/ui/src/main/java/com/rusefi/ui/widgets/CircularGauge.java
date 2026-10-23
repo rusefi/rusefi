@@ -8,10 +8,13 @@ import com.opensr5.ini.IniValue;
 
 import javax.swing.JComponent;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Arc2D;
-import java.awt.geom.Point2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.awt.print.PrinterGraphics;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -69,6 +72,21 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
     // Sensor callbacks can run off the EDT. Publishing one immutable reading
     // keeps the text, color, arc and needle consistent; repaint() is thread-safe.
     private volatile Reading reading;
+    private int artworkRenderCountForTests;
+    private BufferedImage artworkCache;
+    private int cacheWidth;
+    private int cacheHeight;
+    private double cacheScaleX;
+    private double cacheScaleY;
+    private double cachePhaseX;
+    private double cachePhaseY;
+    private Reading cacheReading;
+    private String cacheTitle;
+    private String cacheUnits;
+    private double cacheDangerThreshold;
+    private double cacheLowDangerThreshold;
+    private double cacheLowWarningThreshold;
+    private double cacheHighWarningThreshold;
 
     public CircularGauge(GaugeModel model, IniFileModel ini, ConfigurationImage configuration) {
         this(GaugeScale.fromIni(model, ini, configuration), model);
@@ -254,75 +272,173 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
         if (size <= 0) {
             return;
         }
+        Shape incomingClip = graphics.getClip();
+        boolean hasPartialClip = incomingClip != null && !incomingClip.contains(0, 0, getWidth(), getHeight());
         Graphics2D g = (Graphics2D) graphics.create();
         try {
             g.translate(insets.left + (width - size) / 2.0, insets.top + (height - size) / 2.0);
             g.scale(size / 400.0, size / 400.0);
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+            // Clip-edge antialiasing composes differently when the whole dial is rasterized
+            // first and then clipped as an image, so preserve vector rendering for partial paints.
+            if (hasPartialClip) {
+                paintVectorArtwork(g, reading);
+                return;
+            }
+            AffineTransform artworkTransform = g.getTransform();
+            double scaleX = artworkTransform.getScaleX();
+            double scaleY = artworkTransform.getScaleY();
+            double originX = artworkTransform.getTranslateX();
+            double originY = artworkTransform.getTranslateY();
+            double phaseX = originX - Math.floor(originX);
+            double phaseY = originY - Math.floor(originY);
+            double physicalWidth = 400 * scaleX + phaseX;
+            double physicalHeight = 400 * scaleY + phaseY;
+            if (graphics instanceof PrinterGraphics || !Double.isFinite(scaleX) || !Double.isFinite(scaleY)
+                || !Double.isFinite(originX) || !Double.isFinite(originY) || scaleX <= 0 || scaleY <= 0
+                || artworkTransform.getShearX() != 0 || artworkTransform.getShearY() != 0
+                || !Double.isFinite(physicalWidth) || !Double.isFinite(physicalHeight)
+                || physicalWidth <= 0 || physicalHeight <= 0 || physicalWidth > 4096 || physicalHeight > 4096) {
+                paintVectorArtwork(g, reading);
+                return;
+            }
+            int rasterWidth = (int) Math.ceil(physicalWidth);
+            int rasterHeight = (int) Math.ceil(physicalHeight);
+            if ((long) rasterWidth * rasterHeight > 16_777_216) {
+                paintVectorArtwork(g, reading);
+                return;
+            }
             Reading current = reading;
-            Zone zone = zoneOf(current.rawValue, 0);
-            Color fill = zone == Zone.DANGER ? DANGER_FILL : zone == Zone.WARNING ? WARNING_FILL : PROGRESS;
-
-            // Everything stays inside the dial circle: detached windows clip to it.
-            g.setPaint(new GradientPaint(0, 0, BEZEL_TOP, 0, 400, BEZEL_BOTTOM));
-            g.fill(new Ellipse2D.Double(1.5, 1.5, 397, 397));
-            g.setColor(HUB_RIM);
-            g.setStroke(new BasicStroke(1.5f));
-            g.draw(new Ellipse2D.Double(1.5, 1.5, 397, 397));
-            g.setPaint(new RadialGradientPaint(new Point2D.Double(200, 170), 200,
-                new float[] {0.4f, 1f}, new Color[] {FACE_CENTER, FACE_EDGE}));
-            g.fill(new Ellipse2D.Double(11, 11, 378, 378));
-
-            drawArc(g, 140, 80, 0, current.degrees, fill);
-            drawArc(g, 184, 4, 0, SWEEP_DEGREES, TRACK);
-            double lowDangerEnd = degreesOf(lowDangerThreshold);
-            double lowWarningEnd = degreesOf(lowWarningThreshold);
-            double highWarningStart = degreesOf(highWarningThreshold);
-            double dangerStart = degreesOf(dangerThreshold);
-            drawArc(g, 184, 6, 0, lowDangerEnd, DANGER);
-            drawArc(g, 184, 6, lowDangerEnd, lowWarningEnd - lowDangerEnd, WARNING);
-            drawArc(g, 184, 6, highWarningStart, dangerStart - highWarningStart, WARNING);
-            drawArc(g, 184, 6, dangerStart, SWEEP_DEGREES - dangerStart, DANGER);
-
-            for (int i = 0; i <= 10; i++) {
-                double value = minValue + (maxValue - minValue) * i / 10;
-                Zone labelZone = zoneOf(value, 0.001);
-                Color color = labelZone == Zone.DANGER ? DANGER : labelZone == Zone.WARNING ? WARNING_TEXT : SCALE;
-                double angle = Math.toRadians(START_DEGREES + i * SWEEP_DEGREES / 10.0);
-                g.setColor(labelZone == Zone.DANGER ? DANGER : labelZone == Zone.WARNING ? WARNING : TICK);
-                g.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER));
-                double inner = i % 2 == 0 ? 168 : 174;
-                g.draw(new Line2D.Double(200 + inner * Math.cos(angle), 200 + inner * Math.sin(angle),
-                    200 + 181 * Math.cos(angle), 200 + 181 * Math.sin(angle)));
-                drawText(g, scaleLabels[i], 200 + LABEL_X[i] * 0.84, 200 + LABEL_Y[i] * 0.84,
-                    i % 2 == 0 ? 18 : 16, 62, color);
+            // XRender makes these gradients and antialiased shapes expensive on every repaint.
+            // Rasterize once per visible state, retaining device-pixel phase for sharp HiDPI text.
+            if (!cacheMatches(rasterWidth, rasterHeight, scaleX, scaleY, phaseX, phaseY, current)) {
+                artworkCache = new BufferedImage(rasterWidth, rasterHeight, BufferedImage.TYPE_INT_ARGB_PRE);
+                Graphics2D raster = artworkCache.createGraphics();
+                try {
+                    raster.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    raster.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+                    raster.setTransform(new AffineTransform(scaleX, 0, 0, scaleY, phaseX, phaseY));
+                    paintVectorArtwork(raster, current);
+                } finally {
+                    raster.dispose();
+                }
+                cacheWidth = rasterWidth;
+                cacheHeight = rasterHeight;
+                cacheScaleX = scaleX;
+                cacheScaleY = scaleY;
+                cachePhaseX = phaseX;
+                cachePhaseY = phaseY;
+                cacheReading = current;
+                cacheTitle = title;
+                cacheUnits = units;
+                cacheDangerThreshold = dangerThreshold;
+                cacheLowDangerThreshold = lowDangerThreshold;
+                cacheLowWarningThreshold = lowWarningThreshold;
+                cacheHighWarningThreshold = highWarningThreshold;
             }
-
-            // The needle and fill share the same rounded angle. The hub covers
-            // the needle's inner end; labels and the value stay above the needle.
-            double angle = Math.toRadians(START_DEGREES + current.degrees);
-            g.setColor(NEEDLE);
-            g.setStroke(new BasicStroke(4, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER));
-            g.draw(new Line2D.Double(200 + 90 * Math.cos(angle), 200 + 90 * Math.sin(angle),
-                200 + 178 * Math.cos(angle), 200 + 178 * Math.sin(angle)));
-            // Soft drop shadow lifting the hub off the face.
-            for (int i = 8; i >= 1; i--) {
-                g.setColor(new Color(0, 0, 0, 5));
-                g.fill(new Ellipse2D.Double(100 - i, 104 - i, 200 + 2 * i, 200 + 2 * i));
+            try {
+                AffineTransform alignToDevicePixels = artworkTransform.createInverse();
+                alignToDevicePixels.translate(Math.floor(originX), Math.floor(originY));
+                g.transform(alignToDevicePixels);
+                g.drawImage(artworkCache, 0, 0, null);
+            } catch (java.awt.geom.NoninvertibleTransformException impossibleForPositiveScale) {
+                paintVectorArtwork(g, current);
             }
-            g.setPaint(new GradientPaint(0, 100, HUB, 0, 300, FACE_EDGE));
-            g.fill(new Ellipse2D.Double(100, 100, 200, 200));
-            g.setColor(HUB_RIM);
-            g.setStroke(new BasicStroke(1.5f));
-            g.draw(new Ellipse2D.Double(100, 100, 200, 200));
-            drawText(g, current.text, 200, 200, 60, 165,
-                zone == Zone.DANGER ? DANGER : zone == Zone.WARNING ? WARNING_TEXT : TEXT);
-            drawText(g, units, 202, 246, 16, 160, LABEL_TEXT);
-            drawText(g, title, 200, 331, 16, 230, LABEL_TEXT);
         } finally {
             g.dispose();
         }
+    }
+
+    private boolean cacheMatches(int width, int height, double scaleX, double scaleY,
+                                 double phaseX, double phaseY, Reading current) {
+        return artworkCache != null && cacheWidth == width && cacheHeight == height
+            && Double.compare(cacheScaleX, scaleX) == 0 && Double.compare(cacheScaleY, scaleY) == 0
+            && Double.compare(cachePhaseX, phaseX) == 0 && Double.compare(cachePhaseY, phaseY) == 0
+            && cacheReading == current
+            && Objects.equals(cacheTitle, title) && Objects.equals(cacheUnits, units)
+            && Double.compare(cacheDangerThreshold, dangerThreshold) == 0
+            && Double.compare(cacheLowDangerThreshold, lowDangerThreshold) == 0
+            && Double.compare(cacheLowWarningThreshold, lowWarningThreshold) == 0
+            && Double.compare(cacheHighWarningThreshold, highWarningThreshold) == 0;
+    }
+
+    private void paintVectorArtwork(Graphics2D g, Reading current) {
+        artworkRenderCountForTests++;
+        Zone zone = zoneOf(current.rawValue, 0);
+        Color fill = zone == Zone.DANGER ? DANGER_FILL : zone == Zone.WARNING ? WARNING_FILL : PROGRESS;
+
+        // Everything stays inside the dial circle: detached windows clip to it.
+        g.setPaint(new GradientPaint(0, 0, BEZEL_TOP, 0, 400, BEZEL_BOTTOM));
+        g.fill(new Ellipse2D.Double(1.5, 1.5, 397, 397));
+        g.setColor(HUB_RIM);
+        g.setStroke(new BasicStroke(1.5f));
+        g.draw(new Ellipse2D.Double(1.5, 1.5, 397, 397));
+        g.setPaint(new RadialGradientPaint(new Point2D.Double(200, 170), 200,
+            new float[] {0.4f, 1f}, new Color[] {FACE_CENTER, FACE_EDGE}));
+        g.fill(new Ellipse2D.Double(11, 11, 378, 378));
+
+        drawArc(g, 140, 80, 0, current.degrees, fill);
+        drawArc(g, 184, 4, 0, SWEEP_DEGREES, TRACK);
+        double lowDangerEnd = degreesOf(lowDangerThreshold);
+        double lowWarningEnd = degreesOf(lowWarningThreshold);
+        double highWarningStart = degreesOf(highWarningThreshold);
+        double dangerStart = degreesOf(dangerThreshold);
+        drawArc(g, 184, 6, 0, lowDangerEnd, DANGER);
+        drawArc(g, 184, 6, lowDangerEnd, lowWarningEnd - lowDangerEnd, WARNING);
+        drawArc(g, 184, 6, highWarningStart, dangerStart - highWarningStart, WARNING);
+        drawArc(g, 184, 6, dangerStart, SWEEP_DEGREES - dangerStart, DANGER);
+
+        for (int i = 0; i <= 10; i++) {
+            double value = minValue + (maxValue - minValue) * i / 10;
+            Zone labelZone = zoneOf(value, 0.001);
+            Color color = labelZone == Zone.DANGER ? DANGER : labelZone == Zone.WARNING ? WARNING_TEXT : SCALE;
+            double angle = Math.toRadians(START_DEGREES + i * SWEEP_DEGREES / 10.0);
+            g.setColor(labelZone == Zone.DANGER ? DANGER : labelZone == Zone.WARNING ? WARNING : TICK);
+            g.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER));
+            double inner = i % 2 == 0 ? 168 : 174;
+            g.draw(new Line2D.Double(200 + inner * Math.cos(angle), 200 + inner * Math.sin(angle),
+                200 + 181 * Math.cos(angle), 200 + 181 * Math.sin(angle)));
+            drawText(g, scaleLabels[i], 200 + LABEL_X[i] * 0.84, 200 + LABEL_Y[i] * 0.84,
+                i % 2 == 0 ? 18 : 16, 62, color);
+        }
+
+        // The needle and fill share the same rounded angle. The hub covers
+        // the needle's inner end; labels and the value stay above the needle.
+        double angle = Math.toRadians(START_DEGREES + current.degrees);
+        g.setColor(NEEDLE);
+        g.setStroke(new BasicStroke(4, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER));
+        g.draw(new Line2D.Double(200 + 90 * Math.cos(angle), 200 + 90 * Math.sin(angle),
+            200 + 178 * Math.cos(angle), 200 + 178 * Math.sin(angle)));
+        // Soft drop shadow lifting the hub off the face.
+        for (int i = 8; i >= 1; i--) {
+            g.setColor(new Color(0, 0, 0, 5));
+            g.fill(new Ellipse2D.Double(100 - i, 104 - i, 200 + 2 * i, 200 + 2 * i));
+        }
+        g.setPaint(new GradientPaint(0, 100, HUB, 0, 300, FACE_EDGE));
+        g.fill(new Ellipse2D.Double(100, 100, 200, 200));
+        g.setColor(HUB_RIM);
+        g.setStroke(new BasicStroke(1.5f));
+        g.draw(new Ellipse2D.Double(100, 100, 200, 200));
+        drawText(g, current.text, 200, 200, 60, 165,
+            zone == Zone.DANGER ? DANGER : zone == Zone.WARNING ? WARNING_TEXT : TEXT);
+        drawText(g, units, 202, 246, 16, 160, LABEL_TEXT);
+        drawText(g, title, 200, 331, 16, 230, LABEL_TEXT);
+    }
+
+    int getArtworkRenderCountForTests() {
+        return artworkRenderCountForTests;
+    }
+
+    void paintVectorForTests(Graphics2D graphics) {
+        int width = getWidth();
+        int height = getHeight();
+        int size = Math.min(width, height);
+        graphics.translate((width - size) / 2.0, (height - size) / 2.0);
+        graphics.scale(size / 400.0, size / 400.0);
+        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        paintVectorArtwork(graphics, reading);
     }
 
     private double degreesOf(double value) {
