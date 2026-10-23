@@ -139,8 +139,7 @@ static void writeCsvLine() {
 		csvBytes += written;
 	}
 	MLG::forEachField([&](const MLG::Entries::Field& f) {
-		void* offset = MLG::getUnitTestFieldOffset(f);
-		double v = f.readValueAsDouble(offset);
+		double v = f.readValueAsDouble();
 		int digits = f.getDigits();
 		if (digits < 0) {
 			digits = 0;
@@ -173,8 +172,7 @@ static void writeNdjsonLine() {
 		ndjsonBytes += written;
 	}
 	MLG::forEachField([&](const MLG::Entries::Field& f) {
-		void* offset = MLG::getUnitTestFieldOffset(f);
-		double v = f.readValueAsDouble(offset);
+		double v = f.readValueAsDouble();
 		std::string name = jsonEscape(f.getName());
 		// Always emit as a JSON number. NaN/Inf are emitted as null to keep JSON valid.
 		// Note: the field name is never passed as a printf format string -- it is

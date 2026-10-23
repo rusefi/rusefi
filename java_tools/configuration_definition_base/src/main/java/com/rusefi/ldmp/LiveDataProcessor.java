@@ -212,24 +212,22 @@ public class LiveDataProcessor {
 
                 sdCardFieldsConsumer.structureStartingTsPosition = outputsSections.getBaseOffset();
 
-                if (constexpr != null) {
-                    sdCardFieldsConsumer.expressions = constexpr;
+                if (engineModule != null && outputNames.length != 1) {
+                    throw new IllegalStateException("engineModule requires a single output: " + name);
+                }
+                if (constexpr != null || engineModule != null) {
+                    // [tag:live_data_sd_mapping] Bits are relative to the generated state,
+                    // not the containing module (which may have a polymorphic base).
+                    sdCardFieldsConsumer.expressions = engineModule == null ? constexpr : new String[] {
+                            "static_cast<" + name + "_s&>(*engine->module<" + engineModule + ">())" };
                     sdCardFieldsConsumer.names = outputNames;
                     sdCardFieldsConsumer.conditional = conditional;
-                    sdCardFieldsConsumer.isPtr = isPtr;
+                    sdCardFieldsConsumer.isPtr = engineModule == null && isPtr;
                     state.addDestination(sdCardFieldsConsumer::handleEndStruct);
 
-                    outputValueConsumer.expressions = constexpr;
-                    outputValueConsumer.names = outputNames;
-                    outputValueConsumer.moduleMode = false;
-                    outputValueConsumer.conditional = conditional;
-                    outputValueConsumer.isPtr = isPtr;
-                    state.addDestination(outputValueConsumer::handleEndStruct);
-
-                } else if (engineModule != null) {
                     outputValueConsumer.currentEngineModule = engineModule;
-                    outputValueConsumer.moduleMode = true;
-                    outputValueConsumer.expressions = new String[] {""};
+                    outputValueConsumer.moduleMode = engineModule != null;
+                    outputValueConsumer.expressions = engineModule == null ? constexpr : new String[] {""};
                     outputValueConsumer.names = outputNames;
                     outputValueConsumer.conditional = conditional;
                     outputValueConsumer.isPtr = isPtr;

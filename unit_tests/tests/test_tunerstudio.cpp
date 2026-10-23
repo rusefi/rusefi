@@ -16,7 +16,7 @@ TEST(TunerStudioState, EngineStateLogField) {
 			matches++;
 			EXPECT_EQ(1u, field.getSize());
 			EXPECT_STREQ("", field.getUnits());
-			EXPECT_DOUBLE_EQ(0x3f, field.readValueAsDouble(MLG::getUnitTestFieldOffset(field)));
+			EXPECT_DOUBLE_EQ(0x3f, field.readValueAsDouble());
 		}
 	});
 	EXPECT_EQ(1, matches);

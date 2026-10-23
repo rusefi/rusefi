@@ -89,6 +89,77 @@ TEST(unitTestLog, binaryHeaderMatchesEmittedRecord) {
 	EXPECT_EQ((header.bytes.size() - 24) / 89, readUnsignedBE(22, 2));
 }
 
+TEST(unitTestLog, sourcesFollowEngineAndMockReplacement) {
+	// The generated table exists before any EngineTestHelper. Reuse it across
+	// destroyed fixtures and changes to each of the four mockable sources.
+	for (int fixture = 1; fixture <= 2; fixture++) {
+		EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+		ThrottleModel throttleA, throttleB;
+		HpfpController hpfpA, hpfpB;
+		AcController acA, acB;
+		MisfireController misfireA, misfireB;
+		auto seed = [](auto& throttle, auto& hpfp, auto& ac, auto& misfire, int value) {
+			throttle.throttleModelCrossoverAngle = value * 12.5f;
+			throttle.throttleUseWotModel = value % 2;
+			hpfp.fuel_requested_percent = value * 10;
+			hpfp.isHpfpActive = value % 2;
+			ac.acPressureTooHigh = value % 2;
+			misfire.misfireEmaUs = value * 1250;
+		};
+		seed(engine->module<ThrottleModel>().unmock(), engine->module<HpfpController>().unmock(),
+			 engine->module<AcController>().unmock(), engine->module<MisfireController>().unmock(), fixture);
+		seed(throttleA, hpfpA, acA, misfireA, fixture + 2);
+		seed(throttleB, hpfpB, acB, misfireB, fixture + 3);
+		engine->outputChannels.rtcUnixEpochTime = fixture * 123456;
+		for (int phase = 0; phase < 4; phase++) {
+			SCOPED_TRACE(::testing::Message() << "fixture " << fixture << " phase " << phase);
+			engine->module<ThrottleModel>().set(phase == 1 ? &throttleA : phase == 2 ? &throttleB : nullptr);
+			engine->module<HpfpController>().set(phase == 1 ? &hpfpA : phase == 2 ? &hpfpB : nullptr);
+			engine->module<AcController>().set(phase == 1 ? &acA : phase == 2 ? &acB : nullptr);
+			engine->module<MisfireController>().set(phase == 1 ? &misfireA : phase == 2 ? &misfireB : nullptr);
+			const int value = fixture + (phase == 1 ? 2 : phase == 2 ? 3 : 0);
+			CaptureWriter record;
+			MLG::writeSdBlock(record);
+			size_t offset = 4;
+			int matches = 0;
+			MLG::forEachField([&](const MLG::Entries::Field& field) {
+				const std::string name(field.getName());
+				auto expect = [&](double engineering, double raw, bool floating) {
+					matches++;
+					EXPECT_NEAR(engineering, field.readValueAsDouble(), 0.00001) << name;
+					ASSERT_LE(offset + field.getSize(), record.bytes.size());
+					if (floating) {
+						EXPECT_FLOAT_EQ(raw, readFloatBE(record.bytes.data() + offset)) << name;
+					} else {
+						uint32_t stored = 0;
+						for (size_t i = 0; i < field.getSize(); i++) {
+							stored = (stored << 8) | static_cast<unsigned char>(record.bytes[offset + i]);
+						}
+						EXPECT_EQ(raw, stored) << name;
+					}
+				};
+				if (name == "Air: Throttle crossover pos") {
+					expect(value * 12.5, value * 1250, false);
+				} else if (name == "Air: Throttle model WOT" || name == "AC: pressure too high" || name == "GDI: HPFP Active") {
+					expect(value % 2, value % 2, false);
+				} else if (name == "GDI: HPFP requested duty") {
+					expect(value * 10, value * 10, true);
+				} else if (name == "Misfire: EMA baseline") {
+					expect(value * 1.25, value * 1250, true);
+				} else if (name == "rtcUnixEpochTime") {
+					expect(fixture * 123456, fixture * 123456, false);
+				}
+				offset += field.getSize();
+			});
+			EXPECT_EQ(7, matches);
+			EXPECT_NEAR(value * 12.5, getOutputValueByName("throttleModelCrossoverAngle"), 0.00001);
+			EXPECT_FLOAT_EQ(value * 10, getOutputValueByName("fuel_requested_percent"));
+			EXPECT_FLOAT_EQ(value % 2, getOutputValueByName("acPressureTooHigh"));
+			EXPECT_NEAR(value * 1.25, getOutputValueByName("misfireEmaUs"), 0.00001);
+		}
+	}
+}
+
 TEST(unitTestLog, generatedOutputConversions) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	auto& misfire = engine->module<MisfireController>().unmock();

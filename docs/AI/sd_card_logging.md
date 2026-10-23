@@ -106,6 +106,13 @@ loggers runs, chosen by `engineConfiguration->sdTriggerLog`:
   1-byte additive checksum.
 - The field list is the generated `log_fields_generated.h`; count is reported by
   `sdinfo` as "SD card fields".
+- `[tag:live_data_sd_mapping]` `LiveData.yaml` uses `engineModule` to expose a
+  module's generated state to SD and Lua. SD descriptors remain constant:
+  firmware stores direct addresses, while simulator/tests resolve the current
+  engine and active mock on each read. Bit offsets are relative to the generated
+  state subobject. Explicit `constexpr` expressions cover other sources and are
+  also evaluated lazily on hosts. Feature guards still control field availability;
+  a mock interface must expose the state to support logging its replacement.
 - `[tag:live_data_output_scale]` Every exported numeric field automatically
   uses its constant INI scale/offset in the descriptor: `(raw + offset) * scale`.
   STFT bank 1/2 and dwell deviation therefore display `0.95`, `1.00`, `1.05`
