@@ -25,7 +25,6 @@ import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.List;
@@ -46,7 +45,6 @@ public class MainMenuTreeWidget {
     private final JTextField searchField = new JTextField();
     private boolean isUpdatingModel = false;
     private boolean isProcessingSearchSelection = false;
-    private String lastSearchSelectedKey = null;
     private Consumer<SubMenuModel> onSelect;
 
     private final UIContext uiContext;
@@ -90,7 +88,30 @@ public class MainMenuTreeWidget {
             populate(model);
         }
 
-        tree = new JTree(root);
+        tree = new JTree(root) {
+            private TreePath selectionBeforeMousePress;
+            private boolean sawMousePress;
+
+            @Override
+            protected void processMouseEvent(MouseEvent event) {
+                if (event.getID() == MouseEvent.MOUSE_PRESSED) {
+                    selectionBeforeMousePress = getSelectionPath();
+                    sawMousePress = true;
+                }
+                super.processMouseEvent(event);
+                if (event.getID() == MouseEvent.MOUSE_CLICKED) {
+                    TreePath clickedPath = getPathForLocation(event.getX(), event.getY());
+                    TreePath selectedBeforeClick = sawMousePress ? selectionBeforeMousePress : getSelectionPath();
+                    if (clickedPath != null && clickedPath.equals(selectedBeforeClick)) {
+                        // Selection events handle changed pages during mouse press. Only repeat
+                        // the callback for a click on the page that was already selected.
+                        handleSelection(clickedPath);
+                    }
+                    selectionBeforeMousePress = null;
+                    sawMousePress = false;
+                }
+            }
+        };
         tree.setSelectionModel(new DefaultTreeSelectionModel() {
             {
                 setSelectionMode(SINGLE_TREE_SELECTION);
@@ -133,15 +154,6 @@ public class MainMenuTreeWidget {
             "scrollDownChangeSelection", "scrollDownChangeLead", "scrollDownExtendSelection");
         installNavigationActions(1, true, "selectChild", "selectChildChangeLead");
         tree.setToggleClickCount(1);
-        tree.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                TreePath path = tree.getPathForLocation(e.getX(), e.getY());
-                if (path != null) {
-                    handleSelection(path);
-                }
-            }
-        });
         tree.addTreeSelectionListener(e -> {
             if (isUpdatingModel) {
                 return;
@@ -338,7 +350,6 @@ public class MainMenuTreeWidget {
                             // call onSelect only if not disabled
                             if (onSelect != null && !disabledKeys.contains(subMenuToSelect.getKey())) {
                                 onSelect.accept(subMenuToSelect);
-                                lastSearchSelectedKey = subMenuToSelect.getKey();
                             }
 
                             // Defer scroll to after all other events are processed
@@ -357,12 +368,8 @@ public class MainMenuTreeWidget {
             });
         } else {
             if (selectedSubMenu != null && onSelect != null) {
-                // Skip if this is a spurious selection after search (e.g., first menu item auto-selected by the JTree)
-                if (lastSearchSelectedKey != null && !lastSearchSelectedKey.equals(selectedSubMenu.getKey())) {
-                    lastSearchSelectedKey = null;
-                    return;
-                }
-                lastSearchSelectedKey = null;
+                // Search restoration selects the result programmatically with the listener
+                // suspended. The next real selection is user navigation, not a duplicate.
                 // Skip disabled items
                 if (disabledKeys.contains(selectedSubMenu.getKey())) {
                     return;
@@ -657,9 +664,14 @@ public class MainMenuTreeWidget {
             if (!isSelectable(path)) {
                 return;
             }
+            boolean alreadySelected = path.equals(tree.getSelectionPath());
             tree.setSelectionPath(path);
             tree.scrollPathToVisible(path);
-            handleSelection(path);
+            // A changed selection is handled by the listener. Preserve the public method's
+            // refresh behavior when callers explicitly select the already-current page.
+            if (alreadySelected) {
+                handleSelection(path);
+            }
         }
     }
 

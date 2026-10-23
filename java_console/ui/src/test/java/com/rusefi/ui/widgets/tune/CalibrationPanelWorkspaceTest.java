@@ -456,6 +456,77 @@ class CalibrationPanelWorkspaceTest {
     }
 
     @Test
+    void primaryNavigationDoesNotRebuildDetachedViewsWhenImageContentsAreUnchanged() throws Throwable {
+        IniFileModel ini = ini();
+        SwingUtilities.invokeAndWait(() -> {
+            try (Fixture fixture = new Fixture(ini, new Node())) {
+                fixture.select("first");
+                fixture.workspace.detachCurrentPanel();
+                JTextField beforeNavigation = find(fixture.windows.get(0).content, JTextField.class);
+
+                fixture.select("second");
+
+                assertSame(beforeNavigation, find(fixture.windows.get(0).content, JTextField.class),
+                    "Primary navigation should preserve detached controls when image data is unchanged");
+            }
+        });
+    }
+
+    @Test
+    void primaryNavigationRefreshesDetachedViewsWhenInPlaceImageContentsChanged() throws Throwable {
+        IniFileModel ini = ini();
+        SwingUtilities.invokeAndWait(() -> {
+            try (Fixture fixture = new Fixture(ini, new Node())) {
+                fixture.select("first");
+                fixture.workspace.detachCurrentPanel();
+                ConfigurationImage working = fixture.primary.getWorkingImage();
+                working.getContent()[0] = 82;
+
+                fixture.select("second");
+
+                assertEquals("82", find(fixture.windows.get(0).content, JTextField.class).getText(),
+                    "Detached controls must refresh when mutable working-image contents change");
+            }
+        });
+    }
+
+    @Test
+    void primaryViewRefreshesDetachedViewsWhenIniModelChangesWithSameImage() throws Throwable {
+        IniFileModel ini = ini();
+        IniFileModel replacement = ini();
+        SwingUtilities.invokeAndWait(() -> {
+            try (Fixture fixture = new Fixture(ini, new Node())) {
+                fixture.select("first");
+                fixture.workspace.detachCurrentPanel();
+                JTextField beforeReplacement = find(fixture.windows.get(0).content, JTextField.class);
+
+                fixture.primary.update("second", replacement, fixture.primary.getWorkingImage());
+
+                assertNotSame(beforeReplacement, find(fixture.windows.get(0).content, JTextField.class),
+                    "Detached controls must refresh when their INI model instance changes");
+            }
+        });
+    }
+
+    @Test
+    void navigationAfterDetachedEditPreservesDetachedEditor() throws Throwable {
+        IniFileModel ini = ini();
+        SwingUtilities.invokeAndWait(() -> {
+            try (Fixture fixture = new Fixture(ini, new Node())) {
+                fixture.select("first");
+                fixture.workspace.detachCurrentPanel();
+                JTextField edited = find(fixture.windows.get(0).content, JTextField.class);
+                edited.setText("38");
+
+                fixture.select("second");
+
+                assertSame(edited, find(fixture.windows.get(0).content, JTextField.class));
+                assertEquals("38", edited.getText());
+            }
+        });
+    }
+
+    @Test
     void tableAndCurveEditsReachEveryViewAndPreserveOtherFields() throws Throwable {
         IniFileModel ini = ini();
         SwingUtilities.invokeAndWait(() -> {

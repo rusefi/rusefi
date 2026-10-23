@@ -36,6 +36,12 @@ import com.devexperts.logging.Logging;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
+import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.awt.print.PrinterGraphics;
 import java.util.*;
 import java.util.Arrays;
 import java.util.List;
@@ -1028,11 +1034,36 @@ public class CalibrationDialogWidget {
         return viewportPane.frame;
     }
 
+    int getViewportBackgroundRenderCountForTests() {
+        return viewportPane.backgroundRenderCount;
+    }
+
+    long getViewportBackgroundCachePixelsForTests() {
+        return viewportPane.mosaicCache == null ? 0L
+            : (long) viewportPane.mosaicCache.getWidth() * viewportPane.mosaicCache.getHeight();
+    }
+
+    long getViewportBackgroundCellRenderCountForTests() {
+        return viewportPane.backgroundCellRenderCount;
+    }
+
     private static class DialogViewport extends ScrollablePanel {
         private static final int MARGIN = 8;
         private final JPanel frame = new JPanel(new BorderLayout());
         private int preferredWidth = -1;
         private boolean fillWidth;
+        private int backgroundRenderCount;
+        private long backgroundCellRenderCount;
+        private BufferedImage mosaicCache;
+        private int cachedWidth = -1;
+        private int cachedHeight = -1;
+        private Color cachedBackground;
+        private Rectangle cachedFrameBounds;
+        private Rectangle cachedVisibleBounds;
+        private double cachedScaleX;
+        private double cachedScaleY;
+        private double cachedPhaseX;
+        private double cachedPhaseY;
 
         DialogViewport(JPanel content) {
             setLayout(null);
@@ -1069,47 +1100,158 @@ public class CalibrationDialogWidget {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
+            Color background = getBackground();
+            Rectangle frameBounds = frame.getBounds();
+            Rectangle visibleBounds = getVisibleRect();
+            AffineTransform transform = ((Graphics2D) g).getTransform();
+            double scaleX = transform.getScaleX();
+            double scaleY = transform.getScaleY();
+            Point2D deviceOrigin = transform.transform(new Point2D.Double(visibleBounds.x, visibleBounds.y), null);
+            double phaseX = deviceOrigin.getX() - Math.floor(deviceOrigin.getX());
+            double phaseY = deviceOrigin.getY() - Math.floor(deviceOrigin.getY());
+            int deviceX = (int) Math.floor(deviceOrigin.getX());
+            int deviceY = (int) Math.floor(deviceOrigin.getY());
+            double physicalWidth = visibleBounds.width * scaleX + phaseX;
+            double physicalHeight = visibleBounds.height * scaleY + phaseY;
+            int rasterWidth = physicalWidth > 0 && physicalWidth <= Integer.MAX_VALUE
+                ? (int) Math.ceil(physicalWidth) : 0;
+            int rasterHeight = physicalHeight > 0 && physicalHeight <= Integer.MAX_VALUE
+                ? (int) Math.ceil(physicalHeight) : 0;
+            long pixels = (long) rasterWidth * rasterHeight;
+            // Cache only decoration: per-hexagon XRender masks are costly on every repaint.
+            // The frame and its live editors continue through normal child painting.
+            boolean cacheable = background != null && background.getAlpha() == 255
+                && isOpaque() && isNormalSrcOver(((Graphics2D) g).getComposite())
+                && !(g instanceof PrinterGraphics) && Double.isFinite(scaleX) && Double.isFinite(scaleY)
+                && Double.isFinite(deviceOrigin.getX()) && Double.isFinite(deviceOrigin.getY())
+                && deviceOrigin.getX() >= Integer.MIN_VALUE && deviceOrigin.getX() <= Integer.MAX_VALUE
+                && deviceOrigin.getY() >= Integer.MIN_VALUE && deviceOrigin.getY() <= Integer.MAX_VALUE
+                && scaleX > 0 && scaleY > 0 && transform.getShearX() == 0 && transform.getShearY() == 0
+                && visibleBounds.width > 0 && visibleBounds.height > 0
+                && rasterWidth > 0 && rasterHeight > 0 && pixels <= 16_777_216L;
+            if (cacheable) {
+                boolean cacheMiss = mosaicCache == null || cachedWidth != rasterWidth || cachedHeight != rasterHeight
+                    || !background.equals(cachedBackground) || !frameBounds.equals(cachedFrameBounds)
+                    || !visibleBounds.equals(cachedVisibleBounds) || Double.compare(scaleX, cachedScaleX) != 0
+                    || Double.compare(scaleY, cachedScaleY) != 0 || Double.compare(phaseX, cachedPhaseX) != 0
+                    || Double.compare(phaseY, cachedPhaseY) != 0;
+                long visiblePixels = (long) visibleBounds.width * visibleBounds.height;
+                if (cacheMiss && isSmallPaintClip(g, visibleBounds, visiblePixels)) {
+                    Graphics2D direct = (Graphics2D) g.create();
+                    try {
+                        paintMosaic(direct, background, frameBounds);
+                    } finally {
+                        direct.dispose();
+                    }
+                    return;
+                }
+                if (cacheMiss) {
+                    mosaicCache = new BufferedImage(rasterWidth, rasterHeight, BufferedImage.TYPE_INT_RGB);
+                    Graphics2D cacheGraphics = mosaicCache.createGraphics();
+                    try {
+                        cacheGraphics.setColor(background);
+                        cacheGraphics.fillRect(0, 0, rasterWidth, rasterHeight);
+                        cacheGraphics.setTransform(new AffineTransform(scaleX, 0, 0, scaleY,
+                            transform.getTranslateX() - deviceX, transform.getTranslateY() - deviceY));
+                        // getClipBounds() sees the user clip, not the image's implicit device bounds.
+                        // Keep polygon generation bounded as well as the allocated raster.
+                        cacheGraphics.clip(visibleBounds);
+                        paintMosaic(cacheGraphics, background, frameBounds);
+                    } finally {
+                        cacheGraphics.dispose();
+                    }
+                    cachedWidth = rasterWidth;
+                    cachedHeight = rasterHeight;
+                    cachedBackground = background;
+                    cachedFrameBounds = new Rectangle(frameBounds);
+                    cachedVisibleBounds = new Rectangle(visibleBounds);
+                    cachedScaleX = scaleX;
+                    cachedScaleY = scaleY;
+                    cachedPhaseX = phaseX;
+                    cachedPhaseY = phaseY;
+                }
+                Graphics2D cached = (Graphics2D) g.create();
+                try {
+                    Area unused = new Area(new Rectangle(0, 0, getWidth(), getHeight()));
+                    unused.subtract(new Area(frameBounds));
+                    cached.clip(unused);
+                    AffineTransform alignToDevicePixels = transform.createInverse();
+                    alignToDevicePixels.translate(deviceX, deviceY);
+                    cached.transform(alignToDevicePixels);
+                    cached.drawImage(mosaicCache, 0, 0, null);
+                } catch (java.awt.geom.NoninvertibleTransformException impossibleForPositiveScale) {
+                    Graphics2D direct = (Graphics2D) g.create();
+                    try {
+                        paintMosaic(direct, background, frameBounds);
+                    } finally {
+                        direct.dispose();
+                    }
+                } finally {
+                    cached.dispose();
+                }
+                return;
+            }
             Graphics2D mosaic = (Graphics2D) g.create();
             try {
-                java.awt.geom.Area unused = new java.awt.geom.Area(new Rectangle(0, 0, getWidth(), getHeight()));
-                unused.subtract(new java.awt.geom.Area(frame.getBounds()));
-                mosaic.clip(unused);
-                mosaic.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                Color background = getBackground();
-                boolean dark = background.getRed() + background.getGreen() + background.getBlue() < 384;
-                mosaic.setColor(dark ? Color.WHITE : new Color(45, 58, 68));
-                final double radius = 22;
-                final double rowHeight = Math.sqrt(3) * radius;
-                Rectangle clip = mosaic.getClipBounds();
-                int firstColumn = (int) Math.floor(clip.x / (1.5 * radius)) - 1;
-                int lastColumn = (int) Math.ceil((clip.x + clip.width) / (1.5 * radius)) + 1;
-                int firstRow = (int) Math.floor(clip.y / rowHeight) - 1;
-                int lastRow = (int) Math.ceil((clip.y + clip.height) / rowHeight) + 1;
-                for (int column = firstColumn; column <= lastColumn; column++) {
-                    for (int row = firstRow; row <= lastRow; row++) {
-                        double centerX = column * 1.5 * radius;
-                        double centerY = (row + ((column & 1) == 0 ? 0 : 0.5)) * rowHeight;
-                        java.awt.geom.Path2D hexagon = new java.awt.geom.Path2D.Double();
-                        for (int corner = 0; corner < 6; corner++) {
-                            double angle = corner * Math.PI / 3;
-                            double x = centerX + radius * Math.cos(angle);
-                            double y = centerY + radius * Math.sin(angle);
-                            if (corner == 0) {
-                                hexagon.moveTo(x, y);
-                            } else {
-                                hexagon.lineTo(x, y);
-                            }
-                        }
-                        hexagon.closePath();
-                        int shade = Math.floorMod(column * 31 + row * 17, 7);
-                        mosaic.setComposite(AlphaComposite.SrcOver.derive(0.018f + shade * 0.006f));
-                        mosaic.fill(hexagon);
-                        mosaic.setComposite(AlphaComposite.SrcOver.derive(0.07f));
-                        mosaic.draw(hexagon);
-                    }
-                }
+                paintMosaic(mosaic, background, frameBounds);
             } finally {
                 mosaic.dispose();
+            }
+        }
+
+        private boolean isNormalSrcOver(Composite composite) {
+            return composite instanceof AlphaComposite
+                && ((AlphaComposite) composite).getRule() == AlphaComposite.SRC_OVER
+                && ((AlphaComposite) composite).getAlpha() == 1.0f;
+        }
+
+        private boolean isSmallPaintClip(Graphics g, Rectangle visibleBounds, long viewportPixels) {
+            Rectangle clip = g.getClipBounds();
+            if (clip == null) {
+                return false;
+            }
+            Rectangle dirty = clip.intersection(visibleBounds);
+            return (long) dirty.width * dirty.height < viewportPixels / 4;
+        }
+
+        private void paintMosaic(Graphics2D mosaic, Color background, Rectangle frameBounds) {
+            backgroundRenderCount++;
+            Area unused = new Area(new Rectangle(0, 0, getWidth(), getHeight()));
+            unused.subtract(new Area(frameBounds));
+            mosaic.clip(unused);
+            mosaic.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            boolean dark = background.getRed() + background.getGreen() + background.getBlue() < 384;
+            mosaic.setColor(dark ? Color.WHITE : new Color(45, 58, 68));
+            final double radius = 22;
+            final double rowHeight = Math.sqrt(3) * radius;
+            Rectangle clip = mosaic.getClipBounds();
+            int firstColumn = (int) Math.floor(clip.x / (1.5 * radius)) - 1;
+            int lastColumn = (int) Math.ceil((clip.x + clip.width) / (1.5 * radius)) + 1;
+            int firstRow = (int) Math.floor(clip.y / rowHeight) - 1;
+            int lastRow = (int) Math.ceil((clip.y + clip.height) / rowHeight) + 1;
+            for (int column = firstColumn; column <= lastColumn; column++) {
+                for (int row = firstRow; row <= lastRow; row++) {
+                    backgroundCellRenderCount++;
+                    double centerX = column * 1.5 * radius;
+                    double centerY = (row + ((column & 1) == 0 ? 0 : 0.5)) * rowHeight;
+                    Path2D hexagon = new Path2D.Double();
+                    for (int corner = 0; corner < 6; corner++) {
+                        double angle = corner * Math.PI / 3;
+                        double x = centerX + radius * Math.cos(angle);
+                        double y = centerY + radius * Math.sin(angle);
+                        if (corner == 0) {
+                            hexagon.moveTo(x, y);
+                        } else {
+                            hexagon.lineTo(x, y);
+                        }
+                    }
+                    hexagon.closePath();
+                    int shade = Math.floorMod(column * 31 + row * 17, 7);
+                    mosaic.setComposite(AlphaComposite.SrcOver.derive(0.018f + shade * 0.006f));
+                    mosaic.fill(hexagon);
+                    mosaic.setComposite(AlphaComposite.SrcOver.derive(0.07f));
+                    mosaic.draw(hexagon);
+                }
             }
         }
 

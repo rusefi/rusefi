@@ -15,9 +15,11 @@ import java.awt.event.HierarchyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -36,6 +38,8 @@ public final class CalibrationPanelWorkspace {
     private Consumer<String> onShowInPinout = value -> { };
     private IniFileModel ini;
     private ConfigurationImage image;
+    private String primaryKey;
+    private byte[] detachedImageContent;
     private Window owner;
     private boolean restoring;
     private boolean synchronizing;
@@ -129,22 +133,33 @@ public final class CalibrationPanelWorkspace {
         if (synchronizing || destroyed) {
             return;
         }
-        ini = primary.getCurrentIniFileModel();
-        image = primary.getWorkingImage();
+        IniFileModel currentIni = primary.getCurrentIniFileModel();
+        ConfigurationImage currentImage = primary.getWorkingImage();
+        String currentKey = primary.getCurrentKey();
+        boolean onlyNavigated = !Objects.equals(primaryKey, currentKey)
+            && ini == currentIni && hasSameContent(detachedImageContent, currentImage);
+        ini = currentIni;
+        image = currentImage;
+        primaryKey = currentKey;
+        detachedImageContent = copyContent(currentImage);
         layer.setAvailable(image != null && new CalibrationPanelKey(primary.getCurrentKey()).isSupported(ini));
-        refreshDetached(null);
+        if (!onlyNavigated) {
+            refreshDetached(null);
+        }
     }
 
     /** [tag:detached_calibration_sync] Every view edits a clone. Publish to all peers before
      * notifying the session/toolbar, so a subsequent edit or burn cannot use an older image.
      * The source stays intact to preserve its text caret and table/curve drag state.
-     * Primary replacements (undo, discard, navigation, load/reconnect) use the same fan-out.
+     * Primary replacements (undo, discard, load/reconnect) use the same fan-out; navigation
+     * only fans out when it also changes image contents or the INI model.
      */
     private void edited(CalibrationDialogWidget source, ConfigurationImage changed) {
         if (synchronizing || destroyed) {
             return;
         }
         image = changed;
+        detachedImageContent = copyContent(changed);
         synchronizing = true;
         try {
             if (source != primary) {
@@ -155,6 +170,14 @@ public final class CalibrationPanelWorkspace {
             synchronizing = false;
         }
         onConfigChange.accept(changed);
+    }
+
+    private static byte[] copyContent(ConfigurationImage image) {
+        return image == null ? null : image.getContent().clone();
+    }
+
+    private static boolean hasSameContent(byte[] content, ConfigurationImage image) {
+        return content == null ? image == null : image != null && Arrays.equals(content, image.getContent());
     }
 
     public void detachCurrentPanel() {
