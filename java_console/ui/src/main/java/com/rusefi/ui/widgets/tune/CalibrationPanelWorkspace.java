@@ -16,6 +16,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -204,8 +205,10 @@ public final class CalibrationPanelWorkspace {
                 continue;
             }
             if (panel.window == null && restoring) {
-                Rectangle screen = screens.get().get(0);
-                openPanel(panel, new Point(screen.x + 40, screen.y + 40));
+                List<Rectangle> availableScreens = screens.get();
+                Rectangle screen = owner == null ? availableScreens.get(0)
+                    : screenForBounds(owner.getBounds(), availableScreens);
+                openPanel(panel, new Point(screen.x + 40, screen.y + 40), screen);
             } else if (panel.widget != null && panel.widget != source) {
                 refresh(panel.widget, panel.scroll, panel.key);
             }
@@ -215,7 +218,7 @@ public final class CalibrationPanelWorkspace {
         }
     }
 
-    private void openPanel(DetachedPanel panel, Point position) {
+    private void openPanel(DetachedPanel panel, Point position, Rectangle screen) {
         panel.widget = new CalibrationDialogWidget(uiContext);
         panel.scroll = new JScrollPane(panel.widget.getViewportPane());
         panel.widget.setOnConfigChange(changed -> edited(panel.widget, changed));
@@ -226,11 +229,12 @@ public final class CalibrationPanelWorkspace {
                 panel.bounds = new Rectangle(bounds);
                 saveLayout();
             });
-        if (panel.bounds == null) {
+        boolean fresh = panel.bounds == null;
+        if (fresh) {
             panel.bounds = panel.window.getBounds();
             panel.bounds.setLocation(position);
         }
-        panel.bounds = fitBounds(panel.bounds, screens.get());
+        panel.bounds = fitBounds(panel.bounds, fresh ? Collections.singletonList(screen) : screens.get());
         panel.window.setBounds(panel.bounds);
         panel.widget.setActive(true);
         panel.window.show();
@@ -304,7 +308,8 @@ public final class CalibrationPanelWorkspace {
                 panels.put(part, child);
             }
             if (child.window == null) {
-                openPanel(child, new Point(origin.x + offset, origin.y + offset));
+                Rectangle screen = screenForBounds(origin, screens.get());
+                openPanel(child, new Point(origin.x + offset, origin.y + offset), screen);
             }
             child.window.toFront();
             offset += 32;
@@ -373,6 +378,14 @@ public final class CalibrationPanelWorkspace {
     }
 
     static Rectangle fitBounds(Rectangle bounds, List<Rectangle> screens) {
+        Rectangle screen = screenForBounds(bounds, screens);
+        int width = Math.min(screen.width, Math.max(1, bounds.width));
+        int height = Math.min(screen.height, Math.max(1, bounds.height));
+        return new Rectangle(Math.max(screen.x, Math.min(bounds.x, screen.x + screen.width - width)),
+            Math.max(screen.y, Math.min(bounds.y, screen.y + screen.height - height)), width, height);
+    }
+
+    private static Rectangle screenForBounds(Rectangle bounds, List<Rectangle> screens) {
         Rectangle screen = screens.get(0);
         long bestArea = 0;
         for (Rectangle candidate : screens) {
@@ -383,10 +396,7 @@ public final class CalibrationPanelWorkspace {
                 screen = candidate;
             }
         }
-        int width = Math.min(screen.width, Math.max(1, bounds.width));
-        int height = Math.min(screen.height, Math.max(1, bounds.height));
-        return new Rectangle(Math.max(screen.x, Math.min(bounds.x, screen.x + screen.width - width)),
-            Math.max(screen.y, Math.min(bounds.y, screen.y + screen.height - height)), width, height);
+        return screen;
     }
 
     private static List<Rectangle> usableScreens() {

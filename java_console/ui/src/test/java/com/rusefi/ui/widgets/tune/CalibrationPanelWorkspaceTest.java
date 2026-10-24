@@ -211,6 +211,24 @@ class CalibrationPanelWorkspaceTest {
     }
 
     @Test
+    void newWindowOpensOnOwnersScreen() throws Throwable {
+        IniFileModel ini = ini();
+        List<Rectangle> screens = Arrays.asList(
+            new Rectangle(0, 0, 1920, 1040), new Rectangle(-1280, 0, 1280, 984));
+        SwingUtilities.invokeAndWait(() -> {
+            try (Fixture fixture = new Fixture(ini, new Node(), screens)) {
+                Window owner = mock(Window.class);
+                when(owner.getBounds()).thenReturn(new Rectangle(-1100, 100, 900, 700));
+                fixture.workspace.restore(owner);
+                fixture.select("first");
+                fixture.workspace.detachCurrentPanel();
+                assertEquals(new Point(-1240, 40), fixture.windows.get(0).bounds.getLocation(),
+                    "A fresh detached window should open on the owner's display");
+            }
+        });
+    }
+
+    @Test
     void nativeWindowsHoverEditAndRestore() throws Throwable {
         checkNativeWindows(false);
     }
@@ -665,6 +683,10 @@ class CalibrationPanelWorkspaceTest {
         final CalibrationDialogWidget primary;
 
         Fixture(IniFileModel ini, Node config) {
+            this(ini, config, Collections.singletonList(new Rectangle(0, 0, 1280, 960)));
+        }
+
+        Fixture(IniFileModel ini, Node config, List<Rectangle> screens) {
             this.ini = ini;
             context.iniFileState.setIniFileModelForTest(ini);
             workspace = new CalibrationPanelWorkspace(context, config,
@@ -672,7 +694,7 @@ class CalibrationPanelWorkspaceTest {
                     FakeWindow window = new FakeWindow(title, content, close, split, canSplit, moved);
                     windows.add(window);
                     return window;
-                }, () -> Collections.singletonList(new Rectangle(0, 0, 1280, 960)));
+                }, () -> screens);
             primary = workspace.getPrimary();
             primary.update((String) null, ini, initialImage());
         }
