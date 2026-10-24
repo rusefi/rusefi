@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/** Baseline coverage before alphabetizing selected tuner enums. */
+/** Display ordering must preserve the firmware ordinals used to read and write tunes. */
 public class EnumCalibrationFieldRuntimeTest {
     private static IniFileModel ini;
 
@@ -35,17 +35,17 @@ public class EnumCalibrationFieldRuntimeTest {
     }
 
     @Test
-    void pinModesCurrentlyFollowOrdinalOrderWithInvalidEntriesHidden() throws Exception {
-        // pin_mode_e_enum: visible row 3 is firmware ordinal 64, not 3.
-        checkEnum(field("spi1SckMode"), new int[]{0, 4, 32, 64},
-            "default", "opendrain", "PULLUP", "PULLDOWN");
+    void pinModesAreAlphabeticalWithInvalidEntriesHidden() throws Exception {
+        // pin_mode_e_enum: visible row 2 is firmware ordinal 64, not 2.
+        checkEnum(field("spi1SckMode"), new int[]{0, 4, 64, 32},
+            "default", "opendrain", "PULLDOWN", "PULLUP");
     }
 
     @Test
-    void inputModesCurrentlyFollowOrdinalOrderWithInvalidEntriesHidden() throws Exception {
+    void inputModesAreAlphabeticalWithInvalidEntriesHidden() throws Exception {
         // pin_input_mode_e_enum has holes at ordinals 3 and 7.
-        checkEnum(field("clutchDownPinMode"), new int[]{0, 1, 2, 4, 5, 6},
-            "DEFAULT", "PULLUP", "PULLDOWN", "INVERTED DEFAULT", "INVERTED PULLUP", "INVERTED PULLDOWN");
+        checkEnum(field("clutchDownPinMode"), new int[]{0, 4, 6, 5, 2, 1},
+            "DEFAULT", "INVERTED DEFAULT", "INVERTED PULLDOWN", "INVERTED PULLUP", "PULLDOWN", "PULLUP");
     }
 
     @Test
@@ -56,18 +56,17 @@ public class EnumCalibrationFieldRuntimeTest {
     }
 
     @Test
-    void gppwmChannelsCurrentlyFollowOrdinalOrder() throws Exception {
+    void gppwmChannelsAreAlphabeticalWithTheirOriginalOrdinals() throws Exception {
         checkEnum(field("gppwm1_loadAxis"), new int[]{
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-            18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34
-        }, "Zero", "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load",
-            "Aux Temp 1", "Aux Temp 2", "Accel Pedal", "Battery Voltage",
-            "VVT 1 In Actual", "VVT 1 Ex Actual", "VVT 2 In Actual", "VVT 2 Ex Actual",
-            "Ethanol (Flex) %", "Aux Linear 1", "Aux Linear 2",
+            9, 16, 17, 29, 30, 7, 8, 26, 10, 3, 27, 28, 15, 5, 34, 25, 18, 19,
+            20, 21, 4, 6, 22, 23, 2, 32, 33, 24, 1, 31, 12, 11, 14, 13, 0
+        }, "Accel Pedal", "Aux Linear 1", "Aux Linear 2", "Aux Linear 3", "Aux Linear 4",
+            "Aux Temp 1", "Aux Temp 2", "Baro pressure", "Battery Voltage", "CLT",
+            "EGT 1", "EGT 2", "Ethanol (Flex) %", "Fuel Load", "Fuel Pressure", "Gear (detected)",
             "GPPWM Output 1", "GPPWM Output 2", "GPPWM Output 3", "GPPWM Output 4",
-            "Lua Gauge 1", "Lua Gauge 2", "RPM", "Gear (detected)", "Baro pressure",
-            "EGT 1", "EGT 2", "Aux Linear 3", "Aux Linear 4", "Vehicle speed",
-            "Oil pressure", "Oil temp", "Fuel Pressure");
+            "IAT", "Ignition Load", "Lua Gauge 1", "Lua Gauge 2", "MAP", "Oil pressure", "Oil temp",
+            "RPM", "TPS", "Vehicle speed", "VVT 1 Ex Actual", "VVT 1 In Actual",
+            "VVT 2 Ex Actual", "VVT 2 In Actual", "Zero");
     }
 
     @Test
@@ -173,8 +172,7 @@ public class EnumCalibrationFieldRuntimeTest {
                 for (int row = 0; row < options.length; row++) {
                     options[row] = (String) combo.getItemAt(row);
                 }
-                // Characterizes today's ordinal order. Update this expectation with the sorting change,
-                // keeping each label paired with its original firmware ordinal in the test data.
+                // Each displayed label remains paired with its original firmware ordinal in the test data.
                 assertArrayEquals(labels, options, field.getName());
                 assertEquals(labels[i], combo.getSelectedItem(), field.getName());
                 assertEquals(labels[i], combo.getToolTipText());
