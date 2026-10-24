@@ -124,7 +124,7 @@ public class IndicatorPanel {
         candidates.addAll(TsStringFunction.allPossibleResolutions(model.getOffLabel(), ini));
 
         String saved = label.getText();
-        // measure in bold: an alert chip shows its text in bold (TuningStyle.Chip#setAlert)
+        // measure in bold: a solid chip shows its text in bold (TuningStyle.Chip#setSolid)
         Font savedFont = label.getFont();
         if (savedFont != null) {
             label.setFont(savedFont.deriveFont(Font.BOLD));
@@ -176,7 +176,7 @@ public class IndicatorPanel {
         }
         Color[] colors = TuningStyle.indicatorColors(iniBg, iniFg);
         if (label instanceof TuningStyle.Chip) {
-            ((TuningStyle.Chip) label).setAlert(TuningStyle.isAlertTone(TuningStyle.indicatorTone(iniBg, iniFg)));
+            ((TuningStyle.Chip) label).setSolid(TuningStyle.isSolidTone(TuningStyle.indicatorTone(iniBg, iniFg)));
         }
         label.setText(text);
         label.setToolTipText(text);
