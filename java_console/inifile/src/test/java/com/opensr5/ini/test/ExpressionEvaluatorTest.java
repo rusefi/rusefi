@@ -463,6 +463,13 @@ public class ExpressionEvaluatorTest {
         assertTrue(vars.isEmpty());
     }
 
+    @Test
+    public void testExtractVariables_ConditionalStringFunctions() {
+        Set<String> vars = ExpressionEvaluator.extractVariables(
+            "{override ? bitStringValue(axisLabels, override) : bitStringValue(loadLabels, loadSource)}");
+        assertEquals(Set.of("override", "loadSource"), vars);
+    }
+
     // ========== tryEvaluateWithContext() ==========
 
     @Test

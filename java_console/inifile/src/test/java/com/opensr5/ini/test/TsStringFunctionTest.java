@@ -145,6 +145,24 @@ public class TsStringFunctionTest {
         assertNull(result);
     }
 
+    @Test
+    public void testResolve_bitStringValue_inConditionalLabel() {
+        EnumIniField labels = createMockEnumField("labels", buildEnumMap("Off", "Input"));
+        EnumIniField mode = new EnumIniField("mode", 4, FieldType.UINT8,
+            buildEnumMap("Off", "On"), 0, 0);
+        IniFileModel ini = mock(IniFileModel.class);
+        when(ini.findIniField("labels")).thenReturn(Optional.of(labels));
+        when(ini.findIniField("mode")).thenReturn(Optional.of(mode));
+        ConfigurationImage image = new ConfigurationImage(8);
+        image.getContent()[4] = 1;
+
+        assertEquals("Input", TsStringFunction.resolve(
+            "{mode ? bitStringValue(labels, mode) : bitStringValue(labels, 0)}", ini, image, null));
+        image.getContent()[4] = 0;
+        assertEquals("Off", TsStringFunction.resolve(
+            "{mode ? bitStringValue(labels, mode) : bitStringValue(labels, 0)}", ini, image, null));
+    }
+
     // ========== resolve() - stringValue ==========
 
     @Test

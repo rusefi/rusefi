@@ -20,6 +20,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 import java.util.Locale;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.EventObject;
@@ -56,6 +58,10 @@ public class CurveWidget {
     private Double[] yValues;
     private String xUnits;
     private String yUnits;
+    private String xLabel;
+    private String yLabel;
+    private String curveTitle;
+    private final boolean readOnly;
     private int xDigits;
     private int yDigits;
     private ConfigurationImage imageTarget;
@@ -64,6 +70,12 @@ public class CurveWidget {
     private Runnable onEdit;
 
     public CurveWidget(CurveModel curveModel, IniFileModel iniFileModel, ConfigurationImage ci) {
+        this(curveModel, iniFileModel, ci, ci, false);
+    }
+
+    public CurveWidget(CurveModel curveModel, IniFileModel iniFileModel, ConfigurationImage valuesImage,
+                       ConfigurationImage configImage, boolean readOnly) {
+        this.readOnly = readOnly;
         table.getTableHeader().setReorderingAllowed(false);
         table.setDefaultRenderer(Object.class, new GradientRenderer());
         table.setDefaultEditor(Object.class, new DefaultCellEditor(new JTextField()) {
@@ -86,7 +98,8 @@ public class CurveWidget {
         });
         table.setCellSelectionEnabled(true);
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        table.setToolTipText("Type to replace a value; Enter to accept; Esc to cancel; Shift+arrows to select");
+        table.setToolTipText(readOnly ? "ECU page values are read-only" :
+            "Type to replace a value; Enter to accept; Esc to cancel; Shift+arrows to select");
         table.getSelectionModel().addListSelectionListener(e -> canvas.repaint());
         table.getColumnModel().getSelectionModel().addListSelectionListener(e -> canvas.repaint());
         // JTable defaults to a 450x400 preferredScrollableViewportSize; left unchanged the table would
@@ -112,39 +125,60 @@ public class CurveWidget {
         gbc.weightx = 0.2;
         content.add(rightPanel, gbc);
 
-        update(curveModel, iniFileModel, ci);
+        update(curveModel, iniFileModel, valuesImage, configImage);
     }
 
-    private void update(CurveModel curveModel, IniFileModel iniFile, ConfigurationImage ci) {
+    private void update(CurveModel curveModel, IniFileModel iniFile, ConfigurationImage valuesImage,
+                        ConfigurationImage configImage) {
         this.curveModel = Objects.requireNonNull(curveModel);
-        this.imageTarget = ci;
-        this.configuredXAxis = curveModel.getxAxis().resolve(iniFile, ci);
-        this.configuredYAxis = curveModel.getyAxis().resolve(iniFile, ci);
-
+        this.imageTarget = valuesImage;
+        this.configuredXAxis = curveModel.getxAxis().resolve(iniFile, configImage);
+        this.configuredYAxis = curveModel.getyAxis().resolve(iniFile, configImage);
         IniField xField = iniFile.findIniField(curveModel.getxBins()).get();
-        this.xUnits = resolveUnits(xField.getUnits(), iniFile, ci);
+        this.curveTitle = resolveCurveLabel(curveModel.getTitle(), iniFile, valuesImage, configImage, xField.getPageIndex());
+        this.xLabel = resolveCurveLabel(curveModel.getXLabel(), iniFile, valuesImage, configImage, xField.getPageIndex());
+        this.yLabel = resolveCurveLabel(curveModel.getYLabel(), iniFile, valuesImage, configImage, xField.getPageIndex());
+        this.xUnits = resolveUnits(xField.getUnits(), iniFile, configImage);
         this.xDigits = parseDigits(xField.getDigits());
         this.xBinsField = xField instanceof ArrayIniField ? (ArrayIniField) xField : null;
 
         IniField yField = iniFile.findIniField(curveModel.getyBins()).get();
-        this.yUnits = resolveUnits(yField.getUnits(), iniFile, ci);
+        this.yUnits = resolveUnits(yField.getUnits(), iniFile, configImage);
         this.yDigits = parseDigits(yField.getDigits());
         this.yBinsField = yField instanceof ArrayIniField ? (ArrayIniField) yField : null;
 
         // Field limits are engineering values, independent of the INI's suggested plot range (#9191).
-        xMin = resolveLimit(xBinsField == null ? null : xBinsField.getMin(), iniFile, ci, Double.NEGATIVE_INFINITY);
-        xMax = resolveLimit(xBinsField == null ? null : xBinsField.getMax(), iniFile, ci, Double.POSITIVE_INFINITY);
-        yMin = resolveLimit(yBinsField == null ? null : yBinsField.getMin(), iniFile, ci, Double.NEGATIVE_INFINITY);
-        yMax = resolveLimit(yBinsField == null ? null : yBinsField.getMax(), iniFile, ci, Double.POSITIVE_INFINITY);
+        xMin = resolveLimit(xBinsField == null ? null : xBinsField.getMin(), iniFile, configImage, Double.NEGATIVE_INFINITY);
+        xMax = resolveLimit(xBinsField == null ? null : xBinsField.getMax(), iniFile, configImage, Double.POSITIVE_INFINITY);
+        yMin = resolveLimit(yBinsField == null ? null : yBinsField.getMin(), iniFile, configImage, Double.NEGATIVE_INFINITY);
+        yMax = resolveLimit(yBinsField == null ? null : yBinsField.getMax(), iniFile, configImage, Double.POSITIVE_INFINITY);
 
-        this.xValues = readArray(curveModel.getxBins(), iniFile, ci);
-        this.yValues = readArray(curveModel.getyBins(), iniFile, ci);
+        this.xValues = readArray(curveModel.getxBins(), iniFile, valuesImage);
+        this.yValues = readArray(curveModel.getyBins(), iniFile, valuesImage);
         updatePlotAxes();
 
         canvas.setCurve(curveModel, xValues, yValues);
         table.setModel(new CurveTableModel());
         content.revalidate();
         content.repaint();
+    }
+
+    private static String resolveCurveLabel(String raw, IniFileModel ini, ConfigurationImage valuesImage,
+                                            ConfigurationImage configImage, int dataPage) {
+        Map<String, Double> values = new HashMap<>();
+        if (dataPage != 0 && valuesImage != null) {
+            for (String variable : ExpressionEvaluator.extractVariables(raw)) {
+                Optional<IniField> field = ini.findIniField(variable);
+                if (field.isPresent() && field.get().getPageIndex() == dataPage
+                    && field.get().getOffset() + Math.max(4, field.get().getSize()) <= valuesImage.getSize()) {
+                    Double value = valuesImage.readNumericValue(field.get());
+                    if (value != null) {
+                        values.put(variable, value);
+                    }
+                }
+            }
+        }
+        return TsStringFunction.resolveDisplayLabel(raw, ini, configImage, values);
     }
 
     public void setOnEdit(Runnable onEdit) {
@@ -294,7 +328,7 @@ public class CurveWidget {
             MouseAdapter mouseAdapter = new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    draggingIndex = findIndex(e.getPoint());
+                    draggingIndex = readOnly ? null : findIndex(e.getPoint());
                     dragged = false;
                 }
 
@@ -369,7 +403,7 @@ public class CurveWidget {
             }
 
             g2.setColor(Color.WHITE);
-            String title = curve.getTitle();
+            String title = curveTitle;
             int titleWidth = g2.getFontMetrics().stringWidth(title);
             g2.drawString(title, (getWidth() - titleWidth) / 2, 15);
 
@@ -507,8 +541,8 @@ public class CurveWidget {
 
         @Override
         public String getColumnName(int column) {
-            String label = column == 0 ? curveModel.getXLabel() : curveModel.getYLabel();
-            return label != null ? label : (column == 0 ? "X Axis" : "Y Axis");
+            String label = column == 0 ? xLabel : yLabel;
+            return label != null && !label.isEmpty() ? label : (column == 0 ? "X Axis" : "Y Axis");
         }
 
         @Override
@@ -520,11 +554,14 @@ public class CurveWidget {
 
         @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return true;
+            return !readOnly;
         }
 
         @Override
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+            if (readOnly) {
+                return;
+            }
             try {
                 double val = Double.parseDouble(aValue.toString());
                 if (!Double.isFinite(val)) {

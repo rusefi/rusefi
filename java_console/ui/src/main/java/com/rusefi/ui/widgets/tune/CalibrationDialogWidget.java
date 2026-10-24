@@ -135,9 +135,11 @@ public class CalibrationDialogWidget {
 
     /** Tracks a readout value label for live update from SensorCentral. */
     private static class ReadoutLabelEntry {
+        final JLabel titleLabel;
         final JLabel valueLabel;
         final String channel;
         final String units;
+        final String title;
         final int valDigits;
         final boolean compact;
 
@@ -146,8 +148,15 @@ public class CalibrationDialogWidget {
         }
 
         ReadoutLabelEntry(JLabel valueLabel, String channel, String units, int valDigits, boolean compact) {
+            this(null, valueLabel, channel, null, units, valDigits, compact);
+        }
+
+        ReadoutLabelEntry(JLabel titleLabel, JLabel valueLabel, String channel, String title,
+                          String units, int valDigits, boolean compact) {
+            this.titleLabel = titleLabel;
             this.valueLabel = valueLabel;
             this.channel = channel;
+            this.title = title;
             this.units = units;
             this.valDigits = valDigits;
             this.compact = compact;
@@ -224,6 +233,53 @@ public class CalibrationDialogWidget {
             System.arraycopy(data, 0, page, field.getOffset(), data.length);
             view.displayTable(iniFileModel, table.getTableId(), new ConfigurationImage(page), axisImage);
             panel.remove(status);
+            panel.revalidate();
+            panel.repaint();
+        });
+        return panel;
+    }
+
+    /** Curves on extra TS pages must use those page bytes, never same-offset main settings. */
+    private JComponent createCurveView(IniFileModel ini, CurveModel curve, Runnable notifyEdit) {
+        IniField xField = ini.findIniField(curve.getxBins()).orElse(null);
+        IniField yField = ini.findIniField(curve.getyBins()).orElse(null);
+        if (xField == null || yField == null || xField.getPageIndex() == 0 && yField.getPageIndex() == 0) {
+            CurveWidget widget = new CurveWidget(curve, ini, workingImage);
+            widget.setOnEdit(notifyEdit);
+            return widget.getContentPane();
+        }
+        if (xField.getPageIndex() != yField.getPageIndex()) {
+            return new JLabel("Curve bins are on different ECU pages");
+        }
+
+        int offset = Math.min(xField.getOffset(), yField.getOffset());
+        int end = Math.max(xField.getOffset() + xField.getSize(), yField.getOffset() + yField.getSize());
+        for (String label : Arrays.asList(curve.getTitle(), curve.getXLabel(), curve.getYLabel(),
+            xField.getUnits(), yField.getUnits())) {
+            for (String variable : ExpressionEvaluator.extractVariables(label)) {
+                IniField labelField = ini.findIniField(variable).orElse(null);
+                if (labelField != null && labelField.getPageIndex() == xField.getPageIndex()) {
+                    offset = Math.min(offset, labelField.getOffset());
+                    end = Math.max(end, labelField.getOffset() + Math.max(4, labelField.getSize()));
+                }
+            }
+        }
+        final int readOffset = offset;
+        final int readEnd = end;
+        JPanel panel = new JPanel(new BorderLayout());
+        JLabel status = new JLabel("Reading from ECU...");
+        panel.add(status, BorderLayout.NORTH);
+        ConfigurationImage configImage = workingImage;
+        pageReader.read(xField.getPageIndex(), readOffset, readEnd - readOffset, data -> {
+            if (data == null || data.length != readEnd - readOffset) {
+                status.setText("Connect to the ECU to view this curve");
+                return;
+            }
+            byte[] page = new byte[readEnd];
+            System.arraycopy(data, 0, page, readOffset, data.length);
+            CurveWidget widget = new CurveWidget(curve, ini, new ConfigurationImage(page), configImage, true);
+            panel.remove(status);
+            panel.add(widget.getContentPane(), BorderLayout.CENTER);
             panel.revalidate();
             panel.repaint();
         });
@@ -402,9 +458,7 @@ public class CalibrationDialogWidget {
                     viewportPane.fillWidth = true;
                     JPanel body = prepareTopicHelp(contentPane, curve.getTopicHelp(), iniFileModel);
                     body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
-                    CurveWidget curveWidget = new CurveWidget(curve, iniFileModel, workingImage);
-                    curveWidget.setOnEdit(notifyEdit);
-                    body.add(curveWidget.getContentPane());
+                    body.add(createCurveView(iniFileModel, curve, notifyEdit));
                 }
             }
         }
@@ -632,6 +686,12 @@ public class CalibrationDialogWidget {
         Set<String> channels = new LinkedHashSet<>();
         for (ReadoutLabelEntry entry : readoutEntries) {
             channels.add(entry.channel);
+            if (entry.title != null && TsStringFunction.containsStringFunction(entry.title)) {
+                channels.addAll(ExpressionEvaluator.extractVariables(entry.title));
+            }
+            if (entry.units != null && TsStringFunction.containsStringFunction(entry.units)) {
+                channels.addAll(ExpressionEvaluator.extractVariables(entry.units));
+            }
         }
         for (GaugeReadoutEntry entry : gaugeReadoutEntries) {
             channels.add(entry.channel);
@@ -721,9 +781,7 @@ public class CalibrationDialogWidget {
         CurveModel curve = iniFileModel.getCurves().get(panel.getPanelName());
         if (curve != null) {
             viewportPane.fillWidth = true;
-            CurveWidget curveWidget = new CurveWidget(curve, iniFileModel, workingImage);
-            curveWidget.setOnEdit(notifyEdit);
-            JComponent content = withTopicHelp(curveWidget.getContentPane(), curve.getTopicHelp(), iniFileModel);
+            JComponent content = withTopicHelp(createCurveView(iniFileModel, curve, notifyEdit), curve.getTopicHelp(), iniFileModel);
             CalibrationFieldFactory.applyStyle(content);
             content.setAlignmentX(Component.LEFT_ALIGNMENT);
             if (constraint != null) targetContainer.add(content, constraint); else targetContainer.add(content);
@@ -881,11 +939,15 @@ public class CalibrationDialogWidget {
 
     private void refreshReadouts() {
         for (ReadoutLabelEntry entry : readoutEntries) {
+            if (entry.titleLabel != null) {
+                entry.titleLabel.setText(resolveReadoutLabel(entry.title));
+            }
             double val = SensorCentral.getInstance().getValue(entry.channel);
+            String units = resolveReadoutLabel(entry.units);
             String text = Double.isNaN(val) ? "---" :
                     (entry.compact ? new DecimalFormat("0.###").format(val) :
                         String.format("%." + entry.valDigits + "f", val)) +
-                    (entry.units != null && !entry.units.isEmpty() ? " " + entry.units : "");
+                    (!units.isEmpty() ? " " + units : "");
             entry.valueLabel.setText(text);
         }
         for (GaugeReadoutEntry entry : gaugeReadoutEntries) {
@@ -899,6 +961,23 @@ public class CalibrationDialogWidget {
                 }
             }
         }
+    }
+
+    private String resolveReadoutLabel(String raw) {
+        if (raw == null || currentIniFileModel == null) {
+            return "";
+        }
+        if (!raw.contains("bitStringValue") && !raw.contains("stringValue")) {
+            return raw;
+        }
+        Map<String, Double> values = new HashMap<>();
+        for (String variable : ExpressionEvaluator.extractVariables(raw)) {
+            double value = SensorCentral.getInstance().getValue(variable);
+            if (Double.isFinite(value)) {
+                values.put(variable, value);
+            }
+        }
+        return TsStringFunction.resolveDisplayLabel(raw, currentIniFileModel, workingImage, values);
     }
 
     private JPanel buildReadoutCell(ReadoutModel readout, IniFileModel ini) {
@@ -924,7 +1003,7 @@ public class CalibrationDialogWidget {
                 BorderFactory.createLineBorder(Color.GRAY, 1),
                 BorderFactory.createEmptyBorder(4, 8, 4, 8)));
 
-        JLabel titleLabel = new JLabel(title);
+        JLabel titleLabel = new JLabel(resolveReadoutLabel(title));
         titleLabel.setFont(titleLabel.getFont().deriveFont(Font.PLAIN, 10f));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -935,7 +1014,7 @@ public class CalibrationDialogWidget {
         cell.add(titleLabel);
         cell.add(valueLabel);
 
-        readoutEntries.add(new ReadoutLabelEntry(valueLabel, channel, units, valDig));
+        readoutEntries.add(new ReadoutLabelEntry(titleLabel, valueLabel, channel, title, units, valDig, false));
         return cell;
     }
 

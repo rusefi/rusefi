@@ -334,8 +334,10 @@ public interface ISensorHolder {
 
             if (resolvedTitle != null || resolvedUnits != null) {
                 result.put(e.getKey(), new ResolvedGaugeLabels(
-                    resolvedTitle != null ? resolvedTitle : gauge.getTitle(),
-                    resolvedUnits != null ? resolvedUnits : gauge.getUnits()
+                    TsStringFunction.containsStringFunction(gauge.getTitle())
+                        ? (resolvedTitle != null ? resolvedTitle : "") : gauge.getTitle(),
+                    TsStringFunction.containsStringFunction(gauge.getUnits())
+                        ? (resolvedUnits != null ? resolvedUnits : "") : gauge.getUnits()
                 ));
             }
         }

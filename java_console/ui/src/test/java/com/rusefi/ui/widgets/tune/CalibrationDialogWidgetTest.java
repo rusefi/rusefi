@@ -2,6 +2,8 @@ package com.rusefi.ui.widgets.tune;
 
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.DialogModel;
+import com.opensr5.ini.AxisModel;
+import com.opensr5.ini.CurveModel;
 import com.opensr5.ini.IndicatorModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileMetaInfo;
@@ -615,6 +617,112 @@ public class CalibrationDialogWidgetTest {
             assertNotNull(table);
             assertEquals(0, table.getRowCount(), "No main-page bytes may be shown as trims");
             assertNotNull(findLabel(widget.getContentPane(), "Connect to the ECU to view this table"));
+        } finally {
+            widget.destroy();
+        }
+    }
+
+    @Test
+    public void curveOnSecondaryPageReadsItsOwnPageAndResolvesHeader() {
+        IniFileModel ini = mock(IniFileModel.class);
+        CurveModel curve = new CurveModel("secondVeBias", "Second VE blend bias",
+            "{bitStringValue(axisLabels, blendParameter)}", "bias %",
+            new AxisModel(0, 100, 8), new AxisModel(0, 100, 8), "blendBins", "blendValues");
+        when(ini.getDialogs()).thenReturn(Collections.emptyMap());
+        when(ini.getCurves()).thenReturn(Collections.singletonMap("secondVeBias", curve));
+        ArrayIniField x = new ArrayIniField("blendBins", 580, FieldType.INT16, 1, 8, "", 0.1, "-3200", "3200", "1");
+        ArrayIniField y = new ArrayIniField("blendValues", 596, FieldType.UINT8, 1, 8, "%", 0.5, "0", "100", "1");
+        x.setPageIndex(0x0300);
+        y.setPageIndex(0x0300);
+        EnumIniField selector = new EnumIniField("blendParameter", 579, FieldType.UINT8,
+            new EnumIniField.EnumKeyValueMap(Map.of(0, "Zero", 1, "Input")), 0, 5);
+        selector.setPageIndex(0x0300);
+        EnumIniField labels = mock(EnumIniField.class);
+        when(labels.getEnums()).thenReturn(new EnumIniField.EnumKeyValueMap(Map.of(0, "Off", 1, "TPS")));
+        when(ini.findIniField("blendBins")).thenReturn(java.util.Optional.of(x));
+        when(ini.findIniField("blendValues")).thenReturn(java.util.Optional.of(y));
+        when(ini.findIniField("blendParameter")).thenReturn(java.util.Optional.of(selector));
+        when(ini.findIniField("axisLabels")).thenReturn(java.util.Optional.of(labels));
+        ConfigurationImage main = new ConfigurationImage(620);
+        main.getByteBuffer(580, 2).putShort((short) 16384);
+        byte[] before = main.getContent().clone();
+        List<int[]> requests = new ArrayList<>();
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        widget.setPageReaderForUnitTest((page, offset, size, onResult) -> {
+            requests.add(new int[]{page, offset, size});
+            byte[] secondary = new byte[size];
+            secondary[0] = 1;
+            new ConfigurationImage(secondary).getByteBuffer(1, 2).putShort((short) 100);
+            onResult.accept(secondary);
+        });
+        try {
+            widget.update("secondVeBias", ini, main);
+            JTable table = findTable(widget.getContentPane());
+            assertNotNull(table);
+            assertEquals("10.0", table.getValueAt(0, 0));
+            assertEquals("TPS", table.getColumnName(0));
+            assertFalse(table.isCellEditable(0, 0));
+            table.setValueAt("42", 0, 0);
+            assertEquals("10.0", table.getValueAt(0, 0));
+            assertEquals(1, requests.size());
+            assertArrayEquals(new int[]{0x0300, 579, 25}, requests.get(0));
+            assertArrayEquals(before, widget.getWorkingImage().getContent());
+        } finally {
+            widget.destroy();
+        }
+    }
+
+    @Test
+    public void curveOnSecondaryPageWithoutEcuShowsNoMainPageValues() {
+        IniFileModel ini = mock(IniFileModel.class);
+        CurveModel curve = new CurveModel("remote", "Remote", "X", "Y",
+            new AxisModel(0, 100, 2), new AxisModel(0, 100, 2), "x", "y");
+        when(ini.getDialogs()).thenReturn(Collections.emptyMap());
+        when(ini.getCurves()).thenReturn(Collections.singletonMap("remote", curve));
+        ArrayIniField x = new ArrayIniField("x", 4, FieldType.INT16, 1, 1, "", 1, "0", "100", "0");
+        ArrayIniField y = new ArrayIniField("y", 6, FieldType.INT16, 1, 1, "", 1, "0", "100", "0");
+        x.setPageIndex(0x0300);
+        y.setPageIndex(0x0300);
+        when(ini.findIniField("x")).thenReturn(java.util.Optional.of(x));
+        when(ini.findIniField("y")).thenReturn(java.util.Optional.of(y));
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        widget.setPageReaderForUnitTest((page, offset, size, onResult) -> onResult.accept(null));
+        try {
+            widget.update("remote", ini, new ConfigurationImage(20));
+            assertNull(findTable(widget.getContentPane()));
+            assertNotNull(findLabel(widget.getContentPane(), "Connect to the ECU to view this curve"));
+        } finally {
+            widget.destroy();
+        }
+    }
+
+    @Test
+    public void readoutLabelsResolveFunctionsAndHideUnresolvedFunctions() {
+        IniFileModel ini = mock(IniFileModel.class);
+        EnumIniField selector = new EnumIniField("selector", 4, FieldType.UINT8,
+            new EnumIniField.EnumKeyValueMap(Map.of(0, "Off", 1, "On")), 0, 0);
+        EnumIniField labels = mock(EnumIniField.class);
+        when(labels.getEnums()).thenReturn(new EnumIniField.EnumKeyValueMap(Map.of(0, "Off", 1, "Input")));
+        when(ini.findIniField("selector")).thenReturn(java.util.Optional.of(selector));
+        when(ini.findIniField("labels")).thenReturn(java.util.Optional.of(labels));
+        String conditional = "{selector ? bitStringValue(labels, selector) : bitStringValue(labels, 0)}";
+        String missing = "{bitStringValue(missingLabels, selector)}";
+        ReadoutModel resolved = new ReadoutModel("input", conditional, conditional,
+            null, null, null, null, null, null, 1, 0);
+        ReadoutModel unresolved = new ReadoutModel("other", missing, "",
+            null, null, null, null, null, null, 1, 0);
+        DialogModel dialog = new DialogModel("readouts", "Readouts", Collections.emptyList(), Collections.emptyList(),
+            Collections.emptyList(), Collections.emptyList(), Arrays.asList(resolved, unresolved), 2,
+            Collections.emptyList(), null, null);
+        ConfigurationImage image = new ConfigurationImage(8);
+        image.getContent()[4] = 1;
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        try {
+            widget.update(dialog, ini, image);
+            assertNotNull(findLabel(widget.getContentPane(), "Input"));
+            assertNull(findLabel(widget.getContentPane(), conditional));
+            assertNull(findLabel(widget.getContentPane(), missing));
         } finally {
             widget.destroy();
         }

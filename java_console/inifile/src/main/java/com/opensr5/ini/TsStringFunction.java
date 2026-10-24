@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -62,6 +63,15 @@ public class TsStringFunction {
             return null;
 
         String working = stripBraces(expression);
+        ExpressionEvaluator.TernaryExpression conditional = ExpressionEvaluator.parseTernary(working);
+        if (conditional != null) {
+            Double condition = resolveNumericExpression(conditional.condition, ini, configImage, outputChannelValues);
+            if (condition == null) {
+                return null;
+            }
+            return resolve(condition != 0 ? conditional.trueExpr : conditional.falseExpr,
+                ini, configImage, outputChannelValues);
+        }
 
         // Resolve bitStringValue() calls
         working = resolveBitStringValueCalls(working, ini, configImage, outputChannelValues);
@@ -74,6 +84,20 @@ public class TsStringFunction {
             return null;
 
         return working.trim();
+    }
+
+    /** Resolve a UI label without exposing TunerStudio function syntax on failure. */
+    public static String resolveDisplayLabel(String label, IniFileModel ini,
+                                             @Nullable ConfigurationImage configImage,
+                                             @Nullable Map<String, Double> outputChannelValues) {
+        if (label == null) {
+            return "";
+        }
+        if (!label.contains("bitStringValue") && !label.contains("stringValue")) {
+            return label;
+        }
+        String resolved = resolve(label, ini, configImage, outputChannelValues);
+        return resolved != null ? resolved : "";
     }
 
     @Nullable
@@ -206,12 +230,18 @@ public class TsStringFunction {
             return staticResult;
         }
 
-        // Try evaluation with context
-        if (outputChannelValues != null) {
-            return ExpressionEvaluator.tryEvaluateWithContext(expr, outputChannelValues);
+        // Complex indices can combine output channels with config fields, including ternaries.
+        Map<String, Double> context = new HashMap<>();
+        for (String variable : ExpressionEvaluator.extractVariables(expr)) {
+            Double value = outputChannelValues == null ? null : outputChannelValues.get(variable);
+            if (value == null && configImage != null) {
+                value = readConfigValue(variable, ini, configImage);
+            }
+            if (value != null) {
+                context.put(variable, value);
+            }
         }
-
-        return null;
+        return ExpressionEvaluator.tryEvaluateWithContext(expr, context);
     }
 
     /**
@@ -221,7 +251,10 @@ public class TsStringFunction {
     @Nullable
     private static Double readConfigValue(String fieldName, IniFileModel ini, ConfigurationImage configImage) {
         Optional<IniField> optField = ini.findIniField(fieldName);
-        return optField.map(configImage::readNumericValue).orElse(null);
+        if (!optField.isPresent() || optField.get().getPageIndex() != 0) {
+            return null;
+        }
+        return configImage.readNumericValue(optField.get());
     }
 
     /**

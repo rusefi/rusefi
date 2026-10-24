@@ -201,15 +201,6 @@ public class ExpressionEvaluator {
         // Remove braces if present
         String cleaned = stripBraces(expression);
 
-        // For string function calls, extract variables from the expression argument
-        if (containsUnsupportedConstruct(cleaned)) {
-            String innerExpr = TsStringFunction.extractBitStringValueExpression(cleaned);
-            if (innerExpr != null) {
-                return Collections.unmodifiableSet(extractVariablesFromSimpleExpr(innerExpr));
-            }
-            return Collections.emptySet();
-        }
-
         Set<String> variables = new HashSet<>();
         if (containsTernary(cleaned)) {
             TernaryExpression ternary = parseTernary(cleaned);
@@ -217,10 +208,19 @@ public class ExpressionEvaluator {
                 String condition = ternary.condition.startsWith("!") ?
                     ternary.condition.substring(1).trim() : ternary.condition;
                 variables.addAll(extractVariablesFromSimpleExpr(condition));
-                variables.addAll(extractVariablesFromSimpleExpr(ternary.trueExpr));
-                variables.addAll(extractVariablesFromSimpleExpr(ternary.falseExpr));
+                variables.addAll(computeExtractVariables(ternary.trueExpr));
+                variables.addAll(computeExtractVariables(ternary.falseExpr));
                 return Collections.unmodifiableSet(variables);
             }
+        }
+
+        // For string function calls, extract variables from the expression argument
+        if (containsUnsupportedConstruct(cleaned)) {
+            String innerExpr = TsStringFunction.extractBitStringValueExpression(cleaned);
+            if (innerExpr != null) {
+                return Collections.unmodifiableSet(extractVariablesFromSimpleExpr(innerExpr));
+            }
+            return Collections.emptySet();
         }
 
         return Collections.unmodifiableSet(extractVariablesFromSimpleExpr(cleaned));
