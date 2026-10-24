@@ -90,10 +90,21 @@ public class MainFrameUpdateCheckTest {
     }
 
     @Test
-    public void newFormatSameHashReturnsFalse() {
-        // SREC numeric hash matches ECU numeric hash → no update needed
+    public void newFormatSameDateAndHashReturnsFalse() {
+        // Matching date and configuration signature do not offer an update.
         String srec = "rusefi_development_2026-05-09_uaefi_pro_4226383888_8849742d4267db6407b1400ae917a1ed39795d32_update.srec";
         assertFalse(MainFrame.needsFirmwareUpdate(ECU_SIG, srec));
+    }
+
+    @Test
+    public void newFormatDifferentDateSameConfigurationHashReturnsAvailable() {
+        for (String date : new String[]{"2026-05-10", "2026-06-09", "2027-05-09"}) {
+            String srec = "rusefi_development_" + date
+                + "_uaefi_pro_4226383888_8849742d4267db6407b1400ae917a1ed39795d32_update.srec";
+            assertEquals(MainFrame.FirmwareUpdateCheckResult.AVAILABLE,
+                MainFrame.firmwareUpdateCheckResult(ECU_SIG, srec),
+                "Different firmware dates must not match just because the configuration is unchanged: " + date);
+        }
     }
 
     @Test
