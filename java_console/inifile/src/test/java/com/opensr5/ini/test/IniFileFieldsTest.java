@@ -11,11 +11,48 @@ import com.rusefi.ini.reader.IniFileReaderUtil;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class IniFileFieldsTest {
+    @Test
+    public void alphabeticalDisplayOrderUsesEnumListNameAndPreservesSparseOrdinals() {
+        for (String enumName : Arrays.asList("pin_mode_e_enum", "pin_input_mode_e_enum",
+            "spi_device_e_enum", "gppwm_channel_e_enum")) {
+            EnumIniField field = readDisplayOrderField(enumName);
+            assertEquals(Arrays.asList("alpha", "Beta", "Zulu"), field.getDisplayValues(), enumName);
+            assertEquals(Arrays.asList("Zulu", "alpha", "Beta"), new ArrayList<>(field.getEnums().values()), enumName);
+            assertEquals("Zulu", field.getEnums().get(0));
+            assertEquals("alpha", field.getEnums().get(4));
+            assertEquals("Beta", field.getEnums().get(6));
+            assertEquals(4, field.getEnums().indexOf("alpha"));
+            assertEquals(6, field.getEnums().indexOf("Beta"));
+            assertFalse(field.isPinEnum(), "Sorting does not enable pin-label migration rules");
+        }
+    }
+
+    @Test
+    public void otherEnumListsRetainOrdinalDisplayOrder() {
+        for (String enumName : Arrays.asList("unrelated_enum", "pin_output_mode_e_enum", "output_pin_e_list")) {
+            EnumIniField field = readDisplayOrderField(enumName);
+            assertEquals(Arrays.asList("Zulu", "alpha", "Beta"), field.getDisplayValues(), enumName);
+            assertEquals("output_pin_e_list".equals(enumName), field.isPinEnum());
+        }
+    }
+
+    private static EnumIniField readDisplayOrderField(String enumName) {
+        // Use the same arbitrary field name for every list: sorting belongs to the referenced list.
+        String text = "#define " + enumName + "=0=\"Zulu\",4=\"alpha\",6=\"Beta\"\n"
+            + "[Constants]\npage = 1\n"
+            + "mode = bits, U08, 0, [0:2], $" + enumName + "\n";
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8)));
+        return (EnumIniField) IniFileReaderTest.readLines(lines).getAllIniFields().get("mode");
+    }
+
     @Test
     public void testCurve() {
         String string =

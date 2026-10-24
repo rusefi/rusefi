@@ -15,6 +15,7 @@ public class EnumIniField extends IniField {
     // weird format where 'one bit' width means 0 and "two bits" means "1"
     private final int bitSize0;
     private final boolean pinEnum;
+    private final boolean alphabeticalOrder;
 
     public EnumIniField(String name, int offset, FieldType type, EnumKeyValueMap enums, int bitPosition, int bitSize0) {
         this(name, offset, type, enums, bitPosition, bitSize0, false);
@@ -22,12 +23,18 @@ public class EnumIniField extends IniField {
 
     public EnumIniField(String name, int offset, FieldType type, EnumKeyValueMap enums, int bitPosition, int bitSize0,
                         boolean pinEnum) {
+        this(name, offset, type, enums, bitPosition, bitSize0, pinEnum, false);
+    }
+
+    public EnumIniField(String name, int offset, FieldType type, EnumKeyValueMap enums, int bitPosition, int bitSize0,
+                        boolean pinEnum, boolean alphabeticalOrder) {
         super(name, offset);
         this.type = type;
         this.enums = enums;
         this.bitPosition = bitPosition;
         this.bitSize0 = bitSize0;
         this.pinEnum = pinEnum;
+        this.alphabeticalOrder = alphabeticalOrder;
     }
 
     @Override
@@ -50,6 +57,15 @@ public class EnumIniField extends IniField {
 
     public EnumKeyValueMap getEnums() {
         return enums;
+    }
+
+    /** Display ordering is independent of the firmware ordinals used to read and write tunes. */
+    public List<String> getDisplayValues() {
+        List<String> values = new ArrayList<>(enums.values());
+        if (alphabeticalOrder) {
+            values.sort(String.CASE_INSENSITIVE_ORDER);
+        }
+        return values;
     }
 
     public FieldType getType() {

@@ -128,7 +128,7 @@ public class GenericFieldsPanel extends AbstractWizardStep {
         if (field instanceof EnumIniField) {
             JComboBox<String> combo = new JComboBox<>();
             combo.setEditable(false);
-            for (String v : ((EnumIniField) field).getEnums().values()) {
+            for (String v : ((EnumIniField) field).getDisplayValues()) {
                 if (v == null || v.isEmpty()) continue;
                 if (INVALID_SENTINEL.equalsIgnoreCase(v)) continue;
                 combo.addItem(v);

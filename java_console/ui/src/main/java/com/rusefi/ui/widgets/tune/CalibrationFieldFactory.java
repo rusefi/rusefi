@@ -465,7 +465,7 @@ public class CalibrationFieldFactory {
     }
 
     private static String[] getComboValues(EnumIniField enumField) {
-        return enumField.getEnums().values().stream()
+        return enumField.getDisplayValues().stream()
             .filter(value -> !value.contains("INVALID"))
             .toArray(String[]::new);
     }
