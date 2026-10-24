@@ -59,7 +59,8 @@ import static com.rusefi.config.generated.VariableRegistryValues.GAUGE_NAME_TIME
  * Each plot has a header with its legend (hover a legend item for x to remove it, drag it to another plot)
  * and a ⋯ menu; the row below the time axis adds a plot, and signals can be dropped on a plot or on that
  * row. Dragging the gap between two plots resizes them, double-clicking it makes all plots equal.
- * Clicking a plot makes it active, so new signals go there.
+ * Clicking a plot makes it active, so new signals go there. A box beside the cursor line lists each plot's
+ * values at the cursor ({@link ChartSettings.CursorValues} sets when).
  * Wheel zooms around the pointer, drag selects a range to zoom into, right-drag or Shift+wheel pans,
  * double-click shows the whole log.
  */
@@ -100,6 +101,13 @@ final class LogChart extends JComponent {
     private final ChartSettings grid;
     private int cursorSample = -1;
     private int cursorX = -1;
+    /** Pointer y while it is over the chart, or -1; places the cursor value list boxes. */
+    private int pointerY = -1;
+    /** {@link ChartSettings#isPinValues()}: the clicked sample and y, or -1. */
+    private int clickedSample = -1;
+    private int clickedY = -1;
+    /** The cursor value labels and list boxes from the last paint. */
+    private List<ValueBox> valueBoxes = new ArrayList<>();
     // Geometry from the last paint, used to map mouse positions to time, plots and controls.
     private int plotLeft = LEFT;
     private int plotRight = LEFT + 1;
@@ -414,7 +422,10 @@ final class LogChart extends JComponent {
         bindKey("dropA", () -> dropCursor(MeasureCursors.Which.A), KeyEvent.VK_A, 0);
         bindKey("dropB", () -> dropCursor(MeasureCursors.Which.B), KeyEvent.VK_B, 0);
         bindKey("escape", () -> {
-            if (!cursors.isEmpty()) {
+            if (clickedSample >= 0) {
+                clickedSample = -1;
+                repaint();
+            } else if (!cursors.isEmpty()) {
                 cursors.clear();
             } else if (focus.pinned() != TraceFocus.NONE) {
                 focus.togglePin(focus.pinned());
@@ -830,6 +841,7 @@ final class LogChart extends JComponent {
             boolean inside = insidePlot(event.getX());
             cursorX = inside ? event.getX() : -1;
             cursorSample = inside ? log.nearestSample(timeAt(event.getX())) : -1;
+            pointerY = event.getY();
             LegendItem item = legendAt(event.getX(), event.getY());
             hoveredField = item != null ? item.field : -1;
             hoveredSwatch = item != null && colorMark(item).contains(event.getX(), event.getY()) ? item.field : -1;
@@ -855,7 +867,7 @@ final class LogChart extends JComponent {
         @Override
         public void mouseExited(MouseEvent event) {
             if (selectionFrom < 0 && panFromX < 0) {
-                cursorX = cursorSample = -1;
+                cursorX = cursorSample = pointerY = -1;
                 hoveredField = hoveredMenu = hoveredSwatch = -1;
                 focus.clearHover();
                 repaint();
@@ -969,6 +981,11 @@ final class LogChart extends JComponent {
                 // a click, not a range: place A, then B, then move the nearer one
                 int x = selectionFrom;
                 cursors.place(cursorTimeAt(x), distanceTo(MeasureCursors.Which.A, x), distanceTo(MeasureCursors.Which.B, x));
+            } else if (selectionFrom >= 0 && grid.isPinValues()) {
+                // a click, not a range: show the values there, or hide them on a second click at the same sample
+                int sample = log.nearestSample(timeAt(selectionFrom));
+                clickedSample = sample == clickedSample ? -1 : sample;
+                clickedY = event.getY();
             }
             if (legendPressField >= 0) {
                 // a click on a legend item, not a drag: keep its trace highlighted, or stop
@@ -1152,6 +1169,8 @@ final class LogChart extends JComponent {
                 markers = markers(bands.get(focusedPlot).traces, focused, g.getFontMetrics(valueFont));
                 drawMarkers(g, palette, valueFont, focused);
             }
+            valueBoxes = new ArrayList<>();
+            drawValueBoxes(g, metrics, valueFont, palette);
             card = null;
             cardLines = new ArrayList<>();
             LegendItem hovered = hoveredLegendItem();
@@ -1350,6 +1369,252 @@ final class LogChart extends JComponent {
             return color;
         }
         return new Color(color.getRed(), color.getGreen(), color.getBlue(), FADED_ALPHA);
+    }
+
+    /**
+     * Values at the cursor from the last paint: a label beside one trace ({@link #field} and the trace's
+     * {@link #point}), or a list box of a whole plot ({@link #field} -1, no point). One "value unit" line per trace.
+     */
+    static final class ValueBox {
+        final int plot;
+        final int field;
+        final Rectangle bounds;
+        final Point point;
+        final List<String> lines;
+
+        ValueBox(int plot, int field, Rectangle bounds, Point point, List<String> lines) {
+            this.plot = plot;
+            this.field = field;
+            this.bounds = bounds;
+            this.point = point;
+            this.lines = lines;
+        }
+    }
+
+    /** The cursor value labels and list boxes from the last paint. */
+    List<ValueBox> valueBoxes() {
+        return valueBoxes;
+    }
+
+    private static final int VALUE_ROW = 18;
+    private static final int VALUE_PADDING = 7;
+    private static final int VALUE_DOT = 8;
+    /** Gap between the cursor line and the value labels or list boxes. */
+    private static final int VALUE_GAP = 12;
+    private static final int LABEL_HEIGHT = 18;
+    /** Space between labels pushed apart. */
+    private static final int LABEL_SPACING = 2;
+
+    /**
+     * Shows the values at the cursor (or at the pinned time) beside the cursor line, as labels or list boxes
+     * ({@link ChartSettings.CursorValues}).
+     */
+    private void drawValueBoxes(Graphics2D g, FontMetrics metrics, Font valueFont, PlotPalette palette) {
+        ChartSettings.CursorValues mode = grid.getCursorValues();
+        if (mode == ChartSettings.CursorValues.OFF) {
+            return;
+        }
+        int sample;
+        int lineX;
+        int anchorY;
+        if (grid.isPinValues()) {
+            if (clickedSample < 0 || clickedSample >= log.sampleCount()) {
+                return;
+            }
+            sample = clickedSample;
+            lineX = xOf(log.value(sample, 0));
+            if (!insidePlot(lineX)) {
+                return;
+            }
+            anchorY = clickedY;
+            // the pinned time keeps its own line, as the cursor line follows the mouse
+            g.setColor(palette.cursor);
+            g.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10, new float[]{4, 3}, 0));
+            for (Band band : bands) {
+                g.drawLine(lineX, band.traces.y, lineX, band.traces.y + band.traces.height);
+            }
+            g.setStroke(new BasicStroke(1));
+        } else {
+            boolean overTraces = false;
+            for (Band band : bands) {
+                overTraces |= band.traces.contains(cursorX, pointerY);
+            }
+            boolean dragging = selectionFrom >= 0 && selectionTo != selectionFrom || panFromX >= 0 || resizing >= 0;
+            if (cursorSample < 0 || !overTraces || dragging) {
+                return;
+            }
+            sample = cursorSample;
+            lineX = cursorLineX();
+            anchorY = pointerY;
+        }
+
+        for (Band band : bands) {
+            List<Integer> fields = layout.fields(band.plot);
+            if (fields.isEmpty()) {
+                continue;
+            }
+            if (mode != ChartSettings.CursorValues.LABELS
+                    || !drawLabels(g, band, fields, sample, lineX, metrics, valueFont, palette)) {
+                drawValueList(g, band, fields, sample, lineX, anchorY, metrics, valueFont, palette);
+            }
+        }
+    }
+
+    /**
+     * Tops of labels {@code height} tall, each as close as possible to being centred on its {@code centers} entry
+     * (sorted, top to bottom) without overlapping and within {@code top}..{@code bottom}: labels that would
+     * overlap are pushed apart, downwards first, then back up from the bottom edge. Null when they do not fit.
+     */
+    static int[] spreadLabels(double[] centers, int height, int spacing, int top, int bottom) {
+        int count = centers.length;
+        if (count * height + (count - 1) * spacing > bottom - top) {
+            return null;
+        }
+        int[] tops = new int[count];
+        int below = top;
+        for (int i = 0; i < count; i++) {
+            tops[i] = Math.max(below, (int) Math.round(centers[i] - height / 2.0));
+            below = tops[i] + height + spacing;
+        }
+        int above = bottom;
+        for (int i = count - 1; i >= 0; i--) {
+            tops[i] = Math.min(tops[i], above - height);
+            above = tops[i] - spacing;
+        }
+        return tops;
+    }
+
+    /**
+     * A label beside each trace where it crosses the cursor line: the value with a border and a leader line in the
+     * trace's colour, and a dot on the trace. False, drawing nothing, when the labels do not fit in the plot.
+     */
+    private boolean drawLabels(Graphics2D g, Band band, List<Integer> fields, int sample, int lineX,
+                               FontMetrics metrics, Font valueFont, PlotPalette palette) {
+        Rectangle area = band.traces;
+        int sampleX = xOf(log.value(sample, 0));
+        List<Integer> shown = new ArrayList<>();
+        for (int field : fields) {
+            if (Double.isFinite(log.value(sample, field))) {
+                shown.add(field);
+            }
+        }
+        // top to bottom, so pushing apart keeps each label on the same side of its neighbours as its trace
+        shown.sort((a, b) -> Double.compare(yOf(a, log.value(sample, a), area), yOf(b, log.value(sample, b), area)));
+        double[] centers = new double[shown.size()];
+        for (int i = 0; i < centers.length; i++) {
+            int field = shown.get(i);
+            centers[i] = Math.max(area.y, Math.min(area.y + area.height, yOf(field, log.value(sample, field), area)));
+        }
+        int[] tops = spreadLabels(centers, LABEL_HEIGHT, LABEL_SPACING, area.y, area.y + area.height);
+        if (tops == null) {
+            return false;
+        }
+
+        FontMetrics valueMetrics = g.getFontMetrics(valueFont);
+        String[] values = new String[shown.size()];
+        int[] widths = new int[shown.size()];
+        int widest = 0;
+        for (int i = 0; i < values.length; i++) {
+            int field = shown.get(i);
+            values[i] = ValueFormat.format(log, field, log.value(sample, field));
+            widths[i] = 6 + valueMetrics.stringWidth(values[i]) + metrics.stringWidth(unitSuffix(field)) + 6;
+            widest = Math.max(widest, widths[i]);
+        }
+        // all on one side: right of the line, or left of it near the right edge
+        boolean left = lineX + VALUE_GAP + widest > plotRight;
+        Color background = ThemedStrip.themed("Console.Card.background", Color.WHITE);
+        Color ink = ThemedStrip.themed("Label.foreground", Color.BLACK);
+        Color muted = ThemedStrip.themed("Console.LogViewer.mutedForeground", Color.GRAY);
+        for (int i = 0; i < values.length; i++) {
+            int field = shown.get(i);
+            Color color = colorOf(field, palette);
+            int x = left ? Math.max(plotLeft, lineX - VALUE_GAP - widths[i]) : lineX + VALUE_GAP;
+            Rectangle bounds = new Rectangle(x, tops[i], widths[i], LABEL_HEIGHT);
+            Point point = new Point(sampleX, (int) Math.round(centers[i]));
+
+            g.setColor(color);
+            int edgeX = left ? bounds.x + bounds.width : bounds.x;
+            g.drawLine(point.x, point.y, edgeX, bounds.y + LABEL_HEIGHT / 2);
+            g.setColor(palette.background);
+            g.fillOval(point.x - 4, point.y - 4, 9, 9);
+            g.setColor(color);
+            g.fillOval(point.x - 3, point.y - 3, 7, 7);
+            // slightly transparent, so the traces underneath stay visible
+            g.setColor(new Color(background.getRed(), background.getGreen(), background.getBlue(), 235));
+            g.fillRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, 8, 8);
+            g.setColor(color);
+            g.drawRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, 8, 8);
+            int baseline = bounds.y + 13;
+            g.setFont(valueFont);
+            g.setColor(ink);
+            g.drawString(values[i], bounds.x + 6, baseline);
+            g.setFont(metrics.getFont());
+            g.setColor(muted);
+            g.drawString(unitSuffix(field), bounds.x + 6 + valueMetrics.stringWidth(values[i]), baseline);
+            List<String> lines = new ArrayList<>();
+            lines.add(values[i] + unitSuffix(field));
+            valueBoxes.add(new ValueBox(band.plot, field, bounds, point, lines));
+        }
+        return true;
+    }
+
+    /**
+     * A box beside the cursor line listing the plot's values in legend order: a dot in the trace's colour, then
+     * the value. In the plot under the pointer the box follows the pointer, in the others it sits at the top.
+     */
+    private void drawValueList(Graphics2D g, Band band, List<Integer> fields, int sample, int lineX, int anchorY,
+                               FontMetrics metrics, Font valueFont, PlotPalette palette) {
+        FontMetrics valueMetrics = g.getFontMetrics(valueFont);
+        Color background = ThemedStrip.themed("Console.Card.background", Color.WHITE);
+        Color ink = ThemedStrip.themed("Label.foreground", Color.BLACK);
+        Color muted = ThemedStrip.themed("Console.LogViewer.mutedForeground", Color.GRAY);
+        List<String> values = new ArrayList<>();
+        int valueWidth = 0;
+        int unitWidth = 0;
+        for (int field : fields) {
+            String value = ValueFormat.format(log, field, log.value(sample, field));
+            values.add(value);
+            valueWidth = Math.max(valueWidth, valueMetrics.stringWidth(value));
+            unitWidth = Math.max(unitWidth, metrics.stringWidth(unitSuffix(field)));
+        }
+        int width = VALUE_PADDING + VALUE_DOT + 6 + valueWidth + unitWidth + VALUE_PADDING;
+        int height = VALUE_PADDING * 2 + fields.size() * VALUE_ROW - 4;
+        Rectangle area = band.traces;
+        // right of the line, or left of it near the right edge
+        int x = lineX + VALUE_GAP;
+        if (x + width > plotRight) {
+            x = Math.max(plotLeft, lineX - VALUE_GAP - width);
+        }
+        boolean pointerHere = anchorY >= area.y && anchorY < area.y + area.height;
+        int y = pointerHere ? anchorY + VALUE_GAP : area.y + 6;
+        y = Math.max(area.y, Math.min(area.y + area.height - height, y));
+        Rectangle bounds = new Rectangle(x, y, width, height);
+
+        g.setColor(new Color(0, 0, 0, 28));
+        g.fillRoundRect(x + 2, y + 3, width, height, 10, 10);
+        // slightly transparent, so the traces underneath stay visible
+        g.setColor(new Color(background.getRed(), background.getGreen(), background.getBlue(), 235));
+        g.fillRoundRect(x, y, width, height, 10, 10);
+        g.setColor(ThemedStrip.themed("Console.Card.borderColor", Color.LIGHT_GRAY));
+        g.drawRoundRect(x, y, width, height, 10, 10);
+        List<String> lines = new ArrayList<>();
+        for (int i = 0; i < fields.size(); i++) {
+            int field = fields.get(i);
+            int rowTop = y + VALUE_PADDING + i * VALUE_ROW - 2;
+            int baseline = rowTop + 13;
+            g.setColor(colorOf(field, palette));
+            g.fillOval(x + VALUE_PADDING, rowTop + 4, VALUE_DOT, VALUE_DOT);
+            // right-aligned so the digits line up
+            int valueRight = x + VALUE_PADDING + VALUE_DOT + 6 + valueWidth;
+            g.setFont(valueFont);
+            g.setColor(ink);
+            g.drawString(values.get(i), valueRight - valueMetrics.stringWidth(values.get(i)), baseline);
+            g.setFont(metrics.getFont());
+            g.setColor(muted);
+            g.drawString(unitSuffix(field), valueRight, baseline);
+            lines.add(values.get(i) + unitSuffix(field));
+        }
+        valueBoxes.add(new ValueBox(band.plot, -1, bounds, null, lines));
     }
 
     private LegendItem hoveredLegendItem() {

@@ -284,4 +284,24 @@ class LogChartSettingsTest {
         assertFalse(toolbar.lightPlot.isSelected());
         assertTrue(repaints[0] >= 6);
     }
+
+    @Test
+    void valuesButtonNamesTheChoices() {
+        ChartSettings settings = new ChartSettings();
+        ChartToolbar toolbar = new ChartToolbar(settings, () -> {
+        });
+        assertEquals("Values: Labels  ▾", toolbar.valuesButton.getText());
+
+        toolbar.atClick.doClick();
+        assertTrue(settings.isPinValues());
+        assertEquals("Values: Labels at click  ▾", toolbar.valuesButton.getText());
+
+        toolbar.valuesList.doClick();
+        assertEquals(ChartSettings.CursorValues.LIST, settings.getCursorValues());
+        assertEquals("Values: List at click  ▾", toolbar.valuesButton.getText());
+
+        toolbar.valuesOff.doClick();
+        assertEquals("Values: Off  ▾", toolbar.valuesButton.getText());
+        assertFalse(toolbar.atClick.isEnabled(), "nothing to place while off");
+    }
 }
