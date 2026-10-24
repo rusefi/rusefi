@@ -71,6 +71,15 @@ public final class TuningStyle {
         styleRounded(card, cardBackground(), vertical, horizontal);
     }
 
+    /** A live value in the Tuning strip: a mildly tinted rounded card, set apart from settings. */
+    public static void styleLiveValue(JComponent card, int vertical, int horizontal) {
+        Color background = color("Console.Tuning.liveValue.background", new Color(0xf3f7ff));
+        Color border = color("Console.Tuning.liveValue.borderColor", new Color(0xd6e2fb));
+        card.setBorder(new FlatLineBorder(new Insets(vertical, horizontal, vertical, horizontal), border, 1, ARC));
+        card.setBackground(new Color(background.getRGB(), true));
+        card.setOpaque(true);
+    }
+
     /** A tinted rounded block inside a card, e.g. a dialog readout. */
     public static void styleSection(JComponent section, int vertical, int horizontal) {
         styleRounded(section, sectionBackground(), vertical, horizontal);
