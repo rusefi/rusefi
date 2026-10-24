@@ -100,10 +100,10 @@ public:
 	{
 	}
 
-	// Non-scaled channel, works for plain arithmetic types (int, float, uint8_t, etc)
+	// Non-scaled channel, works for arithmetic types and enums stored as their underlying integer type.
 	// [tag:live_data_output_scale] engineering = (raw + translation) * multiplier.
 	// The header stores the conversion, including raw packed offsets; writeData keeps storage unchanged.
-	template <typename TValue, typename = typename std::enable_if<std::is_arithmetic_v<TValue>>::type>
+	template <typename TValue, typename = typename std::enable_if<std::is_arithmetic_v<TValue> || std::is_enum_v<TValue>>::type>
 	LOG_FIELD_CONSTNESS_SPECIFIER_METHODS Field(Source<TValue> source,
 			   const char* name, const char* units, int8_t digits, const char* category = "none", float multiplier = 1, float translation = 0)
 		: m_multiplier(multiplier)

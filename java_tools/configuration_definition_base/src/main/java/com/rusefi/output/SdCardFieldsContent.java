@@ -100,10 +100,6 @@ public class SdCardFieldsContent {
             categoryStr = ", " + categoryStr;
         }
 
-        boolean isEnum = configField.getTypeName().contains("_e");
-        if (isEnum)
-            return "";
-
         if (configField.isBit()) {
             // 'structureStartingTsPosition' is about fragment list see fragments.h
             int offsetWithinCurrentStructure = currentPosition - structureStartingTsPosition;

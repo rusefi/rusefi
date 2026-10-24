@@ -89,6 +89,36 @@ TEST(unitTestLog, binaryHeaderMatchesEmittedRecord) {
 	EXPECT_EQ((header.bytes.size() - 24) / 89, readUnsignedBE(22, 2));
 }
 
+TEST(unitTestLog, generatedEnumFieldsContainCurrentValues) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	auto& stft = engine->module<ShortTermFuelTrim>().unmock();
+	stft.stftCorrectionBinIdx = ftRegionPower;
+	stft.stftCorrectionState = stftDisabledRPM;
+	stft.stftLearningState[0] = stftDisabledLaunch;
+
+	CaptureWriter record;
+	MLG::writeSdBlock(record);
+	size_t offset = 4;
+	int matches = 0;
+	MLG::forEachField([&](const MLG::Entries::Field& field) {
+		const std::string name(field.getName());
+		int expected = -1;
+		if (name == "STFT: used bin") expected = ftRegionPower;
+		if (name == "STFT: stftCorrectionState") expected = stftDisabledRPM;
+		if (name == "STFT: stftLearningState 1") expected = stftDisabledLaunch;
+		if (expected >= 0) {
+			matches++;
+			ASSERT_EQ(1u, field.getSize()) << name;
+			EXPECT_EQ(static_cast<uint8_t>(MLG::Types::Field::Scalar::U08), field.getTypeId()) << name;
+			ASSERT_LT(offset, record.bytes.size());
+			EXPECT_EQ(expected, static_cast<uint8_t>(record.bytes[offset])) << name;
+			EXPECT_DOUBLE_EQ(expected, field.readValueAsDouble()) << name;
+		}
+		offset += field.getSize();
+	});
+	EXPECT_EQ(3, matches);
+}
+
 TEST(unitTestLog, sourcesFollowEngineAndMockReplacement) {
 	// The generated table exists before any EngineTestHelper. Reuse it across
 	// destroyed fixtures and changes to each of the four mockable sources.

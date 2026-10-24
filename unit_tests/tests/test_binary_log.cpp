@@ -71,6 +71,30 @@ TEST(BinaryLogField, Value) {
 	EXPECT_THAT(buffer, ElementsAre(0x00, 0xbc, 0x61, 0x4e, 0xAA, 0xAA));
 }
 
+TEST(BinaryLogField, EnumValues) {
+	enum class UnsignedState : uint8_t { Active = 0xa5 };
+	enum class SignedState : int16_t { Error = -2 };
+	UnsignedState unsignedState = UnsignedState::Active;
+	SignedState signedState = SignedState::Error;
+	Field unsignedField(unsignedState, "Unsigned state", "", 0);
+	Field signedField(signedState, "Signed state", "", 0);
+
+	EXPECT_EQ(static_cast<uint8_t>(Types::Field::Scalar::U08), unsignedField.getTypeId());
+	EXPECT_EQ(static_cast<uint8_t>(Types::Field::Scalar::S16), signedField.getTypeId());
+	EXPECT_EQ(1u, unsignedField.getSize());
+	EXPECT_EQ(2u, signedField.getSize());
+	EXPECT_DOUBLE_EQ(0xa5, unsignedField.readValueAsDouble());
+	EXPECT_DOUBLE_EQ(-2, signedField.readValueAsDouble());
+
+	char unsignedData[1];
+	char signedData[2];
+	EXPECT_EQ(1u, unsignedField.writeData(unsignedData));
+	EXPECT_EQ(2u, signedField.writeData(signedData));
+	EXPECT_EQ(0xa5, static_cast<uint8_t>(unsignedData[0]));
+	EXPECT_EQ(0xff, static_cast<uint8_t>(signedData[0]));
+	EXPECT_EQ(0xfe, static_cast<uint8_t>(signedData[1]));
+}
+
 TEST(BinaryLogField, FloatDisplayScale) {
 	float grams = 0.125f;
 	Field field(grams, "Fuel mass", "mg", 3, "none", 1000);

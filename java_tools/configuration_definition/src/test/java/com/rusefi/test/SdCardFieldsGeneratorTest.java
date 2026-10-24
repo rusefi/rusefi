@@ -108,6 +108,7 @@ public class SdCardFieldsGeneratorTest {
                         "    uint16_t afterEnum;After enum;\"RPM\", 1, 0, 0, 0, 0\n" +
                         "end_struct",
                 "\t{MLG_SOURCE(test->reference->beforeEnum), \"Before enum\", \"RPM\", 0},\n" +
+                "\t{MLG_SOURCE(test->reference->idleState), \"Idle state\", \"\", 0},\n" +
                 "\t{MLG_SOURCE(test->reference->afterEnum), \"After enum\", \"RPM\", 0},\n",
                 readerState -> {
 

@@ -106,6 +106,9 @@ loggers runs, chosen by `engineConfiguration->sdTriggerLog`:
   1-byte additive checksum.
 - The field list is the generated `log_fields_generated.h`; count is reported by
   `sdinfo` as "SD card fields".
+- Enum fields in mapped live-data fragments are logged as numeric values using
+  their underlying integer width and signedness. The MLG file does not include
+  enum value names.
 - `[tag:live_data_sd_mapping]` `LiveData.yaml` uses `engineModule` to expose a
   module's generated state to SD and Lua. SD descriptors remain constant:
   firmware stores direct addresses, while simulator/tests resolve the current

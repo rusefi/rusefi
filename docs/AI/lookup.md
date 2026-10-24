@@ -82,8 +82,9 @@ iterate all), mutability, naming universe, and flash layout.
   TCU, wideband diagnostics and the example fragment have no SD mapping.
   TCU selects its controller at runtime; wideband state needs timeout/permission
   refresh independently of TunerStudio reads before a direct mapping is useful.
-  STFT input errors are mapped, but its enum state/bin fields remain excluded
-  by the enum filter. Existing `FULL_SD_LOGS` gates still apply to A/C and antilag.
+  STFT input errors and its enum state/bin fields are mapped. Enums are written
+  as their underlying numeric values. Existing `FULL_SD_LOGS` gates still apply
+  to A/C and antilag.
 - **Dead generated file**: `value_lookup_generated.cpp` (switch-based getter + string-compare
   setter) is still emitted by `GetConfigValueConsumer` (first `-field_lookup_file` argument)
   but is NOT in any `.mk` — only the table variant + `value_lookup.cpp` are compiled. Both
