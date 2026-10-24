@@ -30,6 +30,67 @@ import static org.mockito.Mockito.*;
 
 public class TuningTableViewTest {
     @Test
+    public void rectangularTableKeepsRpmHorizontalAndLoadDescendingVertically() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            TuningTableView view = new TuningTableView("Ignition timing");
+            IniFileModel ini = mock(IniFileModel.class);
+            TableModel definition = mock(TableModel.class);
+            ArrayIniField timing = new ArrayIniField("timing", 0, FieldType.UINT8, 3, 2, "", 1, "0", "255", "0");
+            ArrayIniField rpm = new ArrayIniField("rpm", 0, FieldType.UINT16, 3, 1, "RPM", 1, "0", "8000", "0");
+            ArrayIniField load = new ArrayIniField("load", 6, FieldType.UINT16, 1, 2, "kPa", 1, "0", "300", "0");
+            ConfigurationImage timingImage = new ConfigurationImage(6);
+            ConfigurationImage axisImage = new ConfigurationImage(10);
+            ConfigurationImageGetterSetter.setArrayValues(timing, timingImage,
+                new Double[][]{{11.0, 22.0, 33.0}, {44.0, 55.0, 66.0}});
+            ConfigurationImageGetterSetter.setArrayValues(rpm, axisImage,
+                new Double[][]{{1000.0, 2500.0, 6000.0}});
+            ConfigurationImageGetterSetter.setArrayValues(load, axisImage,
+                new Double[][]{{40.0}, {120.0}});
+            when(ini.getTable("ignition")).thenReturn(definition);
+            when(definition.getZBinsConstant()).thenReturn("timing");
+            when(definition.getXBinsConstant()).thenReturn("rpm");
+            when(definition.getYBinsConstant()).thenReturn("load");
+            when(ini.findIniField("timing")).thenReturn(Optional.of(timing));
+            when(ini.findIniField("rpm")).thenReturn(Optional.of(rpm));
+            when(ini.findIniField("load")).thenReturn(Optional.of(load));
+
+            view.displayTable(ini, "ignition", timingImage, axisImage);
+            JTable table = findTable(view.getContent());
+            assertEquals(2, table.getRowCount());
+            assertEquals(4, table.getColumnCount());
+            assertEquals("Load \\ RPM", table.getColumnName(0));
+            assertArrayEquals(new String[]{"1000", "2500", "6000"},
+                new String[]{table.getColumnName(1), table.getColumnName(2), table.getColumnName(3)});
+            assertArrayEquals(new Object[]{"120", "44", "55", "66"}, tableRow(table, 0));
+            assertArrayEquals(new Object[]{"40", "11", "22", "33"}, tableRow(table, 1));
+            assertEquals(CalibrationColorPalette.background(44, 11, 66), cellBackground(table, 0, 1));
+            assertEquals(CalibrationColorPalette.background(33, 11, 66), cellBackground(table, 1, 3));
+            assertEquals(table.getBackground(), cellBackground(table, 0, 0),
+                "Axis labels are not shaded as timing values");
+
+            table.setValueAt("77", 0, 1);
+            table.setValueAt("88", 1, 3);
+            Double[][] stored = ConfigurationImageGetterSetter.getArrayValues(timing, timingImage);
+            assertArrayEquals(new Double[]{11.0, 22.0, 88.0}, stored[0]);
+            assertArrayEquals(new Double[]{77.0, 55.0, 66.0}, stored[1]);
+            assertEquals("77", table.getValueAt(0, 1));
+            assertEquals("88", table.getValueAt(1, 3));
+            table.setValueAt("130", 0, 0);
+            Double[][] storedLoad = ConfigurationImageGetterSetter.getArrayValues(load, axisImage);
+            assertArrayEquals(new Double[]{40.0}, storedLoad[0]);
+            assertArrayEquals(new Double[]{130.0}, storedLoad[1]);
+        });
+    }
+
+    private Object[] tableRow(JTable table, int row) {
+        Object[] values = new Object[table.getColumnCount()];
+        for (int column = 0; column < values.length; column++) {
+            values[column] = table.getValueAt(row, column);
+        }
+        return values;
+    }
+
+    @Test
     public void testKeyboardEntryModes() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
             ConfigurationImage image = new ConfigurationImage(4);

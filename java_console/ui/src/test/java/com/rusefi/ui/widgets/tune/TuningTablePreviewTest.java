@@ -47,6 +47,17 @@ class TuningTablePreviewTest {
             JPanel cards = (JPanel) view.getContent().getComponent(1);
             resize(cards, cards.getWidth(), cards.getHeight());
             JPanel grid = (JPanel) cards.getComponent(0);
+            JTable table = (JTable) ((JScrollPane) grid.getComponent(0)).getViewport().getView();
+            assertEquals(16, table.getRowCount());
+            assertEquals(17, table.getColumnCount());
+            assertEquals("650", table.getColumnName(1));
+            assertEquals("7000", table.getColumnName(16));
+            assertEquals("120", table.getValueAt(0, 0));
+            assertEquals("21", table.getValueAt(15, 0));
+            assertEquals("10.5", table.getValueAt(0, 1));
+            assertEquals("35", table.getValueAt(0, 16));
+            assertEquals("12.2", table.getValueAt(15, 1));
+            assertEquals("42.9", table.getValueAt(15, 16));
             assertTrue(grid.getComponent(1).isVisible(), "The sandbox's real 16x16 ignition table must have a preview");
             invalidateTree(scroll);
             layoutTree(scroll);
