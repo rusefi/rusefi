@@ -22,6 +22,7 @@ import com.rusefi.ui.UIContext;
 import com.rusefi.ui.widgets.CircularGauge;
 import com.rusefi.ui.laf.GradientTitleBorder;
 import com.rusefi.ui.util.ConstrainedBorderLayout;
+import com.rusefi.ui.util.TransparentPanels;
 import com.rusefi.ui.util.ScrollablePanel;
 import com.rusefi.ui.util.SquareGridLayout;
 import com.rusefi.ui.util.SwingUtil;
@@ -999,12 +1000,11 @@ public class CalibrationDialogWidget {
 
         JPanel cell = new JPanel();
         cell.setLayout(new BoxLayout(cell, BoxLayout.Y_AXIS));
-        cell.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.GRAY, 1),
-                BorderFactory.createEmptyBorder(4, 8, 4, 8)));
+        TuningStyle.styleSection(cell, 4, 8);
 
         JLabel titleLabel = new JLabel(resolveReadoutLabel(title));
         titleLabel.setFont(titleLabel.getFont().deriveFont(Font.PLAIN, 10f));
+        titleLabel.setForeground(TuningStyle.muted());
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel valueLabel = new JLabel("---");
@@ -1160,10 +1160,10 @@ public class CalibrationDialogWidget {
 
         DialogViewport(JPanel content) {
             setLayout(null);
-            frame.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.GRAY),
-                BorderFactory.createEmptyBorder(8, 8, 8, 8)));
+            // The dialog sits on one white rounded card; its plain panels let the card show through.
+            TuningStyle.styleCard(frame, 10, 10);
             frame.add(content, BorderLayout.CENTER);
+            TransparentPanels.install(frame);
             add(frame);
             content.addContainerListener(new java.awt.event.ContainerAdapter() {
                 @Override

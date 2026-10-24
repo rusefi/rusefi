@@ -44,10 +44,16 @@ public class IndicatorPanel {
         this.ini = ini;
 
         if (columns > 0) {
-            panel = new JPanel(new GridLayout(0, columns, 4, 4));
+            panel = new JPanel(new GridLayout(0, columns, 4, 4)) {
+                @Override
+                public Dimension getMaximumSize() {
+                    // Chips keep their height instead of stretching over a tall dialog column.
+                    return new Dimension(super.getMaximumSize().width, getPreferredSize().height);
+                }
+            };
             panel.setAlignmentX(Component.LEFT_ALIGNMENT);
         } else {
-            panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
+            panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 4));
         }
 
         for (IndicatorModel model : this.indicators) {
@@ -104,12 +110,7 @@ public class IndicatorPanel {
 
 
     static JLabel makeLabel() {
-        JLabel label = new JLabel(" ");
-        label.setOpaque(true);
-        label.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.GRAY, 1),
-                BorderFactory.createEmptyBorder(4, 8, 4, 8)));
-        return label;
+        return new TuningStyle.Chip();
     }
 
     /**
@@ -156,21 +157,19 @@ public class IndicatorPanel {
         }
         Boolean active = ExpressionEvaluator.evaluateBooleanExpression(indicator.getExpression(), context);
         final String text;
-        final Color bg, fg;
+        final Color[] colors;
         if (Boolean.TRUE.equals(active)) {
             text = resolveLabel(indicator.getOnLabel(), ini, context);
-            bg = parseColor(indicator.getOnBg());
-            fg = parseColor(indicator.getOnFg());
+            colors = TuningStyle.indicatorColors(indicator.getOnBg(), indicator.getOnFg());
         } else {
             String off = resolveLabel(indicator.getOffLabel(), ini, context);
             text = off.isEmpty() ? " " : off;
-            bg = parseColor(indicator.getOffBg());
-            fg = parseColor(indicator.getOffFg());
+            colors = TuningStyle.indicatorColors(indicator.getOffBg(), indicator.getOffFg());
         }
         label.setText(text);
         label.setToolTipText(text);
-        label.setBackground(bg);
-        label.setForeground(fg);
+        label.setBackground(colors[0]);
+        label.setForeground(colors[1]);
     }
 
     private static void addLabelVariables(Set<String> variables, String label) {

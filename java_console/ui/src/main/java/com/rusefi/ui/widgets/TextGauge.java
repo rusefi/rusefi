@@ -11,6 +11,7 @@ import com.rusefi.core.SensorCentral;
 import com.rusefi.core.SensorSubscription;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.ui.UIContext;
+import com.rusefi.ui.widgets.tune.TuningStyle;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,18 +44,16 @@ public class TextGauge {
     private boolean active;
 
     public TextGauge(UIContext uiContext, String channelName, Consumer<String> onChannelChange) {
-        content.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(Color.GRAY, 1),
-            BorderFactory.createEmptyBorder(2, 4, 2, 4)
-        ));
-        content.setBackground(Color.WHITE);
+        TuningStyle.styleCard(content, 4, 8);
 
         Font baseFont = UIManager.getFont("Label.font");
         if (baseFont != null) {
-            titleLabel.setFont(baseFont.deriveFont(Font.BOLD, baseFont.getSize() - 1f));
-            valueLabel.setFont(baseFont.deriveFont(Font.BOLD, baseFont.getSize() + 2f));
+            titleLabel.setFont(baseFont.deriveFont(Font.PLAIN, baseFont.getSize() - 1f));
+            valueLabel.setFont(baseFont.deriveFont(Font.BOLD, baseFont.getSize() + 4f));
             unitsLabel.setFont(baseFont.deriveFont(baseFont.getSize() - 1f));
         }
+        titleLabel.setForeground(TuningStyle.muted());
+        unitsLabel.setForeground(TuningStyle.muted());
 
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         valueLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -65,7 +64,7 @@ public class TextGauge {
         content.add(unitsLabel, BorderLayout.SOUTH);
 
         valueLabel.setText(NO_CONNECTION);
-        valueLabel.setForeground(Color.RED);
+        valueLabel.setForeground(TuningStyle.muted());
 
         content.addMouseListener(new MouseAdapter() {
             @Override
@@ -82,7 +81,7 @@ public class TextGauge {
             if (!isConnected) {
                 SwingUtilities.invokeLater(() -> {
                     valueLabel.setText(NO_CONNECTION);
-                    valueLabel.setForeground(Color.RED);
+                    valueLabel.setForeground(TuningStyle.muted());
                 });
             }
         };
@@ -157,7 +156,7 @@ public class TextGauge {
             SwingUtilities.invokeLater(() -> {
                 if (ConnectionStatusLogic.INSTANCE.isConnected()) {
                     valueLabel.setText(formatValue(value, gaugeModel));
-                    valueLabel.setForeground(Color.BLACK);
+                    valueLabel.setForeground(TuningStyle.text());
                 }
             })
         );
@@ -166,7 +165,7 @@ public class TextGauge {
         Double currentValue = SensorCentral.getInstance().getValue(channel);
         if (currentValue != null && ConnectionStatusLogic.INSTANCE.isConnected()) {
             valueLabel.setText(formatValue(currentValue, gaugeModel));
-            valueLabel.setForeground(Color.BLACK);
+            valueLabel.setForeground(TuningStyle.text());
         }
     }
 

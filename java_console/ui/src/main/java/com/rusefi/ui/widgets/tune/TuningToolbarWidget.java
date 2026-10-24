@@ -1,6 +1,7 @@
 package com.rusefi.ui.widgets.tune;
 
 import com.devexperts.logging.Logging;
+import com.formdev.flatlaf.FlatClientProperties;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
@@ -168,7 +169,10 @@ public class TuningToolbarWidget {
             updateButtons.run();
         });
 
-        panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 6));
+        // sits on the Tuning tab's toolbar strip (TuningPane), which supplies the colour
+        panel.setOpaque(false);
+        stateLabel.setBorder(BorderFactory.createEmptyBorder(0, 6, 0, 0));
         panel.add(burnButton);
         panel.add(discardButton);
         panel.add(undoButton);
@@ -188,7 +192,7 @@ public class TuningToolbarWidget {
     public void refreshState() {
         boolean dirty = hasUnsavedChanges(sessionImage.get());
         stateLabel.setText(stateLabelText(uiContext.isOfflineMode(), dirty));
-        stateLabel.setForeground(dirty ? new Color(0xB0, 0x60, 0x00) : Color.GRAY);
+        stateLabel.setForeground(dirty ? TuningStyle.dirty() : TuningStyle.muted());
     }
 
     /**
@@ -207,6 +211,7 @@ public class TuningToolbarWidget {
                                                 AtomicReference<ConfigurationImage> sessionImage) {
         JButton burnButton = new JButton("Burn to ECU");
         burnButton.setToolTipText("Save the current tune to persistent ECU memory");
+        burnButton.putClientProperty(FlatClientProperties.STYLE_CLASS, "primary");
         burnButton.addActionListener(e -> burnToEcuAndThen(right, null));
         return burnButton;
     }
