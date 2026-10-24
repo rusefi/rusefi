@@ -215,6 +215,13 @@ public final class LogViewerPanel extends JPanel {
      */
     LogViewerPanel(CsvLogReader log, String fileName, ChartSettings settings, SignalLists lists,
                    SidebarState state, SignalColors colors, IniFileModel ini, Consumer<Component> onOpen) {
+        this(log, fileName, settings, lists, state, colors, ini, onOpen, null);
+    }
+
+    /** @param plots the plots to show, e.g. those of the log this one was trimmed from; null for the default ones */
+    LogViewerPanel(CsvLogReader log, String fileName, ChartSettings settings, SignalLists lists,
+                   SidebarState state, SignalColors colors, IniFileModel ini, Consumer<Component> onOpen,
+                   PlotLayout plots) {
         super(new BorderLayout());
         this.log = log;
         this.settings = settings;
@@ -222,7 +229,7 @@ public final class LogViewerPanel extends JPanel {
         this.state = state;
         this.onOpen = onOpen;
         // a log opens with RPM and TPS plotted when it has them; the user picks the rest
-        layout = PlotLayout.single(log.fieldCount(), defaultPlotted(log));
+        layout = plots != null ? plots : PlotLayout.single(log.fieldCount(), defaultPlotted(log));
         categories = SignalCategories.of(log, ini);
         this.ini = ini;
         chart = new LogChart(log, layout, settings);

@@ -15,6 +15,11 @@ final class TraceColors {
         Arrays.fill(slots, NONE);
     }
 
+    /** Takes every field's slot from {@code other}, which has the same fields. */
+    void copyFrom(TraceColors other) {
+        System.arraycopy(other.slots, 0, slots, 0, slots.length);
+    }
+
     int fieldCount() {
         return slots.length;
     }

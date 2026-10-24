@@ -62,7 +62,7 @@ import static com.rusefi.config.generated.VariableRegistryValues.GAUGE_NAME_TIME
  * Clicking a plot makes it active, so new signals go there. A box beside the cursor line lists each plot's
  * values at the cursor ({@link ChartSettings.CursorValues} sets when).
  * Wheel zooms around the pointer, drag selects a range to zoom into, right-drag or Shift+wheel pans,
- * double-click shows the whole log.
+ * double-click shows the whole log. Right-clicking the traces offers the log edits ({@link EditActions}).
  */
 final class LogChart extends JComponent {
     /** Each wheel notch scales the visible span by this factor. */
@@ -789,6 +789,54 @@ final class LogChart extends JComponent {
     }
 
     /** Menu behind a plot's ⋯ button. */
+    /** Edits of the log offered by right-clicking the traces; see {@link #setEditActions}. */
+    interface EditActions {
+        /** Saves the samples of the visible time to a file of their own. */
+        void exportVisible();
+
+        /** Keeps the samples from {@code sample} on. */
+        void dropBefore(int sample);
+
+        /** Keeps the samples up to {@code sample}. */
+        void dropAfter(int sample);
+    }
+
+    private EditActions editActions;
+
+    /** Offers the edits when the traces are right-clicked; null for no menu. */
+    void setEditActions(EditActions editActions) {
+        this.editActions = editActions;
+    }
+
+    private boolean onTraces(int x, int y) {
+        for (Band band : bands) {
+            if (band.traces.contains(x, y)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Right-click menu of the traces: the edits, at the clicked sample. */
+    JPopupMenu editMenu(int sample) {
+        JPopupMenu menu = new JPopupMenu();
+        String time = String.format(Locale.ROOT, "%.2f s", log.value(sample, 0));
+        JMenuItem export = new JMenuItem("Export visible data as…");
+        export.setToolTipText("Save every sample of the visible time to a new log file");
+        export.addActionListener(e -> editActions.exportVisible());
+        JMenuItem before = new JMenuItem("Drop data before cursor (" + time + ")");
+        before.setEnabled(sample > 0);
+        before.addActionListener(e -> editActions.dropBefore(sample));
+        JMenuItem after = new JMenuItem("Drop data after cursor (" + time + ")");
+        after.setEnabled(sample < log.sampleCount() - 1);
+        after.addActionListener(e -> editActions.dropAfter(sample));
+        menu.add(export);
+        menu.addSeparator();
+        menu.add(before);
+        menu.add(after);
+        return menu;
+    }
+
     JPopupMenu plotMenu(int plot) {
         JPopupMenu menu = new JPopupMenu();
         JMenuItem up = new JMenuItem("Move up");
@@ -970,6 +1018,11 @@ final class LogChart extends JComponent {
                     && Math.abs(event.getX() - rightPressX) < DRAG_START_PIXELS) {
                 // a right-click on a legend item, not a right-drag pan
                 legendMenu(rightPressed.field).show(LogChart.this, event.getX(), event.getY());
+            } else if (rightPressed == null && editActions != null && SwingUtilities.isRightMouseButton(event)
+                    && Math.abs(event.getX() - rightPressX) < DRAG_START_PIXELS && insidePlot(event.getX())
+                    && onTraces(event.getX(), event.getY())) {
+                // a right-click on the traces, not a right-drag pan
+                editMenu(log.nearestSample(timeAt(event.getX()))).show(LogChart.this, event.getX(), event.getY());
             }
             if (draggingCursor != null) {
                 draggingCursor = null;
@@ -1160,6 +1213,7 @@ final class LogChart extends JComponent {
                 paintBand(g, band, palette, metrics, valueFont, sampleTimes);
             }
             drawTimeAxis(g, metrics, palette, axisTop, sampleTimes);
+            drawTimeBadge(g, metrics, palette, axisTop);
             drawMeasureCursors(g, metrics, palette, axisTop);
             drawAddPlotRow(g, metrics, palette);
             markers = new ArrayList<>();
@@ -1824,6 +1878,51 @@ final class LogChart extends JComponent {
             timeLabel += "  ·  zoom in to see sample lines";
         }
         g.drawString(timeLabel, (plotLeft + plotRight - metrics.stringWidth(timeLabel)) / 2, axisTop + 37);
+    }
+
+    /** The cursor time badge on the time axis from the last paint, or null. */
+    private Rectangle timeBadge;
+    private String timeBadgeText;
+
+    Rectangle timeBadge() {
+        return timeBadge;
+    }
+
+    String timeBadgeText() {
+        return timeBadgeText;
+    }
+
+    /**
+     * The cursor time in a dark badge on the time axis, right under the cursor line and joined to it, covering the
+     * tick labels there; the decimals follow the zoom, as in the status bar.
+     */
+    private void drawTimeBadge(Graphics2D g, FontMetrics metrics, PlotPalette palette, int axisTop) {
+        timeBadge = null;
+        timeBadgeText = null;
+        int x = cursorLineX();
+        if (x < 0) {
+            return;
+        }
+        String text = String.format(Locale.ROOT, (window.span() < 10 ? "%.3f" : "%.2f") + " s", cursorTime());
+        Font font = g.getFont();
+        g.setFont(font.deriveFont(Font.BOLD));
+        FontMetrics bold = g.getFontMetrics();
+        int width = bold.stringWidth(text) + 16;
+        int height = bold.getHeight() + 4;
+        int left = Math.max(plotLeft - LEFT / 2, Math.min(plotRight + RIGHT_MARGIN / 2 - width, x - width / 2));
+        int top = axisTop + 5;
+        // clear the tick labels behind it, with a little room so no half label shows at its sides
+        g.setColor(palette.background);
+        g.fillRect(left - 6, axisTop + 1, width + 12, height + 6);
+        Color ink = palette.label;
+        g.setColor(ink);
+        g.drawLine(x, axisTop, x, top);
+        g.fillRoundRect(left, top, width, height, 6, 6);
+        g.setColor(palette.background);
+        g.drawString(text, left + 8, top + (height + bold.getAscent() - bold.getDescent()) / 2);
+        g.setFont(font);
+        timeBadge = new Rectangle(left, top, width, height);
+        timeBadgeText = text;
     }
 
     private void drawAddPlotRow(Graphics2D g, FontMetrics metrics, PlotPalette palette) {
