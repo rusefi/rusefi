@@ -1191,6 +1191,7 @@ final class LogChart extends JComponent {
             g.fillRect(0, 0, getWidth(), getHeight());
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             FontMetrics metrics = g.getFontMetrics();
+            axisMetrics = metrics;
             // Fixed-width digits so legend values do not jitter as the cursor moves.
             Font valueFont = ConsoleFonts.mono(Font.PLAIN, g.getFont().getSize());
             FontMetrics valueMetrics = g.getFontMetrics(valueFont);
@@ -1214,6 +1215,7 @@ final class LogChart extends JComponent {
             }
             drawTimeAxis(g, metrics, palette, axisTop, sampleTimes);
             drawTimeBadge(g, metrics, palette, axisTop);
+            drawTimeTitle(g, metrics, palette, axisTop);
             drawMeasureCursors(g, metrics, palette, axisTop);
             drawAddPlotRow(g, metrics, palette);
             markers = new ArrayList<>();
@@ -1867,17 +1869,47 @@ final class LogChart extends JComponent {
 
     private void drawTimeAxis(Graphics2D g, FontMetrics metrics, PlotPalette palette, int axisTop, List<Double> sampleTimes) {
         double step = timeTickStep();
-        int decimals = Math.max(0, Math.min(6, (int) -Math.floor(Math.log10(step))));
         g.setColor(palette.label);
-        for (double time : timeTicks()) {
-            String text = String.format(Locale.ROOT, "%." + decimals + "f", time);
-            g.drawString(text, xOf(time) - metrics.stringWidth(text) / 2, axisTop + 19);
+        timeLabelBounds = new ArrayList<>();
+        for (double time : timeTicks(step)) {
+            String text = timeLabel(time, step);
+            int x = xOf(time) - metrics.stringWidth(text) / 2;
+            g.drawString(text, x, axisTop + 19);
+            timeLabelBounds.add(new Rectangle(x, axisTop + 19 - metrics.getAscent(), metrics.stringWidth(text),
+                    metrics.getHeight()));
         }
         String timeLabel = GAUGE_NAME_TIME + " (s)";
         if (grid.isVertical() && grid.getVerticalMode() == ChartSettings.VerticalMode.SAMPLES && sampleTimes == null) {
             timeLabel += "  ·  zoom in to see sample lines";
         }
-        g.drawString(timeLabel, (plotLeft + plotRight - metrics.stringWidth(timeLabel)) / 2, axisTop + 37);
+        timeTitle = timeLabel;
+    }
+
+    /** The time axis title, from {@link #drawTimeAxis}, and where {@link #drawTimeTitle} put it. */
+    private String timeTitle;
+    private Rectangle timeTitleBounds;
+
+    Rectangle timeTitleBounds() {
+        return timeTitleBounds;
+    }
+
+    /**
+     * The time axis title, centred under the plots; it steps aside when the cursor time badge, which grows with the
+     * font, would cover it.
+     */
+    private void drawTimeTitle(Graphics2D g, FontMetrics metrics, PlotPalette palette, int axisTop) {
+        int width = metrics.stringWidth(timeTitle);
+        int baseline = axisTop + 37;
+        Rectangle bounds = new Rectangle((plotLeft + plotRight - width) / 2, baseline - metrics.getAscent(), width,
+                metrics.getHeight());
+        if (timeBadge != null && bounds.intersects(new Rectangle(timeBadge.x - 8, timeBadge.y, timeBadge.width + 16,
+                timeBadge.height))) {
+            int right = timeBadge.x + timeBadge.width + 12;
+            bounds.x = right + width <= plotRight ? right : timeBadge.x - 12 - width;
+        }
+        g.setColor(palette.label);
+        g.drawString(timeTitle, bounds.x, baseline);
+        timeTitleBounds = bounds;
     }
 
     /** The cursor time badge on the time axis from the last paint, or null. */
@@ -2385,12 +2417,56 @@ final class LogChart extends JComponent {
     }
 
     /** Seconds between time-axis ticks, chosen so ticks are roughly the configured spacing apart. */
+    /** Least space between two time axis labels, in pixels. */
+    static final int TIME_LABEL_GAP = 12;
+    /** Font metrics of the time axis labels from the last paint, or null before it. */
+    private FontMetrics axisMetrics;
+    /** The time axis labels' bounds from the last paint. */
+    private List<Rectangle> timeLabelBounds = new ArrayList<>();
+
+    /**
+     * About one tick per {@link ChartSettings#getTimeSpacing()} pixels, or fewer when the labels would not fit
+     * between them: the widest label plus {@link #TIME_LABEL_GAP}.
+     */
     double timeTickStep() {
-        return niceStep(window.span() / Math.max(2, (plotRight - plotLeft) / (double) grid.getTimeSpacing()));
+        double width = plotRight - plotLeft;
+        double step = niceStep(window.span() / Math.max(2, width / grid.getTimeSpacing()));
+        if (axisMetrics == null) {
+            return step;
+        }
+        for (int i = 0; i < 30 && widestTimeLabel(step) + TIME_LABEL_GAP > step * width / window.span(); i++) {
+            step = niceStep(step * 1.01);
+        }
+        return step;
+    }
+
+    private int widestTimeLabel(double step) {
+        int widest = 0;
+        for (double time : timeTicks(step)) {
+            widest = Math.max(widest, axisMetrics.stringWidth(timeLabel(time, step)));
+        }
+        return widest;
+    }
+
+    /** A tick's label: the time in seconds, with the decimals the step needs. */
+    String timeLabel(double time, double step) {
+        return String.format(Locale.ROOT, "%." + decimalsFor(step) + "f", time);
+    }
+
+    /** Decimals that show a multiple of {@code step} exactly, for steps of 1, 2 or 5 times a power of ten. */
+    private static int decimalsFor(double step) {
+        return Math.max(0, Math.min(6, (int) -Math.floor(Math.log10(step) + 1e-9)));
+    }
+
+    List<Rectangle> timeLabelBounds() {
+        return timeLabelBounds;
     }
 
     private List<Double> timeTicks() {
-        double step = timeTickStep();
+        return timeTicks(timeTickStep());
+    }
+
+    private List<Double> timeTicks(double step) {
         List<Double> ticks = new ArrayList<>();
         long lastTick = (long) Math.floor(window.end() / step + 1e-6);
         for (long tick = (long) Math.ceil(window.start() / step - 1e-6); tick <= lastTick; tick++) {
