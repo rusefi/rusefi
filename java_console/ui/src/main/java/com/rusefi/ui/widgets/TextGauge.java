@@ -33,7 +33,7 @@ public class TextGauge {
     private static final Logging log = getLogging(TextGauge.class);
     private static final String NO_CONNECTION = "---";
 
-    private final JPanel content = new JPanel(new BorderLayout(2, 0));
+    private final JPanel content = new JPanel(new BorderLayout(0, 0));
     private final JLabel titleLabel = new JLabel();
     private final JLabel valueLabel = new JLabel();
     private final JLabel unitsLabel = new JLabel();
@@ -44,24 +44,31 @@ public class TextGauge {
     private boolean active;
 
     public TextGauge(UIContext uiContext, String channelName, Consumer<String> onChannelChange) {
-        TuningStyle.styleCard(content, 4, 8);
+        TuningStyle.styleLiveValue(content, 3, 8);
 
         Font baseFont = UIManager.getFont("Label.font");
         if (baseFont != null) {
             titleLabel.setFont(baseFont.deriveFont(Font.PLAIN, baseFont.getSize() - 1f));
-            valueLabel.setFont(baseFont.deriveFont(Font.BOLD, baseFont.getSize() + 4f));
-            unitsLabel.setFont(baseFont.deriveFont(baseFont.getSize() - 1f));
+            valueLabel.setFont(baseFont.deriveFont(Font.BOLD, baseFont.getSize() + 9f));
+            unitsLabel.setFont(baseFont.deriveFont(Font.PLAIN, baseFont.getSize() - 1f));
         }
         titleLabel.setForeground(TuningStyle.muted());
         unitsLabel.setForeground(TuningStyle.muted());
 
-        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        // Title and units share the top row (units in the right corner), the value fills the rest.
+        // A long title is cut with an ellipsis before the units.
+        titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         valueLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        unitsLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        unitsLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        unitsLabel.setBorder(BorderFactory.createEmptyBorder(0, 6, 0, 0));
 
-        content.add(titleLabel, BorderLayout.NORTH);
+        JPanel header = new JPanel(new BorderLayout());
+        header.setOpaque(false);
+        header.add(titleLabel, BorderLayout.CENTER);
+        header.add(unitsLabel, BorderLayout.EAST);
+
+        content.add(header, BorderLayout.NORTH);
         content.add(valueLabel, BorderLayout.CENTER);
-        content.add(unitsLabel, BorderLayout.SOUTH);
 
         valueLabel.setText(NO_CONNECTION);
         valueLabel.setForeground(TuningStyle.muted());
