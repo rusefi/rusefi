@@ -1,5 +1,7 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.icons.FlatSearchIcon;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.ExpressionEvaluator;
@@ -241,8 +243,12 @@ public class MainMenuTreeWidget {
             }
         });
 
-        JPanel topPanel = new JPanel(new BorderLayout());
-        searchField.putClientProperty("JTextField.placeholderText", "search here");
+        JPanel topPanel = new JPanel(new BorderLayout(4, 0));
+        topPanel.setOpaque(false);
+        topPanel.setBorder(BorderFactory.createEmptyBorder(8, 8, 6, 6));
+        searchField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search settings");
+        searchField.putClientProperty(FlatClientProperties.TEXT_FIELD_LEADING_ICON, new FlatSearchIcon());
+        searchField.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true);
         searchField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -261,24 +267,37 @@ public class MainMenuTreeWidget {
         });
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        buttonPanel.setOpaque(false);
         JButton expandAll = new JButton(AutoupdateUtil.loadIcon("expand_all16.png"));
         expandAll.setToolTipText("Expand All");
-        expandAll.setPreferredSize(new Dimension(32, 32));
+        expandAll.putClientProperty(FlatClientProperties.BUTTON_TYPE, FlatClientProperties.BUTTON_TYPE_TOOLBAR_BUTTON);
+        expandAll.setPreferredSize(new Dimension(30, 30));
         expandAll.addActionListener(e -> expandAll(tree, true));
 
         JButton collapseAll = new JButton(AutoupdateUtil.loadIcon("collapse_all16.png"));
         collapseAll.setToolTipText("Collapse All");
-        collapseAll.setPreferredSize(new Dimension(32, 32));
+        collapseAll.putClientProperty(FlatClientProperties.BUTTON_TYPE, FlatClientProperties.BUTTON_TYPE_TOOLBAR_BUTTON);
+        collapseAll.setPreferredSize(new Dimension(30, 30));
         collapseAll.addActionListener(e -> expandAll(tree, false));
 
         buttonPanel.add(expandAll);
         buttonPanel.add(collapseAll);
 
-        topPanel.add(searchField, BorderLayout.NORTH);
-        topPanel.add(buttonPanel, BorderLayout.SOUTH);
+        topPanel.add(searchField, BorderLayout.CENTER);
+        topPanel.add(buttonPanel, BorderLayout.EAST);
+
+        // A white sidebar like the Log Viewer's, with a rounded selection (Tree.tuningMenu style).
+        Color sidebar = TuningStyle.sidebarBackground();
+        contentPane.setBackground(sidebar);
+        contentPane.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, TuningStyle.separator()));
+        tree.putClientProperty(FlatClientProperties.STYLE_CLASS, "tuningMenu");
+        tree.setBackground(sidebar);
+        JScrollPane treeScroll = new JScrollPane(tree);
+        treeScroll.setBorder(BorderFactory.createEmptyBorder());
+        treeScroll.getViewport().setBackground(sidebar);
 
         contentPane.add(topPanel, BorderLayout.NORTH);
-        contentPane.add(new JScrollPane(tree), BorderLayout.CENTER);
+        contentPane.add(treeScroll, BorderLayout.CENTER);
 
         // Refresh the disabled state as soon as the tune is read from the ECU.
         // If the tree was not populated at startup (no local ini file), populate it now.

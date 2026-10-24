@@ -6,11 +6,17 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * A titled group inside a Tuning dialog: a rounded outline with the bold title inside its top
+ * edge. The outline turns accent-tinted under the mouse to show which group a field belongs to.
+ * Colours: Console.Tuning.section.* theme keys [tag:console_theme].
+ */
 public class GradientTitleBorder extends AbstractBorder {
+    private static final int ARC = 10;
+    private static final int TITLE_HEIGHT = 24;
+    private static final int PADDING = 8;
     private final String title;
     private boolean mouseOver = false;
-    private static final int TITLE_HEIGHT = 25;
-    private static final int HORIZONTAL_PADDING = 5;
 
     public GradientTitleBorder(String title) {
         this.title = title;
@@ -42,44 +48,40 @@ public class GradientTitleBorder extends AbstractBorder {
         return title;
     }
 
+    private static Color color(String key, Color fallback) {
+        Color color = UIManager.getColor(key);
+        return color != null ? color : fallback;
+    }
+
     @Override
     public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
         Graphics2D g2 = (Graphics2D) g.create();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        try {
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+            g2.setColor(mouseOver
+                ? color("Console.Tuning.section.hoverBorderColor", new Color(0x92b1f5))
+                : color("Console.Tuning.section.borderColor", new Color(0xdfe3e9)));
+            g2.drawRoundRect(x, y, width - 1, height - 1, ARC, ARC);
 
-        Color borderColor = mouseOver ? new Color(180, 120, 0) : Color.GRAY;
-        g2.setColor(borderColor);
-
-        // Draw outer rectangle (TitledBorder style)
-        g2.drawRect(x, y, width - 1, height - 1);
-
-        // Measure title text so we can blank the top-border line behind it
-        Font titleFont = g2.getFont().deriveFont(Font.PLAIN, 12f);
-        g2.setFont(titleFont);
-        FontMetrics fm = g2.getFontMetrics();
-        int textX = x + HORIZONTAL_PADDING + 2;
-        int textY = y + fm.getAscent();
-
-        // White-fill gap behind title string to "cut" through the top border line
-        int textWidth = fm.stringWidth(title);
-        g2.setColor(c.getBackground() != null ? c.getBackground() : Color.WHITE);
-        g2.fillRect(textX - 2, y, textWidth + 4, 1);
-
-        // Draw title text in dark gray
-        g2.setColor(new Color(60, 60, 60));
-        g2.drawString(title, textX, textY);
-
-        g2.dispose();
+            Font base = c.getFont() != null ? c.getFont() : g2.getFont();
+            g2.setFont(base.deriveFont(Font.BOLD));
+            FontMetrics fm = g2.getFontMetrics();
+            g2.setColor(color("Console.Tuning.section.title", color("Label.foreground", Color.DARK_GRAY)));
+            g2.drawString(title, x + PADDING + 2, y + (TITLE_HEIGHT - fm.getHeight()) / 2 + fm.getAscent() + 1);
+        } finally {
+            g2.dispose();
+        }
     }
 
     @Override
     public Insets getBorderInsets(Component c) {
-        return new Insets(18, 4, 4, 4);
+        return getBorderInsets(c, new Insets(0, 0, 0, 0));
     }
 
     @Override
     public Insets getBorderInsets(Component c, Insets insets) {
-        insets.set(18, 4, 4, 4);
+        insets.set(TITLE_HEIGHT, PADDING, PADDING - 2, PADDING);
         return insets;
     }
 }

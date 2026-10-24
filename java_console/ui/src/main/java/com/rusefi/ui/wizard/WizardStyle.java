@@ -2,12 +2,10 @@ package com.rusefi.ui.wizard;
 
 import com.formdev.flatlaf.ui.FlatLineBorder;
 import com.rusefi.ui.util.ScrollablePanel;
+import com.rusefi.ui.util.TransparentPanels;
 
 import javax.swing.*;
-import javax.swing.plaf.UIResource;
 import java.awt.*;
-import java.awt.event.ContainerAdapter;
-import java.awt.event.ContainerEvent;
 import java.awt.geom.Path2D;
 
 /**
@@ -19,7 +17,6 @@ final class WizardStyle {
     static final int GAP = 12;
     static final int LARGE_GAP = 20;
     static final int ARC = 10;
-    private static final String TRANSPARENCY_INSTALLED = "rusefi.wizard.transparentPanels";
 
     static Color color(String key, Color fallback) {
         Color color = UIManager.getColor(key);
@@ -138,33 +135,9 @@ final class WizardStyle {
         return scrollPane;
     }
 
-    /**
-     * Clears the theme background of plain panels and scroll viewports under {@code root}, now and
-     * whenever children are added later. Panels with an explicitly assigned colour keep it.
-     */
+    /** See {@link TransparentPanels#install}. */
     static void transparentPanels(JComponent root) {
-        for (Component child : root.getComponents()) {
-            makeTransparent(child);
-        }
-        if (root.getClientProperty(TRANSPARENCY_INSTALLED) == null) {
-            root.putClientProperty(TRANSPARENCY_INSTALLED, Boolean.TRUE);
-            root.addContainerListener(new ContainerAdapter() {
-                @Override
-                public void componentAdded(ContainerEvent e) {
-                    makeTransparent(e.getChild());
-                }
-            });
-        }
-    }
-
-    private static void makeTransparent(Component component) {
-        if (component instanceof JPanel || component instanceof JViewport || component instanceof JScrollPane) {
-            JComponent c = (JComponent) component;
-            if (c.getBackground() instanceof UIResource) {
-                c.setOpaque(false);
-            }
-            transparentPanels(c);
-        }
+        TransparentPanels.install(root);
     }
 
     /** Small bold muted capitals above a group: a card's eyebrow or a field's section label. */

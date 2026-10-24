@@ -20,6 +20,7 @@ import com.rusefi.ui.widgets.tune.CalibrationDialogWidget;
 import com.rusefi.ui.widgets.tune.CalibrationPanelWorkspace;
 import com.rusefi.ui.widgets.tune.IndicatorPanel;
 import com.rusefi.ui.widgets.tune.MainMenuTreeWidget;
+import com.rusefi.ui.widgets.tune.TuningStyle;
 import com.rusefi.ui.widgets.tune.TuningToolbarWidget;
 
 import com.devexperts.logging.Logging;
@@ -274,11 +275,16 @@ public class TuningPane {
         };
         ConnectionStatusLogic.INSTANCE.addListener(connectionStatusListener);
 
+        // Toolbar, indicator chips and live values share one strip in the toolbar colour.
         JPanel northPanel = new JPanel();
         northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
+        TuningStyle.styleBar(northPanel);
+        northPanel.setBorder(BorderFactory.createCompoundBorder(northPanel.getBorder(),
+            BorderFactory.createEmptyBorder(0, 4, 6, 4)));
         northPanel.add(toolbar.getPanel());
         frontPageIndicatorPanel = buildFrontendIndicatorPanel(uiContext);
         if (frontPageIndicatorPanel != null) {
+            frontPageIndicatorPanel.getPanel().setOpaque(false);
             northPanel.add(frontPageIndicatorPanel.getPanel());
         }
         if (gaugeStrip != null) {

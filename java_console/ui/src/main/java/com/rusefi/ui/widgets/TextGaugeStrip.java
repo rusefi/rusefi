@@ -25,7 +25,8 @@ public class TextGaugeStrip {
     public TextGaugeStrip(UIContext uiContext, Node config) {
 
         content.setLayout(new BoxLayout(content, BoxLayout.X_AXIS));
-        content.setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 4));
+        content.setBorder(BorderFactory.createEmptyBorder(4, 6, 0, 6));
+        content.setOpaque(false);
 
         List<String> defaults = getFrontPageDefaults(uiContext);
 
@@ -38,7 +39,7 @@ public class TextGaugeStrip {
             gauges.add(gauge);
             content.add(gauge.getContent());
             if (i < GAUGE_COUNT - 1) {
-                content.add(Box.createHorizontalStrut(2));
+                content.add(Box.createHorizontalStrut(6));
             }
         }
     }
