@@ -18,7 +18,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
-/** Dialog gauges use the space a wide window offers, as in the CAN O2 sensors dialog. */
+/** Dialog gauges fill the space the window offers, as in the CAN O2 sensors dialog. */
 class CalibrationDialogGaugeLayoutTest {
     // Same shape as egoSettings in secondary_panels.ini: two border-layout status panels with
     // gauges on one side, a plain settings column between them, all in an xAxis dialog.
@@ -65,33 +65,52 @@ class CalibrationDialogGaugeLayoutTest {
                 collect(widget.getContentPane(), CircularGauge.class, gauges);
                 assertEquals(8, gauges.size());
 
-                // Text widths depend on the platform fonts (CI runs Linux), so only the 300 px
-                // cap is an exact size: a very wide window reaches it with any fonts.
+                // Text widths depend on the platform fonts (CI runs Linux), so sizes are compared
+                // between window widths rather than against exact pixel values.
                 layout(scroll, 2400, 2000);
                 Component middle = find(widget.getContentPane(), "Middle");
                 assertNotNull(middle);
                 for (CircularGauge gauge : gauges) {
-                    assertEquals(gauge.getWidth(), gauge.getHeight(), "Gauge cells stay square");
-                    assertEquals(300, gauge.getWidth(), "Very wide window: gauges reach the cap");
+                    assertEquals(gauges.get(0).getY(), gauge.getY(), "Very wide window: each group fits in one row");
                 }
+                assertFillWidth(gauges);
                 assertEquals(middle.getPreferredSize().width, middle.getWidth(),
                     "The settings column keeps its width; spare width goes to the gauges");
+                int veryWide = gauges.get(0).getWidth();
 
                 layout(scroll, 1600, 2000);
-                for (CircularGauge gauge : gauges) {
-                    assertTrue(gauge.getWidth() > 150 && gauge.getWidth() <= 300,
-                        "Wide window: gauges grow from 150 px, got " + gauge.getWidth());
-                }
+                assertFillWidth(gauges);
+                int wide = gauges.get(0).getWidth();
+                assertTrue(wide < veryWide, "Gauges shrink with the window: " + wide + " vs " + veryWide);
 
+                // Fewer columns fit, so the groups wrap into more rows instead of shrinking further.
                 layout(scroll, 900, 2000);
+                assertFillWidth(gauges);
                 for (CircularGauge gauge : gauges) {
-                    assertTrue(gauge.getWidth() >= 100 && gauge.getWidth() <= 150,
-                        "Narrow window: back to the base size, got " + gauge.getWidth());
+                    assertTrue(gauge.getWidth() >= 60, "Narrow window: not below the minimum, got " + gauge.getWidth());
                 }
+                assertTrue(gauges.get(3).getY() > gauges.get(0).getY(), "Narrow window: gauges wrap into rows");
             } finally {
                 widget.destroy();
             }
         });
+    }
+
+    /** Square cells whose row spans the gauge panel's width, apart from rounding. */
+    private static void assertFillWidth(List<CircularGauge> gauges) {
+        for (CircularGauge gauge : gauges) {
+            assertEquals(gauge.getWidth(), gauge.getHeight(), "Gauge cells stay square");
+            Container panel = gauge.getParent();
+            int columns = 0;
+            for (Component cell : panel.getComponents()) {
+                if (cell.getY() == gauge.getY()) {
+                    columns++;
+                }
+            }
+            int used = columns * gauge.getWidth() + (columns - 1) * 4;
+            assertTrue(panel.getWidth() - used >= 0 && panel.getWidth() - used < columns,
+                "Gauges fill their panel's width: " + used + " of " + panel.getWidth());
+        }
     }
 
     /** Lays out twice: the gauge grid's height follows the width of the first pass. */

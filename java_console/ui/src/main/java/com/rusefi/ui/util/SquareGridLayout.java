@@ -7,27 +7,29 @@ import java.awt.Insets;
 import java.awt.LayoutManager2;
 
 /**
- * A grid of square cells, such as round gauges, that scales with the width it is given:
- * the preferred width is fixed at {@code preferredCell}, while the preferred height follows the
- * cell size the current width allows, between {@code minimumCell} and {@code maximumCell}.
+ * A grid of square cells, such as round gauges, that fills the width it is given: as many cells
+ * per row as fit at {@code preferredCell}, rows balanced so the last one is not left nearly
+ * empty, then the width shared equally between the columns. There is no upper cell size, so the
+ * cells keep growing with the window.
+ * <p>
+ * The preferred width is fixed at {@code preferredColumns} cells of {@code preferredCell}, while
+ * the preferred height follows the cell size the current width allows.
  * <p>
  * Because the preferred height depends on the current width, the owner must revalidate after a
  * width change (see {@link #revalidateOnWidthChange}). The preferred width never depends on the
  * current width, so this cannot feed back into an ever-growing layout.
  */
 public class SquareGridLayout implements LayoutManager2 {
-    private final int columns;
+    private final int preferredColumns;
     private final int gap;
     private final int minimumCell;
     private final int preferredCell;
-    private final int maximumCell;
 
-    public SquareGridLayout(int columns, int gap, int minimumCell, int preferredCell, int maximumCell) {
-        this.columns = Math.max(1, columns);
+    public SquareGridLayout(int preferredColumns, int gap, int minimumCell, int preferredCell) {
+        this.preferredColumns = Math.max(1, preferredColumns);
         this.gap = Math.max(0, gap);
-        this.minimumCell = minimumCell;
-        this.preferredCell = Math.max(minimumCell, preferredCell);
-        this.maximumCell = Math.max(this.preferredCell, maximumCell);
+        this.minimumCell = Math.max(1, minimumCell);
+        this.preferredCell = Math.max(this.minimumCell, preferredCell);
     }
 
     /** Revalidates {@code parent} whenever its width changes, so ancestors pick up the new height. */
@@ -59,43 +61,59 @@ public class SquareGridLayout implements LayoutManager2 {
         return count;
     }
 
-    private int effectiveColumns(int count) {
-        return Math.max(1, Math.min(columns, count));
+    private int preferredColumns(int count) {
+        return Math.max(1, Math.min(preferredColumns, count));
+    }
+
+    private int innerWidth(Container parent) {
+        Insets insets = parent.getInsets();
+        return parent.getWidth() - insets.left - insets.right;
+    }
+
+    /** As many columns as fit at the preferred cell size, balanced over the resulting rows. */
+    int columnsForWidth(Container parent) {
+        int count = visibleCount(parent);
+        if (count == 0) {
+            return 1;
+        }
+        if (parent.getWidth() <= 0) {
+            return preferredColumns(count);
+        }
+        int fit = (innerWidth(parent) + gap) / (preferredCell + gap);
+        int cols = Math.max(1, Math.min(count, fit));
+        return (count + rows(count, cols) - 1) / rows(count, cols);
     }
 
     private static int rows(int count, int cols) {
         return (count + cols - 1) / cols;
     }
 
-    private Dimension size(Container parent, int cell) {
+    private Dimension size(Container parent, int cols, int cell) {
         Insets insets = parent.getInsets();
         int count = visibleCount(parent);
         if (count == 0) {
             return new Dimension(insets.left + insets.right, insets.top + insets.bottom);
         }
-        int cols = effectiveColumns(count);
         int rows = rows(count, cols);
         return new Dimension(insets.left + insets.right + cols * cell + (cols - 1) * gap,
             insets.top + insets.bottom + rows * cell + (rows - 1) * gap);
     }
 
     /** The cell size the parent's current width allows, before the height limit. */
-    int cellForWidth(Container parent) {
-        int width = parent.getWidth();
-        if (width <= 0) {
+    int cellForWidth(Container parent, int cols) {
+        if (parent.getWidth() <= 0) {
             return preferredCell;
         }
-        Insets insets = parent.getInsets();
-        int cols = effectiveColumns(visibleCount(parent));
-        int cell = (width - insets.left - insets.right - (cols - 1) * gap) / cols;
-        return Math.max(minimumCell, Math.min(maximumCell, cell));
+        return Math.max(minimumCell, (innerWidth(parent) - (cols - 1) * gap) / cols);
     }
 
     @Override
     public Dimension preferredLayoutSize(Container parent) {
         synchronized (parent.getTreeLock()) {
-            Dimension preferred = size(parent, preferredCell);
-            preferred.height = size(parent, cellForWidth(parent)).height;
+            int count = visibleCount(parent);
+            Dimension preferred = size(parent, preferredColumns(count), preferredCell);
+            int cols = columnsForWidth(parent);
+            preferred.height = size(parent, cols, cellForWidth(parent, cols)).height;
             return preferred;
         }
     }
@@ -103,15 +121,13 @@ public class SquareGridLayout implements LayoutManager2 {
     @Override
     public Dimension minimumLayoutSize(Container parent) {
         synchronized (parent.getTreeLock()) {
-            return size(parent, minimumCell);
+            return size(parent, preferredColumns(visibleCount(parent)), minimumCell);
         }
     }
 
     @Override
     public Dimension maximumLayoutSize(Container parent) {
-        synchronized (parent.getTreeLock()) {
-            return size(parent, maximumCell);
-        }
+        return new Dimension(Short.MAX_VALUE, Short.MAX_VALUE);
     }
 
     @Override
@@ -122,10 +138,10 @@ public class SquareGridLayout implements LayoutManager2 {
             if (count == 0) {
                 return;
             }
-            int cols = effectiveColumns(count);
+            int cols = columnsForWidth(parent);
             int rows = rows(count, cols);
             int heightCell = (parent.getHeight() - insets.top - insets.bottom - (rows - 1) * gap) / rows;
-            int cell = Math.max(0, Math.min(cellForWidth(parent), heightCell));
+            int cell = Math.max(0, Math.min(cellForWidth(parent, cols), heightCell));
             int index = 0;
             for (Component component : parent.getComponents()) {
                 if (!component.isVisible()) {
