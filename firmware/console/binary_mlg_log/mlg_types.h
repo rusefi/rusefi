@@ -86,25 +86,29 @@ namespace Field {
     consteval Scalar resolveBuiltInNumberType() {
         using enum Scalar;
         using CleanType = std::remove_const_t<T>;
-        constexpr auto resolvedType{[](){
-            if constexpr (std::is_integral_v<CleanType>) {
-                if constexpr (std::is_signed_v<CleanType>) {
-                    if      constexpr (sizeof(CleanType) == 1) { return S08; }
-                    else if constexpr (sizeof(CleanType) == 2) { return S16; }
-                    else if constexpr (sizeof(CleanType) == 4) { return S32; }
-                    else if constexpr (sizeof(CleanType) == 8) { return S64; }
-                } else {
-                    if      constexpr (sizeof(CleanType) == 1) { return U08; }
-                    else if constexpr (sizeof(CleanType) == 2) { return U16; }
-                    else if constexpr (sizeof(CleanType) == 4) { return U32; }
+        if constexpr (std::is_enum_v<CleanType>) {
+            return resolveBuiltInNumberType<std::underlying_type_t<CleanType>>();
+        } else {
+            constexpr auto resolvedType{[](){
+                if constexpr (std::is_integral_v<CleanType>) {
+                    if constexpr (std::is_signed_v<CleanType>) {
+                        if      constexpr (sizeof(CleanType) == 1) { return S08; }
+                        else if constexpr (sizeof(CleanType) == 2) { return S16; }
+                        else if constexpr (sizeof(CleanType) == 4) { return S32; }
+                        else if constexpr (sizeof(CleanType) == 8) { return S64; }
+                    } else {
+                        if      constexpr (sizeof(CleanType) == 1) { return U08; }
+                        else if constexpr (sizeof(CleanType) == 2) { return U16; }
+                        else if constexpr (sizeof(CleanType) == 4) { return U32; }
+                    }
                 }
-            }
-            else if constexpr (std::same_as<CleanType, float>) { return F32; }
+                else if constexpr (std::same_as<CleanType, float>) { return F32; }
 
-            return unsupported;
-        }()};
-        static_assert(resolvedType != unsupported, "Scalar type was not recognized as supported built in numeric type");
-        return resolvedType;
+                return unsupported;
+            }()};
+            static_assert(resolvedType != unsupported, "Scalar type was not recognized as supported built in numeric type");
+            return resolvedType;
+        }
     }
 
     template<Scalar t>
