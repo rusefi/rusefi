@@ -1137,43 +1137,43 @@ float getOutputValueByHash(const int hash) {
 			return engine->module<FanControl2>()->pwmAppliedPwm;
 // isPrime
 		case -1429286498:
-			return static_cast<fuel_pump_control_s&>(engine->module<FuelPumpController>().unmock()).isPrime;
+			return engine->module<FuelPumpController>()->isPrime;
 // engineTurnedRecently
 		case -1270448973:
-			return static_cast<fuel_pump_control_s&>(engine->module<FuelPumpController>().unmock()).engineTurnedRecently;
+			return engine->module<FuelPumpController>()->engineTurnedRecently;
 // isFuelPumpOn
 		case -344048084:
-			return static_cast<fuel_pump_control_s&>(engine->module<FuelPumpController>().unmock()).isFuelPumpOn;
+			return engine->module<FuelPumpController>()->isFuelPumpOn;
 // ignitionOn
 		case -381519965:
-			return static_cast<fuel_pump_control_s&>(engine->module<FuelPumpController>().unmock()).ignitionOn;
+			return engine->module<FuelPumpController>()->ignitionOn;
 // isSecondaryPumpOn
 		case 2108021704:
-			return static_cast<fuel_pump_control_s&>(engine->module<FuelPumpController>().unmock()).isSecondaryPumpOn;
+			return engine->module<FuelPumpController>()->isSecondaryPumpOn;
 // isFpPidActive
 		case -1198544592:
-			return static_cast<fuel_pump_control_s&>(engine->module<FuelPumpController>().unmock()).isFpPidActive;
+			return engine->module<FuelPumpController>()->isFpPidActive;
 // isFpReliefActive
 		case 511613578:
-			return static_cast<fuel_pump_control_s&>(engine->module<FuelPumpController>().unmock()).isFpReliefActive;
+			return engine->module<FuelPumpController>()->isFpReliefActive;
 // fuelPumpDuty
 		case 456425721:
-			return static_cast<fuel_pump_control_s&>(engine->module<FuelPumpController>().unmock()).fuelPumpDuty;
+			return engine->module<FuelPumpController>()->fuelPumpDuty;
 // fuelPressureTarget
 		case 1083687089:
-			return static_cast<fuel_pump_control_s&>(engine->module<FuelPumpController>().unmock()).fuelPressureTarget;
+			return engine->module<FuelPumpController>()->fuelPressureTarget;
 // isBenchTest
 		case 1054584577:
-			return static_cast<main_relay_s&>(engine->module<MainRelayController>().unmock()).isBenchTest;
+			return engine->module<MainRelayController>()->isBenchTest;
 // hasIgnitionVoltage
 		case -660813356:
-			return static_cast<main_relay_s&>(engine->module<MainRelayController>().unmock()).hasIgnitionVoltage;
+			return engine->module<MainRelayController>()->hasIgnitionVoltage;
 // mainRelayState
 		case 1986974728:
-			return static_cast<main_relay_s&>(engine->module<MainRelayController>().unmock()).mainRelayState;
+			return engine->module<MainRelayController>()->mainRelayState;
 // delayedShutoffRequested
 		case 281198734:
-			return static_cast<main_relay_s&>(engine->module<MainRelayController>().unmock()).delayedShutoffRequested;
+			return engine->module<MainRelayController>()->delayedShutoffRequested;
 // lua.fuelAdd
 		case 1649801578:
 			return engine->engineState.lua.fuelAdd;
@@ -1335,58 +1335,58 @@ float getOutputValueByHash(const int hash) {
 			return (engine->engineState.dwellActualRatio + -1.0f) * 100.0f;
 // tpsFrom
 		case -222310512:
-			return static_cast<tps_accel_state_s&>(engine->module<TpsAccelEnrichment>().unmock()).tpsFrom;
+			return engine->module<TpsAccelEnrichment>()->tpsFrom;
 // tpsTo
 		case 275873183:
-			return static_cast<tps_accel_state_s&>(engine->module<TpsAccelEnrichment>().unmock()).tpsTo;
+			return engine->module<TpsAccelEnrichment>()->tpsTo;
 // deltaTps
 		case 679204230:
-			return static_cast<tps_accel_state_s&>(engine->module<TpsAccelEnrichment>().unmock()).deltaTps;
+			return engine->module<TpsAccelEnrichment>()->deltaTps;
 // extraFuel
 		case -1737113771:
-			return static_cast<tps_accel_state_s&>(engine->module<TpsAccelEnrichment>().unmock()).extraFuel;
+			return engine->module<TpsAccelEnrichment>()->extraFuel;
 // valueFromTable
 		case -1488252226:
-			return static_cast<tps_accel_state_s&>(engine->module<TpsAccelEnrichment>().unmock()).valueFromTable;
+			return engine->module<TpsAccelEnrichment>()->valueFromTable;
 // isAboveAccelThreshold
 		case -1769217965:
-			return static_cast<tps_accel_state_s&>(engine->module<TpsAccelEnrichment>().unmock()).isAboveAccelThreshold;
+			return engine->module<TpsAccelEnrichment>()->isAboveAccelThreshold;
 // isBelowDecelThreshold
 		case -819235516:
-			return static_cast<tps_accel_state_s&>(engine->module<TpsAccelEnrichment>().unmock()).isBelowDecelThreshold;
+			return engine->module<TpsAccelEnrichment>()->isBelowDecelThreshold;
 // isTimeToResetAccumulator
 		case -1810579338:
-			return static_cast<tps_accel_state_s&>(engine->module<TpsAccelEnrichment>().unmock()).isTimeToResetAccumulator;
+			return engine->module<TpsAccelEnrichment>()->isTimeToResetAccumulator;
 // isFractionalEnrichment
 		case 1368733905:
-			return static_cast<tps_accel_state_s&>(engine->module<TpsAccelEnrichment>().unmock()).isFractionalEnrichment;
+			return engine->module<TpsAccelEnrichment>()->isFractionalEnrichment;
 // belowEpsilon
 		case 683434680:
-			return static_cast<tps_accel_state_s&>(engine->module<TpsAccelEnrichment>().unmock()).belowEpsilon;
+			return engine->module<TpsAccelEnrichment>()->belowEpsilon;
 // tooShort
 		case -179263961:
-			return static_cast<tps_accel_state_s&>(engine->module<TpsAccelEnrichment>().unmock()).tooShort;
+			return engine->module<TpsAccelEnrichment>()->tooShort;
 // fractionalInjFuel
 		case 907725845:
-			return static_cast<tps_accel_state_s&>(engine->module<TpsAccelEnrichment>().unmock()).fractionalInjFuel;
+			return engine->module<TpsAccelEnrichment>()->fractionalInjFuel;
 // accumulatedValue
 		case -1278331766:
-			return static_cast<tps_accel_state_s&>(engine->module<TpsAccelEnrichment>().unmock()).accumulatedValue;
+			return engine->module<TpsAccelEnrichment>()->accumulatedValue;
 // maxExtraPerCycle
 		case 29297606:
-			return static_cast<tps_accel_state_s&>(engine->module<TpsAccelEnrichment>().unmock()).maxExtraPerCycle;
+			return engine->module<TpsAccelEnrichment>()->maxExtraPerCycle;
 // maxExtraPerPeriod
 		case 1452398905:
-			return static_cast<tps_accel_state_s&>(engine->module<TpsAccelEnrichment>().unmock()).maxExtraPerPeriod;
+			return engine->module<TpsAccelEnrichment>()->maxExtraPerPeriod;
 // maxInjectedPerPeriod
 		case 938839003:
-			return static_cast<tps_accel_state_s&>(engine->module<TpsAccelEnrichment>().unmock()).maxInjectedPerPeriod;
+			return engine->module<TpsAccelEnrichment>()->maxInjectedPerPeriod;
 // cycleCnt
 		case 708409082:
-			return static_cast<tps_accel_state_s&>(engine->module<TpsAccelEnrichment>().unmock()).cycleCnt;
+			return engine->module<TpsAccelEnrichment>()->cycleCnt;
 // luaAccelFuel
 		case -1283134357:
-			return static_cast<tps_accel_state_s&>(engine->module<TpsAccelEnrichment>().unmock()).luaAccelFuel;
+			return engine->module<TpsAccelEnrichment>()->luaAccelFuel;
 // dcOutput0
 		case 1242329357:
 			return engine->dc_motors.dcOutput0;
@@ -1398,88 +1398,88 @@ float getOutputValueByHash(const int hash) {
 			return engine->dc_motors.isEnabled0;
 // isBurstKnockActive
 		case -235151165:
-			return static_cast<burst_knock_state_s&>(engine->module<BurstKnock>().unmock()).isBurstKnockActive;
+			return engine->module<BurstKnock>()->isBurstKnockActive;
 // burstKnockRetard
 		case -638105939:
-			return static_cast<burst_knock_state_s&>(engine->module<BurstKnock>().unmock()).burstKnockRetard;
+			return engine->module<BurstKnock>()->burstKnockRetard;
 // burstKnockTpsRate
 		case -864794418:
-			return static_cast<burst_knock_state_s&>(engine->module<BurstKnock>().unmock()).burstKnockTpsRate;
+			return engine->module<BurstKnock>()->burstKnockTpsRate;
 // engineSmEnabled
 		case -1253164602:
-			return static_cast<engine_state_machine_state_s&>(engine->module<EngineStateMachine>().unmock()).engineSmEnabled;
+			return engine->module<EngineStateMachine>()->engineSmEnabled;
 // engineSmIsOff
 		case -193409774:
-			return static_cast<engine_state_machine_state_s&>(engine->module<EngineStateMachine>().unmock()).engineSmIsOff;
+			return engine->module<EngineStateMachine>()->engineSmIsOff;
 // engineSmIsCranking
 		case 1610341604:
-			return static_cast<engine_state_machine_state_s&>(engine->module<EngineStateMachine>().unmock()).engineSmIsCranking;
+			return engine->module<EngineStateMachine>()->engineSmIsCranking;
 // engineSmIsAfterStart
 		case -1247857961:
-			return static_cast<engine_state_machine_state_s&>(engine->module<EngineStateMachine>().unmock()).engineSmIsAfterStart;
+			return engine->module<EngineStateMachine>()->engineSmIsAfterStart;
 // engineSmIsIdle
 		case -2087772747:
-			return static_cast<engine_state_machine_state_s&>(engine->module<EngineStateMachine>().unmock()).engineSmIsIdle;
+			return engine->module<EngineStateMachine>()->engineSmIsIdle;
 // engineSmIsCoasting
 		case 2037158031:
-			return static_cast<engine_state_machine_state_s&>(engine->module<EngineStateMachine>().unmock()).engineSmIsCoasting;
+			return engine->module<EngineStateMachine>()->engineSmIsCoasting;
 // engineSmIsTransient
 		case 474716559:
-			return static_cast<engine_state_machine_state_s&>(engine->module<EngineStateMachine>().unmock()).engineSmIsTransient;
+			return engine->module<EngineStateMachine>()->engineSmIsTransient;
 // engineSmIsWot
 		case -193400751:
-			return static_cast<engine_state_machine_state_s&>(engine->module<EngineStateMachine>().unmock()).engineSmIsWot;
+			return engine->module<EngineStateMachine>()->engineSmIsWot;
 // engineSmIsCruising
 		case -1907559941:
-			return static_cast<engine_state_machine_state_s&>(engine->module<EngineStateMachine>().unmock()).engineSmIsCruising;
+			return engine->module<EngineStateMachine>()->engineSmIsCruising;
 // engineSmIsOverrun
 		case 350089032:
-			return static_cast<engine_state_machine_state_s&>(engine->module<EngineStateMachine>().unmock()).engineSmIsOverrun;
+			return engine->module<EngineStateMachine>()->engineSmIsOverrun;
 // engineSmIsLaunchControl
 		case 148191603:
-			return static_cast<engine_state_machine_state_s&>(engine->module<EngineStateMachine>().unmock()).engineSmIsLaunchControl;
+			return engine->module<EngineStateMachine>()->engineSmIsLaunchControl;
 // engineSmIsTorqueReduction
 		case 2082760068:
-			return static_cast<engine_state_machine_state_s&>(engine->module<EngineStateMachine>().unmock()).engineSmIsTorqueReduction;
+			return engine->module<EngineStateMachine>()->engineSmIsTorqueReduction;
 // engineSmIsUpshifting
 		case 2014464536:
-			return static_cast<engine_state_machine_state_s&>(engine->module<EngineStateMachine>().unmock()).engineSmIsUpshifting;
+			return engine->module<EngineStateMachine>()->engineSmIsUpshifting;
 // engineSmIsDownshifting
 		case -2046339797:
-			return static_cast<engine_state_machine_state_s&>(engine->module<EngineStateMachine>().unmock()).engineSmIsDownshifting;
+			return engine->module<EngineStateMachine>()->engineSmIsDownshifting;
 // engineSmIsCold
 		case -2087976391:
-			return static_cast<engine_state_machine_state_s&>(engine->module<EngineStateMachine>().unmock()).engineSmIsCold;
+			return engine->module<EngineStateMachine>()->engineSmIsCold;
 // engineSmIsOperating
 		case 962048096:
-			return static_cast<engine_state_machine_state_s&>(engine->module<EngineStateMachine>().unmock()).engineSmIsOperating;
+			return engine->module<EngineStateMachine>()->engineSmIsOperating;
 // engineSmIsHot
 		case -193417086:
-			return static_cast<engine_state_machine_state_s&>(engine->module<EngineStateMachine>().unmock()).engineSmIsHot;
+			return engine->module<EngineStateMachine>()->engineSmIsHot;
 // engineSmIsAccelerating
 		case 25811225:
-			return static_cast<engine_state_machine_state_s&>(engine->module<EngineStateMachine>().unmock()).engineSmIsAccelerating;
+			return engine->module<EngineStateMachine>()->engineSmIsAccelerating;
 // engineSmIsDecelerating
 		case -1625465922:
-			return static_cast<engine_state_machine_state_s&>(engine->module<EngineStateMachine>().unmock()).engineSmIsDecelerating;
+			return engine->module<EngineStateMachine>()->engineSmIsDecelerating;
 // engineSmCurrentState
 		case 919099231:
-			return static_cast<engine_state_machine_state_s&>(engine->module<EngineStateMachine>().unmock()).engineSmCurrentState;
+			return engine->module<EngineStateMachine>()->engineSmCurrentState;
 // engineSmShiftAccumulator
 		case 1239974297:
-			return static_cast<engine_state_machine_state_s&>(engine->module<EngineStateMachine>().unmock()).engineSmShiftAccumulator;
+			return engine->module<EngineStateMachine>()->engineSmShiftAccumulator;
 // engineSmRpmRate
 		case -1550884842:
-			return static_cast<engine_state_machine_state_s&>(engine->module<EngineStateMachine>().unmock()).engineSmRpmRate;
+			return engine->module<EngineStateMachine>()->engineSmRpmRate;
 // isWotEnrichmentActive
 		case 1376849540:
-			return static_cast<wot_enrichment_state_s&>(engine->module<WotEnrichment>().unmock()).isWotEnrichmentActive;
+			return engine->module<WotEnrichment>()->isWotEnrichmentActive;
 // wotEnrichmentTimer
 		case -1123079795:
-			return static_cast<wot_enrichment_state_s&>(engine->module<WotEnrichment>().unmock()).wotEnrichmentTimer;
+			return engine->module<WotEnrichment>()->wotEnrichmentTimer;
 // wotEnrichmentAfrAdder
 		case -1996371419:
-			return static_cast<wot_enrichment_state_s&>(engine->module<WotEnrichment>().unmock()).wotEnrichmentAfrAdder;
+			return engine->module<WotEnrichment>()->wotEnrichmentAfrAdder;
 #if EFI_ANTILAG_SYSTEM && FULL_SD_LOGS
 // isAntilagCondition
 		case 2108966952:
@@ -1573,6 +1573,15 @@ float getOutputValueByHash(const int hash) {
 // injectorHwIssue
 		case -1237512821:
 			return engine->fuelComputer.injectorHwIssue;
+// throttleUseWotModel
+		case 1678125523:
+			return engine->module<ThrottleModel>()->throttleUseWotModel;
+// throttleModelCrossoverAngle
+		case -1119975111:
+			return engine->module<ThrottleModel>()->throttleModelCrossoverAngle;
+// throttleEstimatedFlow
+		case -1312096013:
+			return engine->module<ThrottleModel>()->throttleEstimatedFlow;
 // wallFuelCorrection
 		case -1361470151:
 			return engine->injectionEvents.elements[0].getWallFuel().wallFuelCorrection * 1000.0f;
@@ -1581,7 +1590,7 @@ float getOutputValueByHash(const int hash) {
 			return engine->injectionEvents.elements[0].getWallFuel().wallFuel * 1000.0f;
 // dtAutotuneActive
 		case 408698318:
-			return static_cast<injector_deadtime_autotune_state_s&>(engine->module<InjectorDeadtimeAutotune>().unmock()).dtAutotuneActive;
+			return engine->module<InjectorDeadtimeAutotune>()->dtAutotuneActive;
 #endif
 #if EFI_ENGINE_CONTROL && EFI_BOOST_CONTROL
 // isTpsInvalid
@@ -1645,28 +1654,28 @@ float getOutputValueByHash(const int hash) {
 #if EFI_ENGINE_CONTROL && EFI_LAUNCH_CONTROL
 // isNitrousArmed
 		case 595683774:
-			return static_cast<nitrous_control_state_s&>(engine->module<NitrousController>().unmock()).isNitrousArmed;
+			return engine->module<NitrousController>()->isNitrousArmed;
 // isNitrousSpeedCondition
 		case 2135736269:
-			return static_cast<nitrous_control_state_s&>(engine->module<NitrousController>().unmock()).isNitrousSpeedCondition;
+			return engine->module<NitrousController>()->isNitrousSpeedCondition;
 // isNitrousTpsCondition
 		case 1400235571:
-			return static_cast<nitrous_control_state_s&>(engine->module<NitrousController>().unmock()).isNitrousTpsCondition;
+			return engine->module<NitrousController>()->isNitrousTpsCondition;
 // isNitrousCltCondition
 		case 31747807:
-			return static_cast<nitrous_control_state_s&>(engine->module<NitrousController>().unmock()).isNitrousCltCondition;
+			return engine->module<NitrousController>()->isNitrousCltCondition;
 // isNitrousMapCondition
 		case 541066842:
-			return static_cast<nitrous_control_state_s&>(engine->module<NitrousController>().unmock()).isNitrousMapCondition;
+			return engine->module<NitrousController>()->isNitrousMapCondition;
 // isNitrousAfrCondition
 		case 2008830549:
-			return static_cast<nitrous_control_state_s&>(engine->module<NitrousController>().unmock()).isNitrousAfrCondition;
+			return engine->module<NitrousController>()->isNitrousAfrCondition;
 // isNitrousRpmCondition
 		case -649083733:
-			return static_cast<nitrous_control_state_s&>(engine->module<NitrousController>().unmock()).isNitrousRpmCondition;
+			return engine->module<NitrousController>()->isNitrousRpmCondition;
 // isNitrousCondition
 		case -454003684:
-			return static_cast<nitrous_control_state_s&>(engine->module<NitrousController>().unmock()).isNitrousCondition;
+			return engine->module<NitrousController>()->isNitrousCondition;
 #endif
 #if EFI_ENGINE_CONTROL && EFI_MISFIRE_DETECTION
 // misfireDetectionActive
@@ -1705,6 +1714,50 @@ float getOutputValueByHash(const int hash) {
 		case 1849938842:
 			return engine->lambdaMonitor.lambdaMonitorCut;
 #endif
+#if EFI_HPFP && EFI_ENGINE_CONTROL
+// m_requested_pump
+		case 313304964:
+			return engine->module<HpfpController>()->m_requested_pump;
+// fuel_requested_percent
+		case 196699602:
+			return engine->module<HpfpController>()->fuel_requested_percent;
+// fuel_requested_percent_pi
+		case -722464886:
+			return engine->module<HpfpController>()->fuel_requested_percent_pi;
+// noValve
+		case 583052640:
+			return engine->module<HpfpController>()->noValve;
+// angleAboveMin
+		case -492511363:
+			return engine->module<HpfpController>()->angleAboveMin;
+// isHpfpActive
+		case -1458531701:
+			return engine->module<HpfpController>()->isHpfpActive;
+// HpfpValveState
+		case -860429166:
+			return engine->module<HpfpController>()->HpfpValveState;
+// m_pressureTarget_kPa
+		case 1417294476:
+			return engine->module<HpfpController>()->m_pressureTarget_kPa;
+// hpfp_p_control_percent
+		case -404465646:
+			return engine->module<HpfpController>()->hpfp_p_control_percent;
+// hpfp_i_control_percent
+		case -470865397:
+			return engine->module<HpfpController>()->hpfp_i_control_percent;
+// nextLobe
+		case 2131885798:
+			return engine->module<HpfpController>()->nextLobe;
+// di_nextStart
+		case 442247582:
+			return engine->module<HpfpController>()->di_nextStart;
+// HpfdActivationPhase
+		case 1773334378:
+			return engine->module<HpfpController>()->HpfdActivationPhase;
+// HpfdDeactivationPhase
+		case 801818451:
+			return engine->module<HpfpController>()->HpfdDeactivationPhase;
+#endif
 #if EFI_IDLE_CONTROL
 // isStableIdle
 		case -297473734:
@@ -1712,6 +1765,96 @@ float getOutputValueByHash(const int hash) {
 // emaError
 		case 1642113986:
 			return static_cast<closed_loop_idle_s&>(engine->m_ltit).emaError;
+// idleState
+		case 1886060228:
+			return engine->module<IdleController>()->idleState;
+// baseIdlePosition
+		case -580955469:
+			return engine->module<IdleController>()->baseIdlePosition;
+// iacByTpsTaper
+		case -2065814304:
+			return engine->module<IdleController>()->iacByTpsTaper;
+// mightResetPid
+		case 149945022:
+			return engine->module<IdleController>()->mightResetPid;
+// shouldResetPid
+		case -226320012:
+			return engine->module<IdleController>()->shouldResetPid;
+// wasResetPid
+		case 1830486000:
+			return engine->module<IdleController>()->wasResetPid;
+// isCranking
+		case -1055526802:
+			return engine->module<IdleController>()->isCranking;
+// isIacTableForCoasting
+		case 705044501:
+			return engine->module<IdleController>()->isIacTableForCoasting;
+// needReset
+		case -2049691836:
+			return engine->module<IdleController>()->needReset;
+// isInDeadZone
+		case -1661765918:
+			return engine->module<IdleController>()->isInDeadZone;
+// isBlipping
+		case 432464630:
+			return engine->module<IdleController>()->isBlipping;
+// badTps
+		case -208884349:
+			return engine->module<IdleController>()->badTps;
+// looksLikeRunning
+		case -1126009613:
+			return engine->module<IdleController>()->looksLikeRunning;
+// looksLikeCoasting
+		case -1786409942:
+			return engine->module<IdleController>()->looksLikeCoasting;
+// looksLikeCrankToIdle
+		case -2079775742:
+			return engine->module<IdleController>()->looksLikeCrankToIdle;
+// isIdleCoasting
+		case 2141275671:
+			return engine->module<IdleController>()->isIdleCoasting;
+// isIdleClosedLoop
+		case 1473688883:
+			return engine->module<IdleController>()->isIdleClosedLoop;
+// isIdling
+		case -212260968:
+			return engine->module<IdleController>()->isIdling;
+// idleTarget
+		case 2127645162:
+			return engine->module<IdleController>()->idleTarget;
+// idleEntryRpm
+		case -1902025276:
+			return engine->module<IdleController>()->idleEntryRpm;
+// idleExitRpm
+		case 190585324:
+			return engine->module<IdleController>()->idleExitRpm;
+// targetRpmByClt
+		case -1241725607:
+			return engine->module<IdleController>()->targetRpmByClt;
+// targetRpmAc
+		case 1156739423:
+			return engine->module<IdleController>()->targetRpmAc;
+// iacByRpmTaper
+		case -1638166696:
+			return engine->module<IdleController>()->iacByRpmTaper;
+// luaAdd
+		case 206059088:
+			return engine->module<IdleController>()->luaAdd;
+// m_lastTargetRpm
+		case 1838047931:
+			return engine->module<IdleController>()->m_lastTargetRpm;
+// idleClosedLoop
+		case 1267620087:
+			return engine->module<IdleController>()->idleClosedLoop;
+// currentIdlePosition
+		case -1149240133:
+			return engine->module<IdleController>()->currentIdlePosition;
+// idleTargetAirmass
+		case 1805437050:
+			return engine->module<IdleController>()->idleTargetAirmass;
+// idleTargetFlow
+		case -1190004798:
+			return engine->module<IdleController>()->idleTargetFlow;
 #endif
 #if EFI_LAUNCH_CONTROL
 // retardThresholdRpm
@@ -1791,63 +1934,63 @@ float getOutputValueByHash(const int hash) {
 			return engine->shiftTorqueReductionController.trqRedIgnRetXaxisValue;
 // isRollingLaunchArmed
 		case -206147908:
-			return static_cast<rolling_launch_state_s&>(engine->module<RollingLaunchControl>().unmock()).isRollingLaunchArmed;
+			return engine->module<RollingLaunchControl>()->isRollingLaunchArmed;
 // isRollingLaunchActive
 		case 1769521423:
-			return static_cast<rolling_launch_state_s&>(engine->module<RollingLaunchControl>().unmock()).isRollingLaunchActive;
+			return engine->module<RollingLaunchControl>()->isRollingLaunchActive;
 // rollingLaunchSwitchState
 		case 26446954:
-			return static_cast<rolling_launch_state_s&>(engine->module<RollingLaunchControl>().unmock()).rollingLaunchSwitchState;
+			return engine->module<RollingLaunchControl>()->rollingLaunchSwitchState;
 // luaRollingLaunchState
 		case 44100218:
-			return static_cast<rolling_launch_state_s&>(engine->module<RollingLaunchControl>().unmock()).luaRollingLaunchState;
+			return engine->module<RollingLaunchControl>()->luaRollingLaunchState;
 // isRollingLaunchRampActive
 		case -622383905:
-			return static_cast<rolling_launch_state_s&>(engine->module<RollingLaunchControl>().unmock()).isRollingLaunchRampActive;
+			return engine->module<RollingLaunchControl>()->isRollingLaunchRampActive;
 // capturedRpm
 		case 1244730476:
-			return static_cast<rolling_launch_state_s&>(engine->module<RollingLaunchControl>().unmock()).capturedRpm;
+			return engine->module<RollingLaunchControl>()->capturedRpm;
 // rollingLaunchTargetRpm
 		case 1396112877:
-			return static_cast<rolling_launch_state_s&>(engine->module<RollingLaunchControl>().unmock()).rollingLaunchTargetRpm;
+			return engine->module<RollingLaunchControl>()->rollingLaunchTargetRpm;
 // rollingLaunchSparkSkipRatio
 		case 528199470:
-			return static_cast<rolling_launch_state_s&>(engine->module<RollingLaunchControl>().unmock()).rollingLaunchSparkSkipRatio;
+			return engine->module<RollingLaunchControl>()->rollingLaunchSparkSkipRatio;
 // rollingLaunchTimingRetardOut
 		case -20913095:
-			return static_cast<rolling_launch_state_s&>(engine->module<RollingLaunchControl>().unmock()).rollingLaunchTimingRetardOut;
+			return engine->module<RollingLaunchControl>()->rollingLaunchTimingRetardOut;
 // rollingLaunchRampElapsed
 		case -432387355:
-			return static_cast<rolling_launch_state_s&>(engine->module<RollingLaunchControl>().unmock()).rollingLaunchRampElapsed;
+			return engine->module<RollingLaunchControl>()->rollingLaunchRampElapsed;
 #endif
 #if EFI_LTFT_CONTROL
 // ltftCntHit
 		case -1524938551:
-			return static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()).ltftCntHit;
+			return engine->module<LongTermFuelTrim>()->ltftCntHit;
 // ltftCntMiss
 		case 1216815136:
-			return static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()).ltftCntMiss;
+			return engine->module<LongTermFuelTrim>()->ltftCntMiss;
 // ltftCntDeadband
 		case -867443033:
-			return static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()).ltftCntDeadband;
+			return engine->module<LongTermFuelTrim>()->ltftCntDeadband;
 // ltftLearning
 		case -956659985:
-			return static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()).ltftLearning;
+			return engine->module<LongTermFuelTrim>()->ltftLearning;
 // ltftCorrecting
 		case 1932317231:
-			return static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()).ltftCorrecting;
+			return engine->module<LongTermFuelTrim>()->ltftCorrecting;
 // ltftSavePending
 		case 462682515:
-			return static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()).ltftSavePending;
+			return engine->module<LongTermFuelTrim>()->ltftSavePending;
 // ltftLoadPending
 		case 875027108:
-			return static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()).ltftLoadPending;
+			return engine->module<LongTermFuelTrim>()->ltftLoadPending;
 // ltftLoadError
 		case -1080581591:
-			return static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()).ltftLoadError;
+			return engine->module<LongTermFuelTrim>()->ltftLoadError;
 // ltftPageRefreshFlag
 		case -345968219:
-			return static_cast<long_term_fuel_trim_state_s&>(engine->module<LongTermFuelTrim>().unmock()).ltftPageRefreshFlag;
+			return engine->module<LongTermFuelTrim>()->ltftPageRefreshFlag;
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 // etb1etbCurrentTarget
@@ -1990,96 +2133,6 @@ float getOutputValueByHash(const int hash) {
 // pressureCorrectionReference
 		case -917305595:
 			return engine->module<InjectorModelPrimary>()->pressureCorrectionReference;
-// idleState
-		case 1886060228:
-			return engine->module<IdleController>().unmock().idleState;
-// baseIdlePosition
-		case -580955469:
-			return engine->module<IdleController>().unmock().baseIdlePosition;
-// iacByTpsTaper
-		case -2065814304:
-			return engine->module<IdleController>().unmock().iacByTpsTaper;
-// mightResetPid
-		case 149945022:
-			return engine->module<IdleController>().unmock().mightResetPid;
-// shouldResetPid
-		case -226320012:
-			return engine->module<IdleController>().unmock().shouldResetPid;
-// wasResetPid
-		case 1830486000:
-			return engine->module<IdleController>().unmock().wasResetPid;
-// isCranking
-		case -1055526802:
-			return engine->module<IdleController>().unmock().isCranking;
-// isIacTableForCoasting
-		case 705044501:
-			return engine->module<IdleController>().unmock().isIacTableForCoasting;
-// needReset
-		case -2049691836:
-			return engine->module<IdleController>().unmock().needReset;
-// isInDeadZone
-		case -1661765918:
-			return engine->module<IdleController>().unmock().isInDeadZone;
-// isBlipping
-		case 432464630:
-			return engine->module<IdleController>().unmock().isBlipping;
-// badTps
-		case -208884349:
-			return engine->module<IdleController>().unmock().badTps;
-// looksLikeRunning
-		case -1126009613:
-			return engine->module<IdleController>().unmock().looksLikeRunning;
-// looksLikeCoasting
-		case -1786409942:
-			return engine->module<IdleController>().unmock().looksLikeCoasting;
-// looksLikeCrankToIdle
-		case -2079775742:
-			return engine->module<IdleController>().unmock().looksLikeCrankToIdle;
-// isIdleCoasting
-		case 2141275671:
-			return engine->module<IdleController>().unmock().isIdleCoasting;
-// isIdleClosedLoop
-		case 1473688883:
-			return engine->module<IdleController>().unmock().isIdleClosedLoop;
-// isIdling
-		case -212260968:
-			return engine->module<IdleController>().unmock().isIdling;
-// idleTarget
-		case 2127645162:
-			return engine->module<IdleController>().unmock().idleTarget;
-// idleEntryRpm
-		case -1902025276:
-			return engine->module<IdleController>().unmock().idleEntryRpm;
-// idleExitRpm
-		case 190585324:
-			return engine->module<IdleController>().unmock().idleExitRpm;
-// targetRpmByClt
-		case -1241725607:
-			return engine->module<IdleController>().unmock().targetRpmByClt;
-// targetRpmAc
-		case 1156739423:
-			return engine->module<IdleController>().unmock().targetRpmAc;
-// iacByRpmTaper
-		case -1638166696:
-			return engine->module<IdleController>().unmock().iacByRpmTaper;
-// luaAdd
-		case 206059088:
-			return engine->module<IdleController>().unmock().luaAdd;
-// m_lastTargetRpm
-		case 1838047931:
-			return engine->module<IdleController>().unmock().m_lastTargetRpm;
-// idleClosedLoop
-		case 1267620087:
-			return engine->module<IdleController>().unmock().idleClosedLoop;
-// currentIdlePosition
-		case -1149240133:
-			return engine->module<IdleController>().unmock().currentIdlePosition;
-// idleTargetAirmass
-		case 1805437050:
-			return engine->module<IdleController>().unmock().idleTargetAirmass;
-// idleTargetFlow
-		case -1190004798:
-			return engine->module<IdleController>().unmock().idleTargetFlow;
 #endif
 #if EFI_SENT_SUPPORT
 // value0
@@ -2286,22 +2339,22 @@ float getOutputValueByHash(const int hash) {
 #if MODULE_VVL_CONTROLLER
 // isVvlTpsCondition
 		case 365919991:
-			return static_cast<vvl_controller_state_s&>(engine->module<VvlController>().unmock()).isVvlTpsCondition;
+			return engine->module<VvlController>()->isVvlTpsCondition;
 // isVvlCltCondition
 		case -1002567773:
-			return static_cast<vvl_controller_state_s&>(engine->module<VvlController>().unmock()).isVvlCltCondition;
+			return engine->module<VvlController>()->isVvlCltCondition;
 // isVvlMapCondition
 		case -493248738:
-			return static_cast<vvl_controller_state_s&>(engine->module<VvlController>().unmock()).isVvlMapCondition;
+			return engine->module<VvlController>()->isVvlMapCondition;
 // isVvlAfrCondition
 		case 974514969:
-			return static_cast<vvl_controller_state_s&>(engine->module<VvlController>().unmock()).isVvlAfrCondition;
+			return engine->module<VvlController>()->isVvlAfrCondition;
 // isVvlRpmCondition
 		case -1683399313:
-			return static_cast<vvl_controller_state_s&>(engine->module<VvlController>().unmock()).isVvlRpmCondition;
+			return engine->module<VvlController>()->isVvlRpmCondition;
 // isVvlCondition
 		case 1072636768:
-			return static_cast<vvl_controller_state_s&>(engine->module<VvlController>().unmock()).isVvlCondition;
+			return engine->module<VvlController>()->isVvlCondition;
 #endif
 #if ROTATIONAL_IDLE_CONTROLLER
 // rotationalIdleEngaged
