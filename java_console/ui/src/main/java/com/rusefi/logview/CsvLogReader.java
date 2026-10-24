@@ -164,6 +164,14 @@ public final class CsvLogReader {
         return time - rows[after - 1][0] <= rows[after][0] - time ? after - 1 : after;
     }
 
+    /** Samples {@code from} to {@code to} (both included) as a log of their own; its ranges cover only them. */
+    public CsvLogReader slice(int from, int to) throws IOException {
+        if (from < 0 || to >= rows.length || from > to) {
+            throw new IllegalArgumentException("Samples " + from + ".." + to + " outside 0.." + (rows.length - 1));
+        }
+        return fromRows(names, units, java.util.Arrays.asList(rows).subList(from, to + 1));
+    }
+
     /** Smallest positive gap between consecutive samples, or 0 if all samples share one time. */
     public double minimumSampleInterval() {
         double result = Double.POSITIVE_INFINITY;

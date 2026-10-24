@@ -7,6 +7,7 @@ import com.opensr5.ini.IniFileModel;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.logview.CsvLogReader;
 import com.rusefi.logview.LogFiles;
+import com.rusefi.logview.MslWriter;
 import com.rusefi.ui.widgets.JoinedButtons;
 
 import javax.swing.AbstractAction;
@@ -51,9 +52,12 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -62,6 +66,8 @@ import static com.devexperts.logging.Logging.getLogging;
  * Hosts the log viewer and opens logs: the recent logs on the empty card, the toolbar's Open menu, Ctrl+O,
  * or dropping a file anywhere on the viewer. Files load in the background; on failure the previous log
  * stays. Chart settings (plot colours, grid, cursor) carry over from one log to the next.
+ * Right-clicking the plots exports the visible data or drops data before or after the clicked time; dropped data
+ * stays in memory for Undo until the edited log is saved, and opening another log first offers to save it.
  */
 public final class LogViewerHost extends JPanel {
     private static final Logging log = getLogging(LogViewerHost.class);
@@ -82,12 +88,26 @@ public final class LogViewerHost extends JPanel {
     private Consumer<String> titleListener = name -> {
     };
     private Consumer<String> errorReporter = message ->
-            JOptionPane.showMessageDialog(this, message, "Open log", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, message, TITLE, JOptionPane.ERROR_MESSAGE);
     private final Node config;
     private final File logsFolder;
     private File directory;
     private LogViewerPanel current;
     private File currentFile;
+    /** The log the viewer shows, after any edits, and the name of the file it came from. */
+    private CsvLogReader shownLog;
+    private String shownName;
+    /** Unsaved edits of the shown log, oldest first, for Undo. */
+    private final List<Edit> edits = new ArrayList<>();
+    private final EditBar editBar = new EditBar(this::saveEdited, this::undo);
+    /** Picks the file to save to, starting from the suggested one; null when cancelled. Replaced in tests. */
+    Function<File, File> saveChooser = this::chooseSaveFile;
+    /**
+     * Asks whether to save unsaved edits before they are lost: YES_OPTION saves them, NO_OPTION drops them, anything
+     * else cancels. Replaced in tests.
+     */
+    Function<String, Integer> unsavedPrompt = question -> JOptionPane.showConfirmDialog(this, question,
+            "Edited log", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
     private SwingWorker<CsvLogReader, Void> loading;
     private JList<RecentLogs.Entry> recentList;
     private Runnable configSaver = () -> {
@@ -193,8 +213,33 @@ public final class LogViewerHost extends JPanel {
     }
 
     public void showLog(CsvLogReader log, String fileName) {
+        edits.clear();
+        shownName = fileName;
+        display(log, null);
+    }
+
+    /** Shows {@code log} under {@link #shownName}, marked edited while it has unsaved edits. */
+    private void display(CsvLogReader log, PlotLayout plots) {
+        shownLog = log;
+        String fileName = edits.isEmpty() ? shownName : shownName + " (edited)";
         current = new LogViewerPanel(log, fileName, settings, lists, sidebar, colors, currentIni(),
-                this::showOpenMenu);
+                this::showOpenMenu, plots);
+        current.chart().setEditActions(new LogChart.EditActions() {
+            @Override
+            public void exportVisible() {
+                LogViewerHost.this.exportVisible();
+            }
+
+            @Override
+            public void dropBefore(int sample) {
+                drop(sample, log.sampleCount() - 1, "Dropped " + range(log, 0, sample - 1));
+            }
+
+            @Override
+            public void dropAfter(int sample) {
+                drop(0, sample, "Dropped " + range(log, sample + 1, log.sampleCount() - 1));
+            }
+        });
         current.chart().setSignalScales(scales);
         current.setHistogramSettings(histogramSettings);
         current.setScatterSettings(scatterSettings);
@@ -205,7 +250,147 @@ public final class LogViewerHost extends JPanel {
             current.setView(view);
         }
         setContent(current);
+        if (!edits.isEmpty()) {
+            editBar.show(edits.get(edits.size() - 1).description, edits.size());
+        }
         titleListener.accept(fileName);
+    }
+
+    /** The shown log before an edit, and what the edit did. */
+    private static final class Edit {
+        final CsvLogReader before;
+        final String description;
+
+        Edit(CsvLogReader before, String description) {
+            this.before = before;
+            this.description = description;
+        }
+    }
+
+    /** "0.00–12.34 s (1235 samples)": the time of samples {@code from} to {@code to}, both included. */
+    private static String range(CsvLogReader log, int from, int to) {
+        return String.format(Locale.ROOT, "%.2f–%.2f s (%d samples)", log.value(from, 0), log.value(to, 0),
+                to - from + 1);
+    }
+
+    EditBar editBar() {
+        return editBar;
+    }
+
+    /** Keeps samples {@code from} to {@code to} of the shown log, in the same plots. */
+    private void drop(int from, int to, String description) {
+        CsvLogReader trimmed;
+        try {
+            trimmed = shownLog.slice(from, to);
+        } catch (IOException e) {
+            errorReporter.accept("Could not drop the data:\n" + e.getMessage());
+            return;
+        }
+        edits.add(new Edit(shownLog, description));
+        display(trimmed, current.chart().plotLayout().copy());
+    }
+
+    /** Brings back the log as it was before the last edit. */
+    void undo() {
+        if (edits.isEmpty()) {
+            return;
+        }
+        CsvLogReader before = edits.remove(edits.size() - 1).before;
+        display(before, current.chart().plotLayout().copy());
+    }
+
+    /** Saves the samples of the visible time to a new file. */
+    private void exportVisible() {
+        TimeWindow window = current.chart().timeWindow();
+        int from = shownLog.firstSampleAtOrAfter(window.start());
+        int to = shownLog.firstSampleAtOrAfter(Math.nextUp(window.end())) - 1;
+        if (to < from) {
+            errorReporter.accept("There are no samples in the visible time.");
+            return;
+        }
+        File file = saveChooser.apply(suggestedFile(String.format(Locale.ROOT, "_%.1f-%.1fs",
+                shownLog.value(from, 0), shownLog.value(to, 0))));
+        if (file != null) {
+            write(from, to, "Exported from " + shownName + ": " + range(shownLog, from, to), file);
+        }
+    }
+
+    /**
+     * Saves the edited log to a new file, which is then the shown log; false when cancelled or failed, so the
+     * edits stay.
+     */
+    boolean saveEdited() {
+        File file = saveChooser.apply(suggestedFile("_edited"));
+        if (file == null || !write(0, shownLog.sampleCount() - 1, "Edited from " + shownName, file)) {
+            return false;
+        }
+        edits.clear();
+        shownName = file.getName();
+        currentFile = file.getAbsoluteFile();
+        directory = currentFile.getParentFile();
+        RecentLogs.remember(config, file);
+        RecentLogs.rememberDuration(durations(), file, shownLog.maximum(0) - shownLog.minimum(0));
+        configSaver.run();
+        display(shownLog, current.chart().plotLayout().copy());
+        return true;
+    }
+
+    /** True when the shown log has edits that are not saved. */
+    boolean hasUnsavedEdits() {
+        return !edits.isEmpty();
+    }
+
+    /** Before the edited log is replaced: offers to save it. False when the user cancels or saving fails. */
+    private boolean confirmDiscardEdits() {
+        if (edits.isEmpty()) {
+            return true;
+        }
+        int answer = unsavedPrompt.apply("The shown log has edits that are not saved.\n"
+                + "Save them before opening another log?");
+        if (answer == JOptionPane.YES_OPTION) {
+            return saveEdited();
+        }
+        return answer == JOptionPane.NO_OPTION;
+    }
+
+    /** A .msl next to the shown log, named after it plus {@code suffix}. */
+    private File suggestedFile(String suffix) {
+        String base = shownName.replaceFirst("\\.[^.]*$", "");
+        File folder = currentFile != null ? currentFile.getParentFile() : directory;
+        return new File(folder, base + suffix + ".msl");
+    }
+
+    private boolean write(int from, int to, String title, File file) {
+        Cursor previous = getCursor();
+        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        try {
+            MslWriter.write(shownLog, from, to, title, file);
+            return true;
+        } catch (IOException e) {
+            errorReporter.accept("Could not save " + file.getName() + ":\n" + e.getMessage());
+            return false;
+        } finally {
+            setCursor(previous);
+        }
+    }
+
+    private File chooseSaveFile(File suggested) {
+        JFileChooser chooser = new JFileChooser(suggested.getParentFile());
+        chooser.setDialogTitle("Save data log");
+        chooser.setFileFilter(new FileNameExtensionFilter("Text data logs (.msl)", "msl"));
+        chooser.setSelectedFile(suggested);
+        if (chooser.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
+            return null;
+        }
+        File file = chooser.getSelectedFile();
+        if (!file.getName().toLowerCase(Locale.ROOT).endsWith(".msl")) {
+            file = new File(file.getPath() + ".msl");
+        }
+        if (file.exists() && JOptionPane.showConfirmDialog(this, file.getName() + " already exists. Replace it?",
+                "Save data log", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+            return null;
+        }
+        return file;
     }
 
     private IniFileModel currentIni() {
@@ -228,6 +413,9 @@ public final class LogViewerHost extends JPanel {
     }
 
     public void open(File file) {
+        if (!confirmDiscardEdits()) {
+            return;
+        }
         directory = file.getAbsoluteFile().getParentFile();
         if (loading != null) {
             loading.cancel(true);
@@ -275,6 +463,8 @@ public final class LogViewerHost extends JPanel {
     private void setContent(JComponent content) {
         removeAll();
         add(content, BorderLayout.CENTER);
+        add(editBar, BorderLayout.NORTH);
+        editBar.setVisible(!edits.isEmpty() && content == current);
         acceptDrops(content);
         revalidate();
         repaint();

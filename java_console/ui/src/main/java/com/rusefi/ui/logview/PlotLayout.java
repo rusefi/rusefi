@@ -47,6 +47,26 @@ final class PlotLayout {
         return layout;
     }
 
+    /** The same plots, signals, colours, heights and axes, without the listeners; e.g. for a trimmed copy of the log. */
+    PlotLayout copy() {
+        PlotLayout copy = new PlotLayout(colors.fieldCount());
+        copy.plots.clear();
+        copy.weights.clear();
+        copy.sameUnitShared.clear();
+        copy.leftAxisUnit.clear();
+        copy.rightAxisUnit.clear();
+        for (List<Integer> fields : plots) {
+            copy.plots.add(new ArrayList<>(fields));
+        }
+        copy.weights.addAll(weights);
+        copy.sameUnitShared.addAll(sameUnitShared);
+        copy.leftAxisUnit.addAll(leftAxisUnit);
+        copy.rightAxisUnit.addAll(rightAxisUnit);
+        copy.colors.copyFrom(colors);
+        copy.active = active;
+        return copy;
+    }
+
     void addListener(Runnable listener) {
         listeners.add(listener);
     }

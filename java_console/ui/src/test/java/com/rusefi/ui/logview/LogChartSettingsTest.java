@@ -221,6 +221,28 @@ class LogChartSettingsTest {
         paint(chart);
         chart.dispatchEvent(new MouseEvent(chart, MouseEvent.MOUSE_MOVED, 0, 0, 5, 200, 0, false));
         assertEquals(-1, chart.cursorLineX());
+        paint(chart);
+        assertNull(chart.timeBadge(), "no cursor, no time badge");
+    }
+
+    @Test
+    void cursorTimeShowsOnTheTimeAxisUnderTheCursorLine() throws IOException {
+        CsvLogReader log = denseLog();
+        LogChart chart = new LogChart(log, new boolean[log.fieldCount()]);
+        paint(chart);
+        java.awt.Rectangle traces = chart.bands().get(0).traces;
+        int x = traces.x + traces.width / 2;
+        chart.dispatchEvent(new MouseEvent(chart, MouseEvent.MOUSE_MOVED, 0, 0, x, traces.y + 10, 0, false));
+        paint(chart);
+        java.awt.Rectangle badge = chart.timeBadge();
+        assertTrue(badge.x < chart.cursorLineX() && chart.cursorLineX() < badge.x + badge.width, "centred on the line");
+        assertTrue(badge.y > traces.y + traces.height, "below the plots, on the time axis");
+        assertEquals(String.format(java.util.Locale.ROOT, "%.2f s", chart.cursorTime()), chart.timeBadgeText());
+
+        // at the right edge the badge stays inside the chart
+        chart.dispatchEvent(new MouseEvent(chart, MouseEvent.MOUSE_MOVED, 0, 0, traces.x + traces.width, traces.y + 10, 0, false));
+        paint(chart);
+        assertTrue(chart.timeBadge().x + chart.timeBadge().width <= WIDTH);
     }
 
     @Test
