@@ -123,6 +123,7 @@ public class CurveWidget {
 
         gbc.gridx = 1;
         gbc.weightx = 0.2;
+        gbc.insets = new Insets(0, 8, 0, 0);
         content.add(rightPanel, gbc);
 
         update(curveModel, iniFileModel, valuesImage, configImage);
