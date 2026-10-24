@@ -226,6 +226,37 @@ class LogChartSettingsTest {
     }
 
     @Test
+    void timeLabelsNeverRunIntoEachOther() throws IOException {
+        CsvLogReader log = denseLog();
+        LogChart chart = new LogChart(log, new boolean[log.fieldCount()]);
+        for (int fontSize : new int[]{12, 24}) {
+            chart.setFont(new java.awt.Font(java.awt.Font.SANS_SERIF, java.awt.Font.PLAIN, fontSize));
+            for (double span : new double[]{100, 10, 1, 0.1, 0.008}) {
+                chart.timeWindow().show(37.7794, 37.7794 + span);
+                paint(chart);
+                List<java.awt.Rectangle> labels = chart.timeLabelBounds();
+                assertTrue(labels.size() >= 2, span + " s at " + fontSize + " pt: " + labels.size() + " labels");
+                for (int i = 1; i < labels.size(); i++) {
+                    java.awt.Rectangle left = labels.get(i - 1);
+                    assertTrue(left.x + left.width < labels.get(i).x,
+                            span + " s at " + fontSize + " pt: label " + i + " overlaps the one before");
+                }
+            }
+        }
+    }
+
+    @Test
+    void zoomedInTimeLabelsShowTheFullTime() throws IOException {
+        CsvLogReader log = denseLog();
+        LogChart chart = new LogChart(log, new boolean[log.fieldCount()]);
+        chart.timeWindow().show(37.7794, 37.7874);
+        paint(chart);
+        assertEquals("37.780", chart.timeLabel(37.780, 0.001));
+        assertEquals("37.7802", chart.timeLabel(37.7802, 0.0002));
+        assertEquals("37", chart.timeLabel(37, 1));
+    }
+
+    @Test
     void cursorTimeShowsOnTheTimeAxisUnderTheCursorLine() throws IOException {
         CsvLogReader log = denseLog();
         LogChart chart = new LogChart(log, new boolean[log.fieldCount()]);
@@ -238,6 +269,15 @@ class LogChartSettingsTest {
         assertTrue(badge.x < chart.cursorLineX() && chart.cursorLineX() < badge.x + badge.width, "centred on the line");
         assertTrue(badge.y > traces.y + traces.height, "below the plots, on the time axis");
         assertEquals(String.format(java.util.Locale.ROOT, "%.2f s", chart.cursorTime()), chart.timeBadgeText());
+
+        // with a large font the badge reaches the title row: the title steps aside
+        chart.setFont(new java.awt.Font(java.awt.Font.SANS_SERIF, java.awt.Font.PLAIN, 24));
+        paint(chart);
+        int middle = chart.timeTitleBounds().x + chart.timeTitleBounds().width / 2;
+        chart.dispatchEvent(new MouseEvent(chart, MouseEvent.MOUSE_MOVED, 0, 0, middle, traces.y + 10, 0, false));
+        paint(chart);
+        assertFalse(chart.timeBadge().intersects(chart.timeTitleBounds()), "title clear of the badge");
+        chart.setFont(null);
 
         // at the right edge the badge stays inside the chart
         chart.dispatchEvent(new MouseEvent(chart, MouseEvent.MOUSE_MOVED, 0, 0, traces.x + traces.width, traces.y + 10, 0, false));
