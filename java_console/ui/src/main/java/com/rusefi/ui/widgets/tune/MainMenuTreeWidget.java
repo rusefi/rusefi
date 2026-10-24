@@ -268,13 +268,13 @@ public class MainMenuTreeWidget {
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         buttonPanel.setOpaque(false);
-        JButton expandAll = new JButton(AutoupdateUtil.loadIcon("expand_all16.png"));
+        JButton expandAll = new JButton(TuningStyle.FoldIcon.EXPAND_ALL);
         expandAll.setToolTipText("Expand All");
         expandAll.putClientProperty(FlatClientProperties.BUTTON_TYPE, FlatClientProperties.BUTTON_TYPE_TOOLBAR_BUTTON);
         expandAll.setPreferredSize(new Dimension(30, 30));
         expandAll.addActionListener(e -> expandAll(tree, true));
 
-        JButton collapseAll = new JButton(AutoupdateUtil.loadIcon("collapse_all16.png"));
+        JButton collapseAll = new JButton(TuningStyle.FoldIcon.COLLAPSE_ALL);
         collapseAll.setToolTipText("Collapse All");
         collapseAll.putClientProperty(FlatClientProperties.BUTTON_TYPE, FlatClientProperties.BUTTON_TYPE_TOOLBAR_BUTTON);
         collapseAll.setPreferredSize(new Dimension(30, 30));
