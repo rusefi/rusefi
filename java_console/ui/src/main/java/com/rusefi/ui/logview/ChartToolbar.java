@@ -26,7 +26,8 @@ import java.util.function.Consumer;
 
 /**
  * Toolbar above the log chart, styled like the Gauges toolbar: Open, plot colours, a Grid button that
- * opens the grid options, the cursor Snap / Free switch, the Measure (A/B cursors) and Stats toggles.
+ * opens the grid options, the cursor Snap / Free switch, a Values button that opens the options of the values
+ * at the cursor, the Measure (A/B cursors) and Stats toggles.
  * [tag:console_theme]
  */
 final class ChartToolbar extends ThemedStrip {
@@ -36,6 +37,17 @@ final class ChartToolbar extends ThemedStrip {
     final JButton gridButton = new JButton();
     final JToggleButton snapCursor = SegmentedControl.segment("Snap");
     final JToggleButton freeCursor = SegmentedControl.segment("Free");
+    final JButton valuesButton = new JButton();
+
+    // values at the cursor options, shown in a popup under the Values button
+    final JPanel valuesPanel = new JPanel(new GridBagLayout());
+    final JToggleButton valuesOff = SegmentedControl.segment("Off");
+    final JToggleButton valuesLabels = SegmentedControl.segment("Labels");
+    final JToggleButton valuesList = SegmentedControl.segment("List");
+    final JToggleButton atMouse = SegmentedControl.segment("Mouse");
+    final JToggleButton atClick = SegmentedControl.segment("Clicked time");
+    private final JLabel atNote = muted(new JLabel());
+    private final JPopupMenu valuesPopup = new JPopupMenu();
     /** Shows the statistics table; the viewer panel listens to it. */
     final JToggleButton measureButton = new JToggleButton("Measure");
     final JToggleButton statsButton = new JToggleButton("Stats");
@@ -82,6 +94,11 @@ final class ChartToolbar extends ThemedStrip {
         freeCursor.setToolTipText("<html>The cursor line follows the mouse; values come from the<br>"
                 + "nearest logged sample, marked with a dot on each trace</html>");
 
+        valuesButton.setToolTipText("How the signal values at the cursor show on the plots");
+        valuesButton.addActionListener(e -> valuesPopup.show(valuesButton, 0, valuesButton.getHeight() + 4));
+        buildValuesPanel();
+        valuesPopup.add(valuesPanel);
+
         timeSpacing = spinner(new SpinnerNumberModel(settings.getTimeSpacing(),
                 ChartSettings.MIN_TIME_SPACING, ChartSettings.MAX_TIME_SPACING, 10));
         horizontalDivisions = spinner(new SpinnerNumberModel(settings.getHorizontalDivisions(),
@@ -111,6 +128,8 @@ final class ChartToolbar extends ThemedStrip {
         add(Box.createHorizontalStrut(JoinedButtons.ROW_GAP));
         add(muted(new JLabel("Cursor")));
         add(new SegmentedControl(snapCursor, freeCursor));
+        add(Box.createHorizontalStrut(JoinedButtons.ROW_GAP));
+        add(new JoinedButtons(valuesButton));
         add(Box.createHorizontalStrut(JoinedButtons.ROW_GAP));
         // a light accent tint when on, instead of the toolbar buttons' heavy grey [tag:console_theme]
         measureButton.putClientProperty(FlatClientProperties.STYLE_CLASS, "viewToggle");
@@ -168,12 +187,61 @@ final class ChartToolbar extends ThemedStrip {
         gridPanel.add(note, noteConstraints);
     }
 
+    private void buildValuesPanel() {
+        valuesPanel.setBorder(BorderFactory.createEmptyBorder(10, 12, 10, 12));
+        ButtonGroup styleGroup = new ButtonGroup();
+        for (JToggleButton segment : valuesSegments()) {
+            styleGroup.add(segment);
+            segment.addActionListener(e -> apply());
+        }
+        valuesSegments()[settings.getCursorValues().ordinal()].setSelected(true);
+        valuesOff.setToolTipText("Values only in the legends above the plots");
+        valuesLabels.setToolTipText("<html>A value beside each trace where it crosses the cursor line;<br>"
+                + "close or crossing traces get stacked values with a line back to their trace</html>");
+        valuesList.setToolTipText("A box beside the cursor line lists each plot's values");
+
+        ButtonGroup atGroup = new ButtonGroup();
+        atGroup.add(atMouse);
+        atGroup.add(atClick);
+        (settings.isPinValues() ? atClick : atMouse).setSelected(true);
+        atMouse.setToolTipText("The values follow the mouse over the plots");
+        atClick.setToolTipText("The values stay where you clicked while the mouse moves on");
+        atMouse.addActionListener(e -> apply());
+        atClick.addActionListener(e -> apply());
+
+        int row = 0;
+        addRow(valuesPanel, muted(new JLabel("Show")), new SegmentedControl(valuesSegments()), row++, 0);
+        addRow(valuesPanel, muted(new JLabel("At")), new SegmentedControl(atMouse, atClick), row++, 0);
+        GridBagConstraints noteConstraints = constraints(0, row, 2, 0);
+        noteConstraints.insets = new Insets(8, 0, 0, 0);
+        valuesPanel.add(atNote, noteConstraints);
+    }
+
+    /** The Values button's text: "Values: Labels  ▾", "Values: List at click  ▾". */
+    static String valuesSummary(ChartSettings settings) {
+        String style;
+        switch (settings.getCursorValues()) {
+            case OFF:
+                return "Values: Off  ▾";
+            case LIST:
+                style = "List";
+                break;
+            default:
+                style = "Labels";
+        }
+        return "Values: " + style + (settings.isPinValues() ? " at click" : "") + "  ▾";
+    }
+
     private void addRow(Component label, Component control, int row, int indent) {
+        addRow(gridPanel, label, control, row, indent);
+    }
+
+    private static void addRow(JPanel panel, Component label, Component control, int row, int indent) {
         GridBagConstraints left = constraints(0, row, control == null ? 2 : 1, indent);
-        gridPanel.add(label, left);
+        panel.add(label, left);
         if (control != null) {
             GridBagConstraints right = constraints(1, row, 1, 12);
-            gridPanel.add(control, right);
+            panel.add(control, right);
         }
     }
 
@@ -230,9 +298,21 @@ final class ChartToolbar extends ThemedStrip {
         return "Grid: " + state + "  ▾";
     }
 
+    /** The Values segments, in {@link ChartSettings.CursorValues} order. */
+    private JToggleButton[] valuesSegments() {
+        return new JToggleButton[]{valuesOff, valuesLabels, valuesList};
+    }
+
     private void apply() {
         settings.setDarkPlot(darkPlot.isSelected());
         settings.setSnapCursor(snapCursor.isSelected());
+        JToggleButton[] values = valuesSegments();
+        for (int i = 0; i < values.length; i++) {
+            if (values[i].isSelected()) {
+                settings.setCursorValues(ChartSettings.CursorValues.values()[i]);
+            }
+        }
+        settings.setPinValues(atClick.isSelected());
         settings.setVertical(verticalBox.isSelected());
         settings.setVerticalMode(samplesMode.isSelected()
                 ? ChartSettings.VerticalMode.SAMPLES : ChartSettings.VerticalMode.TIME_TICKS);
@@ -245,6 +325,16 @@ final class ChartToolbar extends ThemedStrip {
 
     private void updateControls() {
         gridButton.setText(gridSummary(settings));
+        valuesButton.setText(valuesSummary(settings));
+        boolean valuesShown = settings.getCursorValues() != ChartSettings.CursorValues.OFF;
+        atMouse.setEnabled(valuesShown);
+        atClick.setEnabled(valuesShown);
+        atNote.setText(!valuesShown ? "<html>The legends above the plots still show<br>the values at the cursor.</html>"
+                : settings.isPinValues() ? "<html>Click a plot to show the values there.<br>"
+                + "Click the same spot again or press Esc to hide them.</html>"
+                : "<html>Move the mouse over the plots<br>to see the values at the cursor.</html>");
+        // the note's height changes with its text
+        valuesPopup.pack();
         timeTicksMode.setEnabled(settings.isVertical());
         samplesMode.setEnabled(settings.isVertical());
         // Spacing also sets the time labels, so it stays usable while the vertical lines are off.

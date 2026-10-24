@@ -1,12 +1,25 @@
 package com.rusefi.ui.logview;
 
-/** Display options of the log chart: grid lines (both start off), cursor snapping and plot colours. */
+/** Display options of the log chart: grid lines (both start off), cursor snapping, cursor values and plot colours. */
 final class ChartSettings {
     enum VerticalMode {
         /** One line per time-axis tick; spacing follows {@link #getTimeSpacing()}. */
         TIME_TICKS,
         /** One line per logged sample, drawn only once zoomed in far enough to tell them apart. */
         SAMPLES
+    }
+
+    /** How the values at the cursor are shown beside the cursor line, in addition to the legends. */
+    enum CursorValues {
+        /** Only in the legends. */
+        OFF,
+        /**
+         * A tag beside each trace where it crosses the cursor line; tags of close or crossing traces are pushed
+         * apart, with a leader line back to their trace. A plot whose tags do not fit falls back to {@link #LIST}.
+         */
+        LABELS,
+        /** One box per plot listing its values. */
+        LIST
     }
 
     static final int MIN_TIME_SPACING = 40;
@@ -25,6 +38,28 @@ final class ChartSettings {
     private int horizontalDivisions = DEFAULT_HORIZONTAL_DIVISIONS;
     private boolean snapCursor = true;
     private boolean darkPlot;
+    private CursorValues cursorValues = CursorValues.LABELS;
+    private boolean pinValues;
+
+    CursorValues getCursorValues() {
+        return cursorValues;
+    }
+
+    void setCursorValues(CursorValues cursorValues) {
+        this.cursorValues = cursorValues;
+    }
+
+    /**
+     * False: the values follow the cursor while the pointer is over the traces. True: they stay at the clicked time
+     * until another click there or Esc.
+     */
+    boolean isPinValues() {
+        return pinValues;
+    }
+
+    void setPinValues(boolean pinValues) {
+        this.pinValues = pinValues;
+    }
 
     /** Plot area colours, chosen independently of the console theme; light by default. */
     boolean isDarkPlot() {
