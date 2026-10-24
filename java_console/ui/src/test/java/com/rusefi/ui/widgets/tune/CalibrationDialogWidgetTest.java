@@ -1362,6 +1362,10 @@ public class CalibrationDialogWidgetTest {
         assertEquals("Normal Label", normalLabel.getText());
         assertNotEquals(Color.RED, normalLabel.getBackground());
         assertNotEquals(Color.BLUE, normalLabel.getBackground());
+        // Current bad behaviour: an uncoloured label is opaque in the theme's panel grey, which
+        // shows as a grey box behind the text on the white dialog card.
+        assertTrue(normalLabel.isOpaque());
+        assertTrue(normalLabel.getBackground() instanceof javax.swing.plaf.UIResource);
     }
 
     private JLabel getLabelFromRow(JPanel row) {
