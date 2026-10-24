@@ -129,12 +129,25 @@ public final class TuningStyle {
         }
     }
 
+    /** Red and yellow indicators are alerts: shown as solid bold chips that catch the eye. */
+    static boolean isAlertTone(String tone) {
+        return "red".equals(tone) || "yellow".equals(tone);
+    }
+
     /** A label painted as a rounded chip in its background colour. */
     static final class Chip extends JLabel {
         Chip() {
             super(" ");
             setOpaque(false);
             setBorder(BorderFactory.createEmptyBorder(4, 10, 4, 10));
+        }
+
+        void setAlert(boolean alert) {
+            Font font = getFont();
+            int style = alert ? Font.BOLD : Font.PLAIN;
+            if (font != null && font.getStyle() != style) {
+                setFont(font.deriveFont(style));
+            }
         }
 
         @Override
