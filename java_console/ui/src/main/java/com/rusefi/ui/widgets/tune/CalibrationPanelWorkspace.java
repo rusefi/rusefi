@@ -29,6 +29,7 @@ public final class CalibrationPanelWorkspace {
     public static final String CONFIG_KEY = "detached_panels";
     private final UIContext uiContext;
     private final Node config;
+    private final Node tableOrientationConfig;
     private final CalibrationDialogWidget primary;
     private final JScrollPane primaryScroll;
     private final DetachPanelLayer layer;
@@ -53,20 +54,32 @@ public final class CalibrationPanelWorkspace {
     };
 
     public CalibrationPanelWorkspace(UIContext uiContext, Node config) {
-        this(uiContext, config, SwingPanelWindow::new, CalibrationPanelWorkspace::usableScreens);
+        this(uiContext, config, null);
+    }
+
+    public CalibrationPanelWorkspace(UIContext uiContext, Node config, Node tableOrientationConfig) {
+        this(uiContext, config, tableOrientationConfig, SwingPanelWindow::new,
+            CalibrationPanelWorkspace::usableScreens);
     }
 
     // Window factory keeps persistence and edit synchronization testable without a display.
     CalibrationPanelWorkspace(UIContext uiContext, Node config, WindowFactory windowFactory,
                               Supplier<List<Rectangle>> screens) {
+        this(uiContext, config, null, windowFactory, screens);
+    }
+
+    CalibrationPanelWorkspace(UIContext uiContext, Node config, Node tableOrientationConfig,
+                              WindowFactory windowFactory, Supplier<List<Rectangle>> screens) {
         this.uiContext = uiContext;
         this.config = config == null ? new Node() : config;
+        this.tableOrientationConfig = tableOrientationConfig == null ? new Node() : tableOrientationConfig;
         this.windowFactory = windowFactory;
         this.screens = screens;
-        primary = new CalibrationDialogWidget(uiContext);
+        primary = new CalibrationDialogWidget(uiContext, this.tableOrientationConfig);
         primaryScroll = new JScrollPane(primary.getViewportPane());
         layer = new DetachPanelLayer(primaryScroll, primary.getPanelFrame(), this::detachCurrentPanel);
         primary.setOnViewChanged(this::primaryViewChanged);
+        primary.setOnTableOrientationChange(() -> orientationChanged(primary));
         primary.setOnConfigChange(changed -> edited(primary, changed));
         primary.setOnShowInPinout(value -> onShowInPinout.accept(value));
         for (int i = 0; i < this.config.getIntProperty("count", 0); i++) {
@@ -173,6 +186,23 @@ public final class CalibrationPanelWorkspace {
         onConfigChange.accept(changed);
     }
 
+    private void orientationChanged(CalibrationDialogWidget source) {
+        SwingUtilities.invokeLater(() -> {
+            if (destroyed || image == null) {
+                return;
+            }
+            synchronizing = true;
+            try {
+                if (source != primary && primary.getCurrentKey() != null) {
+                    refresh(primary, primaryScroll, new CalibrationPanelKey(primary.getCurrentKey()));
+                }
+                refreshDetached(source);
+            } finally {
+                synchronizing = false;
+            }
+        });
+    }
+
     private static byte[] copyContent(ConfigurationImage image) {
         return image == null ? null : image.getContent().clone();
     }
@@ -219,9 +249,11 @@ public final class CalibrationPanelWorkspace {
     }
 
     private void openPanel(DetachedPanel panel, Point position, Rectangle screen) {
-        panel.widget = new CalibrationDialogWidget(uiContext);
+        panel.widget = new CalibrationDialogWidget(uiContext, tableOrientationConfig);
         panel.scroll = new JScrollPane(panel.widget.getViewportPane());
         panel.widget.setOnConfigChange(changed -> edited(panel.widget, changed));
+        CalibrationDialogWidget widget = panel.widget;
+        panel.widget.setOnTableOrientationChange(() -> orientationChanged(widget));
         panel.widget.setOnShowInPinout(value -> onShowInPinout.accept(value));
         refresh(panel.widget, panel.scroll, panel.key);
         panel.window = windowFactory.create(owner, title(panel.key), panel.scroll,

@@ -7,6 +7,7 @@ import com.opensr5.ini.TableModel;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.config.StringFormatter;
+import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.maintenance.CalibrationsInfo;
 
 import javax.swing.*;
@@ -35,6 +36,7 @@ public class TuningTableView {
     private static final int TOOLBAR_GAP = 6;
     private static final double SMOOTHING_FACTOR = 0.25;
     private final boolean viewMode;
+    private final Node orientationConfig;
     private final JTable table = new JTable() {
         @Override
         public boolean isCellEditable(int row, int column) {
@@ -72,16 +74,28 @@ public class TuningTableView {
     private final JTextField xAxisEditor = new JTextField();
     private int xAxisEditingColumn = -1;
     private Runnable onEdit;
+    private Runnable onOrientationChange = () -> { };
     private String selectionInput = "";
     private boolean applyingSelectionInput;
+    private IniFileModel currentIni;
+    private String currentTableName;
+    private Node orientationNode;
+    private boolean flipAxes;
+    private boolean invertX;
+    private boolean invertY;
 
     public TuningTableView(String title) {
         this(title, false);
     }
 
     public TuningTableView(String title, boolean viewMode) {
+        this(title, viewMode, new Node());
+    }
+
+    public TuningTableView(String title, boolean viewMode, Node orientationConfig) {
         this.title = title;
         this.viewMode = viewMode;
+        this.orientationConfig = orientationConfig;
         table.setTableHeader(new JTableHeader(table.getColumnModel()) {
             @Override
             public void doLayout() {
@@ -110,6 +124,26 @@ public class TuningTableView {
                 }
                 int column = table.getTableHeader().columnAtPoint(e.getPoint());
                 startXAxisEdit(column);
+            }
+        });
+        table.getTableHeader().addMouseListener(new MouseAdapter() {
+            private void showOrientationMenu(MouseEvent event) {
+                if (event.isPopupTrigger()) {
+                    JPopupMenu menu = orientationMenuFor(table.getTableHeader().columnAtPoint(event.getPoint()));
+                    if (menu != null) {
+                        menu.show(table.getTableHeader(), event.getX(), event.getY());
+                    }
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent event) {
+                showOrientationMenu(event);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent event) {
+                showOrientationMenu(event);
             }
         });
         table.addMouseWheelListener(this::handleTableWheel);
@@ -252,6 +286,31 @@ public class TuningTableView {
                 SwingUtilities.invokeLater(() -> updatePreviewVisibility());
             }
         });
+    }
+
+    JPopupMenu orientationMenuFor(int column) {
+        if (column != 0 || orientationNode == null) {
+            return null;
+        }
+        JPopupMenu menu = new JPopupMenu();
+        addOrientationOption(menu, "Flip X/Y axes", "flip_xy", flipAxes);
+        addOrientationOption(menu, "Invert X axis", "invert_x", invertX);
+        addOrientationOption(menu, "Invert Y axis", "invert_y", invertY);
+        return menu;
+    }
+
+    private void addOrientationOption(JPopupMenu menu, String label, String key, boolean selected) {
+        JCheckBoxMenuItem option = new JCheckBoxMenuItem(label, selected);
+        option.addActionListener(event -> {
+            if (!finishXAxisEdit(true) || (table.isEditing() && !table.getCellEditor().stopCellEditing())) {
+                option.setSelected(!option.isSelected());
+                return;
+            }
+            orientationNode.setBoolProperty(key, option.isSelected());
+            displayTable(currentIni, currentTableName, imageTarget, axisImageTarget);
+            onOrientationChange.run();
+        });
+        menu.add(option);
     }
 
     private void updatePreviewVisibility() {
@@ -864,6 +923,10 @@ public class TuningTableView {
         this.onEdit = onEdit;
     }
 
+    public void setOnOrientationChange(Runnable onOrientationChange) {
+        this.onOrientationChange = onOrientationChange;
+    }
+
     private ArrayIniField editableAxisField(IniFileModel ini, String name) {
         Optional<IniField> field = ini.findIniField(name);
         if (field.isPresent() && field.get() instanceof ArrayIniField) {
@@ -895,8 +958,9 @@ public class TuningTableView {
         if (!Double.isFinite(number)) {
             return;
         }
-        int row = field.getRows() == 1 ? 0 : index;
-        int column = field.getRows() == 1 ? index : 0;
+        int storedIndex = (xAxis ? invertX : invertY) ? bins.length - 1 - index : index;
+        int row = field.getRows() == 1 ? 0 : storedIndex;
+        int column = field.getRows() == 1 ? storedIndex : 0;
         // Encode only the edited element, then display the actual stored precision.
         int offset = field.getOffset(row, column);
         ConfigurationImage candidate = axisImageTarget.clone();
@@ -925,8 +989,8 @@ public class TuningTableView {
         if (imageTarget == null || zBinsField == null) {
             return false;
         }
-        ConfigurationImageGetterSetter.setArrayValues(zBinsField, imageTarget, model.data);
-        Double[][] encodedValues = ConfigurationImageGetterSetter.getArrayValues(zBinsField, imageTarget);
+        ConfigurationImageGetterSetter.setArrayValues(zBinsField, imageTarget, toStoredData(model.data));
+        Double[][] encodedValues = orientData(ConfigurationImageGetterSetter.getArrayValues(zBinsField, imageTarget));
         for (int row = 0; row < model.data.length; row++) {
             System.arraycopy(encodedValues[row], 0, model.data[row], 0, model.data[row].length);
         }
@@ -1206,22 +1270,35 @@ public class TuningTableView {
         int precision = IniField.parseDigits(ltft.getDigits());
 
         // Extract data from outputs buffer using the field's offset
-        Double[][] dataValues = ConfigurationImageGetterSetter.getArrayValues(ltft, zImage);
+        Double[][] storedValues = ConfigurationImageGetterSetter.getArrayValues(ltft, zImage);
 
         // X and Y bins (RPM and load) are on page 1
-        Double[] xBins = extractAxisBins(iniFile, iniTable.getXBinsConstant(), axisImage);
-        Double[] yBins = extractAxisBins(iniFile, iniTable.getYBinsConstant(), axisImage);
+        Double[] storedX = extractAxisBins(iniFile, iniTable.getXBinsConstant(), axisImage);
+        Double[] storedY = extractAxisBins(iniFile, iniTable.getYBinsConstant(), axisImage);
+
+        currentIni = iniFile;
+        currentTableName = tableName;
+        orientationNode = orientationConfig.getChild(tableName);
+        flipAxes = orientationNode.getBoolProperty("flip_xy");
+        invertX = orientationNode.getBoolProperty("invert_x");
+        invertY = orientationNode.getBoolProperty("invert_y");
+        Double[][] dataValues = orientData(storedValues);
+        Double[] xBins = orientAxis(flipAxes ? storedY : storedX, invertX);
+        Double[] yBins = orientAxis(flipAxes ? storedX : storedY, invertY);
 
         calculateMinMax(dataValues);
 
         this.imageTarget = zImage;
         this.zBinsField = ltft;
         this.axisImageTarget = axisImage;
-        this.xBinsField = editableAxisField(iniFile, iniTable.getXBinsConstant());
-        this.yBinsField = editableAxisField(iniFile, iniTable.getYBinsConstant());
+        this.xBinsField = editableAxisField(iniFile,
+            flipAxes ? iniTable.getYBinsConstant() : iniTable.getXBinsConstant());
+        this.yBinsField = editableAxisField(iniFile,
+            flipAxes ? iniTable.getXBinsConstant() : iniTable.getYBinsConstant());
 
         TuningTableModel model = new TuningTableModel(dataValues, xBins, yBins, precision, !viewMode,
-            edited -> commitEdit(edited, table.getSelectedRows(), table.getSelectedColumns()));
+            edited -> commitEdit(edited, table.getSelectedRows(), table.getSelectedColumns()),
+            flipAxes ? "RPM \\ Load" : "Load \\ RPM");
         if (!viewMode && axisImage != null && yBinsField != null) {
             model.onYAxisEdit = (index, value) -> setAxisValue(false, index, value);
         }
@@ -1234,6 +1311,47 @@ public class TuningTableView {
 
     public void displayTable(IniFileModel iniFile, String tableName, ConfigurationImage image) {
         displayTable(iniFile, tableName, image, image);
+    }
+
+    private Double[] orientAxis(Double[] bins, boolean inverse) {
+        if (bins == null) {
+            return null;
+        }
+        Double[] oriented = bins.clone();
+        if (inverse) {
+            for (int i = 0; i < bins.length; i++) {
+                oriented[i] = bins[bins.length - 1 - i];
+            }
+        }
+        return oriented;
+    }
+
+    private Double[][] orientData(Double[][] stored) {
+        int rows = flipAxes ? stored[0].length : stored.length;
+        int columns = flipAxes ? stored.length : stored[0].length;
+        Double[][] oriented = new Double[rows][columns];
+        for (int row = 0; row < rows; row++) {
+            for (int column = 0; column < columns; column++) {
+                int y = invertY ? rows - 1 - row : row;
+                int x = invertX ? columns - 1 - column : column;
+                oriented[row][column] = flipAxes ? stored[x][y] : stored[y][x];
+            }
+        }
+        return oriented;
+    }
+
+    private Double[][] toStoredData(Double[][] oriented) {
+        int rows = flipAxes ? oriented[0].length : oriented.length;
+        int columns = flipAxes ? oriented.length : oriented[0].length;
+        Double[][] stored = new Double[rows][columns];
+        for (int row = 0; row < oriented.length; row++) {
+            for (int column = 0; column < oriented[row].length; column++) {
+                int y = invertY ? oriented.length - 1 - row : row;
+                int x = invertX ? oriented[row].length - 1 - column : column;
+                stored[flipAxes ? x : y][flipAxes ? y : x] = oriented[row][column];
+            }
+        }
+        return stored;
     }
 
     @Deprecated
@@ -1295,16 +1413,17 @@ public class TuningTableView {
         private final int precision;
         private final boolean editable;
         private final Consumer<TuningTableModel> onCellEdit;
+        private final String axisTitle;
         private BiConsumer<Integer, Object> onYAxisEdit;
         private int xPrecision;
         private int yPrecision;
 
         public TuningTableModel(Double[][] data, Double[] xBins, Double[] yBins, int precision) {
-            this(data, xBins, yBins, precision, true, null);
+            this(data, xBins, yBins, precision, true, null, "Load \\ RPM");
         }
 
         private TuningTableModel(Double[][] data, Double[] xBins, Double[] yBins, int precision,
-                                 boolean editable, Consumer<TuningTableModel> onCellEdit) {
+                                 boolean editable, Consumer<TuningTableModel> onCellEdit, String axisTitle) {
             this.data = data;
             this.xBins = xBins;
             this.yBins = yBins;
@@ -1313,6 +1432,7 @@ public class TuningTableView {
             this.yPrecision = precision;
             this.editable = editable;
             this.onCellEdit = onCellEdit;
+            this.axisTitle = axisTitle;
         }
 
         @Override
@@ -1360,7 +1480,7 @@ public class TuningTableView {
 
         @Override
         public String getColumnName(int column) {
-            if (column == 0) return "Load \\ RPM";
+            if (column == 0) return axisTitle;
             if (xBins != null && column - 1 < xBins.length) {
                 return formatNumber(xBins[column - 1], xPrecision);
             }

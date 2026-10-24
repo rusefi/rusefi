@@ -6,6 +6,7 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.TableModel;
 import com.opensr5.ini.field.ArrayIniField;
 import com.rusefi.config.FieldType;
+import com.rusefi.core.preferences.storage.Node;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -17,6 +18,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -26,9 +31,158 @@ import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.mockito.Mockito.*;
 
 public class TuningTableViewTest {
+    @Test
+    public void popupTriggerOpensOnlyFromCornerHeader() throws Exception {
+        assumeFalse(GraphicsEnvironment.isHeadless());
+        SwingUtilities.invokeAndWait(() -> {
+            TuningTableView view = editableView(false, new ConfigurationImage(4));
+            JFrame frame = new JFrame("Table orientation menu test");
+            try {
+                frame.add(view.getContent());
+                frame.setSize(600, 400);
+                frame.setVisible(true);
+                JTable table = findTable(view.getContent());
+                JComponent header = table.getTableHeader();
+                for (int column : new int[]{0, 1}) {
+                    Rectangle bounds = table.getTableHeader().getHeaderRect(column);
+                    header.dispatchEvent(new MouseEvent(header, MouseEvent.MOUSE_RELEASED,
+                        System.currentTimeMillis(), 0, bounds.x + 5, bounds.y + 5, 1, true,
+                        MouseEvent.BUTTON3));
+                    boolean open = java.util.Arrays.stream(MenuSelectionManager.defaultManager().getSelectedPath())
+                        .anyMatch(element -> element instanceof JPopupMenu);
+                    assertEquals(column == 0, open);
+                    MenuSelectionManager.defaultManager().clearSelectedPath();
+                }
+            } finally {
+                MenuSelectionManager.defaultManager().clearSelectedPath();
+                frame.dispose();
+            }
+        });
+    }
+
+    @Test
+    public void orientationMenuMapsDisplayedCellsAndAxesBackToStoredTune() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            Node settings = new Node();
+            IniFileModel ini = mock(IniFileModel.class);
+            TableModel definition = mock(TableModel.class);
+            ArrayIniField timing = new ArrayIniField("timing", 0, FieldType.UINT8, 3, 2, "", 1, "0", "255", "0");
+            ArrayIniField rpm = new ArrayIniField("rpm", 0, FieldType.UINT16, 3, 1, "RPM", 1, "0", "8000", "0");
+            ArrayIniField load = new ArrayIniField("load", 6, FieldType.UINT16, 1, 2, "kPa", 1, "0", "300", "0");
+            ConfigurationImage timingImage = new ConfigurationImage(6);
+            ConfigurationImage axisImage = new ConfigurationImage(10);
+            ConfigurationImageGetterSetter.setArrayValues(timing, timingImage,
+                new Double[][]{{11.0, 22.0, 33.0}, {44.0, 55.0, 66.0}});
+            ConfigurationImageGetterSetter.setArrayValues(rpm, axisImage,
+                new Double[][]{{1000.0, 2500.0, 6000.0}});
+            ConfigurationImageGetterSetter.setArrayValues(load, axisImage,
+                new Double[][]{{40.0}, {120.0}});
+            byte[] originalTiming = timingImage.getContent().clone();
+            byte[] originalAxes = axisImage.getContent().clone();
+            when(ini.getTable("ignition")).thenReturn(definition);
+            when(definition.getZBinsConstant()).thenReturn("timing");
+            when(definition.getXBinsConstant()).thenReturn("rpm");
+            when(definition.getYBinsConstant()).thenReturn("load");
+            when(ini.findIniField("timing")).thenReturn(Optional.of(timing));
+            when(ini.findIniField("rpm")).thenReturn(Optional.of(rpm));
+            when(ini.findIniField("load")).thenReturn(Optional.of(load));
+
+            TuningTableView view = new TuningTableView("Ignition timing", false, settings);
+            AtomicInteger orientationChanges = new AtomicInteger();
+            view.setOnOrientationChange(orientationChanges::incrementAndGet);
+            view.displayTable(ini, "ignition", timingImage, axisImage);
+            JTable table = findTable(view.getContent());
+            assertNull(view.orientationMenuFor(1), "Only the top-left header opens orientation settings");
+            JPopupMenu menu = view.orientationMenuFor(0);
+            assertEquals(3, menu.getComponentCount());
+            for (Component component : menu.getComponents()) {
+                assertInstanceOf(JCheckBoxMenuItem.class, component);
+                assertFalse(((JCheckBoxMenuItem) component).isSelected());
+            }
+            assertEquals("Flip X/Y axes", ((JCheckBoxMenuItem) menu.getComponent(0)).getText());
+            assertEquals("Invert X axis", ((JCheckBoxMenuItem) menu.getComponent(1)).getText());
+            assertEquals("Invert Y axis", ((JCheckBoxMenuItem) menu.getComponent(2)).getText());
+
+            ((JCheckBoxMenuItem) menu.getComponent(0)).doClick();
+            assertEquals("RPM \\ Load", table.getColumnName(0));
+            assertEquals("40", table.getColumnName(1));
+            assertEquals("120", table.getColumnName(2));
+            assertArrayEquals(new Object[]{"6000", "33", "66"}, tableRow(table, 0));
+            assertArrayEquals(new Object[]{"2500", "22", "55"}, tableRow(table, 1));
+            assertArrayEquals(new Object[]{"1000", "11", "44"}, tableRow(table, 2));
+
+            ((JCheckBoxMenuItem) view.orientationMenuFor(0).getComponent(1)).doClick();
+            assertEquals("120", table.getColumnName(1));
+            assertArrayEquals(new Object[]{"6000", "66", "33"}, tableRow(table, 0));
+            ((JCheckBoxMenuItem) view.orientationMenuFor(0).getComponent(2)).doClick();
+            assertArrayEquals(new Object[]{"1000", "44", "11"}, tableRow(table, 0));
+            assertArrayEquals(new Object[]{"2500", "55", "22"}, tableRow(table, 1));
+            assertArrayEquals(new Object[]{"6000", "66", "33"}, tableRow(table, 2));
+            assertArrayEquals(originalTiming, timingImage.getContent(), "Display options do not edit the tune");
+            assertArrayEquals(originalAxes, axisImage.getContent());
+            assertEquals(3, orientationChanges.get());
+
+            table.setValueAt("77", 0, 1);
+            table.setValueAt("88", 2, 2);
+            Double[][] stored = ConfigurationImageGetterSetter.getArrayValues(timing, timingImage);
+            assertArrayEquals(new Double[]{11.0, 22.0, 88.0}, stored[0]);
+            assertArrayEquals(new Double[]{77.0, 55.0, 66.0}, stored[1]);
+            table.setValueAt("1100", 0, 0);
+            assertArrayEquals(new Double[]{1100.0, 2500.0, 6000.0},
+                ConfigurationImageGetterSetter.getArrayValues(rpm, axisImage)[0]);
+            table.getTableHeader().setSize(300, 30);
+            Rectangle header = table.getTableHeader().getHeaderRect(1);
+            table.getTableHeader().dispatchEvent(new MouseEvent(table.getTableHeader(), MouseEvent.MOUSE_CLICKED,
+                System.currentTimeMillis(), 0, header.x + 5, 10, 2, false, MouseEvent.BUTTON1));
+            JTextField inlineAxis = findTextField(table.getTableHeader(), "120");
+            assertNotNull(inlineAxis);
+            inlineAxis.setText("130");
+            pressKey(inlineAxis, "ENTER");
+            assertArrayEquals(new Double[]{40.0}, ConfigurationImageGetterSetter.getArrayValues(load, axisImage)[0]);
+            assertArrayEquals(new Double[]{130.0}, ConfigurationImageGetterSetter.getArrayValues(load, axisImage)[1]);
+
+            Node restored = roundTrip(settings);
+            TuningTableView reopened = new TuningTableView("Ignition timing", false, restored);
+            reopened.displayTable(ini, "ignition", timingImage, axisImage);
+            JTable reopenedTable = findTable(reopened.getContent());
+            assertArrayEquals(new Object[]{"1100", "77", "11"}, tableRow(reopenedTable, 0));
+            assertEquals("130", reopenedTable.getColumnName(1));
+            for (Component component : reopened.orientationMenuFor(0).getComponents()) {
+                assertTrue(((JCheckBoxMenuItem) component).isSelected());
+            }
+            when(ini.getTable("other")).thenReturn(definition);
+            reopened.displayTable(ini, "other", timingImage, axisImage);
+            assertEquals("Load \\ RPM", reopenedTable.getColumnName(0),
+                "Orientation preferences are scoped to a table ID");
+            reopened.displayTable(ini, "ignition", timingImage, axisImage);
+            ((JCheckBoxMenuItem) reopened.orientationMenuFor(0).getComponent(0)).doClick();
+            assertArrayEquals(new Object[]{"40", "88", "22", "11"}, tableRow(reopenedTable, 0));
+            assertEquals("6000", reopenedTable.getColumnName(1));
+            ((JCheckBoxMenuItem) reopened.orientationMenuFor(0).getComponent(2)).doClick();
+            assertArrayEquals(new Object[]{"130", "66", "55", "77"}, tableRow(reopenedTable, 0));
+            ((JCheckBoxMenuItem) reopened.orientationMenuFor(0).getComponent(1)).doClick();
+            assertArrayEquals(new Object[]{"130", "77", "55", "66"}, tableRow(reopenedTable, 0));
+            assertEquals("1100", reopenedTable.getColumnName(1));
+            ((JCheckBoxMenuItem) reopened.orientationMenuFor(0).getComponent(2)).doClick();
+            assertArrayEquals(new Object[]{"40", "11", "22", "88"}, tableRow(reopenedTable, 0));
+            assertArrayEquals(new Object[]{"130", "77", "55", "66"}, tableRow(reopenedTable, 1));
+        });
+    }
+
+    private Node roundTrip(Node node) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        try (XMLEncoder encoder = new XMLEncoder(bytes)) {
+            encoder.writeObject(node);
+        }
+        try (XMLDecoder decoder = new XMLDecoder(new ByteArrayInputStream(bytes.toByteArray()))) {
+            return (Node) decoder.readObject();
+        }
+    }
+
     @Test
     public void rectangularTableKeepsRpmHorizontalAndLoadDescendingVertically() throws Exception {
         SwingUtilities.invokeAndWait(() -> {

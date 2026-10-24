@@ -88,7 +88,8 @@ public class TuningPane {
         left = new MainMenuTreeWidget(uiContext);
 
         workspace = new CalibrationPanelWorkspace(uiContext,
-            config == null ? null : config.getChild(CalibrationPanelWorkspace.CONFIG_KEY));
+            config == null ? null : config.getChild(CalibrationPanelWorkspace.CONFIG_KEY),
+            config == null ? null : config.getChild("table_orientation"));
         right = workspace.getPrimary();
 
         ConfigurationImage baseline = initialBaseline;

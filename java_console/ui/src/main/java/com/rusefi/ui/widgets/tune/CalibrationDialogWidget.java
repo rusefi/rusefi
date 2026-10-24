@@ -16,6 +16,7 @@ import com.opensr5.ini.field.OrdinalOutOfRangeException;
 import com.rusefi.core.ISensorHolder;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.SensorSubscription;
+import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.widgets.CircularGauge;
@@ -61,6 +62,7 @@ public class CalibrationDialogWidget {
     private final JPanel contentPane = new ScrollablePanel();
     private final DialogViewport viewportPane = new DialogViewport(contentPane);
     private final UIContext uiContext;
+    private final Node tableOrientationConfig;
     private final List<Runnable> triggerImageUpdaters = new ArrayList<>();
     private ConfigurationImage workingImage;
     private IniFileModel currentIniFileModel;
@@ -85,10 +87,15 @@ public class CalibrationDialogWidget {
     private Runnable currentViewRestorer;
     private String currentKey;
     private Runnable onViewChanged = () -> { };
+    private Runnable onTableOrientationChange = () -> { };
 
     /** Also reports replacements from navigation, undo, discard, and loading another tune. */
     public void setOnViewChanged(Runnable listener) {
         onViewChanged = listener;
+    }
+
+    public void setOnTableOrientationChange(Runnable listener) {
+        onTableOrientationChange = listener;
     }
 
     public String getCurrentKey() {
@@ -193,14 +200,16 @@ public class CalibrationDialogWidget {
     private JComponent createTableView(IniFileModel iniFileModel, TableModel table, Runnable notifyEdit) {
         Optional<IniField> valuesField = iniFileModel.findIniField(table.getZBinsConstant());
         if (!valuesField.isPresent() || valuesField.get().getPageIndex() == 0) {
-            TuningTableView view = new TuningTableView(table.getTitle());
+            TuningTableView view = new TuningTableView(table.getTitle(), false, tableOrientationConfig);
             view.displayTable(iniFileModel, table.getTableId(), workingImage);
             view.setOnEdit(notifyEdit);
+            view.setOnOrientationChange(onTableOrientationChange);
             return view.getContent();
         }
 
         IniField field = valuesField.get();
-        TuningTableView view = new TuningTableView(table.getTitle(), true);
+        TuningTableView view = new TuningTableView(table.getTitle(), true, tableOrientationConfig);
+        view.setOnOrientationChange(onTableOrientationChange);
         JLabel status = new JLabel("Reading from ECU...");
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(status, BorderLayout.NORTH);
@@ -222,7 +231,12 @@ public class CalibrationDialogWidget {
     }
 
     public CalibrationDialogWidget(UIContext uiContext) {
+        this(uiContext, new Node());
+    }
+
+    public CalibrationDialogWidget(UIContext uiContext, Node tableOrientationConfig) {
         this.uiContext = uiContext;
+        this.tableOrientationConfig = tableOrientationConfig;
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         contentPane.setAlignmentX(Component.LEFT_ALIGNMENT);
         // Refresh readouts whenever the ECU sends new output-channel data.
