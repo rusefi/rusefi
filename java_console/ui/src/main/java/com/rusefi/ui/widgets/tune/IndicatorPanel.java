@@ -124,6 +124,11 @@ public class IndicatorPanel {
         candidates.addAll(TsStringFunction.allPossibleResolutions(model.getOffLabel(), ini));
 
         String saved = label.getText();
+        // measure in bold: an alert chip shows its text in bold (TuningStyle.Chip#setAlert)
+        Font savedFont = label.getFont();
+        if (savedFont != null) {
+            label.setFont(savedFont.deriveFont(Font.BOLD));
+        }
         int maxW = 0, maxH = 0;
         for (String text : candidates) {
             label.setText(text == null || text.isEmpty() ? " " : text);
@@ -132,6 +137,7 @@ public class IndicatorPanel {
             if (d.height > maxH) maxH = d.height;
         }
         label.setText(saved);
+        label.setFont(savedFont);
         if (maxW > 0) {
             Dimension fixed = new Dimension(fixedWidth > 0 ? fixedWidth : maxW, maxH);
             label.setPreferredSize(fixed);
@@ -157,14 +163,20 @@ public class IndicatorPanel {
         }
         Boolean active = ExpressionEvaluator.evaluateBooleanExpression(indicator.getExpression(), context);
         final String text;
-        final Color[] colors;
+        final String iniBg, iniFg;
         if (Boolean.TRUE.equals(active)) {
             text = resolveLabel(indicator.getOnLabel(), ini, context);
-            colors = TuningStyle.indicatorColors(indicator.getOnBg(), indicator.getOnFg());
+            iniBg = indicator.getOnBg();
+            iniFg = indicator.getOnFg();
         } else {
             String off = resolveLabel(indicator.getOffLabel(), ini, context);
             text = off.isEmpty() ? " " : off;
-            colors = TuningStyle.indicatorColors(indicator.getOffBg(), indicator.getOffFg());
+            iniBg = indicator.getOffBg();
+            iniFg = indicator.getOffFg();
+        }
+        Color[] colors = TuningStyle.indicatorColors(iniBg, iniFg);
+        if (label instanceof TuningStyle.Chip) {
+            ((TuningStyle.Chip) label).setAlert(TuningStyle.isAlertTone(TuningStyle.indicatorTone(iniBg, iniFg)));
         }
         label.setText(text);
         label.setToolTipText(text);
