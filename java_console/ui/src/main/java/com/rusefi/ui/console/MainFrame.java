@@ -75,8 +75,13 @@ public class MainFrame {
 
     static final class FrameOverlay extends JPanel {
         private static final Color GREEN = new Color(0, 128, 0);
+        private static final int CARD_MAX_WIDTH = 760;
+        private static final int CARD_MARGIN = 56;
+        private static final int CARD_PADDING = 32;
+        private static final int CARD_MESSAGE_GAP = 24;
         private final JTextArea message = new JTextArea();
         private final JButton[] buttons;
+        private final JPanel actionPanel;
         private final JPanel content;
         private final GridBagConstraints contentConstraints;
         // When true the overlay dims the window and floats a compact card, leaving the UI visible
@@ -95,7 +100,7 @@ public class MainFrame {
             setMessage(text, color);
 
             buttons = new JButton[actions.length];
-            JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 8));
+            actionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 8));
             actionPanel.setOpaque(false);
             for (int i = 0; i < actions.length; i++) {
                 OverlayAction action = actions[i];
@@ -106,8 +111,9 @@ public class MainFrame {
                 actionPanel.add(button);
             }
 
-            content = new JPanel(new BorderLayout(0, 24));
-            content.setBorder(BorderFactory.createEmptyBorder(32, 32, 32, 32));
+            content = new JPanel(new BorderLayout(0, CARD_MESSAGE_GAP));
+            content.setBorder(BorderFactory.createEmptyBorder(CARD_PADDING, CARD_PADDING,
+                CARD_PADDING, CARD_PADDING));
             content.add(message, BorderLayout.CENTER);
             content.add(actionPanel, BorderLayout.SOUTH);
             contentConstraints = new GridBagConstraints();
@@ -126,6 +132,12 @@ public class MainFrame {
             dimmed = true;
             setOpaque(false);
             content.setOpaque(false);
+            JScrollPane messageScroll = new JScrollPane(message);
+            messageScroll.setBorder(null);
+            messageScroll.setOpaque(false);
+            messageScroll.getViewport().setOpaque(false);
+            messageScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+            content.add(messageScroll, BorderLayout.CENTER);
             // Compact centered card instead of a full-width band.
             contentConstraints.weightx = 0;
             contentConstraints.fill = GridBagConstraints.NONE;
@@ -134,6 +146,23 @@ public class MainFrame {
             revalidate();
             repaint();
             return this;
+        }
+
+        @Override
+        public void doLayout() {
+            if (dimmed) {
+                int margin = Math.min(CARD_MARGIN, Math.min(getWidth(), getHeight()) / 8);
+                int cardWidth = Math.min(CARD_MAX_WIDTH, Math.max(0, getWidth() - 2 * margin));
+                // Reserve scrollbar width when measuring wrapped text, even if no scrollbar is needed.
+                int textWidth = Math.max(1, cardWidth - 2 * CARD_PADDING - 18);
+                message.setSize(textWidth, 0);
+                int messageHeight = message.getPreferredSize().height;
+                int naturalHeight = 2 * CARD_PADDING + CARD_MESSAGE_GAP
+                    + actionPanel.getPreferredSize().height + messageHeight;
+                int cardHeight = Math.min(naturalHeight, Math.max(0, getHeight() - 2 * margin));
+                content.setPreferredSize(new Dimension(cardWidth, cardHeight));
+            }
+            super.doLayout();
         }
 
         @Override
