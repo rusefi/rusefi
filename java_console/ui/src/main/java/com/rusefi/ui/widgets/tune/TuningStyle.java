@@ -142,6 +142,53 @@ public final class TuningStyle {
         }
     }
 
+    /** Expand and collapse all for the menu tree: chevrons pointing apart or together. */
+    enum FoldIcon implements Icon {
+        EXPAND_ALL, COLLAPSE_ALL;
+
+        @Override
+        public void paintIcon(Component component, Graphics graphics, int x, int y) {
+            Graphics2D g = (Graphics2D) graphics.create();
+            try {
+                g.translate(x, y);
+                g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+                g.setColor(component != null && !component.isEnabled() ? separator() : muted());
+                g.setStroke(new BasicStroke(1.6f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+                // two chevrons on a 16 px grid: apart for expand, meeting in the middle for collapse
+                if (this == EXPAND_ALL) {
+                    chevron(g, 2.5f, false);
+                    chevron(g, 13.5f, true);
+                } else {
+                    chevron(g, 6, true);
+                    chevron(g, 10, false);
+                }
+            } finally {
+                g.dispose();
+            }
+        }
+
+        /** A chevron 7 px wide whose tip is at {@code tipY}, pointing down or up. */
+        private static void chevron(Graphics2D g, float tipY, boolean down) {
+            float armY = down ? tipY - 3.5f : tipY + 3.5f;
+            java.awt.geom.Path2D path = new java.awt.geom.Path2D.Float();
+            path.moveTo(4.5f, armY);
+            path.lineTo(8, tipY);
+            path.lineTo(11.5f, armY);
+            g.draw(path);
+        }
+
+        @Override
+        public int getIconWidth() {
+            return 16;
+        }
+
+        @Override
+        public int getIconHeight() {
+            return 16;
+        }
+    }
+
     private TuningStyle() {
     }
 }
