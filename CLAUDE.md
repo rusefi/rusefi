@@ -542,6 +542,10 @@ monospaced console text. Toolbar controls share `JoinedButtons.HEIGHT` so a row 
 For a rounded panel, set a `FlatLineBorder` with an arc: `FlatPanelUI` then paints the background
 rounded too. Do not also set `FlatClientProperties.STYLE` (`arc`) on the panel, because applying a
 style drops a border set earlier (see `WizardStyle.styleRounded`).
+On Windows 10+ FlatLaf resizes custom-decorated windows through its native window border,
+which it skips for `setUndecorated(true)` windows; its Swing resizer is only installed when
+the native border is unsupported. An undecorated FlatLaf dialog is therefore a fixed size on
+Windows: leave it decorated and let FlatLaf apply the decorations (`DetachedPanelTitleBar`).
 
 ## Java Version Constants
 
