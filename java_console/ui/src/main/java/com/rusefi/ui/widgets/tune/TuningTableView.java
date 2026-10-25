@@ -380,6 +380,41 @@ public class TuningTableView {
     private void repaintAxes() {
         table.repaint();
         table.getTableHeader().repaint();
+        updateSurfaceSelection();
+    }
+
+    /** Shows the grid's selected cells on both 3D views; table rows are shown top-down. */
+    private void updateSurfaceSelection() {
+        if (!(table.getModel() instanceof TuningTableModel)) {
+            return;
+        }
+        Double[][] data = ((TuningTableModel) table.getModel()).data;
+        boolean[][] selection = null;
+        for (int row : table.getSelectedRows()) {
+            for (int column : table.getSelectedColumns()) {
+                if (column > 0 && row < data.length && column - 1 < data[0].length
+                    && table.isCellSelected(row, column)) {
+                    if (selection == null) {
+                        selection = new boolean[data.length][data[0].length];
+                    }
+                    selection[data.length - 1 - row][column - 1] = true;
+                }
+            }
+        }
+        surface3DView.setSelection(selection);
+        mini3DView.setSelection(selection);
+    }
+
+    /** INI axis labels and units can be expressions; only plain text is shown. */
+    private static String plainLabel(String label) {
+        if (label == null) {
+            return null;
+        }
+        String text = label.trim();
+        if (text.length() >= 2 && text.startsWith("\"") && text.endsWith("\"")) {
+            text = text.substring(1, text.length() - 1).trim();
+        }
+        return text.isEmpty() || text.contains("{") || text.contains("@") ? null : text;
     }
 
     private int activeRow() {
@@ -1308,8 +1343,14 @@ public class TuningTableView {
         }
         model.xPrecision = xBinsField == null ? precision : IniField.parseDigits(xBinsField.getDigits());
         model.yPrecision = yBinsField == null ? precision : IniField.parseDigits(yBinsField.getDigits());
+        String xLabel = plainLabel(flipAxes ? iniTable.getYLabel() : iniTable.getXLabel());
+        String yLabel = plainLabel(flipAxes ? iniTable.getXLabel() : iniTable.getYLabel());
+        String zLabel = plainLabel(ltft.getUnits());
+        surface3DView.setAxisTitles(xLabel, yLabel, zLabel);
+        mini3DView.setAxisTitles(xLabel, yLabel, zLabel);
         table.setModel(model);
         table.clearSelection();
+        updateSurfaceSelection();
         updateSurfaces(dataValues, xBins, yBins);
     }
 

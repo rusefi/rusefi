@@ -135,6 +135,35 @@ class TuningTablePreviewTest {
         });
     }
 
+    @Test
+    void tableSelectionIsShownOnBothSurfaces() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            TuningTableView view = new TuningTableView("VE");
+            loadTable(view, true);
+            JPanel cards = (JPanel) view.getContent().getComponent(1);
+            JPanel grid = (JPanel) cards.getComponent(0);
+            Surface3DView preview = (Surface3DView) grid.getComponent(1);
+            Surface3DView full = (Surface3DView) cards.getComponent(1);
+            JTable table = (JTable) ((JScrollPane) grid.getComponent(0)).getViewport().getView();
+            assertFalse(preview.isSelected(1, 0), "A newly displayed table has no selection");
+
+            // The top table row shows the last data row; column 0 holds the load axis.
+            table.changeSelection(0, 1, false, false);
+            table.changeSelection(0, 2, false, true);
+            for (Surface3DView surface : new Surface3DView[]{preview, full}) {
+                assertTrue(surface.isSelected(1, 0));
+                assertTrue(surface.isSelected(1, 1));
+                assertFalse(surface.isSelected(0, 0));
+                assertFalse(surface.isSelected(1, 2));
+            }
+
+            table.changeSelection(1, 0, false, false);
+            assertFalse(preview.isSelected(0, 0), "Selecting the axis column selects no surface point");
+            table.clearSelection();
+            assertFalse(preview.isSelected(1, 0));
+        });
+    }
+
     private static void resize(JPanel cards, int width, int height) {
         cards.setSize(width, height);
         cards.doLayout();
