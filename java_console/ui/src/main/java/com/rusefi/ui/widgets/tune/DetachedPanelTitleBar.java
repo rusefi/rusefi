@@ -2,6 +2,7 @@ package com.rusefi.ui.widgets.tune;
 
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.icons.FlatWindowAbstractIcon;
+import com.formdev.flatlaf.ui.FlatNativeWindowBorder;
 import com.formdev.flatlaf.ui.FlatRootPaneUI;
 import com.formdev.flatlaf.ui.FlatTitlePane;
 
@@ -16,8 +17,14 @@ final class DetachedPanelTitleBar {
 
     static Consumer<Boolean> install(JDialog dialog, Runnable split, boolean canSplit) {
         if (UIManager.getLookAndFeel() instanceof FlatLaf) {
-            dialog.setUndecorated(true);
-            dialog.getRootPane().setWindowDecorationStyle(JRootPane.PLAIN_DIALOG);
+            // With a native window border (Windows 10+), FlatLaf only resizes decorated dialogs:
+            // it enables the border and PLAIN_DIALOG decorations itself once the dialog is
+            // displayable. An undecorated dialog would get neither that border nor FlatLaf's
+            // Swing resizer, leaving the window a fixed size.
+            if (!FlatNativeWindowBorder.isSupported()) {
+                dialog.setUndecorated(true);
+                dialog.getRootPane().setWindowDecorationStyle(JRootPane.PLAIN_DIALOG);
+            }
             SplitRootPaneUI ui = new SplitRootPaneUI(split, canSplit);
             dialog.getRootPane().setUI(ui);
             return ui::setCanSplit;
