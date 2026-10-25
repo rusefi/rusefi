@@ -315,8 +315,9 @@ public class TuningTableView {
 
     private void updatePreviewVisibility() {
         // Keep the grid usable in small dialogs. Large tables can scroll above the preview.
+        Insets border = tableScrollPane.getInsets();
         int gridHeight = Math.min(320, table.getRowCount() * table.getRowHeight())
-            + table.getTableHeader().getPreferredSize().height;
+            + table.getTableHeader().getPreferredSize().height + border.top + border.bottom;
         int availableHeight = tableContainer.getHeight();
         JViewport viewport = (JViewport) SwingUtilities.getAncestorOfClass(JViewport.class, tableContainer);
         if (viewport != null) {
