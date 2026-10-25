@@ -16,7 +16,11 @@ public class Surface3DView extends JPanel {
     private double pitch = Math.toRadians(30);
     private Point lastMousePos;
 
-    private static final double ZOOM = 0.8;
+    private static final double ZOOM = 0.95;
+    // Projected half extents of the [-0.5, 0.5] cube: yaw spreads x and y over sqrt(0.5),
+    // then pitch mixes that with z over sqrt(0.5 + 0.25).
+    private static final double MAX_HALF_WIDTH = Math.sqrt(0.5);
+    private static final double MAX_HALF_HEIGHT = Math.sqrt(0.75);
 
     public Surface3DView() {
         setBackground(Color.WHITE);
@@ -99,7 +103,7 @@ public class Surface3DView extends JPanel {
         int centerX = width / 2;
         int centerY = height / 2;
 
-        double scale = Math.min(width, height) * ZOOM;
+        double scale = fitScale(width, height);
 
         Point3D[][] points = new Point3D[rows][cols];
         for (int r = 0; r < rows; r++) {
@@ -110,7 +114,7 @@ public class Surface3DView extends JPanel {
                 if (maxValue > minValue) {
                     z = (data[r][c] - minValue) / (maxValue - minValue) - 0.5;
                 }
-                points[r][c] = project(x, y, z, scale, centerX, centerY);
+                points[r][c] = project(x, y, z, yaw, pitch, scale, centerX, centerY);
             }
         }
 
@@ -134,7 +138,16 @@ public class Surface3DView extends JPanel {
         }
     }
 
-    private Point3D project(double x, double y, double z, double scale, int centerX, int centerY) {
+    /**
+     * The largest scale at which the unit cube holding the surface stays inside the panel at any
+     * rotation, so the surface is never cut and does not change size while it is dragged.
+     */
+    static double fitScale(int width, int height) {
+        return ZOOM * Math.min(width / (2 * MAX_HALF_WIDTH), height / (2 * MAX_HALF_HEIGHT));
+    }
+
+    static Point3D project(double x, double y, double z, double yaw, double pitch,
+                           double scale, int centerX, int centerY) {
         // Rotation
         double x1 = x * Math.cos(yaw) - y * Math.sin(yaw);
         double y1 = x * Math.sin(yaw) + y * Math.cos(yaw);
@@ -148,7 +161,7 @@ public class Surface3DView extends JPanel {
         );
     }
 
-    private static class Point3D {
+    static class Point3D {
         int x, y;
         Point3D(int x, int y) {
             this.x = x;
