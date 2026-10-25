@@ -22,8 +22,8 @@ Each step of the instructions should not have two wires of the same color - brea
 java -jar java_tools/pinout-helper/build/libs/pinout-helper-all.jar [ecuBoardFolder] [breakoutBoardFolder] [outputFolder]
 ```
 
-Run from the rusefi repo root. Defaults are super-uaefi and ../private-hardware/BMW-N52-adapter;
-output goes to `<breakoutBoardFolder>/patchcord/` as `patchcord-<breakoutBoardFolderName>.md`
+Run from the rusefi repo root. Defaults are alphax-8chan and ../private-hardware/BMW-N52-adapter;
+output goes to `<breakoutBoardFolder>/patchcord-<ecuBoardFolderName>/` as `patchcord-<breakoutBoardFolderName>.md`
 (for example `patchcord-BMW-N52-adapter.md`) plus per-step PNG images.
 
 `PatchCordHelper` matches ECU pins to adapter pins by function text (all parenthesized text such
@@ -36,24 +36,10 @@ a wire color dot followed by an orange paint marker dot (`dot-*.png`), repeating
 A magenta `dot-unknown.png` means the yaml declares no `color:` for that pin. Pins with no function match on the other side are listed
 in the document for manual wiring; improving the yaml `function:` texts improves the match rate.
 
-## Map of existing relevant code
+## Current implementation
 
-YAML parsing and pin model - `:config_definition` / `:config_definition_base`, package `com.rusefi.pinout`:
-* `PinoutLogic` (`java_tools/configuration_definition`) - canonical SnakeYAML parser for board connector yamls: `pin`, `meta`, `class`, `type`, `color`, `ts_name`, `function` keys, meta-header indirection (e.g. `MM100_INJ6` -> STM32 pin), array-form `id`/`class` pins.
-* `BoardInputs`, `FileSystemBoardInputsReaderImpl`, `PinoutLogicConstants` (`java_tools/configuration_definition_base`) - abstraction for enumerating a board's yaml files; `FileSystemBoardInputsImpl` in `configuration_definition`.
-* Usage examples: `PinoutLogicTest`, `PinoutLogicIntegratedTest`, `PinoutLogicHellen112_17_Test`.
+* `ConnectorYaml` reads each side's `connectors/*.yaml` files and their `info:` image paths and pin coordinates.
+* `PatchCordHelper` matches `function:` text, assigns phases by `type:`, splits duplicate wire colors across steps, and writes the Markdown.
+* `WireColors`, `StepImageRenderer`, and `DotRenderer` generate the colored markers and connector PNGs.
 
-Packaging yamls + connector photos:
-* `com.rusefi.output.PinoutsRawPackager` (`java_tools/configuration_definition`) - sweeps `firmware/config/boards/**/connectors/`, zips yamls and images into `pinouts_raw/connectors.zip` with a `boards_meta.yaml` index (published to rusefi.com/docs). This is how pinout data already travels from the firmware tree to consumers.
-
-Rendering with images, coordinates and wire colors - `java_console/ui`:
-* `com.rusefi.ui.PinoutPane` - interactive-pinout consumer: loads `boards_meta.yaml`/`connectors.zip`, parses the yaml `info:` section (`title`, `image.file`, per-pin `x`/`y` coordinates - same schema as interactive-pinout), draws pin markers on the connector photo (`PinCoord`, `ConnectorImagePanel`).
-* `com.rusefi.ui.util.PinColors` - wire-color-string -> `java.awt.Color` resolution, including striped colors like `orange/brown` (`pigtailToColors`), plus pin-type -> color legend mirroring the web CSS.
-
-Headless image-file generation pattern:
-* `java_tools/trigger-image` - existing example of a build-time tool rendering images to files; template for producing static "phase N" assembly instruction images.
-
-Notes:
-* The yaml model and file discovery should come from `:config_definition` / `:config_definition_base` as project dependencies.
-* `PinColors` and the coordinate parsing currently live inside the Swing-coupled `:ui` module (`PinoutPane`); reuse means either depending on `:ui` or extracting the parsing/color code into a shared module.
-* The assembly-order source (Universal-Patchcord-Color-Scheme.md) lives in the separate rusefi_documentation repo and has no Java representation yet.
+See [the detailed guide](../../docs/AI/pinout-helper.md) for the matching rules, output format, and validation points.

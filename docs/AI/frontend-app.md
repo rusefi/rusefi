@@ -250,6 +250,8 @@ combines those physical pins with current tune assignments. Selecting a
 tune field can highlight its pin; double-clicking an assigned pin can open
 the corresponding Tuning field. It listens to the working image, so this
 navigation also reflects unburned edits.
+See [Console Pinout tab](pinout-tab.md) for the connector data,
+cache, and matching rules behind that tab.
 
 The [setup wizard](frontend-app-wizard.md) configures a connected ECU and
 burns each completed step with an ECU-backed progress flag. It can launch
