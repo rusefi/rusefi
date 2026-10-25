@@ -49,18 +49,23 @@ public class PatchCordHelper {
     static class Wire {
         final PinRef ecu;
         final PinRef adapter;
+        private String assignedColor;
 
         Wire(PinRef ecu, PinRef adapter) {
             this.ecu = ecu;
             this.adapter = adapter;
         }
 
-        // readme: wire colors come from the ECU yaml files
-        String color() {
+        // Source color is a preference; assembly uses the available solid-color spools.
+        String sourceColor() {
             if (ecu.pin.color != null && !ecu.pin.color.isEmpty()) {
                 return ecu.pin.color;
             }
             return adapter.pin.color == null ? "" : adapter.pin.color;
+        }
+
+        String color() {
+            return assignedColor == null ? sourceColor() : assignedColor;
         }
     }
 
@@ -71,6 +76,18 @@ public class PatchCordHelper {
         Phase(String title, String... types) {
             this.title = title;
             this.types = new LinkedHashSet<>(Arrays.asList(types));
+        }
+    }
+
+    static class Step {
+        final int number;
+        final String title;
+        final List<Wire> wires;
+
+        Step(int number, String title, List<Wire> wires) {
+            this.number = number;
+            this.title = title;
+            this.wires = wires;
         }
     }
 
@@ -87,10 +104,14 @@ public class PatchCordHelper {
             new Phase("Everything else"));
 
     public static void main(String[] args) throws IOException {
+        if (args.length > 4) {
+            throw new IllegalArgumentException("Usage: PatchCordHelper [ecuFolder] [adapterFolder] [outputFolder] [--html-only=true|false]");
+        }
 //        String ecuFolder = args.length > 0 ? args[0] : "firmware/config/boards/hellen/super-uaefi";
         String ecuFolder = args.length > 0 ? args[0] : "firmware/config/boards/hellen/alphax-8chan";
         String breakoutBoard = args.length > 1 ? args[1] : "../private-hardware/BMW-N52-adapter";
         String outputFolder = args.length > 2 ? args[2] : breakoutBoard + "/patchcord-" + new File(ecuFolder).getName();
+        boolean htmlOnly = args.length < 4 || parseHtmlOnly(args[3]);
 
         List<ConnectorYaml> ecuConnectors = ConnectorYaml.readFolder(new File(ecuFolder, "connectors"));
         List<ConnectorYaml> adapterConnectors = ConnectorYaml.readFolder(new File(breakoutBoard, "connectors"));
@@ -106,12 +127,28 @@ public class PatchCordHelper {
         }
         String adapterName = new File(breakoutBoard).getName();
         File mdFile = new File(outputDir, markdownFileName(adapterName));
-        writeInstructions(new File(ecuFolder).getName(), adapterName,
-                wires, ecuPins, adapterPins, outputDir, mdFile);
-        System.out.println("Wrote " + mdFile.getAbsolutePath()
+        List<Step> steps = buildSteps(wires);
+        if (!htmlOnly) {
+            writeInstructions(new File(ecuFolder).getName(), adapterName,
+                    wires, steps, ecuPins, adapterPins, outputDir, mdFile);
+        }
+        File htmlFile = new File(outputDir, "patchcord-" + fileNameSafe(adapterName) + ".html");
+        InteractivePatchcordHtml.write(htmlFile, new File(ecuFolder).getName(), adapterName,
+                steps, ecuPins, adapterPins);
+        System.out.println("Wrote " + (htmlOnly ? "" : mdFile.getAbsolutePath() + " and ") + htmlFile.getAbsolutePath()
                 + ": " + wires.size() + " wire(s), "
                 + ecuPins.size() + " unmatched ECU pin(s), "
                 + adapterPins.size() + " unmatched adapter pin(s)");
+    }
+
+    private static boolean parseHtmlOnly(String option) {
+        if ("--html-only".equals(option) || "--html-only=true".equals(option)) {
+            return true;
+        }
+        if ("--html-only=false".equals(option)) {
+            return false;
+        }
+        throw new IllegalArgumentException("Expected --html-only=true or --html-only=false, got: " + option);
     }
 
     private static List<PinRef> flatten(List<ConnectorYaml> connectors) {
@@ -180,6 +217,70 @@ public class PatchCordHelper {
         return s.replaceAll("[^A-Za-z0-9_-]+", "_");
     }
 
+    private static List<Step> buildSteps(List<Wire> wires) {
+        Map<Phase, List<Wire>> byPhase = new LinkedHashMap<>();
+        for (Phase phase : PHASES) {
+            byPhase.put(phase, new ArrayList<>());
+        }
+        for (Wire wire : wires) {
+            byPhase.get(phaseOf(wire)).add(wire);
+        }
+        List<Step> steps = new ArrayList<>();
+        for (Map.Entry<Phase, List<Wire>> entry : byPhase.entrySet()) {
+            List<Wire> phaseWires = entry.getValue();
+            if (phaseWires.isEmpty()) {
+                continue;
+            }
+            // Reserve requested solid colors first. Stripes and unavailable colors
+            // use the least-used available spool without displacing those requests.
+            phaseWires.sort(Comparator
+                    .comparing((Wire w) -> WireColors.isOfficial(w.sourceColor()) ? 0 : 1)
+                    .thenComparing(Wire::sourceColor)
+                    .thenComparing(w -> w.ecu.label()));
+            assignOfficialColors(phaseWires);
+            phaseWires.sort(Comparator.comparing(Wire::color).thenComparing(w -> w.ecu.label()));
+            List<List<Wire>> subSteps = splitByUniqueColor(phaseWires);
+            for (int i = 0; i < subSteps.size(); i++) {
+                String title = entry.getKey().title
+                        + (subSteps.size() > 1 ? " (" + (i + 1) + " of " + subSteps.size() + ")" : "");
+                steps.add(new Step(steps.size() + 1, title, subSteps.get(i)));
+            }
+        }
+        return steps;
+    }
+
+    static void assignOfficialColors(List<Wire> wires) {
+        Map<String, Integer> counts = new LinkedHashMap<>();
+        for (String color : WireColors.officialColors()) {
+            counts.put(color, 0);
+        }
+        for (Wire wire : wires) {
+            String requested = wire.sourceColor().trim().toLowerCase(Locale.ROOT);
+            String selected;
+            if (WireColors.isOfficial(requested)) {
+                selected = requested;
+            } else {
+                selected = null;
+                for (String part : requested.split("[/,]")) {
+                    String candidate = part.trim();
+                    if (WireColors.isOfficial(candidate)
+                            && (selected == null || counts.get(candidate) < counts.get(selected))) {
+                        selected = candidate;
+                    }
+                }
+                if (selected == null) {
+                    for (String candidate : counts.keySet()) {
+                        if (selected == null || counts.get(candidate) < counts.get(selected)) {
+                            selected = candidate;
+                        }
+                    }
+                }
+            }
+            wire.assignedColor = selected;
+            counts.put(selected, counts.get(selected) + 1);
+        }
+    }
+
     /**
      * The breakout board folder name goes into the file name, so patchcord documents of several
      * adapters can be told apart (and put side by side in one folder).
@@ -207,17 +308,9 @@ public class PatchCordHelper {
         return "![" + alt + "](" + name + ")";
     }
 
-    private static void writeInstructions(String ecuName, String adapterName, List<Wire> wires,
+    private static void writeInstructions(String ecuName, String adapterName, List<Wire> wires, List<Step> steps,
                                           List<PinRef> unmatchedEcu, List<PinRef> unmatchedAdapter,
                                           File outputDir, File mdFile) throws IOException {
-        Map<Phase, List<Wire>> byPhase = new LinkedHashMap<>();
-        for (Phase phase : PHASES) {
-            byPhase.put(phase, new ArrayList<>());
-        }
-        for (Wire wire : wires) {
-            byPhase.get(phaseOf(wire)).add(wire);
-        }
-
         // pins wired in earlier steps stay visible as dimmed circles: visual progress tracking
         Map<ConnectorYaml, Set<String>> done = new LinkedHashMap<>();
         Set<String> writtenDots = new LinkedHashSet<>();
@@ -233,6 +326,9 @@ public class PatchCordHelper {
             md.println(wires.size() + " wire(s) matched by pin function. Wiring order follows the");
             md.println("[Universal Patchcord Color Scheme](https://github.com/rusefi/rusefi_documentation/blob/master/Universal-Patchcord-Color-Scheme.md).");
             md.println();
+            md.println("Available solid wire colors: " + String.join(", ", WireColors.officialColors()) + ".");
+            md.println("Source YAML colors are preferences; each step uses a color at most once.");
+            md.println();
             md.println("On each image: solid circles are wires of the current step (circle color = wire color),");
             md.println("dimmed grey circles are pins already wired in previous steps.");
             md.println();
@@ -241,42 +337,29 @@ public class PatchCordHelper {
             md.println("can be told apart. The same is repeated per wire in the tables below: the 'Adapter pin'");
             md.println("column starts with the wire color dot followed by the orange paint marker dot.");
 
-            int stepIndex = 0;
-            for (Map.Entry<Phase, List<Wire>> entry : byPhase.entrySet()) {
-                List<Wire> phaseWires = entry.getValue();
-                if (phaseWires.isEmpty()) {
-                    continue;
+            for (Step step : steps) {
+                List<Wire> stepWires = step.wires;
+                int stepIndex = step.number;
+
+                md.println();
+                md.println("## Step " + stepIndex + ": " + step.title);
+                md.println();
+                md.println("| Wire color | ECU pin | Adapter pin | Function |");
+                md.println("|------------|---------|-------------|----------|");
+                for (Wire wire : stepWires) {
+                    md.println("| " + wire.color() + " | " + wire.ecu.label() + " | "
+                            + dot(outputDir, wire.color(), writtenDots) + " " + markerDot
+                            + " " + wire.adapter.label()
+                            + " | " + safe(wire.ecu.pin.function) + " |");
                 }
-                phaseWires.sort(Comparator
-                        .comparing((Wire w) -> w.color())
-                        .thenComparing(w -> w.ecu.label()));
 
-                List<List<Wire>> subSteps = splitByUniqueColor(phaseWires);
-                for (int subStep = 0; subStep < subSteps.size(); subStep++) {
-                    List<Wire> stepWires = subSteps.get(subStep);
-                    stepIndex++;
-                    String title = entry.getKey().title
-                            + (subSteps.size() > 1 ? " (" + (subStep + 1) + " of " + subSteps.size() + ")" : "");
-
-                    md.println();
-                    md.println("## Step " + stepIndex + ": " + title);
-                    md.println();
-                    md.println("| Wire color | ECU pin | Adapter pin | Function |");
-                    md.println("|------------|---------|-------------|----------|");
-                    for (Wire wire : stepWires) {
-                        md.println("| " + wire.color() + " | " + wire.ecu.label() + " | "
-                                + dot(outputDir, wire.color(), writtenDots) + " " + markerDot
-                                + " " + wire.adapter.label()
-                                + " | " + safe(wire.ecu.pin.function) + " |");
-                    }
-
-                    writeStepImages(md, stepIndex, "ecu", ecuName, stepWires, true, done, outputDir);
-                    writeStepImages(md, stepIndex, "adapter", adapterName, stepWires, false, done, outputDir);
-                }
+                writeStepImages(md, stepIndex, "ecu", ecuName, stepWires, true, done, outputDir);
+                writeStepImages(md, stepIndex, "adapter", adapterName, stepWires, false, done, outputDir);
             }
 
             writeUnmatched(md, "ECU (" + ecuName + ")", unmatchedEcu);
             writeUnmatched(md, "adapter (" + adapterName + ")", unmatchedAdapter);
+            writeOverview(md, wires, ecuName, adapterName, outputDir);
         }
     }
 
@@ -345,6 +428,53 @@ public class PatchCordHelper {
         for (PinRef ref : unmatched) {
             md.println("| " + ref.label() + " | " + safe(ref.pin.type) + " | " + safe(ref.pin.color)
                     + " | " + safe(ref.pin.function) + " |");
+        }
+    }
+
+    private static void writeOverview(PrintWriter md, List<Wire> wires, String ecuName,
+                                      String adapterName, File outputDir) throws IOException {
+        md.println();
+        md.println("## Complete patchcord diagram");
+        md.println();
+        md.println("All matched pins are marked below. ECU connectors are the left side of each route;");
+        md.println("adapter connectors are the right side. Each connector is shown once.");
+        writeOverviewImages(md, wires, ecuName, true, outputDir);
+        writeOverviewImages(md, wires, adapterName, false, outputDir);
+        md.println();
+        md.println("| ECU pin (left) | Wire color | Adapter pin (right) | Function |");
+        md.println("|----------------|------------|---------------------|----------|");
+        for (Wire wire : wires) {
+            md.println("| " + wire.ecu.label() + " | " + wire.color() + " | "
+                    + wire.adapter.label() + " | " + safe(wire.ecu.pin.function) + " |");
+        }
+    }
+
+    private static void writeOverviewImages(PrintWriter md, List<Wire> wires,
+                                            String sideName, boolean ecuSide,
+                                            File outputDir) throws IOException {
+        Map<ConnectorYaml, Map<String, String>> byConnector = new LinkedHashMap<>();
+        for (Wire wire : wires) {
+            PinRef ref = ecuSide ? wire.ecu : wire.adapter;
+            byConnector.computeIfAbsent(ref.connector, key -> new LinkedHashMap<>())
+                    .put(ref.pin.pin, wire.color());
+        }
+        md.println();
+        md.println("### " + (ecuSide ? "ECU" : "Adapter") + " connectors ("
+                + (ecuSide ? "left" : "right") + ")");
+        for (Map.Entry<ConnectorYaml, Map<String, String>> entry : byConnector.entrySet()) {
+            ConnectorYaml connector = entry.getKey();
+            md.println();
+            md.println(sideName + ", connector " + connector.name + ":");
+            if (connector.imageFile != null && connector.imageFile.isFile()) {
+                String imageName = "overview-" + (ecuSide ? "ecu" : "adapter") + "-"
+                        + fileNameSafe(connector.name) + ".png";
+                StepImageRenderer.render(connector, entry.getValue(),
+                        java.util.Collections.emptySet(), !ecuSide, new File(outputDir, imageName));
+                md.println();
+                md.println("![" + sideName + " " + connector.name + "](" + imageName + ")");
+            } else {
+                md.println("No connector image available.");
+            }
         }
     }
 

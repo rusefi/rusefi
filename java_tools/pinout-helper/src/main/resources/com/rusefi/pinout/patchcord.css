@@ -1,0 +1,84 @@
+:root{color-scheme:light;--ink:#172434;--muted:#506173;--line:#cfd7df;--paper:#f4f7fa;--panel:#fff;--accent:#db5b0a;--zoom:100%;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink)}
+.page-header{display:flex;justify-content:space-between;align-items:center;gap:2rem;padding:2rem max(2rem,calc((100vw - 1500px)/2));background:#182b3f;color:#fff}
+.page-header h1{font-size:clamp(1.6rem,2.6vw,2.7rem);margin:.25rem 0 .5rem}
+.page-header p{margin:.2rem 0;max-width:62rem;color:#dbe5ee}
+.page-header .eyebrow{font-size:.8rem;text-transform:uppercase;letter-spacing:.15em;color:#ffb682;font-weight:700}
+.header-count{display:flex;flex-direction:column;align-items:center;min-width:110px}
+.header-count strong{font-size:2.6rem;line-height:1}
+.header-count span{white-space:nowrap;color:#dbe5ee}
+main{max-width:1540px;margin:auto;padding:1.5rem 2rem 3rem}
+.controls{display:flex;flex-wrap:wrap;align-items:end;gap:.8rem 1rem;padding:1rem;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:0 2px 10px #1724340a}
+.controls label{display:flex;flex-direction:column;gap:.3rem;font-size:.8rem;font-weight:700;color:var(--muted)}
+.controls select,.controls input[type=search],.controls button{border:1px solid #9aa9b8;border-radius:7px;background:#fff;color:var(--ink);padding:.55rem .7rem;font:inherit;font-size:.95rem}
+.controls select{max-width:350px}
+.controls .search-label{flex:1;min-width:220px}
+.controls input[type=range]{width:125px;height:36px;accent-color:var(--accent)}
+.controls button{cursor:pointer;font-weight:650}
+.controls button:hover{background:#eef4fa}
+.selection{position:sticky;top:0;z-index:6;padding:.85rem 1rem;margin:1rem 0 .5rem;border-left:5px solid var(--accent);border-radius:5px;background:#fff8f0;min-height:2.8rem;box-shadow:0 2px 8px #17243418}
+.key{font-size:.88rem;color:var(--muted);margin:.6rem 0 1.2rem}
+.key-dot{display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--accent);vertical-align:middle}
+.connector-pairs{display:grid;gap:1.25rem}
+.connector-pair{min-width:0;padding:1rem;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:0 2px 10px #1724340a}
+.connector-pair[hidden]{display:none}
+.connector-pair h2{font-size:1.1rem;margin:0 0 .8rem}
+.connector-pair h2 span{color:var(--accent)}
+.pair-scroll{overflow-x:auto}
+.pair-layout{min-width:680px}
+.pair-sides{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;align-items:start}
+.pair-wires{display:grid;gap:.4rem;margin-top:.7rem}
+.pair-wire,.overview-route{display:grid;grid-template-columns:minmax(5rem,1fr) minmax(7rem,2fr) minmax(5rem,1fr);grid-template-areas:"ecu track adapter" "function function function";align-items:center;width:100%;padding:.45rem .65rem;border:1px solid #d4dce4;border-radius:7px;background:#f8fafc;color:var(--ink);cursor:pointer;font:inherit;font-size:.83rem}
+.pair-wire:hover,.pair-wire.hovered,.overview-route:hover,.overview-route.hovered{background:#eaf3ff}
+.pair-wire.selected,.overview-route.selected{background:#ffe5cf;border-color:var(--accent)}
+.pair-wire:focus-visible,.overview-route:focus-visible{outline:2px solid #254869;outline-offset:1px}
+.pair-wire[hidden]{display:none}
+.pair-pin{font-weight:750;text-align:center}
+.pair-pin-ecu{grid-area:ecu}.pair-pin-adapter{grid-area:adapter}
+.wire-track{grid-area:track;position:relative;height:5px;background:var(--wire-color);border-radius:3px;box-shadow:0 0 0 1px #17243450}
+.wire-track:after{content:"";position:absolute;right:-1px;top:-5px;border-top:8px solid transparent;border-bottom:8px solid transparent;border-left:12px solid var(--wire-color)}
+.pair-function{grid-area:function;text-align:center;color:var(--muted);font-size:.75rem;margin-top:.15rem}
+h2{font-size:1.35rem;margin:0 0 .7rem}
+.connector-card{min-width:0;padding:.85rem;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:0 2px 10px #1724340a}
+.connector-card h3{font-size:1rem;margin:.1rem 0 .75rem;display:flex;justify-content:space-between;align-items:center}
+.connector-card small{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.image-scroll{overflow:auto;border:1px solid #e1e6eb;border-radius:8px;background:white}
+.pinout-image{position:relative;width:var(--zoom);min-width:100%;line-height:0}
+.pinout-image img{display:block;width:100%;height:auto}
+.pin-marker{position:absolute;transform:translate(-50%,-50%);border:2px solid #f39920;border-radius:50%;min-width:28px;height:28px;padding:0 2px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;line-height:1;color:#101b24;text-shadow:0 1px #ffffffaa;box-shadow:0 1px 4px #0009;cursor:pointer;white-space:nowrap;z-index:2}
+.pin-marker:hover,.pin-marker:focus-visible{outline:3px solid #142f4a;outline-offset:2px;z-index:4}
+.pin-marker.selected{outline:4px solid #ef4f10;outline-offset:3px;z-index:5;transform:translate(-50%,-50%) scale(1.2)}
+.pin-marker.hovered{outline:2px solid #274e73;outline-offset:2px;z-index:3}
+body.has-selection .pin-marker:not(.selected){opacity:.45}
+.pin-marker[hidden]{display:none}
+.context-marker{position:absolute;transform:translate(-50%,-50%);width:10px;height:10px;border:1px solid #172434;border-radius:50%;pointer-events:none;z-index:1}
+.corner{position:absolute;width:17px;height:17px;border-radius:50%;background:#ff6500;z-index:1;pointer-events:none}
+.corner.tl{top:12px;left:12px}.corner.tr{top:12px;right:12px}.corner.bl{bottom:12px;left:12px}.corner.br{bottom:12px;right:12px}
+.wire-section{margin-top:1.5rem}
+#visible-count{font-size:.88rem;color:var(--muted)}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:10px;background:#fff}
+table{border-collapse:collapse;width:100%;min-width:650px;font-size:.89rem}
+th,td{text-align:left;padding:.65rem .7rem;border-bottom:1px solid #e6ebef;vertical-align:middle}
+th{position:sticky;top:0;background:#e9f0f6;color:#294257;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;z-index:1}
+.wire-row{cursor:pointer}
+.wire-row:hover,.wire-row.hovered{background:#edf5ff}
+.wire-row.selected{background:#ffe5cf;box-shadow:inset 4px 0 var(--accent)}
+.wire-row:focus-visible{outline:2px solid #254869;outline-offset:-2px}
+.wire-row[hidden]{display:none}
+.swatch{display:inline-block;width:17px;height:17px;margin-right:.45rem;border-radius:50%;border:1px solid #58636c;vertical-align:middle}
+.unmatched{margin-top:1rem;padding:.8rem 1rem;border:1px solid var(--line);border-radius:8px;background:#fff}
+.unmatched summary{cursor:pointer;font-weight:700}
+.unmatched li{margin:.35rem 0}
+.total-overview{margin-top:2rem;padding:1rem;background:var(--panel);border:1px solid var(--line);border-radius:12px}
+.total-overview p{margin:.2rem 0 1rem;color:var(--muted);font-size:.9rem}
+.overview-scroll{overflow-x:auto}
+.overview-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(370px,1.2fr) minmax(0,1fr);gap:1rem;align-items:start;min-width:1080px}
+.overview-bank,.overview-routes{display:grid;gap:.55rem;min-width:0}
+.overview-bank h3,.overview-routes h3{font-size:1rem;margin:0 0 .2rem}
+.overview-route{grid-template-columns:minmax(6rem,1.2fr) minmax(3rem,.7fr) minmax(6rem,1.2fr);font-size:.75rem}
+.overview-route .pair-pin{overflow-wrap:anywhere}
+footer{margin-top:2rem;color:var(--muted);font-size:.83rem}
+a{color:#15578b}
+@media(max-width:900px){.page-header{padding:1.3rem 1rem}main{padding:1rem}.header-count{min-width:70px}.header-count strong{font-size:2rem}}
+@media print{body{background:#fff}.page-header{background:#fff;color:#000;padding:0}.page-header p,.page-header .eyebrow,.header-count span{color:#333}.controls,#copy-link{display:none}.selection{position:static;box-shadow:none}.connector-pair{box-shadow:none;break-inside:avoid}.pair-layout,.overview-layout{min-width:0}.total-overview{break-before:page}.connector-card{box-shadow:none}.pin-marker,.context-marker,.wire-track{print-color-adjust:exact}.wire-section{break-before:page}tr{break-inside:avoid}}

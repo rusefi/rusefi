@@ -90,6 +90,13 @@ family, such as `1A`, rather than converting them to uaEFI's `A1` convention.
 | 34pins-4k-front.png | 34 C | 1163x1024 | C-34pins-4k.yaml |
 | 26pins-4k-front.png | 26 D | 1097x1024 | 26pin_4k.yaml |
 
+The combined 60-pin housing has two internal locating keys along the top of
+each socket and one centered key along the bottom of each socket. The
+`60pins.jpg` connector-face photo shows this arrangement; preserve it in the
+base drawing and both board-specific annotated versions. These keys sit
+outside the terminal circles, so correcting them does not change `info.pins`
+coordinates.
+
 Pair X coordinates between rows 1/4 and between rows 2/3. Do not align the
 middle rows to the outer rows: that would remove the physical stagger.
 Draw every physical position listed under `info.pins`, including positions
