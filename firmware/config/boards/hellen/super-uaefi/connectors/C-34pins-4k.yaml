@@ -144,7 +144,7 @@ info:
   title: super-uaefi
   name: connector C
   image:
-    file: 34pins-4k-front.png
+    file: superuaefi-34pins-4k-front.png
   # Mating face, indexing tabs up. Coordinates are pixels in the 1163x1024 image.
   # Shared rows, top to bottom: y=389,479,570,660; see docs/imagegen.md.
   pins:

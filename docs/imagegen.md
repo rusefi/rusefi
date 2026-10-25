@@ -24,6 +24,11 @@ for style. Keep the original photographs.
 - Give wider connectors more image width, keeping cavity and terminal sizes
   comparable across the family.
 
+The unannotated front-view drawings follow the no-label rule above. Placement
+variants may add a labeled connector schematic in unused image space while
+preserving the terminal positions. See [Connector placement overlays](AI/connector-placement-overlays.md)
+for the reusable method and a super-uaEFI example.
+
 ## Shared coordinates
 
 Every final image has a **1024-pixel canvas height**. The five two-row uaEFI

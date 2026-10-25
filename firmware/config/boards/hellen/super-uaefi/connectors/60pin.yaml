@@ -407,7 +407,7 @@ info:
   name: connector A/B
   board_url: https://wiki.rusefi.com/super-uaEFI
   image:
-    file: 60pins-front.png
+    file: superuaefi-60pins-front.png
   # Mating face, indexing tabs up. Coordinates are pixels in the 1973x1024 image.
   # Shared rows, top to bottom: y=389,479,570,660; see docs/imagegen.md.
   pins:
