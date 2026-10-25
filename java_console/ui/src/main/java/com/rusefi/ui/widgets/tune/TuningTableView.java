@@ -35,6 +35,7 @@ import java.util.function.BiConsumer;
 public class TuningTableView {
     private static final int TOOLBAR_GAP = 6;
     private static final double SMOOTHING_FACTOR = 0.25;
+    private static final int MIN_PREVIEW_HEIGHT = 240;
     private final boolean viewMode;
     private final Node orientationConfig;
     private final JTable table = new JTable() {
@@ -326,11 +327,13 @@ public class TuningTableView {
             Point top = SwingUtilities.convertPoint(tableContainer, 0, 0, viewport.getView());
             availableHeight = viewport.getExtentSize().height - Math.max(0, top.y);
         }
-        boolean visible = previewEligible && !full3D && tableContainer.getWidth() >= 320
-            && availableHeight >= gridHeight + 160;
+        // A scrollable dialog keeps a short preview and scrolls to it; elsewhere it hides when it
+        // does not fit below the table.
+        boolean fits = viewport != null || availableHeight >= gridHeight + MIN_PREVIEW_HEIGHT;
+        boolean visible = previewEligible && !full3D && tableContainer.getWidth() >= 320 && fits;
         boolean sizeChanged = false;
         if (visible) {
-            int previewHeight = availableHeight - gridHeight;
+            int previewHeight = Math.max(MIN_PREVIEW_HEIGHT, availableHeight - gridHeight);
             if (mini3DView.getPreferredSize().height != previewHeight
                 || tableScrollPane.getPreferredSize().height != gridHeight) {
                 mini3DView.setPreferredSize(new Dimension(320, previewHeight));

@@ -93,8 +93,11 @@ class TuningTablePreviewTest {
             scroll.doLayout();
             scroll.getViewport().doLayout();
             resize(cards, 800, 400);
-            assertFalse(grid.getComponent(1).isVisible(),
-                "A previously expanded table must not keep the preview visible in a short viewport");
+            assertTrue(grid.getComponent(1).isVisible(), "A short viewport keeps the preview");
+            assertEquals(240, grid.getComponent(1).getPreferredSize().height,
+                "A short viewport keeps the preview at its minimum height");
+            assertTrue(dialog.getPreferredSize().height > scroll.getViewport().getExtentSize().height,
+                "The dialog grows past the short viewport, so it scrolls to the preview");
         });
     }
 
