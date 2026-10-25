@@ -2,6 +2,11 @@
 
 A placement overlay gives a connector's front-view pinout the context of its position among neighboring connectors. Add a small schematic in unused image space, label each connector, and highlight the connector or joined housing represented by the large drawing. Keep the schematic's viewpoint and orientation consistent with the drawing and a physical connector-face photo. Show separate housings with visible gaps and joined openings within one housing.
 
+In the D/A/B/C and A/B/C/D previews below, A and C are 34-pin sockets and
+are wider than the 26-pin B and D sockets. Keep the relative opening widths
+consistent across all three annotated images for each board, including the
+shared A/B housing.
+
 ## Reusable method
 
 1. Establish the left-to-right order, housing boundaries, and viewing orientation from a physical photo. Use the connector names in the pinout YAML; do not infer order from file names or mirror a harness-side view.

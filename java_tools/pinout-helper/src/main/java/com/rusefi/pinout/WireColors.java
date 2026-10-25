@@ -1,9 +1,19 @@
 package com.rusefi.pinout;
 
 import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Wire color strings from connector yamls ("red", "orange/brown") to paintable colors.
@@ -35,6 +45,44 @@ public final class WireColors {
         BY_NAME.put("brown", new Color(130, 75, 30));
         BY_NAME.put("purple", new Color(130, 30, 180));
         BY_NAME.put("pink", Color.PINK);
+    }
+
+    private static final List<String> OFFICIAL = loadOfficial();
+
+    public static List<String> officialColors() {
+        return OFFICIAL;
+    }
+
+    public static boolean isOfficial(String name) {
+        return name != null && OFFICIAL.contains(name.trim().toLowerCase(Locale.ROOT));
+    }
+
+    private static List<String> loadOfficial() {
+        InputStream input = WireColors.class.getResourceAsStream("official-wire-colors.md");
+        if (input == null) {
+            throw new IllegalStateException("Missing official-wire-colors.md resource");
+        }
+        List<String> colors = new ArrayList<>();
+        Set<String> seen = new HashSet<>();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (!line.startsWith("- ")) {
+                    continue;
+                }
+                String name = line.substring(2).trim().toLowerCase(Locale.ROOT);
+                if (!BY_NAME.containsKey(name) || !seen.add(name)) {
+                    throw new IllegalStateException("Invalid official wire color: " + name);
+                }
+                colors.add(name);
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not read official-wire-colors.md", e);
+        }
+        if (colors.size() != 9) {
+            throw new IllegalStateException("Expected nine official wire colors, found " + colors.size());
+        }
+        return Collections.unmodifiableList(colors);
     }
 
     /**
