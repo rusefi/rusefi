@@ -27,6 +27,7 @@
 #include "mazda_miata_1_6.h"
 #include "mazda_miata_na8.h"
 #include "mazda_miata_vvt.h"
+#include "mazda_miata_nc.h"
 #include "m111.h"
 #include "mercedes.h"
 
@@ -65,7 +66,6 @@ void applyEngineType(engine_type_e engineType) {
 	 */
 	switch (engineType) {
 	case engine_type_e::FORD_COYOTE:
-	case engine_type_e::MAZDA_MIATA_NC:
 	case engine_type_e::DISCOVERY_PDM:
 	case engine_type_e::UNUSED94:
 	case engine_type_e::UNUSED_97:
@@ -142,6 +142,11 @@ void applyEngineType(engine_type_e engineType) {
 		mreBCM();
 		break;
 #endif // HW_MICRO_RUSEFI
+#if defined(HW_HELLEN_SUPER_UAEFI) || defined(HW_HELLEN_8CHAN)
+	case engine_type_e::MAZDA_MIATA_NC:
+		setMazdaMiataNC();
+		break;
+#endif
 	case engine_type_e::HONDA_OBD1:
 		setHondaObd1();
 		break;
