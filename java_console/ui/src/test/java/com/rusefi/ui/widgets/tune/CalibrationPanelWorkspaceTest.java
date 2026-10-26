@@ -11,6 +11,7 @@ import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.ui.UIContext;
+import com.rusefi.ui.util.UiUtils;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -771,7 +772,8 @@ class CalibrationPanelWorkspaceTest {
     }
 
     private static JButton button(JPanel panel, String text) {
-        return Arrays.stream(panel.getComponents()).filter(component -> component instanceof JButton)
+        // buttons sit inside JoinedButtons groups, so search the whole toolbar
+        return UiUtils.getAllComponents(panel).stream().filter(component -> component instanceof JButton)
             .map(component -> (JButton) component).filter(button -> text.equals(button.getText())).findFirst().get();
     }
 
