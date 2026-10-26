@@ -1,0 +1,101 @@
+name: Dispatch Workflow
+description: Dispatch a workflow once and return immediately with its exact run ID and URL.
+
+inputs:
+  owner:
+    description: Repository owner
+    required: true
+  repo:
+    description: Repository name
+    required: true
+  workflow_file_name:
+    description: Workflow filename
+    required: true
+  ref:
+    description: Branch or tag to dispatch
+    required: true
+  github_token:
+    description: Token with workflow dispatch permission
+    required: true
+  workflow_inputs:
+    description: JSON object of workflow inputs (string, number, or boolean values)
+    required: false
+    default: '{}'
+
+outputs:
+  run_id:
+    description: Exact run ID returned by the workflow dispatch API
+    value: ${{ steps.dispatch.outputs.run_id }}
+  run_url:
+    description: URL of the exact dispatched workflow run
+    value: ${{ steps.dispatch.outputs.run_url }}
+
+runs:
+  using: composite
+  steps:
+    - id: dispatch
+      name: Dispatch workflow once
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github_token }}
+        TARGET_OWNER: ${{ inputs.owner }}
+        TARGET_REPO: ${{ inputs.repo }}
+        TARGET_WORKFLOW: ${{ inputs.workflow_file_name }}
+        TARGET_REF: ${{ inputs.ref }}
+        WORKFLOW_INPUTS: ${{ inputs.workflow_inputs }}
+        SERVER_URL: ${{ github.server_url }}
+      run: |
+        set -euo pipefail
+
+        for value_name in TARGET_OWNER TARGET_REPO TARGET_WORKFLOW TARGET_REF; do
+          value="${!value_name}"
+          if [[ -z "$value" || "$value" == *$'\n'* || "$value" == *$'\r'* ]]; then
+            echo "$value_name must be non-empty and contain no line breaks" >&2
+            exit 1
+          fi
+        done
+        if [[ ! "$TARGET_OWNER" =~ ^[A-Za-z0-9_.-]+$ || ! "$TARGET_REPO" =~ ^[A-Za-z0-9_.-]+$ || ! "$TARGET_WORKFLOW" =~ ^[A-Za-z0-9_.-]+$ ]]; then
+          echo "owner, repo, and workflow_file_name contain unsupported characters" >&2
+          exit 1
+        fi
+
+        if ! request_body=$(jq -sce --arg ref "$TARGET_REF" '
+          if length != 1 then error("workflow_inputs must contain one JSON document")
+          else .[0] |
+          if type != "object" then error("workflow_inputs must be a JSON object")
+          elif length > 25 then error("workflow_inputs may contain at most 25 keys")
+          elif all(.[]; (type == "string" or type == "number" or type == "boolean")) then
+            {ref: $ref, inputs: .}
+          else error("workflow_inputs values must be strings, numbers, or booleans")
+          end
+          end
+        ' <<< "$WORKFLOW_INPUTS"); then
+          echo "Invalid workflow_inputs JSON object" >&2
+          exit 1
+        fi
+
+        # Never retry this POST: a timeout can happen after GitHub accepted it.
+        response=$(printf '%s' "$request_body" | timeout --foreground --kill-after=1s 120s gh api \
+          --method POST \
+          -H 'X-GitHub-Api-Version: 2026-03-10' \
+          --input - \
+          "repos/$TARGET_OWNER/$TARGET_REPO/actions/workflows/$TARGET_WORKFLOW/dispatches")
+        if ! run_id=$(jq -ser '
+          if length != 1 then error("dispatch response must contain one JSON document")
+          else .[0] | .workflow_run_id |
+            select(type == "number" and . > 0 and floor == .) | tostring
+          end
+        ' <<< "$response"); then
+          echo "Workflow dispatch response did not contain a positive integer workflow_run_id" >&2
+          exit 1
+        fi
+
+        server_url="${SERVER_URL:-https://github.com}"
+        run_url="${server_url%/}/$TARGET_OWNER/$TARGET_REPO/actions/runs/$run_id"
+        echo "Dispatched workflow run $run_id (completion is not awaited): $run_url"
+        printf 'run_id=%s\nrun_url=%s\n' "$run_id" "$run_url" >> "$GITHUB_OUTPUT"
+        {
+          echo "## Workflow dispatched"
+          echo
+          echo "[Run $run_id]($run_url) was dispatched. This action returns immediately; it does not wait for or report workflow completion."
+        } >> "$GITHUB_STEP_SUMMARY"
