@@ -526,7 +526,7 @@ console live data tab is broken #8402
             if (UiProperties.isKnockAnalyzerEnabled()) {
                 tabbedPane.addTab("Knock Analyzer", new KnockPane(uiContext).getContent());
             }
-            SlcanTabController slcanTabs = new SlcanTabController(tabbedPane.tabbedPane,
+            SlcanTabController slcanTabs = new SlcanTabController(tabbedPane.tabbedPane, tabbedPane::addTab,
                 () -> new SlcanTab(uiContext, mainFrame::showMessageOverlay));
             Runnable refreshSlcanTab = () -> {
                 // Use only the current connection, never IniFileState's cached/offline fallback.

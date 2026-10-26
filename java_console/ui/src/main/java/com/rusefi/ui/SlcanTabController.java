@@ -7,19 +7,29 @@ import com.opensr5.ini.MenuModel;
 import com.opensr5.ini.SubMenuModel;
 
 import javax.swing.*;
+import java.awt.Component;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 /** Manages the lazy sniffer tab as the connected board changes. All calls run on the EDT. */
 public class SlcanTabController {
+    static final String TITLE = "SLCAN Sniffer";
     private final JTabbedPane tabs;
+    private final BiConsumer<String, Component> addTab;
     private final Supplier<SlcanTab> factory;
     private IniFileModel currentIni;
     private JComponent content;
     private SlcanTab sniffer;
 
     public SlcanTabController(JTabbedPane tabs, Supplier<SlcanTab> factory) {
+        this(tabs, tabs::addTab, factory);
+    }
+
+    /** @param addTab adds the tab to {@code tabs}, e.g. TabbedPanel.addTab for the console's icon and title */
+    public SlcanTabController(JTabbedPane tabs, BiConsumer<String, Component> addTab, Supplier<SlcanTab> factory) {
         this.tabs = tabs;
+        this.addTab = addTab;
         this.factory = factory;
     }
 
@@ -42,7 +52,7 @@ public class SlcanTabController {
                     return sniffer.getContent();
                 }
             }.getContent();
-            tabs.addTab("SLCAN Sniffer", content);
+            addTab.accept(TITLE, content);
         }
     }
 
