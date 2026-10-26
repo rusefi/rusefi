@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="11.0.5" transformSequenceNumber="11">
-  <directoryPresets config="../../../../../bundles/rusefi_bundle_universal/rusefi.snapshot.universal" />
+  <directoryPresets config="../work-area/rusefi_bundle_universal/rusefi.snapshot.universal" />
   <application name="rusEFI tuner" applicationId="5936-1408-7724-2651" mediaDir="." shortName="rusEFI tuner" version="1.0.0.3" allPathsRelative="true" macVolumeId="9af7b89f15108498">
     <jreBundles jdkProviderId="Zulu" release="17/17.0.14" />
   </application>
@@ -11,7 +11,7 @@
     </mountPoints>
     <entries>
       <fileEntry mountPoint="2" file="./installation.properties" />
-      <dirEntry mountPoint="1" file="../../../../../bundles/rusefi_bundle_universal/rusefi.snapshot.universal" />
+      <dirEntry mountPoint="1" file="../work-area/rusefi_bundle_universal/rusefi.snapshot.universal" />
     </entries>
   </files>
   <launchers>
