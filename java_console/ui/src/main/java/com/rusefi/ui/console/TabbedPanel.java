@@ -1,5 +1,6 @@
 package com.rusefi.ui.console;
 
+import com.formdev.flatlaf.FlatClientProperties;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.ui.AutoupdateUtil;
@@ -105,6 +106,13 @@ public class TabbedPanel {
     }
 
     public TabbedPanel(UIContext uiContext) {
+        // One row at any width. Wrapping moved the first tabs onto a second row and stretched
+        // that row's tabs to fill it; tabs that do not fit are listed by FlatLaf's "more" button.
+        tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        tabbedPane.putClientProperty(FlatClientProperties.TABBED_PANE_TABS_POPUP_POLICY,
+            FlatClientProperties.TABBED_PANE_POLICY_AS_NEEDED);
+        tabbedPane.putClientProperty(FlatClientProperties.TABBED_PANE_SCROLL_BUTTONS_POLICY,
+            FlatClientProperties.TABBED_PANE_POLICY_NEVER);
         tabbedPane.addHierarchyListener(e -> {
             if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0 && tabbedPane.isShowing())
                 SwingUtilities.invokeLater(this::installGlassPane);

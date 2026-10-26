@@ -17,29 +17,28 @@ import java.util.List;
  * Colours come from the Console.TitleBar.* keys in the theme files [tag:console_theme].
  */
 class TitleBarPanel extends JPanel {
+    static final int GAP = 8;
     private final JLabel name = caption(new JLabel(UiProperties.getDisplayName()));
     private final JLabel version = caption(new JLabel());
-    private final JPanel chips = new JPanel(new FlowLayout(FlowLayout.CENTER, 6, 0));
 
     TitleBarPanel() {
-        super(new FlowLayout(FlowLayout.CENTER, 8, 0));
+        super(new DroppingRowLayout());
         setOpaque(false);
         caption(this);
-        chips.setOpaque(false);
-        caption(chips);
         name.setFont(name.getFont().deriveFont(Font.BOLD));
         add(name);
         add(version);
-        add(chips);
     }
 
     void update(String consoleVersion, List<String> chipTexts, String tooltip) {
         version.setText(consoleVersion);
         version.setForeground(mutedForeground());
-        chips.removeAll();
+        while (getComponentCount() > 2) {
+            remove(getComponentCount() - 1);
+        }
         for (String text : chipTexts) {
             if (text != null && !text.isEmpty()) {
-                chips.add(caption(new ChipLabel(text)));
+                add(caption(new ChipLabel(text)));
             }
         }
         setToolTipText(tooltip);
@@ -105,6 +104,74 @@ class TitleBarPanel extends JPanel {
         // Clicking and dragging the title text still moves the window, like an empty title bar.
         component.putClientProperty(FlatClientProperties.COMPONENT_TITLE_BAR_CAPTION, true);
         return component;
+    }
+
+    /**
+     * One centred row. When the title bar is too narrow for everything, the last items (the
+     * connection chip first, then the firmware chip, then the version) are hidden instead of
+     * wrapping onto a second line the title bar would cut off; the tooltip keeps the full text.
+     */
+    static class DroppingRowLayout implements LayoutManager {
+        @Override
+        public void layoutContainer(Container parent) {
+            Insets insets = parent.getInsets();
+            int available = parent.getWidth() - insets.left - insets.right;
+            int height = parent.getHeight() - insets.top - insets.bottom;
+            int shown = 0;
+            int width = 0;
+            for (Component c : parent.getComponents()) {
+                int next = width + (shown == 0 ? 0 : GAP) + c.getPreferredSize().width;
+                // the product name always stays, clipped if even it does not fit
+                if (shown > 0 && next > available) {
+                    break;
+                }
+                width = next;
+                shown++;
+            }
+            int x = insets.left + Math.max(0, (available - width) / 2);
+            for (int i = 0; i < parent.getComponentCount(); i++) {
+                Component c = parent.getComponent(i);
+                if (i >= shown) {
+                    c.setBounds(0, 0, 0, 0);
+                    continue;
+                }
+                Dimension size = c.getPreferredSize();
+                int w = Math.min(size.width, insets.left + available - x);
+                int h = Math.min(size.height, height);
+                c.setBounds(x, insets.top + (height - h) / 2, w, h);
+                x += w + GAP;
+            }
+        }
+
+        @Override
+        public Dimension preferredLayoutSize(Container parent) {
+            Insets insets = parent.getInsets();
+            int width = 0;
+            int height = 0;
+            for (Component c : parent.getComponents()) {
+                Dimension size = c.getPreferredSize();
+                width += (width == 0 ? 0 : GAP) + size.width;
+                height = Math.max(height, size.height);
+            }
+            return new Dimension(width + insets.left + insets.right, height + insets.top + insets.bottom);
+        }
+
+        /** The product name only, so the menu bar can shrink this panel instead of the menus. */
+        @Override
+        public Dimension minimumLayoutSize(Container parent) {
+            Dimension preferred = preferredLayoutSize(parent);
+            Insets insets = parent.getInsets();
+            int first = parent.getComponentCount() == 0 ? 0 : parent.getComponent(0).getPreferredSize().width;
+            return new Dimension(first + insets.left + insets.right, preferred.height);
+        }
+
+        @Override
+        public void addLayoutComponent(String name, Component comp) {
+        }
+
+        @Override
+        public void removeLayoutComponent(Component comp) {
+        }
     }
 
     /** Short monospaced label on a rounded background. */
