@@ -16,14 +16,16 @@ import com.rusefi.ui.UIContext;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.widgets.AnyCommand;
+import com.rusefi.ui.widgets.ConsoleFonts;
+import com.rusefi.ui.widgets.JoinedButtons;
+import com.rusefi.ui.widgets.ToolbarStrip;
+import com.formdev.flatlaf.FlatClientProperties;
 import neoe.formatter.lua.LuaFormatter;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -36,6 +38,11 @@ public class LuaScriptPanel {
     private static final Logging log = getLogging(LuaScriptPanel.class);
 
     private static final String SCRIPT_FOLDER_CONFIG_KEY = "SCRIPT_FOLDER";
+    static final String WRITE = "Write to ECU";
+    static final String BURN = "Burn to ECU";
+    static final String MORE = "More…";
+    static final String SCRIPT = "Script";
+    static final String OUTPUT = "Output";
     private final UIContext context;
     private final Node config;
     private final JPanel mainPanel = new JPanel(new BorderLayout());
@@ -46,13 +53,14 @@ public class LuaScriptPanel {
     public LuaScriptPanel(UIContext context, Node config) {
         this.context = context;
         this.config = config;
-        command = AnyCommand.createField(context, config, true, true);
+        command = AnyCommand.createField(context, config, true, false);
 
-        // Upper panel: command entry, etc
-        JPanel upperPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
-
-        JButton writeButton = new JButton("Write to ECU");
-        JButton burnButton = new JButton("Burn to ECU");
+        JButton writeButton = new JButton(WRITE);
+        writeButton.setToolTipText("Send the script to the ECU and restart Lua; lost at power off until burned");
+        JButton burnButton = new JButton(BURN);
+        burnButton.setToolTipText("Save the script on the ECU so it survives power off");
+        burnButton.putClientProperty(FlatClientProperties.STYLE_CLASS, "primary");
+        burnButton.setPreferredSize(new Dimension(burnButton.getPreferredSize().width + 24, JoinedButtons.HEIGHT));
 
         mp = new MessagesPanel(null, config);
 
@@ -74,67 +82,38 @@ public class LuaScriptPanel {
             });
         });
 
-        JButton moreButton = new JButton("More...");
-        moreButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent me) {
-                JPopupMenu menu = new JPopupMenu();
-                JMenuItem format = new JMenuItem("Format Script");
-                format.addActionListener(e -> formatScript());
-                JMenuItem reset = new JMenuItem("Reset Lua");
-                reset.addActionListener(e -> resetLua());
+        JButton moreButton = new JButton(MORE);
+        moreButton.setToolTipText("Format, reset Lua, reload the script from disk, working folder");
+        moreButton.addActionListener(event -> createMoreMenu().show(moreButton, 0, moreButton.getHeight()));
 
+        // toolbar in the Gauges tab style [tag:console_theme]: script actions, then the command box
+        JPanel actions = new JPanel(new FlowLayout(FlowLayout.LEFT, JoinedButtons.ROW_GAP, 0));
+        actions.setOpaque(false);
+        actions.add(new JoinedButtons(writeButton));
+        actions.add(burnButton);
+        actions.add(new JoinedButtons(moreButton));
+        actions.add(command.getContent());
+        // GridBagLayout centres the link vertically in the toolbar
+        JPanel help = new JPanel(new GridBagLayout());
+        help.setOpaque(false);
+        help.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, JoinedButtons.ROW_GAP));
+        help.add(new URLLabel("Lua Wiki", "https://wiki.rusefi.com/Lua-Scripting"));
+        JPanel upperPanel = new ToolbarStrip(new BorderLayout());
+        upperPanel.setBorder(BorderFactory.createEmptyBorder(8, 0, 9, JoinedButtons.ROW_END_INSET - JoinedButtons.ROW_GAP));
+        upperPanel.add(actions, BorderLayout.CENTER);
+        upperPanel.add(help, BorderLayout.EAST);
 
-                String scriptName = LuaIncludeSyntax.getScriptName(getScript());
-                JMenuItem loadFromDisc;
-                if (scriptName == null) {
-                    loadFromDisc = new JMenuItem("Script name not specified");
-                    loadFromDisc.setEnabled(false);
-                } else if (!new File(getScriptFullFileName()).exists()) {
-                    loadFromDisc = new JMenuItem(scriptName + " not found in " + getWorkingFolder());
-                    loadFromDisc.setEnabled(false);
-                } else {
-                    loadFromDisc = new JMenuItem("Reload " + scriptName);
-                    loadFromDisc.addActionListener(e -> reloadFromDisc());
-                }
-
-                JMenuItem selectFolder = createSelectFolderMenuItem();
-
-
-                menu.add(format);
-                menu.add(reset);
-                menu.add(new JSeparator());
-                menu.add(loadFromDisc);
-                menu.add(selectFolder);
-
-
-                menu.show(moreButton, me.getX(), me.getY());
-            }
-        });
-
-
-        upperPanel.add(writeButton);
-        upperPanel.add(burnButton);
-        upperPanel.add(moreButton);
-        upperPanel.add(command.getContent());
-        upperPanel.add(new URLLabel("Lua Wiki", "https://wiki.rusefi.com/Lua-Scripting"));
-
-        // Center panel - script editor and log
-        JPanel scriptPanel = new JPanel(new BorderLayout());
-
+        // Center panel - script editor and log, each under its own titled header
         scriptText = new LuaTextEditor(context);
-        JComponent editorComponent = scriptText.getControl();
-        // enforce monospaced font for editor
-        editorComponent.setFont(new Font(Font.MONOSPACED, Font.PLAIN, editorComponent.getFont().getSize()));
-        scriptPanel.add(editorComponent, BorderLayout.CENTER);
+        JPanel scriptPanel = new JPanel(new BorderLayout());
+        scriptPanel.add(paneHeader(SCRIPT, null), BorderLayout.NORTH);
+        scriptPanel.add(scriptText.getControl(), BorderLayout.CENTER);
 
-        //centerPanel.add(, BorderLayout.WEST);
         JPanel messagesPanel = new JPanel(new BorderLayout());
-        messagesPanel.add(BorderLayout.NORTH, mp.getButtonPanel());
-        // enforce monospaced font for log view
-        Font current = mp.getFont();
-        Font mono = new Font(Font.MONOSPACED, Font.PLAIN, current.getSize());
-        mp.setFont(mono, config);
+        messagesPanel.add(paneHeader(OUTPUT, new JoinedButtons(mp.getButtons())), BorderLayout.NORTH);
+        // fixed-width output, in the console's monospaced font rather than Courier
+        mp.setFont(ConsoleFonts.mono(Font.PLAIN, mp.getFont().getSize()), config);
+        mp.getMessagesScroll().setBorder(BorderFactory.createEmptyBorder());
         messagesPanel.add(BorderLayout.CENTER, mp.getMessagesScroll());
 
         // addAndFireListener (not addListener): the Lua tab is usually opened AFTER the ECU is
@@ -156,11 +135,60 @@ public class LuaScriptPanel {
         JSplitPane centerPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scriptPanel, messagesPanel);
         centerPanel.setResizeWeight(0.5);
         centerPanel.setDividerLocation(0.5);
+        centerPanel.setContinuousLayout(true);
+        centerPanel.setBorder(BorderFactory.createEmptyBorder());
 
         mainPanel.add(upperPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
 
         AutoupdateUtil.trueLayoutAndRepaint(mainPanel);
+    }
+
+    /** Pane title on the left, optional controls on the right, on a white strip with a divider. */
+    static JPanel paneHeader(String title, JComponent trailing) {
+        JPanel header = new ToolbarStrip(new BorderLayout());
+        header.setBorder(BorderFactory.createEmptyBorder(6, 12, 7, JoinedButtons.ROW_END_INSET));
+        JLabel label = new JLabel(title);
+        label.setFont(label.getFont().deriveFont(Font.BOLD));
+        // as tall as the controls, so headers with and without them line up
+        label.setPreferredSize(new Dimension(label.getPreferredSize().width, JoinedButtons.HEIGHT));
+        header.add(label, BorderLayout.WEST);
+        if (trailing != null) {
+            header.add(trailing, BorderLayout.EAST);
+        }
+        return header;
+    }
+
+    /** The "More…" menu, built on each click so the reload entry reflects the current script name. */
+    JPopupMenu createMoreMenu() {
+        JPopupMenu menu = new JPopupMenu();
+        JMenuItem format = new JMenuItem("Format Script");
+        format.addActionListener(e -> formatScript());
+        JMenuItem reset = new JMenuItem("Reset Lua");
+        reset.addActionListener(e -> resetLua());
+
+        String scriptName = LuaIncludeSyntax.getScriptName(getScript());
+        JMenuItem loadFromDisc;
+        if (scriptName == null) {
+            loadFromDisc = new JMenuItem("Script name not specified");
+            loadFromDisc.setEnabled(false);
+        } else if (!new File(getScriptFullFileName()).exists()) {
+            loadFromDisc = new JMenuItem(scriptName + " not found in " + getWorkingFolder());
+            loadFromDisc.setEnabled(false);
+        } else {
+            loadFromDisc = new JMenuItem("Reload " + scriptName);
+            loadFromDisc.addActionListener(e -> reloadFromDisc());
+        }
+
+        JMenuItem selectFolder = createSelectFolderMenuItem();
+
+        menu.add(format);
+        menu.add(reset);
+        menu.add(new JSeparator());
+        menu.add(loadFromDisc);
+        menu.add(selectFolder);
+
+        return menu;
     }
 
     private String getScriptFullFileName() {
