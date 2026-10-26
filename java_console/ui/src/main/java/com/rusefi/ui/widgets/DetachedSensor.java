@@ -144,7 +144,11 @@ public class DetachedSensor {
     }
 
     public void show(MouseEvent event) {
-        frame.setLocation(event.getXOnScreen(), event.getYOnScreen());
+        show(event.getLocationOnScreen());
+    }
+
+    public void show(Point screenLocation) {
+        frame.setLocation(screenLocation);
         frame.setVisible(true);
     }
 

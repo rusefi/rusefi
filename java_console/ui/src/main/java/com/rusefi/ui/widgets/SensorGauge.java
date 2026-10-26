@@ -32,7 +32,8 @@ import static com.devexperts.logging.Logging.getLogging;
 /**
  * Round gauge
  * <p>
- * Double-click, or "Pop out to window" in the right-click menu, creates a {@link DetachedSensor}
+ * Right-click changes the gauge; the gear shown on hover holds its display options.
+ * Double-click, or "Pop out to window" on the gear, creates a {@link DetachedSensor}
  * <p>
  * Date: 7/9/14
  * Andrey Belomutskiy, (c) 2013-2020
@@ -43,10 +44,9 @@ import static com.devexperts.logging.Logging.getLogging;
 public class SensorGauge {
     private static final Logging log = getLogging(SensorGauge.class);
 
-    public static final String CHANGE_GAUGE = "Change gauge";
     static final String POP_OUT = "Pop out to window";
-    private static final String HINT_LINE_1 = "Double-click to detach";
-    private static final String HINT_LINE_2 = "Right-click for options";
+    private static final String HINT_LINE_1 = "Right-click to change gauge, double-click to detach";
+    private static final String HINT_LINE_2 = "Gear (top right) for display options";
 
     public interface GaugeChangeListener {
         /**
@@ -65,7 +65,7 @@ public class SensorGauge {
     }
 
     /**
-     * @param extraMenuItems added to the right-click menu after "Change gauge"
+     * @param extraMenuItems added to the gear menu before "Pop out to window"
      * @param kind round, text or bar; live graphs are built by their own class
      * @param overrides the user's replacements for the .ini range, danger value and decimals
      */
@@ -129,6 +129,8 @@ public class SensorGauge {
         }
 
         gauge.setValue(SensorCentral.getInstance().getValue(channelName));
+        GaugeOptionsButton.install(component, () -> createOptionsMenu(extraMenuItems,
+            () -> popOut(uiContext, popOutLocation(component), gaugeName)));
         MouseListener mouseListener = new MouseAdapter() {
             // The menu follows the platform popup trigger (press on macOS/Linux, release on
             // Windows). mouseClicked is lost whenever the mouse moves a pixel between press
@@ -145,15 +147,14 @@ public class SensorGauge {
 
             private void showMenuOnPopupTrigger(MouseEvent e) {
                 if (e.isPopupTrigger()) {
-                    GaugePopups.show(createPopupMenu(uiContext, wrapper, listener, extraMenuItems,
-                        () -> popOut(uiContext, e, gaugeName), kind), e);
+                    GaugePopups.show(createPopupMenu(uiContext, wrapper, listener, extraMenuItems, kind), e);
                 }
             }
 
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (!SwingUtilities.isRightMouseButton(e) && e.getClickCount() == 2) {
-                    popOut(uiContext, e, gaugeName);
+                    popOut(uiContext, e.getLocationOnScreen(), gaugeName);
                 }
             }
         };
@@ -173,29 +174,36 @@ public class SensorGauge {
     }
 
     /**
-     * Search, then "Change gauge", the caller's display options, and "Pop out to window".
+     * Right-click menu: search, then the gauge groups, so a gauge is one step away. Display
+     * settings are on the gear, see {@link #createOptionsMenu}.
      * Package-private so tests inspect the same menu users see.
      */
     static JPopupMenu createPopupMenu(UIContext uiContext, JPanelWithListener wrapper, GaugeChangeListener listener,
-                                      JMenuItem extraMenuItem, Runnable popOut) {
-        return createPopupMenu(uiContext, wrapper, listener, menuItems(extraMenuItem), popOut, GaugeDisplayKind.ROUND);
+                                      JMenuItem extraMenuItem) {
+        return createPopupMenu(uiContext, wrapper, listener, menuItems(extraMenuItem), GaugeDisplayKind.ROUND);
     }
 
     static JPopupMenu createPopupMenu(UIContext uiContext, JPanelWithListener wrapper, GaugeChangeListener listener,
-                                      List<JMenuItem> extraMenuItems, Runnable popOut, GaugeDisplayKind kind) {
+                                      List<JMenuItem> extraMenuItems, GaugeDisplayKind kind) {
         JPopupMenu pm = new JPopupMenu();
-        JMenu changeGauge = new JMenu(CHANGE_GAUGE);
-        fillGaugeMenuItems(uiContext, changeGauge, wrapper, listener, extraMenuItems, kind);
-        pm.add(changeGauge);
+        fillGaugeMenuItems(uiContext, pm, wrapper, listener, extraMenuItems, kind);
+        GaugeMenuSearch.addTo(pm);
+        return pm;
+    }
+
+    /** Gear menu: the caller's display options, then "Pop out to window". */
+    static JPopupMenu createOptionsMenu(List<JMenuItem> extraMenuItems, Runnable popOut) {
+        JPopupMenu pm = new JPopupMenu();
         for (JMenuItem item : extraMenuItems) {
             pm.add(item);
         }
-        pm.addSeparator();
+        if (!extraMenuItems.isEmpty()) {
+            pm.addSeparator();
+        }
         JMenuItem popOutItem = new JMenuItem(POP_OUT);
         popOutItem.setToolTipText("Open this gauge in its own always-on-top window (also: double-click)");
         popOutItem.addActionListener(e -> popOut.run());
         pm.add(popOutItem);
-        GaugeMenuSearch.addTo(pm, changeGauge);
         return pm;
     }
 
@@ -263,8 +271,12 @@ public class SensorGauge {
         return item == null ? Collections.emptyList() : Collections.singletonList(item);
     }
 
-    private static void popOut(UIContext uiContext, MouseEvent e, String gaugeName) {
-        new DetachedSensor(uiContext, gaugeName, DetachedSensor.DEFAULT_WIDTH).show(e);
+    private static Point popOutLocation(JComponent gauge) {
+        return gauge.isShowing() ? gauge.getLocationOnScreen() : new Point();
+    }
+
+    private static void popOut(UIContext uiContext, Point screenLocation, String gaugeName) {
+        new DetachedSensor(uiContext, gaugeName, DetachedSensor.DEFAULT_WIDTH).show(screenLocation);
     }
 
 }

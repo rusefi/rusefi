@@ -8,7 +8,6 @@ import com.rusefi.ui.widgets.DigitalGauge;
 import com.rusefi.ui.widgets.GaugeDisplayKind;
 import com.rusefi.ui.widgets.GaugePopups;
 import com.rusefi.ui.widgets.GaugeScaleOverrides;
-import com.rusefi.ui.widgets.SensorGauge;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -151,16 +150,14 @@ class GaugesGridElementTest {
                     dialog.reset.doClick(0);
                     assertEquals(GaugeScaleOverrides.NONE, dialog.parse().overrides, "Reset clears every field");
 
+                    ((AbstractButton) ((Container) gauge(element)).getComponent(0)).doClick(0);
+                    assertEquals(Arrays.asList(GaugesGridElement.DISPLAY_AS, GaugesGridElement.SCALE,
+                        "Pop out to window"), visibleItems(shown.get(shown.size() - 1)), "The gear holds the display options");
+
                     rightClick(gauge(element));
                     JPopupMenu menu = shown.get(shown.size() - 1);
-                    List<String> items = new ArrayList<>();
-                    for (Component child : menu.getComponents()) {
-                        if (child instanceof JMenuItem && child.isVisible()) {
-                            items.add(((JMenuItem) child).getText());
-                        }
-                    }
-                    assertEquals(Arrays.asList(SensorGauge.CHANGE_GAUGE, GaugesGridElement.DISPLAY_AS,
-                        GaugesGridElement.SCALE, "Pop out to window"), items);
+                    assertEquals(Collections.singletonList("Test"), visibleItems(menu),
+                        "Right-click lists the gauge groups directly");
 
                     findItem(menu, "CustomGauge").doClick(0);
                     assertEquals("CustomGauge", config.getProperty("gauge"));
@@ -189,6 +186,16 @@ class GaugesGridElementTest {
     private static void rightClick(Component target) {
         target.dispatchEvent(new MouseEvent(target, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(),
             InputEvent.BUTTON3_DOWN_MASK, 10, 10, 1, true, MouseEvent.BUTTON3));
+    }
+
+    private static List<String> visibleItems(JPopupMenu menu) {
+        List<String> items = new ArrayList<>();
+        for (Component child : menu.getComponents()) {
+            if (child instanceof JMenuItem && child.isVisible()) {
+                items.add(((JMenuItem) child).getText());
+            }
+        }
+        return items;
     }
 
     private static JMenuItem findItem(MenuElement menu, String text) {
