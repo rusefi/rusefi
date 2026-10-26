@@ -49,6 +49,23 @@ class SlcanTabControllerTest {
         return ini;
     }
 
+    /**
+     * The tab used to be added straight to the JTabbedPane, skipping TabbedPanel.addTab, so it
+     * had no icon and no bold-when-selected title unlike every other tab.
+     */
+    @Test
+    void consoleTabIsAddedThroughTheCallersTabFactory() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            com.rusefi.ui.console.TabbedPanel panel = new com.rusefi.ui.console.TabbedPanel(new UIContext());
+            @SuppressWarnings("unchecked")
+            Supplier<SlcanTab> factory = mock(Supplier.class);
+            new SlcanTabController(panel.tabbedPane, panel::addTab, factory).update(ini(true), false);
+            int index = panel.tabbedPane.indexOfTab(SlcanTabController.TITLE);
+            assertNotNull(panel.tabbedPane.getIconAt(index), "CAN icon");
+            assertTrue(panel.tabbedPane.getTabComponentAt(index) instanceof JLabel, "Console tab title");
+        });
+    }
+
     @Test
     void visibilityFollowsBoardAndDisconnectWithoutStartingScanner() throws Exception {
         SwingUtilities.invokeAndWait(() -> {

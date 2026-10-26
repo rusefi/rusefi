@@ -10,12 +10,14 @@ import com.rusefi.ui.LogDownloader;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.logview.LogViewerHost;
 import com.rusefi.ui.obd.ObdCodesPane;
+import com.rusefi.ui.widgets.SparkleIcon;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.HierarchyEvent;
 
 public class TabbedPanel {
+    private static final int TAB_ICON_SIZE = 18;
     // todo: the logic around 'criticalError' could be implemented nicer
     private String criticalError;
 
@@ -273,6 +275,11 @@ public class TabbedPanel {
             case ObdCodesPane.TITLE:
                 iconName = "file-info";
                 break;
+            case "AI Troubleshooting":
+                return new SparkleIcon(TAB_ICON_SIZE);
+            case "SLCAN Sniffer":
+                iconName = "can";
+                break;
             default:
                 return null;
         }
@@ -281,7 +288,7 @@ public class TabbedPanel {
         if (icon == null) {
             return null;
         }
-        return new ImageIcon(icon.getImage().getScaledInstance(18, 18, Image.SCALE_SMOOTH));
+        return new ImageIcon(icon.getImage().getScaledInstance(TAB_ICON_SIZE, TAB_ICON_SIZE, Image.SCALE_SMOOTH));
     }
 
     public void selectTab(String title) {
