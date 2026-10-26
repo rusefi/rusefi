@@ -1,16 +1,23 @@
 package com.rusefi.ui.console;
 
 import com.rusefi.core.RusEfiSignature;
+import com.rusefi.core.SignatureHelper;
 import com.rusefi.io.ConnectionStatusValue;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import javax.swing.Icon;
 import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
+import javax.swing.text.StyleConstants;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,42 +26,88 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MainFrameUpdateCheckTest {
+    @TempDir
+    Path tempDir;
+
+    @Test
+    public void installedImageWithDifferentFilenameDate() throws IOException {
+        // #10406 characterization: one image can have a UTC filename date and a London signature date.
+        // Comparing only the filename date incorrectly offers this installed image again.
+        RusEfiSignature installed = new RusEfiSignature(
+            "master", "2026", "07", "02", "uaefi_pro", "4226383888", false);
+        Path file = writeFirmware("rusefi_development_2026-07-01_uaefi_pro_4226383888_local_update.srec",
+            "rusEFI master.2026.07.02.uaefi_pro.4226383888");
+
+        assertEquals(MainFrame.FirmwareUpdateCheckResult.UP_TO_DATE,
+            MainFrame.firmwareUpdateCheckResultFromFile(installed, file.toFile()));
+    }
+
+    private Path writeFirmware(String filename, String signature) throws IOException {
+        byte[] data = (signature + "\0").getBytes(StandardCharsets.US_ASCII);
+        int count = 4 + data.length + 1;
+        int checksum = count + 8; // S3 address 0x08000000.
+        StringBuilder record = new StringBuilder(String.format("S3%02X08000000", count));
+        for (byte value : data) {
+            checksum += value & 0xFF;
+            record.append(String.format("%02X", value & 0xFF));
+        }
+        record.append(String.format("%02X%n", ~checksum & 0xFF));
+        Path file = tempDir.resolve(filename);
+        Files.write(file, record.toString().getBytes(StandardCharsets.US_ASCII));
+        return file;
+    }
 
     // ECU signature: rusEFI development.2026.05.09.uaefi_pro.4226383888
     private static final RusEfiSignature ECU_SIG = new RusEfiSignature(
         "development", "2026", "05", "09", "uaefi_pro", "4226383888", false
     );
+    private static final String ECU_SIGNATURE = "rusEFI development.2026.05.09.uaefi_pro.4226383888";
 
     @Test
-    public void nullEcuSigReturnsFalse() {
-        assertFalse(MainFrame.needsFirmwareUpdate(null, "rusefi_development_2026-05-09_uaefi_pro_4226383888_8849742d4267db6407b1400ae917a1ed39795d32_update.srec"));
+    public void nullEcuSigIsUnableToCheck() throws IOException {
+        assertEquals(MainFrame.FirmwareUpdateCheckResult.UNABLE_TO_CHECK,
+            MainFrame.firmwareUpdateCheckResultFromFile(null,
+                writeFirmware("firmware.srec", ECU_SIGNATURE).toFile()));
     }
 
     @Test
-    public void nullSrecNameReturnsFalse() {
-        assertFalse(MainFrame.needsFirmwareUpdate(ECU_SIG, null));
+    public void nullSrecFileIsUnableToCheck() {
+        assertEquals(MainFrame.FirmwareUpdateCheckResult.UNABLE_TO_CHECK,
+            MainFrame.firmwareUpdateCheckResultFromFile(ECU_SIG, null));
     }
 
     @Test
-    public void unparseableSrecNameReturnsFalse() {
-        assertFalse(MainFrame.needsFirmwareUpdate(ECU_SIG, "garbage.srec"));
+    public void missingSrecIsUnableToCheckEvenWhenFilenameMatches() {
+        assertEquals(MainFrame.FirmwareUpdateCheckResult.UNABLE_TO_CHECK,
+            MainFrame.firmwareUpdateCheckResultFromFile(ECU_SIG, tempDir.resolve(
+                "rusefi_development_2026-05-09_uaefi_pro_4226383888_local_update.srec").toFile()));
     }
 
     @Test
-    public void checkResultDistinguishesUnavailableFromUpToDate() {
+    public void malformedSrecIsUnableToCheck() throws IOException {
+        Path file = tempDir.resolve("firmware.srec");
+        Files.write(file, "garbage".getBytes(StandardCharsets.US_ASCII));
         assertEquals(MainFrame.FirmwareUpdateCheckResult.UNABLE_TO_CHECK,
-            MainFrame.firmwareUpdateCheckResult(null, "firmware.srec"));
-        assertEquals(MainFrame.FirmwareUpdateCheckResult.UNABLE_TO_CHECK,
-            MainFrame.firmwareUpdateCheckResult(ECU_SIG, null));
-        assertEquals(MainFrame.FirmwareUpdateCheckResult.UNABLE_TO_CHECK,
-            MainFrame.firmwareUpdateCheckResult(ECU_SIG, "garbage.srec"));
+            MainFrame.firmwareUpdateCheckResultFromFile(ECU_SIG, file.toFile()));
+    }
 
-        String matching = "rusefi_development_2026-05-09_uaefi_pro_4226383888_8849742d4267db6407b1400ae917a1ed39795d32_update.srec";
-        String different = "rusefi_development_2026-05-09_uaefi_pro_9999999999_8849742d4267db6407b1400ae917a1ed39795d32_update.srec";
+    @Test
+    public void matchingEmbeddedSignatureIsUpToDateRegardlessOfFilename() throws IOException {
         assertEquals(MainFrame.FirmwareUpdateCheckResult.UP_TO_DATE,
-            MainFrame.firmwareUpdateCheckResult(ECU_SIG, matching));
-        assertEquals(MainFrame.FirmwareUpdateCheckResult.AVAILABLE,
-            MainFrame.firmwareUpdateCheckResult(ECU_SIG, different));
+            MainFrame.firmwareUpdateCheckResultFromFile(ECU_SIG,
+                writeFirmware("firmware.srec", ECU_SIGNATURE).toFile()));
+        assertEquals(MainFrame.FirmwareUpdateCheckResult.UP_TO_DATE,
+            MainFrame.firmwareUpdateCheckResultFromFile(ECU_SIG, writeFirmware(
+                "rusefi_development_2027-05-09_uaefi_pro_9999999999_local_update.srec",
+                ECU_SIGNATURE).toFile()));
+    }
+
+    @Test
+    public void absentEmbeddedSignatureDoesNotFallBackToFilename() throws IOException {
+        assertEquals(MainFrame.FirmwareUpdateCheckResult.UNABLE_TO_CHECK,
+            MainFrame.firmwareUpdateCheckResultFromFile(ECU_SIG, writeFirmware(
+                "rusefi_development_2027-05-09_uaefi_pro_9999999999_local_update.srec",
+                "no readable firmware signature").toFile()));
     }
 
     @Test
@@ -90,71 +143,52 @@ public class MainFrameUpdateCheckTest {
     }
 
     @Test
-    public void newFormatSameDateAndHashReturnsFalse() {
-        // Matching date and configuration signature do not offer an update.
-        String srec = "rusefi_development_2026-05-09_uaefi_pro_4226383888_8849742d4267db6407b1400ae917a1ed39795d32_update.srec";
-        assertFalse(MainFrame.needsFirmwareUpdate(ECU_SIG, srec));
-    }
-
-    @Test
-    public void newFormatDifferentDateSameConfigurationHashReturnsAvailable() {
-        for (String date : new String[]{"2026-05-10", "2026-06-09", "2027-05-09"}) {
-            String srec = "rusefi_development_" + date
-                + "_uaefi_pro_4226383888_8849742d4267db6407b1400ae917a1ed39795d32_update.srec";
+    public void differentEmbeddedDateSameConfigurationHashReturnsAvailable() throws IOException {
+        for (String date : new String[]{"2026.05.10", "2026.06.09", "2027.05.09", "2026.05.08"}) {
+            Path file = writeFirmware(
+                "rusefi_development_2026-05-09_uaefi_pro_4226383888_local_update.srec",
+                "rusEFI development." + date + ".uaefi_pro.4226383888");
             assertEquals(MainFrame.FirmwareUpdateCheckResult.AVAILABLE,
-                MainFrame.firmwareUpdateCheckResult(ECU_SIG, srec),
-                "Different firmware dates must not match just because the configuration is unchanged: " + date);
+                MainFrame.firmwareUpdateCheckResultFromFile(ECU_SIG, file.toFile()),
+                "Different embedded dates must not match just because the configuration is unchanged: " + date);
         }
     }
 
     @Test
-    public void newFormatDifferentHashReturnsTrue() {
-        // SREC numeric hash differs from ECU numeric hash → update needed
-        String srec = "rusefi_development_2026-05-09_uaefi_pro_9999999999_8849742d4267db6407b1400ae917a1ed39795d32_update.srec";
-        assertTrue(MainFrame.needsFirmwareUpdate(ECU_SIG, srec));
+    public void differentEmbeddedHashOnSameDateReturnsAvailable() throws IOException {
+        assertEquals(MainFrame.FirmwareUpdateCheckResult.AVAILABLE,
+            MainFrame.firmwareUpdateCheckResultFromFile(ECU_SIG, writeFirmware("firmware.srec",
+                "rusEFI development.2026.05.09.uaefi_pro.1111111111").toFile()));
     }
 
     @Test
-    public void newFormatSameDateDifferentHashReturnsTrue() {
-        // Even if dates match, different numeric hash means different build → update needed
-        String srec = "rusefi_development_2026-05-09_uaefi_pro_1111111111_8849742d4267db6407b1400ae917a1ed39795d32_update.srec";
-        assertTrue(MainFrame.needsFirmwareUpdate(ECU_SIG, srec));
+    public void branchAndTargetDifferencesAreNotReportedAsMatching() throws IOException {
+        for (String signature : new String[]{
+            "rusEFI master.2026.05.09.uaefi_pro.4226383888",
+            "rusEFI development.2026.05.09.proteus_f7.4226383888"}) {
+            assertEquals(MainFrame.FirmwareUpdateCheckResult.AVAILABLE,
+                MainFrame.firmwareUpdateCheckResultFromFile(ECU_SIG,
+                    writeFirmware("firmware.srec", signature).toFile()), signature);
+        }
     }
 
     @Test
-    public void legacyFormatSameDateReturnsFalse() {
-        // Legacy 4-part srec, same date as ECU → no update needed
-        RusEfiSignature ecuSig = new RusEfiSignature(
-            "development", "2026", "05", "09", "all", null, false
-        );
-        String srec = "rusefi_development_2026-05-09_8849742d4267db6407b1400ae917a1ed39795d32_update.srec";
-        assertFalse(MainFrame.needsFirmwareUpdate(ecuSig, srec));
+    public void legacyFilenameStillUsesEmbeddedSignature() throws IOException {
+        assertEquals(MainFrame.FirmwareUpdateCheckResult.UP_TO_DATE,
+            MainFrame.firmwareUpdateCheckResultFromFile(ECU_SIG, writeFirmware(
+                "rusefi_development_2026-05-10_8849742d4267db6407b1400ae917a1ed39795d32_update.srec",
+                ECU_SIGNATURE).toFile()));
     }
 
     @Test
-    public void legacyFormatDifferentDateReturnsTrue() {
-        // Legacy 4-part srec, date differs from ECU → update needed
-        RusEfiSignature ecuSig = new RusEfiSignature(
-            "development", "2026", "05", "09", "all", null, false
-        );
-        String srec = "rusefi_development_2026-05-10_8849742d4267db6407b1400ae917a1ed39795d32_update.srec";
-        assertTrue(MainFrame.needsFirmwareUpdate(ecuSig, srec));
-    }
-
-    @Test
-    public void legacyFormatDifferentMonthReturnsTrue() {
-        RusEfiSignature ecuSig = new RusEfiSignature(
-            "development", "2026", "04", "09", "all", null, false
-        );
-        String srec = "rusefi_development_2026-05-09_8849742d4267db6407b1400ae917a1ed39795d32_update.srec";
-        assertTrue(MainFrame.needsFirmwareUpdate(ecuSig, srec));
-    }
-
-    @Test
-    public void newFormatWithoutUpdateSuffix() {
-        // SREC name without _update suffix should still parse correctly
-        String srec = "rusefi_development_2026-05-09_uaefi_pro_4226383888_8849742d4267db6407b1400ae917a1ed39795d32.srec";
-        assertFalse(MainFrame.needsFirmwareUpdate(ECU_SIG, srec));
+    public void afterUpdatingEcuTheSameImageIsNoLongerOffered() throws IOException {
+        String nextSignature = "rusEFI development.2026.05.10.uaefi_pro.4226383888";
+        Path file = writeFirmware(
+            "rusefi_development_2026-05-09_uaefi_pro_4226383888_local_update.srec", nextSignature);
+        assertEquals(MainFrame.FirmwareUpdateCheckResult.AVAILABLE,
+            MainFrame.firmwareUpdateCheckResultFromFile(ECU_SIG, file.toFile()));
+        assertEquals(MainFrame.FirmwareUpdateCheckResult.UP_TO_DATE,
+            MainFrame.firmwareUpdateCheckResultFromFile(SignatureHelper.parse(nextSignature), file.toFile()));
     }
 
     @Test
@@ -187,6 +221,31 @@ public class MainFrameUpdateCheckTest {
                 assertTrue(message.getHeight() >= message.getFontMetrics(message.getFont()).getHeight());
                 assertTrue(content.getY() >= 0);
                 assertTrue(content.getY() + content.getHeight() <= overlay.getHeight(), "Actions should remain on screen");
+            }
+        });
+    }
+
+    @Test
+    public void firmwareCheckMessageIsCenteredWithoutRestylingDialog() throws Exception {
+        // Screenshot characterization: the firmware-check text is left aligned despite centered actions.
+        SwingUtilities.invokeAndWait(() -> {
+            MainFrame.FrameOverlay overlay = new MainFrame.FrameOverlay("Checking ECU firmware...", Color.DARK_GRAY, true,
+                new MainFrame.OverlayAction("Update ECU Firmware", 'U', () -> {}),
+                new MainFrame.OverlayAction("Close", 'C', () -> {}));
+            overlay.setActionVisible(0, false);
+            Container content = (Container) overlay.getComponent(0);
+            JTextPane message = (JTextPane) content.getComponent(0);
+            assertTrue(overlay.isOpaque(), "Keep the existing dialog background");
+            assertEquals(32f, message.getFont().getSize2D(), "Keep the existing message font size");
+            assertEquals(new JTextArea().getFont().deriveFont(java.awt.Font.BOLD, 32f), message.getFont());
+            assertEquals(new JTextArea().getMargin(), message.getMargin());
+            assertEquals(Color.DARK_GRAY, message.getForeground());
+            for (String text : new String[]{"Checking ECU firmware...", "ECU firmware update available",
+                "ECU already matches the local firmware image", "Unable to check ECU firmware"}) {
+                overlay.setMessage(text, Color.DARK_GRAY);
+                assertEquals(StyleConstants.ALIGN_CENTER, StyleConstants.getAlignment(
+                    message.getStyledDocument().getParagraphElement(0).getAttributes()));
+                assertEquals(text, overlay.getMessageForUnitTest());
             }
         });
     }
