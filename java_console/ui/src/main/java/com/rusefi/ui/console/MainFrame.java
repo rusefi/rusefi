@@ -31,6 +31,9 @@ import javax.swing.Action;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -71,7 +74,7 @@ public class MainFrame {
 
     static final class FrameOverlay extends JPanel {
         private static final Color GREEN = new Color(0, 128, 0);
-        private final JTextArea message = new JTextArea();
+        private final JTextComponent message;
         private final JButton[] buttons;
         private final JPanel content;
         private final GridBagConstraints contentConstraints;
@@ -80,14 +83,30 @@ public class MainFrame {
         private boolean dimmed;
 
         FrameOverlay(String text, Color color, OverlayAction... actions) {
+            this(text, color, false, actions);
+        }
+
+        FrameOverlay(String text, Color color, boolean centerMessage, OverlayAction... actions) {
             super(new GridBagLayout());
+            JTextArea area = new JTextArea();
+            if (centerMessage) {
+                JTextPane pane = new JTextPane();
+                pane.setFont(area.getFont());
+                pane.setMargin(area.getMargin());
+                SimpleAttributeSet paragraph = new SimpleAttributeSet();
+                StyleConstants.setAlignment(paragraph, StyleConstants.ALIGN_CENTER);
+                pane.setParagraphAttributes(paragraph, false);
+                message = pane;
+            } else {
+                area.setLineWrap(true);
+                area.setWrapStyleWord(true);
+                area.setColumns(50);
+                message = area;
+            }
             setFocusCycleRoot(true);
             message.setEditable(false);
             message.setOpaque(false);
             message.setFont(message.getFont().deriveFont(Font.BOLD, 32f));
-            message.setLineWrap(true);
-            message.setWrapStyleWord(true);
-            message.setColumns(50);
             setMessage(text, color);
 
             buttons = new JButton[actions.length];
@@ -404,24 +423,27 @@ public class MainFrame {
     }
 
 
-    static FirmwareUpdateCheckResult firmwareUpdateCheckResult(RusEfiSignature ecuSig, String srecName) {
-        if (ecuSig == null || srecName == null) {
+    static FirmwareUpdateCheckResult firmwareUpdateCheckResultFromFile(RusEfiSignature ecuSig, File srecFile) {
+        if (ecuSig == null || srecFile == null) {
             return FirmwareUpdateCheckResult.UNABLE_TO_CHECK;
         }
-        RusEfiSignature srecSig = SignatureHelper.parseSrec(srecName);
-        if (srecSig == null) {
+        final RusEfiSignature imageSig;
+        try {
+            imageSig = FirmwareSignatureReader.read(srecFile);
+        } catch (java.io.IOException e) {
+            log.info("checkFirmwareUpdate: unable to read SREC signature: " + e.getMessage());
             return FirmwareUpdateCheckResult.UNABLE_TO_CHECK;
         }
-        // The signature hash covers configuration inputs, so firmware code can change without it changing.
-        boolean needsUpdate = !ecuSig.getYear().equals(srecSig.getYear())
-            || !ecuSig.getMonth().equals(srecSig.getMonth())
-            || !ecuSig.getDay().equals(srecSig.getDay())
-            || (!srecSig.getIsLegacyFormat() && !Objects.equals(srecSig.getHash(), ecuSig.getHash()));
-        return needsUpdate ? FirmwareUpdateCheckResult.AVAILABLE : FirmwareUpdateCheckResult.UP_TO_DATE;
-    }
-
-    static boolean needsFirmwareUpdate(RusEfiSignature ecuSig, String srecName) {
-        return firmwareUpdateCheckResult(ecuSig, srecName) == FirmwareUpdateCheckResult.AVAILABLE;
+        if (imageSig == null) {
+            return FirmwareUpdateCheckResult.UNABLE_TO_CHECK;
+        }
+        boolean matches = Objects.equals(ecuSig.getBranch(), imageSig.getBranch())
+            && Objects.equals(ecuSig.getYear(), imageSig.getYear())
+            && Objects.equals(ecuSig.getMonth(), imageSig.getMonth())
+            && Objects.equals(ecuSig.getDay(), imageSig.getDay())
+            && Objects.equals(ecuSig.getBundleTarget(), imageSig.getBundleTarget())
+            && Objects.equals(ecuSig.getHash(), imageSig.getHash());
+        return matches ? FirmwareUpdateCheckResult.UP_TO_DATE : FirmwareUpdateCheckResult.AVAILABLE;
     }
 
     static boolean isFirmwareUpdateConnectionReady(ConnectionStatusValue status) {
@@ -441,9 +463,9 @@ public class MainFrame {
             log.info("checkFirmwareUpdate: no srec file found");
             return FirmwareUpdateCheckResult.UNABLE_TO_CHECK;
         }
-        String srecName = new File(srecPath).getName();
-        log.info("checkFirmwareUpdate: srec=" + srecName);
-        FirmwareUpdateCheckResult result = firmwareUpdateCheckResult(ecuSig, srecName);
+        File srecFile = new File(srecPath);
+        log.info("checkFirmwareUpdate: srec=" + srecFile.getName());
+        FirmwareUpdateCheckResult result = firmwareUpdateCheckResultFromFile(ecuSig, srecFile);
         log.info("checkFirmwareUpdate: result=" + result);
         return result;
     }
@@ -531,7 +553,7 @@ public class MainFrame {
         closeUnsavedTuneChangesOverlay();
         closeConnectionFailureOverlay();
         closeFirmwareUpdateCheckOverlay();
-        firmwareUpdateCheckOverlay = new FrameOverlay("Checking ECU firmware...", Color.DARK_GRAY,
+        firmwareUpdateCheckOverlay = new FrameOverlay("Checking ECU firmware...", Color.DARK_GRAY, true,
             new OverlayAction("Update ECU Firmware", KeyEvent.VK_U, () -> {
                 closeFirmwareUpdateCheckOverlay();
                 if (updateEcuItem.isEnabled() && updateEcuAction != null) {
