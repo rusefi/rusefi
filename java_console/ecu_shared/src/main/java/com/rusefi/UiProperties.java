@@ -51,6 +51,10 @@ public class UiProperties {
         return ConnectionAndMeta.getBoolean("show_pinout_tab", PropertiesHolder.INSTANCE.getProperties());
     }
 
+    public static boolean isObdCodesEnabled() {
+        return ConnectionAndMeta.getBoolean("show_obd_codes_tab", PropertiesHolder.INSTANCE.getProperties());
+    }
+
     public static boolean isSlcanSnifferEnabled() {
         return ConnectionAndMeta.getBoolean("show_slcan_sniffer", PropertiesHolder.INSTANCE.getProperties());
     }

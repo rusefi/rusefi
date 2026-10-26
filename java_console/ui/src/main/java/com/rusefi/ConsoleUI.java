@@ -569,7 +569,7 @@ console live data tab is broken #8402
                 devicePane.triggerAutoUpdate();
             });
 
-            if (!isOffline) {
+            if (!isOffline && UiProperties.isObdCodesEnabled()) {
                 // the last built-in tab, so a tab index saved by older consoles still finds its tab (SavedTab)
                 tabbedPane.addTab(ObdCodesPane.TITLE, new ObdCodesPane().getContent());
             }
