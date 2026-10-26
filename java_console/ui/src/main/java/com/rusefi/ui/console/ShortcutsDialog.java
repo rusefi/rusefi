@@ -25,6 +25,12 @@ final class ShortcutsDialog extends JDialog {
             "        Press Ctrl+S again to stop recording or cancel a pending tune capture.",
             "        This shortcut controls logging; use File > Save Tune to save a tune.",
             "",
+            "LOGGING PROFILES (Logging > Profile > Edit profiles…)",
+            "Delete  In the profile's signals: stop recording the selected signal.",
+            "Enter   In the signals to add: record the selected signal. In the search box: record the",
+            "        selected signal, or the only match.",
+            "Esc     Close the window. Changes are saved as you make them.",
+            "",
             "TUNING TABLES",
             "Focus the table with Tab or click a cell. Editing shortcuts operate on the selected data cells "
                     + "in an editable table, not on the axis column or a read-only comparison.",

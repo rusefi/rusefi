@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 /**
  * What the signal sidebar remembers from one log to the next and across console runs: which sections are open
  * and the Hide zero / Hide constant switches. Sections are kept as changes from their defaults (groups closed,
- * the plots and the lists open), so a group added in a later version starts closed like the others. Saved with
+ * the profiles closed, the plots and the lists open), so a group added in a later version starts closed like the others. Saved with
  * the console config on exit.
  */
 final class SidebarState {
@@ -35,7 +35,7 @@ final class SidebarState {
 
     boolean isCollapsed(String section) {
         return titles(CLOSED).contains(section)
-                || collapsedByDefault.contains(section) && !titles(OPENED).contains(section);
+                || startsCollapsed(section) && !titles(OPENED).contains(section);
     }
 
     void setCollapsed(String section, boolean collapsed) {
@@ -43,7 +43,7 @@ final class SidebarState {
         Set<String> closed = titles(CLOSED);
         opened.remove(section);
         closed.remove(section);
-        if (collapsed != collapsedByDefault.contains(section)) {
+        if (collapsed != startsCollapsed(section)) {
             (collapsed ? closed : opened).add(section);
         }
         node.setProperty(OPENED, String.join(SEPARATOR, opened));
@@ -52,7 +52,11 @@ final class SidebarState {
 
     /** Forgets a deleted list, so a new list of the same name starts open. */
     void forget(String section) {
-        setCollapsed(section, collapsedByDefault.contains(section));
+        setCollapsed(section, startsCollapsed(section));
+    }
+
+    private boolean startsCollapsed(String section) {
+        return SignalSections.collapsedByDefault(collapsedByDefault, section);
     }
 
     /** A renamed list keeps its open or closed state. */

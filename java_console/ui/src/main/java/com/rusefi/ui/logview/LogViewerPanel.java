@@ -5,6 +5,10 @@ import com.formdev.flatlaf.icons.FlatSearchIcon;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.logview.CsvLogReader;
+import com.rusefi.sensor_logs.CustomBinaryLogEntry;
+import com.rusefi.sensor_logs.LoggingProfile;
+import com.rusefi.sensor_logs.LoggingProfiles;
+import com.rusefi.sensor_logs.SensorLogger;
 import com.rusefi.ui.widgets.SegmentedControl;
 
 import javax.swing.AbstractAction;
@@ -58,10 +62,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -102,11 +109,18 @@ public final class LogViewerPanel extends JPanel {
             SignalSections.Row row = rows.get(index);
             if (row.isHeading()) {
                 String toggle = row.expanded ? "Click to collapse" : "Click to expand";
+                if (row.kind == SignalSections.Kind.PROFILE) {
+                    return toggle + " · the signals this logging profile records · ⋯ or right-click: actions";
+                }
                 if (row.kind == SignalSections.Kind.PLOTTED) {
-                    return toggle + " · drop a signal here to move it to " + row.section.toLowerCase(Locale.ROOT);
+                    return toggle + " · drop a signal here to move it to " + row.section.toLowerCase(Locale.ROOT)
+                            + " · right-click: save the plotted signals as a logging profile";
                 }
                 return row.kind == SignalSections.Kind.LIST
                         ? toggle + " · ⋯ or right-click: list actions · drop a signal here to add it" : toggle;
+            }
+            if (row.isMissing() && row.kind == SignalSections.Kind.PROFILE) {
+                return row.label + " is recorded by this profile but not in this log";
             }
             if (row.isMissing()) {
                 return row.label + " is not in this log · right-click to remove it from " + row.section;
@@ -143,15 +157,22 @@ public final class LogViewerPanel extends JPanel {
     /** The working tune, for tune tables' axis values; null without one. */
     private Supplier<ConfigurationImage> tuneSupplier = () -> null;
     private final SignalLists lists;
-    /** Asks for a list name (dialog title, initial text); null when cancelled. Replaced in tests. */
+    /** Asks for a list or profile name (dialog title, initial text); null when cancelled. Replaced in tests. */
     BiFunction<String, String, String> namePrompt = (title, initial) ->
-            (String) JOptionPane.showInputDialog(this, "List name:", title, JOptionPane.PLAIN_MESSAGE, null, null,
+            (String) JOptionPane.showInputDialog(this, "Name:", title, JOptionPane.PLAIN_MESSAGE, null, null,
                     initial);
     /** Asks to go ahead with the given question. Replaced in tests. */
     Predicate<String> confirm = question -> JOptionPane.showConfirmDialog(this, question, "Signal lists",
             JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION;
     Consumer<String> messages = message -> JOptionPane.showMessageDialog(this, message, "Signal lists",
             JOptionPane.WARNING_MESSAGE);
+    /** Tells that something worked, e.g. a profile was saved. Replaced in tests. */
+    Consumer<String> notices = message -> JOptionPane.showMessageDialog(this, message, "Logging profiles",
+            JOptionPane.INFORMATION_MESSAGE);
+    /** The logging profiles listed below the lists, or null when the viewer runs without data logging. */
+    private LoggingProfiles profiles;
+    /** What data logging records with the .ini, in recording order; built when first needed. */
+    private List<CustomBinaryLogEntry> recordable;
     private final SidebarState state;
     final JCheckBox hideZeroBox = new JCheckBox();
     final JCheckBox hideConstantBox = new JCheckBox();
@@ -430,9 +451,8 @@ public final class LogViewerPanel extends JPanel {
     private void clickRow(int index, MouseEvent event) {
         SignalSections.Row row = rows.get(index);
         Rectangle cell = fieldList.getCellBounds(index, index);
-        if (row.isHeading() && row.kind == SignalSections.Kind.LIST
-                && event.getX() >= cell.x + cell.width - MENU_HOT_WIDTH) {
-            listMenu(row.section).show(fieldList, cell.x + cell.width - MENU_HOT_WIDTH, cell.y + cell.height);
+        if (row.isHeading() && hasMenuButton(row) && event.getX() >= cell.x + cell.width - MENU_HOT_WIDTH) {
+            rowMenu(row).show(fieldList, cell.x + cell.width - MENU_HOT_WIDTH, cell.y + cell.height);
             return;
         }
         if (row.isHeading()) {
@@ -515,7 +535,16 @@ public final class LogViewerPanel extends JPanel {
     /** The right-click menu of a row: list actions for a list heading, signal actions otherwise. */
     JPopupMenu rowMenu(SignalSections.Row row) {
         if (row.isHeading()) {
-            return row.kind == SignalSections.Kind.LIST ? listMenu(row.section) : null;
+            switch (row.kind) {
+                case LIST:
+                    return listMenu(row.section);
+                case PROFILE:
+                    return profileMenu(row.section);
+                case PLOTTED:
+                    return plotsMenu();
+                default:
+                    return null;
+            }
         }
         JPopupMenu menu = new JPopupMenu();
         if (row.isSignal()) {
@@ -558,7 +587,8 @@ public final class LogViewerPanel extends JPanel {
             remove.addActionListener(e -> removeFromList(row.section, label));
             menu.add(remove);
         }
-        return menu;
+        // a profile signal missing from the log has nothing to act on
+        return menu.getComponentCount() == 0 ? null : menu;
     }
 
     /** The ⋯ / right-click menu of a list heading. */
@@ -593,7 +623,169 @@ public final class LogViewerPanel extends JPanel {
         JMenuItem newList = new JMenuItem("New list…");
         newList.addActionListener(e -> newList(-1));
         menu.add(newList);
+        if (profiles != null) {
+            menu.add(saveAsProfileItem("Save as logging profile…", "Record this list's signals next time",
+                    labels(list), list));
+        }
         return menu;
+    }
+
+    /** List and profile headings end with a ⋯ menu button. */
+    private static boolean hasMenuButton(SignalSections.Row row) {
+        return row.kind == SignalSections.Kind.LIST || row.kind == SignalSections.Kind.PROFILE;
+    }
+
+    /** The ⋯ / right-click menu of a logging profile's heading. */
+    JPopupMenu profileMenu(String section) {
+        JPopupMenu menu = new JPopupMenu();
+        List<Integer> present = presentFields(profileLabels(section));
+        JMenuItem plotAll = new JMenuItem("Plot all");
+        plotAll.setToolTipText("Adds the profile's signals in this log to a new plot");
+        plotAll.setEnabled(present.stream().anyMatch(field -> !layout.isPlotted(field)));
+        plotAll.addActionListener(e -> plotAll(present));
+        menu.add(plotAll);
+        menu.addSeparator();
+        JMenuItem edit = new JMenuItem("Edit profile…");
+        edit.setToolTipText("Add or remove the signals it records");
+        edit.addActionListener(e -> editProfile(section));
+        menu.add(edit);
+        return menu;
+    }
+
+    /** Opens the profile editor on the profile a section shows. */
+    private void editProfile(String section) {
+        String id = null;
+        for (LoggingProfile profile : profiles.list()) {
+            if (SignalSections.profileTitle(profile.getName()).equals(section)) {
+                id = profile.getId();
+            }
+        }
+        LoggingProfilesEditor.showDialog(this, profiles, ini, id);
+    }
+
+    /** The right-click menu of a plot heading. */
+    JPopupMenu plotsMenu() {
+        JPopupMenu menu = new JPopupMenu();
+        List<String> plotted = new ArrayList<>();
+        for (int plot = 0; plot < layout.plotCount(); plot++) {
+            for (int field : layout.fields(plot)) {
+                plotted.add(log.name(field));
+            }
+        }
+        JMenuItem save = saveAsProfileItem("Save plotted signals as logging profile…",
+                "Record the signals of every plot next time", plotted, "");
+        if (plotted.isEmpty()) {
+            save.setEnabled(false);
+            save.setToolTipText("Plot some signals first");
+        }
+        menu.add(save);
+        return menu;
+    }
+
+    private JMenuItem saveAsProfileItem(String text, String tip, List<String> labels, String suggestedName) {
+        JMenuItem item = new JMenuItem(text);
+        item.setToolTipText(tip);
+        if (profiles == null || ini == null) {
+            item.setEnabled(false);
+            item.setToolTipText(profiles == null ? "Data logging is not available here"
+                    : "Needs the ECU's .ini: connect to the ECU, then open the log again");
+        }
+        item.addActionListener(e -> saveAsProfile(labels, suggestedName));
+        return item;
+    }
+
+    void setLoggingProfiles(LoggingProfiles profiles) {
+        this.profiles = profiles;
+        filter(search.getText());
+    }
+
+    /** The signals data logging can record with the .ini, in recording order; empty without one. */
+    private List<CustomBinaryLogEntry> recordable() {
+        if (recordable == null) {
+            recordable = ini == null ? new ArrayList<>() : SensorLogger.getOutputChannels(ini);
+        }
+        return recordable;
+    }
+
+    /**
+     * Section title to labels of each logging profile but Full (which would only repeat the groups), in
+     * recording order. Logs label signals by the .ini's [Datalog] labels; without an .ini a profile's channels
+     * stand for themselves.
+     */
+    Map<String, List<String>> profileSections() {
+        Map<String, List<String>> sections = new LinkedHashMap<>();
+        if (profiles == null) {
+            return sections;
+        }
+        for (LoggingProfile profile : profiles.list()) {
+            if (profile.isFull()) {
+                continue;
+            }
+            Set<String> channels = profile.channels(ini);
+            List<String> labels = new ArrayList<>();
+            if (ini == null) {
+                labels.addAll(channels);
+            } else {
+                for (CustomBinaryLogEntry entry : recordable()) {
+                    if (channels.contains(entry.getChannel()) && !labels.contains(entry.getName())) {
+                        labels.add(entry.getName());
+                    }
+                }
+            }
+            sections.put(SignalSections.profileTitle(profile.getName()), labels);
+        }
+        return sections;
+    }
+
+    private List<String> profileLabels(String section) {
+        List<String> labels = profileSections().get(section);
+        return labels != null ? labels : new ArrayList<>();
+    }
+
+    /**
+     * Saves signals as a new logging profile, after asking its name: labels are matched to the .ini's channels,
+     * and those data logging can't record (e.g. a signal the viewer computed) are left out.
+     */
+    void saveAsProfile(List<String> labels, String suggestedName) {
+        if (profiles == null || ini == null) {
+            return;
+        }
+        String name = namePrompt.apply("New logging profile",
+                profiles.problem(suggestedName) == null ? suggestedName : "");
+        if (name == null) {
+            return;
+        }
+        String problem = profiles.problem(name);
+        if (problem != null) {
+            messages.accept(problem);
+            return;
+        }
+        Map<String, String> channelOfLabel = new HashMap<>();
+        for (CustomBinaryLogEntry entry : recordable()) {
+            channelOfLabel.putIfAbsent(entry.getName(), entry.getChannel());
+        }
+        List<String> channels = new ArrayList<>();
+        int skipped = 0;
+        for (String label : labels) {
+            String channel = channelOfLabel.get(label);
+            if (channel == null) {
+                skipped++;
+            } else if (!channels.contains(channel)) {
+                channels.add(channel);
+            }
+        }
+        LoggingProfile profile = profiles.create(name.trim());
+        for (String channel : channels) {
+            profile.add(channel);
+        }
+        state.setCollapsed(SignalSections.profileTitle(profile.getName()), false);
+        // tells the listeners, e.g. the record button's menu
+        profiles.save();
+        filter(search.getText());
+        int recorded = profile.channels(ini).size();
+        notices.accept("Saved the logging profile \"" + profile.getName() + "\" with " + recorded + " signals"
+                + (skipped > 0 ? "; " + skipped + " can't be recorded and were left out" : "")
+                + ". Choose it beside Start Data Logging.");
     }
 
     private List<String> listNames() {
@@ -611,9 +803,13 @@ public final class LogViewerPanel extends JPanel {
 
     /** A list's signals that are in this log, in list order. */
     private List<Integer> presentFields(String list) {
+        return presentFields(labels(list));
+    }
+
+    private List<Integer> presentFields(List<String> labels) {
         Map<String, Integer> fieldOfLabel = SignalSections.fieldOfLabel(log);
         List<Integer> fields = new ArrayList<>();
-        for (String label : labels(list)) {
+        for (String label : labels) {
             Integer field = fieldOfLabel.get(label);
             if (field != null) {
                 fields.add(field);
@@ -641,8 +837,12 @@ public final class LogViewerPanel extends JPanel {
 
     /** Adds the list's unplotted signals to a new plot, or to the active plot while it is empty. */
     void plotAll(String list) {
+        plotAll(presentFields(list));
+    }
+
+    private void plotAll(List<Integer> fields) {
         boolean intoActive = layout.fields(layout.activePlot()).isEmpty();
-        for (int field : presentFields(list)) {
+        for (int field : fields) {
             if (layout.isPlotted(field)) {
                 continue;
             }
@@ -937,8 +1137,8 @@ public final class LogViewerPanel extends JPanel {
         SignalStrip strip = activeStrip();
         int[] axisFields = strip != null ? new int[]{strip.field('x'), strip.field('y'), strip.field('z')} : null;
         String axesTitle = SCATTER.equals(shownView) ? SignalSections.SCATTER : SignalSections.HISTOGRAM;
-        for (SignalSections.Row row : SignalSections.rows(log, layout, axisFields, axesTitle, categories, lists, query,
-                state.hideZero(), state.hideConstant(), state::isCollapsed)) {
+        for (SignalSections.Row row : SignalSections.rows(log, layout, axisFields, axesTitle, categories, lists,
+                profileSections(), query, state.hideZero(), state.hideConstant(), state::isCollapsed)) {
             rows.addElement(row);
         }
         if (selected != null) {
@@ -1112,6 +1312,7 @@ public final class LogViewerPanel extends JPanel {
             case HISTOGRAM:
                 return 0;
             case LIST:
+            case PROFILE:
                 return 1;
             default:
                 return 2;
@@ -1177,8 +1378,7 @@ public final class LogViewerPanel extends JPanel {
                 name.setFont(list.getFont().deriveFont(Font.BOLD, list.getFont().getSize2D() - 1));
                 name.setForeground(muted);
                 // a list heading ends with its menu button (MENU_HOT_WIDTH)
-                unit.setText(String.format(Locale.ROOT, row.kind == SignalSections.Kind.LIST ? "%,d    ⋯" : "%,d",
-                        row.count));
+                unit.setText(String.format(Locale.ROOT, hasMenuButton(row) ? "%,d    ⋯" : "%,d", row.count));
                 unit.setFont(list.getFont().deriveFont(list.getFont().getSize2D() - 1));
                 unit.setForeground(muted);
                 return this;

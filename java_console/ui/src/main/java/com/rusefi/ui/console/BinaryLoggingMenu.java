@@ -6,8 +6,11 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionStatusValue;
+import com.rusefi.sensor_logs.LoggingProfile;
+import com.rusefi.sensor_logs.LoggingProfiles;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.UIContext;
+import com.rusefi.ui.logview.LoggingProfilesEditor;
 import com.rusefi.util.TuneSnapshot;
 
 import javax.swing.*;
@@ -33,6 +36,8 @@ final class BinaryLoggingMenu {
     static final String LAST_LOG = "last_log";
     /** Whether the status strips show the Start Data Logging / Stop Logging button; on unless turned off. */
     static final String SHOW_RECORD_BUTTON = "show_record_button";
+    /** Child node holding the logging profiles and the one recordings use. */
+    static final String PROFILES = "profiles";
     private final UIContext uiContext;
     private final Node settings;
     private final Component parent;
@@ -41,6 +46,8 @@ final class BinaryLoggingMenu {
     private final JMenuItem startAsItem;
     private final JMenuItem stopItem;
     private final JCheckBoxMenuItem saveTuneItem;
+    private final JMenu profileMenu;
+    private final LoggingProfiles profiles;
     private final JMenuItem viewLastItem;
     private final JCheckBoxMenuItem showRecordButtonItem;
     private SwingWorker<byte[], Void> startWorker;
@@ -60,6 +67,9 @@ final class BinaryLoggingMenu {
         this.settings = settings;
         String lastPath = settings.getProperty(LAST_LOG, null);
         lastLog = lastPath == null || lastPath.isEmpty() ? null : new File(lastPath);
+        profiles = new LoggingProfiles(settings.getChild(PROFILES));
+        // e.g. a profile saved from the Log Viewer appears in the menu and beside the record button
+        profiles.addListener(this::refresh);
         menu = new JMenu("Logging");
         menu.setMnemonic(KeyEvent.VK_B);
 
@@ -83,6 +93,9 @@ final class BinaryLoggingMenu {
         });
         menu.add(stopItem);
         menu.addSeparator();
+        profileMenu = new JMenu();
+        profileMenu.setToolTipText("Which signals the data log records");
+        menu.add(profileMenu);
         saveTuneItem = new JCheckBoxMenuItem("Save tune", true);
         saveTuneItem.setToolTipText("Embed the starting tune in each data log and save a dated MSQ beside it");
         menu.add(saveTuneItem);
@@ -204,12 +217,68 @@ final class BinaryLoggingMenu {
         startItem.setAccelerator(isLogging || isStarting ? null : TOGGLE_LOGGING);
         stopItem.setAccelerator(isLogging || isStarting ? TOGGLE_LOGGING : null);
         saveTuneItem.setEnabled(!isLogging && !isStarting);
+        profileMenu.setText("Profile: " + profiles.selected().getName());
+        profileMenu.setEnabled(!isLogging && !isStarting);
+        profileMenu.removeAll();
+        for (JMenuItem item : profileItems()) {
+            profileMenu.add(item);
+        }
+        profileMenu.addSeparator();
+        profileMenu.add(editProfilesItem());
         // a log still being written is not complete yet
         viewLastItem.setEnabled(viewLogAction != null && lastLog != null && lastLog.isFile()
                 && !isLogging && !isStarting);
         for (Runnable listener : stateListeners) {
             listener.run();
         }
+    }
+
+    LoggingProfiles profiles() {
+        return profiles;
+    }
+
+    /** Chooses the profile the next recording uses; ignored while recording, whose file is already laid out. */
+    void selectProfile(String id) {
+        if (!isRecording() && !isStarting()) {
+            // tells the listeners, refresh() among them
+            profiles.select(id);
+        } else {
+            refresh();
+        }
+    }
+
+    /** One radio item per profile, the selected one checked: for the Logging menu and the status-strip popup. */
+    List<JMenuItem> profileItems() {
+        List<JMenuItem> items = new ArrayList<>();
+        ButtonGroup group = new ButtonGroup();
+        boolean locked = isRecording() || isStarting();
+        for (LoggingProfile profile : profiles.list()) {
+            JRadioButtonMenuItem item = new JRadioButtonMenuItem(profile.getName(),
+                    profile == profiles.selected());
+            item.setToolTipText(profile.describe());
+            item.setEnabled(!locked);
+            item.addActionListener(e -> selectProfile(profile.getId()));
+            group.add(item);
+            items.add(item);
+        }
+        return items;
+    }
+
+    /** Opens the profile editor; also while recording, which keeps the fields it started with. */
+    JMenuItem editProfilesItem() {
+        JMenuItem item = new JMenuItem("Edit profiles…");
+        item.setToolTipText("Add or remove signals, or make your own profiles");
+        item.addActionListener(e -> editProfiles());
+        return item;
+    }
+
+    void editProfiles() {
+        IniFileModel ini = uiContext.iniFileState == null ? null : uiContext.iniFileState.getIniFileModel();
+        LoggingProfilesEditor.showDialog(parent, profiles, ini, null);
+    }
+
+    JMenu profileMenu() {
+        return profileMenu;
     }
 
     /** The file a quick start records into: the rusEFI logs folder, named by date and time. */
@@ -320,7 +389,7 @@ final class BinaryLoggingMenu {
     }
 
     void start(File file, byte[] tune) {
-        if (uiContext.sensorLogger.start(file, tune)) {
+        if (uiContext.sensorLogger.start(file, tune, profiles.selected())) {
             lastLog = file;
             recordingSince = System.currentTimeMillis();
             settings.setProperty(LAST_LOG, file.getAbsolutePath());

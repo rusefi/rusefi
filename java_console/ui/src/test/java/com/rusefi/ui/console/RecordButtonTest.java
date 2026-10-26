@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
@@ -84,14 +85,14 @@ class RecordButtonTest {
     void oneClickRecordsIntoTheLogsFolderWithoutAsking(@TempDir Path logs) throws Exception {
         withConnection(ConnectionStatusValue.CONNECTED, () -> {
             UIContext context = context();
-            when(context.sensorLogger.start(any(File.class), isNull())).thenReturn(true);
+            when(context.sensorLogger.start(any(File.class), isNull(), any())).thenReturn(true);
             BinaryLoggingMenu logging = menu(context);
             logging.setLogsFolderForTests(logs.toFile());
             RecordButton button = new RecordButton(logging);
             logging.refresh();
 
             button.doClick();
-            verify(context.sensorLogger).start(any(File.class), isNull());
+            verify(context.sensorLogger).start(any(File.class), isNull(), any());
             File recording = logging.lastLog();
             assertEquals(logs.toFile().getAbsoluteFile(), recording.getParentFile());
             assertTrue(recording.getName().matches("rusEFI_\\d{4}-\\d{2}-\\d{2}_\\d{2}_\\d{2}_\\d{2}_\\d{3}\\.mlg"), recording.getName());
@@ -103,7 +104,7 @@ class RecordButtonTest {
         File recording = Files.write(logs.resolve("drive.mlg"), new byte[2048]).toFile();
         withConnection(ConnectionStatusValue.CONNECTED, () -> {
             UIContext context = context();
-            when(context.sensorLogger.start(recording, null)).thenReturn(true);
+            when(context.sensorLogger.start(eq(recording), isNull(), any())).thenReturn(true);
             when(context.sensorLogger.getLastRecordingSeconds()).thenReturn(12.1);
             BinaryLoggingMenu logging = menu(context);
             RecordButton button = new RecordButton(logging);

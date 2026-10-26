@@ -8,6 +8,7 @@ import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.logview.CsvLogReader;
 import com.rusefi.logview.LogFiles;
 import com.rusefi.logview.MslWriter;
+import com.rusefi.sensor_logs.LoggingProfiles;
 import com.rusefi.ui.widgets.JoinedButtons;
 
 import javax.swing.AbstractAction;
@@ -83,6 +84,7 @@ public final class LogViewerHost extends JPanel {
     private final HistogramSettings histogramSettings;
     private final HistogramSettings scatterSettings;
     private Supplier<IniFileModel> iniSupplier = () -> null;
+    private LoggingProfiles loggingProfiles;
     private Supplier<ConfigurationImage> tuneSupplier = () -> null;
     private final TransferHandler fileDrop = new FileDropHandler();
     private Consumer<String> titleListener = name -> {
@@ -179,6 +181,22 @@ public final class LogViewerHost extends JPanel {
     }
 
     /**
+     * The logging profiles, listed in the sidebar below the signal lists; a list or the plotted signals can be
+     * saved as a new one. The sidebar follows changes made elsewhere, e.g. beside the record button.
+     */
+    public void setLoggingProfiles(LoggingProfiles profiles) {
+        loggingProfiles = profiles;
+        profiles.addListener(() -> {
+            if (current != null) {
+                current.setLoggingProfiles(profiles);
+            }
+        });
+        if (current != null) {
+            current.setLoggingProfiles(profiles);
+        }
+    }
+
+    /**
      * The working tune (or null), read when the histogram bins by a tune table's axes; it is read each time, so
      * the bins follow tune edits and connecting.
      */
@@ -244,6 +262,7 @@ public final class LogViewerHost extends JPanel {
         current.setHistogramSettings(histogramSettings);
         current.setScatterSettings(scatterSettings);
         current.setTuneSupplier(tuneSupplier);
+        current.setLoggingProfiles(loggingProfiles);
         // the next log opens in the view the last one was left in
         String view = histogramSettings.view();
         if (HistogramSettings.HISTOGRAM.equals(view) || HistogramSettings.SCATTER.equals(view)) {
