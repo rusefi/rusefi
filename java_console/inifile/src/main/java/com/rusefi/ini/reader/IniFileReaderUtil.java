@@ -120,8 +120,14 @@ public class IniFileReaderUtil {
     }
 
     private static RawIniFile read(File input) throws FileNotFoundException {
-        InputStream in = new FileInputStream(input);
-        return read(in, input.getAbsolutePath());
+        // closed at once, so the .ini can be replaced or deleted (Windows refuses while it is open)
+        try (InputStream in = new FileInputStream(input)) {
+            return read(in, input.getAbsolutePath());
+        } catch (FileNotFoundException e) {
+            throw e;
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     public static @NotNull IniFileModel readIniFile(RawIniFile content, String iniFilePath, IniFileMetaInfo metaInfo) throws IniParsingException {

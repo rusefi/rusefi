@@ -197,6 +197,49 @@ class SensorLoggerTest {
         assertEquals(2.35, logger.getLastRecordingSeconds(), 1e-9);
     }
 
+    /** A profile only decides which fields go into the file; the rows still match the header. */
+    @Test
+    void profileRecordsOnlyItsSignals() throws Exception {
+        BinaryProtocol protocol = mock(BinaryProtocol.class);
+        IniFileModel ini = mock(IniFileModel.class);
+        ScalarIniField rpm = new ScalarIniField("RPMValue", 0, "RPM", FieldType.UINT16, 1, "0", 0);
+        ScalarIniField clt = new ScalarIniField("coolant", 2, "C", FieldType.INT16, 1, "0", 0);
+        ScalarIniField map = new ScalarIniField("MAPValue", 4, "kPa", FieldType.UINT16, 1, "0", 0);
+        Map<String, IniField> outputChannels = new LinkedHashMap<>();
+        outputChannels.put("RPMValue", rpm);
+        outputChannels.put("coolant", clt);
+        outputChannels.put("MAPValue", map);
+        when(protocol.getIniFileNullable()).thenReturn(ini);
+        when(ini.getAllOutputChannels()).thenReturn(outputChannels);
+
+        LoggingProfile profile = new LoggingProfiles(new com.rusefi.core.preferences.storage.Node()).create("Short");
+        profile.add("coolant");
+        SensorLogger logger = new SensorLogger(() -> protocol);
+        Path file = tempDir.resolve("profile.mlg");
+        try {
+            assertTrue(logger.start(file.toFile(), null, profile));
+            SensorCentral sensorCentral = SensorCentral.getInstance();
+            long generation = sensorCentral.getOutputChannelDemand().getGeneration();
+            assertTrue(sensorCentral.getOutputChannelDemand().isFull(), "the ECU is read the same way");
+            byte[] response = {0, -24, 3, 85, 0, 100, 0};
+            BitSet valid = new BitSet(response.length - 1);
+            valid.set(0, response.length - 1);
+            sensorCentral.grabSensorValues(new OutputChannelSnapshot(
+                    response, valid, Collections.emptySet(), generation, true), ini, null);
+        } finally {
+            logger.stop();
+        }
+
+        ByteBuffer data = ByteBuffer.wrap(Files.readAllBytes(file)).order(ByteOrder.BIG_ENDIAN);
+        assertEquals(2, data.getShort(22));
+        assertEquals("RPMValue", readFieldName(data, 0));
+        assertEquals("coolant", readFieldName(data, 1));
+        data.position(data.getInt(16) + 4);
+        assertEquals(1000, data.getShort());
+        assertEquals(85, data.getShort());
+        assertEquals(1, data.remaining(), "only the checksum follows");
+    }
+
     private static String readFieldName(ByteBuffer data, int index) {
         byte[] name = new byte[34];
         data.position(24 + index * 89 + 1);

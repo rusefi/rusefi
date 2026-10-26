@@ -29,13 +29,18 @@ import static com.rusefi.core.SensorNames.MAPGauge;
  * 4/15/2016.
  */
 public class SensorLogger {
-    private static List<CustomBinaryLogEntry> getOutputChannels(Supplier<BinaryProtocol> protocol) {
+    private static List<CustomBinaryLogEntry> getOutputChannels(Supplier<BinaryProtocol> protocol,
+                                                                LoggingProfile profile) {
         BinaryProtocol bp = protocol.get();
         if (bp == null) {
             return Collections.emptyList();
         }
         IniFileModel iniFileModel = bp.getIniFileNullable();
-        return iniFileModel == null ? Collections.emptyList() : getOutputChannels(iniFileModel);
+        if (iniFileModel == null) {
+            return Collections.emptyList();
+        }
+        List<CustomBinaryLogEntry> all = getOutputChannels(iniFileModel);
+        return profile == null ? all : profile.select(all, iniFileModel);
     }
 
     public static List<CustomBinaryLogEntry> getOutputChannels(IniFileModel iniFileModel) {
@@ -95,11 +100,19 @@ public class SensorLogger {
     }
 
     public synchronized boolean start(File file, byte[] tune) {
+        return start(file, tune, null);
+    }
+
+    /**
+     * @param profile the signals to record, or null for every recordable channel. The full output block is
+     *                read either way; the profile only decides what goes into the file.
+     */
+    public synchronized boolean start(File file, byte[] tune, LoggingProfile profile) {
         if (sensorLog != null) {
             return true;
         }
 
-        List<CustomBinaryLogEntry> outputChannels = getOutputChannels(protocol);
+        List<CustomBinaryLogEntry> outputChannels = getOutputChannels(protocol, profile);
         if (outputChannels.isEmpty()) {
             return false;
         }

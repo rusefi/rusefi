@@ -374,6 +374,8 @@ public class ConsoleUI {
             logViewer.setIniSupplier(() -> uiContext.iniFileState.getIniFileModel());
             // the histogram can bin by a tune table's axes: the working tune, offline edits included
             logViewer.setTuneSupplier(uiContext::getCurrentConfigurationImage);
+            // the sidebar lists the logging profiles and can save a list as one
+            logViewer.setLoggingProfiles(mainFrame.loggingProfiles());
             tabbedPane.addTab(LogViewerHost.TITLE, logViewer);
             mainFrame.setLogViewerActions(file -> {
                 tabbedPane.selectTab(LogViewerHost.TITLE);

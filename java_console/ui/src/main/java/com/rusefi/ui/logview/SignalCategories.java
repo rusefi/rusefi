@@ -144,22 +144,12 @@ final class SignalCategories {
     /** @param ini the ECU's .ini, or null to use the name rules only */
     static SignalCategories of(CsvLogReader log, IniFileModel ini) {
         Map<String, String> channelOfLabel = new HashMap<>();
-        Map<String, Group> groupOfChannel = new HashMap<>();
         if (ini != null) {
             for (DatalogEntry entry : ini.getDatalogEntries()) {
                 channelOfLabel.put(entry.getLabel(), entry.getChannel());
             }
-            for (GaugeCategoryModel category : ini.getGaugeCategories().values()) {
-                Group group = iniGroup(category.getName());
-                if (group == null) {
-                    continue;
-                }
-                for (GaugeModel gauge : category.getGauges()) {
-                    groupOfChannel.merge(gauge.getChannel(), group,
-                            (old, candidate) -> candidate.ordinal() < old.ordinal() ? candidate : old);
-                }
-            }
         }
+        Map<String, Group> groupOfChannel = groupsByChannel(ini);
         Group[] groups = new Group[log.fieldCount()];
         String[] channels = new String[log.fieldCount()];
         for (int field = 1; field < log.fieldCount(); field++) {
@@ -181,6 +171,26 @@ final class SignalCategories {
             categories.defaultCommonLabels.add(label);
         }
         return categories;
+    }
+
+    /** The group of each .ini channel shown by a gauge category; empty without an .ini. */
+    static Map<String, Group> groupsByChannel(IniFileModel ini) {
+        Map<String, Group> groupOfChannel = new HashMap<>();
+        Map<String, GaugeCategoryModel> categories = ini == null ? null : ini.getGaugeCategories();
+        if (categories == null) {
+            return groupOfChannel;
+        }
+        for (GaugeCategoryModel category : categories.values()) {
+            Group group = iniGroup(category.getName());
+            if (group == null) {
+                continue;
+            }
+            for (GaugeModel gauge : category.getGauges()) {
+                groupOfChannel.merge(gauge.getChannel(), group,
+                        (old, candidate) -> candidate.ordinal() < old.ordinal() ? candidate : old);
+            }
+        }
+        return groupOfChannel;
     }
 
     private static boolean matches(String[] signal, String channel, String label) {

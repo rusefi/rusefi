@@ -26,6 +26,7 @@ import com.rusefi.core.SignatureHelper;
 import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.core.ui.FrameHelper;
+import com.rusefi.sensor_logs.LoggingProfiles;
 import com.rusefi.ui.basic.LoadTuneHelper;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.util.ExitUtil;
@@ -404,8 +405,9 @@ public class MainFrame {
                 loadMenuIcon("player-play"), loadMenuIcon("player-stop"), loadMenuIcon("view"),
                 getConfig().getRoot().getChild("binary_logging"));
         menuBar.add(binaryLoggingMenu.getMenu());
-        // the tabs' status strips each get a Start Data Logging / Stop Logging button driven by this menu
-        consoleUI.uiContext.recordButtonFactory = () -> new RecordButton(binaryLoggingMenu);
+        // the tabs' status strips each get a Start Data Logging / Stop Logging button and the logging profile
+        // choice, driven by this menu
+        consoleUI.uiContext.recordButtonFactory = () -> ProfileButton.withRecordButton(binaryLoggingMenu);
 
         // filled by setToolTabs(); hidden while there is nothing to open
         toolsMenu = new JMenu("Tools");
@@ -489,6 +491,11 @@ public class MainFrame {
         openLogItem.setEnabled(true);
         binaryLoggingMenu.setViewLogAction(viewLog);
         binaryLoggingMenu.addRecordingStoppedListener(recordingStopped);
+    }
+
+    /** The logging profiles data logging records with, shared with the Log Viewer's sidebar. */
+    public LoggingProfiles loggingProfiles() {
+        return binaryLoggingMenu.profiles();
     }
 
     /** One Tools menu item per tab kept out of the main tab row; choosing it opens that tab. */

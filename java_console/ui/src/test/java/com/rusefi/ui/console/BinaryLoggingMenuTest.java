@@ -81,7 +81,7 @@ class BinaryLoggingMenuTest {
         SwingUtilities.invokeAndWait(() -> {
             UIContext context = mock(UIContext.class);
             context.sensorLogger = mock(SensorLogger.class);
-            when(context.sensorLogger.start(recording, null)).thenReturn(true);
+            when(context.sensorLogger.start(eq(recording), isNull(), any())).thenReturn(true);
             // the console config node outlives the menu, like the saved config across restarts
             Node settings = new Node();
             BinaryLoggingMenu beforeRestart = new BinaryLoggingMenu(context, null, null, null, null, settings);
@@ -103,7 +103,7 @@ class BinaryLoggingMenuTest {
         SwingUtilities.invokeAndWait(() -> {
             UIContext context = mock(UIContext.class);
             context.sensorLogger = mock(SensorLogger.class);
-            when(context.sensorLogger.start(recording, null)).thenReturn(true);
+            when(context.sensorLogger.start(eq(recording), isNull(), any())).thenReturn(true);
             when(context.sensorLogger.getLastRecordingSeconds()).thenReturn(12.5);
             BinaryLoggingMenu logging = new BinaryLoggingMenu(context, null, null, null, null, new Node());
             List<String> stopped = new ArrayList<>();
@@ -139,7 +139,7 @@ class BinaryLoggingMenuTest {
         SwingUtilities.invokeAndWait(() -> {
             UIContext context = mock(UIContext.class);
             context.sensorLogger = mock(SensorLogger.class);
-            when(context.sensorLogger.start(recording, null)).thenReturn(true);
+            when(context.sensorLogger.start(eq(recording), isNull(), any())).thenReturn(true);
             BinaryLoggingMenu logging = new BinaryLoggingMenu(context, null, null, null, null, new Node());
             JMenuItem viewLast = logging.viewLastItem();
             List<File> viewed = new ArrayList<>();

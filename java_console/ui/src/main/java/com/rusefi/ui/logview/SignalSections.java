@@ -3,6 +3,7 @@ package com.rusefi.ui.logview;
 import com.rusefi.logview.CsvLogReader;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -19,7 +20,8 @@ import java.util.function.Predicate;
  * of the groups, separately for zero signals, mostly unused features, and constant ones at another value,
  * which can matter (an active error, the detected gear, the firmware version), also while searching. Hidden
  * signals stay in the plots and the lists. A member of a user list that the log does not have is shown as
- * missing; Common lists only the signals the log has.
+ * missing; Common lists only the signals the log has. The logging profiles follow the lists, read-only and
+ * collapsed until opened, also showing the signals the log lacks: a log recorded with a profile has its signals.
  */
 final class SignalSections {
     /** Title prefix of the plot sections: Plot 1, Plot 2... */
@@ -29,12 +31,16 @@ final class SignalSections {
     /** The same for the Scatter view. */
     static final String SCATTER = "Scatter";
     static final String COMMON = "Common";
+    /** Title prefix of the logging profile sections: "Profile: Trigger". */
+    static final String PROFILE = "Profile: ";
 
     enum Kind {
         PLOTTED,
         HISTOGRAM,
         /** Common or a user list. */
         LIST,
+        /** A logging profile's signals. */
+        PROFILE,
         GROUP
     }
 
@@ -71,7 +77,11 @@ final class SignalSections {
         }
 
         static Row missing(String list, String label) {
-            return new Row(list, Kind.LIST, MISSING, label, 0, true);
+            return missing(list, Kind.LIST, label);
+        }
+
+        static Row missing(String section, Kind kind, String label) {
+            return new Row(section, kind, MISSING, label, 0, true);
         }
 
         boolean isHeading() {
@@ -111,6 +121,16 @@ final class SignalSections {
         return number.length() > 3 ? -1 : Integer.parseInt(number) - 1;
     }
 
+    /** The section of a logging profile. */
+    static String profileTitle(String profile) {
+        return PROFILE + profile;
+    }
+
+    /** Whether a section starts collapsed: the groups and the profiles; the plots and the lists start open. */
+    static boolean collapsedByDefault(Set<String> defaultCollapsed, String section) {
+        return defaultCollapsed.contains(section) || section.startsWith(PROFILE);
+    }
+
     /** Group sections start collapsed; the plots and the lists start open. */
     static Set<String> defaultCollapsed() {
         Set<String> collapsed = new LinkedHashSet<>();
@@ -146,6 +166,14 @@ final class SignalSections {
     static List<Row> rows(CsvLogReader log, PlotLayout layout, int[] histogramFields, String axesTitle,
                           SignalCategories categories, SignalLists lists, String query, boolean hideZero,
                           boolean hideConstant, Predicate<String> collapsed) {
+        return rows(log, layout, histogramFields, axesTitle, categories, lists, Collections.emptyMap(), query,
+                hideZero, hideConstant, collapsed);
+    }
+
+    /** @param profiles section title ({@link #profileTitle}) to the profile's signals as logs label them */
+    static List<Row> rows(CsvLogReader log, PlotLayout layout, int[] histogramFields, String axesTitle,
+                          SignalCategories categories, SignalLists lists, Map<String, List<String>> profiles,
+                          String query, boolean hideZero, boolean hideConstant, Predicate<String> collapsed) {
         String needle = query.trim().toLowerCase(Locale.ROOT);
         boolean searching = !needle.isEmpty();
         List<Row> rows = new ArrayList<>();
@@ -197,6 +225,18 @@ final class SignalSections {
             }
             // a list stays visible while empty, so signals can be dropped on it and it can be deleted
             addSection(rows, list, Kind.LIST, members, searching, collapsed, !searching);
+        }
+
+        for (Map.Entry<String, List<String>> profile : profiles.entrySet()) {
+            List<Row> members = new ArrayList<>();
+            for (String label : profile.getValue()) {
+                Integer field = fieldOfLabel.get(label);
+                if (matches(label, needle)) {
+                    members.add(field != null ? Row.signal(profile.getKey(), Kind.PROFILE, field)
+                            : Row.missing(profile.getKey(), Kind.PROFILE, label));
+                }
+            }
+            addSection(rows, profile.getKey(), Kind.PROFILE, members, searching, collapsed, !searching);
         }
 
         for (SignalCategories.Group group : SignalCategories.Group.values()) {
