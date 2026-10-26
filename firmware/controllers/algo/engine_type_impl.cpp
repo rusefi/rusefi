@@ -142,7 +142,7 @@ void applyEngineType(engine_type_e engineType) {
 		mreBCM();
 		break;
 #endif // HW_MICRO_RUSEFI
-#if defined(HW_HELLEN_SUPER_UAEFI) || defined(HW_HELLEN_8CHAN)
+#if defined(HW_HELLEN_SUPER_UAEFI) || defined(HW_HELLEN_8CHAN) || EFI_SIMULATOR || EFI_UNIT_TEST
 	case engine_type_e::MAZDA_MIATA_NC:
 		setMazdaMiataNC();
 		break;
