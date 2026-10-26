@@ -12,6 +12,21 @@ public class ToolbarStrip extends JPanel {
         super(layout);
     }
 
+    /** Pane title on the left, optional controls on the right, e.g. "Output | Clear Pause". */
+    public static JPanel header(String title, JComponent trailing) {
+        JPanel header = new ToolbarStrip(new BorderLayout());
+        header.setBorder(BorderFactory.createEmptyBorder(6, 12, 7, JoinedButtons.ROW_END_INSET));
+        JLabel label = new JLabel(title);
+        label.setFont(label.getFont().deriveFont(Font.BOLD));
+        header.add(label, BorderLayout.WEST);
+        // as tall as the controls, so headers with and without them line up
+        header.add(Box.createVerticalStrut(JoinedButtons.HEIGHT), BorderLayout.CENTER);
+        if (trailing != null) {
+            header.add(trailing, BorderLayout.EAST);
+        }
+        return header;
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         Color background = UIManager.getColor("Console.Toolbar.background");

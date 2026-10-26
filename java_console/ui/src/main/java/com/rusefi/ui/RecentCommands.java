@@ -1,15 +1,17 @@
 package com.rusefi.ui;
 
 import com.devexperts.logging.Logging;
+import com.formdev.flatlaf.FlatClientProperties;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.ui.util.UiUtils;
+import com.rusefi.ui.widgets.CommandIcon;
+import com.rusefi.ui.widgets.JoinedButtons;
+import com.rusefi.ui.widgets.ToolbarStrip;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -47,21 +49,44 @@ public class RecentCommands {
     private final static Map<String, Icon> COMMAND_ICONS = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     static {
-        COMMAND_ICONS.put(STOPENGINE, AutoupdateUtil.loadIcon("stop.jpg"));
-        ImageIcon infoIcon = AutoupdateUtil.loadIcon("info.png");
-        COMMAND_ICONS.put(HELP, AutoupdateUtil.loadIcon("help.jpg"));
-        COMMAND_ICONS.put(SENSORINFO, infoIcon);
-        COMMAND_ICONS.put(CMD_TRIGGERINFO, AutoupdateUtil.loadIcon("trigger.jpg"));
-        COMMAND_ICONS.put(TSINFO, infoIcon);
-        COMMAND_ICONS.put(MAPINFO, infoIcon);
-        COMMAND_ICONS.put(CANINFO, infoIcon);
-        COMMAND_ICONS.put(FUELINFO, infoIcon);
-        COMMAND_ICONS.put(SDINFO, AutoupdateUtil.loadIcon("sdinfo.jpg"));
-        COMMAND_ICONS.put(PINS, infoIcon);
-        COMMAND_ICONS.put(Integration.CMD_WRITECONFIG, AutoupdateUtil.loadIcon("writeconfig.jpg"));
+        // painted line icons on a transparent background, see CommandIcon [tag:console_theme]
+        COMMAND_ICONS.put(STOPENGINE, CommandIcon.STOP);
+        COMMAND_ICONS.put(HELP, CommandIcon.HELP);
+        COMMAND_ICONS.put(SENSORINFO, CommandIcon.INFO);
+        COMMAND_ICONS.put(CMD_TRIGGERINFO, CommandIcon.TRIGGER);
+        COMMAND_ICONS.put(TSINFO, CommandIcon.INFO);
+        COMMAND_ICONS.put(MAPINFO, CommandIcon.INFO);
+        COMMAND_ICONS.put(CANINFO, CommandIcon.INFO);
+        COMMAND_ICONS.put(FUELINFO, CommandIcon.INFO);
+        COMMAND_ICONS.put(ACCELINFO, CommandIcon.INFO);
+        COMMAND_ICONS.put(SDINFO, CommandIcon.SD_CARD);
+        COMMAND_ICONS.put(PINS, CommandIcon.INFO);
+        COMMAND_ICONS.put(Integration.CMD_WRITECONFIG, CommandIcon.SAVE);
+        COMMAND_ICONS.put("rewriteconfig", CommandIcon.SAVE);
+        COMMAND_ICONS.put(SHOWCONFIG, CommandIcon.LIST);
+        COMMAND_ICONS.put("enable", CommandIcon.ENABLE);
+        COMMAND_ICONS.put("disable", CommandIcon.DISABLE);
+        COMMAND_ICONS.put("sparkbench", CommandIcon.SPARK);
+        COMMAND_ICONS.put("fuelbench", CommandIcon.FUEL);
+        COMMAND_ICONS.put("blipidle", CommandIcon.IDLE);
+        COMMAND_ICONS.put("set_idle_position", CommandIcon.IDLE);
+        COMMAND_ICONS.put(Integration.CMD_LUA_RESET, CommandIcon.RESET);
     }
 
-    private final JPanel content = new JPanel(new GridLayout(NUMBER_OF_COMMANDS + 1, 1));
+    static final String TITLE = "Quick commands";
+    static final String RESET = "Reset";
+    /** Width of the column, so long commands such as "disable self_stimulation" fit. */
+    private static final int COLUMN_WIDTH = 250;
+    private static final int PADDING = 8;
+
+    /** One flat, left-aligned button per remembered command. */
+    private final JPanel content = new JPanel(new GridLayout(0, 1, 0, 2)) {
+        @Override
+        public Dimension getPreferredSize() {
+            Dimension size = super.getPreferredSize();
+            return new Dimension(COLUMN_WIDTH, size.height);
+        }
+    };
 
     private static final LinkedHashMap<Entry, Object> entries = new LinkedHashMap<Entry, Object>() {
         @Override
@@ -72,11 +97,42 @@ public class RecentCommands {
 
     private final AtomicBoolean reentrant = new AtomicBoolean();
 
-    private final JScrollPane messagesScroll = new JScrollPane(content, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    private final JScrollPane messagesScroll = new JScrollPane(content, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    private final JPanel column = new JPanel(new BorderLayout()) {
+        /** The list plus its scrollbar, so neither the commands nor the header get cut. */
+        @Override
+        public Dimension getPreferredSize() {
+            Dimension size = super.getPreferredSize();
+            size.width = Math.max(size.width, COLUMN_WIDTH + messagesScroll.getVerticalScrollBar().getPreferredSize().width);
+            return size;
+        }
+
+        @Override
+        protected void paintChildren(Graphics g) {
+            super.paintChildren(g);
+            // divider between the messages and this column
+            Color line = UIManager.getColor("Separator.foreground");
+            g.setColor(line != null ? line : Color.LIGHT_GRAY);
+            g.drawLine(0, 0, 0, getHeight());
+        }
+    };
     private final UIContext uiContext;
 
     public RecentCommands(UIContext uiContext) {
         this.uiContext = uiContext;
+
+        // [tag:console_theme] titled header with Reset, like the Lua tab's panes
+        JButton reset = new JButton(RESET);
+        reset.setToolTipText("Replace the list with the default commands");
+        reset.addActionListener(e -> {
+            entries.clear();
+            addDefaults();
+        });
+        column.add(ToolbarStrip.header(TITLE, new JoinedButtons(reset)), BorderLayout.NORTH);
+        content.setBorder(BorderFactory.createEmptyBorder(PADDING, PADDING, PADDING, PADDING));
+        messagesScroll.setBorder(BorderFactory.createEmptyBorder());
+        messagesScroll.getVerticalScrollBar().setUnitIncrement(16);
+        column.add(messagesScroll, BorderLayout.CENTER);
         uiContext.getCommandQueue().addListener(command -> {
                 if (!reentrant.get())
                     add(command);
@@ -142,30 +198,14 @@ public class RecentCommands {
             @Override
             public void run() {
                 content.removeAll();
-
-
-
-                JButton reset = new JButton(AutoupdateUtil.loadIcon("undo.jpg"));
-                reset.setContentAreaFilled(false);
-                reset.setFocusPainted(false);
-                reset.setBorder(BorderFactory.createEmptyBorder());
-                content.add(UiUtils.wrap(reset));
-                reset.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        entries.clear();
-                        addDefaults();
-                    }
-                });
-
                 synchronized (entries) {
                     Set<Entry> sorted = new TreeSet<>(entries.keySet());
 
                     for (Entry entry : sorted) {
-                        content.add(createButton(uiContext, reentrant, entry.command));
+                        content.add(createListButton(entry.command));
                     }
                 }
-                AutoupdateUtil.trueLayoutAndRepaint(content.getParent());
+                AutoupdateUtil.trueLayoutAndRepaint(column);
             }
         });
         getConfig().getRoot().setProperty(KEY, pack());
@@ -181,22 +221,43 @@ public class RecentCommands {
         if (icon != null)
             button.setIcon(icon);
         button.setBorder(BorderFactory.createEmptyBorder(3, 5, 0, 5));
-
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                reentrant.set(true);
-                int timeout = CommandQueue.getTimeout(command);
-                uiContext.getCommandQueue().write(command, timeout);
-                reentrant.set(false);
-            }
-        });
+        button.addActionListener(e -> send(uiContext, reentrant, command));
 
         return UiUtils.wrap(button);
     }
 
+    /** A flat list row: small icon (blank when the command has none, so texts line up) and the command. */
+    private JButton createListButton(String command) {
+        JButton button = new JButton(command, iconFor(command));
+        button.putClientProperty(FlatClientProperties.BUTTON_TYPE, FlatClientProperties.BUTTON_TYPE_TOOLBAR_BUTTON);
+        button.setHorizontalAlignment(SwingConstants.LEADING);
+        button.setIconTextGap(8);
+        button.setMargin(new Insets(5, 8, 5, 8));
+        button.setFocusPainted(false);
+        button.setToolTipText("Send " + command);
+        button.addActionListener(e -> send(uiContext, reentrant, command));
+        return button;
+    }
+
+    private static void send(UIContext uiContext, AtomicBoolean reentrant, String command) {
+        reentrant.set(true);
+        int timeout = CommandQueue.getTimeout(command);
+        uiContext.getCommandQueue().write(command, timeout);
+        reentrant.set(false);
+    }
+
+    /**
+     * Icon by the command's first word, so "enable ignition" or "sparkbench 5 400 2" match their
+     * kind; commands without one, e.g. typed by the user, get the console prompt icon.
+     */
+    static Icon iconFor(String command) {
+        String firstWord = command.trim().split("\\s+")[0];
+        Icon icon = COMMAND_ICONS.get(firstWord);
+        return icon != null ? icon : CommandIcon.COMMAND;
+    }
+
     public Component getContent() {
-        return messagesScroll;
+        return column;
     }
 
     public String pack() {
