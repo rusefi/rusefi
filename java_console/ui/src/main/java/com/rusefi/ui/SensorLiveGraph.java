@@ -9,10 +9,10 @@ import com.rusefi.core.SensorCategory;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.widgets.GaugeMenuSearch;
+import com.rusefi.ui.widgets.GaugeOptionsButton;
 import com.rusefi.ui.widgets.GaugePopups;
 import com.rusefi.ui.widgets.GaugeStyle;
 import com.rusefi.ui.widgets.GaugeMenuLabel;
-import com.rusefi.ui.widgets.SensorGauge;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -96,6 +96,7 @@ public class SensorLiveGraph extends JPanel {
         };
 
         addMouseListener(mouseListener);
+        GaugeOptionsButton.install(this, this::createOptionsMenu);
 
         setOpaque(false);
     }
@@ -138,14 +139,19 @@ public class SensorLiveGraph extends JPanel {
         GaugePopups.show(createPopupMenu(), e);
     }
 
-    /** Search, "Change gauge", graph options, then the caller's display options. */
+    /** Right-click menu: search, then the gauge groups; graph options are on the gear. */
     // Package-private so tests inspect the same menu users see.
     JPopupMenu createPopupMenu() {
         JPopupMenu pm = new JPopupMenu();
+        addChangeSensorItems(pm);
+        GaugeMenuSearch.addTo(pm);
+        return pm;
+    }
 
-        JMenu changeGauge = new JMenu(SensorGauge.CHANGE_GAUGE);
-        addChangeSensorItems(changeGauge);
-        pm.add(changeGauge);
+    /** Gear menu: graph options, then the caller's display options. */
+    // Package-private so tests inspect the same menu users see.
+    JPopupMenu createOptionsMenu() {
+        JPopupMenu pm = new JPopupMenu();
         addChangePeriodItems(pm);
         JMenuItem scale = new JMenu("Scale");
 
@@ -199,7 +205,6 @@ public class SensorLiveGraph extends JPanel {
             pm.addSeparator();
             pm.add(extraItem);
         }
-        GaugeMenuSearch.addTo(pm, changeGauge);
         return pm;
     }
 

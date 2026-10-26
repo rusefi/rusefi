@@ -200,8 +200,8 @@ class GaugeScaleTest {
                 assertEquals(135, gauge.getProgressDegrees(), "Half of the overridden 0..50 range");
 
                 JPopupMenu menu = SensorGauge.createPopupMenu(context, wrapper, name -> changed[0] = name,
-                    Collections.emptyList(), () -> { }, GaugeDisplayKind.ROUND);
-                findItem(SensorGaugeTest.changeGaugeMenu(menu), "Other").doClick(0);
+                    Collections.emptyList(), GaugeDisplayKind.ROUND);
+                findItem(menu, "Other").doClick(0);
                 assertEquals("otherScaleGauge", changed[0]);
                 CircularGauge other = (CircularGauge) wrapper.getComponent(0);
                 other.setValue(25);

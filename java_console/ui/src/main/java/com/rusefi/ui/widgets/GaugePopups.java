@@ -1,6 +1,7 @@
 package com.rusefi.ui.widgets;
 
 import javax.swing.JPopupMenu;
+import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
 
@@ -12,12 +13,16 @@ public final class GaugePopups {
     }
 
     public static void show(JPopupMenu menu, MouseEvent event) {
+        show(menu, event.getComponent(), event.getX(), event.getY());
+    }
+
+    public static void show(JPopupMenu menu, Component invoker, int x, int y) {
         if (shownForUnitTest != null) {
             // A headless test cannot show a popup; report it instead.
             shownForUnitTest.accept(menu);
             return;
         }
-        menu.show(event.getComponent(), event.getX(), event.getY());
+        menu.show(invoker, x, y);
     }
 
     /** @param listener receives each menu instead of showing it; null restores normal behavior */

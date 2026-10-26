@@ -26,11 +26,6 @@ public final class GaugeMenuSearch {
     private GaugeMenuSearch() {
     }
 
-    /** Searches the gauge catalog inside {@code catalog}, typically the "Change gauge" submenu. */
-    public static void addTo(JPopupMenu popup, JMenu catalog) {
-        install(popup, catalogEntries(Arrays.asList(catalog.getMenuComponents())));
-    }
-
     /** Searches the gauge groups already at the top level of {@code popup}. */
     public static void addTo(JPopupMenu popup) {
         install(popup, catalogEntries(Arrays.asList(popup.getComponents())));

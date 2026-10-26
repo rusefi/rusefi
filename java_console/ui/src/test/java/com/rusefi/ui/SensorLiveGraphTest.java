@@ -7,7 +7,8 @@ import com.opensr5.ini.RawIniFile;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ini.reader.IniFileReaderUtil;
-import com.rusefi.ui.widgets.SensorGauge;
+import com.rusefi.core.SensorCategory;
+import com.rusefi.ui.widgets.GaugeOptionsButton;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -61,7 +62,7 @@ class SensorLiveGraphTest {
     }
 
     @Test
-    void popupPutsSearchAndGaugeCatalogFirst() throws Throwable {
+    void rightClickListsGaugeGroupsAndTheGearHoldsGraphOptions() throws Throwable {
         SwingUtilities.invokeAndWait(() -> {
             UIContext context = new UIContext();
             JMenu displayAs = new JMenu(GaugesGridElement.DISPLAY_AS);
@@ -70,18 +71,29 @@ class SensorLiveGraphTest {
                 graph.setActive(false);
                 JPopupMenu menu = graph.createPopupMenu();
                 assertTrue(menu.getComponent(0) instanceof JPanel, "Search field is at the top");
-                List<String> items = new ArrayList<>();
-                for (Component component : menu.getComponents()) {
-                    if (component instanceof JMenuItem && component.isVisible()) {
-                        items.add(((JMenuItem) component).getText());
-                    }
+                List<String> groups = new ArrayList<>();
+                for (SensorCategory category : SensorCategory.values()) {
+                    groups.add(category.getName());
                 }
-                assertEquals(java.util.Arrays.asList(SensorGauge.CHANGE_GAUGE, "Refresh period", "Scale",
-                    GaugesGridElement.DISPLAY_AS), items);
+                assertEquals(groups, visibleItems(menu), "Without an .ini, the built-in groups are listed directly");
+
+                assertTrue(graph.getComponent(0) instanceof GaugeOptionsButton);
+                assertEquals(java.util.Arrays.asList("Refresh period", "Scale", GaugesGridElement.DISPLAY_AS),
+                    visibleItems(graph.createOptionsMenu()));
             } finally {
                 graph.destroy();
             }
         });
+    }
+
+    private static List<String> visibleItems(JPopupMenu menu) {
+        List<String> items = new ArrayList<>();
+        for (Component component : menu.getComponents()) {
+            if (component instanceof JMenuItem && component.isVisible()) {
+                items.add(((JMenuItem) component).getText());
+            }
+        }
+        return items;
     }
 
     /**
