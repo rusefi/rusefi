@@ -30,10 +30,10 @@ java -jar java_tools/pinout-helper/build/libs/pinout-helper-all.jar [ecuBoardFol
 
 Run from the rusefi repo root. Defaults are alphax-8chan and ../private-hardware/BMW-N52-adapter;
 output goes to `<breakoutBoardFolder>/patchcord-<ecuBoardFolderName>/` as
-`patchcord-<breakoutBoardFolderName>.html` (interactive, self-contained).
-`--html-only=true` is the default. Pass `--html-only=false` to also generate
+`patchcord-<breakoutBoardFolderName>.html` (interactive, self-contained) and
 `patchcord-<breakoutBoardFolderName>.md` (printable steps), plus per-step and
-complete-overview PNGs. Existing files in the output directory are preserved.
+complete-overview PNGs. Pass `--html-only=true` to generate just the HTML, as
+the Miata NC guide does. Existing files in the output directory are preserved.
 For example, open `patchcord-BMW-N52-adapter.html` in a browser. Select a pin
 or wire row to highlight both ends; filter by step or search by pin, function,
 or color; zoom the images; and copy a link to the selected wire. No Pandoc is
@@ -49,7 +49,7 @@ ends with the same all-wire connector overview and route table.
 
 ### Optional static conversion or PDF
 
-Generate Markdown with `--html-only=false` first. With Pandoc installed, run this from the output folder to convert the Markdown
+With Pandoc installed, run this from the output folder to convert the Markdown
 to a separate, static HTML file. `--embed-resources` includes the step PNGs.
 
 ```bash

@@ -233,7 +233,7 @@ the newly connected ECU.
 |---|---|
 | [Gauges](../../java_console/ui/src/main/java/com/rusefi/ui/GaugesPanel.java) | Live dashboard values decoded from output channels by SensorCentral. |
 | [Messages](../../java_console/ui/src/main/java/com/rusefi/ui/MessagesPane.java) | ECU text and Console messages, plus a command entry and recent commands. |
-| [OBD Codes](../../java_console/ui/src/main/java/com/rusefi/ui/obd/ObdCodesPane.java) | Recent and last error-code output channels. Its visible history is for this Console session; clearing the view does not erase ECU codes. |
+| [OBD Codes](../../java_console/ui/src/main/java/com/rusefi/ui/obd/ObdCodesPane.java) | Optional online tab for recent and last error-code output channels. Set `show_obd_codes_tab=true` in the bundled `shared_io.properties` to show it; it is hidden by default. Its visible history is for this Console session; clearing the view does not erase ECU codes. |
 | Engine Sniffer | Composite trigger/output events acquired on a separate path from ordinary scalar output polling. See [Engine Sniffer](engine_sniffer.md) for acquisition and display limits. |
 | [Lua Scripting](../../java_console/ui/src/main/java/com/rusefi/ui/lua/LuaScriptPanel.java) | Editor and controls for ECU Lua scripts; built lazily when its tab is first used. |
 | [Knock Analyzer](../../java_console/ui/src/main/java/com/rusefi/ui/KnockPane.java) | Shown when the Console's `UiProperties` feature flag enables it. |

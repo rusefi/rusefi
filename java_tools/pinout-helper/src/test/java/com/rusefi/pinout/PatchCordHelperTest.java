@@ -172,7 +172,7 @@ public class PatchCordHelperTest {
         File out = new File(root, "out");
 
         PatchCordHelper.main(new String[]{new File(root, "ecu").getPath(),
-                new File(root, "N52-adapter").getPath(), out.getPath(), "--html-only=false"});
+                new File(root, "N52-adapter").getPath(), out.getPath()});
 
         File md = new File(out, "patchcord-N52-adapter.md");
         assertTrue(md.isFile());
@@ -232,7 +232,7 @@ public class PatchCordHelperTest {
         }
         File out = new File(root, "out");
         PatchCordHelper.main(new String[]{new File(root, "ecu").getPath(),
-                new File(root, "adapter").getPath(), out.getPath()});
+                new File(root, "adapter").getPath(), out.getPath(), "--html-only=true"});
         assertFalse(new File(out, "patchcord-adapter.md").exists());
         assertEquals(1, out.listFiles().length);
         String html = new String(Files.readAllBytes(new File(out, "patchcord-adapter.html").toPath()),

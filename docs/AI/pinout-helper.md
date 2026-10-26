@@ -22,10 +22,11 @@ Each input folder must contain a `connectors/` directory of `.yaml` files.
 The first argument defaults to `firmware/config/boards/hellen/alphax-8chan`,
 the second to `../private-hardware/BMW-N52-adapter`, and the output folder to
 `<adapter-board-folder>/patchcord-<ecu-board-folder-name>`. The defaults only
-work when that adapter directory is available. `--html-only=true` is the default
-and writes only the self-contained `patchcord-<adapter-board-folder-name>.html`.
-Use `--html-only=false` to also write `patchcord-<adapter-board-folder-name>.md`,
-connector step images, complete-overview images, and color-dot images beside it.
+work when that adapter directory is available. By default the helper writes
+self-contained `patchcord-<adapter-board-folder-name>.html` and
+`patchcord-<adapter-board-folder-name>.md`, connector step images,
+complete-overview images, and color-dot images beside it. Use
+`--html-only=true` to generate only the HTML, as the Miata NC guide does.
 The generator preserves existing files in the output directory.
 It embeds connector images and lets you select either end of a wire, highlight
 the matching end and row, filter by step or text, zoom images, and copy a link

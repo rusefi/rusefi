@@ -111,7 +111,7 @@ public class PatchCordHelper {
         String ecuFolder = args.length > 0 ? args[0] : "firmware/config/boards/hellen/alphax-8chan";
         String breakoutBoard = args.length > 1 ? args[1] : "../private-hardware/BMW-N52-adapter";
         String outputFolder = args.length > 2 ? args[2] : breakoutBoard + "/patchcord-" + new File(ecuFolder).getName();
-        boolean htmlOnly = args.length < 4 || parseHtmlOnly(args[3]);
+        boolean htmlOnly = args.length == 4 && parseHtmlOnly(args[3]);
 
         List<ConnectorYaml> ecuConnectors = ConnectorYaml.readFolder(new File(ecuFolder, "connectors"));
         List<ConnectorYaml> adapterConnectors = ConnectorYaml.readFolder(new File(breakoutBoard, "connectors"));
