@@ -238,7 +238,7 @@ the newly connected ECU.
 | [Lua Scripting](../../java_console/ui/src/main/java/com/rusefi/ui/lua/LuaScriptPanel.java) | Editor and controls for ECU Lua scripts; built lazily when its tab is first used. |
 | [Knock Analyzer](../../java_console/ui/src/main/java/com/rusefi/ui/KnockPane.java) | Shown when the Console's `UiProperties` feature flag enables it. |
 | [CAN/SLCAN](../../java_console/ui/src/main/java/com/rusefi/ui/SlcanTab.java) | Conditional CAN tool whose availability depends on the connection and INI. |
-| [AI Troubleshooting](../../java_console/ui/src/main/java/com/rusefi/ui/llm/LLMTab.java) | Online-session tab for its optional troubleshooting workflow, built when opened. |
+| [AI Troubleshooting](../../java_console/ui/src/main/java/com/rusefi/ui/llm/LLMTab.java) | Online-session tab for its optional troubleshooting workflow, built when opened. Completed conversations and retained tool evidence are saved privately by account in local session files; recent sessions can be resumed or deleted. |
 
 The Messages view is useful when a connection is technically alive but a
 feature is failing: protocol text and configuration errors are separate

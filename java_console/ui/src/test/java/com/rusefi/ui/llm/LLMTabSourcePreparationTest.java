@@ -103,7 +103,8 @@ class LLMTabSourcePreparationTest {
         await(() -> button("Continue with ChatGPT") != null && button("Continue with ChatGPT").isEnabled());
         edt(() -> {
             int styledButtons = 0;
-            for (String label : new String[]{"Continue with ChatGPT", "Sign out", "Cancel sign-in", "Send", "Stop", "New conversation"}) {
+            for (String label : new String[]{"Continue with ChatGPT", "Sign out", "Cancel sign-in", "Send", "Stop",
+                    "New conversation", "Resume", "Delete session"}) {
                 JButton actual = button(label);
                 assertNotNull(actual, label);
                 JButton expected = new JButton();
@@ -111,10 +112,10 @@ class LLMTabSourcePreparationTest {
                 assertEquals(expected.getFont(), actual.getFont(), label + " font");
                 styledButtons++;
             }
-            assertEquals(6, styledButtons);
+            assertEquals(8, styledButtons);
             List<?> combos = visible(JComboBox.class);
-            assertEquals(2, combos.size());
-            int[] intendedWidths = {500, 250};
+            assertEquals(3, combos.size());
+            int[] intendedWidths = {500, 250, 500};
             for (int i = 0; i < combos.size(); i++) {
                 JComboBox<?> combo = (JComboBox<?>) combos.get(i);
                 JComboBox<?> expected = new JComboBox<>();
@@ -157,6 +158,37 @@ class LLMTabSourcePreparationTest {
             assertFalse(button("Continue with ChatGPT").isEnabled());
             return null;
         });
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test void recentSessionResumesHistoryAndNewConversationKeepsItAvailable() throws Exception {
+        sources.cached = true;
+        seedExpiredAndReadyAccounts("ready-id");
+        TroubleshootingSessionStore saved = new TroubleshootingSessionStore(directory.resolve("accounts/sessions"));
+        org.json.simple.JSONArray history = new org.json.simple.JSONArray();
+        history.add(ChatGptClient.object("role", "user", "content", "Why did RPM drop?"));
+        TroubleshootingSessionStore.Session session = TroubleshootingSessionStore.Session
+                .start("ready-id", "available", "Why did RPM drop?")
+                .completed("available", history, "> Why did RPM drop?\nCheck voltage.\n", null);
+        saved.save(session);
+        UiTransport transport = new UiTransport();
+        open(transport, uri -> { throw new AssertionError("Resume must not launch a browser"); });
+        await(() -> transport.models.get() == 1 && visible(JComboBox.class).size() == 3
+                && ((JComboBox<?>) visible(JComboBox.class).get(2)).getItemCount() == 1
+                && button("Resume") != null);
+        edt(() -> {
+            JComboBox<?> recent = (JComboBox<?>) visible(JComboBox.class).get(2);
+            recent.setSelectedIndex(0);
+            button("Resume").doClick();
+            return null;
+        });
+        await(() -> visible(JTextArea.class).stream().anyMatch(area -> area.getText().contains("Check voltage.")));
+        edt(() -> {
+            button("New conversation").doClick();
+            assertEquals(1, ((JComboBox<?>) visible(JComboBox.class).get(2)).getItemCount());
+            return null;
+        });
+        assertEquals(history, saved.load("ready-id", session.id).history);
     }
 
     @Test void startupFallsBackFromExpiredLastAccountToFirstReadyAccount() throws Exception {

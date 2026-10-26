@@ -16,8 +16,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -31,6 +33,7 @@ public final class LLMTab implements AutoCloseable {
     private static final com.devexperts.logging.Logging log = com.devexperts.logging.Logging.getLogging(LLMTab.class);
     private final LinkManager linkManager;
     private final Path storage;
+    private final TroubleshootingSessionStore savedSessions;
     private final SourcePreparation sources;
     private final ClientFactory clients;
     private final BrowserOpener browser;
@@ -56,10 +59,15 @@ public final class LLMTab implements AutoCloseable {
     private final JButton send = new JButton("Send");
     private final JButton stop = new JButton("Stop");
     private final JButton reset = new JButton("New conversation");
+    private final JComboBox<TroubleshootingSessionStore.Summary> recentSessions = new JComboBox<>();
+    private final JButton resume = new JButton("Resume");
+    private final JButton delete = new JButton("Delete session");
     private final JTextArea terminal = new JTextArea(24, 90);
     private final JTextArea prompt = new JTextArea(3, 70);
     private final JLabel status = new JLabel("Opening account store...");
     private final JSONArray history = new JSONArray();
+    private String committedTranscript = "";
+    private TroubleshootingSessionStore.Session activeSession;
     private final ExecutorService worker = Executors.newSingleThreadExecutor(r -> {
         Thread thread = new Thread(r, "chatgpt-console");
         thread.setDaemon(true);
@@ -69,6 +77,7 @@ public final class LLMTab implements AutoCloseable {
     private Cancellation running;
     private String selectedId;
     private boolean updatingAccounts;
+    private boolean updatingModels;
     private boolean closed;
     private boolean ready;
     private boolean signingIn;
@@ -135,6 +144,7 @@ public final class LLMTab implements AutoCloseable {
            ClientFactory clients, BrowserOpener browser, FallbackDialogFactory fallbackDialogs) {
         this.linkManager = linkManager;
         this.storage = storage;
+        savedSessions = new TroubleshootingSessionStore(storage.resolve("sessions"));
         this.sources = sources;
         this.clients = clients;
         this.browser = browser;
@@ -179,7 +189,20 @@ public final class LLMTab implements AutoCloseable {
         modelBar.add(models);
         modelBar.add(reset);
         modelBar.add(status);
-        header.add(modelBar, BorderLayout.SOUTH);
+        header.add(modelBar, BorderLayout.CENTER);
+        JPanel sessionBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JLabel recentLabel = new JLabel("Recent sessions:");
+        CalibrationFieldFactory.applyStyle(recentLabel);
+        sessionBar.add(recentLabel);
+        CalibrationFieldFactory.applyStyle(recentSessions);
+        recentSessions.setPreferredSize(new Dimension(500, recentSessions.getPreferredSize().height));
+        recentSessions.setToolTipText("Saved conversations for the selected ChatGPT account");
+        sessionBar.add(recentSessions);
+        CalibrationFieldFactory.applyStyle(resume);
+        CalibrationFieldFactory.applyStyle(delete);
+        sessionBar.add(resume);
+        sessionBar.add(delete);
+        header.add(sessionBar, BorderLayout.SOUTH);
         llmControls.add(header, BorderLayout.NORTH);
 
         Font mono = new Font(Font.MONOSPACED, Font.PLAIN, 14);
@@ -221,6 +244,7 @@ public final class LLMTab implements AutoCloseable {
         append("rusEFI Troubleshooting\nSign in to use your ChatGPT plan.\n"
                 + "Your messages, requested ECU readings and source/wiki excerpts are sent to OpenAI. ECU access is read-only.\n"
                 + "Ask to export a diagnostic case to save findings and selected evidence locally.\n"
+                + "Completed conversations and their collected context are saved locally and can be resumed here.\n"
                 + "Connect to an ECU in Console, then describe the problem.\n\n");
 
         login.addActionListener(e -> signIn(selectedId));
@@ -252,10 +276,19 @@ public final class LLMTab implements AutoCloseable {
             updateControls();
             clearConversation();
             models.removeAllItems();
+            setRecentSessions(Collections.emptyList());
             loadModels();
         });
-        models.addActionListener(e -> { if (running == null) { clearConversation(); } });
+        models.addActionListener(e -> {
+            if (!updatingModels && running == null && activeSession != null) {
+                clearConversation();
+                append("Model changed; start a new conversation or resume a saved one.\n");
+            }
+        });
         reset.addActionListener(e -> { clearConversation(); append("New conversation.\n"); });
+        recentSessions.addActionListener(e -> updateControls());
+        resume.addActionListener(e -> resumeSession());
+        delete.addActionListener(e -> deleteSession());
         stop.addActionListener(e -> {
             if (running != null) {
                 running.cancel();
@@ -323,10 +356,12 @@ public final class LLMTab implements AutoCloseable {
         perform("Complete sign-in in your browser...", cancellation -> {
             String signedIn = client.signIn(id, uri -> SwingUtilities.invokeLater(() -> browse(uri, cancellation)), cancellation);
             List<Model> available = loadModels(signedIn, cancellation);
+            List<TroubleshootingSessionStore.Summary> recent = savedSessions.list(signedIn);
             return () -> {
                 selectedId = signedIn;
                 clearConversation();
                 setModels(available);
+                setRecentSessions(recent);
                 append("Connected to ChatGPT.\n");
             };
         });
@@ -336,8 +371,12 @@ public final class LLMTab implements AutoCloseable {
         String id = selectedId;
         if (id == null) { updateControls(); return; }
         perform("Loading models...", cancellation -> {
+            List<TroubleshootingSessionStore.Summary> recent = savedSessions.list(id);
             List<Model> available = loadModels(id, cancellation);
-            return () -> setModels(available);
+            return () -> {
+                setModels(available);
+                setRecentSessions(recent);
+            };
         });
     }
 
@@ -366,13 +405,16 @@ public final class LLMTab implements AutoCloseable {
         if (text.isEmpty() || model == null || running != null) { return; }
         String id = selectedId;
         if (session != null && !session.isCurrent()) {
-            clearConversation();
-            append("Console connection changed; starting a new conversation.\n");
+            session.close();
+            session = null;
+            append("[Console connection changed; collecting fresh ECU evidence for this conversation.]\n");
         }
         if (session == null) {
             try {
                 session = new ConsoleEcuSession(linkManager);
-                caseEvidence = new DiagnosticCaseStore(storage.resolve("diagnostic-cases"));
+                if (caseEvidence == null) {
+                    caseEvidence = new DiagnosticCaseStore(storage.resolve("diagnostic-cases"));
+                }
             } catch (java.io.IOException e) {
                 append("[" + e.getMessage() + "]\n");
                 return;
@@ -382,7 +424,12 @@ public final class LLMTab implements AutoCloseable {
         DiagnosticCaseStore turnEvidence = new DiagnosticCaseStore(caseEvidence);
         JSONArray previous = new JSONArray();
         previous.addAll(history);
-        append("\n> " + text + "\n\n");
+        TroubleshootingSessionStore.Session base = activeSession == null
+                ? TroubleshootingSessionStore.Session.start(id, model.slug, text) : activeSession;
+        String prefix = "\n> " + text + "\n\n";
+        StringBuilder turnTranscript = new StringBuilder(prefix);
+        String precedingTranscript = committedTranscript;
+        append(prefix);
         prompt.setText("");
         log.info("troubleshooting turn: model=" + model.slug + ", prompt=" + text.length() + " chars, "
                 + history.size() + " history items");
@@ -390,8 +437,29 @@ public final class LLMTab implements AutoCloseable {
             ChatGptAgent.Tools tools = new TroubleshootingTools(current, knowledgeDirectory, turnEvidence);
             JSONArray completed = ChatGptAgent.run(
                     (input, definitions, delta, c) -> client.respondWithTools(id, model.slug, input, definitions, delta, c),
-                    tools, previous, text, delta -> SwingUtilities.invokeLater(() -> append(delta)),
-                    progress -> SwingUtilities.invokeLater(() -> append(progress)), cancellation);
+                    tools, previous, text, delta -> {
+                        turnTranscript.append(delta);
+                        SwingUtilities.invokeLater(() -> append(delta));
+                    }, progress -> {
+                        turnTranscript.append(progress);
+                        SwingUtilities.invokeLater(() -> append(progress));
+                    }, cancellation);
+            String transcript = precedingTranscript + turnTranscript + "\n";
+            if (transcript.length() > TroubleshootingSessionStore.MAX_TRANSCRIPT) {
+                transcript = transcript.substring(transcript.length() - TroubleshootingSessionStore.MAX_TRANSCRIPT);
+            }
+            TroubleshootingSessionStore.Session finished = base.completed(model.slug, completed, transcript,
+                    turnEvidence.snapshot());
+            IOException saveFailure = null;
+            if (!cancellation.isCancelled() && current.isCurrent()) {
+                try {
+                    savedSessions.save(finished);
+                } catch (IOException e) {
+                    log.error("troubleshooting session save failed", e);
+                    saveFailure = e;
+                }
+            }
+            IOException finalSaveFailure = saveFailure;
             return () -> {
                 if (cancellation.isCancelled() || !current.isCurrent()) {
                     append("\n[Turn discarded: stopped or Console connection changed.]\n");
@@ -400,7 +468,14 @@ public final class LLMTab implements AutoCloseable {
                 history.clear();
                 history.addAll(completed);
                 caseEvidence = turnEvidence;
+                activeSession = finished;
+                committedTranscript = finished.transcript;
                 append("\n");
+                if (finalSaveFailure == null) {
+                    rememberSession(finished.summary());
+                } else {
+                    append("[Could not save this conversation locally: " + safeMessage(finalSaveFailure) + "]\n");
+                }
             };
         });
     }
@@ -463,8 +538,83 @@ public final class LLMTab implements AutoCloseable {
     }
 
     private void setModels(List<Model> available) {
-        models.removeAllItems();
-        for (Model model : available) { models.addItem(model); }
+        updatingModels = true;
+        try {
+            models.removeAllItems();
+            for (Model model : available) { models.addItem(model); }
+        } finally {
+            updatingModels = false;
+        }
+    }
+
+    private void setRecentSessions(List<TroubleshootingSessionStore.Summary> recent) {
+        recentSessions.removeAllItems();
+        for (TroubleshootingSessionStore.Summary item : recent) { recentSessions.addItem(item); }
+        recentSessions.setSelectedIndex(-1);
+        updateControls();
+    }
+
+    private void rememberSession(TroubleshootingSessionStore.Summary updated) {
+        List<TroubleshootingSessionStore.Summary> recent = new ArrayList<>();
+        recent.add(updated);
+        for (int index = 0; index < recentSessions.getItemCount(); index++) {
+            TroubleshootingSessionStore.Summary existing = recentSessions.getItemAt(index);
+            if (!existing.id.equals(updated.id)) { recent.add(existing); }
+        }
+        recent.sort((left, right) -> Long.compare(right.updatedAt, left.updatedAt));
+        setRecentSessions(recent);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void resumeSession() {
+        TroubleshootingSessionStore.Summary selected = (TroubleshootingSessionStore.Summary) recentSessions.getSelectedItem();
+        String accountId = selectedId;
+        if (selected == null || accountId == null) { return; }
+        perform("Opening session...", cancellation -> {
+            TroubleshootingSessionStore.Session restored = savedSessions.load(accountId, selected.id);
+            DiagnosticCaseStore evidence = DiagnosticCaseStore.restore(storage.resolve("diagnostic-cases"), restored.evidence);
+            return () -> {
+                clearConversation();
+                activeSession = restored;
+                history.addAll(restored.history);
+                caseEvidence = evidence;
+                committedTranscript = restored.transcript;
+                terminal.setText(restored.transcript);
+                terminal.setCaretPosition(terminal.getDocument().getLength());
+                updatingModels = true;
+                boolean matchingModel = false;
+                try {
+                    for (int index = 0; index < models.getItemCount(); index++) {
+                        Model model = models.getItemAt(index);
+                        if (model.slug.equals(restored.model)) {
+                            models.setSelectedIndex(index);
+                            matchingModel = true;
+                            break;
+                        }
+                    }
+                } finally {
+                    updatingModels = false;
+                }
+                if (!matchingModel) { append("\n[Previous model unavailable. Choose an available model to continue.]\n"); }
+            };
+        });
+    }
+
+    private void deleteSession() {
+        TroubleshootingSessionStore.Summary selected = (TroubleshootingSessionStore.Summary) recentSessions.getSelectedItem();
+        String accountId = selectedId;
+        if (selected == null || accountId == null) { return; }
+        int choice = JOptionPane.showConfirmDialog(content, "Delete this saved troubleshooting session?\n" + selected.title,
+                "Delete session", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (choice != JOptionPane.YES_OPTION) { return; }
+        perform("Deleting session...", cancellation -> {
+            savedSessions.delete(accountId, selected.id);
+            List<TroubleshootingSessionStore.Summary> remaining = savedSessions.list(accountId);
+            return () -> {
+                if (activeSession != null && activeSession.id.equals(selected.id)) { clearConversation(); }
+                setRecentSessions(remaining);
+            };
+        });
     }
 
     private void updateControls() {
@@ -477,6 +627,10 @@ public final class LLMTab implements AutoCloseable {
         logout.setEnabled(idle && selected != null && selected.connected);
         cancelSignIn.setEnabled(signingIn && running != null && !running.isCancelled() && !closed);
         models.setEnabled(idle);
+        recentSessions.setEnabled(idle);
+        boolean hasRecent = recentSessions.getSelectedItem() != null;
+        resume.setEnabled(idle && hasRecent);
+        delete.setEnabled(idle && hasRecent);
         send.setEnabled(canSend(idle, selected, models.getItemCount()));
         prompt.setEnabled(idle);
         stop.setEnabled(running != null && !closed);
@@ -505,6 +659,8 @@ public final class LLMTab implements AutoCloseable {
 
     private void clearConversation() {
         history.clear();
+        activeSession = null;
+        committedTranscript = "";
         caseEvidence = null;
         terminal.setText("");
         if (session != null) {
@@ -518,7 +674,7 @@ public final class LLMTab implements AutoCloseable {
     private void append(String text) {
         if (closed) { return; }
         terminal.append(text);
-        int excess = terminal.getDocument().getLength() - 200000;
+        int excess = terminal.getDocument().getLength() - TroubleshootingSessionStore.MAX_TRANSCRIPT;
         if (excess > 0) { terminal.replaceRange("", 0, excess); }
         terminal.setCaretPosition(terminal.getDocument().getLength());
     }
