@@ -538,14 +538,11 @@ public class MainFrame {
         if (srecSig == null) {
             return FirmwareUpdateCheckResult.UNABLE_TO_CHECK;
         }
-        boolean needsUpdate;
-        if (!srecSig.getIsLegacyFormat()) {
-            needsUpdate = !srecSig.getHash().equals(ecuSig.getHash());
-        } else {
-            needsUpdate = !ecuSig.getYear().equals(srecSig.getYear())
-                || !ecuSig.getMonth().equals(srecSig.getMonth())
-                || !ecuSig.getDay().equals(srecSig.getDay());
-        }
+        // The signature hash covers configuration inputs, so firmware code can change without it changing.
+        boolean needsUpdate = !ecuSig.getYear().equals(srecSig.getYear())
+            || !ecuSig.getMonth().equals(srecSig.getMonth())
+            || !ecuSig.getDay().equals(srecSig.getDay())
+            || (!srecSig.getIsLegacyFormat() && !Objects.equals(srecSig.getHash(), ecuSig.getHash()));
         return needsUpdate ? FirmwareUpdateCheckResult.AVAILABLE : FirmwareUpdateCheckResult.UP_TO_DATE;
     }
 
