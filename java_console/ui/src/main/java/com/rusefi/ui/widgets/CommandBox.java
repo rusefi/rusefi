@@ -3,6 +3,7 @@ package com.rusefi.ui.widgets;
 import com.formdev.flatlaf.FlatClientProperties;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -14,15 +15,16 @@ import java.awt.geom.RoundRectangle2D;
  * typing and to the error colour when the field carries FlatLaf's error outline property
  * (set by AnyCommand for invalid input). Colours from the theme files [tag:console_theme].
  * The same frame serves other short inputs, e.g. "50000 | bytes" ({@link #withSuffix}).
+ * A multi-line text area grows the box beyond that height, one text line at a time.
  */
 public class CommandBox extends JPanel {
     private static final int ARC = 10;
 
-    private final JTextField text;
+    private final JTextComponent text;
     /** Shaded segment at the right end: the Go button or a unit label. */
     private final JComponent trailing;
 
-    CommandBox(JTextField text, JButton go) {
+    CommandBox(JTextComponent text, JButton go) {
         this(text, ">", styleGo(go));
     }
 
@@ -33,7 +35,7 @@ public class CommandBox extends JPanel {
         return new CommandBox(text, null, unit);
     }
 
-    private CommandBox(JTextField text, String prompt, JComponent trailing) {
+    private CommandBox(JTextComponent text, String prompt, JComponent trailing) {
         super(new BorderLayout());
         this.text = text;
         this.trailing = trailing;
@@ -83,7 +85,7 @@ public class CommandBox extends JPanel {
     @Override
     public Dimension getPreferredSize() {
         Dimension size = super.getPreferredSize();
-        size.height = JoinedButtons.HEIGHT;
+        size.height = Math.max(JoinedButtons.HEIGHT, size.height);
         return size;
     }
 

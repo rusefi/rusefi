@@ -248,15 +248,26 @@ public class AnyCommand {
     }
 
     public static AnyCommand createArea(UIContext uiContext, Node config, String defaultCommand, boolean listenToCommands, boolean withCommandCaption) {
-        final JTextArea text = new JTextArea(3, 20) {
+        // starts one line tall and grows with each line typed or pasted; every line is sent
+        final JTextArea text = new JTextArea() {
             @Override
             public Dimension getPreferredSize() {
                 Dimension size = super.getPreferredSize();
-                return new Dimension(200, size.height);
+                return new Dimension(340, size.height);
             }
         };
-//        text.setMax
 
-        return new AnyCommand(uiContext, text, config, defaultCommand, listenToCommands, withCommandCaption);
+        AnyCommand command = new AnyCommand(uiContext, text, config, defaultCommand, listenToCommands, withCommandCaption);
+        // the same rounded "> command | Go" control as createField [tag:console_theme]
+        command.content.remove(text);
+        command.content.remove(command.go);
+        command.content.add(new CommandBox(text, command.go));
+        // centre a single line in the box, which is as tall as the toolbar controls
+        int lineHeight = text.getFontMetrics(text.getFont()).getHeight();
+        int padding = Math.max(0, (JoinedButtons.HEIGHT - 2 - lineHeight) / 2);
+        text.setBorder(BorderFactory.createEmptyBorder(padding, 0, padding, 8));
+        text.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Console command");
+        text.setToolTipText("Ctrl+Enter sends; Enter starts a new line and each line is sent as its own command");
+        return command;
     }
 }

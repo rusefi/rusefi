@@ -6,6 +6,7 @@ import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.UiUtils;
+import com.rusefi.ui.widgets.ConsoleFonts;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -31,8 +32,9 @@ public class MessagesView {
     public MessagesView(Node config) {
         this.config = config;
         messages.setEditable(false);
-        // fixed-width font so hexdumps and other formatted multi-line output stay aligned (#9827)
-        messages.setFont(new Font(Font.MONOSPACED, Font.PLAIN, messages.getFont().getSize()));
+        // fixed-width font so hexdumps and other formatted multi-line output stay aligned (#9827);
+        // the console's monospaced font, as in the Lua editor: logical Monospaced is Courier New on Windows
+        messages.setFont(ConsoleFonts.mono(Font.PLAIN, messages.getFont().getSize()));
         // ECU-controlled background color, see 'set_bg_color=' messages
         MessagesPaneBackgroundColor.register(messages);
 

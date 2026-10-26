@@ -16,7 +16,6 @@ import com.rusefi.ui.UIContext;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.widgets.AnyCommand;
-import com.rusefi.ui.widgets.ConsoleFonts;
 import com.rusefi.ui.widgets.JoinedButtons;
 import com.rusefi.ui.widgets.ToolbarStrip;
 import com.formdev.flatlaf.FlatClientProperties;
@@ -106,13 +105,11 @@ public class LuaScriptPanel {
         // Center panel - script editor and log, each under its own titled header
         scriptText = new LuaTextEditor(context);
         JPanel scriptPanel = new JPanel(new BorderLayout());
-        scriptPanel.add(paneHeader(SCRIPT, null), BorderLayout.NORTH);
+        scriptPanel.add(ToolbarStrip.header(SCRIPT, null), BorderLayout.NORTH);
         scriptPanel.add(scriptText.getControl(), BorderLayout.CENTER);
 
         JPanel messagesPanel = new JPanel(new BorderLayout());
-        messagesPanel.add(paneHeader(OUTPUT, new JoinedButtons(mp.getButtons())), BorderLayout.NORTH);
-        // fixed-width output, in the console's monospaced font rather than Courier
-        mp.setFont(ConsoleFonts.mono(Font.PLAIN, mp.getFont().getSize()), config);
+        messagesPanel.add(ToolbarStrip.header(OUTPUT, new JoinedButtons(mp.getButtons())), BorderLayout.NORTH);
         mp.getMessagesScroll().setBorder(BorderFactory.createEmptyBorder());
         messagesPanel.add(BorderLayout.CENTER, mp.getMessagesScroll());
 
@@ -142,21 +139,6 @@ public class LuaScriptPanel {
         mainPanel.add(centerPanel, BorderLayout.CENTER);
 
         AutoupdateUtil.trueLayoutAndRepaint(mainPanel);
-    }
-
-    /** Pane title on the left, optional controls on the right, on a white strip with a divider. */
-    static JPanel paneHeader(String title, JComponent trailing) {
-        JPanel header = new ToolbarStrip(new BorderLayout());
-        header.setBorder(BorderFactory.createEmptyBorder(6, 12, 7, JoinedButtons.ROW_END_INSET));
-        JLabel label = new JLabel(title);
-        label.setFont(label.getFont().deriveFont(Font.BOLD));
-        // as tall as the controls, so headers with and without them line up
-        label.setPreferredSize(new Dimension(label.getPreferredSize().width, JoinedButtons.HEIGHT));
-        header.add(label, BorderLayout.WEST);
-        if (trailing != null) {
-            header.add(trailing, BorderLayout.EAST);
-        }
-        return header;
     }
 
     /** The "More…" menu, built on each click so the reload entry reflects the current script name. */
