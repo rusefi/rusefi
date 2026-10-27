@@ -16,7 +16,14 @@ import com.rusefi.core.net.PropertiesHolder;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.ui.util.PinColors;
+import com.rusefi.ui.util.WrapLayout;
 import com.rusefi.ui.util.YamlUtil;
+import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.icons.FlatSearchIcon;
+import com.rusefi.ui.widgets.JoinedButtons;
+import com.rusefi.ui.widgets.SegmentedControl;
+import com.rusefi.ui.widgets.ToolbarStrip;
+import com.rusefi.ui.widgets.tune.TuningStyle;
 import org.yaml.snakeyaml.Yaml;
 
 import javax.imageio.ImageIO;
@@ -40,9 +47,6 @@ import java.util.zip.ZipFile;
 
 import static com.devexperts.logging.Logging.getLogging;
 
-import static com.rusefi.ui.util.PinColors.COLOR_HIGHLIGHT;
-import static com.rusefi.ui.util.PinColors.FALLBACK_NORMAL;
-
 /**
  * Displays ECU connector pinouts for the currently connected board.
  *
@@ -56,15 +60,14 @@ import static com.rusefi.ui.util.PinColors.FALLBACK_NORMAL;
  * {@code /pinouts_raw/<zip_file>}.</p>
  *
  * <p>The Console selects the target from the ECU or offline-tune signature, verifies the archive,
- * then renders the pinouts and tune assignments. Each connector is shown as a tab with an
- * interactive image (pin markers) above a table. Pin marker color can be switched between
- * type-based and pigtail wire color.</p>
+ * then renders the pinouts and tune assignments. A toolbar switch picks the connector, shown as
+ * its image with a marker on each pin ({@link PinoutDrawing}) above a table. Markers are coloured
+ * by pin type, pigtail wire colour or tune use [tag:console_theme].</p>
  */
 public class PinoutPane {
     private static final Logging log = getLogging(PinoutPane.class);
 
     private static final String PINOUTS_DIR = "pinouts_raw";
-    private static final String[] COLUMNS = {"Pin", "Function", "Type", "Class", "TS Name", "Pigtail color", "Tune use"};
 
     private static final String PINOUT_CACHE_DIR = FileUtil.RUSEFI_SETTINGS_FOLDER + "pinouts" + File.separator;
 
@@ -81,294 +84,42 @@ public class PinoutPane {
     }
 
     private final JPanel content = new JPanel(new BorderLayout());
-    private final JLabel statusLabel = new JLabel("Not connected", SwingConstants.CENTER);
+    private final JLabel statusLabel = new JLabel("Not connected");
     private JComponent centerPanel;
 
     private Map<String, Map<String, Object>> boardsData;
     private final UIContext uiContext;
     private final Set<String> pinoutDownloads = Collections.synchronizedSet(new HashSet<>());
-    /** All image panels currently displayed — updated when a board's tabs are built. */
-    private final List<ConnectorImagePanel> activeImagePanels = new ArrayList<>();
-    /** All table models currently displayed — updated alongside activeImagePanels. */
-    private final List<DefaultTableModel> activeTableModels = new ArrayList<>();
-    /** JTables aligned index-for-index with {@link #activeTableModels}; needed to drive row selection from {@link #highlightByEnumValue}. */
-    private final List<JTable> activeTables = new ArrayList<>();
-    /** Tab host for connectors; held as a field so {@link #highlightByEnumValue} can switch connector. */
-    private JTabbedPane connectorTabs;
+    /** The connectors of the board shown, in switch order. */
+    private final List<PinoutConnectorPage> activeConnectors = new ArrayList<>();
+    /** Finds pins across every connector of the board. */
+    final JTextField search = new JTextField(22);
+    /** "Connector C  ·  20", the switch's text when not searching. */
+    private final List<String> connectorLabels = new ArrayList<>();
+    /** Holds one page per connector; {@link #highlightByEnumValue} switches between them. */
+    private JPanel connectorPages;
+    private final CardLayout connectorCards = new CardLayout();
+    /** The connector switch in the toolbar; rebuilt for each board. */
+    private final JPanel connectorSwitchHolder = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+    private final List<JToggleButton> connectorButtons = new ArrayList<>();
     /** Callback fired on double-click of a pin row that has a tune field currently assigned to it. Args: dialogKey, fieldKey. */
     private BiConsumer<String, String> navigateToTune;
     /** Latest config image observed via uiContext.addConfigImageListener — reflects unburned Tune edits. Prefer over BinaryProtocol.getControllerConfiguration(). */
     private ConfigurationImage liveConfigImage;
-    // ---- Color mode ----
-
-    enum ColorMode { TYPE, PIGTAIL }
-    private ColorMode colorMode = ColorMode.TYPE;
-
-    // ---- Legend panel  ----
-
-    private static class LegendPanel extends JPanel {
-        private static final int SWATCH  = 12;
-        private static final int ROW_H   = 18;
-        private static final int PAD_X   = 8;
-        private static final int PAD_Y   = 6;
-        private static final int GAP     = 5;
-
-        LegendPanel() {
-            setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, UIManager.getColor("Separator.foreground")));
-        }
-
-        @Override
-        public Dimension getPreferredSize() {
-            FontMetrics fm = getFontMetrics(getFont().deriveFont(Font.PLAIN, 10f));
-            int maxW = 0;
-            for (PinColors.TypeEntry e : PinColors.TYPE_ENTRIES) maxW = Math.max(maxW, fm.stringWidth(e.keyword));
-            int w = PAD_X * 2 + SWATCH + GAP + maxW + 4;
-            int h = PAD_Y * 2 + 16 + PinColors.TYPE_ENTRIES.size() * ROW_H;
-            return new Dimension(Math.max(w, 80), h);
-        }
-
-        @Override
-        public Dimension getMinimumSize() { return getPreferredSize(); }
-        @Override
-        public Dimension getMaximumSize() { return new Dimension(getPreferredSize().width, Integer.MAX_VALUE); }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            Graphics2D g2 = (Graphics2D) g.create();
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,      RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-
-            Font titleFont = getFont().deriveFont(Font.BOLD, 11f);
-            g2.setFont(titleFont);
-            FontMetrics titleFm = g2.getFontMetrics();
-            g2.setColor(getForeground());
-            g2.drawString("Type", PAD_X, PAD_Y + titleFm.getAscent());
-
-            Font rowFont = getFont().deriveFont(Font.PLAIN, 10f);
-            g2.setFont(rowFont);
-            FontMetrics rowFm = g2.getFontMetrics();
-
-            int y = PAD_Y + titleFm.getHeight() + 2;
-            for (PinColors.TypeEntry e : PinColors.TYPE_ENTRIES) {
-                int swatchY = y + (ROW_H - SWATCH) / 2;
-
-                // Swatch
-                g2.setColor(e.color);
-                g2.fillRoundRect(PAD_X, swatchY, SWATCH, SWATCH, 4, 4);
-                g2.setColor(Color.GRAY);
-                g2.setStroke(new BasicStroke(0.5f));
-                g2.drawRoundRect(PAD_X, swatchY, SWATCH, SWATCH, 4, 4);
-
-                // Label
-                g2.setColor(getForeground());
-                g2.drawString(e.keyword, PAD_X + SWATCH + GAP,
-                        y + (ROW_H + rowFm.getAscent() - rowFm.getDescent()) / 2);
-
-                y += ROW_H;
-            }
-            g2.dispose();
-        }
-    }
+    private PinoutDrawing.ColorMode colorMode = PinoutDrawing.ColorMode.TYPE;
+    private final Map<PinoutDrawing.ColorMode, JToggleButton> colorModeSegments = new EnumMap<>(PinoutDrawing.ColorMode.class);
 
     // ---- Data models ----
-
-    private static class PinCoord {
-        final String pin;
-        final int x, y;
-        /** Pin type string from yaml (e.g. "ign", "inj", "ls"). May be empty. */
-        final String type;
-        /** Pigtail wire color string from yaml (e.g. "red", "orange/brown"). May be empty. */
-        final String wireColor;
-
-        PinCoord(String pin, int x, int y, String type, String wireColor) {
-            this.pin = pin;
-            this.x = x;
-            this.y = y;
-            this.type = type;
-            this.wireColor = wireColor;
-        }
-    }
 
     private static class ConnectorData {
         final String title;
         final BufferedImage image;
-        final List<PinCoord> coords;
-        final List<Object[]> rows;
+        final List<PinoutPin> pins;
 
-        ConnectorData(String title, BufferedImage image, List<PinCoord> coords, List<Object[]> rows) {
+        ConnectorData(String title, BufferedImage image, List<PinoutPin> pins) {
             this.title = title;
             this.image = image;
-            this.coords = coords;
-            this.rows = rows;
-        }
-    }
-
-    // ---- Image panel with clickable pin markers ----
-
-    private static class ConnectorImagePanel extends JPanel {
-        private BufferedImage image;
-        private List<PinCoord> coords = Collections.emptyList();
-        private String highlightedPin;
-        private Consumer<String> pinClickListener;
-        private ColorMode colorMode = ColorMode.TYPE;
-
-        // Cached transform (recalculated each paint)
-        private double scale = 1.0;
-        private int imgOffsetX, imgOffsetY;
-
-        private static final int MARKER_RADIUS = 12;
-        private static final int CLICK_RADIUS  = 16;
-
-        ConnectorImagePanel() {
-            setBackground(Color.DARK_GRAY);
-            addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    String pin = findNearestPin(e.getX(), e.getY());
-                    if (pin != null) {
-                        highlightedPin = pin;
-                        repaint();
-                        if (pinClickListener != null) pinClickListener.accept(pin);
-                    }
-                }
-            });
-        }
-
-        void setData(BufferedImage img, List<PinCoord> coords) {
-            this.image = img;
-            this.coords = coords != null ? coords : Collections.emptyList();
-            highlightedPin = null;
-            repaint();
-        }
-
-        void setPinClickListener(Consumer<String> listener) {
-            this.pinClickListener = listener;
-        }
-
-        void setHighlightedPin(String pin) {
-            highlightedPin = pin;
-            repaint();
-        }
-
-        void setColorMode(ColorMode mode) {
-            this.colorMode = mode;
-            repaint();
-        }
-
-        private void recalcTransform() {
-            if (image == null || getWidth() <= 0 || getHeight() <= 0) {
-                scale = 1.0; imgOffsetX = 0; imgOffsetY = 0;
-                return;
-            }
-            double sx = (double) getWidth() / image.getWidth();
-            double sy = (double) getHeight() / image.getHeight();
-            scale = Math.min(sx, sy);
-            imgOffsetX = (int) ((getWidth()  - image.getWidth()  * scale) / 2);
-            imgOffsetY = (int) ((getHeight() - image.getHeight() * scale) / 2);
-        }
-
-        private int screenX(PinCoord c) { return (int) (c.x * scale) + imgOffsetX; }
-        private int screenY(PinCoord c) { return (int) (c.y * scale) + imgOffsetY; }
-
-        private String findNearestPin(int mx, int my) {
-            String nearest = null;
-            double bestDist = (double) CLICK_RADIUS * CLICK_RADIUS;
-            for (PinCoord c : coords) {
-                double dx = mx - screenX(c);
-                double dy = my - screenY(c);
-                double dist2 = dx * dx + dy * dy;
-                if (dist2 <= bestDist) {
-                    bestDist = dist2;
-                    nearest = c.pin;
-                }
-            }
-            return nearest;
-        }
-
-        private Color[] markerFillColors(PinCoord c) {
-            if (c.pin.equals(highlightedPin)) return new Color[]{COLOR_HIGHLIGHT};
-            if (colorMode == ColorMode.PIGTAIL) {
-                Color[] cols = PinColors.pigtailToColors(c.wireColor);
-                if (cols != null) {
-                    Color[] result = new Color[cols.length];
-                    for (int i = 0; i < cols.length; i++) {
-                        result[i] = new Color(cols[i].getRed(), cols[i].getGreen(), cols[i].getBlue(), 200);
-                    }
-                    return result;
-                }
-                return new Color[]{FALLBACK_NORMAL};
-            }
-            Color base = PinColors.typeToColor(c.type);
-            Color fill = base != null ? new Color(base.getRed(), base.getGreen(), base.getBlue(), 200) : FALLBACK_NORMAL;
-            return new Color[]{fill};
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            if (image == null) return;
-            recalcTransform();
-
-            Graphics2D g2 = (Graphics2D) g.create();
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,       RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,      RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,  RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-
-            int w = (int) (image.getWidth()  * scale);
-            int h = (int) (image.getHeight() * scale);
-            g2.drawImage(image, imgOffsetX, imgOffsetY, w, h, null);
-
-            int fontSize = MARKER_RADIUS - 1;
-            Font markerFont = g2.getFont().deriveFont(Font.BOLD, (float) fontSize);
-            g2.setFont(markerFont);
-            FontMetrics fm = g2.getFontMetrics();
-
-            for (PinCoord c : coords) {
-                int sx = screenX(c);
-                int sy = screenY(c);
-                int r  = MARKER_RADIUS;
-                boolean hl = c.pin.equals(highlightedPin);
-
-                Color[] fills = markerFillColors(c);
-                Shape savedClip = g2.getClip();
-
-                if (fills.length == 2) {
-                    // Left half — color[0]
-                    g2.clip(new Rectangle(sx - r, sy - r, r, r * 2));
-                    g2.setColor(fills[0]);
-                    g2.fillOval(sx - r, sy - r, r * 2, r * 2);
-                    g2.setClip(savedClip);
-                    // Right half — color[1]
-                    g2.clip(new Rectangle(sx, sy - r, r, r * 2));
-                    g2.setColor(fills[1]);
-                    g2.fillOval(sx - r, sy - r, r * 2, r * 2);
-                    g2.setClip(savedClip);
-                } else {
-                    g2.setColor(fills[0]);
-                    g2.fillOval(sx - r, sy - r, r * 2, r * 2);
-                }
-
-                // Border: white normally, bright orange when highlighted
-                g2.setColor(hl ? Color.ORANGE : Color.WHITE);
-                g2.setStroke(new BasicStroke(hl ? 2f : 1f));
-                g2.drawOval(sx - r, sy - r, r * 2, r * 2);
-
-                // Pin label: pick contrast color from the first (dominant) fill
-                String label = c.pin;
-                int textW = fm.stringWidth(label);
-                int textX = sx - textW / 2;
-                int textY = sy + fm.getAscent() / 2 - 1;
-
-                Color textColor = PinColors.isLight(fills[0]) ? Color.BLACK : Color.WHITE;
-                Color shadowColor = PinColors.isLight(fills[0]) ? new Color(200, 200, 200, 120) : new Color(0, 0, 0, 120);
-
-                g2.setColor(shadowColor);
-                g2.drawString(label, textX + 1, textY + 1);
-                g2.setColor(textColor);
-                g2.drawString(label, textX, textY);
-            }
-            g2.dispose();
+            this.pins = pins;
         }
     }
 
@@ -389,24 +140,8 @@ public class PinoutPane {
             updater.start();
         }
 
-        statusLabel.setFont(statusLabel.getFont().deriveFont(Font.BOLD, 13f));
-
-        JComboBox<String> colorCombo = new JComboBox<>(new String[]{"Type", "Pigtail"});
-        colorCombo.addActionListener(e -> {
-            colorMode = "Pigtail".equals(colorCombo.getSelectedItem()) ? ColorMode.PIGTAIL : ColorMode.TYPE;
-            for (ConnectorImagePanel p : activeImagePanels) p.setColorMode(colorMode);
-        });
-
-        JPanel northPanel = new JPanel(new BorderLayout());
-        northPanel.setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 4));
-        northPanel.add(statusLabel, BorderLayout.CENTER);
-
-        JPanel colorToolbar = new JPanel(new FlowLayout(FlowLayout.RIGHT, 4, 0));
-        colorToolbar.add(new JLabel("Color by:"));
-        colorToolbar.add(colorCombo);
-        northPanel.add(colorToolbar, BorderLayout.EAST);
-
-        content.add(northPanel, BorderLayout.NORTH);
+        content.add(createToolbar(), BorderLayout.NORTH);
+        setCenterPanel(null);
 
         if (startBoardUpdates) {
             ConnectionStatusLogic.INSTANCE.addAndFireListener(isConnected -> SwingUtilities.invokeLater(() -> {
@@ -430,24 +165,149 @@ public class PinoutPane {
         }));
     }
 
+    /** Board (or status), the connector switch, and Color by: Type | Pigtail | Tune use. */
+    private JComponent createToolbar() {
+        statusLabel.setFont(statusLabel.getFont().deriveFont(Font.BOLD));
+        JPanel left = new JPanel(new WrapLayout(FlowLayout.LEFT, JoinedButtons.ROW_GAP + 4, 0));
+        left.setOpaque(false);
+        left.add(statusLabel);
+        connectorSwitchHolder.setOpaque(false);
+        left.add(connectorSwitchHolder);
+        search.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Find a pin, function or tune use");
+        search.putClientProperty(FlatClientProperties.TEXT_FIELD_LEADING_ICON, new FlatSearchIcon());
+        search.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true);
+        search.setToolTipText("Searches every connector · Enter selects the first match");
+        search.setPreferredSize(new Dimension(search.getPreferredSize().width, JoinedButtons.HEIGHT));
+        search.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                applySearch();
+            }
+
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                applySearch();
+            }
+
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                applySearch();
+            }
+        });
+        search.addActionListener(e -> selectFirstMatch());
+        left.add(search);
+
+        ButtonGroup group = new ButtonGroup();
+        JToggleButton type = colorModeSegment("Type", "What each pin is for", PinoutDrawing.ColorMode.TYPE, group);
+        JToggleButton pigtail = colorModeSegment("Pigtail", "The wire colour on the pigtail",
+                PinoutDrawing.ColorMode.PIGTAIL, group);
+        JToggleButton tune = colorModeSegment("Tune use", "Used by the tune, free to use, or fixed (power and ground)",
+                PinoutDrawing.ColorMode.TUNE_USE, group);
+        type.setSelected(true);
+        JLabel colorBy = new JLabel("Color by");
+        colorBy.setForeground(UIManager.getColor("Label.disabledForeground"));
+        JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT, JoinedButtons.ROW_GAP, 0));
+        right.setOpaque(false);
+        right.add(colorBy);
+        right.add(new SegmentedControl(type, pigtail, tune));
+
+        JPanel toolbar = new ToolbarStrip(new BorderLayout(JoinedButtons.ROW_GAP, 0));
+        toolbar.setBorder(BorderFactory.createEmptyBorder(8, 12, 9, JoinedButtons.ROW_END_INSET));
+        toolbar.add(left, BorderLayout.CENTER);
+        toolbar.add(right, BorderLayout.EAST);
+        return toolbar;
+    }
+
+    private JToggleButton colorModeSegment(String text, String tooltip, PinoutDrawing.ColorMode mode, ButtonGroup group) {
+        JToggleButton segment = SegmentedControl.segment(text);
+        segment.setToolTipText(tooltip);
+        segment.addActionListener(e -> setColorMode(mode));
+        group.add(segment);
+        colorModeSegments.put(mode, segment);
+        return segment;
+    }
+
+    void setColorMode(PinoutDrawing.ColorMode mode) {
+        colorMode = mode;
+        JToggleButton segment = colorModeSegments.get(mode);
+        if (segment != null && !segment.isSelected()) {
+            segment.setSelected(true);
+        }
+        for (PinoutConnectorPage page : activeConnectors) {
+            page.setColorMode(mode);
+        }
+    }
+
+    /**
+     * Narrows every connector to the pins matching the search, shows each connector's matches on its switch
+     * button, and moves to the first connector with a match when the shown one has none.
+     */
+    void applySearch() {
+        String query = search.getText();
+        boolean searching = !query.trim().isEmpty();
+        int firstWithMatches = -1;
+        int[] matches = new int[activeConnectors.size()];
+        for (int i = 0; i < activeConnectors.size(); i++) {
+            matches[i] = activeConnectors.get(i).setQuery(query);
+            if (matches[i] > 0 && firstWithMatches < 0) {
+                firstWithMatches = i;
+            }
+            if (i < connectorButtons.size()) {
+                connectorButtons.get(i).setText(!searching ? connectorLabels.get(i)
+                        : connectorLabels.get(i).replaceAll("  ·  \\d+$", "") + "  ·  "
+                        + (matches[i] == 0 ? "none" : matches[i] + " found"));
+            }
+        }
+        int shown = selectedConnector();
+        if (searching && shown >= 0 && matches[shown] == 0 && firstWithMatches >= 0) {
+            selectConnector(firstWithMatches);
+        }
+        connectorSwitchHolder.revalidate();
+    }
+
+    /** Enter in the search: selects the first matching pin of the connector shown. */
+    void selectFirstMatch() {
+        int shown = selectedConnector();
+        if (shown < 0) return;
+        PinoutConnectorPage page = activeConnectors.get(shown);
+        for (PinoutPin pin : page.pins) {
+            if (page.isShown(pin)) {
+                page.select(pin);
+                return;
+            }
+        }
+    }
+
     public JPanel getContent() {
         return content;
     }
 
+    /** Shows a page, or a centred note repeating the status when there is nothing to show. */
     private void setCenterPanel(JComponent c) {
         if (centerPanel != null) content.remove(centerPanel);
+        if (c == null) {
+            JLabel note = new JLabel(statusLabel.getText(), SwingConstants.CENTER);
+            note.setForeground(UIManager.getColor("Label.disabledForeground"));
+            c = note;
+            connectorSwitchHolder.removeAll();
+            connectorSwitchHolder.revalidate();
+        }
         centerPanel = c;
-        if (c != null) content.add(c, BorderLayout.CENTER);
+        content.add(c, BorderLayout.CENTER);
         content.revalidate();
         content.repaint();
     }
 
+    private void clearConnectors() {
+        activeConnectors.clear();
+        connectorButtons.clear();
+        connectorLabels.clear();
+        connectorPages = null;
+    }
+
     private void showDisconnected() {
         statusLabel.setText("Not connected");
-        activeImagePanels.clear();
-        activeTableModels.clear();
-        activeTables.clear();
-        connectorTabs = null;
+        clearConnectors();
         liveConfigImage = null;
         setCenterPanel(null);
     }
@@ -458,7 +318,7 @@ public class PinoutPane {
         String signature = ini != null ? ini.getSignature() : null;
         if (signature == null) {
             statusLabel.setText("Offline tune — board unknown");
-            activeImagePanels.clear();
+            clearConnectors();
             setCenterPanel(null);
             return;
         }
@@ -468,14 +328,14 @@ public class PinoutPane {
     private void showBoard(String signature) {
         if (signature == null) {
             statusLabel.setText("Connected — board unknown");
-            activeImagePanels.clear();
+            clearConnectors();
             setCenterPanel(null);
             return;
         }
         RusEfiSignature parsed = SignatureHelper.parse(signature);
         if (parsed == null) {
             statusLabel.setText("Connected — unrecognized signature: " + signature);
-            activeImagePanels.clear();
+            clearConnectors();
             setCenterPanel(null);
             return;
         }
@@ -484,7 +344,7 @@ public class PinoutPane {
 
         if (boardsData == null) {
             statusLabel.setText("Board: " + boardKey + "  [pinout data not found — expected: " + new File(boardsMetaRelativePath()).getAbsolutePath() + "]");
-            activeImagePanels.clear();
+            clearConnectors();
             setCenterPanel(null);
             return;
         }
@@ -492,7 +352,7 @@ public class PinoutPane {
         Map<String, Object> boardEntry = boardsData.get(boardKey);
         if (boardEntry == null) {
             statusLabel.setText("Board: " + boardKey + "  [no pinout available]");
-            activeImagePanels.clear();
+            clearConnectors();
             setCenterPanel(null);
             return;
         }
@@ -507,10 +367,7 @@ public class PinoutPane {
             statusLabel.setText("Board: " + boardKey + (canUseCachedPinout
                 ? "  [updating pinout data]" : "  [downloading pinout data]"));
             if (!canUseCachedPinout) {
-                activeImagePanels.clear();
-                activeTableModels.clear();
-                activeTables.clear();
-                connectorTabs = null;
+                clearConnectors();
                 setCenterPanel(new JLabel("Downloading " + zipName + "...", SwingConstants.CENTER));
             }
             requestPinoutZip(boardKey, zipName, expectedSha, connectorFiles);
@@ -520,10 +377,7 @@ public class PinoutPane {
     }
 
     void buildConnectorTabs(List<String> connectorPaths, File zipFile) {
-        activeImagePanels.clear();
-        activeTableModels.clear();
-        activeTables.clear();
-        connectorTabs = null;
+        clearConnectors();
 
         List<ConnectorData> connectors = new ArrayList<>();
         try (ZipFile zip = new ZipFile(zipFile)) {
@@ -543,40 +397,53 @@ public class PinoutPane {
         connectors.sort(Comparator.comparing(cd -> cd.title, String.CASE_INSENSITIVE_ORDER));
         Map<String, String> tuneUseMap = buildTuneUseMap();
 
-        JTabbedPane tabs = new JTabbedPane();
-        for (ConnectorData cd : connectors) {
-            tabs.addTab(cd.title, buildConnectorPanel(cd, tuneUseMap));
+        JPanel pages = new JPanel(connectorCards);
+        ButtonGroup group = new ButtonGroup();
+        for (int i = 0; i < connectors.size(); i++) {
+            ConnectorData cd = connectors.get(i);
+            pages.add(buildConnectorPanel(cd, tuneUseMap), String.valueOf(i));
+            connectorLabels.add(cd.title + "  ·  " + cd.pins.size());
+            JToggleButton button = SegmentedControl.segment(connectorLabels.get(i));
+            button.setToolTipText(cd.title + ": " + cd.pins.size() + " pins");
+            int index = i;
+            button.addActionListener(e -> selectConnector(index));
+            group.add(button);
+            connectorButtons.add(button);
         }
-        connectorTabs = tabs;
-        setCenterPanel(tabs);
+        connectorPages = pages;
+        setCenterPanel(pages);
+        connectorSwitchHolder.removeAll();
+        if (connectors.size() > 1) {
+            connectorSwitchHolder.add(new SegmentedControl(connectorButtons.toArray(new JToggleButton[0])));
+        }
+        connectorSwitchHolder.revalidate();
+        selectConnector(0);
+        applySearch();
+    }
+
+    /** Shows a connector's page and marks it in the switch. */
+    void selectConnector(int index) {
+        if (connectorPages == null || index < 0 || index >= connectorButtons.size()) return;
+        connectorButtons.get(index).setSelected(true);
+        connectorCards.show(connectorPages, String.valueOf(index));
+    }
+
+    /** The connector shown, or -1. */
+    int selectedConnector() {
+        for (int i = 0; i < connectorButtons.size(); i++) {
+            if (connectorButtons.get(i).isSelected()) return i;
+        }
+        return -1;
     }
 
     private JPanel buildConnectorPanel(ConnectorData cd, Map<String, String> tuneUseMap) {
-        DefaultTableModel model = new DefaultTableModel(COLUMNS, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) { return false; }
-        };
-        // ts_name is at index 4, pin at index 0, tune use at index 6.
-        // ts_names may contain "___" as a placeholder for the pin ID (e.g. "___ injector output 1"
-        // on pin B6 → ini enum value "B6 injector output 1"), so expand before lookup.
-        for (Object[] row : cd.rows) {
-            String pinName = row[0] != null ? row[0].toString() : "";
-            String tsName  = row[4] != null ? row[4].toString() : "";
-            String iniKey  = tsName.replace("___", pinName).trim();
-            row[6] = tuneUseMap.getOrDefault(iniKey, "");
-            model.addRow(row);
+        for (PinoutPin pin : cd.pins) {
+            pin.tuneUse = tuneUseMap.getOrDefault(pin.tsName, "");
         }
-
-        activeTableModels.add(model);
-
-        JTable table = new JTable(model);
-        table.setAutoCreateRowSorter(true);
-        table.getTableHeader().setReorderingAllowed(false);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        packColumns(table);
-        activeTables.add(table);
-
+        PinoutConnectorPage page = new PinoutConnectorPage(cd.title, cd.image, cd.pins, colorMode,
+                pin -> navigateToTune == null || pin.tsName.isEmpty() ? null : findPinAssignment(pin.tsName),
+                assignment -> navigateToTune.accept(assignment[1], assignment[0]));
+        JTable table = page.table;
         // Double-click a row → jump to the tune field currently driving that pin, if any.
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -584,67 +451,11 @@ public class PinoutPane {
                 if (e.getClickCount() != 2 || navigateToTune == null) return;
                 int viewRow = table.rowAtPoint(e.getPoint());
                 if (viewRow < 0) return;
-                int modelRow = table.convertRowIndexToModel(viewRow);
-                String pinName = YamlUtil.toStr(model.getValueAt(modelRow, 0));
-                String tsName  = YamlUtil.toStr(model.getValueAt(modelRow, 4));
-                String iniKey  = tsName.replace("___", pinName).trim();
-                if (iniKey.isEmpty()) return;
-                String[] assignment = findPinAssignment(iniKey);
-                if (assignment != null) {
-                    navigateToTune.accept(assignment[1], assignment[0]);
-                }
+                page.open(page.pins.get(table.convertRowIndexToModel(viewRow)));
             }
         });
-
-        JPanel panel = new JPanel(new BorderLayout());
-
-        if (cd.image != null) {
-            ConnectorImagePanel imagePanel = new ConnectorImagePanel();
-            imagePanel.setData(cd.image, cd.coords);
-            imagePanel.setColorMode(colorMode);
-            activeImagePanels.add(imagePanel);
-
-            // Map pin name → model row index
-            Map<String, Integer> pinToRow = new HashMap<>();
-            for (int i = 0; i < cd.rows.size(); i++) {
-                Object v = cd.rows.get(i)[0];
-                if (v != null) pinToRow.put(v.toString(), i);
-            }
-
-            // Image click → select table row
-            imagePanel.setPinClickListener(pin -> {
-                Integer row = pinToRow.get(pin);
-                if (row != null) {
-                    int viewRow = table.convertRowIndexToView(row);
-                    table.setRowSelectionInterval(viewRow, viewRow);
-                    table.scrollRectToVisible(table.getCellRect(viewRow, 0, true));
-                }
-            });
-
-            // Table row selection → highlight image marker
-            table.getSelectionModel().addListSelectionListener(e -> {
-                if (e.getValueIsAdjusting()) return;
-                int viewRow = table.getSelectedRow();
-                if (viewRow < 0) { imagePanel.setHighlightedPin(null); return; }
-                int modelRow = table.convertRowIndexToModel(viewRow);
-                Object v = model.getValueAt(modelRow, 0);
-                imagePanel.setHighlightedPin(v != null ? v.toString() : null);
-            });
-
-            LegendPanel legend = new LegendPanel();
-
-            JPanel imageRow = new JPanel(new BorderLayout());
-            imageRow.add(imagePanel, BorderLayout.CENTER);
-            imageRow.add(legend, BorderLayout.EAST);
-
-            JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, imageRow, new JScrollPane(table));
-            split.setResizeWeight(0.6);
-            panel.add(split, BorderLayout.CENTER);
-        } else {
-            panel.add(new JScrollPane(table), BorderLayout.CENTER);
-        }
-
-        return panel;
+        activeConnectors.add(page);
+        return page;
     }
 
     @SuppressWarnings("unchecked")
@@ -660,26 +471,21 @@ public class PinoutPane {
         }
         if (doc == null) return null;
 
-        // Build pin name → {type, wireColor} from top-level pins array
-        Map<String, String[]> pinMeta = new HashMap<>();
-        List<Object[]> rows = new ArrayList<>();
+        List<PinoutPin> pinList = new ArrayList<>();
+        Map<String, PinoutPin> byName = new HashMap<>();
         List<Map<String, Object>> pins = (List<Map<String, Object>>) doc.get("pins");
         if (pins != null) {
             for (Map<String, Object> pin : pins) {
                 String pinName = YamlUtil.toStr(pin.get("pin"));
-                String type    = YamlUtil.toStr(pin.get("type"));
-                String color   = YamlUtil.toStr(pin.get("color"));
-                if (!pinName.isEmpty()) pinMeta.put(pinName, new String[]{type, color});
-                rows.add(new Object[]{
-                        pinName,
+                PinoutPin p = new PinoutPin(pinName,
                         YamlUtil.toStr(pin.get("function")),
-                        type,
+                        YamlUtil.toStr(pin.get("type")),
                         YamlUtil.toCommaSeparated(pin.get("class")),
                         // original yaml has ___ has placeholder for the pin
                         YamlUtil.toStr(pin.get("ts_name")).replace("___", pinName).trim(),
-                        color,
-                        "",  // "Tune use" — filled in by buildConnectorPanel
-                });
+                        YamlUtil.toStr(pin.get("color")));
+                pinList.add(p);
+                if (!pinName.isEmpty()) byName.putIfAbsent(pinName, p);
             }
         }
 
@@ -687,7 +493,6 @@ public class PinoutPane {
         Map<String, Object> info = (Map<String, Object>) doc.get("info");
         String title = yamlPath;
         BufferedImage image = null;
-        List<PinCoord> coords = new ArrayList<>();
 
         if (info != null) {
             String t = YamlUtil.toStr(info.get("name"));
@@ -706,12 +511,10 @@ public class PinoutPane {
             List<Map<String, Object>> coordList = (List<Map<String, Object>>) info.get("pins");
             if (coordList != null) {
                 for (Map<String, Object> c : coordList) {
-                    String pin = YamlUtil.toStr(c.get("pin"));
-                    if (pin.isEmpty()) continue;
-                    int x = YamlUtil.toInt(c.get("x"));
-                    int y = YamlUtil.toInt(c.get("y"));
-                    String[] meta = pinMeta.getOrDefault(pin, new String[]{"", ""});
-                    coords.add(new PinCoord(pin, x, y, meta[0], meta[1]));
+                    PinoutPin pin = byName.get(YamlUtil.toStr(c.get("pin")));
+                    if (pin == null) continue;
+                    pin.x = YamlUtil.toInt(c.get("x"));
+                    pin.y = YamlUtil.toInt(c.get("y"));
                 }
             }
         }
@@ -719,24 +522,20 @@ public class PinoutPane {
         if (!title.isEmpty()) {
             title = Character.toUpperCase(title.charAt(0)) + title.substring(1);
         }
-        return new ConnectorData(title, image, coords, rows);
+        return new ConnectorData(title, image, pinList);
     }
 
-    /** Updates only the "Tune use" column in every active table without rebuilding the tabs. */
+    /** Updates the "Tune use" column, the markers and the legends without rebuilding the connectors. */
     private void refreshTuneUse(ConfigurationImage ci) {
-        if (activeTableModels.isEmpty()) return;
+        if (activeConnectors.isEmpty()) return;
         IniFileModel ini = uiContext.iniFileState.getIniFileModel();
         if (ini == null || ci == null) return;
         Map<String, String> tuneUseMap = buildTuneUseMap(ini, ci);
-        int tuneUseCol = COLUMNS.length - 1; // last column
-        for (DefaultTableModel model : activeTableModels) {
-            for (int row = 0; row < model.getRowCount(); row++) {
-                String pinName = YamlUtil.toStr(model.getValueAt(row, 0));
-                String tsName  = YamlUtil.toStr(model.getValueAt(row, 4));
-                String iniKey  = tsName.replace("___", pinName).trim();
-                model.setValueAt(tuneUseMap.getOrDefault(iniKey, ""), row, tuneUseCol);
-            }
+        for (PinoutConnectorPage page : activeConnectors) {
+            page.setTuneUse(tuneUseMap);
         }
+        // tune use is searchable
+        applySearch();
     }
 
     public void setNavigateToTune(BiConsumer<String, String> navigateToTune) {
@@ -749,22 +548,18 @@ public class PinoutPane {
      * No-op if no row matches (e.g. value is NONE, or pin lives on a connector not currently shown).
      */
     public void highlightByEnumValue(String enumValue) {
-        if (enumValue == null || connectorTabs == null) return;
+        if (enumValue == null || connectorPages == null) return;
         String target = enumValue.replace("\"", "").trim();
         if (target.isEmpty() || "NONE".equalsIgnoreCase(target) || "INVALID".equalsIgnoreCase(target)) return;
-        int connectorCount = Math.min(activeTableModels.size(), activeTables.size());
-        for (int i = 0; i < connectorCount; i++) {
-            DefaultTableModel model = activeTableModels.get(i);
-            JTable table = activeTables.get(i);
-            for (int modelRow = 0; modelRow < model.getRowCount(); modelRow++) {
-                String pinName = YamlUtil.toStr(model.getValueAt(modelRow, 0));
-                String tsName  = YamlUtil.toStr(model.getValueAt(modelRow, 4));
-                String iniKey  = tsName.replace("___", pinName).trim();
-                if (target.equals(iniKey)) {
-                    if (i < connectorTabs.getTabCount()) connectorTabs.setSelectedIndex(i);
-                    int viewRow = table.convertRowIndexToView(modelRow);
-                    table.setRowSelectionInterval(viewRow, viewRow);
-                    table.scrollRectToVisible(table.getCellRect(viewRow, 0, true));
+        for (int i = 0; i < activeConnectors.size(); i++) {
+            PinoutConnectorPage page = activeConnectors.get(i);
+            for (PinoutPin pin : page.pins) {
+                if (target.equals(pin.tsName)) {
+                    // the pin must be listed: drop a search, chip or filter that hides it
+                    search.setText("");
+                    page.showAll();
+                    selectConnector(i);
+                    page.select(pin);
                     return;
                 }
             }
@@ -864,26 +659,6 @@ public class PinoutPane {
             result.merge(value, displayName, (a, b) -> a + ", " + b);
         }
         return result;
-    }
-
-    /**
-     * Sets each column's preferred width to the widest of its header and cell content.
-     */
-    private static void packColumns(JTable table) {
-        for (int col = 0; col < table.getColumnCount(); col++) {
-            javax.swing.table.TableColumn column = table.getColumnModel().getColumn(col);
-            javax.swing.table.TableCellRenderer hr = column.getHeaderRenderer();
-            if (hr == null) hr = table.getTableHeader().getDefaultRenderer();
-            int width = hr.getTableCellRendererComponent(
-                    table, column.getHeaderValue(), false, false, -1, col)
-                    .getPreferredSize().width;
-            for (int row = 0; row < table.getRowCount(); row++) {
-                width = Math.max(width,
-                        table.prepareRenderer(table.getCellRenderer(row, col), row, col)
-                             .getPreferredSize().width);
-            }
-            column.setPreferredWidth(width + 6);
-        }
     }
 
     private static BufferedImage loadImageFromZip(ZipFile zip, String imagePath) {

@@ -1,56 +1,177 @@
 package com.rusefi.ui.util;
 
+import javax.swing.UIManager;
 import java.awt.Color;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.Locale;
+import java.util.regex.Pattern;
 
 /**
- * Pin marker color utilities for the Pinout tab.
- * Type colors mirror the rusEFI web CSS rules.
- * Pigtail colors are resolved from the wire color strings in connectors.zip yamls.
+ * Pin marker colours for the Pinout tab. Every pin {@code type} the boards' connector YAMLs use maps to a
+ * {@link PinType}, coloured by family so related pins read together: power reds, grounds greys, analog
+ * inputs teals, speed and switch inputs purples, outputs, communication. A pin without a type takes one from
+ * its function or class where that is clear ({@link #resolve}), marked as inferred. Colours come from the
+ * Console.Pinout.type.* theme keys [tag:console_theme], with the light theme's values as fallbacks.
+ * Pigtail colours are resolved from the wire colour strings in the connector YAMLs.
  */
 public final class PinColors {
 
     private PinColors() {}
 
-    public static final Color FALLBACK_NORMAL = new Color(0, 120, 255, 200);
-    public static final Color COLOR_HIGHLIGHT  = new Color(255, 80, 0, 230);
+    /** What a pin is for, as the Pinout tab colours and names it. */
+    public enum PinType {
+        POWER("12V supply", "power", "#dc2626", "12v", "vign", "mr"),
+        SUPPLY_5V("5V supply", "supply5v", "#ea580c", "5v"),
+        GROUND("Power ground", "ground", "#334155", "gnd", "pgnd"),
+        SENSOR_GROUND("Sensor ground", "sensorGround", "#94a3b8", "agnd", "sgnd", "sqnd"),
+        ANALOG("Analog input", "analog", "#0d9488", "av", "tps"),
+        TEMPERATURE("Temperature input", "temperature", "#0891b2", "at"),
+        WIDEBAND("Wideband O2", "wideband", "#4f46e5", "wbo"),
+        HALL("Hall / digital input", "hall", "#7c3aed", "hall"),
+        VR("VR input", "vr", "#a21caf", "vr"),
+        SWITCH("Switch input", "switchInput", "#c4b5fd", "din"),
+        INJECTOR("Injector", "injector", "#2563eb", "inj"),
+        IGNITION("Ignition coil", "ignition", "#db2777", "ign"),
+        LOW_SIDE("Low-side output", "lowSide", "#16a34a", "ls", "gp_low", "mil"),
+        HIGH_SIDE("High-side output", "highSide", "#a16207", "hs", "gp_high", "gp_pp"),
+        HBRIDGE("H-bridge / ETB", "hbridge", "#92400e", "etb"),
+        CAN("CAN bus", "can", "#0284c7", "can"),
+        USB("USB", "usb", "#0369a1", "usb"),
+        /** The board file gives no type and none can be inferred. */
+        UNTYPED("Untyped", "untyped", "#e5e7eb");
 
-    /** A keyword→color mapping entry for a pin type. Used for both lookup and legend rendering. */
-    public static final class TypeEntry {
-        public final String keyword;
-        public final Color color;
-        TypeEntry(String keyword, Color color) { this.keyword = keyword; this.color = color; }
+        public final String label;
+        private final String themeKey;
+        private final Color fallback;
+        private final String[] keywords;
+
+        PinType(String label, String themeKey, String fallback, String... keywords) {
+            this.label = label;
+            this.themeKey = "Console.Pinout.type." + themeKey;
+            this.fallback = Color.decode(fallback);
+            this.keywords = keywords;
+        }
+
+        public Color color() {
+            Color themed = UIManager.getColor(themeKey);
+            return themed != null ? themed : fallback;
+        }
+
+        /** Marker text colour: dark on the light fills, white otherwise. */
+        public Color textColor() {
+            return isLight(color()) ? new Color(0x1f2937) : Color.WHITE;
+        }
+
+        /** The type a YAML {@code type} names, or null for an unknown or empty one. */
+        public static PinType of(String yamlType) {
+            String token = yamlType == null ? "" : yamlType.toLowerCase(Locale.ROOT)
+                    // a list such as "[gp_low, gp_high]" counts as its first entry
+                    .replaceAll("[\\[\\]]", "").split(",")[0].trim();
+            if (token.isEmpty()) {
+                return null;
+            }
+            for (PinType type : values()) {
+                for (String keyword : type.keywords) {
+                    if (keyword.equals(token)) {
+                        return type;
+                    }
+                }
+            }
+            return null;
+        }
+    }
+
+    /** A pin's type and whether it came from the YAML or was inferred. */
+    public static final class Resolved {
+        public final PinType type;
+        /** "function" or "class" when inferred from those, else null. */
+        public final String inferredFrom;
+
+        Resolved(PinType type, String inferredFrom) {
+            this.type = type;
+            this.inferredFrom = inferredFrom;
+        }
+
+        public boolean isInferred() {
+            return inferredFrom != null;
+        }
     }
 
     /**
-     * Ordered list of type keyword→color mappings. Order is significant: longer/more-specific
-     * keywords (pgnd, sgnd) appear before their shorter prefixes (gnd) to avoid false matches.
-     * {@link #typeToColor} iterates over it.
+     * Function words that say what a pin is, checked in order; the first match wins. Grounds come first
+     * ("Power Ground / VR Shield" is a ground), then signals; power words only after the pin's class
+     * ({@link #POWER_RULES}), since "Battery Voltage Analog Input" is an analog input.
      */
-    public static final List<TypeEntry> TYPE_ENTRIES = Collections.unmodifiableList(Arrays.asList(
-            new TypeEntry("pgnd", new Color(0xFF, 0x7F, 0x50)), // coral
-            new TypeEntry("sgnd", new Color(0x80, 0x80, 0x00)), // olive
-            new TypeEntry("ign",  new Color(0xFF, 0x00, 0xFF)), // #f0f
-            new TypeEntry("inj",  new Color(0x80, 0x00, 0x00)), // maroon
-            new TypeEntry("ls",   new Color(0x90, 0xEE, 0x90)), // #90ee90
-            new TypeEntry("mr",   new Color(0xB2, 0x22, 0x22)), // #b22222
-            new TypeEntry("usb",  new Color(0x20, 0xB2, 0xAA)), // #20b2aa
-            new TypeEntry("vr",   new Color(0xA0, 0x52, 0x2D))  // sienna
-    ));
+    private static final Object[][] FUNCTION_RULES = {
+            {"\\bsensor (ground|gnd)\\b|\\bsignal (ground|gnd)\\b|\\bagnd\\b", PinType.SENSOR_GROUND},
+            {"\\bground\\b|\\bgnd\\b", PinType.GROUND},
+            {"\\bvr\\s?\\d*[+-]?(\\s|$|/)|\\bvariable reluctance\\b", PinType.VR},
+            {"\\bhall\\b|\\bcam\\b|\\bcrank\\b|\\bvss\\b", PinType.HALL},
+            {"\\bwideband\\b|\\bwbo\\b|\\blsu\\b", PinType.WIDEBAND},
+            {"\\binjector\\b|\\binj\\b", PinType.INJECTOR},
+            {"\\bignition (coil|output)\\b|\\bcoil\\b", PinType.IGNITION},
+            {"\\bh-?bridge\\b|\\betb\\b|\\bdc[12][+-]", PinType.HBRIDGE},
+            {"\\bhigh[- ]side\\b", PinType.HIGH_SIDE},
+            {"\\blow[- ]side\\b", PinType.LOW_SIDE},
+            {"\\bcan ?(h|l|bus|high|low)\\b", PinType.CAN},
+            {"\\busb\\b", PinType.USB},
+            {"\\b(clt|iat|temperature|temp)\\b", PinType.TEMPERATURE},
+    };
+
+    /** Power words, checked after the class. */
+    private static final Object[][] POWER_RULES = {
+            {"\\+?5 ?v\\b.*\\b(power|supply|feed|out|reference)\\b|\\bsensor supply\\b", PinType.SUPPLY_5V},
+            {"\\+?12 ?v\\b.*\\b(power|supply|feed|relay)\\b|\\bmain relay\\b|\\bbattery\\b", PinType.POWER},
+    };
+
+    /** Classes, by their YAML names, that say what a pin is when its function does not. */
+    private static final Object[][] CLASS_RULES = {
+            {"switch_inputs", PinType.SWITCH},
+            {"event_inputs", PinType.HALL},
+            {"analog_inputs", PinType.ANALOG},
+    };
+
+    private static final Pattern[] FUNCTION_PATTERNS = compile(FUNCTION_RULES);
+    private static final Pattern[] POWER_PATTERNS = compile(POWER_RULES);
+
+    private static Pattern[] compile(Object[][] rules) {
+        Pattern[] patterns = new Pattern[rules.length];
+        for (int i = 0; i < rules.length; i++) {
+            patterns[i] = Pattern.compile((String) rules[i][0], Pattern.CASE_INSENSITIVE);
+        }
+        return patterns;
+    }
 
     /**
-     * Maps pin type string to marker color. Uses substring matching in TYPE_ENTRIES order.
-     * Returns null for unrecognised types.
+     * The type of a pin: its YAML {@code type} when that is known, else one inferred from the words of its
+     * function, its class (a pin with several classes takes the first rule that matches: a pin that is both a
+     * switch and an event input is shown as a switch input) or power words in its function, in that order
+     * (see {@link #FUNCTION_RULES}), else {@link PinType#UNTYPED}.
+     *
+     * @param classes the YAML {@code class}, comma separated when a list
      */
-    public static Color typeToColor(String type) {
-        if (type == null || type.isEmpty()) return null;
-        String t = type.toLowerCase();
-        for (TypeEntry e : TYPE_ENTRIES) {
-            if (t.contains(e.keyword)) return e.color;
+    public static Resolved resolve(String yamlType, String function, String classes) {
+        PinType declared = PinType.of(yamlType);
+        if (declared != null) {
+            return new Resolved(declared, null);
         }
-        return null;
+        String text = function == null ? "" : function;
+        for (int i = 0; i < FUNCTION_PATTERNS.length; i++) {
+            if (FUNCTION_PATTERNS[i].matcher(text).find()) {
+                return new Resolved((PinType) FUNCTION_RULES[i][1], "function");
+            }
+        }
+        String cls = classes == null ? "" : classes.toLowerCase(Locale.ROOT);
+        for (Object[] rule : CLASS_RULES) {
+            if (cls.contains((String) rule[0])) {
+                return new Resolved((PinType) rule[1], "class");
+            }
+        }
+        for (int i = 0; i < POWER_PATTERNS.length; i++) {
+            if (POWER_PATTERNS[i].matcher(text).find()) {
+                return new Resolved((PinType) POWER_RULES[i][1], "function");
+            }
+        }
+        return new Resolved(PinType.UNTYPED, null);
     }
 
     /**
@@ -73,19 +194,19 @@ public final class PinColors {
     public static Color pigtailTokenToColor(String token) {
         if (token == null) return null;
         switch (token.toLowerCase().trim()) {
-            case "black":  return new Color(30, 30, 30);
-            case "red":    return new Color(200, 0, 0);
-            case "white":  return new Color(230, 230, 230);
-            case "yellow": return new Color(220, 200, 0);
-            case "green":  return new Color(0, 150, 0);
-            case "blue":   return new Color(0, 60, 200);
-            case "orange": return new Color(255, 140, 0);
+            case "black":  return new Color(0x111827);
+            case "red":    return new Color(0xdc2626);
+            case "white":  return new Color(0xffffff);
+            case "yellow": return new Color(0xfacc15);
+            case "green":  return new Color(0x16a34a);
+            case "blue":   return new Color(0x2563eb);
+            case "orange": return new Color(0xf97316);
             case "purple":
-            case "violet": return new Color(128, 0, 128);
-            case "brown":  return new Color(139, 69, 19);
+            case "violet": return new Color(0x7e22ce);
+            case "brown":  return new Color(0x92400e);
             case "grey":
-            case "gray":   return new Color(120, 120, 120);
-            case "pink":   return new Color(255, 160, 160);
+            case "gray":   return new Color(0x9ca3af);
+            case "pink":   return new Color(0xf9a8d4);
             default:       return null;
         }
     }
