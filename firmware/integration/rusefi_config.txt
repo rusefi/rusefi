@@ -2606,6 +2606,8 @@ end_struct
 
 #define VE_BLEND1_TABLE_NAME "VE blend 1"
 #define HD_MENU_NAME "Harley"
+#define ACR_TEST_BUTTON_NAME "Test ACR #1"
+#define ACR2_TEST_BUTTON_NAME "Test ACR #2"
 #define smLaunchControl_NAME "Launch Control"
 #define pedalToTpsTbl_NAME "ETB pedal target"
 #define pedalSensor_NAME "Accelerator pedal"
