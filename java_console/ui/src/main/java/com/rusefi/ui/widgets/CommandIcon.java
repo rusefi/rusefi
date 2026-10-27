@@ -199,22 +199,25 @@ public enum CommandIcon implements Icon {
             g.draw(new Line(8, 12, 8, 14.5));
         }
     },
-    /** Firmware update: an arrow out of a tray. */
-    UPLOAD(new Color(0x586273)) {
+    /**
+     * Firmware update: a solid green up arrow, the flat form of the console's earlier 48 px upload arrow
+     * (upload48.png), so the update action keeps its familiar mark.
+     */
+    UPLOAD(new Color(0x16A34A)) {
         @Override
         void paint(Graphics2D g) {
-            g.draw(new Line(8, 10, 8, 2));
-            Path2D head = new Path2D.Double();
-            head.moveTo(4.8, 5.2);
-            head.lineTo(8, 2);
-            head.lineTo(11.2, 5.2);
-            g.draw(head);
-            Path2D tray = new Path2D.Double();
-            tray.moveTo(2, 10.5);
-            tray.lineTo(2, 14);
-            tray.lineTo(14, 14);
-            tray.lineTo(14, 10.5);
-            g.draw(tray);
+            Path2D arrow = new Path2D.Double();
+            arrow.moveTo(8, 1.5);
+            arrow.lineTo(14.5, 8);
+            arrow.lineTo(10.75, 8);
+            arrow.lineTo(10.75, 14.5);
+            arrow.lineTo(5.25, 14.5);
+            arrow.lineTo(5.25, 8);
+            arrow.lineTo(1.5, 8);
+            arrow.closePath();
+            g.fill(arrow);
+            // the round-joined outline softens the corners
+            g.draw(arrow);
         }
     },
     /** Any other command: a console prompt. */

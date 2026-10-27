@@ -54,4 +54,42 @@ class DevicePaneLayoutTest {
             assertTrue(copy.getParent() instanceof JoinedButtons);
         });
     }
+
+    /** The update button sits in the middle of the toolbar, as before the restyle, and never covers the options. */
+    @Test
+    void updateButtonIsCentredAndKeepsClearOfTheOptions() throws Throwable {
+        SwingUtilities.invokeAndWait(() -> {
+            List<Component> all = UiUtils.getAllComponents((JComponent) createPane().getContent());
+            JSplitButton update = (JSplitButton) all.stream().filter(c -> c instanceof JSplitButton)
+                .findFirst().orElseThrow(AssertionError::new);
+            ToolbarStrip toolbar = (ToolbarStrip) SwingUtilities.getAncestorOfClass(ToolbarStrip.class, update);
+            JCheckBox autoUpdate = (JCheckBox) all.stream()
+                .filter(c -> c instanceof JCheckBox && "Auto-update Software".equals(((JCheckBox) c).getText()))
+                .findFirst().orElseThrow(AssertionError::new);
+            Component middle = toolbar.getComponent(0);
+            Component options = toolbar.getComponent(1);
+
+            toolbar.setSize(1600, toolbar.getPreferredSize().height);
+            toolbar.doLayout();
+            int centre = middle.getX() + middle.getWidth() / 2;
+            assertTrue(Math.abs(centre - 800) <= 1, "centred on the whole width: " + centre);
+            assertTrue(options.getX() + options.getWidth() <= 1600);
+            assertTrue(SwingUtilities.isDescendingFrom(autoUpdate, options));
+
+            int narrow = middle.getPreferredSize().width + options.getPreferredSize().width + 20;
+            toolbar.setSize(narrow, toolbar.getPreferredSize().height);
+            toolbar.doLayout();
+            assertTrue(middle.getX() + middle.getWidth() <= options.getX(), "moves left rather than overlap");
+            assertEquals(new java.awt.Color(0x16A34A), getUploadColour());
+        });
+    }
+
+    /** The update icon keeps the earlier upload arrow's green. */
+    private static java.awt.Color getUploadColour() {
+        java.awt.image.BufferedImage image = new java.awt.image.BufferedImage(16, 16, java.awt.image.BufferedImage.TYPE_INT_ARGB);
+        java.awt.Graphics2D g = image.createGraphics();
+        com.rusefi.ui.widgets.CommandIcon.UPLOAD.paintIcon(null, g, 0, 0);
+        g.dispose();
+        return new java.awt.Color(image.getRGB(8, 10), true);
+    }
 }
