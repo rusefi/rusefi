@@ -24,13 +24,20 @@ public class KnockCanvas {
 
     private static final int MARGIN_LEFT = 52;
     private static final int MARGIN_RIGHT = 10;
+    /** Log Viewer layout: room for the colour bar right of the plot. */
+    private static final int COLOUR_BAR_MARGIN = 58;
+    private static final int COLOUR_BAR_WIDTH = 10;
+    private static final int CHIP_GAP = 8;
+    /**
+     * Lines drawn over the spectrogram itself. Its colour map always starts at black, so these
+     * stay light in both console plot themes; the theme's own grid and cursor colours are used
+     * only around the plot.
+     */
+    private static final Color OVER_SPECTROGRAM_GRID = new Color(0xff, 0xff, 0xff, 40);
+    private static final Color OVER_SPECTROGRAM_CURSOR = new Color(0xff, 0xff, 0xff, 190);
     private static final int MARGIN_BOTTOM = 6;
     private static final int LEGEND_PADDING = 4;
 
-    private static final Color BACKGROUND = new Color(0x1b, 0x1b, 0x1f);
-    private static final Color GRID = new Color(0xff, 0xff, 0xff, 40);
-    private static final Color AXIS_TEXT = new Color(0xd0, 0xd0, 0xd0);
-    private static final Color TITLE = new Color(0xff, 0xff, 0xff, 60);
 
     private final JComponent component = new JComponent() {
         @Override
@@ -39,7 +46,10 @@ public class KnockCanvas {
         }
     };
 
+    private KnockPlotStyle style = KnockPlotStyle.DEFAULT;
     private final boolean isCombined;
+    /** Title in the Log Viewer layout, e.g. "Cylinder 3"; null for "Combined" or the number. */
+    private String title;
     private final int number;
 
     private final int spectrogramXAxisSize;
@@ -75,7 +85,7 @@ public class KnockCanvas {
         bufferedImage = new BufferedImage(spectrogramXAxisSize, BIN_COUNT, BufferedImage.TYPE_INT_RGB);
 
         component.setOpaque(true);
-        component.setBackground(BACKGROUND);
+        component.setBackground(style.background);
 
         //linear-gradient(to right, #000000, #290d1a, #490b32, #670353, #81007b, #a60085, #ca008b, #ef008f, #ff356b, #ff6947, #ff9a22, #ffc700);
         colorspace = new Color[]{
@@ -98,6 +108,19 @@ public class KnockCanvas {
 
     public JComponent getComponent() {
         return component;
+    }
+
+    /** Title shown above the plot in the Log Viewer layout. */
+    public void setTitle(String title) {
+        this.title = title;
+        component.repaint();
+    }
+
+    /** Replaces the colours, e.g. with the console's Log Viewer palette. */
+    public void setStyle(KnockPlotStyle style) {
+        this.style = style;
+        component.setBackground(style.background);
+        component.repaint();
     }
 
     public void setFrequencyStart(int start) {
@@ -181,7 +204,11 @@ public class KnockCanvas {
     }
 
     private int plotWidth(int width) {
-        return Math.max(1, width - MARGIN_LEFT - MARGIN_RIGHT);
+        return Math.max(1, width - MARGIN_LEFT - marginRight());
+    }
+
+    private int marginRight() {
+        return style.logViewerLayout ? COLOUR_BAR_MARGIN : MARGIN_RIGHT;
     }
 
     private int plotTop(int legendHeight) {
@@ -193,7 +220,11 @@ public class KnockCanvas {
     }
 
     private void render(Graphics2D g, int width, int height) {
-        g.setColor(BACKGROUND);
+        if (style.logViewerLayout) {
+            renderLogViewerLayout(g, width, height);
+            return;
+        }
+        g.setColor(style.background);
         g.fillRect(0, 0, width, height);
 
         Font base = g.getFont();
@@ -231,7 +262,7 @@ public class KnockCanvas {
         float size = Math.min(plotH * 0.3f, base.getSize2D() * 2f);
         g.setFont(base.deriveFont(Font.BOLD, Math.max(11f, size)));
         FontMetrics fm = g.getFontMetrics();
-        g.setColor(TITLE);
+        g.setColor(style.title);
         // top right corner: the left side is occupied by the frequency labels
         g.drawString(title, left + plotW - fm.stringWidth(title) - 16, top + fm.getAscent() + 2);
     }
@@ -244,12 +275,12 @@ public class KnockCanvas {
         for (int i = 0; i < BIN_COUNT; i += step) {
             int y = binToY(i, top, plotH);
 
-            g.setColor(GRID);
+            g.setColor(style.logViewerLayout ? OVER_SPECTROGRAM_GRID : style.grid);
             g.drawLine(left, y, left + plotW, y);
 
             String label = formatHz(yAxisHz[i]);
             int textY = Math.min(top + plotH - 1, Math.max(top + fm.getAscent(), y + fm.getAscent() / 2));
-            g.setColor(AXIS_TEXT);
+            g.setColor(style.axisText);
             g.drawString(label, Math.max(2, left - 6 - fm.stringWidth(label)), textY);
         }
     }
@@ -266,14 +297,14 @@ public class KnockCanvas {
     private void drawMarkers(Graphics2D g, int left, int top, int plotW, int plotH) {
         int right = left + plotW;
 
-        g.setColor(Color.RED);
+        g.setColor(style.peakMarker);
         drawArrow(g, right, binToY(peakY, top, plotH));
 
-        g.setColor(Color.YELLOW);
+        g.setColor(style.current);
         drawArrow(g, right, hzToY(currentFrequency, top, plotH));
 
-        if (mouseX >= left && mouseX <= right && mouseY >= top && mouseY <= top + plotH) {
-            g.setColor(new Color(0xff, 0xff, 0xff, 90));
+        if (!style.logViewerLayout && isMouseInside(left, top, plotW, plotH)) {
+            g.setColor(style.cursor);
             g.drawLine(left, mouseY, right, mouseY);
         }
     }
@@ -300,7 +331,7 @@ public class KnockCanvas {
             formatAmplitude(peakAmplitude),
             mouseInside ? formatAmplitude(mouseAmplitude) : "-",
         };
-        Color[] colors = {Color.YELLOW, new Color(0xff, 0x6e, 0x6e), Color.ORANGE};
+        Color[] colors = {style.current, style.peak, style.mouse};
 
         int cellWidth = Math.max(1, width / titles.length);
         int firstLine = LEGEND_PADDING + fm.getAscent();
@@ -316,7 +347,7 @@ public class KnockCanvas {
             g.drawString(clip(fm, values, available), cellLeft, secondLine);
         }
 
-        g.setColor(GRID);
+        g.setColor(style.grid);
         g.drawLine(0, legendHeight - 1, width, legendHeight - 1);
     }
 
@@ -355,7 +386,7 @@ public class KnockCanvas {
 
     /** Maps a component x coordinate into the ring buffer column which is drawn there. */
     private int columnAt(int x) {
-        int plotW = Math.max(1, component.getWidth() - MARGIN_LEFT - MARGIN_RIGHT);
+        int plotW = plotWidth(component.getWidth());
         double relative = (double) (x - plotLeft()) / plotW;
         relative = Math.max(0, Math.min(1, relative));
         int offset = (int) (relative * (spectrogramXAxisSize - 1));
@@ -363,6 +394,159 @@ public class KnockCanvas {
         if (index >= spectrogramXAxisSize)
             index -= spectrogramXAxisSize;
         return Math.max(0, Math.min(spectrogramXAxisSize - 1, index));
+    }
+
+    private boolean isMouseInside(int left, int top, int plotW, int plotH) {
+        return mouseX >= left && mouseX <= left + plotW && mouseY >= top && mouseY <= top + plotH;
+    }
+
+    // ---- Log Viewer layout ------------------------------------------------------
+
+    /**
+     * Title and legend chips above the plot, a colour bar right of it and "Older / Now" below;
+     * a dashed cursor with a value box follows the pointer, as in the console's Log Viewer.
+     */
+    private void renderLogViewerLayout(Graphics2D g, int width, int height) {
+        g.setColor(style.background);
+        g.fillRect(0, 0, width, height);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+        Font base = g.getFont();
+        Font small = base.deriveFont(Font.PLAIN, Math.max(9f, base.getSize2D() - 2));
+        Font value = style.valueFontFamily == null ? base
+            : new Font(style.valueFontFamily, Font.PLAIN, base.getSize());
+        FontMetrics baseMetrics = g.getFontMetrics(base);
+        FontMetrics smallMetrics = g.getFontMetrics(small);
+
+        int chipHeight = baseMetrics.getHeight() + 6;
+        int headerHeight = chipHeight + 2 * LEGEND_PADDING + 4;
+        int footerHeight = smallMetrics.getHeight() + 4;
+
+        int left = plotLeft();
+        int top = headerHeight;
+        int plotW = plotWidth(width);
+        int plotH = Math.max(1, height - headerHeight - footerHeight);
+
+        drawSpectrogram(g, left, top, plotW, plotH);
+        drawFrequencyAxis(g, base, left, top, plotW, plotH);
+        g.setColor(style.grid);
+        g.drawRect(left, top, plotW - 1, plotH - 1);
+        drawMarkers(g, left, top, plotW, plotH);
+        drawColourBar(g, small, smallMetrics, left + plotW + 14, top, plotH);
+        drawTimeHints(g, small, smallMetrics, left, top + plotH, plotW);
+        drawHeader(g, base, value, baseMetrics, width, chipHeight, top, plotH);
+        if (isMouseInside(left, top, plotW, plotH)) {
+            drawCursor(g, small, value, left, top, plotW, plotH);
+        }
+        g.setFont(base);
+    }
+
+    private void drawHeader(Graphics2D g, Font base, Font value, FontMetrics fm, int width, int chipHeight,
+                            int top, int plotH) {
+        int y = LEGEND_PADDING + 2;
+        String name = title != null ? title : isCombined ? "Combined" : Integer.toString(number);
+        g.setFont(base.deriveFont(Font.BOLD));
+        FontMetrics bold = g.getFontMetrics();
+        g.setColor(style.text);
+        g.drawString(name, plotLeft(), y + (chipHeight + bold.getAscent() - bold.getDescent()) / 2);
+        int x = plotLeft() + bold.stringWidth(name) + 14;
+
+        boolean mouseInside = isMouseInside(plotLeft(), top, plotWidth(width), plotH);
+        String[] labels = {"Current", "Peak", "Cursor"};
+        String[] values = {
+            formatHz(currentFrequency) + " Hz · " + Math.round(currentAmplitude),
+            formatHz(peakFrequency) + " Hz · " + Math.round(peakAmplitude),
+            mouseInside
+                ? formatHz(yToHz(mouseY, top, plotH)) + " Hz · " + Math.round(mouseAmplitude(top, plotH))
+                : "–",
+        };
+        Color[] dots = {style.current, style.peak, style.mouse};
+        FontMetrics valueMetrics = g.getFontMetrics(value);
+        for (int i = 0; i < labels.length; i++) {
+            int labelWidth = fm.stringWidth(labels[i]);
+            int valueWidth = valueMetrics.stringWidth(values[i]);
+            int chipWidth = 10 + 8 + 6 + labelWidth + 6 + valueWidth + 10;
+            if (x + chipWidth > width - 8) {
+                // narrow plot: drop the chips that do not fit rather than overlap them
+                break;
+            }
+            g.setColor(style.chipBackground);
+            g.fillRoundRect(x, y, chipWidth, chipHeight, chipHeight, chipHeight);
+            int textY = y + (chipHeight + fm.getAscent() - fm.getDescent()) / 2;
+            g.setColor(dots[i]);
+            g.fillOval(x + 10, y + chipHeight / 2 - 4, 8, 8);
+            g.setFont(base);
+            g.setColor(style.axisText);
+            g.drawString(labels[i], x + 24, textY);
+            g.setFont(value);
+            g.setColor(style.text);
+            g.drawString(values[i], x + 24 + labelWidth + 6, textY);
+            x += chipWidth + CHIP_GAP;
+        }
+    }
+
+    private void drawColourBar(Graphics2D g, Font small, FontMetrics fm, int x, int top, int plotH) {
+        g.setFont(small);
+        int barTop = top + fm.getHeight() + 2;
+        int barBottom = top + plotH - fm.getHeight() - 2;
+        int barHeight = Math.max(1, barBottom - barTop);
+        // loudest colour at the top, matching "Loud" above the bar
+        for (int i = 0; i < colorspace.length; i++) {
+            int y0 = barBottom - barHeight * (i + 1) / colorspace.length;
+            int y1 = barBottom - barHeight * i / colorspace.length;
+            g.setColor(colorspace[i]);
+            g.fillRect(x, y0, COLOUR_BAR_WIDTH, y1 - y0);
+        }
+        g.setColor(style.grid);
+        g.drawRect(x, barTop, COLOUR_BAR_WIDTH - 1, barHeight - 1);
+        g.setColor(style.axisText);
+        int centre = x + COLOUR_BAR_WIDTH / 2;
+        g.drawString("Loud", centre - fm.stringWidth("Loud") / 2, top + fm.getAscent());
+        g.drawString("Quiet", centre - fm.stringWidth("Quiet") / 2, top + plotH - fm.getDescent());
+    }
+
+    private void drawTimeHints(Graphics2D g, Font small, FontMetrics fm, int left, int bottom, int plotW) {
+        g.setFont(small);
+        g.setColor(style.axisText);
+        int y = bottom + 2 + fm.getAscent();
+        g.drawString("Older", left, y);
+        g.drawString("Now", left + plotW - fm.stringWidth("Now"), y);
+    }
+
+    private void drawCursor(Graphics2D g, Font small, Font value, int left, int top, int plotW, int plotH) {
+        Stroke stroke = g.getStroke();
+        g.setColor(OVER_SPECTROGRAM_CURSOR);
+        g.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10, new float[]{4, 3}, 0));
+        g.drawLine(mouseX, top, mouseX, top + plotH);
+        g.drawLine(left, mouseY, left + plotW, mouseY);
+        g.setStroke(stroke);
+
+        String label = "At cursor";
+        String text = formatHz(yToHz(mouseY, top, plotH)) + " Hz · " + Math.round(mouseAmplitude(top, plotH));
+        Font bold = value.deriveFont(Font.BOLD);
+        FontMetrics labelMetrics = g.getFontMetrics(small);
+        FontMetrics textMetrics = g.getFontMetrics(bold);
+        int boxW = Math.max(labelMetrics.stringWidth(label), textMetrics.stringWidth(text)) + 20;
+        int boxH = labelMetrics.getHeight() + textMetrics.getHeight() + 10;
+        // right of the pointer, flipped to the left near the plot's right edge; kept inside the plot
+        int x = mouseX + 12;
+        if (x + boxW > left + plotW) {
+            x = mouseX - 12 - boxW;
+        }
+        int y = Math.max(top + 4, Math.min(mouseY - boxH - 8, top + plotH - boxH - 4));
+        g.setColor(new Color(0, 0, 0, 40));
+        g.fillRoundRect(x + 1, y + 2, boxW, boxH, 8, 8);
+        g.setColor(style.background);
+        g.fillRoundRect(x, y, boxW, boxH, 8, 8);
+        g.setColor(style.grid);
+        g.drawRoundRect(x, y, boxW, boxH, 8, 8);
+        g.setFont(small);
+        g.setColor(style.axisText);
+        g.drawString(label, x + 10, y + 5 + labelMetrics.getAscent());
+        g.setFont(bold);
+        g.setColor(style.text);
+        g.drawString(text, x + 10, y + 5 + labelMetrics.getHeight() + textMetrics.getAscent());
     }
 
     private static String clip(FontMetrics fm, String text, int available) {

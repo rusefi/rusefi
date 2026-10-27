@@ -12,6 +12,18 @@ public class ToolbarStrip extends JPanel {
         super(layout);
     }
 
+    /** Like {@link #header(String, JComponent)}, with {@code afterTitle} (e.g. a tag and a hint) next to the title. */
+    public static JPanel header(String title, JComponent afterTitle, JComponent trailing) {
+        JPanel header = header(title, trailing);
+        JPanel middle = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        middle.setOpaque(false);
+        // keeps the header as tall as the controls, as the plain header's strut does
+        middle.add(Box.createVerticalStrut(JoinedButtons.HEIGHT));
+        middle.add(afterTitle);
+        header.add(middle, BorderLayout.CENTER);
+        return header;
+    }
+
     /** Pane title on the left, optional controls on the right, e.g. "Output | Clear Pause". */
     public static JPanel header(String title, JComponent trailing) {
         JPanel header = new ToolbarStrip(new BorderLayout());

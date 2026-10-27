@@ -23,11 +23,7 @@ public class KnockMagnitudeCanvas {
     private static final int MARGIN_RIGHT = 10;
     private static final int MARGIN_TOP = 8;
 
-    private static final Color BACKGROUND = new Color(0x1b, 0x1b, 0x1f);
-    private static final Color GRID = new Color(0xff, 0xff, 0xff, 40);
-    private static final Color AXIS_TEXT = new Color(0xd0, 0xd0, 0xd0);
-    private static final Color FILL = new Color(0x55, 0x8f, 0xd0, 140);
-    private static final Color LINE = new Color(0x9f, 0xd0, 0xff);
+    private KnockPlotStyle style = KnockPlotStyle.DEFAULT;
 
     private final JComponent component = new JComponent() {
         @Override
@@ -44,12 +40,19 @@ public class KnockMagnitudeCanvas {
 
     public KnockMagnitudeCanvas() {
         component.setOpaque(true);
-        component.setBackground(BACKGROUND);
+        component.setBackground(style.background);
         SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayoutAndRepaint(component));
     }
 
     public JComponent getComponent() {
         return component;
+    }
+
+    /** Replaces the colours, e.g. with the console's Log Viewer palette. */
+    public void setStyle(KnockPlotStyle style) {
+        this.style = style;
+        component.setBackground(style.background);
+        component.repaint();
     }
 
     public void setFrequencyStart(int start) {
@@ -74,6 +77,11 @@ public class KnockMagnitudeCanvas {
             yAxisHz[i] = yAxisFrequencyStart + (double) yAxisFrequencyStep * i;
     }
 
+    /** A copy of the slice currently shown. */
+    public float[] getMagnitudes() {
+        return magnitudes.clone();
+    }
+
     public void processValues(float[] values) {
         System.arraycopy(values, 0, magnitudes, 0, Math.min(values.length, VALUE_COUNT));
         AutoupdateUtil.trueLayoutAndRepaint(component);
@@ -82,7 +90,7 @@ public class KnockMagnitudeCanvas {
     // ---- rendering -----------------------------------------------------------
 
     private void render(Graphics2D g, int width, int height) {
-        g.setColor(BACKGROUND);
+        g.setColor(style.background);
         g.fillRect(0, 0, width, height);
 
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -111,11 +119,11 @@ public class KnockMagnitudeCanvas {
         int lines = Math.max(1, Math.min(4, plotH / (fm.getHeight() * 2)));
         for (int i = 0; i <= lines; i++) {
             int y = top + plotH - plotH * i / lines;
-            g.setColor(GRID);
+            g.setColor(style.grid);
             g.drawLine(left, y, left + plotW, y);
 
             String label = Integer.toString((int) (MAX_MAGNITUDE * i / lines));
-            g.setColor(AXIS_TEXT);
+            g.setColor(style.axisText);
             g.drawString(label, Math.max(2, left - 6 - fm.stringWidth(label)), y + fm.getAscent() / 2);
         }
     }
@@ -125,12 +133,12 @@ public class KnockMagnitudeCanvas {
         for (int i = 0; i < VALUE_COUNT; i += step) {
             int x = binToX(i, left, plotW);
 
-            g.setColor(GRID);
+            g.setColor(style.grid);
             g.drawLine(x, bottom, x, bottom + 4);
 
             String label = formatHz(yAxisHz[i]);
             int textX = Math.max(0, Math.min(x - fm.stringWidth(label) / 2, left + plotW - fm.stringWidth(label)));
-            g.setColor(AXIS_TEXT);
+            g.setColor(style.axisText);
             g.drawString(label, textX, bottom + 4 + fm.getAscent());
         }
     }
@@ -158,9 +166,9 @@ public class KnockMagnitudeCanvas {
         xPoints[VALUE_COUNT + 1] = left;
         yPoints[VALUE_COUNT + 1] = bottom;
 
-        g.setColor(FILL);
+        g.setColor(style.magnitudeFill);
         g.fillPolygon(xPoints, yPoints, VALUE_COUNT + 2);
-        g.setColor(LINE);
+        g.setColor(style.magnitudeLine);
         g.drawPolyline(xPoints, yPoints, VALUE_COUNT);
     }
 
@@ -170,12 +178,40 @@ public class KnockMagnitudeCanvas {
             return;
 
         int x = binToX(index, left, plotW);
-        g.setColor(Color.YELLOW);
+        if (style.logViewerLayout) {
+            drawPeakLabel(g, fm, x, left, top, bottom, plotW, index);
+            return;
+        }
+        g.setColor(style.magnitudePeak);
         g.drawLine(x, top, x, bottom);
 
         String label = formatHz(yAxisHz[index]) + " Hz / " + String.format("%.0f", magnitudes[index]);
         int textX = Math.max(left, Math.min(x + 4, left + plotW - fm.stringWidth(label)));
         g.drawString(label, textX, top + fm.getAscent());
+    }
+
+    /** Log Viewer layout: dashed peak line and a tinted "Peak" label in the value font. */
+    private void drawPeakLabel(Graphics2D g, FontMetrics axis, int x, int left, int top, int bottom, int plotW, int index) {
+        Stroke stroke = g.getStroke();
+        g.setColor(style.magnitudePeak);
+        g.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10, new float[]{4, 3}, 0));
+        g.drawLine(x, top, x, bottom);
+        g.setStroke(stroke);
+
+        Font font = style.valueFontFamily == null ? axis.getFont().deriveFont(Font.BOLD)
+            : new Font(style.valueFontFamily, Font.BOLD, axis.getFont().getSize());
+        g.setFont(font);
+        FontMetrics fm = g.getFontMetrics();
+        String label = "Peak " + formatHz(yAxisHz[index]) + " Hz · " + String.format("%.0f", magnitudes[index]);
+        int w = fm.stringWidth(label) + 14;
+        int h = fm.getHeight() + 4;
+        int boxX = Math.max(left, Math.min(x + 6, left + plotW - w));
+        Color peak = style.magnitudePeak;
+        g.setColor(new Color(peak.getRed(), peak.getGreen(), peak.getBlue(), 40));
+        g.fillRoundRect(boxX, top + 2, w, h, 8, 8);
+        g.setColor(peak);
+        g.drawString(label, boxX + 7, top + 4 + fm.getAscent());
+        g.setFont(axis.getFont());
     }
 
     private int searchPeak() {
