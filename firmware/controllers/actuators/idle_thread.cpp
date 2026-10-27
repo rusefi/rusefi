@@ -180,8 +180,12 @@ percent_t IdleController::getRunningOpenLoop(IIdleController::Phase phase, float
     	running += engineConfiguration->acIdleExtraOffset;
     }
 
-	running += enginePins.fanRelay.getLogicValue() ? engineConfiguration->fan1ExtraIdle : 0;
-	running += enginePins.fanRelay2.getLogicValue() ? engineConfiguration->fan2ExtraIdle : 0;
+	if (isBrainPinValid(engineConfiguration->fanPin) && enginePins.fanRelay.getLogicValue()) {
+		running += engineConfiguration->fan1ExtraIdle;
+	}
+	if (isBrainPinValid(engineConfiguration->fan2Pin) && enginePins.fanRelay2.getLogicValue()) {
+		running += engineConfiguration->fan2ExtraIdle;
+	}
 
 	running += luaAdd;
 	running += m_isParkNeutral ? engineConfiguration->idleParkNeutralOffset : 0;
