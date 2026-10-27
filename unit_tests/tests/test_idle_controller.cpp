@@ -260,6 +260,8 @@ TEST(idle_v2, runningFanAcBump) {
 	engineConfiguration->acIdleExtraOffset = 9;
 	engineConfiguration->fan1ExtraIdle = 7;
 	engineConfiguration->fan2ExtraIdle = 3;
+	engineConfiguration->fanPin = Gpio::A1;
+	engineConfiguration->fan2Pin = Gpio::A2;
 
 	setTable(config->cltIdleCorrTable, 50.0f);
 
@@ -290,8 +292,8 @@ TEST(idle_v2, runningFanAcBump) {
 	EXPECT_FLOAT_EQ(50 + 9 + 7 + 3, dut.getRunningOpenLoop(IIdleController::Phase::Idling, 0, 10, 0));
 }
 
-// Issue #10310: reproduce unwanted idle adders with unassigned fan outputs.
-TEST(idle_v2, unassignedFanOutputStillAddsIdleAir) {
+// Issue #10310: unassigned fan outputs must not add idle air.
+TEST(idle_v2, unassignedFanOutputDoesNotAddIdleAir) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	IdleController dut;
 
@@ -316,7 +318,7 @@ TEST(idle_v2, unassignedFanOutputStillAddsIdleAir) {
 	engine->module<FanControl2>()->onSlowCallback();
 	EXPECT_TRUE(enginePins.fanRelay.getLogicValue());
 	EXPECT_FALSE(enginePins.fanRelay2.getLogicValue());
-	EXPECT_FLOAT_EQ(50 + 7, dut.getRunningOpenLoop(IIdleController::Phase::Idling, 0, 10, 0));
+	EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(IIdleController::Phase::Idling, 0, 10, 0));
 
 	engineConfiguration->fanOnTemperature = 110;
 	engineConfiguration->fanOffTemperature = 105;
@@ -326,7 +328,7 @@ TEST(idle_v2, unassignedFanOutputStillAddsIdleAir) {
 	engine->module<FanControl2>()->onSlowCallback();
 	EXPECT_FALSE(enginePins.fanRelay.getLogicValue());
 	EXPECT_TRUE(enginePins.fanRelay2.getLogicValue());
-	EXPECT_FLOAT_EQ(50 + 3, dut.getRunningOpenLoop(IIdleController::Phase::Idling, 0, 10, 0));
+	EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(IIdleController::Phase::Idling, 0, 10, 0));
 }
 
 TEST(idle_v2, parkNeutralOffset) {
