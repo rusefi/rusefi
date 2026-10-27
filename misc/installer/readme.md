@@ -51,14 +51,16 @@ Package the extracted bundle root with one `dirEntry` instead of listing individ
 
 ## Launchers
 
-The current public console bundle places both entry points in `console/rusefi_console.jar`:
+The installer launchers use `com.rusefi.Launcher` from `console/rusefi_console.jar`:
 
 | Launcher purpose | Main class |
 |------------------|------------|
-| Download fresh bundle and update ECU | `com.rusefi.autoupdate.Autoupdate` |
+| Download fresh bundle and update ECU (`basic-ui` argument) | `com.rusefi.Launcher` |
 | Start console/update ECU | `com.rusefi.Launcher` |
 
-Do not reference `rusefi_autoupdate.jar` unless the selected bundle actually contains it. Current bundles include the autoupdate class in `rusefi_console.jar`.
+Do not launch `com.rusefi.autoupdate.Autoupdate` against `rusefi_console.jar`;
+the class is not available there. Do not reference `rusefi_autoupdate.jar`
+unless the selected bundle actually contains it.
 
 If the launcher working directory is `console`, its install4j classpath location is still relative to the installation root, for example `console/rusefi_console.jar`.
 

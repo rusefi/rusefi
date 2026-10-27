@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="11.0.5" transformSequenceNumber="11">
   <directoryPresets config="../../../../../bundles/rusefi_bundle_uaefi/rusefi.snapshot.uaefi" />
-  <application name="uaEFI Updater" applicationId="9384-2741-6502-8137" mediaDir="." shortName="uaEFI Updater" version="1.0.0.0" allPathsRelative="true">
+  <application name="uaEFI Updater" applicationId="9384-2741-6502-8137" mediaDir="." shortName="uaEFI Updater" version="1.0.0.1" allPathsRelative="true">
     <jreBundles jdkProviderId="Zulu" release="17/17.0.14" />
   </application>
   <files>
@@ -17,7 +17,7 @@
   <launchers>
     <launcher name="uaEFI-Grab-Fresh-And-Update-ECU" id="3">
       <executable name="uaEFI-Grab-Fresh-And-Update-ECU" iconSet="true" executableMode="gui" workingDirectory="console" executionLevel="requireAdministrator" />
-      <java mainClass="com.rusefi.autoupdate.Autoupdate" arguments="basic-ui">
+      <java mainClass="com.rusefi.Launcher" arguments="basic-ui">
         <classPath>
           <archive location="console/rusefi_console.jar" failOnError="false" />
         </classPath>
