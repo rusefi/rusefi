@@ -24,10 +24,10 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
     private static final Logging log = getLogging(StartupUpdateActions.class);
 
     private final JLabel updateSoftwareStatus = new JLabel();
-    private final JCheckBox migrateSettings = new JCheckBox("Migrate Settings");
+    private final JCheckBox migrateSettings = new JCheckBox("Try to keep my current tune");
     private final JCheckBox verboseMessages = new JCheckBox("Verbose Status");
 
-    private final JButton updateSoftwareButton = new JButton("Update Software");
+    private final JButton updateSoftwareButton = new JButton("Update application");
     // todo: this control lives on a different parent TODO fix this mess!
     private final ImportTuneControl importTuneButton;
 
@@ -59,11 +59,12 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
             () -> !softwareUpdateInProgress, this::refreshButtons,
             showRollbackPicker, closeRollbackPicker);
         singleAsyncJobExecutor.addOnJobAboutToStartListener(() -> SwingUtilities.invokeLater(this::refreshButtons));
-        singleAsyncJobExecutor.addOnJobInProgressFinishedListener(() -> SwingUtilities.invokeLater(this::refreshButtons));
+        singleAsyncJobExecutor.addOnJobReleasedListener(() -> SwingUtilities.invokeLater(this::refreshButtons));
         importTuneButton = new ImportTuneControl(singleAsyncJobExecutor, this, connectivityContext);
 //        updateCalibrations = new UpdateCalibrations(singleAsyncJobExecutor);
 
         softwareUpdateAvailable = !Autoupdate.isAutoUpdateEnabled();
+        updateSoftwareButton.setToolTipText("Update the application on this computer, not the ECU firmware.");
         updateSoftwareButton.setVisible(softwareUpdateAvailable);
         updateSoftwareButton.setEnabled(softwareUpdateAvailable);
         updateSoftwareButton.addActionListener(e -> onUpdateSoftwareClicked());
@@ -78,6 +79,7 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
         importTuneButton.setEnabled(false);
 
         migrateSettings.setSelected(true);
+        migrateSettings.setToolTipText("The console will try to restore your tune after the update, but this is not guaranteed. Check the settings before using the ECU.");
         migrateSettings.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         migrateSettings.addActionListener(e -> updateMigrateSettingState());
 

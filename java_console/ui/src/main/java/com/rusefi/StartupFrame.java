@@ -36,6 +36,7 @@ import com.rusefi.maintenance.jobs.ImportTuneJob;
 import com.rusefi.maintenance.jobs.OpenBltAutoJob;
 import com.rusefi.maintenance.jobs.OpenBltSwitchJob;
 import com.rusefi.ui.basic.StartupUpdateActions;
+import com.rusefi.ui.basic.StartupFirmwareOperationLifecycle;
 import com.rusefi.ui.basic.SingleAsyncJobExecutor;
 import com.rusefi.ui.basic.StatusPanelWithProgressBar;
 import com.rusefi.ui.basic.TuneManagementTab;
@@ -199,15 +200,13 @@ public class StartupFrame {
         this.softwareUpdateOutcome = softwareUpdateOutcome;
         // Firmware-update and tune operations open the serial port themselves via a fresh
         // LinkManager. If our splash auto-connect is holding the same port, they'd deadlock on
-        // "Connecting...". Release the splash connection just before any job starts so the port
-        // is free for the exclusive operation.
-        asyncJobExecutor.addOnJobAboutToStartListener(() -> SwingUtilities.invokeLater(() ->
-            setStartupFirmwareUpdateInProgress(isFirmwareOperationInProgress())));
-        asyncJobExecutor.addOnJobAboutToStartListener(() -> asyncJobExecutor.getJobInProgress()
-            .ifPresent(job -> prepareSplashForJob(job, this::releaseSplashConnection)));
+        // "Connecting...". Release it only after preparation is accepted and before active work.
+        StartupFirmwareOperationLifecycle.registerAboutToStart(asyncJobExecutor,
+            this::setStartupFirmwareUpdateInProgress,
+            job -> prepareSplashForJob(job, this::releaseSplashConnection));
         asyncJobExecutor.addOnJobInProgressFinishedListener(this::onLiveConnectionJobFinished);
-        asyncJobExecutor.addOnJobInProgressFinishedListener(() -> SwingUtilities.invokeLater(() ->
-            setStartupFirmwareUpdateInProgress(false)));
+        StartupFirmwareOperationLifecycle.registerReleased(asyncJobExecutor,
+            this::setStartupFirmwareUpdateInProgress);
         String title = UiProperties.getDisplayName() + " " + Launcher.CONSOLE_VERSION;
         log.info(title);
         noPortsMessage.setForeground(Color.red);
@@ -498,7 +497,7 @@ public class StartupFrame {
         JPanel firmwareTabPanel = new JPanel(new BorderLayout(0, 0));
         firmwareTabPanel.add(firmwareTopPanel, BorderLayout.NORTH);
         firmwareTabPanel.add(firmwareStatusPanel.getContent(), BorderLayout.CENTER);
-        outerTabs.addTab("Update Firmware", firmwareTabPanel);
+        outerTabs.addTab("Update ECU firmware", firmwareTabPanel);
         final TuneManagementTab tuneManagementTab = new TuneManagementTab(
             connectivityContext,
             uiContext,
@@ -843,8 +842,8 @@ public class StartupFrame {
             // A board sitting in the OpenBLT bootloader has no running firmware to auto-connect to —
             // mirror the auto-connect status line and point the user at the firmware-update flow.
             noPortsMessage.setForeground(Color.darkGray);
-            noPortsMessage.setText("Board in OpenBLT bootloader on " + openBltPort.port
-                + " — use the Update Firmware tab");
+            noPortsMessage.setText("Bootloader detected on " + openBltPort.port
+                + " — use the Update ECU firmware tab");
         } else {
             noPortsMessage.setForeground(Color.red);
             noPortsMessage.setText("Make sure you are disconnected from TunerStudio");
@@ -967,9 +966,7 @@ public class StartupFrame {
     }
 
     private boolean isFirmwareOperationInProgress() {
-        return asyncJobExecutor.getJobInProgress()
-            .map(job -> !(job instanceof ImportTuneJob) && !(job instanceof ExportTuneJob))
-            .orElse(false);
+        return StartupFirmwareOperationLifecycle.isFirmwareOperationInProgress(asyncJobExecutor);
     }
 
     private void setStartupFirmwareUpdateInProgress(boolean inProgress) {
@@ -1163,6 +1160,7 @@ public class StartupFrame {
         final LinkManager lm = uiContext.getLinkManager();
         startupUpdateActions.setSplashLinkManager(lm);
         selector.setLinkManager(lm);
+        selector.apply(connectivityContext.getCurrentHardware());
 
         maybeAutoCreateTsProject(target);
 
@@ -1231,7 +1229,8 @@ public class StartupFrame {
     }
 
     /**
-     * Called just before an async job starts. Detaches the splash connection listener and decides
+     * Called on the EDT after preparation is accepted, just before an async job starts.
+     * Detaches the splash connection listener and decides
      * what to do with the live {@link LinkManager}:
      * <ul>
      *   <li>Firmware jobs ({@link DfuAutoJob}, {@link OpenBltAutoJob}): keep the LM alive —
@@ -1349,6 +1348,7 @@ public class StartupFrame {
                 return;
             }
             selector.setLinkManager(lm);
+            selector.apply(connectivityContext.getCurrentHardware());
             autoConnectedPort = savedPort;
             startupUpdateActions.setSplashLinkManager(lm);
             noPortsMessage.setForeground(Color.darkGray);

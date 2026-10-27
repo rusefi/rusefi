@@ -13,6 +13,8 @@ import com.rusefi.config.generated.Integration;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.UpdateOperationCallbacks;
+import com.rusefi.ConnectivityContext;
+import com.rusefi.maintenance.jobs.OpenBltManualJob.RestoreResult;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -35,6 +37,37 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 public class CalibrationsHelperContextTest {
+
+    @Test
+    public void manualRestoreWithoutBackupReturnsWarningWithoutLookingForHardware() {
+        CalibrationsHelper.discardLastEcuCalibrations();
+        ConnectivityContext context = mock(ConnectivityContext.class);
+        UpdateOperationCallbacks callbacks = mock(UpdateOperationCallbacks.class);
+
+        assertEquals(RestoreResult.WARNING,
+            CalibrationsHelper.restorePreviousCalibrationsAfterManualFlashWithResult(callbacks, context));
+
+        verify(callbacks).logLine(
+            "No previously backed-up tune available - ECU will keep its freshly flashed configuration.");
+        verifyNoInteractions(context);
+        verify(callbacks, org.mockito.Mockito.never()).done();
+        verify(callbacks, org.mockito.Mockito.never()).error();
+        verify(callbacks, org.mockito.Mockito.never()).warning();
+    }
+
+    @Test
+    public void legacyManualRestoreReportsMissingBackupAsWarning() {
+        CalibrationsHelper.discardLastEcuCalibrations();
+        ConnectivityContext context = mock(ConnectivityContext.class);
+        UpdateOperationCallbacks callbacks = mock(UpdateOperationCallbacks.class);
+
+        CalibrationsHelper.restorePreviousCalibrationsAfterManualFlash(callbacks, context);
+
+        verify(callbacks).warning();
+        verify(callbacks, org.mockito.Mockito.never()).done();
+        verify(callbacks, org.mockito.Mockito.never()).error();
+        verifyNoInteractions(context);
+    }
 
     @Test
     public void testIsUiContext_withDummyCallbacks() {

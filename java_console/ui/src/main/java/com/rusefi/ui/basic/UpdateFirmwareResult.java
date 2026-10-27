@@ -12,6 +12,7 @@ public enum UpdateFirmwareResult {
     /** No update completed this session (or a new job just started). */
     NONE,
     SUCCESS,
+    WARNING,
     FAILURE;
 
     private static final Color GREEN = new Color(0, 128, 0);
@@ -22,9 +23,14 @@ public enum UpdateFirmwareResult {
     public String bannerText(final String portName) {
         switch (this) {
             case SUCCESS:
-                return "Firmware update complete — connected to " + portName + " — click Connect to open console";
+                return "Firmware update and settings steps completed — reconnect requested on " + portName
+                    + " — check firmware version and settings before use";
+            case WARNING:
+                return "Firmware update steps completed, but settings warnings remain — see the report — reconnect requested on "
+                    + portName + " — check firmware version and settings before use";
             case FAILURE:
-                return "Firmware update failed — see the report — connected to " + portName;
+                return "Firmware update did not complete all steps — programming may have succeeded — see the report — ECU detected on "
+                    + portName + " — check firmware and settings before use";
             default:
                 return "Connected to " + portName + " — click Connect to open console";
         }
@@ -35,6 +41,8 @@ public enum UpdateFirmwareResult {
         switch (this) {
             case SUCCESS:
                 return GREEN;
+            case WARNING:
+                return new Color(160, 100, 0);
             case FAILURE:
                 return Color.RED;
             default:
