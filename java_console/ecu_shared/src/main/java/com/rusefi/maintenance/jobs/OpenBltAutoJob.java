@@ -31,7 +31,7 @@ public class OpenBltAutoJob extends AbstractAutoFlashJob {
     public OpenBltAutoJob(final PortResult port, final JComponent parent, final ConnectivityContext connectivityContext,
                           final @Nullable LinkManager linkManager, final @Nullable String firmwareSrecFile,
                           final CalibrationsHelper.FirmwareUpdatePolicy policy) {
-        super(LinkManager.isCanPort(port.port) ? "OpenBLT via " + port.port : "OpenBLT via Serial",
+        super("Update ECU firmware",
             port, parent, connectivityContext, linkManager);
         this.firmwareSrecFile = firmwareSrecFile;
         this.policy = policy;

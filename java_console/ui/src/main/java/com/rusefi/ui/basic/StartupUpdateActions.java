@@ -109,7 +109,7 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
 
     public void configureFirmwareSelector(ProgramSelector selector) {
         selector.addFirmwareControl(updateSoftwareButton);
-        selector.setFirmwareUpdateInterceptor(rollbackController::startLatestUpdate);
+        selector.setTargetedFirmwareUpdateInterceptor(rollbackController::startLatestUpdate);
         selector.setExternalBusySupplier(() -> rollbackController.isBusy() || softwareUpdateInProgress);
         rollbackController.addStateChangedListener(() -> selector.apply(connectivityContext.getCurrentHardware()));
     }

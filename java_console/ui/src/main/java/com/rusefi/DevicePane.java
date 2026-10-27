@@ -1,7 +1,6 @@
 package com.rusefi;
 
 import com.rusefi.core.OsUtil;
-
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.maintenance.DfuFlasher;
 import com.rusefi.maintenance.ProgramSelector;
@@ -41,7 +40,7 @@ public class DevicePane {
     private final FirmwareRollbackController rollbackController;
     private final StatusPanelWithProgressBar statusPanel;
     private final JCheckBox autoUpdateBundle = new JCheckBox("Auto-update Software", AutoupdateProperty.get());
-    private final JCheckBox migrateSettings = new JCheckBox("Migrate Settings", true);
+    private final JCheckBox migrateSettings = new JCheckBox("Try to keep my current tune", true);
     // Previous state rendered on the EDT — used to detect the *transition* into a bootloader state so we
     // pull focus to the Device tab only once, not on every scan cycle [tag:better_ux_for_flashing].
     private SessionState lastRenderedState;
@@ -75,7 +74,7 @@ public class DevicePane {
             showFullScreenPanel,
             closeFullScreenPanel);
         rollbackController.setLinkManager(uiContext.getLinkManager());
-        selector.setFirmwareUpdateInterceptor(rollbackController::startLatestUpdate);
+        selector.setTargetedFirmwareUpdateInterceptor(rollbackController::startLatestUpdate);
         selector.setExternalBusySupplier(rollbackController::isBusy);
         selector.addFirmwareControl(rollbackController.getRollbackButton());
 
