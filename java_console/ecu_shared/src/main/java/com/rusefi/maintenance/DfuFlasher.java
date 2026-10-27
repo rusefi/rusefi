@@ -269,6 +269,13 @@ public class DfuFlasher {
             : FindFileHelper.findFirmwareFileForConnectedBoard(connectedEcuTarget);
     }
 
+    /** The UI job completed board consent before acquiring active-update transport ownership. */
+    public static void runPreparedManualRecovery(UpdateOperationCallbacks callbacks, Runnable onJobFinished,
+                                                 ConnectedEcuTarget recoveryTarget) {
+        submitAction(() -> JobHelper.doJob(() -> ManualDfuRecovery.runSelected(recoveryTarget, callbacks,
+            (file, target) -> executeDfuAndPaintStatusPanel(callbacks, file, target)), onJobFinished));
+    }
+
     public static void runOpenBltInitialProgramming(UpdateOperationCallbacks callbacks, final Runnable onJobFinished,
                                                     final ConnectedEcuTarget connectedEcuTarget) {
         submitAction(() -> {

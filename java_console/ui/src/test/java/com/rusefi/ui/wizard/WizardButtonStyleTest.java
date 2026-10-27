@@ -138,7 +138,7 @@ class WizardButtonStyleTest {
     void firmwareConfirmationAndDestructiveActionsHaveAppropriateRoles() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
             DfuBoardSelectionPanel dfu = new DfuBoardSelectionPanel(board -> { });
-            assertConfirm(button(dfu, "Download and flash"));
+            assertConfirm(button(dfu, "Download firmware and recover ECU"));
             assertNegative(button(dfu, "Cancel"));
             EmergencyWipePanel wipe = new EmergencyWipePanel("Erase flash", () -> { }, () -> { });
             assertNegative(button(wipe, "Erase Internal Flash"));
