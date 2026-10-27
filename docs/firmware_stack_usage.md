@@ -193,7 +193,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
 | firmware | Lua | 4096 | - | - | - | 2864 | NOT REVIEWED: 35 unknown, 15 indirect, recursion |
 | firmware | main loop | 1024 | - | - | - | 788 | NOT REVIEWED: 15 unknown, 5 indirect, recursion |
-| firmware | main/process | 1536 | - | - | - | 1324 | NOT REVIEWED: 62 unknown, 32 indirect, recursion |
+| firmware | main/process | 1536 | - | - | - | 1316 | NOT REVIEWED: 62 unknown, 32 indirect, recursion |
 | firmware | MAX3185x | 400 | - | - | - | 852 | NOT REVIEWED: 20 unknown, 2 indirect, recursion |
 | firmware | PCA9685 | 816 | - | - | - | 756 | NOT REVIEWED: 15 unknown, 4 indirect, recursion |
 | firmware | SD/MMC | 1600 | - | - | - | 1916 | NOT REVIEWED: 47 unknown, 22 indirect, recursion |
