@@ -17,10 +17,12 @@ public class SingleAsyncJobExecutor implements com.rusefi.DeviceSessionManager.J
     private final Predicate<AsyncJob> recordResult;
 
     private final java.util.List<Runnable> onJobInProgressFinished = new ArrayList<>();
+    private final java.util.List<Runnable> onJobReleased = new ArrayList<>();
     private final java.util.List<Runnable> onJobAboutToStart = new ArrayList<>();
     private final java.util.List<Runnable> onJobWorkerAboutToStart = new ArrayList<>();
 
     private volatile Optional<AsyncJob> jobInProgress = Optional.empty();
+    private volatile boolean updating;
 
     /**
      * Terminal outcome of the last job, captured by wrapping the real callbacks — so the post-flash
@@ -55,8 +57,15 @@ public class SingleAsyncJobExecutor implements com.rusefi.DeviceSessionManager.J
 
             @Override
             public void done() {
-                lastResult = UpdateFirmwareResult.SUCCESS;
-                delegate.done();
+                // Finishing later steps must not turn defaults/partial settings into a clean success.
+                if (lastResult == UpdateFirmwareResult.WARNING) {
+                    delegate.warning();
+                } else if (lastResult == UpdateFirmwareResult.FAILURE) {
+                    delegate.error();
+                } else {
+                    lastResult = UpdateFirmwareResult.SUCCESS;
+                    delegate.done();
+                }
             }
 
             @Override
@@ -77,6 +86,10 @@ public class SingleAsyncJobExecutor implements com.rusefi.DeviceSessionManager.J
 
             @Override
             public void warning() {
+                if (lastResult == UpdateFirmwareResult.FAILURE) {
+                    return;
+                }
+                lastResult = UpdateFirmwareResult.WARNING;
                 delegate.warning();
             }
 
@@ -109,8 +122,15 @@ public class SingleAsyncJobExecutor implements com.rusefi.DeviceSessionManager.J
         return result;
     }
 
+    /** Ownership cleanup. New jobs remain rejected until every cleanup listener returns. */
     public void addOnJobInProgressFinishedListener(Runnable listener) {
         onJobInProgressFinished.add(listener);
+    }
+
+    /** UI/state notifications that must observe the executor released rather than still cleaning up. */
+    @Override
+    public void addOnJobReleasedListener(Runnable listener) {
+        onJobReleased.add(listener);
     }
 
     /**
@@ -121,7 +141,7 @@ public class SingleAsyncJobExecutor implements com.rusefi.DeviceSessionManager.J
         onJobAboutToStart.add(listener);
     }
 
-    /** Runs on the job worker immediately before the job, so blocking preparation cannot freeze Swing. */
+    /** Runs on the worker after accepted preflight, immediately before active update/transport ownership. */
     @Override
     public void addOnJobWorkerAboutToStartListener(Runnable listener) {
         onJobWorkerAboutToStart.add(listener);
@@ -161,6 +181,7 @@ public class SingleAsyncJobExecutor implements com.rusefi.DeviceSessionManager.J
             UpdateOperationCallbacks callbacks = recordResult.test(job) ? recordingCallbacks(delegate) : delegate;
             callbacks.clear(); // clears the selected status panel; recorded jobs also reset lastResult
             AsyncJobExecutor.INSTANCE.executeJob(job, callbacks, () -> {
+                updating = true;
                 for (Runnable listener : onJobWorkerAboutToStart) {
                     listener.run();
                 }
@@ -176,6 +197,11 @@ public class SingleAsyncJobExecutor implements com.rusefi.DeviceSessionManager.J
         return !jobInProgress.isPresent();
     }
 
+    @Override
+    public boolean isUpdating() {
+        return updating;
+    }
+
     public synchronized Optional<AsyncJob> getJobInProgress() {
         return jobInProgress;
     }
@@ -189,13 +215,37 @@ public class SingleAsyncJobExecutor implements com.rusefi.DeviceSessionManager.J
     }
 
     private synchronized void resetJobInProgress() {
+        updating = false;
         jobInProgress = Optional.empty();
     }
 
     private void handleJobInProgressFinished() {
-        resetJobInProgress();
-        for (Runnable listener : onJobInProgressFinished) {
-            listener.run();
+        // Retain the ownership token, but stop claiming an active update while resources are restored.
+        updating = false;
+        RuntimeException failure;
+        try {
+            failure = notifyListeners(onJobInProgressFinished, null);
+        } finally {
+            resetJobInProgress();
         }
+        failure = notifyListeners(onJobReleased, failure);
+        if (failure != null) {
+            throw failure;
+        }
+    }
+
+    private static RuntimeException notifyListeners(java.util.List<Runnable> listeners, RuntimeException failure) {
+        for (Runnable listener : listeners) {
+            try {
+                listener.run();
+            } catch (RuntimeException e) {
+                if (failure == null) {
+                    failure = e;
+                } else if (failure != e) {
+                    failure.addSuppressed(e);
+                }
+            }
+        }
+        return failure;
     }
 }

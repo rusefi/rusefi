@@ -10,6 +10,17 @@ import javax.swing.*;
 import java.util.concurrent.TimeUnit;
 
 public class OpenBltManualJob extends AsyncJobWithContext<SerialPortWithParentComponentJobContext> {
+    /** Result of the settings step, separate from whether programming succeeded. */
+    public enum RestoreResult {
+        /** Settings processing finished without known migration/write failures; not a readiness check. */
+        COMPLETE,
+        /** Defaults, partial migration, no backup, or an unreported legacy restoration outcome. */
+        WARNING,
+        FAILED,
+        /** An operation such as emergency wipe deliberately does not restore settings. */
+        SKIPPED
+    }
+
     /**
      * Seam for unit tests: the three side-effecting steps wrapped by the scanner suspend/resume
      * choreography, so OpenBltManualJobTest can assert the ordering without hardware. Production
@@ -21,6 +32,14 @@ public class OpenBltManualJob extends AsyncJobWithContext<SerialPortWithParentCo
         boolean flash(JComponent parent, String port, UpdateOperationCallbacks callbacks, ConnectedEcuTarget target);
 
         void restoreCalibrations(UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext);
+
+        /** Retain legacy implementations, but do not infer verified restoration from a void return. */
+        default RestoreResult restoreCalibrationsWithResult(UpdateOperationCallbacks callbacks,
+                                                           ConnectivityContext connectivityContext) {
+            restoreCalibrations(callbacks, connectivityContext);
+            callbacks.logLine("Settings restoration outcome was not reported. Verify settings before using the ECU.");
+            return RestoreResult.WARNING;
+        }
     }
 
     private final ConnectivityContext connectivityContext;

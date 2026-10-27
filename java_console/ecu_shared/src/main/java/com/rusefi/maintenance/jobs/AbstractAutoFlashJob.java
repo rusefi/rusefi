@@ -48,6 +48,68 @@ abstract class AbstractAutoFlashJob extends AsyncJobWithContext<SerialPortWithPa
         return true;
     }
 
+    /** Keep step-level callbacks from publishing a full-job outcome before reconnect recovery. */
+    private static final class FlashCallbacks implements UpdateOperationCallbacks {
+        private final UpdateOperationCallbacks delegate;
+        private boolean warned;
+        private boolean failed;
+
+        private FlashCallbacks(UpdateOperationCallbacks delegate) {
+            this.delegate = delegate;
+        }
+
+        @Override
+        public void log(String message, boolean breakLineOnTextArea, boolean sendToLogger) {
+            delegate.log(message, breakLineOnTextArea, sendToLogger);
+        }
+
+        @Override
+        public void logLine(String message) {
+            delegate.logLine(message);
+        }
+
+        @Override
+        public boolean isInteractive() {
+            return delegate.isInteractive();
+        }
+
+        @Override
+        public void updateProgress(int percent) {
+            delegate.updateProgress(percent);
+        }
+
+        @Override
+        public void firmwareUpdateBlocked(String reason) {
+            delegate.firmwareUpdateBlocked(reason);
+        }
+
+        @Override
+        public void firmwareHandoffStarted() {
+            delegate.firmwareHandoffStarted();
+        }
+
+        @Override
+        public void done() {
+            // A nested step finishing does not complete the enclosing update or erase its warnings.
+        }
+
+        @Override
+        public void warning() {
+            warned = true;
+        }
+
+        @Override
+        public void error() {
+            failed = true;
+        }
+
+        @Override
+        public void clear() {
+            // A nested step may clear presentation, but cannot erase the enclosing job's outcome.
+            delegate.clear();
+        }
+    }
+
     @Override
     public void doJob(final UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
         final LinkManager lm = linkManager;
@@ -76,11 +138,8 @@ abstract class AbstractAutoFlashJob extends AsyncJobWithContext<SerialPortWithPa
                 return;
             }
             firmwareHandoffStarted = true;
-            if (flash(lm, bp, callbacks)) {
-                callbacks.done();
-            } else {
-                callbacks.error();
-            }
+            final FlashCallbacks flashCallbacks = new FlashCallbacks(callbacks);
+            final boolean updateStepsCompleted = flash(lm, bp, flashCallbacks);
 
             // Recover the live connection even when calibration restore failed: the firmware itself may
             // have flashed successfully. Keep the job busy until recovery finishes so no other action can
@@ -100,6 +159,22 @@ abstract class AbstractAutoFlashJob extends AsyncJobWithContext<SerialPortWithPa
                 lm.reconnect(detectedPort);
             } else {
                 callbacks.logLine("ECU did not re-appear after flashing — reconnect manually once it enumerates.");
+            }
+            // reconnect() starts a connection attempt, not a verified live session. In particular, a
+            // successful programming/settings step must not hide a failed port-reappearance wait.
+            if (updateStepsCompleted && detectedPort != null && !flashCallbacks.failed) {
+                callbacks.logLine("Firmware update steps finished. Reconnect requested on " + detectedPort
+                    + ". Verify the installed firmware version and settings before using the ECU.");
+                if (flashCallbacks.warned) {
+                    callbacks.logLine("Settings warnings remain; review the report before using the ECU.");
+                    callbacks.warning();
+                } else {
+                    callbacks.done();
+                }
+            } else {
+                callbacks.logLine("Firmware update did not finish all update/reconnect steps. "
+                    + "Programming may have succeeded; review the report and verify the ECU before using it.");
+                callbacks.error();
             }
         } finally {
             if (firmwareHandoffStarted && lm != null) {

@@ -21,6 +21,7 @@ import com.rusefi.io.UpdateOperationCallbacks;
 import org.jetbrains.annotations.Nullable;
 import com.rusefi.maintenance.migration.migrators.ComposedTuneMigrator;
 import com.rusefi.maintenance.migration.TuneMigrationContext;
+import com.rusefi.maintenance.jobs.OpenBltManualJob.RestoreResult;
 import com.rusefi.tune.ConfigurationImageGetterSetter2;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
@@ -338,6 +339,7 @@ public class CalibrationsHelper {
                 ));
 
                 if (skipCalibrationRestore) {
+                    callbacks.warning();
                     if (policy == FirmwareUpdatePolicy.ROLLBACK_RESTORE_OR_RESET) {
                         return resetRollbackDefaults(
                             newEcuPort,
@@ -394,6 +396,7 @@ public class CalibrationsHelper {
                         );
                         if (action == CalibrationBackupFailureAction.RESET_ALL) {
                             callbacks.logLine("Skipping calibration restore - ECU will use default configuration.");
+                            callbacks.warning();
                             return true;
                         } else if (action == CalibrationBackupFailureAction.CANCEL) {
                             callbacks.logLine("Firmware update cancelled by user.");
@@ -414,6 +417,7 @@ public class CalibrationsHelper {
                             // the freshly flashed ECU on its default configuration instead of crashing on
                             // an empty Optional.
                             callbacks.logLine("No calibration could be read from ECU - it will use default configuration.");
+                            callbacks.warning();
                             return true;
                         }
                     } else {
@@ -459,6 +463,7 @@ public class CalibrationsHelper {
                         return false;
                     } else if (decision == PostMergeDecision.RESET_TO_DEFAULTS) {
                         callbacks.logLine("Calibration not restored - ECU will use default configuration.");
+                        callbacks.warning();
                         return true;
                     } else if (decision == PostMergeDecision.RETRY) {
                         final Optional<CalibrationsInfo> reread = readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
@@ -470,6 +475,7 @@ public class CalibrationsHelper {
                         if (!reread.isPresent()) {
                             // can't read the config image anymore -> reset to defaults
                             callbacks.logLine("Could not re-read calibration from ECU - it will use default configuration.");
+                            callbacks.warning();
                             return true;
                         }
                         updatedCalibrations = reread;
@@ -485,6 +491,7 @@ public class CalibrationsHelper {
                     // WRITE_MERGED: accept the partial merge (good fields applied, failed ones at defaults)
                     callbacks.logLine("Applying partial merge; " + mergeResult.failedFields.size()
                         + " field(s) left at firmware defaults.");
+                    callbacks.warning();
                     break;
                 }
 
@@ -518,6 +525,9 @@ public class CalibrationsHelper {
                         callbacks.logLine("Failed to back up merged tune from ECU...");
                         return false;
                     }
+                } else if (mergeResult.mergedCalibrations.isPresent()) {
+                    callbacks.logLine("Tune restoration was not selected. Check the ECU's settings before use.");
+                    callbacks.warning();
                 }
                 return true;
             }
@@ -579,6 +589,7 @@ public class CalibrationsHelper {
         final UpdateOperationCallbacks callbacks,
         final ConnectivityContext connectivityContext
     ) {
+        callbacks.warning();
         final boolean reset = BinaryProtocolExecutor.executeWithSuspendedPortScanner(
             ecuPort.port,
             callbacks,
@@ -619,12 +630,26 @@ public class CalibrationsHelper {
         final UpdateOperationCallbacks callbacks,
         final ConnectivityContext connectivityContext
     ) {
+        // Keep the existing public API for shared callers; job owners use the explicit result below.
+        final RestoreResult result = restorePreviousCalibrationsAfterManualFlashWithResult(callbacks, connectivityContext);
+        if (result == RestoreResult.FAILED) {
+            callbacks.error();
+        } else if (result == RestoreResult.WARNING) {
+            callbacks.warning();
+        }
+    }
+
+    /** Reports the settings outcome without emitting a terminal job callback. */
+    public static RestoreResult restorePreviousCalibrationsAfterManualFlashWithResult(
+        final UpdateOperationCallbacks callbacks,
+        final ConnectivityContext connectivityContext
+    ) {
         AutoupdateUtil.assertNotAwtThread();
 
         final Optional<CalibrationsInfo> prev = lastEcuCalibrations;
         if (!prev.isPresent()) {
             callbacks.logLine("No previously backed-up tune available - ECU will keep its freshly flashed configuration.");
-            return;
+            return RestoreResult.WARNING;
         }
 
         // A freshly flashed board comes up as either Ecu or EcuWithOpenblt depending on the port
@@ -638,7 +663,7 @@ public class CalibrationsHelper {
         if (ecuPorts.size() != 1) {
             callbacks.logLine(String.format(
                 "Cannot restore tune: expected exactly one ECU after flash but found %d.", ecuPorts.size()));
-            return;
+            return RestoreResult.FAILED;
         }
         final String newEcuPort = ecuPorts.get(0).port;
 
@@ -655,7 +680,7 @@ public class CalibrationsHelper {
         }
         if (!freshCalibrations.isPresent()) {
             callbacks.logLine("Failed to read calibration from ECU after flash - tune not restored, ECU keeps defaults.");
-            return;
+            return RestoreResult.FAILED;
         }
 
         final MergeResult mergeResult = mergeCalibrationsWithPartialFailure(
@@ -670,8 +695,8 @@ public class CalibrationsHelper {
                 + " field(s) could not be migrated; leaving them at firmware defaults.");
         }
         if (!mergeResult.mergedCalibrations.isPresent()) {
-            callbacks.logLine("Restored tune matches firmware defaults - nothing to write.");
-            return;
+            callbacks.logLine("No settings changes were produced by migration - nothing to write.");
+            return mergeResult.failedFields.isEmpty() ? RestoreResult.COMPLETE : RestoreResult.WARNING;
         }
         if (!CalibrationsUpdater.INSTANCE.updateCalibrations(
             newEcuPort,
@@ -680,9 +705,10 @@ public class CalibrationsHelper {
             connectivityContext
         )) {
             callbacks.logLine("Failed to write restored tune to ECU...");
-            return;
+            return RestoreResult.FAILED;
         }
-        callbacks.logLine("Previous tune restored after manual flash.");
+        callbacks.logLine("Settings write finished after manual flash. Verify settings before using the ECU.");
+        return mergeResult.failedFields.isEmpty() ? RestoreResult.COMPLETE : RestoreResult.WARNING;
     }
 
     /**

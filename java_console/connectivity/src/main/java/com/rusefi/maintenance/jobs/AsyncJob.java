@@ -13,5 +13,10 @@ public abstract class AsyncJob {
         return name;
     }
 
+    /** Worker-side preflight while the executor remains reserved, before update/handoff hooks or status windows. */
+    public boolean prepare(UpdateOperationCallbacks callbacks) {
+        return true;
+    }
+
     public abstract void doJob(final UpdateOperationCallbacks callbacks, final Runnable onJobFinished);
 }
