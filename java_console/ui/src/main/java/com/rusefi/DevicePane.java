@@ -33,6 +33,59 @@ import java.util.function.Consumer;
 public class DevicePane {
     static final String ACTIVITY = "Activity";
     static final String COPY_LOG = "Copy log";
+
+    /**
+     * Lays out two children at their preferred sizes, vertically centred: the first in the middle of the
+     * whole width, the second at the right edge. When the window is too narrow for both, the first moves
+     * left so it never covers the second.
+     */
+    static final class CenteredLayout implements LayoutManager {
+        @Override
+        public void layoutContainer(Container parent) {
+            Insets insets = parent.getInsets();
+            int height = parent.getHeight() - insets.top - insets.bottom;
+            int right = parent.getWidth() - insets.right;
+            if (parent.getComponentCount() > 1) {
+                Component trailing = parent.getComponent(1);
+                Dimension size = trailing.getPreferredSize();
+                right -= size.width;
+                trailing.setBounds(right, insets.top + (height - size.height) / 2, size.width, size.height);
+                right -= JoinedButtons.ROW_GAP;
+            }
+            if (parent.getComponentCount() > 0) {
+                Component middle = parent.getComponent(0);
+                Dimension size = middle.getPreferredSize();
+                int x = Math.max(insets.left, Math.min((parent.getWidth() - size.width) / 2, right - size.width));
+                middle.setBounds(x, insets.top + (height - size.height) / 2, size.width, size.height);
+            }
+        }
+
+        @Override
+        public Dimension preferredLayoutSize(Container parent) {
+            Insets insets = parent.getInsets();
+            int width = 0;
+            int height = 0;
+            for (Component child : parent.getComponents()) {
+                Dimension size = child.getPreferredSize();
+                width += size.width + JoinedButtons.ROW_GAP;
+                height = Math.max(height, size.height);
+            }
+            return new Dimension(width + insets.left + insets.right, height + insets.top + insets.bottom);
+        }
+
+        @Override
+        public Dimension minimumLayoutSize(Container parent) {
+            return preferredLayoutSize(parent);
+        }
+
+        @Override
+        public void addLayoutComponent(String name, Component comp) {
+        }
+
+        @Override
+        public void removeLayoutComponent(Component comp) {
+        }
+    }
     private final JPanel content = new JPanel();
     private final ConnectivityContext connectivityContext;
     private final DeviceSessionManager sessionManager;
@@ -99,8 +152,8 @@ public class DevicePane {
         migrateSettings.addActionListener(e -> MigrateSettingsCheckboxState.isMigrationNeeded = migrateSettings.isSelected());
         MigrateSettingsCheckboxState.isMigrationNeeded = true;
 
-        // toolbar in the Gauges/Lua style [tag:console_theme]: update actions on the left,
-        // update options and the how-to link on the right
+        // toolbar in the Gauges/Lua style [tag:console_theme]: the update button in the middle, where
+        // it always was, update options and the how-to link on the right
         selector.useToolbarStyle(CommandIcon.UPLOAD);
         JPanel actions = new JPanel(new FlowLayout(FlowLayout.LEFT, JoinedButtons.ROW_GAP, 0));
         actions.setOpaque(false);
@@ -114,10 +167,10 @@ public class DevicePane {
         options.add(migrateSettings, c);
         c.insets = new Insets(0, 0, 0, JoinedButtons.ROW_GAP);
         options.add(ProgramSelector.createHelpButton(), c);
-        JPanel toolbar = new ToolbarStrip(new BorderLayout());
+        JPanel toolbar = new ToolbarStrip(new CenteredLayout());
         toolbar.setBorder(BorderFactory.createEmptyBorder(8, 0, 9, JoinedButtons.ROW_END_INSET - JoinedButtons.ROW_GAP));
-        toolbar.add(actions, BorderLayout.CENTER);
-        toolbar.add(options, BorderLayout.EAST);
+        toolbar.add(actions);
+        toolbar.add(options);
         content.add(toolbar, BorderLayout.NORTH);
 
         // Status log fills the middle under its own header; the StatusPanelWithProgressBar keeps its
