@@ -37,7 +37,7 @@ class StartupFirmwareHandoffTest {
         executor.addOnJobAboutToStartListener(() -> executor.getJobInProgress()
             .ifPresent(job -> StartupFrame.prepareSplashForJob(job, releaseSplash)));
         CountDownLatch finished = new CountDownLatch(1);
-        executor.addOnJobInProgressFinishedListener(finished::countDown);
+        executor.addOnJobReleasedListener(finished::countDown);
 
         OpenBltAutoJob job = new OpenBltAutoJob(new PortResult("TEST_PORT", SerialPortType.EcuWithOpenblt),
             null, new ConnectivityContext(new FakePortScanner()), lm) {
