@@ -47,15 +47,16 @@ entry, or a failed first download leaves the tab without connector data.
 reads each `pins` item as a table row. `pin`, `function`, `type`, `class`,
 `ts_name`, and `color` become the Pin, Function, Type, Class, TS Name, and
 Pigtail color columns. `info.name` (then `info.title`) labels the connector
-tab. `info.image.file` names an image beside the YAML, and `info.pins` gives
+in the toolbar's connector switch, with its pin count. `info.image.file` names an image beside the YAML, and `info.pins` gives
 pin names with pixel `x`/`y` coordinates in that image. The Console decodes
 images with Java `ImageIO`; PNG and JPEG are suitable for the interactive
 image. A connector without a readable image still has its table.
 
 The `pin` names in `info.pins` must match the corresponding top-level `pins`
 entries. Coordinates refer to the source image pixels; the Console scales
-the image and markers together. For artwork and coordinate work, see
-[Connector Artwork](../imagegen.md).
+the image and markers together, and sizes the markers from the smallest
+distance between two placed pins, so they fill the cavities at any size. For
+artwork and coordinate work, see [Connector Artwork](../imagegen.md).
 
 `ts_name` is the bridge to the tune's pin enum values. The Console replaces
 `___` with the physical `pin` name before matching, as does
@@ -65,6 +66,16 @@ and generated INI leaves **Tune use** blank and prevents cross-tab navigation.
 `function` describes the physical capability; `type` controls marker color;
 `color` supplies the optional pigtail color. For canonical function and type
 terms, see [Pinout language conventions](../../firmware/config/boards/readme-boards.md#pinout-language-conventions).
+
+[`PinColors`](../../java_console/ui/src/main/java/com/rusefi/ui/util/PinColors.java)
+maps every `type` the boards use to a `PinType` coloured by family (power,
+grounds, analog inputs, speed and switch inputs, outputs, communication;
+theme keys `Console.Pinout.type.*`). A pin without a known `type` takes one
+from its `function` words (grounds, then signals such as VR or Hall), then
+its `class`, then power words; the hover card and legend show the result,
+and a pin none of these place is "Untyped". A new `type` keyword therefore
+needs an entry in `PinType`, or it shows as inferred or Untyped. Adding the
+missing `type` values to the board YAMLs remains the better fix.
 
 `PinoutLogic` also uses `id` or `meta` with `class` to generate firmware pin
 names and INI choices. `meta` resolves through the YAML's top-level meta
@@ -87,12 +98,27 @@ ignored.
 The image listener updates **Tune use** after a working tune edit, before a
 Burn. The offline path seeds it from the loaded tune image; the connected path
 falls back to the controller configuration until a newer image arrives.
-Clicking an image marker selects and highlights its table row, and selecting a
-row highlights its marker. Double-clicking an assigned row opens its Tuning
-field. Conversely, the **W** button beside a pin selector in Tuning opens
-Pinout and selects that enum value. Both directions depend on an exact
-`ts_name` match. Pinout is a viewer and navigator; assigning a pin happens in
-Tuning.
+Each connector is a [`PinoutConnectorPage`](../../java_console/ui/src/main/java/com/rusefi/ui/PinoutConnectorPage.java).
+Markers are coloured by **Type**, **Pigtail** wire colour or **Tune use**
+(used by the tune, free: a `ts_name` no setting uses, or fixed: no
+`ts_name`, i.e. power and ground). The legend chips under the drawing list
+what the colours mean on that connector, with counts; choosing a chip shows
+only those pins. The table's **All / Used / Free / Fixed** filter and the
+toolbar search (pin, function, type, wire, tune name or tune use, across all
+connectors, with each connector's match count on its switch button) narrow
+the same set: the table lists only those pins and the drawing fades the
+rest. Hovering a marker shows the pin's function, type, wire colour and tune
+use.
+
+The drawing, the table and the pin card on the right always show the same
+selected pin. The card gives its function, tune use, type (marked when
+inferred), pigtail, tune name and class. For a used pin, **Open in Tuning**,
+a click on the table's Tune use link or a double-click on the row opens the
+setting's Tuning page; for a free pin the card names the choice to pick in a
+pin setting. Conversely, the **W** button beside a pin selector in Tuning
+opens Pinout and selects that enum value, clearing any search or filter that
+would hide it. Both directions depend on an exact `ts_name` match. Pinout is
+a viewer and navigator; assigning a pin happens in Tuning.
 
 ## When changing the helper
 
