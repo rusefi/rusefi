@@ -15,6 +15,7 @@ public class JSplitButton extends JPanel {
     private final JButton mainButton;
     private final JButton arrowButton;
     private JPopupMenu popupMenu;
+    private int fixedHeight;
 
     public JSplitButton(String text) {
         this(text, null);
@@ -43,6 +44,21 @@ public class JSplitButton extends JPanel {
 
     public void setIcon(Icon icon) {
         mainButton.setIcon(icon);
+    }
+
+    /** Keeps the natural width but uses {@code height}, e.g. a toolbar's control height; 0 for natural. */
+    public void setFixedHeight(int height) {
+        fixedHeight = height;
+        revalidate();
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+        Dimension size = super.getPreferredSize();
+        if (fixedHeight > 0 && !isPreferredSizeSet()) {
+            size.height = fixedHeight;
+        }
+        return size;
     }
 
     public void setText(String text) {

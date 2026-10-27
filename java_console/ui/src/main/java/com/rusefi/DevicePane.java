@@ -9,6 +9,9 @@ import com.rusefi.ui.basic.MigrateSettingsCheckboxState;
 import com.rusefi.ui.basic.SingleAsyncJobExecutor;
 import com.rusefi.ui.basic.StatusPanelWithProgressBar;
 import com.rusefi.ui.basic.UpdateFirmwareResult;
+import com.rusefi.ui.widgets.CommandIcon;
+import com.rusefi.ui.widgets.JoinedButtons;
+import com.rusefi.ui.widgets.ToolbarStrip;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,6 +31,8 @@ import java.util.function.Consumer;
  * this tab only offers firmware updates and locks the live tabs while the board isn't a usable ECU.
  */
 public class DevicePane {
+    static final String ACTIVITY = "Activity";
+    static final String COPY_LOG = "Copy log";
     private final JPanel content = new JPanel();
     private final ConnectivityContext connectivityContext;
     private final DeviceSessionManager sessionManager;
@@ -83,27 +88,47 @@ public class DevicePane {
         // kept only as a populated *model* feeding ProgramSelector's flash target (no visible picker
         // needed for the single-board case). [tag:better_ux_for_flashing]
         content.setLayout(new BorderLayout());
-        JPanel column = new JPanel();
-        column.setLayout(new BoxLayout(column, BoxLayout.Y_AXIS));
-        content.add(column, BorderLayout.NORTH);
 
-        autoUpdateBundle.setAlignmentX(Component.LEFT_ALIGNMENT);
+        autoUpdateBundle.setToolTipText("Update this console software automatically when a newer version is available");
+        autoUpdateBundle.setOpaque(false);
         autoUpdateBundle.addActionListener(e -> PersistentConfiguration.setBoolProperty(
             AutoupdateProperty.AUTO_UPDATE_BUNDLE_PROPERTY, autoUpdateBundle.isSelected()));
-        column.add(autoUpdateBundle);
 
-        migrateSettings.setAlignmentX(Component.LEFT_ALIGNMENT);
+        migrateSettings.setToolTipText("Carry the current tune over to the new firmware when updating");
+        migrateSettings.setOpaque(false);
         migrateSettings.addActionListener(e -> MigrateSettingsCheckboxState.isMigrationNeeded = migrateSettings.isSelected());
         MigrateSettingsCheckboxState.isMigrationNeeded = true;
-        column.add(migrateSettings);
 
-        JComponent selectorControl = selector.getControl();
-        selectorControl.setAlignmentX(Component.LEFT_ALIGNMENT);
-        column.add(selectorControl);
+        // toolbar in the Gauges/Lua style [tag:console_theme]: update actions on the left,
+        // update options and the how-to link on the right
+        selector.useToolbarStyle(CommandIcon.UPLOAD);
+        JPanel actions = new JPanel(new FlowLayout(FlowLayout.LEFT, JoinedButtons.ROW_GAP, 0));
+        actions.setOpaque(false);
+        actions.add(selector.getControl());
+        // GridBagLayout centres the options vertically in the toolbar
+        JPanel options = new JPanel(new GridBagLayout());
+        options.setOpaque(false);
+        GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(0, 0, 0, 16);
+        options.add(autoUpdateBundle, c);
+        options.add(migrateSettings, c);
+        c.insets = new Insets(0, 0, 0, JoinedButtons.ROW_GAP);
+        options.add(ProgramSelector.createHelpButton(), c);
+        JPanel toolbar = new ToolbarStrip(new BorderLayout());
+        toolbar.setBorder(BorderFactory.createEmptyBorder(8, 0, 9, JoinedButtons.ROW_END_INSET - JoinedButtons.ROW_GAP));
+        toolbar.add(actions, BorderLayout.CENTER);
+        toolbar.add(options, BorderLayout.EAST);
+        content.add(toolbar, BorderLayout.NORTH);
 
-        // Status log fills the middle; the StatusPanelWithProgressBar keeps its progress bar at the
-        // very bottom of the pane.
-        content.add(statusPanel.getContent(), BorderLayout.CENTER);
+        // Status log fills the middle under its own header; the StatusPanelWithProgressBar keeps its
+        // progress bar at the very bottom of the pane.
+        JButton copyLog = new JButton(COPY_LOG);
+        copyLog.setToolTipText("Copy the whole log, e.g. to paste into a support request");
+        copyLog.addActionListener(e -> statusPanel.copyLogToClipboard());
+        JPanel logPanel = new JPanel(new BorderLayout());
+        logPanel.add(ToolbarStrip.header(ACTIVITY, new JoinedButtons(copyLog)), BorderLayout.NORTH);
+        logPanel.add(statusPanel.getContent(), BorderLayout.CENTER);
+        content.add(logPanel, BorderLayout.CENTER);
 
         sessionManager.addListener((state, hardware) -> SwingUtilities.invokeLater(() -> render(state, hardware)));
     }

@@ -18,8 +18,11 @@ import static com.rusefi.ToolUtil.EOL;
 public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
     private static final Logging log = getLogging(StatusWindow.class);
 
-    private static final Color LIGHT_RED = new Color(255, 102, 102);
-    private static final Color LIGHT_GREEN = new Color(102, 255, 102);
+    // soft tints of the console's status colours [tag:console_theme]: still clearly
+    // success / failure / warning, without saturated backgrounds behind the text
+    private static final Color LIGHT_RED = new Color(0xFBE0E0);
+    private static final Color LIGHT_GREEN = new Color(0xDCF5E3);
+    private static final Color LIGHT_YELLOW = new Color(0xFDF0D5);
     private final JTextArea logTextArea = new JTextArea();
     private final JLabel bottomStatusLabel = new JLabel();
 
@@ -27,6 +30,9 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
         super(new BorderLayout());
 
         logTextArea.setLineWrap(true);
+        logTextArea.setMargin(new Insets(8, 12, 8, 12));
+        // the console's monospaced font, as in the Messages log [tag:console_theme]
+        logTextArea.setFont(ConsoleFonts.mono(Font.PLAIN, ConsoleFonts.baseSize()));
         // read-only status log: text arrives via log(), user keystrokes must not alter it
         logTextArea.setEditable(false);
         JScrollPane messagesScroll = new JScrollPane(logTextArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
@@ -57,7 +63,7 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
 
     @Override
     public void warning() {
-        SwingUtilities.invokeLater(() -> logTextArea.setBackground(Color.YELLOW));
+        SwingUtilities.invokeLater(() -> logTextArea.setBackground(LIGHT_YELLOW));
     }
 
     public void setSuccessState() {
@@ -65,6 +71,12 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
     }
 
     public void copyContentToClipboard() {
+        copyLogToClipboard();
+        logLine("hint: error state is already in your clipboard, please use PASTE or Ctrl-V while reporting issues");
+    }
+
+    /** Copies the whole log, e.g. for a support request. */
+    public void copyLogToClipboard() {
         // kludge: due to 'append' method using invokeLater even while on AWT thread we also need invokeLater to
         // actually get overall status message
         SwingUtilities.invokeLater(() -> {
@@ -76,8 +88,6 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
                 log.error("getSystemClipboard error " + e, e);
             }
         });
-
-        logLine("hint: error state is already in your clipboard, please use PASTE or Ctrl-V while reporting issues");
     }
 
     @Override

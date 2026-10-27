@@ -14,6 +14,7 @@ import com.rusefi.maintenance.jobs.*;
 import com.rusefi.ui.basic.SingleAsyncJobExecutor;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.widgets.JSplitButton;
+import com.rusefi.ui.widgets.JoinedButtons;
 import com.rusefi.ui.wizard.EmergencyWipePanel;
 import com.rusefi.ui.wizard.DfuRecoveryConfirmationPanel;
 import com.rusefi.ui.wizard.FirmwareProgrammingPanel;
@@ -641,6 +642,20 @@ public class ProgramSelector {
 
     public JPanel getControl() {
         return content;
+    }
+
+    /**
+     * Fits the control into a toolbar row [tag:console_theme]: left-aligned without the outer gaps,
+     * as tall as the other toolbar controls, with a small icon instead of the 48 px arrow.
+     */
+    public void useToolbarStyle(Icon icon) {
+        updateModeAndButton.setLayout(new FlowLayout(FlowLayout.LEFT, JoinedButtons.ROW_GAP, 0));
+        updateModeAndButton.setOpaque(false);
+        content.setOpaque(false);
+        splitButton.setIcon(icon);
+        // height only: the label changes with the update mode, so the width must follow it
+        splitButton.setFixedHeight(JoinedButtons.HEIGHT);
+        matchFirmwareControlSizes();
     }
 
     public void addFirmwareControl(JComponent control) {

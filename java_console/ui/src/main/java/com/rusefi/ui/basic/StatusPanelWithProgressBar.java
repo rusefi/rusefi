@@ -33,7 +33,8 @@ public class StatusPanelWithProgressBar implements UpdateOperationCallbacks {
         this.prepareFirmwareHandoff = Objects.requireNonNull(prepareFirmwareHandoff);
         progressBar.setIndeterminate(false);
         progressBar.setStringPainted(true);
-        progressBar.setBorder(BorderFactory.createLineBorder(Color.RED));
+        // themed bar with a little room around it, no debug-red outline [tag:console_theme]
+        progressBar.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
 
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.add(statusPanelFirmwareTab);
@@ -42,6 +43,11 @@ public class StatusPanelWithProgressBar implements UpdateOperationCallbacks {
 
     public JPanel getContent() {
         return content;
+    }
+
+    /** Copies the status log, e.g. for a support request. */
+    public void copyLogToClipboard() {
+        statusPanelFirmwareTab.copyLogToClipboard();
     }
 
     @Override
