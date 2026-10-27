@@ -171,7 +171,7 @@ class ProgramSelectorSocketCanTest {
 
         OpenBltAutoJob job = new OpenBltAutoJob(
             slcan, null, new ConnectivityContext(new FakePortScanner()), null);
-        assertEquals("OpenBLT via SLCAN:COM7", job.getName());
+        assertEquals("Update ECU firmware", job.getName());
     }
 
     @Test

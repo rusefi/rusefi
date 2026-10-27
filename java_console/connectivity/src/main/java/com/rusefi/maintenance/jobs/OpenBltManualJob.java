@@ -47,7 +47,7 @@ public class OpenBltManualJob extends AsyncJobWithContext<SerialPortWithParentCo
 
     OpenBltManualJob(final PortResult port, final JComponent parent, final ConnectivityContext connectivityContext,
                      final FlashSteps steps) {
-        this("OpenBLT via Serial", port, parent, connectivityContext, steps);
+        this("Update ECU firmware", port, parent, connectivityContext, steps);
     }
 
     OpenBltManualJob(final String title, final PortResult port, final JComponent parent,
@@ -103,10 +103,24 @@ public class OpenBltManualJob extends AsyncJobWithContext<SerialPortWithParentCo
                 // Scanner is running again so restore can wait for the rebooted ECU port to reappear.
                 // The auto path backs up+restores the tune around the flash; the manual path had no live
                 // ECU pre-flash (board was already in the bootloader), so restore the last tune backed up
-                // off an ECU this session. A hard failure here is non-fatal: the flash itself succeeded.
+                // off an ECU this session. Programming success must not hide failed restoration.
                 // [tag:better_ux_for_flashing]
-                steps.restoreCalibrations(callbacks, connectivityContext);
-                callbacks.done();
+                final RestoreResult restoreResult = steps.restoreCalibrationsWithResult(callbacks, connectivityContext);
+                if (restoreResult == RestoreResult.FAILED) {
+                    callbacks.logLine("Firmware programming finished, but settings restoration failed. "
+                        + "Review the report and verify settings before using the ECU.");
+                    callbacks.error();
+                } else if (restoreResult == RestoreResult.WARNING) {
+                    callbacks.logLine("Firmware programming finished with settings warnings. "
+                        + "Review the report and verify settings before using the ECU.");
+                    callbacks.warning();
+                } else {
+                    callbacks.logLine(restoreResult == RestoreResult.SKIPPED
+                        ? "Programming operation finished; settings restoration was intentionally skipped."
+                        : "Firmware programming and settings steps finished. "
+                            + "Verify the installed firmware version and settings before using the ECU.");
+                    callbacks.done();
+                }
             },
             onJobFinished
         );

@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -47,7 +48,7 @@ public class ProgramSelector {
     private SingleAsyncJobExecutor jobExecutor;
     @Nullable
     private LinkManager linkManager;
-    private Function<JComponent, Boolean> firmwareUpdateInterceptor = source -> false;
+    private BiFunction<JComponent, PortResult, Boolean> firmwareUpdateInterceptor = (source, port) -> false;
     private BooleanSupplier externalBusy = () -> false;
 
     public ProgramSelector(ConnectivityContext connectivityContext, JComboBox<PortResult> comboPorts,
@@ -65,11 +66,8 @@ public class ProgramSelector {
         updateModeAndButton.add(splitButton);
 
         splitButton.addActionListener(e -> {
-            if (firmwareUpdateInterceptor.apply(splitButton)) {
-                return;
-            }
-            final PortResult targetPort = resolveFlashPort();
-            if (targetPort == null) {
+            final PortResult targetPort = resolveCurrentFlashPort();
+            if (targetPort == null || firmwareUpdateInterceptor.apply(splitButton, targetPort)) {
                 return;
             }
             executeJob(splitButton, mainButtonModeFor(targetPort), targetPort);
@@ -144,6 +142,40 @@ public class ProgramSelector {
      * This covers the offline "open a tune, plug an OpenBLT board" flow where the combo selection may be
      * null/stale right after the hot-plug. [tag:better_ux_for_flashing]
      */
+    /** Resolve a still-detected selected target; normal ECU updates require the live session to match it. */
+    private PortResult resolveCurrentFlashPort() {
+        final PortResult selected = (PortResult) comboPorts.getSelectedItem();
+        final List<PortResult> knownPorts = connectivityContext.getCurrentHardware().getKnownPorts();
+        final PortResult current = currentPort(knownPorts, selected);
+        if (current == null) {
+            return null;
+        }
+        if (current.type == SerialPortType.Dfu || current.type == OpenBlt) {
+            return current;
+        }
+        if (isCanEcu(current)) {
+            return UiProperties.isCanOpenBltEnabled()
+                && hasMatchingLiveConnection(current, isLiveConnection(),
+                    linkManager == null ? null : linkManager.getLastTriedPort()) ? current : null;
+        }
+        if (isUnflashableEcu(current)) {
+            return null;
+        }
+        if (current.type == SerialPortType.Ecu || current.type == SerialPortType.EcuWithOpenblt) {
+            return hasMatchingLiveConnection(current, isLiveConnection(),
+                linkManager == null ? null : linkManager.getLastTriedPort()) ? current : null;
+        }
+        return null;
+    }
+
+    private static PortResult currentPort(List<PortResult> ports, @Nullable PortResult selected) {
+        return ports.stream().filter(port -> samePort(port, selected)).findFirst().orElse(null);
+    }
+
+    private static boolean samePort(@Nullable PortResult left, @Nullable PortResult right) {
+        return left != null && right != null && left.type == right.type && left.port.equals(right.port);
+    }
+
     private PortResult resolveFlashPort() {
         final PortResult selected = (PortResult) comboPorts.getSelectedItem();
         return resolveFlashPort(
@@ -194,8 +226,7 @@ public class ProgramSelector {
         boolean liveConnection,
         @Nullable String connectedPort
     ) {
-        return liveConnection
-            && (!isCanEcu(selected) || selected.port.equals(connectedPort));
+        return selected != null && liveConnection && selected.port.equals(connectedPort);
     }
 
     private void executeJob(JComponent parent, UpdateMode selectedMode, PortResult selectedPort) {
@@ -284,7 +315,12 @@ public class ProgramSelector {
     }
 
     public void setFirmwareUpdateInterceptor(Function<JComponent, Boolean> firmwareUpdateInterceptor) {
-        this.firmwareUpdateInterceptor = Objects.requireNonNull(firmwareUpdateInterceptor);
+        Objects.requireNonNull(firmwareUpdateInterceptor);
+        this.firmwareUpdateInterceptor = (source, port) -> firmwareUpdateInterceptor.apply(source);
+    }
+
+    public void setTargetedFirmwareUpdateInterceptor(BiFunction<JComponent, PortResult, Boolean> interceptor) {
+        this.firmwareUpdateInterceptor = Objects.requireNonNull(interceptor);
     }
 
     public void setExternalBusySupplier(BooleanSupplier externalBusy) {
@@ -296,11 +332,8 @@ public class ProgramSelector {
      * same as clicking the split button. Used by the console's "Update ECU" menu shortcut [tag:better_ux_for_flashing].
      */
     public void triggerUpdateFirmware() {
-        if (firmwareUpdateInterceptor.apply(splitButton)) {
-            return;
-        }
-        final PortResult targetPort = resolveFlashPort();
-        if (targetPort == null) {
+        final PortResult targetPort = resolveCurrentFlashPort();
+        if (targetPort == null || firmwareUpdateInterceptor.apply(splitButton, targetPort)) {
             // Nothing detected/selected — mirrors the split button being disabled in apply(). [tag:better_ux_for_flashing]
             log.info("triggerUpdateFirmware: no port to flash, ignoring");
             return;

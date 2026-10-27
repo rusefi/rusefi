@@ -22,6 +22,31 @@ class FirmwareRollbackControllerTest {
             new PortResult("COM7", SerialPortType.Ecu)));
         assertFalse(FirmwareRollbackController.isSerialFirmwareUpdateSupported(
             new PortResult("COM7", SerialPortType.OpenBlt)));
+        assertFalse(FirmwareRollbackController.isSerialFirmwareUpdateSupported(
+            new PortResult(LinkManager.PCAN, SerialPortType.Ecu)));
+        assertFalse(FirmwareRollbackController.isSerialFirmwareUpdateSupported(
+            new PortResult(LinkManager.PCAN, SerialPortType.EcuWithOpenblt)));
+        assertFalse(FirmwareRollbackController.isSerialFirmwareUpdateSupported(
+            new PortResult("SLCAN:COM7", SerialPortType.Ecu)));
+    }
+
+    @Test
+    void latestUpdateCannotReplaceConfirmedBWithStaleProviderAOrAnotherConnection() {
+        PortResult a = new PortResult("ECU_A", SerialPortType.Ecu);
+        PortResult b = new PortResult("ECU_B", SerialPortType.Ecu);
+        assertFalse(FirmwareRollbackController.matchesExpectedUpdateTarget(b, a, true, b.port),
+            "startup's independent provider must not override the confirmed selection");
+        assertFalse(FirmwareRollbackController.matchesExpectedUpdateTarget(b, b, true, a.port));
+        assertFalse(FirmwareRollbackController.matchesExpectedUpdateTarget(b,
+            new PortResult(b.port, SerialPortType.EcuWithOpenblt), true, b.port));
+        assertFalse(FirmwareRollbackController.matchesExpectedUpdateTarget(b, null, true, b.port));
+        assertFalse(FirmwareRollbackController.matchesExpectedUpdateTarget(b, b, false, b.port));
+        assertTrue(FirmwareRollbackController.matchesExpectedUpdateTarget(b,
+            new PortResult(b.port, b.type), true, b.port));
+        for (String transport : new String[]{LinkManager.PCAN, LinkManager.SOCKET_CAN, "SLCAN:COM7"}) {
+            PortResult can = new PortResult(transport, SerialPortType.Ecu);
+            assertFalse(FirmwareRollbackController.matchesExpectedUpdateTarget(can, can, true, can.port));
+        }
     }
 
     @Test

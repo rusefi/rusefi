@@ -87,7 +87,8 @@ public final class FirmwareOperations {
     ) {
         // Scanner is already suspended by the caller (bltUpdateFirmware).
         return waitForPredicate(
-            String.format("Waiting for ECU on port %s to reboot to OpenBlt for up to " + TOTAL_WAIT_SECONDS + " seconds...", ecuPort),
+            String.format("Preparing ECU for firmware update on %s (may take up to %d seconds)...",
+                ecuPort.port, TOTAL_WAIT_SECONDS),
             () -> {
                 // Directly probe the port rather than relying on the scanner snapshot.
                 // The scanner cache would keep reporting EcuWithOpenblt even after the
@@ -126,7 +127,7 @@ public final class FirmwareOperations {
         // the bootloader has a different USB PID and gets a new COM assignment).
         final List<PortResult> newPorts = new ArrayList<>();
         waitForPredicate(
-            "Waiting for new OpenBlt port to appear...",
+            "Waiting for the ECU to enter firmware update mode...",
             () -> {
                 for (SerialPort sp : SerialPort.getCommPorts()) {
                     final String portName = sp.getSystemPortName();
@@ -313,7 +314,7 @@ public final class FirmwareOperations {
             final OpenbltJni.OpenbltCallbacks openbltCallbacks = makeOpenbltCallbacks(callbacks);
             callbacks.logLine("flashCan " + canPort + " " + fileName);
             flashAction.flash(fileName, openbltCallbacks);
-            callbacks.logLine("Update completed successfully!");
+            callbacks.logLine("Firmware programming complete. Checking the remaining update steps...");
             return true;
         } catch (Throwable e) {
             callbacks.logLine("flashOpenBltCan Error: " + e);
@@ -362,9 +363,9 @@ public final class FirmwareOperations {
         final boolean isEcuPortDisappeared = waitForEcuPortDisappeared(ecuPort, callbacks);
 
         if (!isEcuPortDisappeared) {
-            callbacks.logLine("Looks like your ECU still haven't rebooted to OpenBLT");
+            callbacks.logLine("The ECU did not enter update mode.");
             callbacks.logLine("");
-            callbacks.logLine("Try closing and opening console again");
+            callbacks.logLine("Check power and USB, then reconnect and try the update again.");
             callbacks.logLine("");
             return false;
         }
@@ -451,7 +452,7 @@ public final class FirmwareOperations {
             callbacks.logLine("flashSerial " + fileName);
             OpenBltFlasher.flashSerial(fileName, port, cb);
 
-            callbacks.logLine("Update completed successfully!");
+            callbacks.logLine("Firmware programming complete. Checking the remaining update steps...");
             return true;
         } catch (Throwable e) {
             callbacks.logLine("flashOpenbltSerial Error: " + e);
