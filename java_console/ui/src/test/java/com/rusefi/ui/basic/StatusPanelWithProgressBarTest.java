@@ -27,7 +27,7 @@ class StatusPanelWithProgressBarTest {
         String reason = "Install an intermediate version first.\nDetails: <current> & <destination>";
         SingleAsyncJobExecutor executor = new SingleAsyncJobExecutor(panel.get());
         CountDownLatch finished = new CountDownLatch(1);
-        executor.addOnJobInProgressFinishedListener(finished::countDown);
+        executor.addOnJobReleasedListener(finished::countDown);
 
         assertTrue(executor.startJob(new AsyncJob("blocked firmware") {
             @Override
