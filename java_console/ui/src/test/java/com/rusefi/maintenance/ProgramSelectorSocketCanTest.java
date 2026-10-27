@@ -162,11 +162,11 @@ class ProgramSelectorSocketCanTest {
 
         assertTrue(LinkManager.isSlcanPort(slcan.port));
         assertTrue(LinkManager.isCanPort(slcan.port));
-        assertNull(ProgramSelector.resolveFlashPort(
+        assertNull(ProgramSelector.resolveNormalFlashPort(
             slcan,
             true,
-            Collections.emptyList(),
-            Collections.emptyList(),
+            slcan.port,
+            Collections.singletonList(slcan),
             true));
 
         OpenBltAutoJob job = new OpenBltAutoJob(

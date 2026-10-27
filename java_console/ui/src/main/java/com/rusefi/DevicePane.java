@@ -1,6 +1,5 @@
 package com.rusefi;
 
-import com.rusefi.core.OsUtil;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.maintenance.DfuFlasher;
 import com.rusefi.maintenance.ProgramSelector;
@@ -184,20 +183,11 @@ public class DevicePane {
 
     static String bootloaderGuidance(final SessionState state) {
         if (state == SessionState.DEVICE_IN_DFU) {
-            if (DfuFlasher.isDfuProgrammingSupported()
-                && com.rusefi.maintenance.ManualDfuRecovery.isUniversalBundle(
-                    com.rusefi.core.io.BundleUtil.getBundleTarget())) {
-                return "Board is in the DFU bootloader - click Manual DFU Update to pick the board and firmware."
-                    + (OsUtil.isLinux() ? " Flashing uses dfu-util." : "");
-            }
-            if (OsUtil.isLinux()) {
-                return "Board is in the DFU bootloader - click Update Firmware to flash with dfu-util.";
-            }
             return DfuFlasher.isDfuProgrammingSupported()
-                ? "Board is in the DFU bootloader - click Update Firmware to flash."
-                : "Board is in the DFU bootloader. DFU flashing is not supported on this platform.";
+                ? "Your ECU is in recovery mode. Use Recover ECU to choose its board and firmware."
+                : "Your ECU is in recovery mode. Recovery is not supported on this platform.";
         }
-        return "Board is in the OpenBLT bootloader — click Update Firmware to flash.";
+        return "Bootloader detected — click Update ECU firmware to continue.";
     }
 
     static boolean isBootloaderState(final SessionState state) {

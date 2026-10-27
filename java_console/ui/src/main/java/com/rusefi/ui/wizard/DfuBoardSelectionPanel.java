@@ -18,7 +18,7 @@ public final class DfuBoardSelectionPanel extends JPanel {
     private final JList<String> boards = new JList<>(model);
     private final JLabel status = new JLabel("Loading board list...");
     private final JButton cancel = new JButton("Cancel");
-    private final JButton confirm = new JButton("Download and flash");
+    private final JButton confirm = new JButton("Download firmware and recover ECU");
     private final List<String> targets = new ArrayList<>();
     private final Consumer<String> completion;
     private boolean completed;
@@ -35,11 +35,11 @@ public final class DfuBoardSelectionPanel extends JPanel {
             Math.max(18f, UIManager.getFont("Label.font").getSize2D() * 1.15f));
         JPanel heading = new JPanel(new BorderLayout(0, WizardStyle.GAP));
         heading.setOpaque(false);
-        JLabel title = new JLabel("Pick board - Manual DFU Update");
+        JLabel title = new JLabel("Choose your ECU board");
         AbstractWizardStep.styleTitle(title);
         heading.add(title, BorderLayout.NORTH);
-        JTextArea explanation = new JTextArea("DFU mode cannot identify or verify the board model. "
-            + "Select the board connected in DFU mode, then choose Download and flash to update its firmware.");
+        JTextArea explanation = new JTextArea("Recovery mode cannot identify the ECU's board automatically. "
+            + "Select the exact model of the ECU you connected, then choose Download firmware and recover ECU.");
         explanation.setEditable(false);
         explanation.setOpaque(false);
         explanation.setLineWrap(true);
@@ -130,7 +130,7 @@ public final class DfuBoardSelectionPanel extends JPanel {
         filter();
         if (targets.contains(suggested)) {
             boards.setSelectedValue(suggested, true);
-            status.setText("Previously used board suggested. Confirm it matches the connected board.");
+            status.setText("Previously used board selected as a suggestion. Check that it matches the ECU you connected.");
         }
         search.requestFocusInWindow();
     }
@@ -153,7 +153,7 @@ public final class DfuBoardSelectionPanel extends JPanel {
         }
         // JList.setSelectedValue clears selection when the previous target is filtered out.
         boards.setSelectedValue(previous, true);
-        status.setText(model.isEmpty() ? "No boards match your search." : "Select the board to flash.");
+        status.setText(model.isEmpty() ? "No boards match your search." : "Select the board you connected.");
     }
 
     private void finish(String selected) {

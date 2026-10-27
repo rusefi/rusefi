@@ -30,7 +30,7 @@ public class DfuAutoJob extends AbstractAutoFlashJob {
     public DfuAutoJob(final PortResult port, final JComponent parent, final ConnectivityContext connectivityContext,
                       final @Nullable LinkManager linkManager, final @Nullable String firmwareBinFile,
                       final CalibrationsHelper.FirmwareUpdatePolicy policy) {
-        super("DFU update", port, parent, connectivityContext, linkManager);
+        super("Update ECU firmware", port, parent, connectivityContext, linkManager);
         this.firmwareBinFile = firmwareBinFile;
         this.policy = policy;
     }
