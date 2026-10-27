@@ -39,7 +39,7 @@ class DevicePaneLayoutTest {
             assertEquals(JoinedButtons.HEIGHT, update.getPreferredSize().height, "As tall as the other toolbar controls");
             assertTrue(SwingUtilities.getAncestorOfClass(ToolbarStrip.class, update) != null);
 
-            for (String option : new String[]{"Auto-update Software", "Migrate Settings"}) {
+            for (String option : new String[]{"Auto-update Software", "Try to keep my current tune"}) {
                 JCheckBox box = (JCheckBox) all.stream()
                     .filter(c -> c instanceof JCheckBox && option.equals(((JCheckBox) c).getText()))
                     .findFirst().orElseThrow(() -> new AssertionError(option));
