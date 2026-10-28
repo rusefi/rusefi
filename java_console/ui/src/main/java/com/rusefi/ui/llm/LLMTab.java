@@ -4,7 +4,11 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.mcp.ConsoleEcuSession;
 import com.rusefi.core.net.FirmwareSourceCodeDownloader;
 import com.rusefi.core.net.ConnectionAndMeta.DownloadProgressListener;
-import com.rusefi.ui.widgets.tune.CalibrationFieldFactory;
+import com.rusefi.ui.widgets.ConsoleFonts;
+import com.rusefi.ui.widgets.JoinedButtons;
+import com.rusefi.ui.widgets.ToolbarStrip;
+import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.ui.FlatLineBorder;
 
 import com.rusefi.ui.llm.ChatGptClient.Account;
 import com.rusefi.ui.llm.ChatGptClient.Cancellation;
@@ -31,6 +35,7 @@ import java.util.function.Consumer;
 public final class LLMTab implements AutoCloseable {
     // Never log prompts, reply text or tokens; operation names, model slugs and exceptions only.
     private static final com.devexperts.logging.Logging log = com.devexperts.logging.Logging.getLogging(LLMTab.class);
+    static final String PROMPT_PLACEHOLDER = "Describe your problem here, then click Send or press Ctrl+Enter";
     private final LinkManager linkManager;
     private final Path storage;
     private final TroubleshootingSessionStore savedSessions;
@@ -44,7 +49,7 @@ public final class LLMTab implements AutoCloseable {
     private DiagnosticCaseStore caseEvidence;
     private final CardLayout cards = new CardLayout();
     private final JPanel content = new JPanel(cards);
-    private final JPanel llmControls = new JPanel(new BorderLayout(8, 8));
+    private final JPanel llmControls = new JPanel(new BorderLayout());
     private final JButton startDownload = new JButton("Start Download");
     private final JProgressBar sourceProgress = new JProgressBar(0, 100);
     private final JLabel sourceStatus = new JLabel("Checking cached source code...");
@@ -52,18 +57,18 @@ public final class LLMTab implements AutoCloseable {
     private boolean preparingSources;
     private final JComboBox<Account> accounts = new JComboBox<>();
     private final JComboBox<Model> models = new JComboBox<>();
-    private final JButton login = new JButton("Continue with ChatGPT");
-    private final JButton addAccount = new JButton("Add account");
-    private final JButton logout = new JButton("Sign out");
-    private final JButton cancelSignIn = new JButton("Cancel sign-in");
+    private final JButton login = roomyButton("Continue with ChatGPT");
+    private final JButton addAccount = roomyButton("Add account");
+    private final JButton logout = roomyButton("Sign out");
+    private final JButton cancelSignIn = roomyButton("Cancel sign-in");
     private final JButton send = new JButton("Send");
     private final JButton stop = new JButton("Stop");
-    private final JButton reset = new JButton("New conversation");
+    private final JButton reset = roomyButton("New conversation");
     private final JComboBox<TroubleshootingSessionStore.Summary> recentSessions = new JComboBox<>();
-    private final JButton resume = new JButton("Resume");
-    private final JButton delete = new JButton("Delete session");
+    private final JButton resume = roomyButton("Resume");
+    private final JButton delete = roomyButton("Delete session");
     private final JTextArea terminal = new JTextArea(24, 90);
-    private final JTextArea prompt = new JTextArea(3, 70);
+    private final JTextArea prompt = new PlaceholderTextArea(4, 70, PROMPT_PLACEHOLDER);
     private final JLabel status = new JLabel("Opening account store...");
     private final JSONArray history = new JSONArray();
     private String committedTranscript = "";
@@ -149,77 +154,32 @@ public final class LLMTab implements AutoCloseable {
         this.clients = clients;
         this.browser = browser;
         this.fallbackDialogs = fallbackDialogs == null ? this::showFallbackDialog : fallbackDialogs;
-        CalibrationFieldFactory.applyStyle(startDownload);
-        content.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        JPanel sourceCard = new JPanel(new GridBagLayout());
-        JPanel downloadControls = new JPanel(new GridLayout(0, 1, 0, 8));
-        downloadControls.add(new JLabel("Hit the button below to download the rusEFI source code gist."));
-        downloadControls.add(startDownload);
-        sourceProgress.setStringPainted(true);
-        downloadControls.add(sourceProgress);
-        downloadControls.add(sourceStatus);
-        sourceCard.add(downloadControls);
-        content.add(sourceCard, "sources");
+        content.add(createSourceCard(), "sources");
         content.add(llmControls, "chat");
         cards.show(content, "sources");
         startDownload.addActionListener(e -> prepareSources(true));
-        JPanel accountBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        CalibrationFieldFactory.applyStyle(accounts);
-        CalibrationFieldFactory.applyStyle(login);
-        CalibrationFieldFactory.applyStyle(addAccount);
-        CalibrationFieldFactory.applyStyle(logout);
-        CalibrationFieldFactory.applyStyle(cancelSignIn);
-        accounts.setPreferredSize(new Dimension(500, accounts.getPreferredSize().height));
-        accounts.setToolTipText("Saved ChatGPT account and workspace registrations");
-        accountBar.add(accounts);
-        accountBar.add(login);
-        accountBar.add(addAccount);
-        addAccount.setVisible(false);
-        accountBar.add(logout);
-        accountBar.add(cancelSignIn);
-        JPanel header = new JPanel(new BorderLayout());
-        header.add(accountBar, BorderLayout.NORTH);
-        JPanel modelBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JLabel modelLabel = new JLabel("Model:");
-        CalibrationFieldFactory.applyStyle(modelLabel);
-        modelBar.add(modelLabel);
-        CalibrationFieldFactory.applyStyle(models);
-        CalibrationFieldFactory.applyStyle(reset);
-        models.setPreferredSize(new Dimension(250, models.getPreferredSize().height));
-        modelBar.add(models);
-        modelBar.add(reset);
-        modelBar.add(status);
-        header.add(modelBar, BorderLayout.CENTER);
-        JPanel sessionBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JLabel recentLabel = new JLabel("Recent sessions:");
-        CalibrationFieldFactory.applyStyle(recentLabel);
-        sessionBar.add(recentLabel);
-        CalibrationFieldFactory.applyStyle(recentSessions);
-        recentSessions.setPreferredSize(new Dimension(500, recentSessions.getPreferredSize().height));
-        recentSessions.setToolTipText("Saved conversations for the selected ChatGPT account");
-        sessionBar.add(recentSessions);
-        CalibrationFieldFactory.applyStyle(resume);
-        CalibrationFieldFactory.applyStyle(delete);
-        sessionBar.add(resume);
-        sessionBar.add(delete);
-        header.add(sessionBar, BorderLayout.SOUTH);
-        llmControls.add(header, BorderLayout.NORTH);
+        llmControls.add(createToolbar(), BorderLayout.NORTH);
 
-        Font mono = new Font(Font.MONOSPACED, Font.PLAIN, 14);
-        terminal.setFont(mono);
-        terminal.setBackground(new Color(24, 27, 32));
-        terminal.setForeground(new Color(220, 230, 220));
-        terminal.setCaretColor(Color.WHITE);
+        terminal.setFont(ConsoleFonts.mono(Font.PLAIN, ConsoleFonts.baseSize()));
+        // a plain Color, not the theme's UIResource: FlatLaf greys out read-only text areas otherwise
+        terminal.setBackground(new Color(themed("Console.Card.background", Color.WHITE).getRGB()));
         terminal.setEditable(false);
         terminal.setLineWrap(true);
         terminal.setWrapStyleWord(true);
-        terminal.setMargin(new Insets(10, 10, 10, 10));
+        terminal.setMargin(new Insets(10, 14, 10, 14));
         terminal.getAccessibleContext().setAccessibleName("ChatGPT terminal output");
-        llmControls.add(new JScrollPane(terminal), BorderLayout.CENTER);
-        prompt.setFont(mono);
-        CalibrationFieldFactory.applyStyle(prompt);
+        JScrollPane terminalScroll = new JScrollPane(terminal);
+        terminalScroll.setBorder(BorderFactory.createEmptyBorder());
+        // the transcript on a white card under a titled header, like the Knock Analyzer plots
+        JPanel conversation = new JPanel(new BorderLayout());
+        conversation.setBackground(terminal.getBackground());
+        conversation.setBorder(BorderFactory.createLineBorder(themed("Console.Card.borderColor", Color.LIGHT_GRAY)));
+        conversation.add(ToolbarStrip.header("Conversation", null), BorderLayout.NORTH);
+        conversation.add(terminalScroll, BorderLayout.CENTER);
+
         prompt.setLineWrap(true);
         prompt.setWrapStyleWord(true);
+        prompt.setMargin(new Insets(6, 8, 6, 8));
         prompt.getAccessibleContext().setAccessibleName("Message to ChatGPT");
         prompt.setToolTipText("Type a message, then press Ctrl+Enter or click Send. Enter inserts a new line.");
         prompt.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_DOWN_MASK), "send-prompt");
@@ -228,19 +188,38 @@ public final class LLMTab implements AutoCloseable {
                 if (send.isEnabled()) { send(); }
             }
         });
-        JPanel input = new JPanel(new BorderLayout(8, 8));
-        JLabel promptLabel = new JLabel("Describe your problem below and hit 'Send'");
-        CalibrationFieldFactory.applyStyle(promptLabel);
-        input.add(promptLabel, BorderLayout.NORTH);
-        input.add(new JScrollPane(prompt), BorderLayout.CENTER);
         send.setToolTipText("Send the message (Ctrl+Enter from the message field)");
-        CalibrationFieldFactory.applyStyle(send);
-        CalibrationFieldFactory.applyStyle(stop);
-        JPanel buttons = new JPanel(new GridLayout(2, 1, 4, 4));
+        send.putClientProperty(FlatClientProperties.STYLE_CLASS, "primary");
+        send.setPreferredSize(new Dimension(send.getPreferredSize().width + 32, JoinedButtons.HEIGHT));
+        stop.setToolTipText("Stop the running request");
+        // a plain outlined button: Send and Stop share the column width and keep their text centred
+        stop.setPreferredSize(new Dimension(stop.getPreferredSize().width, JoinedButtons.HEIGHT));
+        JPanel buttons = new JPanel(new GridLayout(2, 1, 0, JoinedButtons.ROW_GAP));
+        buttons.setOpaque(false);
         buttons.add(send);
         buttons.add(stop);
-        input.add(buttons, BorderLayout.EAST);
-        llmControls.add(input, BorderLayout.SOUTH);
+        JPanel buttonColumn = new JPanel(new BorderLayout());
+        buttonColumn.setOpaque(false);
+        buttonColumn.add(buttons, BorderLayout.NORTH);
+        JPanel input = new JPanel(new BorderLayout(JoinedButtons.ROW_GAP, 0));
+        input.setOpaque(false);
+        input.add(new JScrollPane(prompt), BorderLayout.CENTER);
+        input.add(buttonColumn, BorderLayout.EAST);
+        input.setMinimumSize(new Dimension(0, buttons.getPreferredSize().height));
+        conversation.setMinimumSize(new Dimension(0, 120));
+
+        // drag the divider up to give the message box more room
+        JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, conversation, input);
+        split.setResizeWeight(1);
+        split.setContinuousLayout(true);
+        split.setDividerSize(12);
+        split.setBorder(BorderFactory.createEmptyBorder());
+        split.setOpaque(false);
+
+        JPanel page = new JPanel(new BorderLayout());
+        page.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+        page.add(split, BorderLayout.CENTER);
+        llmControls.add(page, BorderLayout.CENTER);
         append("rusEFI Troubleshooting\nSign in to use your ChatGPT plan.\n"
                 + "Your messages, requested ECU readings and source/wiki excerpts are sent to OpenAI. ECU access is read-only.\n"
                 + "Ask to export a diagnostic case to save findings and selected evidence locally.\n"
@@ -669,6 +648,149 @@ public final class LLMTab implements AutoCloseable {
         }
     }
 
+    /** Centred card for the source download step, like the Knock Analyzer's start card. */
+    private JComponent createSourceCard() {
+        JLabel title = new JLabel("Prepare troubleshooting knowledge");
+        Font base = UIManager.getFont("Label.font");
+        if (base != null) {
+            title.setFont(base.deriveFont(Font.BOLD, base.getSize2D() + 2));
+        }
+        JLabel description = muted(new JLabel("Hit the button below to download the rusEFI source code gist."));
+        startDownload.putClientProperty(FlatClientProperties.STYLE_CLASS, "primary");
+        startDownload.setPreferredSize(new Dimension(startDownload.getPreferredSize().width + 32, JoinedButtons.HEIGHT));
+        sourceProgress.setStringPainted(true);
+        sourceProgress.setPreferredSize(new Dimension(360, sourceProgress.getPreferredSize().height));
+        muted(sourceStatus);
+
+        JPanel card = new JPanel(new GridBagLayout());
+        // FlatPanelUI paints a rounded background when the border is a FlatLineBorder with an arc
+        card.setBorder(new FlatLineBorder(new Insets(24, 28, 24, 28), themed("Console.Card.borderColor", Color.LIGHT_GRAY), 1, 10));
+        card.setBackground(new Color(themed("Console.Card.background", Color.WHITE).getRGB()));
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.insets = new Insets(0, 0, 8, 0);
+        card.add(title, c);
+        c.insets = new Insets(0, 0, 16, 0);
+        card.add(description, c);
+        card.add(startDownload, c);
+        c.insets = new Insets(0, 0, 8, 0);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        card.add(sourceProgress, c);
+        c.fill = GridBagConstraints.NONE;
+        c.insets = new Insets(0, 0, 0, 0);
+        card.add(sourceStatus, c);
+
+        JPanel page = new JPanel(new GridBagLayout());
+        page.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
+        page.add(card);
+        return page;
+    }
+
+    /** Account controls with the status on the right, then model and saved sessions, in the Gauges toolbar style. */
+    private JComponent createToolbar() {
+        accounts.setPreferredSize(new Dimension(320, JoinedButtons.HEIGHT));
+        accounts.setToolTipText("Saved ChatGPT account and workspace registrations");
+        models.setPreferredSize(new Dimension(220, JoinedButtons.HEIGHT));
+        recentSessions.setPreferredSize(new Dimension(360, JoinedButtons.HEIGHT));
+        recentSessions.setToolTipText("Saved conversations for the selected ChatGPT account");
+        addAccount.setVisible(false);
+
+        JPanel accountRow = toolbarRow();
+        accountRow.add(muted(new JLabel("Account")));
+        accountRow.add(accounts);
+        accountRow.add(new JoinedButtons(login, addAccount));
+        accountRow.add(new JoinedButtons(logout, cancelSignIn));
+        // GridBagLayout centres the status vertically in the row
+        JPanel statusBox = new JPanel(new GridBagLayout());
+        statusBox.setOpaque(false);
+        statusBox.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, JoinedButtons.ROW_GAP));
+        statusBox.add(muted(status));
+        JPanel first = new JPanel(new BorderLayout());
+        first.setOpaque(false);
+        first.add(accountRow, BorderLayout.CENTER);
+        first.add(statusBox, BorderLayout.EAST);
+
+        JPanel sessionRow = toolbarRow();
+        sessionRow.add(muted(new JLabel("Model")));
+        sessionRow.add(models);
+        sessionRow.add(new JoinedButtons(reset));
+        sessionRow.add(Box.createHorizontalStrut(JoinedButtons.ROW_GAP));
+        sessionRow.add(muted(new JLabel("Recent sessions")));
+        sessionRow.add(recentSessions);
+        sessionRow.add(new JoinedButtons(resume, delete));
+
+        JPanel rows = new JPanel(new GridLayout(0, 1, 0, JoinedButtons.ROW_GAP));
+        rows.setOpaque(false);
+        rows.add(first);
+        rows.add(sessionRow);
+        JPanel toolbar = new ToolbarStrip(new BorderLayout());
+        toolbar.setBorder(BorderFactory.createEmptyBorder(8, 0, 9, JoinedButtons.ROW_END_INSET - JoinedButtons.ROW_GAP));
+        toolbar.add(rows, BorderLayout.CENTER);
+        return toolbar;
+    }
+
+    /**
+     * A toolbar button a few pixels wider than its text needs. At fractional display scaling (125%, 150%)
+     * Java paints text wider than it measures it, so an exactly fitted label ends in "...".
+     */
+    private static JButton roomyButton(String text) {
+        return new JButton(text) {
+            @Override public Dimension getPreferredSize() {
+                Dimension size = super.getPreferredSize();
+                if (!isPreferredSizeSet()) {
+                    size.width += Math.max(8, getFontMetrics(getFont()).stringWidth(getText()) / 8);
+                }
+                return size;
+            }
+        };
+    }
+
+    /** Text area that shows a muted hint while it is empty, so the user knows where to type. */
+    private static final class PlaceholderTextArea extends JTextArea {
+        private final String placeholder;
+
+        PlaceholderTextArea(int rows, int columns, String placeholder) {
+            super(rows, columns);
+            this.placeholder = placeholder;
+            getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+                @Override public void insertUpdate(javax.swing.event.DocumentEvent e) { repaint(); }
+                @Override public void removeUpdate(javax.swing.event.DocumentEvent e) { repaint(); }
+                @Override public void changedUpdate(javax.swing.event.DocumentEvent e) { repaint(); }
+            });
+        }
+
+        @Override protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            if (getDocument().getLength() > 0) { return; }
+            Graphics2D g2 = (Graphics2D) g.create();
+            try {
+                g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+                g2.setFont(getFont());
+                g2.setColor(themed("TextField.placeholderForeground", Color.GRAY));
+                Insets insets = getInsets();
+                g2.drawString(placeholder, insets.left, insets.top + g2.getFontMetrics().getAscent());
+            } finally {
+                g2.dispose();
+            }
+        }
+    }
+
+    private static JPanel toolbarRow() {
+        JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, JoinedButtons.ROW_GAP, 0));
+        row.setOpaque(false);
+        return row;
+    }
+
+    private static JLabel muted(JLabel label) {
+        label.setForeground(UIManager.getColor("Label.disabledForeground"));
+        return label;
+    }
+
+    private static Color themed(String key, Color fallback) {
+        Color color = UIManager.getColor(key);
+        return color != null ? color : fallback;
+    }
+
     public JPanel getContent() { return content; }
 
     private void append(String text) {
@@ -703,12 +825,17 @@ public final class LLMTab implements AutoCloseable {
         dialog.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override public void windowClosing(java.awt.event.WindowEvent e) { onCancel.run(); }
         });
+        link.setFont(ConsoleFonts.mono(Font.PLAIN, ConsoleFonts.baseSize()));
+        link.setMargin(new Insets(6, 8, 6, 8));
         JButton cancel = new JButton("Cancel sign-in");
         cancel.addActionListener(e -> { onCancel.run(); dialog.dispose(); });
-        JPanel panel = new JPanel(new BorderLayout(8, 8));
+        JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        footer.add(new JoinedButtons(cancel));
+        JPanel panel = new JPanel(new BorderLayout(0, 12));
+        panel.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
         panel.add(new JLabel("Open this sign-in link in your browser, or cancel sign-in:"), BorderLayout.NORTH);
         panel.add(new JScrollPane(link), BorderLayout.CENTER);
-        panel.add(cancel, BorderLayout.SOUTH);
+        panel.add(footer, BorderLayout.SOUTH);
         dialog.setContentPane(panel);
         dialog.pack();
         dialog.setLocationRelativeTo(content);

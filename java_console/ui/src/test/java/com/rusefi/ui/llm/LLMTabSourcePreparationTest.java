@@ -2,7 +2,7 @@ package com.rusefi.ui.llm;
 
 import com.rusefi.core.net.ConnectionAndMeta.DownloadProgressListener;
 import com.rusefi.io.LinkManager;
-import com.rusefi.ui.widgets.tune.CalibrationFieldFactory;
+import com.rusefi.ui.widgets.JoinedButtons;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -97,40 +97,38 @@ class LLMTabSourcePreparationTest {
         assertEquals(0, sources.downloads.get());
     }
 
-    @Test void troubleshootingInputsAndButtonsUseTuningFieldStyle() throws Exception {
+    @Test void troubleshootingInputsAndButtonsUseConsoleToolbarStyle() throws Exception {
         sources.cached = true;
         open();
         await(() -> button("Continue with ChatGPT") != null && button("Continue with ChatGPT").isEnabled());
         edt(() -> {
+            Font themeButtonFont = new JButton().getFont();
             int styledButtons = 0;
             for (String label : new String[]{"Continue with ChatGPT", "Sign out", "Cancel sign-in", "Send", "Stop",
                     "New conversation", "Resume", "Delete session"}) {
                 JButton actual = button(label);
                 assertNotNull(actual, label);
-                JButton expected = new JButton();
-                CalibrationFieldFactory.applyStyle(expected);
-                assertEquals(expected.getFont(), actual.getFont(), label + " font");
+                if (!"Send".equals(label)) {
+                    // the primary Send button gets its bold font from the theme style class
+                    assertEquals(themeButtonFont, actual.getFont(), label + " font");
+                }
                 styledButtons++;
             }
             assertEquals(8, styledButtons);
+            assertEquals(JoinedButtons.HEIGHT, button("Send").getPreferredSize().height);
             List<?> combos = visible(JComboBox.class);
             assertEquals(3, combos.size());
-            int[] intendedWidths = {500, 250, 500};
+            int[] intendedWidths = {320, 220, 360};
+            Font themeComboFont = new JComboBox<>().getFont();
             for (int i = 0; i < combos.size(); i++) {
                 JComboBox<?> combo = (JComboBox<?>) combos.get(i);
-                JComboBox<?> expected = new JComboBox<>();
-                CalibrationFieldFactory.applyStyle(expected);
-                assertEquals(expected.getFont(), combo.getFont());
+                assertEquals(themeComboFont, combo.getFont());
                 assertEquals(intendedWidths[i], combo.getPreferredSize().width);
-                assertEquals(expected.getPreferredSize().height, combo.getPreferredSize().height);
+                assertEquals(JoinedButtons.HEIGHT, combo.getPreferredSize().height);
             }
             JTextArea prompt = visible(JTextArea.class).stream().filter(area -> "Message to ChatGPT".equals(
                     area.getAccessibleContext().getAccessibleName())).findFirst().orElseThrow();
-            JTextArea expectedPrompt = new JTextArea();
-            expectedPrompt.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
-            CalibrationFieldFactory.applyStyle(expectedPrompt);
-            assertEquals(expectedPrompt.getFont(), prompt.getFont());
-            assertEquals(Font.MONOSPACED, prompt.getFont().getFamily());
+            assertEquals(new JTextArea().getFont(), prompt.getFont());
             return null;
         });
     }
