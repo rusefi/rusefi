@@ -95,7 +95,7 @@
 ! @@XXX_e_enum@@ is using the enum options defined above
 !
 ! "custom NEW_TYPE_NAME 1 bits, U08, @OFFSET@, [0:1], @@can_baudrate_e_enum@@" defines NEW_TYPE_NAME
-! and "can_baudrate_e canBaudRate; set can_baudrate" creates a parameter of that custom type "can_baudrate_e"
+! and "can_baudrate_e canBaudRate" creates a parameter of that custom type "can_baudrate_e"
 !
 !
 ! bit bitName,"true value","false value";Tooltip text
@@ -427,7 +427,7 @@ end_struct
 custom UiMode 1 bits, S08, @OFFSET@, [0:1], @@UiMode_enum@@
 
 struct cranking_parameters_s
-int16_t rpm;This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. \nset cranking_rpm X;"RPM", 1, 0, 0, 12000, 0
+int16_t rpm;This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm.;"RPM", 1, 0, 0, 12000, 0
 end_struct
 
 #define debug_mode_e_enum "INVALID", "TPS acceleration enrichment", "INVALID", "Stepper Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "INVALID", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "INVALID", "ETB Autotune", "Composite Log", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "INVALID", "TCU", "Lua"
@@ -550,13 +550,13 @@ struct ThermistorConf
 end_struct
 
 custom engine_type_e 2 bits, U16, @OFFSET@, [0:6], @@engine_type_e_auto_enum@@
-engine_type_e engineType;http://rusefi.com/wiki/index.php?title=Manual:Engine_Type\nset engine_type X
+engine_type_e engineType;http://rusefi.com/wiki/index.php?title=Manual:Engine_Type
 
 uint16_t startButtonSuppressOnStartUpMs
 
 uint16_t launchRpm;The target engine speed (RPM) to maintain during launch.;"rpm", 1, 0, 0, 20000, 0
-uint16_t rpmHardLimit;set rpm_hard_limit X;"rpm", 1, 0, 0, 20000, 0
-uint16_t engineSnifferRpmThreshold;Engine sniffer would be disabled above this rpm\nset engineSnifferRpmThreshold X;"RPM", 1, 0, 0, 30000, 0
+uint16_t rpmHardLimit;;"rpm", 1, 0, 0, 20000, 0
+uint16_t engineSnifferRpmThreshold;Engine sniffer would be disabled above this rpm;"RPM", 1, 0, 0, 30000, 0
 
 	bit ltitEnabled,"yes","no";Enable LTIT (Long Term Idle Trim) learning
 	bit useMetricOnInterface,"Metric","Imperial"
@@ -747,10 +747,10 @@ injection_mode_e injectionMode;This is where the fuel injection type is defined:
 
 include_file controllers/actuators/boost_control_engineConfiguration.txt
 
-angle_t crankingTimingAngle;Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.\nThere is tapering towards running timing advance\nset cranking_timing_angle X;"deg", 1, 0, -30, 30, 0
+angle_t crankingTimingAngle;Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.\nThere is tapering towards running timing advance;"deg", 1, 0, -30, 30, 0
 
 custom ignition_mode_e 1 bits, U08, @OFFSET@, [0:1], "Single Coil", "Individual Coils", "Wasted Spark", "Two Distributors"
-ignition_mode_e ignitionMode;Single coil = distributor\nIndividual coils = one coil per cylinder (COP, coil-near-plug), requires sequential mode\nWasted spark = Fires pairs of cylinders together, either one coil per pair of cylinders or one coil per cylinder\nTwo distributors = A pair of distributors, found on some BMW, Toyota and other engines\nset ignition_mode X
+ignition_mode_e ignitionMode;Single coil = distributor\nIndividual coils = one coil per cylinder (COP, coil-near-plug), requires sequential mode\nWasted spark = Fires pairs of cylinders together, either one coil per pair of cylinders or one coil per cylinder\nTwo distributors = A pair of distributors, found on some BMW, Toyota and other engines
 
 int8_t gapTrackingLengthOverride;How many consecutive gap rations have to match expected ranges for sync to happen;"count", 1, 0, 1, @@GAP_TRACKING_LENGTH@@, 0
  uint8_t maxIdleVss;Above this speed, disable closed loop idle control. Set to 0 to disable (allow closed loop idle at any speed).;{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KMH_TO_MPH@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 100 : 62}, 0
@@ -1195,11 +1195,11 @@ end_struct
 	bit fuelClosedLoopCorrectionEnabled,"enabled","disabled";Enables lambda sensor closed loop feedback for fuelling.
 	bit alwaysWriteSdCard,"yes","no";Write SD card log even when powered by USB
 	bit knockDetectionUseDoubleFrequency,"second harmonic","first harmonic";Second harmonic (aka double) is usually quieter background noise
-	bit yesUnderstandLocking,"yes","no";Unlocking only via rusEFI console using 'unlock PICODEBUG' command. Use 'reset to default firmware' if pincode is lost.
+	bit yesUnderstandLocking,"yes","no";Unlocking only via rusEFI console. Use 'reset to default firmware' if pincode is lost.
 	bit silentTriggerError,"don't print","print";Sometimes we have a performance issue while printing error
 	bit useLinearCltSensor,"yes","no"
-	bit canReadEnabled,"enable","disable";enable can_read/disable can_read
-	bit canWriteEnabled,"enable","disable";enable can_write/disable can_write. See also can1ListenMode
+	bit canReadEnabled,"enable","disable"
+	bit canWriteEnabled,"enable","disable";See also can1ListenMode
 	bit useLinearIatSensor,"yes","no"
 	bit enableOilPressureProtect,"yes","no"
 	bit tachPulseDurationAsDutyCycle,"Duty cycle","Constant time";Treat milliseconds value as duty cycle value, i.e. 0.5ms would become 50%
@@ -1275,7 +1275,7 @@ pin_input_mode_e sdLogTriggerPinMode;
 
 	int16_t acIdleRpmTarget;Idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.;"RPM", 1, 0, 0, 2000, 0
 
-	int16_t warningPeriod;set warningPeriod X;"seconds", 1, 0, 0, 60, 0
+	int16_t warningPeriod;;"seconds", 1, 0, 0, 60, 0
 
 	float knockDetectionWindowStart;;"angle", 1, 0, -1000, 1000, 2
 
