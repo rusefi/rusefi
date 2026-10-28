@@ -5,6 +5,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.ShortcutsHelper;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.UIContext;
+import com.rusefi.ui.basic.UiHelper;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.ConsoleFonts;
 import org.jetbrains.annotations.NotNull;
@@ -41,9 +42,6 @@ import java.awt.event.KeyEvent;
 public class LuaTextEditor {
     /** Share of the ECU's script space from which the size turns amber. */
     static final double NEAR_LIMIT = 0.9;
-    private static final Color CURRENT_LINE = new Color(0xF2F5FA);
-    /** Console.Status.pending.foreground of the light theme, for when no theme is installed. */
-    private static final Color NEAR_LIMIT_FALLBACK = new Color(0xB45309);
     private final JPanel area = new JPanel(new BorderLayout());
     private final RSyntaxTextArea textArea = new RSyntaxTextArea();
     private final JLabel sizeLabel = new JLabel();
@@ -62,7 +60,7 @@ public class LuaTextEditor {
         textArea.setToolTipText("Edit Lua script; Ctrl+Z to undo, Ctrl+Y to redo, Ctrl+Space for completions");
         // the console's monospaced font; the logical Monospaced font is Courier New on Windows
         textArea.setFont(ConsoleFonts.mono(Font.PLAIN, ConsoleFonts.baseSize()));
-        textArea.setCurrentLineHighlightColor(CURRENT_LINE);
+        textArea.setCurrentLineHighlightColor(themed("Console.Lua.currentLine", new Color(0xF2F5FA)));
 		textArea.requestFocusInWindow();
 
         AbstractDocument pDoc = (AbstractDocument) textArea.getDocument();
@@ -100,6 +98,9 @@ public class LuaTextEditor {
 
         RTextScrollPane textAreaScroll = new RTextScrollPane(textArea, true);
         textAreaScroll.setBorder(BorderFactory.createEmptyBorder());
+        if (UiHelper.isDarkTheme()) {
+            applyDarkSyntaxTheme(textAreaScroll);
+        }
         Gutter gutter = textAreaScroll.getGutter();
         gutter.setLineNumberFont(textArea.getFont());
         gutter.setLineNumberColor(muted());
@@ -153,8 +154,8 @@ public class LuaTextEditor {
     void showSize(int length, int limit) {
         sizeLabel.setText(String.format("%d / %d bytes", length, limit));
         // amber once the script is close to what the ECU can store
-        Color warning = UIManager.getColor("Console.Status.pending.foreground");
-        sizeLabel.setForeground(length >= limit * NEAR_LIMIT ? (warning != null ? warning : NEAR_LIMIT_FALLBACK) : muted());
+        sizeLabel.setForeground(length >= limit * NEAR_LIMIT
+            ? themed("Console.Status.pending.foreground", new Color(0xB45309)) : muted());
     }
 
     private void updateLocation() {
@@ -173,6 +174,11 @@ public class LuaTextEditor {
 
     JLabel getSizeLabel() {
         return sizeLabel;
+    }
+
+    private static Color themed(String key, Color fallback) {
+        Color color = UIManager.getColor(key);
+        return color != null ? color : fallback;
     }
 
     private static Color muted() {
@@ -257,4 +263,24 @@ public class LuaTextEditor {
         }
     }
 
+
+    /**
+     * [tag:console_dark_mode] RSyntaxTextArea's bundled dark scheme for the Lua tokens, on the console's own
+     * dark editor and gutter background. The theme also sets a default font, so the console font goes back.
+     */
+    private void applyDarkSyntaxTheme(RTextScrollPane scroll) {
+        Font font = textArea.getFont();
+        try (java.io.InputStream in = RSyntaxTextArea.class.getResourceAsStream("/org/fife/ui/rsyntaxtextarea/themes/dark.xml")) {
+            if (in != null) {
+                org.fife.ui.rsyntaxtextarea.Theme.load(in).apply(textArea);
+            }
+        } catch (java.io.IOException e) {
+            // keep the default token colours on the dark background
+        }
+        textArea.setFont(font);
+        Color background = themed("Console.Lua.background", textArea.getBackground());
+        textArea.setBackground(background);
+        textArea.setCurrentLineHighlightColor(themed("Console.Lua.currentLine", textArea.getCurrentLineHighlightColor()));
+        scroll.getGutter().setBackground(background);
+    }
 }

@@ -237,7 +237,7 @@ final class PinoutDrawing extends JPanel {
         if (mode == ColorMode.TUNE_USE && pin.use() == PinoutPin.Use.FREE) {
             return themed("Console.Pinout.used", new Color(0x2563eb));
         }
-        return PinColors.isLight(fill) ? new Color(0x1f2937) : Color.WHITE;
+        return PinColors.isLight(fill) ? new Color(0x1f2937) : Color.WHITE; // [tag:fixed_color] picked for the pin colour
     }
 
     static Color themed(String key, Color fallback) {
@@ -316,7 +316,7 @@ final class PinoutDrawing extends JPanel {
             Ellipse2D circle = new Ellipse2D.Double(cx - r, cy - r, 2 * r, 2 * r);
             if (!faded) {
                 // a soft shadow lifts the marker off the line art
-                g.setColor(new Color(21, 26, 33, 50));
+                g.setColor(new Color(21, 26, 33, 50)); // [tag:fixed_color] soft shadow
                 g.fill(new Ellipse2D.Double(cx - r, cy - r + 1.5, 2 * r, 2 * r));
             }
             Color[] fills = fills(pin, mode);
@@ -343,17 +343,17 @@ final class PinoutDrawing extends JPanel {
             }
             if (dashed(pin, mode)) {
                 g.setColor(mode == ColorMode.TUNE_USE ? themed("Console.Pinout.used", new Color(0x2563eb))
-                        : new Color(0x9ca3af));
+                        : new Color(0x9ca3af)); // [tag:fixed_color] dashed rim of a free pin on the artwork
                 g.setStroke(new BasicStroke(2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 1f,
                         new float[]{3f, 2.5f}, 0f));
             } else {
                 boolean whiteFill = PinColors.isLight(fills[0]) && fills[0].getRed() > 240;
-                g.setColor(whiteFill ? new Color(0x9ca3af) : Color.WHITE);
+                g.setColor(whiteFill ? new Color(0x9ca3af) : Color.WHITE); // [tag:fixed_color] rim on the pin colour
                 g.setStroke(new BasicStroke(2f));
             }
             g.draw(circle);
             if (pin.name.equals(selected)) {
-                g.setColor(Color.WHITE);
+                g.setColor(Color.WHITE); // [tag:fixed_color] halo between pin and selection ring
                 g.setStroke(new BasicStroke(3f));
                 g.draw(new Ellipse2D.Double(cx - r - 2.5, cy - r - 2.5, 2 * r + 5, 2 * r + 5));
                 g.setColor(themed("Console.Pinout.selection", new Color(0x2563eb)));
@@ -369,8 +369,7 @@ final class PinoutDrawing extends JPanel {
 
     /** {@code share} of {@code to} mixed into {@code from}. */
     private static Color mix(Color from, Color to, float share) {
-        return new Color(
-                Math.round(from.getRed() + (to.getRed() - from.getRed()) * share),
+        return new Color(Math.round(from.getRed() + (to.getRed() - from.getRed()) * share),
                 Math.round(from.getGreen() + (to.getGreen() - from.getGreen()) * share),
                 Math.round(from.getBlue() + (to.getBlue() - from.getBlue()) * share));
     }
@@ -426,7 +425,7 @@ final class PinoutDrawing extends JPanel {
         x = Math.max(4, Math.min(getWidth() - CARD_WIDTH - 4, x));
         y = Math.max(4, Math.min(getHeight() - height - 4, y));
 
-        g2.setColor(new Color(21, 26, 33, 40));
+        g2.setColor(new Color(21, 26, 33, 40)); // [tag:fixed_color] soft shadow
         g2.fillRoundRect(x + 1, y + 3, CARD_WIDTH, height, 12, 12);
         g2.setColor(themed("Console.Card.background", Color.WHITE));
         g2.fillRoundRect(x, y, CARD_WIDTH, height, 12, 12);
@@ -463,7 +462,7 @@ final class PinoutDrawing extends JPanel {
                 g2.setColor(wire[1]);
                 g2.fillRoundRect(sx + sw / 2, sy, sw / 2, sh, 3, 3);
             }
-            g2.setColor(new Color(0xc7ccd4));
+            g2.setColor(PinoutConnectorPage.swatchBorder());
             g2.drawRoundRect(sx, sy, sw, sh, 3, 3);
         }
 

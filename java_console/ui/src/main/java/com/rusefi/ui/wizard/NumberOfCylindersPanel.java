@@ -24,7 +24,7 @@ public class NumberOfCylindersPanel extends AbstractWizardStep {
     private final JPanel overlayPanel = new JPanel() {
         @Override
         protected void paintComponent(Graphics g) {
-            g.setColor(new Color(0, 0, 0, 150));
+            g.setColor(new Color(0, 0, 0, 150)); // [tag:fixed_color] black scrim in every theme
             g.fillRect(0, 0, getWidth(), getHeight());
             super.paintComponent(g);
         }
@@ -49,7 +49,7 @@ public class NumberOfCylindersPanel extends AbstractWizardStep {
         });
 
         JLabel messageLabel = new JLabel();
-        messageLabel.setForeground(Color.WHITE);
+        messageLabel.setForeground(Color.WHITE); // [tag:fixed_color] on the black scrim
         scale(messageLabel, 2);
         overlayPanel.add(messageLabel);
 

@@ -51,9 +51,14 @@ public class TuneOperationStatusPanel {
         return content;
     }
 
+    private static Color themed(String key, Color fallback) {
+        Color color = UIManager.getColor(key);
+        return color != null ? color : fallback;
+    }
+
     public void showProgress(String message) {
         result.setText(message);
-        result.setForeground(Color.DARK_GRAY);
+        result.setForeground(themed("Console.Overlay.foreground", Color.DARK_GRAY));
         progress.setString(message);
         progress.setVisible(true);
         copyLog.setVisible(false);
@@ -62,7 +67,8 @@ public class TuneOperationStatusPanel {
 
     public void showResult(String successMessage, String failureMessage, boolean failed) {
         result.setText(failed ? failureMessage : successMessage);
-        result.setForeground(failed ? Color.RED.darker() : new Color(0, 128, 0));
+        result.setForeground(failed ? themed("Console.Overlay.bad", Color.RED.darker())
+            : themed("Console.Overlay.good", new Color(0, 128, 0)));
         progress.setVisible(false);
         copyLog.setVisible(failed);
         continueButton.setVisible(true);

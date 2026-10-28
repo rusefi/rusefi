@@ -20,9 +20,6 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
 
     // soft tints of the console's status colours [tag:console_theme]: still clearly
     // success / failure / warning, without saturated backgrounds behind the text
-    private static final Color LIGHT_RED = new Color(0xFBE0E0);
-    private static final Color LIGHT_GREEN = new Color(0xDCF5E3);
-    private static final Color LIGHT_YELLOW = new Color(0xFDF0D5);
     private final JTextArea logTextArea = new JTextArea();
     private final JLabel bottomStatusLabel = new JLabel();
 
@@ -47,7 +44,7 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
     }
 
     public void setErrorState() {
-        logTextArea.setBackground(LIGHT_RED);
+        logTextArea.setBackground(failureBackground());
         copyContentToClipboard();
     }
 
@@ -63,11 +60,11 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
 
     @Override
     public void warning() {
-        SwingUtilities.invokeLater(() -> logTextArea.setBackground(LIGHT_YELLOW));
+        SwingUtilities.invokeLater(() -> logTextArea.setBackground(themed("Console.Log.warningBackground", new Color(0xFDF0D5))));
     }
 
     public void setSuccessState() {
-        logTextArea.setBackground(LIGHT_GREEN);
+        logTextArea.setBackground(themed("Console.Log.successBackground", new Color(0xDCF5E3)));
     }
 
     public void copyContentToClipboard() {
@@ -90,10 +87,19 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
         });
     }
 
+    private static Color failureBackground() {
+        return themed("Console.Log.failureBackground", new Color(0xFBE0E0));
+    }
+
+    private static Color themed(String key, Color fallback) {
+        Color color = UIManager.getColor(key);
+        return color != null ? color : fallback;
+    }
+
     @Override
     public void clear() {
         logTextArea.setText("");
-        logTextArea.setBackground(Color.WHITE);
+        logTextArea.setBackground(themed("Console.Log.background", Color.WHITE));
         logLine("Console version " + UiVersion.CONSOLE_VERSION);
         log.info(OsUtil.getOsName() + " " + System.getProperty("os.version"));
         logLine("Bundle " + BundleUtil.readBundleFullNameNotNull());
@@ -125,6 +131,6 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
     }
 
     public boolean isInErrorState() {
-        return LIGHT_RED.equals(logTextArea.getBackground());
+        return failureBackground().equals(logTextArea.getBackground());
     }
 }

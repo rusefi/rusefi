@@ -133,6 +133,15 @@ public class ThemeParityTest {
             check(failures, "Console.Tuning.surface.axis", "Console.Tuning.surface.background", TEXT);
             check(failures, "Console.Tuning.noteForeground", "Panel.background", TEXT);
             check(failures, "Console.ErrorText.foreground", "TextField.background", GRAPHIC);
+            // Messages, Lua editor, operation log, update result, SLCAN mixed checkbox
+            check(failures, "TextPane.foreground", "Console.Messages.background", TEXT);
+            check(failures, "TextArea.foreground", "Console.Lua.background", TEXT);
+            check(failures, "TextArea.foreground", "Console.Lua.currentLine", TEXT);
+            for (String log : new String[]{"background", "successBackground", "warningBackground", "failureBackground"}) {
+                check(failures, "TextArea.foreground", "Console.Log." + log, TEXT);
+            }
+            check(failures, "Console.Overlay.warning", "Panel.background", TEXT);
+            check(failures, "CheckBox.foreground", "Console.Checkbox.mixedBackground", TEXT);
             for (String tone : new String[]{"neutral", "accent"}) {
                 String key = "Console.Status." + tone + ".";
                 check(failures, key + "foreground", key + "background", TEXT);
@@ -146,7 +155,8 @@ public class ThemeParityTest {
      * look stays pinned by LightThemeSnapshotTest. Green #15803d on #e7f6ec measures 4.49:1; the classic
      * pure red error text #ff0000 measures 3.67:1 on the page and 4.00:1 on white; the live graph's amber
      * line #e0a100 measures 2.27:1 on the white card, with the tinted area under it; a round dial's orange
-     * warning numbers #e65100 measure 2.56:1 on its warning fill #ffcc80.
+     * warning numbers #e65100 measure 2.56:1 on its warning fill #ffcc80; the firmware update result's amber
+     * warning text #a06400 measures 4.46:1 on the page.
      */
     private static final Set<String> KNOWN_LIGHT_EXCEPTIONS = new TreeSet<>(java.util.Arrays.asList(
         "Console.Status.connected.foreground on Console.Status.connected.background",
@@ -155,7 +165,8 @@ public class ThemeParityTest {
         "Console.ErrorText.foreground on Console.Card.background",
         "Console.ErrorText.foreground on Console.Toolbar.background",
         "Console.Gauge.graph.line on Console.Gauge.card.top",
-        "Console.Gauge.warningText on Console.Gauge.warningFill"));
+        "Console.Gauge.warningText on Console.Gauge.warningFill",
+        "Console.Overlay.warning on Panel.background"));
 
     private static void check(List<String> failures, String foreground, String background, double minimum) {
         if (!UiHelper.isDarkTheme() && KNOWN_LIGHT_EXCEPTIONS.contains(foreground + " on " + background)) {
