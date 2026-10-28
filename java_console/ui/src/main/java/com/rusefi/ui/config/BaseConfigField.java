@@ -70,7 +70,7 @@ public abstract class BaseConfigField {
 
         center.add(control);
 
-        panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black),
+        panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(lineColor()),
                 BorderFactory.createEmptyBorder(2, 2, 2, 2)));
         panel.add(new JLabel(topLabel), BorderLayout.WEST);
         panel.add(center, BorderLayout.CENTER);
@@ -78,6 +78,12 @@ public abstract class BaseConfigField {
 
     public JPanel getContent() {
         return panel;
+    }
+
+    /** Frame around the field: black in the light theme [tag:console_theme]. */
+    private static Color lineColor() {
+        Color line = UIManager.getColor("Console.HorizontalLine.foreground");
+        return line != null ? line : Color.BLACK;
     }
 
     @NotNull

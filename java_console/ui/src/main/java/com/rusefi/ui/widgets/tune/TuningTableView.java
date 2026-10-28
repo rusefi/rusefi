@@ -105,7 +105,7 @@ public class TuningTableView {
             }
         });
         table.getTableHeader().setReorderingAllowed(false);
-        table.setSelectionBackground(Color.ORANGE);
+        table.setSelectionBackground(Color.ORANGE); // [tag:fixed_color] selected cells, with black text, in every theme
         table.setDefaultRenderer(Object.class, new GradientRenderer());
         table.setCellSelectionEnabled(true);
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -721,7 +721,7 @@ public class TuningTableView {
             }
         } catch (NumberFormatException ignored) {
         }
-        field.setBorder(BorderFactory.createLineBorder(Color.RED));
+        field.setBorder(BorderFactory.createLineBorder(TuningStyle.color("Console.ErrorText.foreground", Color.RED)));
         field.setToolTipText("Enter a finite number, or press Esc to cancel");
         return false;
     }
@@ -1573,8 +1573,8 @@ public class TuningTableView {
                 return c;
             }
             if (isSelected) {
-                c.setBackground(Color.ORANGE);
-                c.setForeground(Color.BLACK);
+                c.setBackground(Color.ORANGE); // [tag:fixed_color] selected cell
+                c.setForeground(Color.BLACK); // [tag:fixed_color] text on the selected cell
                 return c;
             }
 

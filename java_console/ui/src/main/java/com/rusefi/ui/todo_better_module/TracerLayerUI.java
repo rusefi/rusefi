@@ -17,9 +17,9 @@ import java.awt.*;
 public class TracerLayerUI extends LayerUI<JPanel> {
 
     // --- Visual Appearance Constants ---
-    private static final Color TRACER_GLOW_COLOR = new Color(255, 128, 0, 150);
-    private static final Color TRACER_CORE_COLOR = new Color(255, 128, 0);
-    private static final Color TRACER_BORDER_COLOR = Color.WHITE;
+    private static final Color TRACER_GLOW_COLOR = new Color(255, 128, 0, 150); // [tag:fixed_color] live position marker
+    private static final Color TRACER_CORE_COLOR = new Color(255, 128, 0); // [tag:fixed_color] live position marker
+    private static final Color TRACER_BORDER_COLOR = Color.WHITE; // [tag:fixed_color] ring of the marker
 
     private static final int GLOW_SIZE = 16;
     private static final int CORE_SIZE = 10;

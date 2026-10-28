@@ -254,7 +254,7 @@ public class TriggerImageHelper {
         Color border = UIManager.getColor("Separator.foreground");
         eastPanel.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createEmptyBorder(0, 16, 0, 0),
-            new LineBorder(border == null ? Color.GRAY : border)));
+            new LineBorder(border == null ? Color.GRAY : border))); // [tag:fixed_color] mid grey shows on both
 
         eastPanel.add(triggerImagePanel);
         panel.add(eastPanel, BorderLayout.EAST);

@@ -1314,7 +1314,7 @@ public class CalibrationDialogWidget {
             mosaic.clip(unused);
             mosaic.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             boolean dark = background.getRed() + background.getGreen() + background.getBlue() < 384;
-            mosaic.setColor(dark ? Color.WHITE : new Color(45, 58, 68));
+            mosaic.setColor(dark ? Color.WHITE : new Color(45, 58, 68)); // [tag:fixed_color] picked for the background above
             final double radius = 22;
             final double rowHeight = Math.sqrt(3) * radius;
             Rectangle clip = mosaic.getClipBounds();
