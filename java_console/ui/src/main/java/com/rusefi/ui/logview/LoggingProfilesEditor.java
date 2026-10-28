@@ -993,7 +993,7 @@ public final class LoggingProfilesEditor extends JPanel {
 
     /** Colours by kind of profile: grey built-in, green recommended, amber edited, blue the user's. */
     static final class Badge extends JLabel {
-        private Color fill = Color.LIGHT_GRAY;
+        private Color fill = themed("Console.LogViewer.chipBackground", new Color(0xeef0f3));
 
         Badge() {
             setBorder(BorderFactory.createEmptyBorder(2, 9, 2, 9));

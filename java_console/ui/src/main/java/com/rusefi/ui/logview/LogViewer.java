@@ -56,7 +56,7 @@ public class LogViewer extends JPanel {
         this.uiContext = uiContext;
         this.engineSnifferPanel = engineSnifferPanel;
 
-        setBackground(Color.green);
+        setBackground(Color.green); // [tag:fixed_color] legacy file list; its console tab is disabled
 
         /**
          * scan the default folder on start-up
@@ -87,7 +87,7 @@ public class LogViewer extends JPanel {
 
         JPanel boxPanel = new JPanel();
         boxPanel.setLayout(new BoxLayout(boxPanel, BoxLayout.X_AXIS));
-        boxPanel.setBorder(BorderFactory.createLineBorder(Color.cyan));
+        boxPanel.setBorder(BorderFactory.createLineBorder(Color.cyan)); // [tag:fixed_color] legacy file list
 
         fileList.addMouseListener(new MouseAdapter() {
             @Override

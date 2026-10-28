@@ -1,9 +1,8 @@
 # Hard-coded colours per console source file, see HardcodedColorRatchetTest. Only ever lower these.
-# total=97
+# total=78
 com/rusefi/CodeWalkthrough.java=6
 com/rusefi/CommandControl.java=1
 com/rusefi/livedata/LiveDataParserPanel.java=1
-com/rusefi/ui/KnockPane.java=5
 com/rusefi/ui/LiveDataPane.java=1
 com/rusefi/ui/MessagesPaneBackgroundColor.java=3
 com/rusefi/ui/MessagesPanel.java=1
@@ -14,14 +13,6 @@ com/rusefi/ui/basic/StartupUpdateActions.java=1
 com/rusefi/ui/basic/TuneManagementTab.java=1
 com/rusefi/ui/basic/TuneOperationStatusPanel.java=2
 com/rusefi/ui/basic/UpdateFirmwareResult.java=4
-com/rusefi/ui/logview/HistogramColors.java=2
-com/rusefi/ui/logview/HistogramTable.java=2
-com/rusefi/ui/logview/LogChart.java=2
-com/rusefi/ui/logview/LogViewer.java=2
-com/rusefi/ui/logview/LoggingProfilesEditor.java=1
-com/rusefi/ui/logview/SignalColors.java=1
-com/rusefi/ui/logview/StatsPanel.java=3
-com/rusefi/ui/logview/SwatchGrid.java=1
 com/rusefi/ui/lua/LuaTextEditor.java=2
 com/rusefi/ui/util/PinColors.java=12
 com/rusefi/ui/widgets/AnyCommand.java=1
