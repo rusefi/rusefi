@@ -97,17 +97,36 @@ public class ThemeParityTest {
             check(failures, "Label.foreground", "Console.Segmented.selectedBackground", TEXT);
             check(failures, "Label.foreground", "Console.GridPicker.selectedBackground", TEXT);
             check(failures, "Console.LogViewer.mutedForeground", "Console.LogViewer.sidebar.background", TEXT);
+            // window frame: full-window messages, banner, links and error lines
+            for (String overlay : new String[]{"foreground", "good", "bad"}) {
+                check(failures, "Console.Overlay." + overlay, "Panel.background", TEXT);
+            }
+            check(failures, "Console.Link.foreground", "Console.InstallerBanner.background", TEXT);
+            for (String background : page) {
+                check(failures, "Console.Link.foreground", background, TEXT);
+                check(failures, "Console.ErrorText.foreground", background, TEXT);
+            }
+            check(failures, "Console.HorizontalLine.foreground", "Panel.background", GRAPHIC);
+            check(failures, "Console.Announcement.borderColor", "Panel.background", GRAPHIC);
+            for (String tone : new String[]{"neutral", "accent"}) {
+                String key = "Console.Status." + tone + ".";
+                check(failures, key + "foreground", key + "background", TEXT);
+            }
         });
         assertTrue(failures.isEmpty(), (dark ? "dark" : "light") + " theme:\n" + String.join("\n", failures));
     }
 
     /**
      * Light pairs that are known to sit just under the minimum and are kept as they are, so that the light
-     * look stays pinned by LightThemeSnapshotTest. Green #15803d on #e7f6ec measures 4.49:1.
+     * look stays pinned by LightThemeSnapshotTest. Green #15803d on #e7f6ec measures 4.49:1; the classic
+     * pure red error text #ff0000 measures 3.67:1 on the page and 4.00:1 on white.
      */
     private static final Set<String> KNOWN_LIGHT_EXCEPTIONS = new TreeSet<>(java.util.Arrays.asList(
         "Console.Status.connected.foreground on Console.Status.connected.background",
-        "Console.Wizard.success.foreground on Console.Wizard.success.background"));
+        "Console.Wizard.success.foreground on Console.Wizard.success.background",
+        "Console.ErrorText.foreground on Panel.background",
+        "Console.ErrorText.foreground on Console.Card.background",
+        "Console.ErrorText.foreground on Console.Toolbar.background"));
 
     private static void check(List<String> failures, String foreground, String background, double minimum) {
         if (!UiHelper.isDarkTheme() && KNOWN_LIGHT_EXCEPTIONS.contains(foreground + " on " + background)) {

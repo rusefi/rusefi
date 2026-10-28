@@ -19,9 +19,9 @@ public class StatusChip extends JLabel {
         /** Unavailable, e.g. "Not connected". */
         BAD("disconnected", "#dc2626", "#fdecec", "#b91c1c"),
         /** Idle, e.g. "Stopped". */
-        NEUTRAL(null, "#9aa3af", "#eef0f3", "#586273"),
+        NEUTRAL("neutral", "#9aa3af", "#eef0f3", "#586273"),
         /** Points at what the user is inspecting, e.g. "At cursor". */
-        ACCENT(null, "#2563eb", "#dbeafe", "#1d4ed8");
+        ACCENT("accent", "#2563eb", "#dbeafe", "#1d4ed8");
 
         private final String key;
         private final Color dot;
@@ -36,7 +36,7 @@ public class StatusChip extends JLabel {
         }
 
         private Color themed(String part, Color fallback) {
-            Color c = key == null ? null : UIManager.getColor("Console.Status." + key + "." + part);
+            Color c = UIManager.getColor("Console.Status." + key + "." + part);
             return c != null ? c : fallback;
         }
     }
