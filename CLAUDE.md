@@ -536,10 +536,19 @@ height; re-evaluate after ancestor resize/layout as well as local resize.
 
 The console's FlatLaf look is defined in `java_console/ui/src/main/resources/com/rusefi/ui/theme/`
 (`[tag:console_theme]`, registered in `UiHelper.configureLaf()`): `FlatLaf.properties` for
-sizes/shapes shared by all themes, `FlatLightLaf.properties` (and a future
-`FlatDarkLaf.properties`) for palette variables and colour keys. Do not put colour keys in the
-shared file: FlatLaf's built-in `FlatLightLaf.properties` assigns most of them and wins. Add new
-look settings there rather than as `UIManager.put` calls, so they follow the active theme.
+sizes/shapes shared by all themes, `FlatLightLaf.properties` and `FlatDarkLaf.properties` for
+palette variables and colour keys. Do not put colour keys in the shared file: FlatLaf's built-in
+`FlatLightLaf.properties` assigns most of them and wins. Add new look settings there rather than
+as `UIManager.put` calls, so they follow the active theme.
+The dark theme (`[tag:console_dark_mode]`) is incomplete and only reachable with
+`-Dconsole.theme=dark`. Every new colour key goes into both theme files (`ThemeParityTest` checks
+equal key sets and contrast). `LightThemeSnapshotTest` pins every resolved light colour, so a
+refactor of the theme files must leave it green; an intended light change updates
+`light-theme-snapshot.txt` from the copy the failing run writes to `ui/build/console-theme/`.
+`tint()` mixes with white and glows on dark backgrounds: the dark file uses `shade()` instead.
+Hard-coded `Color` values in `ui/src/main/java` are counted by `HardcodedColorRatchetTest`
+(`[tag:fixed_color]`): take colours from the theme, or mark one that must look the same in every
+theme with that tag and a reason; lower `hardcoded-colors-baseline.txt` when removing them.
 Java's logical `Font.MONOSPACED` renders as Courier New on Windows; use `ConsoleFonts.mono()` for
 monospaced console text. Toolbar controls share `JoinedButtons.HEIGHT` so a row lines up.
 For a rounded panel, set a `FlatLineBorder` with an arc: `FlatPanelUI` then paints the background

@@ -3,6 +3,7 @@ package com.rusefi.ui.basic;
 import com.rusefi.core.OsUtil;
 
 import com.devexperts.logging.Logging;
+import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.rusefi.FileLog;
@@ -15,6 +16,7 @@ import static com.devexperts.logging.Logging.getLogging;
 public class UiHelper {
     private static final Logging log = getLogging(UiHelper.class);
     static final String THEME_PACKAGE = "com.rusefi.ui.theme";
+    static final String THEME_PROPERTY = "console.theme";
     private static boolean themeRegistered;
 
     public static void commonUiStartup() {
@@ -31,8 +33,30 @@ public class UiHelper {
     }
 
     public static void configureLaf() {
+        configureLaf(isDarkThemeRequested());
+    }
+
+    /**
+     * [tag:console_dark_mode] Developer switch until the dark theme is finished: start the console with
+     * -Dconsole.theme=dark. Anything else, including a missing property, keeps the light theme.
+     */
+    static boolean isDarkThemeRequested() {
+        try {
+            return "dark".equalsIgnoreCase(System.getProperty(THEME_PROPERTY, "").trim());
+        } catch (SecurityException e) {
+            return false;
+        }
+    }
+
+    /** True while the dark console theme is installed. */
+    public static boolean isDarkTheme() {
+        return FlatLaf.isLafDark();
+    }
+
+    public static void configureLaf(boolean dark) {
         // [tag:console_theme] Sizes, shapes and per-theme colours live in the .properties
-        // files of this package, so a dark theme only needs its own FlatDarkLaf.properties.
+        // files of this package: FlatLaf.properties for both themes, then FlatLightLaf.properties
+        // or FlatDarkLaf.properties for the one installed.
         if (!themeRegistered) {
             FlatLaf.registerCustomDefaultsSource(THEME_PACKAGE, UiHelper.class.getClassLoader());
             themeRegistered = true;
@@ -42,8 +66,10 @@ public class UiHelper {
         JFrame.setDefaultLookAndFeelDecorated(true);
         JDialog.setDefaultLookAndFeelDecorated(true);
 
-        // console messages/status areas are not ready for FlatDarkLaf - colors are weird
-        FlatLightLaf.setup();
+        // a failed dark setup falls back to the light theme rather than to stock Swing
+        if (!dark || !FlatDarkLaf.setup()) {
+            FlatLightLaf.setup();
+        }
     }
 
     // Lets tests remove the console theme so it does not leak into other tests in the same JVM.
