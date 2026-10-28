@@ -201,16 +201,20 @@ public class IndicatorPanel {
         return t;
     }
 
+    /**
+     * The colour an INI indicator names, used when the theme has no Console.Tuning.indicator.* chip for
+     * it (TuningStyle.indicatorColors). These are the INI's own colours. [tag:fixed_color]
+     */
     static Color parseColor(String name) {
-        if (name == null) return Color.LIGHT_GRAY;
+        if (name == null) return Color.LIGHT_GRAY; // [tag:fixed_color] INI colour
         switch (name.toLowerCase().trim()) {
-            case "white":  return Color.WHITE;
-            case "black":  return Color.BLACK;
-            case "red":    return Color.RED;
-            case "yellow": return Color.YELLOW;
-            case "green":  return Color.GREEN;
-            case "blue":   return Color.BLUE;
-            default:       return Color.LIGHT_GRAY;
+            case "white":  return Color.WHITE; // [tag:fixed_color] INI colour
+            case "black":  return Color.BLACK; // [tag:fixed_color] INI colour
+            case "red":    return Color.RED; // [tag:fixed_color] INI colour
+            case "yellow": return Color.YELLOW; // [tag:fixed_color] INI colour
+            case "green":  return Color.GREEN; // [tag:fixed_color] INI colour
+            case "blue":   return Color.BLUE; // [tag:fixed_color] INI colour
+            default:       return Color.LIGHT_GRAY; // [tag:fixed_color] INI colour
         }
     }
 }

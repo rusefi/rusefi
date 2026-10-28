@@ -2,11 +2,14 @@ package com.rusefi.ui.widgets.tune;
 
 import java.awt.Color;
 
-/** Shared value colors and readable text for calibration editors and previews. */
+/**
+ * Shared value colors and readable text for calibration editors and previews. Value colours mean the
+ * same in every theme, and each cell picks black or white text for its own colour. [tag:fixed_color]
+ */
 final class CalibrationColorPalette {
-    static final Color LOW = new Color(0x24557A);
-    static final Color MIDDLE = new Color(0x59636D);
-    static final Color HIGH = new Color(0xC47A20);
+    static final Color LOW = new Color(0x24557A); // [tag:fixed_color] value colour
+    static final Color MIDDLE = new Color(0x59636D); // [tag:fixed_color] value colour
+    static final Color HIGH = new Color(0xC47A20); // [tag:fixed_color] value colour
 
     private CalibrationColorPalette() {
     }
@@ -22,7 +25,7 @@ final class CalibrationColorPalette {
         int red = (int) Math.round(start.getRed() + blend * (end.getRed() - start.getRed()));
         int green = (int) Math.round(start.getGreen() + blend * (end.getGreen() - start.getGreen()));
         int blue = (int) Math.round(start.getBlue() + blend * (end.getBlue() - start.getBlue()));
-        return new Color(red, green, blue);
+        return new Color(red, green, blue); // [tag:fixed_color] blend of the value colours
     }
 
     static Color foreground(Color background) {
@@ -30,7 +33,7 @@ final class CalibrationColorPalette {
         double luminance = 0.2126 * linearChannel(background.getRed())
             + 0.7152 * linearChannel(background.getGreen())
             + 0.0722 * linearChannel(background.getBlue());
-        return luminance < 0.179 ? Color.WHITE : Color.BLACK;
+        return luminance < 0.179 ? Color.WHITE : Color.BLACK; // [tag:fixed_color] text for the cell colour
     }
 
     private static double linearChannel(int channel) {

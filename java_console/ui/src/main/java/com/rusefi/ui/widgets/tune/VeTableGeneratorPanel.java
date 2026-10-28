@@ -143,7 +143,7 @@ public class VeTableGeneratorPanel extends JPanel {
         JLabel siNote = new JLabel(
             "<html>Note: version 1 supports four-stroke spark-ignition engines only.<br>" +
             "Two-stroke, rotary, and other types are not supported.</html>");
-        siNote.setForeground(new Color(120, 80, 0));
+        siNote.setForeground(TuningStyle.color("Console.Tuning.noteForeground", new Color(120, 80, 0)));
         siNote.setFont(siNote.getFont().deriveFont(siNote.getFont().getSize() - 1f));
 
         c.insets = new Insets(8, 6, 4, 6);
@@ -348,12 +348,14 @@ public class VeTableGeneratorPanel extends JPanel {
                         try {
                             double val = Double.parseDouble(String.valueOf(getModel().getValueAt(row, column)));
                             if (isDelta) {
+                                // [tag:fixed_color] value cells: green/red change or blue-to-pink ramp, black text
                                 c.setBackground(val > 0.05 ? new Color(180, 230, 180) : val < -0.05 ? new Color(230, 180, 180) : Color.WHITE);
                             } else {
                                 double ratio = (max > min) ? Math.max(0, Math.min(1, (val - min) / (max - min))) : 0.5;
+                                // [tag:fixed_color] see above
                                 c.setBackground(new Color((int)(173 + ratio * 82), (int)(216 - ratio * 34), (int)(230 - ratio * 37)));
                             }
-                            c.setForeground(Color.BLACK);
+                            c.setForeground(Color.BLACK); // [tag:fixed_color] on the value cell
                         } catch (NumberFormatException ignored) {}
                     }
                 }

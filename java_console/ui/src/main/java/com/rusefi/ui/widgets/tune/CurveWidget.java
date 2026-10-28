@@ -319,6 +319,7 @@ public class CurveWidget {
         private boolean dragged = false;
 
         public CurveCanvas() {
+            // [tag:fixed_color] the curve plot is a black scope in every theme, with bright marks on it
             setBackground(Color.BLACK);
             // An empty JPanel reports a near-zero preferred width, so GridBagLayout has no canvas baseline
             // to defend while shrinking and the plot collapses to a sliver on small windows (issue #9635).
@@ -403,7 +404,7 @@ public class CurveWidget {
                 plotGraphics.dispose();
             }
 
-            g2.setColor(Color.WHITE);
+            g2.setColor(Color.WHITE); // [tag:fixed_color] on the black scope
             String title = curveTitle;
             int titleWidth = g2.getFontMetrics().stringWidth(title);
             g2.drawString(title, (getWidth() - titleWidth) / 2, 15);
@@ -423,7 +424,7 @@ public class CurveWidget {
         }
 
         public void drawGrid(Graphics2D g2) {
-            Color gridColor = new Color(200, 200, 200, 100); // light grey, semi-transparent
+            Color gridColor = new Color(200, 200, 200, 100); // light grey, semi-transparent // [tag:fixed_color] on the black scope
             g2.setStroke(new BasicStroke(0.5f));
 
             FontMetrics fm = g2.getFontMetrics();
@@ -445,7 +446,7 @@ public class CurveWidget {
                 int labelWidth = fm.stringWidth(label);
                 int labelLeft = p1.x - labelWidth / 2;
                 if (labelLeft > lastXLabelRight) {
-                    g2.setColor(Color.RED);
+                    g2.setColor(Color.RED); // [tag:fixed_color] on the black scope
                     g2.drawString(label, labelLeft, p1.y + fm.getAscent() + 2);
                     lastXLabelRight = labelLeft + labelWidth + 4; // 4px minimum gap between labels
                 }
@@ -460,7 +461,7 @@ public class CurveWidget {
                 g2.setColor(gridColor);
                 g2.drawLine(p1.x, p1.y, p2.x, p2.y);
 
-                g2.setColor(Color.RED);
+                g2.setColor(Color.RED); // [tag:fixed_color] on the black scope
                 String label = String.format(Locale.ROOT, "%." + yDigits + "f", val);
                 int labelWidth = fm.stringWidth(label);
                 g2.drawString(label, p1.x - labelWidth - 5, p1.y + fm.getAscent() / 2);
@@ -471,20 +472,20 @@ public class CurveWidget {
         private void drawCurve(Graphics2D g2) {
             if (x == null || y == null || x.length == 0) return;
 
-            g2.setColor(Color.ORANGE);
+            g2.setColor(Color.ORANGE); // [tag:fixed_color] on the black scope
             for (int i = 0; i < x.length - 1; i++) {
                 Point p1 = worldToCanvas(x[i], y[i]);
                 Point p2 = worldToCanvas(x[i + 1], y[i + 1]);
                 g2.drawLine(p1.x, p1.y, p2.x, p2.y);
             }
 
-            g2.setColor(Color.GREEN);
+            g2.setColor(Color.GREEN); // [tag:fixed_color] on the black scope
             for (int i = 0; i < x.length; i++) {
                 Point p = worldToCanvas(x[i], y[i]);
                 g2.fillOval(p.x - 4, p.y - 4, 8, 8);
             }
 
-            g2.setColor(Color.MAGENTA);
+            g2.setColor(Color.MAGENTA); // [tag:fixed_color] on the black scope
             for (int row : table.getSelectedRows()) {
                 Point p = worldToCanvas(x[row], y[row]);
                 g2.fillOval(p.x - 5, p.y - 5, 10, 10);

@@ -36,12 +36,11 @@ public class Surface3DView extends JPanel {
     /** Labels are centered on their anchor; keep room for half a label beyond the anchors. */
     static final int LABEL_HALF_WIDTH = 28;
     static final int LABEL_HALF_HEIGHT = 8;
-    private static final Color AXIS_COLOR = Color.DARK_GRAY;
-    private static final Color SELECTION_COLOR = Color.ORANGE;
-    static final Color SELECTED_POINT_COLOR = Color.BLACK;
+    private static final Color SELECTION_COLOR = Color.ORANGE; // [tag:fixed_color] lit facets, like the table selection
+    static final Color SELECTED_POINT_COLOR = Color.BLACK; // [tag:fixed_color] ringed in white below
 
     public Surface3DView() {
-        setBackground(Color.WHITE);
+        setBackground(TuningStyle.color("Console.Tuning.surface.background", Color.WHITE));
         setPreferredSize(new Dimension(400, 400));
         MouseAdapter mouseAdapter = new MouseAdapter() {
             @Override
@@ -174,7 +173,7 @@ public class Surface3DView extends JPanel {
                 int[] yPoints = {p1.y, p2.y, p3.y, p4.y};
                 g2d.fillPolygon(xPoints, yPoints, 4);
 
-                g2d.setColor(Color.DARK_GRAY);
+                g2d.setColor(Color.DARK_GRAY); // [tag:fixed_color] facet edges between value colours
                 g2d.drawPolygon(xPoints, yPoints, 4);
             }
         }
@@ -192,7 +191,7 @@ public class Surface3DView extends JPanel {
                     Point3D point = points[r][c];
                     g2d.setColor(SELECTED_POINT_COLOR);
                     g2d.fillOval(point.x - radius, point.y - radius, 2 * radius, 2 * radius);
-                    g2d.setColor(Color.WHITE);
+                    g2d.setColor(Color.WHITE); // [tag:fixed_color] ring of the selected point
                     g2d.drawOval(point.x - radius - 1, point.y - radius - 1, 2 * radius + 2, 2 * radius + 2);
                 }
             }
@@ -208,7 +207,7 @@ public class Surface3DView extends JPanel {
         Point3D xEnd = project(0.5, -0.5, -0.5, yaw, pitch, scale, centerX, centerY);
         Point3D yEnd = project(-0.5, 0.5, -0.5, yaw, pitch, scale, centerX, centerY);
         Point3D zEnd = project(-0.5, -0.5, 0.5, yaw, pitch, scale, centerX, centerY);
-        g2d.setColor(AXIS_COLOR);
+        g2d.setColor(TuningStyle.color("Console.Tuning.surface.axis", Color.DARK_GRAY));
         g2d.setStroke(new BasicStroke(1.5f));
         g2d.drawLine(origin.x, origin.y, xEnd.x, xEnd.y);
         g2d.drawLine(origin.x, origin.y, yEnd.x, yEnd.y);

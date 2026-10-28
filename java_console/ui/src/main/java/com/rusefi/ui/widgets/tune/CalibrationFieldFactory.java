@@ -47,7 +47,6 @@ public class CalibrationFieldFactory {
     private static final int HELP_PADDING = 8;
     private static final int HELP_MAX_HEIGHT = 300;
     private static final int HELP_LAYOUT_ALLOWANCE = 8;
-    private static final Color HELP_BACKGROUND = new Color(255, 255, 190);
     private static final Icon SETTING_HELP_ICON = loadHelpIcon();
     private static JPopupMenu openHelpPopup;
     private static final Pattern URL_PATTERN = Pattern.compile("https?://[^\\s<>\"']+");
@@ -234,9 +233,9 @@ public class CalibrationFieldFactory {
         JScrollPane scrollPane = createHtmlHelpScrollPane(html);
 
         JPanel content = new JPanel(new BorderLayout(4, 4));
-        content.setBackground(HELP_BACKGROUND);
+        content.setBackground(helpBackground());
         content.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(60, 90, 160), 2),
+            BorderFactory.createLineBorder(TuningStyle.color("Console.Tuning.help.borderColor", new Color(60, 90, 160)), 2),
             BorderFactory.createEmptyBorder(6, 8, 8, 8)));
         JButton close = new JButton("×");
         close.setToolTipText("Close help");
@@ -282,7 +281,7 @@ public class CalibrationFieldFactory {
         JEditorPane helpPane = new JEditorPane("text/html", html);
         helpPane.setEditable(false);
         helpPane.setOpaque(true);
-        helpPane.setBackground(HELP_BACKGROUND);
+        helpPane.setBackground(helpBackground());
         helpPane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
         helpPane.addHyperlinkListener(event -> {
             if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED && event.getURL() != null) {
@@ -315,7 +314,7 @@ public class CalibrationFieldFactory {
         scrollPane.setVerticalScrollBarPolicy(needsVerticalScroll
             ? ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED
             : ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        scrollPane.getViewport().setBackground(HELP_BACKGROUND);
+        scrollPane.getViewport().setBackground(helpBackground());
         int preferredWidth = viewportWidth + (needsVerticalScroll
             ? scrollPane.getVerticalScrollBar().getPreferredSize().width : 0);
         int preferredHeight = viewportHeight + (needsHorizontalScroll
@@ -629,10 +628,11 @@ public class CalibrationFieldFactory {
         JLabel message = new JLabel("Copied: " + copied);
         message.setOpaque(true);
         message.setBorder(BorderFactory.createCompoundBorder(
+            // [tag:fixed_color] a dark toast with white text reads the same in every theme
             BorderFactory.createLineBorder(Color.DARK_GRAY),
             BorderFactory.createEmptyBorder(4, 8, 4, 8)));
-        message.setBackground(Color.DARK_GRAY);
-        message.setForeground(Color.WHITE);
+        message.setBackground(Color.DARK_GRAY); // [tag:fixed_color] the dark toast
+        message.setForeground(Color.WHITE); // [tag:fixed_color] text on the dark toast
         Point location = label.getLocationOnScreen();
         Popup popup = PopupFactory.getSharedInstance().getPopup(label, message, location.x, location.y + label.getHeight());
         popup.show();
@@ -643,6 +643,11 @@ public class CalibrationFieldFactory {
 
     static void fixRowHeight(JPanel row) {
         row.setMaximumSize(new Dimension(Integer.MAX_VALUE, row.getPreferredSize().height + 5));
+    }
+
+    /** Background of the setting help popup [tag:console_theme]. */
+    private static Color helpBackground() {
+        return TuningStyle.color("Console.Tuning.help.background", new Color(255, 255, 190));
     }
 
     public static void applyStyle(JComponent component) {
@@ -665,11 +670,11 @@ public class CalibrationFieldFactory {
 
     static void applyBackgroundColor(JComponent component, String value) {
         if (value.startsWith(BLUE_PREFIX)) {
-            component.setBackground(Color.BLUE);
-            component.setForeground(Color.WHITE);
+            component.setBackground(Color.BLUE); // [tag:fixed_color] INI '#' label markup asks for blue
+            component.setForeground(Color.WHITE); // [tag:fixed_color] text on the INI colour
         } else if (value.startsWith(RED_PREFIX)) {
-            component.setBackground(Color.RED);
-            component.setForeground(Color.WHITE);
+            component.setBackground(Color.RED); // [tag:fixed_color] INI '!' label markup asks for red
+            component.setForeground(Color.WHITE); // [tag:fixed_color] text on the INI colour
         }
     }
 

@@ -126,6 +126,13 @@ public class ThemeParityTest {
             check(failures, "Console.Gauge.graph.line", "Console.Gauge.card.top", GRAPHIC);
             check(failures, "Console.Gauge.edit.accent", "Panel.background", GRAPHIC);
             check(failures, "Console.Gauge.detached.close", "Console.Gauge.detached.background", GRAPHIC);
+            // Tuning: setting help popup, 3D view axes and labels, generator notes
+            check(failures, "Label.foreground", "Console.Tuning.help.background", TEXT);
+            check(failures, "EditorPane.foreground", "Console.Tuning.help.background", TEXT);
+            check(failures, "Console.Tuning.help.borderColor", "Console.Tuning.help.background", GRAPHIC);
+            check(failures, "Console.Tuning.surface.axis", "Console.Tuning.surface.background", TEXT);
+            check(failures, "Console.Tuning.noteForeground", "Panel.background", TEXT);
+            check(failures, "Console.ErrorText.foreground", "TextField.background", GRAPHIC);
             for (String tone : new String[]{"neutral", "accent"}) {
                 String key = "Console.Status." + tone + ".";
                 check(failures, key + "foreground", key + "background", TEXT);
