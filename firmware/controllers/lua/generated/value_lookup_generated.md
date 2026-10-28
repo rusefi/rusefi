@@ -5,10 +5,10 @@ null
 The target engine speed (RPM) to maintain during launch.
 
 ### rpmHardLimit
-set rpm_hard_limit X
+
 
 ### engineSnifferRpmThreshold
-Engine sniffer would be disabled above this rpm\nset engineSnifferRpmThreshold X
+Engine sniffer would be disabled above this rpm
 
 ### ltitEnabled
 Enable LTIT (Long Term Idle Trim) learning
@@ -185,7 +185,7 @@ TPS error detection: what throttle % is unrealistically low?\nAlso used for acce
 TPS error detection: what throttle % is unrealistically high?\nAlso used for accelerator pedal error detection if so equipped.
 
 ### cranking.rpm
-This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. \nset cranking_rpm X
+This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm.
 
 ### ignitionDwellForCrankingMs
 Dwell duration while cranking
@@ -287,7 +287,7 @@ Minimum TPS to enable boost control. Use this to avoid solenoid noise at idle, a
 Minimum MAP to enable boost control. Use this to avoid solenoid noise at idle, and help spool in some cases.
 
 ### crankingTimingAngle
-Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.\nThere is tapering towards running timing advance\nset cranking_timing_angle X
+Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.\nThere is tapering towards running timing advance
 
 ### gapTrackingLengthOverride
 How many consecutive gap rations have to match expected ranges for sync to happen
@@ -836,7 +836,7 @@ Write SD card log even when powered by USB
 Second harmonic (aka double) is usually quieter background noise
 
 ### yesUnderstandLocking
-Unlocking only via rusEFI console using 'unlock PICODEBUG' command. Use 'reset to default firmware' if pincode is lost.
+Unlocking only via rusEFI console. Use 'reset to default firmware' if pincode is lost.
 
 ### silentTriggerError
 Sometimes we have a performance issue while printing error
@@ -845,10 +845,10 @@ Sometimes we have a performance issue while printing error
 
 
 ### canReadEnabled
-enable can_read/disable can_read
+
 
 ### canWriteEnabled
-enable can_write/disable can_write. See also can1ListenMode
+See also can1ListenMode
 
 ### useLinearIatSensor
 
@@ -1022,7 +1022,7 @@ Also require vehicle speed at/above this to start logging (0 = ignore)
 Idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.
 
 ### warningPeriod
-set warningPeriod X
+
 
 ### knockDetectionWindowStart
 

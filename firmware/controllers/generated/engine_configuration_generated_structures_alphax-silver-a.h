@@ -296,8 +296,7 @@ static_assert(sizeof(MsIoBox_config_s) == 4);
 // start of cranking_parameters_s
 struct cranking_parameters_s {
 	/**
-	 * This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. 
-	 * set cranking_rpm X
+	 * This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm.
 	 * units: RPM
 	 * offset 0
 	 */
@@ -1597,7 +1596,6 @@ static_assert(sizeof(can_sniffer_channel_s) == 4);
 struct engine_configuration_s {
 	/**
 	 * http://rusefi.com/wiki/index.php?title=Manual:Engine_Type
-	 * set engine_type X
 	 * offset 0
 	 */
 	engine_type_e engineType;
@@ -1612,14 +1610,12 @@ struct engine_configuration_s {
 	 */
 	uint16_t launchRpm;
 	/**
-	 * set rpm_hard_limit X
 	 * units: rpm
 	 * offset 6
 	 */
 	uint16_t rpmHardLimit;
 	/**
 	 * Engine sniffer would be disabled above this rpm
-	 * set engineSnifferRpmThreshold X
 	 * units: RPM
 	 * offset 8
 	 */
@@ -2245,7 +2241,6 @@ struct engine_configuration_s {
 	/**
 	 * Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.
 	 * There is tapering towards running timing advance
-	 * set cranking_timing_angle X
 	 * units: deg
 	 * offset 472
 	 */
@@ -2255,7 +2250,6 @@ struct engine_configuration_s {
 	 * Individual coils = one coil per cylinder (COP, coil-near-plug), requires sequential mode
 	 * Wasted spark = Fires pairs of cylinders together, either one coil per pair of cylinders or one coil per cylinder
 	 * Two distributors = A pair of distributors, found on some BMW, Toyota and other engines
-	 * set ignition_mode X
 	 * offset 476
 	 */
 	ignition_mode_e ignitionMode;
@@ -3842,7 +3836,7 @@ struct engine_configuration_s {
 	offset 1436 bit 3 */
 	bool knockDetectionUseDoubleFrequency : 1 {};
 	/**
-	 * Unlocking only via rusEFI console using 'unlock PICODEBUG' command. Use 'reset to default firmware' if pincode is lost.
+	 * Unlocking only via rusEFI console. Use 'reset to default firmware' if pincode is lost.
 	offset 1436 bit 4 */
 	bool yesUnderstandLocking : 1 {};
 	/**
@@ -3853,11 +3847,10 @@ struct engine_configuration_s {
 	offset 1436 bit 6 */
 	bool useLinearCltSensor : 1 {};
 	/**
-	 * enable can_read/disable can_read
 	offset 1436 bit 7 */
 	bool canReadEnabled : 1 {};
 	/**
-	 * enable can_write/disable can_write. See also can1ListenMode
+	 * See also can1ListenMode
 	offset 1436 bit 8 */
 	bool canWriteEnabled : 1 {};
 	/**
@@ -4166,7 +4159,6 @@ struct engine_configuration_s {
 	 */
 	int16_t acIdleRpmTarget;
 	/**
-	 * set warningPeriod X
 	 * units: seconds
 	 * offset 1478
 	 */
