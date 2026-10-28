@@ -68,7 +68,8 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
         updateSoftwareButton.setVisible(softwareUpdateAvailable);
         updateSoftwareButton.setEnabled(softwareUpdateAvailable);
         updateSoftwareButton.addActionListener(e -> onUpdateSoftwareClicked());
-        updateSoftwareStatus.setForeground(Color.red);
+        Color error = UIManager.getColor("Console.ErrorText.foreground");
+        updateSoftwareStatus.setForeground(error != null ? error : Color.red);
         updateSoftwareStatus.setVisible(false);
 
         bindSoftwareUpdateOutcome(softwareUpdateOutcome, updateSoftwareButton, updateSoftwareStatus, () -> {

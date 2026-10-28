@@ -612,15 +612,16 @@ final class PinoutConnectorPage extends JPanel {
                     g2.setClip(null);
                 }
                 float stroke = size > 20 ? 2f : 1f;
+                // [tag:fixed_color] outline of the pin colour: dashed grey for a free pin, a rim for light fills
                 g2.setColor(dashed ? new Color(0x9ca3af) : PinColors.isLight(fills[0]) ? new Color(0xb6bcc6)
-                        : new Color(0, 0, 0, 0));
+                        : new Color(0, 0, 0, 0)); // [tag:fixed_color] see above
                 g2.setStroke(dashed ? new BasicStroke(stroke, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 1f,
                         new float[]{2f, 1.5f}, 0f) : new BasicStroke(stroke));
                 g2.drawOval(x, y, size - 1, size - 1);
                 if (label != null) {
                     Font font = c.getFont().deriveFont(Font.BOLD, Math.min(15f, size * 0.32f));
                     g2.setFont(font);
-                    g2.setColor(PinColors.isLight(fills[0]) ? new Color(0x1f2937) : Color.WHITE);
+                    g2.setColor(PinColors.isLight(fills[0]) ? new Color(0x1f2937) : Color.WHITE); // [tag:fixed_color] picked for the pin colour
                     int w = g2.getFontMetrics().stringWidth(label);
                     g2.drawString(label, x + (size - w) / 2f,
                             y + (size + g2.getFontMetrics().getAscent() - g2.getFontMetrics().getDescent()) / 2f);
@@ -657,7 +658,7 @@ final class PinoutConnectorPage extends JPanel {
             try {
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 if (colors == null) {
-                    g2.setColor(new Color(0xc7ccd4));
+                    g2.setColor(swatchBorder());
                     for (int i = -H; i < W; i += 4) {
                         g2.drawLine(x + i, y + H, x + i + H, y);
                     }
@@ -669,7 +670,7 @@ final class PinoutConnectorPage extends JPanel {
                         g2.fillRect(x + W / 2, y, W / 2, H);
                     }
                 }
-                g2.setColor(new Color(0xc7ccd4));
+                g2.setColor(swatchBorder());
                 g2.drawRoundRect(x, y, W - 1, H - 1, 3, 3);
             } finally {
                 g2.dispose();
@@ -859,5 +860,11 @@ final class PinoutConnectorPage extends JPanel {
             revalidate();
             repaint();
         }
+    }
+
+    /** Border and "no colour" hatching of a legend swatch [tag:console_theme]. */
+    static Color swatchBorder() {
+        Color color = UIManager.getColor("Console.Pinout.swatchBorder");
+        return color != null ? color : new Color(0xc7ccd4);
     }
 }

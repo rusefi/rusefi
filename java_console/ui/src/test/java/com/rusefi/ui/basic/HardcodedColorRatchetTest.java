@@ -95,6 +95,10 @@ public class HardcodedColorRatchetTest {
             int n = 0;
             for (int i = 0; i < lines.size(); i++) {
                 String line = DERIVED.matcher(lines.get(i)).replaceAll("");
+                String trimmed = line.trim();
+                if (trimmed.startsWith("//") || trimmed.startsWith("*")) {
+                    continue; // commented-out code
+                }
                 if (!COLOR.matcher(line).find() || THEME_LOOKUP.matcher(line).find()) {
                     continue;
                 }

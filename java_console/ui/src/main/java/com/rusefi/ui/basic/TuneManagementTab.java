@@ -211,7 +211,8 @@ public class TuneManagementTab {
             JLabel offlineHint = new JLabel("<html><div style='text-align:center;'>"
                     + "No ECU connected. Load a tune file to view and edit it offline,<br>"
                     + "then connect an ECU to burn your changes.</div></html>");
-            offlineHint.setForeground(Color.DARK_GRAY);
+            Color plain = UIManager.getColor("Console.Overlay.foreground");
+            offlineHint.setForeground(plain != null ? plain : Color.DARK_GRAY);
 
             // [tag:offline_tune] The import pair pushes a tune to a *connected* ECU; on this pre-connection
             // splash it has nothing to talk to (clicking just prints "Not connected?"), so only show it

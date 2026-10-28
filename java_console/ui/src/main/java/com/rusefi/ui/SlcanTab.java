@@ -109,8 +109,8 @@ public class SlcanTab {
         stopButton.setEnabled(false);
 
         indicator.setPreferredSize(new Dimension(22, 22));
-        indicator.setBackground(Color.RED);
-        indicator.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+        indicator.setBackground(Color.RED); // [tag:fixed_color] connection lamp, red or green in every theme
+        indicator.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY)); // [tag:fixed_color] rim of the lamp
         JPanel indicatorWrapper = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         indicatorWrapper.setOpaque(false);
         indicatorWrapper.add(indicator);
@@ -235,7 +235,7 @@ public class SlcanTab {
      */
     private void refresh() {
         String port = connectedPort;
-        indicator.setBackground(port != null ? new Color(0, 160, 0) : Color.RED);
+        indicator.setBackground(port != null ? new Color(0, 160, 0) : Color.RED); // [tag:fixed_color] connection lamp
         indicator.setToolTipText(port != null ? "Connected to " + port : "No SLCAN port");
 
         int bufferSize;
@@ -344,7 +344,8 @@ public class SlcanTab {
             cb.setBackground(null);
         } else {
             cb.setSelected(true); // show as checked but grayed
-            cb.setBackground(java.awt.Color.LIGHT_GRAY);
+            java.awt.Color mixed = UIManager.getColor("Console.Checkbox.mixedBackground");
+            cb.setBackground(mixed != null ? mixed : java.awt.Color.LIGHT_GRAY);
         }
     }
 

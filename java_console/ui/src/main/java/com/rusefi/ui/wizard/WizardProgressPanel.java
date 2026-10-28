@@ -331,7 +331,7 @@ final class WizardProgressPanel extends JPanel {
                 if (item.state == State.CURRENT) {
                     g2.setColor(WizardStyle.accent());
                     g2.fill(circle);
-                    numberColor = Color.WHITE;
+                    numberColor = Color.WHITE; // [tag:fixed_color] on the accent circle
                 } else {
                     g2.setColor(WizardStyle.border());
                     g2.draw(circle);

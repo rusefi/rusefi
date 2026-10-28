@@ -1,5 +1,6 @@
 package com.rusefi.ui.basic;
 
+import javax.swing.UIManager;
 import java.awt.Color;
 
 /**
@@ -15,7 +16,6 @@ public enum UpdateFirmwareResult {
     WARNING,
     FAILURE;
 
-    private static final Color GREEN = new Color(0, 128, 0);
 
     /**
      * Persistent banner text shown after the post-flash reconnect for a board on {@code portName}.
@@ -40,13 +40,18 @@ public enum UpdateFirmwareResult {
     public Color bannerColor() {
         switch (this) {
             case SUCCESS:
-                return GREEN;
+                return themed("Console.Overlay.good", new Color(0, 128, 0));
             case WARNING:
-                return new Color(160, 100, 0);
+                return themed("Console.Overlay.warning", new Color(160, 100, 0));
             case FAILURE:
-                return Color.RED;
+                return themed("Console.ErrorText.foreground", Color.RED);
             default:
-                return Color.DARK_GRAY;
+                return themed("Console.Overlay.foreground", Color.DARK_GRAY);
         }
+    }
+
+    private static Color themed(String key, Color fallback) {
+        Color color = UIManager.getColor(key);
+        return color != null ? color : fallback;
     }
 }

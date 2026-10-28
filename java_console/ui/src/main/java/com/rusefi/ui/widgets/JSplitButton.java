@@ -103,10 +103,8 @@ public class JSplitButton extends JPanel {
     @Override
     protected void paintBorder(Graphics g) {
         int arc = UIManager.getInt("Button.arc");
-        Color borderColor = UIManager.getColor("Component.borderColor");
-        if (borderColor == null) {
-            borderColor = Color.GRAY;
-        }
+        Color themedBorder = UIManager.getColor("Component.borderColor");
+        Color borderColor = themedBorder != null ? themedBorder : Color.GRAY;
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setColor(borderColor);
