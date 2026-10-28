@@ -16,6 +16,7 @@ import com.rusefi.ts_plugin.knock.KnockMagnitudeCanvas;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.ts_plugin.knock.KnockPlotStyle;
 import com.rusefi.ui.widgets.CommandIcon;
+import com.rusefi.ui.widgets.ScaledIcon;
 import com.rusefi.ui.widgets.ConsoleFonts;
 import com.rusefi.ui.widgets.JoinedButtons;
 import com.rusefi.ui.widgets.SegmentedControl;
@@ -720,39 +721,6 @@ public class KnockPane {
         public boolean getScrollableTracksViewportHeight() {
             Container parent = getParent();
             return parent == null || getPreferredSize().height <= parent.getHeight();
-        }
-    }
-
-    /** Draws a small line icon larger, e.g. a 16 px icon at 40 px on a message card. */
-    private static final class ScaledIcon implements Icon {
-        private final Icon icon;
-        private final double scale;
-
-        ScaledIcon(Icon icon, double scale) {
-            this.icon = icon;
-            this.scale = scale;
-        }
-
-        @Override
-        public void paintIcon(Component c, Graphics g, int x, int y) {
-            Graphics2D g2 = (Graphics2D) g.create();
-            try {
-                g2.translate(x, y);
-                g2.scale(scale, scale);
-                icon.paintIcon(c, g2, 0, 0);
-            } finally {
-                g2.dispose();
-            }
-        }
-
-        @Override
-        public int getIconWidth() {
-            return (int) Math.round(icon.getIconWidth() * scale);
-        }
-
-        @Override
-        public int getIconHeight() {
-            return (int) Math.round(icon.getIconHeight() * scale);
         }
     }
 
