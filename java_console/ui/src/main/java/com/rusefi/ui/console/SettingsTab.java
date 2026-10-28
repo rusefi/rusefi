@@ -105,7 +105,8 @@ public class SettingsTab {
         panel.add(UiUtils.wrap(RecentCommands.createButton(uiContext, new AtomicBoolean(), Integration.CMD_WRITECONFIG)));
 
         JLabel unusable = new JLabel("This is painfully unusable, TunerStudio works way better for settings!");
-        unusable.setForeground(Color.red);
+        Color error = UIManager.getColor("Console.ErrorText.foreground");
+        unusable.setForeground(error != null ? error : Color.red);
         content.add(unusable, BorderLayout.NORTH);
         content.add(panel, BorderLayout.CENTER);
         UiUtils.trueLayout(content);

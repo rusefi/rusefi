@@ -43,18 +43,19 @@ public class TabbedPanel {
             Font f = g.getFont();
             g.setFont(new Font(f.getName(), f.getStyle(), f.getSize() * 4));
             String text;
+            // [tag:fixed_color] status words on a translucent black card, the same in every theme
             Color textColor;
             if (criticalError != null) {
                 text = criticalError;
-                textColor = Color.red;
+                textColor = Color.red; // [tag:fixed_color] on the black card
             } else if (Boolean.TRUE.equals(tabbedPane.getClientProperty("isUpdating"))) {
                 text = "Updating";
-                textColor = Color.orange;
+                textColor = Color.orange; // [tag:fixed_color] on the black card
             } else {
                 ConnectionStatusValue status = ConnectionStatusLogic.INSTANCE.getValue();
                 if (status == ConnectionStatusValue.LOADING) {
                     text = "Loading";
-                    textColor = Color.white;
+                    textColor = Color.white; // [tag:fixed_color] on the black card
                 } else {
                     // Don't show "Not connected" overlay — the status is visible in the
                     // title bar and corner icon. Blocking the entire UI with a black overlay
@@ -67,7 +68,7 @@ public class TabbedPanel {
             int x = (d.width - labelWidth) / 2;
             int y = d.height / 2;
             int padding = 12;
-            g.setColor(new Color(0, 0, 0, 180));
+            g.setColor(new Color(0, 0, 0, 180)); // [tag:fixed_color] the black card
             g.fillRoundRect(x - padding, y - fm.getAscent() - padding, labelWidth + padding * 2, fm.getHeight() + padding * 2, 16, 16);
             g.setColor(textColor);
             g.drawString(text, x, y);

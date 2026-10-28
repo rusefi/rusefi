@@ -75,7 +75,6 @@ public class MainFrame {
     }
 
     static final class FrameOverlay extends JPanel {
-        private static final Color GREEN = new Color(0, 128, 0);
         private static final int CARD_MAX_WIDTH = 760;
         private static final int CARD_MARGIN = 56;
         private static final int CARD_PADDING = 32;
@@ -173,15 +172,35 @@ public class MainFrame {
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 // Dim the whole window so the UI shows through, then a darker rounded card behind
                 // the message for contrast.
+                // [tag:fixed_color] a black scrim and card dim the window the same way in every theme
                 g2.setColor(new Color(0, 0, 0, 140));
                 g2.fillRect(0, 0, getWidth(), getHeight());
                 Rectangle b = content.getBounds();
                 int pad = 28;
+                // [tag:fixed_color] see the scrim above
                 g2.setColor(new Color(0, 0, 0, 210));
                 g2.fillRoundRect(b.x - pad, b.y - pad, b.width + 2 * pad, b.height + 2 * pad, 28, 28);
                 g2.dispose();
             }
             super.paintComponent(g);
+        }
+
+        /** Message text of an opaque overlay: plain, good news or a failure [tag:console_theme]. */
+        static Color plain() {
+            return themed("Console.Overlay.foreground", Color.DARK_GRAY);
+        }
+
+        static Color good() {
+            return themed("Console.Overlay.good", new Color(0, 128, 0));
+        }
+
+        static Color bad() {
+            return themed("Console.Overlay.bad", Color.RED.darker());
+        }
+
+        private static Color themed(String key, Color fallback) {
+            Color color = UIManager.getColor(key);
+            return color != null ? color : fallback;
         }
 
         void setMessage(String text, Color color) {
@@ -667,7 +686,7 @@ public class MainFrame {
         closeUnsavedTuneChangesOverlay();
         closeConnectionFailureOverlay();
         closeFirmwareUpdateCheckOverlay();
-        firmwareUpdateCheckOverlay = new FrameOverlay("Checking ECU firmware...", Color.DARK_GRAY,
+        firmwareUpdateCheckOverlay = new FrameOverlay("Checking ECU firmware...", FrameOverlay.plain(),
             new OverlayAction("Update ECU Firmware", KeyEvent.VK_U, () -> {
                 closeFirmwareUpdateCheckOverlay();
                 if (updateEcuItem.isEnabled() && updateEcuAction != null) {
@@ -690,7 +709,7 @@ public class MainFrame {
         Runnable onDownload = errorMessage.contains(RUSEFI_WIKI_DOWNLOAD_PAGE)
             ? () -> URLLabel.open(RUSEFI_WIKI_DOWNLOAD_PAGE)
             : null;
-        connectionFailureOverlay = new FrameOverlay(errorMessage, Color.DARK_GRAY,
+        connectionFailureOverlay = new FrameOverlay(errorMessage, FrameOverlay.plain(),
             new OverlayAction("Open Download Page", KeyEvent.VK_O, () -> {
                 if (onDownload != null) {
                     onDownload.run();
@@ -711,7 +730,7 @@ public class MainFrame {
         closeFirmwareUpdateCheckOverlay();
         closeConnectionFailureOverlay();
         closeUnsavedTuneChangesOverlay();
-        unsavedTuneChangesOverlay = new FrameOverlay(message, Color.DARK_GRAY,
+        unsavedTuneChangesOverlay = new FrameOverlay(message, FrameOverlay.plain(),
             new OverlayAction(saveText, KeyEvent.VK_S, () -> saveAndThen.accept(() -> {
                 closeUnsavedTuneChangesOverlay();
                 discardAndExit.run();
@@ -726,7 +745,7 @@ public class MainFrame {
         closeFirmwareUpdateCheckOverlay();
         closeConnectionFailureOverlay();
         closeUnsavedTuneChangesOverlay();
-        FrameOverlay overlay = new FrameOverlay(message, Color.DARK_GRAY,
+        FrameOverlay overlay = new FrameOverlay(message, FrameOverlay.plain(),
             new OverlayAction("Close", KeyEvent.VK_C, () -> closeOverlay(activeOverlay)));
         showOverlay(overlay);
     }
@@ -757,7 +776,8 @@ public class MainFrame {
     }
 
     private void showConfigErrorOverlay(String message) {
-        // Bright red so it stays readable on the dark translucent card.
+        // Bright red so it stays readable on the dark translucent card, which is black in every theme.
+        // [tag:fixed_color]
         configErrorOverlay = new FrameOverlay("Config Error\n\n" + message, new Color(255, 96, 96),
             new OverlayAction("Close", KeyEvent.VK_C, this::closeConfigErrorOverlay)).asDimmedOverlay();
         showOverlay(configErrorOverlay);
@@ -824,9 +844,9 @@ public class MainFrame {
 
     private void showInstallerAnnouncementBanner(String installerUrl) {
         JPanel banner = new JPanel(new BorderLayout(12, 0));
-        banner.setBackground(new Color(255, 243, 205));
+        banner.setBackground(FrameOverlay.themed("Console.InstallerBanner.background", new Color(255, 243, 205)));
         banner.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(180, 140, 50)),
+            BorderFactory.createMatteBorder(0, 0, 1, 0, FrameOverlay.themed("Console.InstallerBanner.borderColor", new Color(180, 140, 50))),
             BorderFactory.createEmptyBorder(6, 12, 6, 6)
         ));
 
@@ -898,15 +918,15 @@ public class MainFrame {
     private void showFirmwareUpdateCheckResult(FirmwareUpdateCheckResult result) {
         switch (result) {
             case AVAILABLE:
-                firmwareUpdateCheckOverlay.setMessage("ECU firmware update available", FrameOverlay.GREEN);
+                firmwareUpdateCheckOverlay.setMessage("ECU firmware update available", FrameOverlay.good());
                 firmwareUpdateCheckOverlay.setActionVisible(0, true);
                 break;
             case UP_TO_DATE:
-                firmwareUpdateCheckOverlay.setMessage("ECU already matches the local firmware image", FrameOverlay.GREEN);
+                firmwareUpdateCheckOverlay.setMessage("ECU already matches the local firmware image", FrameOverlay.good());
                 firmwareUpdateCheckOverlay.setActionVisible(0, false);
                 break;
             default:
-                firmwareUpdateCheckOverlay.setMessage("Unable to check ECU firmware", Color.RED.darker());
+                firmwareUpdateCheckOverlay.setMessage("Unable to check ECU firmware", FrameOverlay.bad());
                 firmwareUpdateCheckOverlay.setActionVisible(0, false);
                 break;
         }

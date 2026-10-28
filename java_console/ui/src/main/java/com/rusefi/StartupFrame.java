@@ -137,15 +137,18 @@ public class StartupFrame {
      * closing the application.
      */
     private boolean isProceeding;
+    /** Markers for {@link #noPortsMessage}, which replaces them with theme colours [tag:fixed_color] */
+    private static final Color STATUS_ERROR = Color.red; // [tag:fixed_color] marker, never painted
+    private static final Color STATUS_INFO = Color.darkGray; // [tag:fixed_color] marker, never painted
     // TODO: we should rename this!; now we are showing more than the "no ports connected" message
-    // The status logic sets plain Color.red / Color.darkGray; show those as the theme's readable
+    // The status logic sets STATUS_ERROR / STATUS_INFO; show those as the theme's readable
     // red and grey, with a status dot in the same colour [tag:console_theme].
     private final JLabel noPortsMessage = new JLabel("", new StatusDotIcon(), SwingConstants.CENTER) {
         @Override
         public void setForeground(Color color) {
-            if (Color.red.equals(color)) {
+            if (STATUS_ERROR.equals(color)) {
                 color = StartupCard.themed("Console.Status.disconnected.foreground", new Color(0xb91c1c));
-            } else if (Color.darkGray.equals(color)) {
+            } else if (STATUS_INFO.equals(color)) {
                 color = StartupCard.themed("Console.TitleBar.mutedForeground", new Color(0x586273));
             }
             super.setForeground(color);
@@ -209,7 +212,7 @@ public class StartupFrame {
             this::setStartupFirmwareUpdateInProgress);
         String title = UiProperties.getDisplayName() + " " + Launcher.CONSOLE_VERSION;
         log.info(title);
-        noPortsMessage.setForeground(Color.red);
+        noPortsMessage.setForeground(STATUS_ERROR);
         status = new StatusAnimation(new StatusAnimation.StatusConsumer() {
             @Override
             public void onStatus(String niceStatus) {
@@ -626,7 +629,7 @@ public class StartupFrame {
                 }
             };
             newReleaseAnnouncePanel.setBorder(new TitledBorder(
-                BorderFactory.createLineBorder(Color.darkGray),
+                BorderFactory.createLineBorder(StartupCard.themed("Console.Announcement.borderColor", Color.darkGray)),
                 ""
             ));
             newReleaseAnnouncePanel.add(newReleaseAmmomceMessage);
@@ -640,7 +643,7 @@ public class StartupFrame {
         JLabel jLabel;
         if (binaryModificationTimestamp == 0) {
             jLabel = new JLabel("firmware file not found");
-            jLabel.setForeground(Color.red);
+            jLabel.setForeground(StartupCard.themed("Console.ErrorText.foreground", Color.red));
         } else {
             final Date binaryModificationDate = new Date(binaryModificationTimestamp);
             final String branchNameToDisplay = ConsoleBundleUtil.readBundleFullNameNotNull().getBranchName();
@@ -836,16 +839,16 @@ public class StartupFrame {
         boolean hasOpenBlt = openBltPort != null;
         if (ports.isEmpty()) {
             String message = emptyHardwareMessage(currentHardware);
-            noPortsMessage.setForeground(SOCKET_CAN_WITHOUT_ECU.equals(message) ? Color.darkGray : Color.red);
+            noPortsMessage.setForeground(SOCKET_CAN_WITHOUT_ECU.equals(message) ? STATUS_INFO : STATUS_ERROR);
             noPortsMessage.setText(message);
         } else if (hasOpenBlt) {
             // A board sitting in the OpenBLT bootloader has no running firmware to auto-connect to —
             // mirror the auto-connect status line and point the user at the firmware-update flow.
-            noPortsMessage.setForeground(Color.darkGray);
+            noPortsMessage.setForeground(STATUS_INFO);
             noPortsMessage.setText("Bootloader detected on " + openBltPort.port
                 + " — use the Update ECU firmware tab");
         } else {
-            noPortsMessage.setForeground(Color.red);
+            noPortsMessage.setForeground(STATUS_ERROR);
             noPortsMessage.setText("Make sure you are disconnected from TunerStudio");
         }
 
@@ -1006,7 +1009,7 @@ public class StartupFrame {
         connectButton.setText("Connecting...");
         portsComboBox.getComboPorts().setEnabled(false);
         noPortsMessage.setText("Connecting to " + target.port + "…");
-        noPortsMessage.setForeground(Color.darkGray);
+        noPortsMessage.setForeground(STATUS_INFO);
         noPortsMessage.setVisible(true);
 
         splashListener = new ConnectionStatusLogic.Listener() {
@@ -1148,7 +1151,7 @@ public class StartupFrame {
         updateConnectButtonState();
         portsComboBox.getComboPorts().setEnabled(true);
         String launchingMsg = "Connected to " + target.port + " — launching " + UiProperties.getDisplayName() + "…";
-        noPortsMessage.setForeground(Color.darkGray);
+        noPortsMessage.setForeground(STATUS_INFO);
         noPortsMessage.setText(launchingMsg);
         noPortsMessage.setVisible(true);
         if (scanningStatusLabel != null) {
@@ -1304,7 +1307,7 @@ public class StartupFrame {
                 connectButton.setText("Connect");
                 connectButton.setEnabled(asyncJobExecutor.isNotInProgress());
                 portsComboBox.getComboPorts().setEnabled(asyncJobExecutor.isNotInProgress());
-                noPortsMessage.setForeground(Color.darkGray);
+                noPortsMessage.setForeground(STATUS_INFO);
                 noPortsMessage.setText("Updating firmware...");
                 noPortsMessage.setVisible(true);
             });
@@ -1327,7 +1330,7 @@ public class StartupFrame {
             connectButton.setText("Connect");
             connectButton.setEnabled(asyncJobExecutor.isNotInProgress());
             portsComboBox.getComboPorts().setEnabled(asyncJobExecutor.isNotInProgress());
-            noPortsMessage.setForeground(Color.darkGray);
+            noPortsMessage.setForeground(STATUS_INFO);
             noPortsMessage.setText("");
             noPortsMessage.setVisible(false);
         });
@@ -1351,7 +1354,7 @@ public class StartupFrame {
             selector.apply(connectivityContext.getCurrentHardware());
             autoConnectedPort = savedPort;
             startupUpdateActions.setSplashLinkManager(lm);
-            noPortsMessage.setForeground(Color.darkGray);
+            noPortsMessage.setForeground(STATUS_INFO);
             noPortsMessage.setText("Connected to " + savedPort.port + " — click Connect to open " + UiProperties.getDisplayName());
             noPortsMessage.setVisible(true);
         });
@@ -1410,7 +1413,7 @@ public class StartupFrame {
         connectButton.setText("Connect");
         updateConnectButtonState();
         portsComboBox.getComboPorts().setEnabled(true);
-        noPortsMessage.setForeground(Color.red);
+        noPortsMessage.setForeground(STATUS_ERROR);
         noPortsMessage.setText("Auto-connect failed: " + msg);
         noPortsMessage.setVisible(true);
         // Reveal the connect controls so the user can retry/pick a port (#9715).

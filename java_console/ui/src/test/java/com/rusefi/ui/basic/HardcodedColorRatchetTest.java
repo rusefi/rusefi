@@ -33,7 +33,12 @@ public class HardcodedColorRatchetTest {
     private static final Pattern COLOR = Pattern.compile(
         "new Color\\(|Color\\.decode\\(|\\bColor\\.(white|black|red|green|blue|gray|lightGray|darkGray|yellow|orange|pink|cyan|magenta"
             + "|WHITE|BLACK|RED|GREEN|BLUE|GRAY|LIGHT_GRAY|DARK_GRAY|YELLOW|ORANGE|PINK|CYAN|MAGENTA)\\b");
-    private static final Pattern THEME_LOOKUP = Pattern.compile("UIManager\\.getColor|themed\\(|!= null \\?");
+    private static final Pattern THEME_LOOKUP = Pattern.compile("UIManager\\.getColor|themed\\(|\\bcolor\\(\"|!= null \\?");
+    /**
+     * Not a colour written into the code: a translucent copy of another colour, e.g. a theme colour, and
+     * parsing a variable (the hex fallbacks of a theme key, e.g. StatusChip.Tone).
+     */
+    private static final Pattern DERIVED = Pattern.compile("new Color\\(\\w+\\.getRed\\(\\)|Color\\.decode\\([A-Za-z_]\\w*\\)");
     /** Light and dark plot palettes kept equal to the theme files by PlotPaletteTest and SnifferPaletteTest */
     private static final Set<String> PALETTES = new HashSet<>(Arrays.asList(
         "com/rusefi/ui/logview/PlotPalette.java",
@@ -88,7 +93,7 @@ public class HardcodedColorRatchetTest {
             List<String> lines = Files.readAllLines(source, StandardCharsets.UTF_8);
             int n = 0;
             for (int i = 0; i < lines.size(); i++) {
-                String line = lines.get(i);
+                String line = DERIVED.matcher(lines.get(i)).replaceAll("");
                 if (!COLOR.matcher(line).find() || THEME_LOOKUP.matcher(line).find()) {
                     continue;
                 }

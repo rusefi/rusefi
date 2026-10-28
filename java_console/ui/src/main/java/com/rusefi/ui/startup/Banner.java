@@ -114,7 +114,7 @@ public class Banner extends JPanel {
                 g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
                 g2.setColor(kind.accent());
                 g2.fill(new Ellipse2D.Float(x, y, SIZE, SIZE));
-                g2.setColor(Color.WHITE);
+                g2.setColor(Color.WHITE); // [tag:fixed_color] symbol on the accent circle in every theme
                 g2.setFont(c.getFont().deriveFont(Font.BOLD, 13f));
                 FontMetrics fm = g2.getFontMetrics();
                 String s = String.valueOf(kind.symbol);
