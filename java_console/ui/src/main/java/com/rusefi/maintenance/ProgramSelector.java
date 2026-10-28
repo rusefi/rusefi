@@ -691,7 +691,6 @@ public class ProgramSelector {
         boolean hasDfuDevice = currentHardware.isDfuFound();
 
         JPopupMenu popupMenu = new JPopupMenu();
-        JMenu advancedTools = new JMenu("Advanced programming tools");
 
         boolean requireBlt = obfuscated || isForeignBoardOnUniversalBundle(bundleTarget, effectiveTarget);
         boolean canUseDfu = supportsDfu && !requireBlt;
@@ -699,41 +698,38 @@ public class ProgramSelector {
 
         final PortResult selectedPort = currentPort(knownPorts, (PortResult) comboPorts.getSelectedItem());
         if (canUseDfu && isAdvancedActionAvailable(DFU_AUTO, currentHardware, selectedPort)) {
-            addMenuItem(advancedTools, DFU_AUTO);
-            addMenuItem(advancedTools, DFU_SWITCH);
+            addMenuItem(popupMenu, DFU_AUTO);
+            addMenuItem(popupMenu, DFU_SWITCH);
         }
         if (hasDfuDevice && canUseManualDfu && resolveDetectedDfuPort(currentHardware) != null) {
-            addMenuItem(advancedTools, DFU_MANUAL);
+            addMenuItem(popupMenu, DFU_MANUAL);
         }
         if (canUseDfu && hasDfuDevice && resolveDetectedDfuPort(currentHardware) != null) {
-            addCustomFirmwareMenuItem(advancedTools);
-            addMenuItem(advancedTools, DFU_ERASE);
+            addCustomFirmwareMenuItem(popupMenu);
+            addMenuItem(popupMenu, DFU_ERASE);
             if (DfuFlasher.haveBootloaderBinFile()) {
-                addMenuItem(advancedTools, INSTALL_OPENBLT);
+                addMenuItem(popupMenu, INSTALL_OPENBLT);
             }
         }
 
         if (capabilityProvider.get().windows) {
             if (!requireBlt && currentHardware.isStLinkConnected()) {
-                addMenuItem(advancedTools, ST_LINK);
+                addMenuItem(popupMenu, ST_LINK);
             }
             if (currentHardware.isPCANConnected()) {
-                addMenuItem(advancedTools, OPENBLT_CAN);
+                addMenuItem(popupMenu, OPENBLT_CAN);
             }
         }
 
         if (hasSerialPorts) {
-            addMenuItem(advancedTools, OPENBLT_SWITCH);
-            addMenuItem(advancedTools, OPENBLT_MANUAL);
+            addMenuItem(popupMenu, OPENBLT_SWITCH);
+            addMenuItem(popupMenu, OPENBLT_MANUAL);
             PortResult selected = resolveFlashPort();
             if (isEmergencyWipeAvailable(selected)) {
-                addMenuItem(advancedTools, OPENBLT_EMERGENCY_WIPE);
+                addMenuItem(popupMenu, OPENBLT_EMERGENCY_WIPE);
             }
         }
 
-        if (advancedTools.getItemCount() > 0) {
-            popupMenu.add(advancedTools);
-        }
         PortResult flashPort = resolveNormalFlashPort();
         boolean hasFirmwareTarget = hasFirmwareTarget(hasSerialPorts, flashPort) && flashPort != null;
         boolean recoveryAvailable = hasDfuDevice && canUseManualDfu(supportsDfu, obfuscated, bundleTarget, effectiveTarget)
@@ -802,7 +798,7 @@ public class ProgramSelector {
         return bundleTarget != null && connected != null && !bundleTarget.equalsIgnoreCase(connected);
     }
 
-    private void addMenuItem(JMenu menu, UpdateMode mode) {
+    private void addMenuItem(JPopupMenu menu, UpdateMode mode) {
         JMenuItem item = new JMenuItem(mode.displayText);
         item.addActionListener(e -> {
             if (mode == DFU_MANUAL) {
@@ -856,7 +852,7 @@ public class ProgramSelector {
         }
     }
 
-    private void addCustomFirmwareMenuItem(JMenu menu) {
+    private void addCustomFirmwareMenuItem(JPopupMenu menu) {
         JMenuItem item = new JMenuItem("Pick Custom File [DFU]");
         item.addActionListener(e -> {
             if (!canUseDfuNow() || isJobRunning()
