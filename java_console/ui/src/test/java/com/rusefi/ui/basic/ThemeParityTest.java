@@ -108,6 +108,24 @@ public class ThemeParityTest {
             }
             check(failures, "Console.HorizontalLine.foreground", "Panel.background", GRAPHIC);
             check(failures, "Console.Announcement.borderColor", "Panel.background", GRAPHIC);
+            // gauges: value, captions and scale on the card and dial face; zones, needle and graph line
+            for (String face : new String[]{"Console.Gauge.card.top", "Console.Gauge.card.bottom", "Console.Gauge.face.center"}) {
+                check(failures, "Console.Gauge.text", face, TEXT);
+                check(failures, "Console.Gauge.label", face, TEXT);
+                check(failures, "Console.Gauge.scale", face, TEXT);
+                check(failures, "Console.Gauge.danger", face, GRAPHIC);
+                check(failures, "Console.Gauge.warningText", face, GRAPHIC);
+            }
+            check(failures, "Console.Gauge.label", "Console.Gauge.face.edge", TEXT);
+            // a round dial draws its scale numbers over the zone fill
+            check(failures, "Console.Gauge.scale", "Console.Gauge.dialFill", TEXT);
+            check(failures, "Console.Gauge.warningText", "Console.Gauge.warningFill", GRAPHIC);
+            check(failures, "Console.Gauge.danger", "Console.Gauge.dangerFill", GRAPHIC);
+            check(failures, "Console.Gauge.needle", "Console.Gauge.dialFill", GRAPHIC);
+            check(failures, "Console.Gauge.needle", "Console.Gauge.face.center", GRAPHIC);
+            check(failures, "Console.Gauge.graph.line", "Console.Gauge.card.top", GRAPHIC);
+            check(failures, "Console.Gauge.edit.accent", "Panel.background", GRAPHIC);
+            check(failures, "Console.Gauge.detached.close", "Console.Gauge.detached.background", GRAPHIC);
             for (String tone : new String[]{"neutral", "accent"}) {
                 String key = "Console.Status." + tone + ".";
                 check(failures, key + "foreground", key + "background", TEXT);
@@ -119,14 +137,18 @@ public class ThemeParityTest {
     /**
      * Light pairs that are known to sit just under the minimum and are kept as they are, so that the light
      * look stays pinned by LightThemeSnapshotTest. Green #15803d on #e7f6ec measures 4.49:1; the classic
-     * pure red error text #ff0000 measures 3.67:1 on the page and 4.00:1 on white.
+     * pure red error text #ff0000 measures 3.67:1 on the page and 4.00:1 on white; the live graph's amber
+     * line #e0a100 measures 2.27:1 on the white card, with the tinted area under it; a round dial's orange
+     * warning numbers #e65100 measure 2.56:1 on its warning fill #ffcc80.
      */
     private static final Set<String> KNOWN_LIGHT_EXCEPTIONS = new TreeSet<>(java.util.Arrays.asList(
         "Console.Status.connected.foreground on Console.Status.connected.background",
         "Console.Wizard.success.foreground on Console.Wizard.success.background",
         "Console.ErrorText.foreground on Panel.background",
         "Console.ErrorText.foreground on Console.Card.background",
-        "Console.ErrorText.foreground on Console.Toolbar.background"));
+        "Console.ErrorText.foreground on Console.Toolbar.background",
+        "Console.Gauge.graph.line on Console.Gauge.card.top",
+        "Console.Gauge.warningText on Console.Gauge.warningFill"));
 
     private static void check(List<String> failures, String foreground, String background, double minimum) {
         if (!UiHelper.isDarkTheme() && KNOWN_LIGHT_EXCEPTIONS.contains(foreground + " on " + background)) {

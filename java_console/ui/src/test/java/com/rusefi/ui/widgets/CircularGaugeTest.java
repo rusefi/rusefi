@@ -87,20 +87,20 @@ class CircularGaugeTest {
         CircularGauge gauge = gauge(0, 100, 80, 0);
         gauge.setValue(50);
         BufferedImage image = render(gauge, 400, 400);
-        int progress = CircularGauge.PROGRESS.getRGB() & 0xFFFFFF;
+        int progress = GaugeStyle.dialFill().getRGB() & 0xFFFFFF;
         assertEquals(progress, rgb(image, 70, 150), "Filled side of the dial");
         assertNotEquals(progress, rgb(image, 330, 150), "Unfilled side of the dial");
-        assertEquals(CircularGauge.NEEDLE.getRGB() & 0xFFFFFF, rgb(image, 200, 40), "Half-scale needle points straight up");
-        assertNotEquals(CircularGauge.NEEDLE.getRGB() & 0xFFFFFF, rgb(image, 200, 120), "Hub hides the inner needle");
+        assertEquals(GaugeStyle.needle().getRGB() & 0xFFFFFF, rgb(image, 200, 40), "Half-scale needle points straight up");
+        assertNotEquals(GaugeStyle.needle().getRGB() & 0xFFFFFF, rgb(image, 200, 120), "Hub hides the inner needle");
         assertEquals(0xE53935, rgb(image, 384, 200), "Danger ring at the end of the scale");
         gauge.setValue(80);
         image = render(gauge, 400, 400);
-        assertEquals(CircularGauge.DANGER_FILL.getRGB() & 0xFFFFFF, rgb(image, 70, 150),
+        assertEquals(GaugeStyle.dangerFill().getRGB() & 0xFFFFFF, rgb(image, 70, 150),
             "Danger starts at the threshold, inclusively");
         gauge.setHighDangerValue(100);
         image = render(gauge, 400, 400);
         // model() sets the high warning value equal to the original danger value.
-        assertEquals(CircularGauge.WARNING_FILL.getRGB() & 0xFFFFFF, rgb(image, 70, 150),
+        assertEquals(GaugeStyle.warningFill().getRGB() & 0xFFFFFF, rgb(image, 70, 150),
             "Raising the danger threshold leaves the reading in the warning zone");
         gauge.setValue(50);
         assertEquals(progress, rgb(render(gauge, 400, 400), 70, 150));
@@ -175,7 +175,7 @@ class CircularGaugeTest {
         BufferedImage danger = render(gauge, 400, 400);
         assertEquals("80", gauge.getDisplayText());
         assertEquals(2, gauge.getArtworkRenderCountForTests());
-        assertEquals(CircularGauge.DANGER_FILL.getRGB() & 0xFFFFFF, rgb(danger, 70, 150));
+        assertEquals(GaugeStyle.dangerFill().getRGB() & 0xFFFFFF, rgb(danger, 70, 150));
     }
 
     @Test
@@ -231,19 +231,19 @@ class CircularGaugeTest {
         // wb1nernstVoltage from gauge_declarations.ini
         CircularGauge gauge = new CircularGauge(-0.2, 1.1, model(-0.2, 1.1, 0.35, 0.40, 0.50, 0.55, 3));
         BufferedImage image = render(gauge, 400, 400);
-        assertEquals(CircularGauge.DANGER.getRGB() & 0xFFFFFF, rimRgb(image, gauge, 0.0), "Low danger");
-        assertEquals(CircularGauge.WARNING.getRGB() & 0xFFFFFF, rimRgb(image, gauge, 0.375), "Low warning");
-        assertNotEquals(CircularGauge.WARNING.getRGB() & 0xFFFFFF, rimRgb(image, gauge, 0.45), "Normal band");
-        assertNotEquals(CircularGauge.DANGER.getRGB() & 0xFFFFFF, rimRgb(image, gauge, 0.45), "Normal band");
-        assertEquals(CircularGauge.WARNING.getRGB() & 0xFFFFFF, rimRgb(image, gauge, 0.525), "High warning");
-        assertEquals(CircularGauge.DANGER.getRGB() & 0xFFFFFF, rimRgb(image, gauge, 0.8), "High danger");
+        assertEquals(GaugeStyle.danger().getRGB() & 0xFFFFFF, rimRgb(image, gauge, 0.0), "Low danger");
+        assertEquals(GaugeStyle.warning().getRGB() & 0xFFFFFF, rimRgb(image, gauge, 0.375), "Low warning");
+        assertNotEquals(GaugeStyle.warning().getRGB() & 0xFFFFFF, rimRgb(image, gauge, 0.45), "Normal band");
+        assertNotEquals(GaugeStyle.danger().getRGB() & 0xFFFFFF, rimRgb(image, gauge, 0.45), "Normal band");
+        assertEquals(GaugeStyle.warning().getRGB() & 0xFFFFFF, rimRgb(image, gauge, 0.525), "High warning");
+        assertEquals(GaugeStyle.danger().getRGB() & 0xFFFFFF, rimRgb(image, gauge, 0.8), "High danger");
 
         gauge.setValue(0.45);
-        assertEquals(CircularGauge.PROGRESS.getRGB() & 0xFFFFFF, rgb(render(gauge, 400, 400), 70, 150));
+        assertEquals(GaugeStyle.dialFill().getRGB() & 0xFFFFFF, rgb(render(gauge, 400, 400), 70, 150));
         gauge.setValue(0.52);
-        assertEquals(CircularGauge.WARNING_FILL.getRGB() & 0xFFFFFF, rgb(render(gauge, 400, 400), 70, 150));
+        assertEquals(GaugeStyle.warningFill().getRGB() & 0xFFFFFF, rgb(render(gauge, 400, 400), 70, 150));
         gauge.setValue(0.838);
-        assertEquals(CircularGauge.DANGER_FILL.getRGB() & 0xFFFFFF, rgb(render(gauge, 400, 400), 70, 150));
+        assertEquals(GaugeStyle.dangerFill().getRGB() & 0xFFFFFF, rgb(render(gauge, 400, 400), 70, 150));
     }
 
     /** Colour of the zone ring at {@code value}'s position on a 400x400 render. */

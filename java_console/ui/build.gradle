@@ -45,6 +45,16 @@ tasks.register('runLLMTabSandbox', JavaExec) {
     }
 }
 
+// Gauges tab with simulated values, no ECU. -Ptheme=dark previews the dark console theme.
+tasks.register('runGaugesSandbox', JavaExec) {
+    dependsOn testClasses
+    group = 'Execution'
+    description = 'Open the Gauges tab with simulated sensor values (no ECU port opened)'
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.rusefi.ui.GaugesPanelMockedSandbox'
+    systemProperty 'console.theme', project.findProperty('theme') ?: 'light'
+}
+
 tasks.register('runLogViewerSandbox', JavaExec) {
     dependsOn testClasses
     group = 'Execution'

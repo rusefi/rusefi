@@ -38,7 +38,8 @@ public class HardcodedColorRatchetTest {
      * Not a colour written into the code: a translucent copy of another colour, e.g. a theme colour, and
      * parsing a variable (the hex fallbacks of a theme key, e.g. StatusChip.Tone).
      */
-    private static final Pattern DERIVED = Pattern.compile("new Color\\(\\w+\\.getRed\\(\\)|Color\\.decode\\([A-Za-z_]\\w*\\)");
+    private static final Pattern DERIVED = Pattern.compile(
+        "new Color\\(\\w+\\.getRed\\(\\)|new Color\\(\\w+\\.getRGB\\(\\)|Color\\.decode\\([A-Za-z_]\\w*\\)");
     /** Light and dark plot palettes kept equal to the theme files by PlotPaletteTest and SnifferPaletteTest */
     private static final Set<String> PALETTES = new HashSet<>(Arrays.asList(
         "com/rusefi/ui/logview/PlotPalette.java",

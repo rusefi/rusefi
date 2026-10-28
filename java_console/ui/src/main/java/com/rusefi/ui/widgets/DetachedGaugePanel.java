@@ -138,7 +138,7 @@ final class DetachedGaugePanel extends JPanel {
         Graphics2D g = (Graphics2D) graphics.create();
         try {
             g.setComposite(AlphaComposite.Src);
-            g.setColor(window == null ? new Color(0, true) : window.getBackground());
+            g.setColor(window == null ? new Color(0, true) : window.getBackground()); // [tag:fixed_color] transparent
             g.fillRect(0, 0, getWidth(), getHeight());
         } finally {
             g.dispose();
@@ -196,11 +196,11 @@ final class DetachedGaugePanel extends JPanel {
             Graphics2D g = (Graphics2D) graphics.create();
             try {
                 g.translate(x, y);
-                g.setColor(new Color(0xF3F4F6));
+                g.setColor(GaugeStyle.detachedBackground());
                 g.fillRect(0, 0, CLOSE_SIZE, CLOSE_SIZE);
                 g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g.setStroke(new BasicStroke(2));
-                g.setColor(Color.RED);
+                g.setColor(GaugeStyle.detachedClose());
                 g.drawRect(1, 1, CLOSE_SIZE - 3, CLOSE_SIZE - 3);
                 g.drawLine(8, 8, 20, 20);
                 g.drawLine(20, 8, 8, 20);

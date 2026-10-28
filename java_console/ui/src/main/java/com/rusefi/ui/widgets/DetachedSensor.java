@@ -97,13 +97,13 @@ public class DetachedSensor {
         frame.getRootPane().setOpaque(false);
         if (configuration.isTranslucencyCapable()
                 && device.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.PERPIXEL_TRANSLUCENT)) {
-            frame.setBackground(new Color(0, 0, 0, 0));
+            frame.setBackground(new Color(0, 0, 0, 0)); // [tag:fixed_color] transparent window
             // Swing clears its translucent back buffer to the root's background.
             // FlatLaf supplies an opaque theme color even for a non-opaque root,
             // which otherwise leaves a pale halo behind the antialiased rim.
             frame.getRootPane().setBackground(frame.getBackground());
         } else {
-            frame.setBackground(new Color(0xF3F4F6));
+            frame.setBackground(GaugeStyle.detachedBackground());
         }
         frame.addPropertyChangeListener("graphicsConfiguration", event ->
             SwingUtilities.invokeLater(() -> restoreTransparency(frame)));

@@ -1,6 +1,7 @@
 package com.rusefi.ui;
 
 import com.rusefi.core.preferences.storage.Node;
+import com.rusefi.ui.widgets.GaugeStyle;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,10 +32,6 @@ final class FreeGaugeArea {
     static final double NEW_GAUGE_WIDTH = 0.25;
     static final int HANDLE = 14;
     static final int CLOSE = 20;
-    private static final Color ACCENT = new Color(0x1E88E5);
-    private static final Color OUTLINE = new Color(30, 136, 229, 140);
-    private static final Color CLOSE_FILL = new Color(0xE53935);
-    private static final Color GRID_LINE = new Color(0, 0, 0, 18);
 
     private final UIContext uiContext;
     private final Node config;
@@ -462,7 +459,7 @@ final class FreeGaugeArea {
             try {
                 g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 // Faint 10% guides show that the area is being edited.
-                g.setColor(GRID_LINE);
+                g.setColor(GaugeStyle.editGrid());
                 for (int i = 1; i < 10; i++) {
                     int x = (int) Math.round(getWidth() * i / 10.0);
                     int y = (int) Math.round(getHeight() * i / 10.0);
@@ -470,24 +467,24 @@ final class FreeGaugeArea {
                     g.drawLine(0, y, getWidth(), y);
                 }
                 g.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10, new float[]{4, 4}, 0));
-                g.setColor(OUTLINE);
+                g.setColor(GaugeStyle.editOutline());
                 for (Item item : items) {
                     Rectangle r = pixels(boundsOf(item));
                     g.drawRect(r.x, r.y, r.width - 1, r.height - 1);
                 }
                 if (selected != null) {
                     Rectangle r = pixels(boundsOf(selected));
-                    g.setColor(ACCENT);
+                    g.setColor(GaugeStyle.editAccent());
                     g.setStroke(new BasicStroke(2));
                     g.drawRect(r.x + 1, r.y + 1, r.width - 2, r.height - 2);
                     Rectangle handle = resizeHandle(selected);
                     g.fillRect(handle.x, handle.y, handle.width, handle.height);
-                    g.setColor(Color.WHITE);
+                    g.setColor(Color.WHITE); // [tag:fixed_color] glyph on the accent or red button
                     g.drawLine(handle.x + 4, handle.y + handle.height - 3, handle.x + handle.width - 3, handle.y + 4);
                     Rectangle close = closeButton(selected);
-                    g.setColor(CLOSE_FILL);
+                    g.setColor(GaugeStyle.editClose());
                     g.fill(new Ellipse2D.Double(close.x, close.y, close.width, close.height));
-                    g.setColor(Color.WHITE);
+                    g.setColor(Color.WHITE); // [tag:fixed_color] glyph on the accent or red button
                     g.drawLine(close.x + 6, close.y + 6, close.x + close.width - 6, close.y + close.height - 6);
                     g.drawLine(close.x + close.width - 6, close.y + 6, close.x + 6, close.y + close.height - 6);
                 }
