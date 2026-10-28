@@ -1,6 +1,7 @@
 package com.rusefi.ui.basic;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.util.SystemInfo;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -13,7 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * [tag:console_theme] [tag:light_theme_snapshot] Every colour the console theme sets in the light
@@ -26,19 +27,45 @@ import static org.junit.jupiter.api.Assertions.fail;
  */
 public class LightThemeSnapshotTest {
     static final String SNAPSHOT = "/com/rusefi/ui/theme/light-theme-snapshot.txt";
+    private static final String[] LINUX_CLOSE_FOREGROUNDS = {
+        "TitlePane.closeHoverForeground", "TitlePane.closePressedForeground"
+    };
 
     @Test
     public void lightThemeColoursAreUnchanged() throws Exception {
-        String actual = render(snapshot());
-        String expected = read();
+        SortedMap<String, String> colours = snapshot();
+        String actual = render(colours);
+        String expected = read(SystemInfo.isLinux);
         if (actual.equals(expected)) {
             return;
         }
         Path written = Paths.get("build", "console-theme", "light-theme-snapshot.txt");
         Files.createDirectories(written.getParent());
-        Files.write(written, actual.getBytes(StandardCharsets.UTF_8));
+        // Keep the replacement snapshot portable: Linux aliases are checked above and derived below.
+        if (SystemInfo.isLinux) {
+            for (String key : LINUX_CLOSE_FOREGROUNDS) {
+                colours.remove(key);
+            }
+        }
+        Files.write(written, render(colours).getBytes(StandardCharsets.UTF_8));
         fail("Light theme colours changed:\n" + diff(expected, actual)
             + "\nIf intended, copy " + written.toAbsolutePath() + " to src/test/resources" + SNAPSHOT);
+    }
+
+    @Test
+    public void linuxCloseButtonAliasesUseThePinnedForeground() throws IOException {
+        Map<String, String> expected = parse(read(true));
+        assertNotNull(expected.get("TitlePane.foreground"));
+        for (String key : LINUX_CLOSE_FOREGROUNDS) {
+            assertEquals(expected.get("TitlePane.foreground"), expected.get(key));
+        }
+    }
+
+    @Test
+    public void otherPlatformsKeepTheSharedSnapshot() throws IOException {
+        Map<String, String> expected = parse(read(false));
+        assertFalse(expected.containsKey("TitlePane.closeHoverForeground"));
+        assertFalse(expected.containsKey("TitlePane.closePressedForeground"));
     }
 
     /** Key -> colour or style text of the console light theme, where it differs from stock FlatLightLaf. */
@@ -96,7 +123,7 @@ public class LightThemeSnapshotTest {
         return sb.toString();
     }
 
-    private static String read() throws IOException {
+    private static String read(boolean linux) throws IOException {
         try (InputStream stream = LightThemeSnapshotTest.class.getResourceAsStream(SNAPSHOT)) {
             if (stream == null) {
                 return "";
@@ -107,7 +134,17 @@ public class LightThemeSnapshotTest {
             while ((n = stream.read(buffer)) > 0) {
                 out.write(buffer, 0, n);
             }
-            return new String(out.toByteArray(), StandardCharsets.UTF_8).replace("\r\n", "\n");
+            SortedMap<String, String> expected = new TreeMap<>(parse(
+                new String(out.toByteArray(), StandardCharsets.UTF_8)));
+            // FlatLaf's [linux] defaults alias these to TitlePane.foreground. On other platforms
+            // they stay stock white and are absent from this diff against stock FlatLightLaf.
+            // Use the pinned foreground, never the current theme, so colour regressions still fail.
+            if (linux) {
+                for (String key : LINUX_CLOSE_FOREGROUNDS) {
+                    expected.put(key, expected.get("TitlePane.foreground"));
+                }
+            }
+            return render(expected);
         }
     }
 
@@ -130,7 +167,7 @@ public class LightThemeSnapshotTest {
 
     private static Map<String, String> parse(String text) {
         Map<String, String> map = new HashMap<>();
-        for (String line : text.split("\n")) {
+        for (String line : text.replace("\r\n", "\n").split("\n")) {
             int eq = line.indexOf('=');
             if (eq > 0) {
                 map.put(line.substring(0, eq), line.substring(eq + 1));

@@ -547,6 +547,11 @@ overrides the saved choice. Every new colour key goes into both theme files (`Th
 equal key sets and contrast). `LightThemeSnapshotTest` pins every resolved light colour, so a
 refactor of the theme files must leave it green; an intended light change updates
 `light-theme-snapshot.txt` from the copy the failing run writes to `ui/build/console-theme/`.
+FlatLaf's Linux defaults make `TitlePane.closeHoverForeground` and
+`TitlePane.closePressedForeground` aliases of `TitlePane.foreground`; on other
+platforms they remain stock white. `LightThemeSnapshotTest` derives the Linux
+expectations from the pinned title colour and omits these aliases from its
+replacement snapshot, so the same baseline works across platforms.
 `tint()` mixes with white and glows on dark backgrounds: the dark file uses `shade()` instead.
 Hard-coded `Color` values in `ui/src/main/java` are counted by `HardcodedColorRatchetTest`
 (`[tag:fixed_color]`): take colours from the theme, or mark one that must look the same in every
