@@ -80,7 +80,7 @@ class ProgramSelectorDfuUiTest {
     }
 
     @Test
-    void specialistActionsAreGroupedUnderAdvancedProgrammingTools() throws Exception {
+    void specialistActionsAreListedDirectlyInTheDropDown() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
             PortResult dfu = new PortResult("DFU", SerialPortType.Dfu);
             PortResult ecu = new PortResult("ECU", SerialPortType.Ecu);
@@ -92,14 +92,9 @@ class ProgramSelectorDfuUiTest {
                 ignored -> {}, () -> {});
 
             JPopupMenu menu = selector.apply(hardware, true, false, "proteus_f7", "proteus_f7");
-            assertEquals(1, menu.getComponentCount());
-            assertTrue(menu.getComponent(0) instanceof JMenu);
-            JMenu advancedTools = (JMenu) menu.getComponent(0);
-            assertEquals("Advanced programming tools", advancedTools.getText());
-            List<String> advancedLabels = Arrays.stream(advancedTools.getMenuComponents())
-                .filter(JMenuItem.class::isInstance)
-                .map(component -> ((JMenuItem) component).getText())
-                .collect(java.util.stream.Collectors.toList());
+            assertFalse(Arrays.stream(menu.getComponents()).anyMatch(JMenu.class::isInstance),
+                "actions are not nested in a submenu");
+            List<String> advancedLabels = menuLabels(menu);
 
             assertTrue(advancedLabels.containsAll(Arrays.asList(
                 UpdateMode.DFU_MANUAL.displayText,
@@ -133,9 +128,8 @@ class ProgramSelectorDfuUiTest {
 
             selector.setCapabilityProviderForTests(() -> capabilities(true, true, "universal", "proteus_f7"));
             JPopupMenu menu = selector.apply(hardware, true, true, "universal", "proteus_f7");
-            assertEquals(1, menu.getComponentCount(), "manual DFU remains available under advanced tools");
-            JMenu advanced = (JMenu) menu.getComponent(0);
-            assertEquals(UpdateMode.DFU_MANUAL.displayText, ((JMenuItem) advanced.getMenuComponent(0)).getText());
+            assertEquals(1, menu.getComponentCount(), "manual DFU remains available in the drop-down");
+            assertEquals(UpdateMode.DFU_MANUAL.displayText, ((JMenuItem) menu.getComponent(0)).getText());
             JButton recover = findButton(selector.getControl(), "Recover ECU");
             assertNotNull(recover);
             assertTrue(recover.isVisible());
@@ -471,11 +465,7 @@ class ProgramSelectorDfuUiTest {
                     PortResult can = new PortResult(transport, type);
                     Harness h = new Harness(can, new PortResult("COM8", SerialPortType.Ecu));
                     JPopupMenu menu = h.selector.apply(h.hardware.get(), true, false, "proteus_f7", "proteus_f7");
-                    JMenu advanced = (JMenu) menu.getComponent(0);
-                    List<String> labels = Arrays.stream(advanced.getMenuComponents())
-                        .filter(JMenuItem.class::isInstance)
-                        .map(component -> ((JMenuItem) component).getText())
-                        .collect(java.util.stream.Collectors.toList());
+                    List<String> labels = menuLabels(menu);
                     assertFalse(labels.contains(UpdateMode.DFU_AUTO.displayText));
                     assertFalse(labels.contains(UpdateMode.DFU_SWITCH.displayText));
                     verify(h.executor, never()).startJob(any(), any());
@@ -489,10 +479,7 @@ class ProgramSelectorDfuUiTest {
         SwingUtilities.invokeAndWait(() -> {
             Harness h = new Harness(bootloader("proteus_f7"));
             JPopupMenu menu = h.selector.apply(h.hardware.get(), true, false, "proteus_f7", "proteus_f7");
-            List<String> labels = Arrays.stream(((JMenu) menu.getComponent(0)).getMenuComponents())
-                .filter(JMenuItem.class::isInstance)
-                .map(component -> ((JMenuItem) component).getText())
-                .collect(java.util.stream.Collectors.toList());
+            List<String> labels = menuLabels(menu);
 
             assertFalse(labels.contains(UpdateMode.DFU_AUTO.displayText), labels.toString());
             assertFalse(labels.contains(UpdateMode.DFU_SWITCH.displayText), labels.toString());
@@ -1366,15 +1353,18 @@ class ProgramSelectorDfuUiTest {
 
     private static JMenuItem menuItem(JPopupMenu menu, String text) {
         for (Component component : menu.getComponents()) {
-            if (component instanceof JMenu) {
-                for (Component child : ((JMenu) component).getMenuComponents()) {
-                    if (child instanceof JMenuItem && text.equals(((JMenuItem) child).getText())) {
-                        return (JMenuItem) child;
-                    }
-                }
+            if (component instanceof JMenuItem && text.equals(((JMenuItem) component).getText())) {
+                return (JMenuItem) component;
             }
         }
         return fail("Missing menu item " + text);
+    }
+
+    private static List<String> menuLabels(JPopupMenu menu) {
+        return Arrays.stream(menu.getComponents())
+            .filter(JMenuItem.class::isInstance)
+            .map(component -> ((JMenuItem) component).getText())
+            .collect(java.util.stream.Collectors.toList());
     }
 
     private static final class Harness {
