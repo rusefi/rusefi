@@ -50,8 +50,52 @@ public class UpDownImage extends JPanel {
 
     private boolean renderText = true;
 
+    /**
+     * Colours of the texts and vertical lines. {@link #DEFAULT} is the classic look, used by the trigger
+     * image generator; the console's Engine Sniffer passes its light or dark plot palette.
+     */
+    public static final class Style {
+        public static final Style DEFAULT = new Style(Color.black, Color.darkGray, Color.red,
+            TIME_SCALE_COLOR, ENGINE_CYCLE_COLOR, false);
+
+        final Color text;
+        final Color mutedText;
+        final Color durationText;
+        final Color timeScale;
+        final Color engineCycle;
+        /** Skip tooth index, duration and angle texts wider than their pulse; zooming in brings them back. */
+        final boolean skipCrowdedText;
+
+        public Style(Color text, Color mutedText, Color durationText, Color timeScale, Color engineCycle,
+                     boolean skipCrowdedText) {
+            this.text = text;
+            this.mutedText = mutedText;
+            this.durationText = durationText;
+            this.timeScale = timeScale;
+            this.engineCycle = engineCycle;
+            this.skipCrowdedText = skipCrowdedText;
+        }
+    }
+
+    private Style style = Style.DEFAULT;
+
+    public void setStyle(Style style) {
+        this.style = style;
+        repaint();
+    }
+
     public void setRenderText(boolean renderText) {
         this.renderText = renderText;
+    }
+
+    /**
+     * Channel name and event count in the top left corner; off when the host shows them beside the row,
+     * like the console's Engine Sniffer channel column. Scale lines and pulse texts are unaffected.
+     */
+    private boolean renderName = true;
+
+    public void setRenderName(boolean renderName) {
+        this.renderName = renderName;
     }
 
     interface PinNameSource {
@@ -186,11 +230,11 @@ public class UpDownImage extends JPanel {
 				for (EngineReport.UpDown upDown : engineReport.getList())
             paintGap(d, upDown, g, gapIndex);
 
-        g2.setColor(Color.black);
+        g2.setColor(style.text);
 
         int line = 0;
 
-        if (!this.renderText) {
+        if (!this.renderText || !this.renderName) {
             return;
         }
 
@@ -220,7 +264,7 @@ public class UpDownImage extends JPanel {
         g2.setStroke(ENGINE_CYCLE_STROKE);
         for (int time : time2rpm.keySet()) {
             int x = translator.timeToScreen(time, d.width);
-            g2.setColor(ENGINE_CYCLE_COLOR);
+            g2.setColor(style.engineCycle);
             g2.drawLine(x, 0, x, d.height);
 
             if (isShowTdcLabel()) {
@@ -255,7 +299,7 @@ public class UpDownImage extends JPanel {
 
         Stroke oldStroke = g2.getStroke();
         g2.setStroke(TIME_SCALE_STROKE);
-        g2.setColor(TIME_SCALE_COLOR);
+        g2.setColor(style.timeScale);
 
         // start at +1 so we don't render a line at the left edge
         for (int ms = fromMs + 1; ms <= toMs; ms++) {
@@ -276,7 +320,7 @@ public class UpDownImage extends JPanel {
             return;
         }
 
-        g.setColor(Color.black);
+        g.setColor(style.text);
 
         // '-1' actually means 'not first wheel' it's coming from
         if (!Double.isNaN(upDown.prevGap)) {
@@ -314,23 +358,24 @@ public class UpDownImage extends JPanel {
         }
 
         final int duration = upDown.getDuration();
+        int pulseWidth = x2 - x1;
 
         // don't render duration for zero duration or for trigger
         if (duration != 0 && upDown.upTriggerCycleIndex == -1) {
-            g.setColor(Color.red);
+            g.setColor(style.durationText);
             String durationString = String.format(" %.2fms", duration / EngineReport.ENGINE_SNIFFER_TICKS_PER_MS);
-            g.drawString(durationString, x1, 15);
+            drawFitting(g, durationString, x1, 15, pulseWidth);
         }
 
         if (upDown.upTriggerCycleIndex != -1) {
-            g.setColor(Color.darkGray);
-            g.drawString("" + upDown.upTriggerCycleIndex, x1, (int) (0.25 * d.height));
+            g.setColor(style.mutedText);
+            drawFitting(g, "" + upDown.upTriggerCycleIndex, x1, (int) (0.25 * d.height), pulseWidth);
         }
 
         // Skip second index if invalid or equal to start index
         if (upDown.downTriggerCycleIndex != -1 && upDown.upTriggerCycleIndex != upDown.downTriggerCycleIndex) {
-            g.setColor(Color.darkGray);
-            g.drawString("" + upDown.downTriggerCycleIndex, x2, (int) (0.25 * d.height));
+            g.setColor(style.mutedText);
+            drawFitting(g, "" + upDown.downTriggerCycleIndex, x2, (int) (0.25 * d.height), pulseWidth);
         }
 
         // No angle text if shorter than 50px
@@ -339,15 +384,23 @@ public class UpDownImage extends JPanel {
         }
 
         int offset = 3;
-        g.setColor(Color.black);
+        g.setColor(style.text);
 
         double fromAngle = time2rpm.getCrankAngleByTime(upDown.upTime);
         String fromAngleStr = RevolutionLog.angle2string(fromAngle);
-        g.drawString(fromAngleStr, x1 + offset, (int) (0.5 * d.height));
+        drawFitting(g, fromAngleStr, x1 + offset, (int) (0.5 * d.height), pulseWidth - offset);
 
         double toAngle = time2rpm.getCrankAngleByTime(upDown.downTime);
         String toAngleStr = RevolutionLog.angle2string(toAngle);
-        g.drawString(toAngleStr, x1 + offset, (int) (0.75 * d.height));
+        drawFitting(g, toAngleStr, x1 + offset, (int) (0.75 * d.height), pulseWidth - offset);
+    }
+
+    /** Draws {@code text}, unless the style skips crowded texts and it is wider than {@code room}. */
+    private void drawFitting(Graphics g, String text, int x, int y, int room) {
+        if (style.skipCrowdedText && g.getFontMetrics().stringWidth(text) > room) {
+            return;
+        }
+        g.drawString(text, x, y);
     }
 
     public void setRevolutions(StringBuilder revolutions) {
