@@ -386,6 +386,9 @@ public class MainFrame {
 
         fileMenu.addSeparator();
 
+        fileMenu.add(AppearanceMenu.create(frame.getFrame()));
+        fileMenu.addSeparator();
+
         JMenuItem exitItem = new JMenuItem("Exit");
         exitItem.setIcon(loadMenuIcon("logout"));
         exitItem.setMnemonic(KeyEvent.VK_X);

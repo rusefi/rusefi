@@ -540,8 +540,10 @@ sizes/shapes shared by all themes, `FlatLightLaf.properties` and `FlatDarkLaf.pr
 palette variables and colour keys. Do not put colour keys in the shared file: FlatLaf's built-in
 `FlatLightLaf.properties` assigns most of them and wins. Add new look settings there rather than
 as `UIManager.put` calls, so they follow the active theme.
-The dark theme (`[tag:console_dark_mode]`) is incomplete and only reachable with
-`-Dconsole.theme=dark`. Every new colour key goes into both theme files (`ThemeParityTest` checks
+Users pick the theme in File > Appearance (Light, Dark, Follow system; `ConsoleTheme`,
+`[tag:console_dark_mode]`). It is read once in `UiHelper.configureLaf()` and applies on the next
+start, because many panels read their colours when they are built; `-Dconsole.theme=dark|light`
+overrides the saved choice. Every new colour key goes into both theme files (`ThemeParityTest` checks
 equal key sets and contrast). `LightThemeSnapshotTest` pins every resolved light colour, so a
 refactor of the theme files must leave it green; an intended light change updates
 `light-theme-snapshot.txt` from the copy the failing run writes to `ui/build/console-theme/`.
