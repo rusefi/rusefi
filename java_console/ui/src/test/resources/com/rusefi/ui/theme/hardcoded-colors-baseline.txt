@@ -1,5 +1,2 @@
 # Hard-coded colours per console source file, see HardcodedColorRatchetTest. Only ever lower these.
-# total=30
-com/rusefi/ui/util/PinColors.java=12
-com/rusefi/ui/widgets/CommandIcon.java=17
-com/rusefi/ui/widgets/SparkleIcon.java=1
+# total=0

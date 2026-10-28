@@ -58,7 +58,7 @@ public final class PinColors {
 
         /** Marker text colour: dark on the light fills, white otherwise. */
         public Color textColor() {
-            return isLight(color()) ? new Color(0x1f2937) : Color.WHITE;
+            return isLight(color()) ? new Color(0x1f2937) : Color.WHITE; // [tag:fixed_color] picked for the pin colour
         }
 
         /** The type a YAML {@code type} names, or null for an unknown or empty one. */
@@ -194,19 +194,19 @@ public final class PinColors {
     public static Color pigtailTokenToColor(String token) {
         if (token == null) return null;
         switch (token.toLowerCase().trim()) {
-            case "black":  return new Color(0x111827);
-            case "red":    return new Color(0xdc2626);
-            case "white":  return new Color(0xffffff);
-            case "yellow": return new Color(0xfacc15);
-            case "green":  return new Color(0x16a34a);
-            case "blue":   return new Color(0x2563eb);
-            case "orange": return new Color(0xf97316);
+            case "black":  return new Color(0x111827); // [tag:fixed_color] wire colour
+            case "red":    return new Color(0xdc2626); // [tag:fixed_color] wire colour
+            case "white":  return new Color(0xffffff); // [tag:fixed_color] wire colour
+            case "yellow": return new Color(0xfacc15); // [tag:fixed_color] wire colour
+            case "green":  return new Color(0x16a34a); // [tag:fixed_color] wire colour
+            case "blue":   return new Color(0x2563eb); // [tag:fixed_color] wire colour
+            case "orange": return new Color(0xf97316); // [tag:fixed_color] wire colour
             case "purple":
-            case "violet": return new Color(0x7e22ce);
-            case "brown":  return new Color(0x92400e);
+            case "violet": return new Color(0x7e22ce); // [tag:fixed_color] wire colour
+            case "brown":  return new Color(0x92400e); // [tag:fixed_color] wire colour
             case "grey":
-            case "gray":   return new Color(0x9ca3af);
-            case "pink":   return new Color(0xf9a8d4);
+            case "gray":   return new Color(0x9ca3af); // [tag:fixed_color] wire colour
+            case "pink":   return new Color(0xf9a8d4); // [tag:fixed_color] wire colour
             default:       return null;
         }
     }

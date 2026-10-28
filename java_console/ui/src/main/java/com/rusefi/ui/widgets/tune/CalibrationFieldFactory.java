@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.rusefi.ui.widgets.TuningIcons;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.field.EnumIniField;
@@ -8,7 +9,6 @@ import com.opensr5.ini.field.StringIniField;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.ContextHelpModel;
 import com.opensr5.ini.IniFileModel;
-import com.rusefi.core.ui.AutoupdateUtil;
 
 import javax.swing.*;
 import javax.swing.text.AbstractDocument;
@@ -193,7 +193,7 @@ public class CalibrationFieldFactory {
     }
 
     private static Icon loadHelpIcon() {
-        ImageIcon source = AutoupdateUtil.loadIcon("icons/tuning/help48.png");
+        ImageIcon source = TuningIcons.load("help");
         return source == null ? null : new ImageIcon(
             source.getImage().getScaledInstance(HELP_ICON_SIZE, HELP_ICON_SIZE, Image.SCALE_SMOOTH));
     }

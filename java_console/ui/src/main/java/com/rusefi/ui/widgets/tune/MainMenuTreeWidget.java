@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.rusefi.ui.widgets.TuningIcons;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.icons.FlatSearchIcon;
 import com.opensr5.ConfigurationImage;
@@ -719,7 +720,7 @@ public class MainMenuTreeWidget {
     }
 
     private static ImageIcon loadTuningIcon(String name, int size) {
-        return scaleIcon(AutoupdateUtil.loadIcon("icons/tuning/" + name + "48.png"), size);
+        return scaleIcon(TuningIcons.load(name), size);
     }
 
     public JPanel getContentPane() {
