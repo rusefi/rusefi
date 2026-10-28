@@ -32,20 +32,9 @@ public class UiHelper {
         DefaultExceptionHandler.install();
     }
 
+    /** The appearance chosen in File > Appearance, or the -Dconsole.theme option [tag:console_dark_mode]. */
     public static void configureLaf() {
-        configureLaf(isDarkThemeRequested());
-    }
-
-    /**
-     * [tag:console_dark_mode] Developer switch until the dark theme is finished: start the console with
-     * -Dconsole.theme=dark. Anything else, including a missing property, keeps the light theme.
-     */
-    static boolean isDarkThemeRequested() {
-        try {
-            return "dark".equalsIgnoreCase(System.getProperty(THEME_PROPERTY, "").trim());
-        } catch (SecurityException e) {
-            return false;
-        }
+        configureLaf(ConsoleTheme.isDarkRequested());
     }
 
     /** True while the dark console theme is installed. */
