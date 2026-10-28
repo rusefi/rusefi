@@ -549,6 +549,8 @@ refactor of the theme files must leave it green; an intended light change update
 Hard-coded `Color` values in `ui/src/main/java` are counted by `HardcodedColorRatchetTest`
 (`[tag:fixed_color]`): take colours from the theme, or mark one that must look the same in every
 theme with that tag and a reason; lower `hardcoded-colors-baseline.txt` when removing them.
+Colours inside images are invisible to that test: load the `icons/tuning/*48.png` icons through
+`TuningIcons.load`, which lightens them in the dark theme (`TuningIconsTest` checks their contrast).
 Java's logical `Font.MONOSPACED` renders as Courier New on Windows; use `ConsoleFonts.mono()` for
 monospaced console text. Toolbar controls share `JoinedButtons.HEIGHT` so a row lines up.
 For a rounded panel, set a `FlatLineBorder` with an arc: `FlatPanelUI` then paints the background

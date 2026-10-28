@@ -1,9 +1,9 @@
 package com.rusefi.ui.console;
 
+import com.rusefi.ui.widgets.TuningIcons;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.MessagesCentral;
-import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionStatusValue;
 import com.rusefi.ui.LogDownloader;
@@ -285,7 +285,7 @@ public class TabbedPanel {
                 return null;
         }
 
-        ImageIcon icon = AutoupdateUtil.loadIcon("icons/tuning/" + iconName + "48.png");
+        ImageIcon icon = TuningIcons.load(iconName);
         if (icon == null) {
             return null;
         }

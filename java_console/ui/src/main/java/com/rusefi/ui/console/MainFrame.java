@@ -1,5 +1,6 @@
 package com.rusefi.ui.console;
 
+import com.rusefi.ui.widgets.TuningIcons;
 import com.devexperts.logging.Logging;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.util.SystemInfo;
@@ -1068,7 +1069,7 @@ public class MainFrame {
     }
 
     static Icon loadMenuIcon(String name) {
-        ImageIcon icon = AutoupdateUtil.loadIcon("icons/tuning/" + name + "48.png");
+        ImageIcon icon = TuningIcons.load(name);
         if (icon == null) {
             return null;
         }

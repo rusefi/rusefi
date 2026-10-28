@@ -142,6 +142,12 @@ public class ThemeParityTest {
             }
             check(failures, "Console.Overlay.warning", "Panel.background", TEXT);
             check(failures, "CheckBox.foreground", "Console.Checkbox.mixedBackground", TEXT);
+            // line icons: every tone shows on pages, toolbars and cards
+            for (String icon : new String[]{"neutral", "accent", "good", "bad", "spark", "fuel", "sparkle"}) {
+                for (String background : page) {
+                    check(failures, "Console.Icon." + icon, background, GRAPHIC);
+                }
+            }
             for (String tone : new String[]{"neutral", "accent"}) {
                 String key = "Console.Status." + tone + ".";
                 check(failures, key + "foreground", key + "background", TEXT);
@@ -156,7 +162,7 @@ public class ThemeParityTest {
      * pure red error text #ff0000 measures 3.67:1 on the page and 4.00:1 on white; the live graph's amber
      * line #e0a100 measures 2.27:1 on the white card, with the tinted area under it; a round dial's orange
      * warning numbers #e65100 measure 2.56:1 on its warning fill #ffcc80; the firmware update result's amber
-     * warning text #a06400 measures 4.46:1 on the page.
+     * warning text #a06400 measures 4.46:1 on the page; the amber spark icon #d97706 measures 2.92:1 on the page.
      */
     private static final Set<String> KNOWN_LIGHT_EXCEPTIONS = new TreeSet<>(java.util.Arrays.asList(
         "Console.Status.connected.foreground on Console.Status.connected.background",
@@ -166,7 +172,8 @@ public class ThemeParityTest {
         "Console.ErrorText.foreground on Console.Toolbar.background",
         "Console.Gauge.graph.line on Console.Gauge.card.top",
         "Console.Gauge.warningText on Console.Gauge.warningFill",
-        "Console.Overlay.warning on Panel.background"));
+        "Console.Overlay.warning on Panel.background",
+        "Console.Icon.spark on Panel.background"));
 
     private static void check(List<String> failures, String foreground, String background, double minimum) {
         if (!UiHelper.isDarkTheme() && KNOWN_LIGHT_EXCEPTIONS.contains(foreground + " on " + background)) {

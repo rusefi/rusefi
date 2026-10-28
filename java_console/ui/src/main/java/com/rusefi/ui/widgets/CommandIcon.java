@@ -12,7 +12,7 @@ import java.awt.geom.RoundRectangle2D;
  */
 public enum CommandIcon implements Icon {
     /** Status/report commands such as sensorinfo. */
-    INFO(new Color(0x1D4ED8)) {
+    INFO("accent", 0x1D4ED8) {
         @Override
         void paint(Graphics2D g) {
             g.draw(new Ellipse2D.Double(1.5, 1.5, 13, 13));
@@ -20,7 +20,7 @@ public enum CommandIcon implements Icon {
             g.draw(new Line(8, 7.5, 8, 11.5));
         }
     },
-    HELP(new Color(0x1D4ED8)) {
+    HELP("accent", 0x1D4ED8) {
         @Override
         void paint(Graphics2D g) {
             g.draw(new Ellipse2D.Double(1.5, 1.5, 13, 13));
@@ -32,14 +32,14 @@ public enum CommandIcon implements Icon {
             g.fill(new Ellipse2D.Double(7.1, 11, 1.8, 1.8));
         }
     },
-    STOP(new Color(0xDC2626)) {
+    STOP("bad", 0xDC2626) {
         @Override
         void paint(Graphics2D g) {
             g.fill(new RoundRectangle2D.Double(2.5, 2.5, 11, 11, 3, 3));
         }
     },
     /** Trigger wheel signal: a square pulse train. */
-    TRIGGER(new Color(0x586273)) {
+    TRIGGER("neutral", 0x586273) {
         @Override
         void paint(Graphics2D g) {
             Path2D wave = new Path2D.Double();
@@ -56,7 +56,7 @@ public enum CommandIcon implements Icon {
             g.draw(wave);
         }
     },
-    SD_CARD(new Color(0x586273)) {
+    SD_CARD("neutral", 0x586273) {
         @Override
         void paint(Graphics2D g) {
             Path2D card = new Path2D.Double();
@@ -73,7 +73,7 @@ public enum CommandIcon implements Icon {
         }
     },
     /** Write the configuration to flash: an arrow into a tray. */
-    SAVE(new Color(0x586273)) {
+    SAVE("neutral", 0x586273) {
         @Override
         void paint(Graphics2D g) {
             g.draw(new Line(8, 2, 8, 10));
@@ -91,7 +91,7 @@ public enum CommandIcon implements Icon {
         }
     },
     /** enable injection, enable ignition, ... */
-    ENABLE(new Color(0x16A34A)) {
+    ENABLE("good", 0x16A34A) {
         @Override
         void paint(Graphics2D g) {
             g.draw(new Ellipse2D.Double(1.5, 1.5, 13, 13));
@@ -103,7 +103,7 @@ public enum CommandIcon implements Icon {
         }
     },
     /** disable injection, disable ignition, ... */
-    DISABLE(new Color(0xDC2626)) {
+    DISABLE("bad", 0xDC2626) {
         @Override
         void paint(Graphics2D g) {
             g.draw(new Ellipse2D.Double(1.5, 1.5, 13, 13));
@@ -111,7 +111,7 @@ public enum CommandIcon implements Icon {
         }
     },
     /** sparkbench: a lightning bolt. */
-    SPARK(new Color(0xD97706)) {
+    SPARK("spark", 0xD97706) {
         @Override
         void paint(Graphics2D g) {
             Path2D bolt = new Path2D.Double();
@@ -126,7 +126,7 @@ public enum CommandIcon implements Icon {
         }
     },
     /** fuelbench: a fuel drop. */
-    FUEL(new Color(0x0891B2)) {
+    FUEL("fuel", 0x0891B2) {
         @Override
         void paint(Graphics2D g) {
             Path2D drop = new Path2D.Double();
@@ -140,7 +140,7 @@ public enum CommandIcon implements Icon {
         }
     },
     /** Idle control: a dial with its needle. */
-    IDLE(new Color(0x586273)) {
+    IDLE("neutral", 0x586273) {
         @Override
         void paint(Graphics2D g) {
             g.draw(new java.awt.geom.Arc2D.Double(1.5, 3, 13, 13, -20, 220, java.awt.geom.Arc2D.OPEN));
@@ -149,7 +149,7 @@ public enum CommandIcon implements Icon {
         }
     },
     /** luareset: a circular arrow. */
-    RESET(new Color(0x586273)) {
+    RESET("neutral", 0x586273) {
         @Override
         void paint(Graphics2D g) {
             g.draw(new java.awt.geom.Arc2D.Double(2.5, 2.5, 11, 11, 60, 280, java.awt.geom.Arc2D.OPEN));
@@ -161,7 +161,7 @@ public enum CommandIcon implements Icon {
         }
     },
     /** showconfig: lines of a listing. */
-    LIST(new Color(0x586273)) {
+    LIST("neutral", 0x586273) {
         @Override
         void paint(Graphics2D g) {
             for (double y = 3.5; y < 14; y += 3) {
@@ -171,7 +171,7 @@ public enum CommandIcon implements Icon {
         }
     },
     /** Start something, e.g. a capture: a play triangle. */
-    PLAY(new Color(0x1D4ED8)) {
+    PLAY("accent", 0x1D4ED8) {
         @Override
         void paint(Graphics2D g) {
             Path2D play = new Path2D.Double();
@@ -183,7 +183,7 @@ public enum CommandIcon implements Icon {
         }
     },
     /** Connect a device: a plug. */
-    PLUG(new Color(0x586273)) {
+    PLUG("neutral", 0x586273) {
         @Override
         void paint(Graphics2D g) {
             g.draw(new Line(6, 1.5, 6, 4.5));
@@ -203,7 +203,7 @@ public enum CommandIcon implements Icon {
      * Firmware update: a solid green up arrow, the flat form of the console's earlier 48 px upload arrow
      * (upload48.png), so the update action keeps its familiar mark.
      */
-    UPLOAD(new Color(0x16A34A)) {
+    UPLOAD("good", 0x16A34A) {
         @Override
         void paint(Graphics2D g) {
             Path2D arrow = new Path2D.Double();
@@ -221,7 +221,7 @@ public enum CommandIcon implements Icon {
         }
     },
     /** Any other command: a console prompt. */
-    COMMAND(new Color(0x586273)) {
+    COMMAND("neutral", 0x586273) {
         @Override
         void paint(Graphics2D g) {
             Path2D prompt = new Path2D.Double();
@@ -234,10 +234,19 @@ public enum CommandIcon implements Icon {
     };
 
     static final int SIZE = 16;
-    private final Color color;
+    /** Console.Icon.{@code tone} [tag:console_theme], e.g. accent, neutral, good, bad */
+    private final String tone;
+    /** The tone's light theme colour as 0xRRGGBB, for when no theme is installed */
+    private final int fallback;
 
-    CommandIcon(Color color) {
-        this.color = color;
+    CommandIcon(String tone, int fallback) {
+        this.tone = tone;
+        this.fallback = fallback;
+    }
+
+    Color color() {
+        Color themed = UIManager.getColor("Console.Icon." + tone);
+        return themed != null ? themed : new Color(fallback);
     }
 
     abstract void paint(Graphics2D g);
@@ -249,7 +258,7 @@ public enum CommandIcon implements Icon {
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
             g2.translate(x, y);
-            g2.setColor(c != null && !c.isEnabled() ? UIManager.getColor("Label.disabledForeground") : color);
+            g2.setColor(c != null && !c.isEnabled() ? UIManager.getColor("Label.disabledForeground") : color());
             g2.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
             paint(g2);
         } finally {
