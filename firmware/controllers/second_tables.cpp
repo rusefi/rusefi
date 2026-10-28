@@ -19,6 +19,13 @@ static_assert(PAGE4_SECTOR_OFFSET + sizeof(page4_container_s) <= LUA_PAGE_SECTOR
 	"page4 grew into the Lua page region — bump LUA_PAGE_SECTOR_OFFSET");
 #endif
 
+// On MFS boards page 4 is its own MFS record; mfsWriteRecord() panics above MFS_CFG_MAX_RECORD_SIZE.
+#if (EFI_STORAGE_MFS == TRUE) && !EFI_SIMULATOR
+#include "hal_mfs.h"
+static_assert(sizeof(page4_container_s) <= MFS_CFG_MAX_RECORD_SIZE,
+	"page4 exceeds MFS_CFG_MAX_RECORD_SIZE — raise it for this board");
+#endif
+
 static page4_container_s secondTablesContainer;
 
 void secondTablesSetDefaults() {
