@@ -29,26 +29,7 @@ import java.util.Objects;
 public final class CircularGauge extends JComponent implements GaugeDisplay {
     private static final int START_DEGREES = 135;
     private static final int SWEEP_DEGREES = 270;
-    // Light dial matching the console's FlatLaf light theme.
-    static final Color PROGRESS = new Color(0xFCE38A);
-    static final Color DANGER_FILL = new Color(0xFFCDD2);
-    static final Color DANGER = new Color(0xE53935);
-    // Amber rather than yellow: the normal progress fill is already yellow.
-    static final Color WARNING = new Color(0xFFA000);
-    static final Color WARNING_FILL = new Color(0xFFCC80);
-    static final Color WARNING_TEXT = new Color(0xE65100);
-    static final Color NEEDLE = new Color(0xE53935);
-    private static final Color SCALE = new Color(0x5F656D);
-    private static final Color TICK = new Color(0x9AA0A6);
-    private static final Color TRACK = new Color(0xE3E5E8);
-    private static final Color BEZEL_TOP = new Color(0xFBFBFC);
-    private static final Color BEZEL_BOTTOM = new Color(0xDADDE1);
-    private static final Color FACE_CENTER = Color.WHITE;
-    private static final Color FACE_EDGE = new Color(0xF3F4F6);
-    static final Color HUB = Color.WHITE;
-    private static final Color HUB_RIM = new Color(0xE1E4E8);
-    private static final Color TEXT = new Color(0x111111);
-    private static final Color LABEL_TEXT = new Color(0x2B2F33);
+    // Dial colours come from GaugeStyle, so the round gauge follows the light or dark console theme.
     private static final Font FONT = new Font(Font.SANS_SERIF, Font.PLAIN, 16);
     // Clockwise label centers from ui_gauge_resize(), relative to the dial center.
     private static final int[] LABEL_X = {-127, -169, -165, -139, -83, -1, 83, 139, 165, 163, 129};
@@ -366,35 +347,35 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
     private void paintVectorArtwork(Graphics2D g, Reading current) {
         artworkRenderCountForTests++;
         Zone zone = zoneOf(current.rawValue, 0);
-        Color fill = zone == Zone.DANGER ? DANGER_FILL : zone == Zone.WARNING ? WARNING_FILL : PROGRESS;
+        Color fill = zone == Zone.DANGER ? GaugeStyle.dangerFill() : zone == Zone.WARNING ? GaugeStyle.warningFill() : GaugeStyle.dialFill();
 
         // Everything stays inside the dial circle: detached windows clip to it.
-        g.setPaint(new GradientPaint(0, 0, BEZEL_TOP, 0, 400, BEZEL_BOTTOM));
+        g.setPaint(new GradientPaint(0, 0, GaugeStyle.bezelTop(), 0, 400, GaugeStyle.bezelBottom()));
         g.fill(new Ellipse2D.Double(1.5, 1.5, 397, 397));
-        g.setColor(HUB_RIM);
+        g.setColor(GaugeStyle.hubRim());
         g.setStroke(new BasicStroke(1.5f));
         g.draw(new Ellipse2D.Double(1.5, 1.5, 397, 397));
         g.setPaint(new RadialGradientPaint(new Point2D.Double(200, 170), 200,
-            new float[] {0.4f, 1f}, new Color[] {FACE_CENTER, FACE_EDGE}));
+            new float[] {0.4f, 1f}, new Color[] {GaugeStyle.faceCenter(), GaugeStyle.faceEdge()}));
         g.fill(new Ellipse2D.Double(11, 11, 378, 378));
 
         drawArc(g, 140, 80, 0, current.degrees, fill);
-        drawArc(g, 184, 4, 0, SWEEP_DEGREES, TRACK);
+        drawArc(g, 184, 4, 0, SWEEP_DEGREES, GaugeStyle.track());
         double lowDangerEnd = degreesOf(lowDangerThreshold);
         double lowWarningEnd = degreesOf(lowWarningThreshold);
         double highWarningStart = degreesOf(highWarningThreshold);
         double dangerStart = degreesOf(dangerThreshold);
-        drawArc(g, 184, 6, 0, lowDangerEnd, DANGER);
-        drawArc(g, 184, 6, lowDangerEnd, lowWarningEnd - lowDangerEnd, WARNING);
-        drawArc(g, 184, 6, highWarningStart, dangerStart - highWarningStart, WARNING);
-        drawArc(g, 184, 6, dangerStart, SWEEP_DEGREES - dangerStart, DANGER);
+        drawArc(g, 184, 6, 0, lowDangerEnd, GaugeStyle.danger());
+        drawArc(g, 184, 6, lowDangerEnd, lowWarningEnd - lowDangerEnd, GaugeStyle.warning());
+        drawArc(g, 184, 6, highWarningStart, dangerStart - highWarningStart, GaugeStyle.warning());
+        drawArc(g, 184, 6, dangerStart, SWEEP_DEGREES - dangerStart, GaugeStyle.danger());
 
         for (int i = 0; i <= 10; i++) {
             double value = minValue + (maxValue - minValue) * i / 10;
             Zone labelZone = zoneOf(value, 0.001);
-            Color color = labelZone == Zone.DANGER ? DANGER : labelZone == Zone.WARNING ? WARNING_TEXT : SCALE;
+            Color color = labelZone == Zone.DANGER ? GaugeStyle.danger() : labelZone == Zone.WARNING ? GaugeStyle.warningText() : GaugeStyle.scale();
             double angle = Math.toRadians(START_DEGREES + i * SWEEP_DEGREES / 10.0);
-            g.setColor(labelZone == Zone.DANGER ? DANGER : labelZone == Zone.WARNING ? WARNING : TICK);
+            g.setColor(labelZone == Zone.DANGER ? GaugeStyle.danger() : labelZone == Zone.WARNING ? GaugeStyle.warning() : GaugeStyle.tick());
             g.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER));
             double inner = i % 2 == 0 ? 168 : 174;
             g.draw(new Line2D.Double(200 + inner * Math.cos(angle), 200 + inner * Math.sin(angle),
@@ -406,24 +387,24 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
         // The needle and fill share the same rounded angle. The hub covers
         // the needle's inner end; labels and the value stay above the needle.
         double angle = Math.toRadians(START_DEGREES + current.degrees);
-        g.setColor(NEEDLE);
+        g.setColor(GaugeStyle.needle());
         g.setStroke(new BasicStroke(4, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER));
         g.draw(new Line2D.Double(200 + 90 * Math.cos(angle), 200 + 90 * Math.sin(angle),
             200 + 178 * Math.cos(angle), 200 + 178 * Math.sin(angle)));
         // Soft drop shadow lifting the hub off the face.
         for (int i = 8; i >= 1; i--) {
-            g.setColor(new Color(0, 0, 0, 5));
+            g.setColor(new Color(0, 0, 0, 5)); // [tag:fixed_color] a faint shadow is black in every theme
             g.fill(new Ellipse2D.Double(100 - i, 104 - i, 200 + 2 * i, 200 + 2 * i));
         }
-        g.setPaint(new GradientPaint(0, 100, HUB, 0, 300, FACE_EDGE));
+        g.setPaint(new GradientPaint(0, 100, GaugeStyle.hub(), 0, 300, GaugeStyle.faceEdge()));
         g.fill(new Ellipse2D.Double(100, 100, 200, 200));
-        g.setColor(HUB_RIM);
+        g.setColor(GaugeStyle.hubRim());
         g.setStroke(new BasicStroke(1.5f));
         g.draw(new Ellipse2D.Double(100, 100, 200, 200));
         drawText(g, current.text, 200, 200, 60, 165,
-            zone == Zone.DANGER ? DANGER : zone == Zone.WARNING ? WARNING_TEXT : TEXT);
-        drawText(g, units, 202, 246, 16, 160, LABEL_TEXT);
-        drawText(g, title, 200, 331, 16, 230, LABEL_TEXT);
+            zone == Zone.DANGER ? GaugeStyle.danger() : zone == Zone.WARNING ? GaugeStyle.warningText() : GaugeStyle.text());
+        drawText(g, units, 202, 246, 16, 160, GaugeStyle.label());
+        drawText(g, title, 200, 331, 16, 230, GaugeStyle.label());
     }
 
     int getArtworkRenderCountForTests() {

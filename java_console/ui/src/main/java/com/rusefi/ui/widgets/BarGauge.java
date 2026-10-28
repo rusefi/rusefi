@@ -52,7 +52,7 @@ public final class BarGauge extends CardGauge {
         double valueLeft = paintValue(g, value, valueFont, unitsFont, valueRight, headerBaseline);
 
         g.setFont(GaugeStyle.font(Font.PLAIN, (float) clamp(face.height * 0.14, 10, 16)));
-        g.setColor(GaugeStyle.SCALE);
+        g.setColor(GaugeStyle.scale());
         GaugeStyle.drawText(g, GaugeStyle.fit(g, getTitle(), valueLeft - left - pad), left, headerBaseline, -1);
 
         Font labelFont = GaugeStyle.font(Font.PLAIN, (float) clamp(face.height * 0.11, 9, 13));
@@ -65,7 +65,7 @@ public final class BarGauge extends CardGauge {
             fraction(value), dangerFraction(), isDanger(value));
 
         g.setFont(labelFont);
-        g.setColor(GaugeStyle.TICK);
+        g.setColor(GaugeStyle.tick());
         double labelBaseline = trackTop + thickness + 4 + labelMetrics.getAscent();
         GaugeStyle.drawText(g, label(minValue), left, labelBaseline, -1);
         GaugeStyle.drawText(g, label(maxValue), left + width, labelBaseline, 1);
@@ -78,7 +78,7 @@ public final class BarGauge extends CardGauge {
         double bottom = face.y + face.height - pad;
 
         g.setFont(GaugeStyle.font(Font.PLAIN, (float) clamp(face.width * 0.11, 10, 16)));
-        g.setColor(GaugeStyle.SCALE);
+        g.setColor(GaugeStyle.scale());
         FontMetrics titleMetrics = g.getFontMetrics();
         double titleBaseline = face.y + pad + titleMetrics.getAscent();
         GaugeStyle.drawText(g, GaugeStyle.fit(g, getTitle(), width), centre, titleBaseline, 0);
@@ -116,7 +116,7 @@ public final class BarGauge extends CardGauge {
             fraction(value), dangerFraction(), isDanger(value));
         if (labels) {
             g.setFont(labelFont);
-            g.setColor(GaugeStyle.TICK);
+            g.setColor(GaugeStyle.tick());
             double labelX = trackLeft + thickness + 6;
             GaugeStyle.drawText(g, label(maxValue), labelX, trackTop + labelMetrics.getAscent(), -1);
             GaugeStyle.drawText(g, label(minValue), labelX, trackTop + trackHeight, -1);
@@ -127,12 +127,12 @@ public final class BarGauge extends CardGauge {
     private double paintValue(Graphics2D g, double value, Font valueFont, Font unitsFont, double right, double baseline) {
         String units = units();
         g.setFont(unitsFont);
-        g.setColor(GaugeStyle.SCALE);
+        g.setColor(GaugeStyle.scale());
         double unitsWidth = g.getFontMetrics().stringWidth(units);
         GaugeStyle.drawText(g, units, right, baseline, 1);
         double gap = units.isEmpty() ? 0 : valueFont.getSize2D() * 0.15;
         g.setFont(valueFont);
-        g.setColor(!Double.isFinite(value) ? GaugeStyle.TICK : isDanger(value) ? GaugeStyle.DANGER : GaugeStyle.TEXT);
+        g.setColor(!Double.isFinite(value) ? GaugeStyle.tick() : isDanger(value) ? GaugeStyle.danger() : GaugeStyle.text());
         String text = text(value);
         double valueRight = right - unitsWidth - gap;
         GaugeStyle.drawText(g, text, valueRight, baseline, 1);

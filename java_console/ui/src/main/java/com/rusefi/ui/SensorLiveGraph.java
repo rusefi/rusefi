@@ -41,9 +41,6 @@ public class SensorLiveGraph extends JPanel {
     private static final String UPPER = "upper";
     private static final String LOWER = "lower";
     static final String WAITING = "Waiting for data" + GaugeStyle.ELLIPSIS;
-    private static final Color DANGER_BAND = new Color(0xFF, 0xCD, 0xD2, 110);
-    private static final Color AREA_TOP = new Color(0xF6, 0xC4, 0x45, 120);
-    private static final Color AREA_BOTTOM = new Color(0xF6, 0xC4, 0x45, 0);
 
     private final LinkedList<Double> values = new LinkedList<>();
     private final UIContext uiContext;
@@ -393,18 +390,18 @@ public class SensorLiveGraph extends JPanel {
         double headerBaseline = face.y + pad + valueMetrics.getAscent() * 0.9;
         String units = units(model);
         g.setFont(unitsFont);
-        g.setColor(GaugeStyle.SCALE);
+        g.setColor(GaugeStyle.scale());
         double unitsWidth = g.getFontMetrics().stringWidth(units);
         GaugeStyle.drawText(g, units, right, headerBaseline, 1);
         int decimals = model == null ? 2 : Math.max(0, Math.min(6, model.getValueDecimalPlaces()));
         String text = Double.isFinite(last) ? format(last, decimals) : "---";
         g.setFont(valueFont);
-        g.setColor(!Double.isFinite(last) ? GaugeStyle.TICK : inDanger ? GaugeStyle.DANGER : GaugeStyle.TEXT);
+        g.setColor(!Double.isFinite(last) ? GaugeStyle.tick() : inDanger ? GaugeStyle.danger() : GaugeStyle.text());
         double valueRight = right - unitsWidth - (units.isEmpty() ? 0 : valueFont.getSize2D() * 0.2);
         GaugeStyle.drawText(g, text, valueRight, headerBaseline, 1);
         double valueLeft = valueRight - valueMetrics.stringWidth(text);
         g.setFont(GaugeStyle.font(Font.PLAIN, (float) clamp(face.height * 0.08, 10, 15)));
-        g.setColor(GaugeStyle.SCALE);
+        g.setColor(GaugeStyle.scale());
         GaugeStyle.drawText(g, GaugeStyle.fit(g, getTitle(model), valueLeft - left - pad), left, headerBaseline, -1);
 
         // Plot: scale labels on the left, light grid lines, the danger band, then the series.
@@ -432,17 +429,17 @@ public class SensorLiveGraph extends JPanel {
 
         if (danger < range.maxValue) {
             double y = plot.y(Math.max(danger, range.minValue));
-            g.setColor(DANGER_BAND);
+            g.setColor(GaugeStyle.graphDangerBand());
             g.fill(new Rectangle2D.Double(plotLeft, plotTop, right - plotLeft, y - plotTop));
         }
         g.setStroke(new BasicStroke(1f));
-        g.setColor(GaugeStyle.GRID);
+        g.setColor(GaugeStyle.graphGrid());
         for (int i = 0; i <= 4; i++) {
             double y = plotTop + (plotBottom - plotTop) * i / 4;
             g.draw(new Line2D.Double(plotLeft, y, right, y));
         }
         g.setFont(labelFont);
-        g.setColor(GaugeStyle.TICK);
+        g.setColor(GaugeStyle.tick());
         for (int i = 0; i < labels.length; i++) {
             double y = plotTop + (plotBottom - plotTop) * i / 2;
             GaugeStyle.drawText(g, labels[i], plotLeft - 8, y + labelMetrics.getAscent() / 2.0 - 1, 1);
@@ -468,16 +465,17 @@ public class SensorLiveGraph extends JPanel {
         g.setClip(oldClip);
         if (!hasReading(samples)) {
             g.setFont(GaugeStyle.font(Font.PLAIN, (float) clamp(face.height * 0.08, 10, 14)));
-            g.setColor(GaugeStyle.TICK);
+            g.setColor(GaugeStyle.tick());
             GaugeStyle.drawText(g, WAITING, (plotLeft + right) / 2,
                 (plotTop + plotBottom) / 2 + g.getFontMetrics().getAscent() / 2.0 - 1, 0);
         }
         if (Double.isFinite(last)) {
             double x = right;
             double y = plot.y(Math.max(range.minValue, Math.min(range.maxValue, last)));
-            g.setColor(Color.WHITE);
+            // the last value: a dot in the card colour, ringed in the line colour
+            g.setColor(GaugeStyle.cardTop());
             g.fill(new Ellipse2D.Double(x - 4.5, y - 4.5, 9, 9));
-            g.setColor(inDanger ? GaugeStyle.DANGER : GaugeStyle.LINE);
+            g.setColor(inDanger ? GaugeStyle.danger() : GaugeStyle.graphLine());
             g.setStroke(new BasicStroke(2.5f));
             g.draw(new Ellipse2D.Double(x - 4.5, y - 4.5, 9, 9));
         }
@@ -508,10 +506,10 @@ public class SensorLiveGraph extends JPanel {
             area.lineTo(xs[count - 1], plot.bottom);
             area.lineTo(xs[0], plot.bottom);
             area.closePath();
-            g.setPaint(new GradientPaint(0, (float) plot.top, AREA_TOP, 0, (float) plot.bottom, AREA_BOTTOM));
+            g.setPaint(new GradientPaint(0, (float) plot.top, GaugeStyle.graphAreaTop(), 0, (float) plot.bottom, GaugeStyle.graphAreaBottom()));
             g.fill(area);
         }
-        g.setColor(GaugeStyle.LINE);
+        g.setColor(GaugeStyle.graphLine());
         g.setStroke(new BasicStroke(2.2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g.draw(line);
     }

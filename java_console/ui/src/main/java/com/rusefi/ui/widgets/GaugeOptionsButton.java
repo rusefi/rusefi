@@ -18,7 +18,6 @@ public final class GaugeOptionsButton extends JButton {
     public static final String TOOLTIP = "Gauge options";
     static final int SIZE = 22;
     private static final int MARGIN = 6;
-    private static final Color HOVER = new Color(0, 0, 0, 24);
 
     private GaugeOptionsButton() {
         super(new GearIcon());
@@ -70,7 +69,7 @@ public final class GaugeOptionsButton extends JButton {
             Graphics2D g2 = (Graphics2D) g.create();
             try {
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(HOVER);
+                g2.setColor(GaugeStyle.hover());
                 g2.fill(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 8, 8));
             } finally {
                 g2.dispose();
@@ -130,7 +129,7 @@ public final class GaugeOptionsButton extends JButton {
                     gear.add(tooth);
                 }
                 gear.subtract(new Area(new Ellipse2D.Double(-2.2, -2.2, 4.4, 4.4)));
-                g2.setColor(c != null && !c.isEnabled() ? GaugeStyle.TICK : GaugeStyle.SCALE);
+                g2.setColor(c != null && !c.isEnabled() ? GaugeStyle.tick() : GaugeStyle.scale());
                 g2.fill(gear);
             } finally {
                 g2.dispose();
