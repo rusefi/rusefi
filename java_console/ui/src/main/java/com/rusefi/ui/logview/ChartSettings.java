@@ -37,7 +37,8 @@ final class ChartSettings {
     private int timeSpacing = DEFAULT_TIME_SPACING;
     private int horizontalDivisions = DEFAULT_HORIZONTAL_DIVISIONS;
     private boolean snapCursor = true;
-    private boolean darkPlot;
+    // plots start in the console theme's brightness [tag:console_dark_mode]
+    private boolean darkPlot = com.rusefi.ui.basic.UiHelper.isDarkTheme();
     private CursorValues cursorValues = CursorValues.LABELS;
     private boolean pinValues;
 
@@ -61,7 +62,7 @@ final class ChartSettings {
         this.pinValues = pinValues;
     }
 
-    /** Plot area colours, chosen independently of the console theme; light by default. */
+    /** Plot area colours, chosen independently of the console theme; dark by default in the dark theme. */
     boolean isDarkPlot() {
         return darkPlot;
     }

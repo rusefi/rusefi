@@ -1,6 +1,7 @@
 package com.rusefi.ui;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import com.rusefi.ui.basic.UiHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.IniFileModel;
@@ -107,7 +108,8 @@ public class KnockPane {
 
     private final java.util.List<KnockCanvas> canvases = new CopyOnWriteArrayList<>();
     private final KnockMagnitudeCanvas magnitudes = new KnockMagnitudeCanvas();
-    private boolean darkPlot = PersistentConfiguration.getConfig().getRoot().getBoolProperty(DARK_PLOT_KEY, false);
+    private boolean darkPlot = PersistentConfiguration.getConfig().getRoot()
+        .getBoolProperty(UiHelper.plotThemeKey(DARK_PLOT_KEY), UiHelper.isDarkTheme());
     /**
      * Whether the pointer is over a spectrogram: the magnitudes then show the slice under it,
      * otherwise the newest line as it arrives.
@@ -390,7 +392,7 @@ public class KnockPane {
 
     private void setDarkPlot(boolean dark) {
         darkPlot = dark;
-        PersistentConfiguration.getConfig().getRoot().setBoolProperty(DARK_PLOT_KEY, dark);
+        PersistentConfiguration.getConfig().getRoot().setBoolProperty(UiHelper.plotThemeKey(DARK_PLOT_KEY), dark);
         KnockPlotStyle style = plotStyle(dark);
         canvases.forEach(c -> c.setStyle(style));
         magnitudes.setStyle(style);
@@ -404,22 +406,23 @@ public class KnockPane {
     static KnockPlotStyle plotStyle(boolean dark) {
         String key = "Console.LogChart." + (dark ? "dark" : "light") + ".";
         Color accent = themed(key + "accent", dark ? 0x5bcdfa : 0x2563eb);
+        // [tag:fixed_color] light and dark plot palettes, each the same in every console theme
         Color peak = new Color(dark ? 0xf6839d : 0xdc2626);
         return KnockPlotStyle.DEFAULT.toBuilder()
             .background(themed(key + "background", dark ? 0x151b26 : 0xffffff))
             .grid(themed(key + "grid", dark ? 0x374352 : 0xe3e7ed))
             .axisText(themed(key + "label", dark ? 0xc6d1de : 0x586273))
             .title(themed(key + "hint", dark ? 0x788698 : 0x6b7485))
-            .cursor(dark ? new Color(0xdc, 0xe6, 0xf5, 0x9b) : new Color(0x33, 0x41, 0x55, 0x99))
-            .current(new Color(dark ? 0xffbf47 : 0xd97706))
+            .cursor(dark ? new Color(0xdc, 0xe6, 0xf5, 0x9b) : new Color(0x33, 0x41, 0x55, 0x99)) // [tag:fixed_color] plot palette
+            .current(new Color(dark ? 0xffbf47 : 0xd97706)) // [tag:fixed_color] plot palette
             .peak(peak)
             .peakMarker(peak)
             .mouse(accent)
             .magnitudeFill(new Color(accent.getRed(), accent.getGreen(), accent.getBlue(), dark ? 0x30 : 0x29))
             .magnitudeLine(accent)
             .magnitudePeak(peak)
-            .text(new Color(dark ? 0xe6edf5 : 0x111827))
-            .chipBackground(new Color(dark ? 0x232c3b : 0xeef0f3))
+            .text(new Color(dark ? 0xe6edf5 : 0x111827)) // [tag:fixed_color] plot palette
+            .chipBackground(new Color(dark ? 0x232c3b : 0xeef0f3)) // [tag:fixed_color] plot palette
             .logViewerLayout(true)
             .valueFontFamily(ConsoleFonts.mono(Font.PLAIN, ConsoleFonts.baseSize()).getFamily())
             .build();

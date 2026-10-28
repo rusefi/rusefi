@@ -64,7 +64,7 @@ final class SignalColors {
             return null;
         }
         try {
-            return new Color(Integer.parseInt(value.substring(1), 16));
+            return new Color(Integer.parseInt(value.substring(1), 16)); // [tag:fixed_color] the user's trace colour
         } catch (NumberFormatException corrupt) {
             return null;
         }

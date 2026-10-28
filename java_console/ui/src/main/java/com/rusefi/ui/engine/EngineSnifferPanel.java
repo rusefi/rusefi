@@ -10,6 +10,7 @@ import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.ui.*;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.URLLabel;
+import com.rusefi.ui.basic.UiHelper;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.AnyCommand;
 import com.rusefi.ui.widgets.CommandIcon;
@@ -159,7 +160,7 @@ public class EngineSnifferPanel {
         ButtonGroup plots = new ButtonGroup();
         plots.add(light);
         plots.add(dark);
-        boolean darkPlot = config.getBoolProperty(DARK_PLOT_KEY, false);
+        boolean darkPlot = config.getBoolProperty(UiHelper.plotThemeKey(DARK_PLOT_KEY), UiHelper.isDarkTheme());
         (darkPlot ? dark : light).setSelected(true);
         light.addActionListener(e -> setDarkPlot(false));
         dark.addActionListener(e -> setDarkPlot(true));
@@ -445,7 +446,7 @@ public class EngineSnifferPanel {
 
     private void setDarkPlot(boolean dark) {
         palette = SnifferPalette.of(dark);
-        config.setBoolProperty(DARK_PLOT_KEY, dark);
+        config.setBoolProperty(UiHelper.plotThemeKey(DARK_PLOT_KEY), dark);
         images.forEach(this::applyPalette);
         imagePanel.setBackground(palette.divider);
         statusPanel.setLegendColors(palette.engineCycle, palette.timeScale);

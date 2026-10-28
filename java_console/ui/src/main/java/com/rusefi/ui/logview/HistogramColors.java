@@ -142,7 +142,7 @@ final class HistogramColors {
         double r = 0.13572138 + t * (4.61539260 + t * (-42.66032258 + t * (132.13108234 + t * (-152.94239396 + t * 59.28637943))));
         double g = 0.09140261 + t * (2.19418839 + t * (4.84296658 + t * (-14.18503333 + t * (4.27729857 + t * 2.82956604))));
         double b = 0.10667330 + t * (12.64194608 + t * (-60.58204836 + t * (110.36276771 + t * (-89.90310912 + t * 27.34824973))));
-        return new Color(channel(r), channel(g), channel(b));
+        return new Color(channel(r), channel(g), channel(b)); // [tag:fixed_color] colour scale
     }
 
     private static int channel(double value) {
@@ -155,7 +155,7 @@ final class HistogramColors {
     private static Color stops(int[] stops, double t) {
         double position = t * (stops.length - 1);
         int index = Math.min(stops.length - 2, (int) Math.floor(position));
-        return HistogramTable.mix(new Color(stops[index]), new Color(stops[index + 1]), position - index);
+        return HistogramTable.mix(new Color(stops[index]), new Color(stops[index + 1]), position - index); // [tag:fixed_color] colour scale
     }
 
     /** Dark or white text, whichever reads better on a background. */

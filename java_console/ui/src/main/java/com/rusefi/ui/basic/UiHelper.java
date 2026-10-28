@@ -53,6 +53,15 @@ public class UiHelper {
         return FlatLaf.isLafDark();
     }
 
+    /**
+     * [tag:console_dark_mode] Settings key for a remembered Light/Dark plot choice (Knock Analyzer, Engine
+     * Sniffer). The dark console theme keeps its own choice, so picking a light plot in the light theme does
+     * not make plots light in the dark theme; the light theme keeps using {@code key} as before.
+     */
+    public static String plotThemeKey(String key) {
+        return isDarkTheme() ? key + "_in_dark_theme" : key;
+    }
+
     public static void configureLaf(boolean dark) {
         // [tag:console_theme] Sizes, shapes and per-theme colours live in the .properties
         // files of this package: FlatLaf.properties for both themes, then FlatLightLaf.properties

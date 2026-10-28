@@ -511,8 +511,7 @@ final class HistogramTable extends JComponent implements ColourScale {
 
     static Color mix(Color from, Color to, double amount) {
         double a = Math.max(0, Math.min(1, amount));
-        return new Color(
-                (int) Math.round(from.getRed() + (to.getRed() - from.getRed()) * a),
+        return new Color((int) Math.round(from.getRed() + (to.getRed() - from.getRed()) * a),
                 (int) Math.round(from.getGreen() + (to.getGreen() - from.getGreen()) * a),
                 (int) Math.round(from.getBlue() + (to.getBlue() - from.getBlue()) * a));
     }
@@ -679,7 +678,8 @@ final class HistogramTable extends JComponent implements ColourScale {
                 }
                 Color fill = cellColor(cell);
                 boolean thin = isThin(cell);
-                g.setColor(thin ? mix(fill, Color.WHITE, 0.6) : fill);
+                // thin cells fade toward an empty cell: white in the light theme, the card in the dark one
+                g.setColor(thin ? mix(fill, empty, 0.6) : fill);
                 g.fillRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, 4, 4);
                 if (thin) {
                     paintHatch(g, bounds, hatch);
@@ -832,7 +832,8 @@ final class HistogramTable extends JComponent implements ColourScale {
 
         if (!hideThin) {
             Rectangle swatch = new Rectangle(x, barTop - 1, 22, barHeight + 2);
-            g.setColor(mix(themed("Console.LogViewer.histogram.neutral", new Color(0xf4f5f7)), Color.WHITE, 0.6));
+            g.setColor(mix(themed("Console.LogViewer.histogram.neutral", new Color(0xf4f5f7)),
+                themed("Console.LogViewer.histogram.empty", Color.WHITE), 0.6));
             g.fillRect(swatch.x, swatch.y, swatch.width, swatch.height);
             paintHatch(g, swatch, themed("Console.LogViewer.histogram.hatch", new Color(88, 98, 115, 58)));
             x += swatch.width + 6;

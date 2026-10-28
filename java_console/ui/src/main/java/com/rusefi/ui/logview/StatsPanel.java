@@ -13,6 +13,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.BorderLayout;
@@ -305,9 +306,10 @@ final class StatsPanel extends JPanel {
         private Icon dot;
         private String name = "";
         private String unit = "";
-        private Color ink = Color.BLACK;
-        private Color muted = Color.GRAY;
-        private Color background = Color.WHITE;
+        // replaced by set() before painting
+        private Color ink = UIManager.getColor("Label.foreground");
+        private Color muted = UIManager.getColor("Label.disabledForeground");
+        private Color background = UIManager.getColor("Console.Card.background");
 
         void set(Icon dot, String name, String unit, Font font, Color ink, Color muted, Color background) {
             this.dot = dot;

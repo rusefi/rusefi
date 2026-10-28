@@ -105,7 +105,7 @@ final class SwatchGrid extends JPanel {
                 if (swatch == current) {
                     // a check that stays visible on light (dark-plot) and dark swatches alike
                     boolean light = (color.getRed() * 299 + color.getGreen() * 587 + color.getBlue() * 114) / 1000 > 150;
-                    g2.setColor(light ? Color.BLACK : Color.WHITE);
+                    g2.setColor(light ? Color.BLACK : Color.WHITE); // [tag:fixed_color] picked for the swatch
                     g2.setStroke(new BasicStroke(2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
                     g2.drawPolyline(new int[]{w / 2 - 5, w / 2 - 1, w / 2 + 5}, new int[]{h / 2, h / 2 + 4, h / 2 - 4}, 3);
                 }

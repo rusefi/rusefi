@@ -1646,7 +1646,7 @@ final class LogChart extends JComponent {
         y = Math.max(area.y, Math.min(area.y + area.height - height, y));
         Rectangle bounds = new Rectangle(x, y, width, height);
 
-        g.setColor(new Color(0, 0, 0, 28));
+        g.setColor(new Color(0, 0, 0, 28)); // [tag:fixed_color] soft shadow
         g.fillRoundRect(x + 2, y + 3, width, height, 10, 10);
         // slightly transparent, so the traces underneath stay visible
         g.setColor(new Color(background.getRed(), background.getGreen(), background.getBlue(), 235));
@@ -1831,7 +1831,7 @@ final class LogChart extends JComponent {
         int y = card.y;
 
         Color background = ThemedStrip.themed("Console.Card.background", Color.WHITE);
-        g.setColor(new Color(0, 0, 0, 28));
+        g.setColor(new Color(0, 0, 0, 28)); // [tag:fixed_color] soft shadow
         g.fillRoundRect(x + 2, y + 3, width, height, 12, 12);
         // slightly transparent, so the traces underneath stay visible
         g.setColor(new Color(background.getRed(), background.getGreen(), background.getBlue(), 240));
