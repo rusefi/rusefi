@@ -18,8 +18,6 @@ import javax.swing.text.DocumentFilter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseAdapter;
@@ -43,12 +41,7 @@ public class CalibrationFieldFactory {
     static final int MAX_LABEL_WIDTH = 360;
     private static final int HELP_ICON_SIZE = 18;
     private static final int HELP_COLUMN_WIDTH = 24;
-    private static final int HELP_MAX_TEXT_WIDTH = 500;
-    private static final int HELP_PADDING = 8;
-    private static final int HELP_MAX_HEIGHT = 300;
-    private static final int HELP_LAYOUT_ALLOWANCE = 8;
     private static final Icon SETTING_HELP_ICON = loadHelpIcon();
-    private static JPopupMenu openHelpPopup;
     private static final Pattern URL_PATTERN = Pattern.compile("https?://[^\\s<>\"']+");
 
     private static class CalibrationTextField extends JTextField {
@@ -110,6 +103,8 @@ public class CalibrationFieldFactory {
                                  Consumer<String> onShowInPinout, int labelWidth, int fieldEditorWidth,
                                  String helpText) {
         JPanel row = createRowPanel();
+        // a row with help shows its help card; tooltips that only repeat the row would compete with it
+        boolean hasHelp = helpText != null && !helpText.trim().isEmpty();
         row.add(Box.createHorizontalStrut(10));
         row.add(createHelpSlot(helpText));
 
@@ -120,7 +115,9 @@ public class CalibrationFieldFactory {
             if (labelText != null && label.getPreferredSize().width > labelWidth && !labelText.startsWith("<html>")) {
                 label.setText("<html><div style='width: " + (labelWidth - 4) + "px'>" +
                     escapeHtml(labelText) + "</div></html>");
-                label.setToolTipText(labelText);
+                if (!hasHelp) {
+                    label.setToolTipText(labelText);
+                }
             }
             Dimension size = label.getPreferredSize();
             size.width = labelWidth;
@@ -143,7 +140,7 @@ public class CalibrationFieldFactory {
                 value = () -> checkBox.isSelected() ? "enabled" : "disabled";
             } else {
                 JComboBox<String> comboBox = createComboBox(
-                    enumField, iniField, currentValue, workingImage, onChange, fieldEditorWidth);
+                    enumField, iniField, currentValue, workingImage, onChange, fieldEditorWidth, !hasHelp);
                 row.add(comboBox);
                 value = () -> String.valueOf(comboBox.getSelectedItem());
                 JButton pinoutButton = createPinoutButton(comboBox, field.getKey(), onShowInPinout);
@@ -159,7 +156,8 @@ public class CalibrationFieldFactory {
             row.add(textField);
             value = textField::getText;
         }
-        installCopyListener(label, labelText, value);
+        installCopyListener(label, labelText, value, !hasHelp);
+        SettingHelpCard.attach(row, labelText, iniField.getUnits(), helpText);
 
         fixRowHeight(row);
         return row;
@@ -179,7 +177,6 @@ public class CalibrationFieldFactory {
 
         JButton button = new JButton(SETTING_HELP_ICON);
         button.setName("settingHelpButton");
-        button.setToolTipText(formatHelpHtml(helpText));
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
         button.setFocusPainted(false);
@@ -187,7 +184,7 @@ public class CalibrationFieldFactory {
         button.setPreferredSize(new Dimension(HELP_ICON_SIZE, HELP_ICON_SIZE));
         button.setMaximumSize(button.getPreferredSize());
         button.getAccessibleContext().setAccessibleName("Setting help");
-        button.addActionListener(event -> showHelpPopup(button, helpText));
+        button.addActionListener(event -> SettingHelpCard.showExpanded(button));
         slot.add(button);
         return slot;
     }
@@ -204,132 +201,49 @@ public class CalibrationFieldFactory {
         }
         reference = reference.trim();
         ContextHelpModel help = ini.getContextHelp(reference);
-        String html;
+        SettingHelpCard.Help card;
         if (help != null) {
-            html = "<html>" + help.toHtml() + "</html>";
+            card = new SettingHelpCard.Help(help.getTitle(), "", topicText(help.getTextLines()), help.getWebHelp());
         } else if (reference.startsWith("https://") || reference.startsWith("http://")) {
-            html = formatHelpHtml(reference);
+            card = new SettingHelpCard.Help("Help", "", "", reference);
         } else {
             return null;
         }
         JButton button = new JButton("Help", SETTING_HELP_ICON);
         button.setName("topicHelpButton");
-        button.setToolTipText(html);
+        button.setToolTipText("Help for this page");
         button.getAccessibleContext().setAccessibleName(help == null ? "Topic help" : help.getTitle());
-        button.addActionListener(event -> showHtmlHelpPopup(button, html));
+        button.putClientProperty(SettingHelpCard.TOPIC_KEY, card);
+        button.addActionListener(event -> SettingHelpCard.showTopic(button, card));
         return button;
     }
 
-    private static void showHelpPopup(JButton owner, String helpText) {
-        showHtmlHelpPopup(owner, formatHelpHtml(helpText));
+    /** INI topic help lines may use simple HTML such as {@code <br>}; the card shows plain text. */
+    static String topicText(List<String> lines) {
+        return String.join("\n", lines)
+            .replaceAll("(?i)<br\\s*/?>|</p>", "\n")
+            .replaceAll("<[^>]*>", "")
+            .replace("&nbsp;", " ").replace("&lt;", "<").replace("&gt;", ">")
+            .replace("&quot;", "\"").replace("&#39;", "'").replace("&amp;", "&")
+            .trim();
     }
 
-    private static void showHtmlHelpPopup(JButton owner, String html) {
-        closeHelpPopup();
-        if (!owner.isShowing()) {
-            return;
+    static void openHelpLink(HyperlinkEvent event) {
+        if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED && event.getURL() != null) {
+            openUrl(event.getURL().toString());
         }
-
-        JScrollPane scrollPane = createHtmlHelpScrollPane(html);
-
-        JPanel content = new JPanel(new BorderLayout(4, 4));
-        content.setBackground(helpBackground());
-        content.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(TuningStyle.color("Console.Tuning.help.borderColor", new Color(60, 90, 160)), 2),
-            BorderFactory.createEmptyBorder(6, 8, 8, 8)));
-        JButton close = new JButton("×");
-        close.setToolTipText("Close help");
-        close.setMargin(new Insets(0, 5, 0, 5));
-        JPanel closeRow = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
-        closeRow.setOpaque(false);
-        closeRow.add(close);
-        content.add(closeRow, BorderLayout.NORTH);
-        content.add(scrollPane, BorderLayout.CENTER);
-
-        JPopupMenu popup = new JPopupMenu();
-        popup.setBorder(BorderFactory.createEmptyBorder());
-        popup.add(content);
-        popup.addPopupMenuListener(new PopupMenuListener() {
-            @Override
-            public void popupMenuWillBecomeVisible(PopupMenuEvent event) {
-            }
-
-            @Override
-            public void popupMenuWillBecomeInvisible(PopupMenuEvent event) {
-                if (openHelpPopup == popup) {
-                    openHelpPopup = null;
-                }
-            }
-
-            @Override
-            public void popupMenuCanceled(PopupMenuEvent event) {
-                if (openHelpPopup == popup) {
-                    openHelpPopup = null;
-                }
-            }
-        });
-        close.addActionListener(event -> popup.setVisible(false));
-        openHelpPopup = popup;
-        popup.show(owner, 0, owner.getHeight());
     }
 
-    static JScrollPane createHelpScrollPane(String helpText) {
-        return createHtmlHelpScrollPane(formatHelpHtml(helpText));
-    }
-
-    static JScrollPane createHtmlHelpScrollPane(String html) {
-        JEditorPane helpPane = new JEditorPane("text/html", html);
-        helpPane.setEditable(false);
-        helpPane.setOpaque(true);
-        helpPane.setBackground(helpBackground());
-        helpPane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
-        helpPane.addHyperlinkListener(event -> {
-            if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED && event.getURL() != null) {
-                try {
-                    Desktop.getDesktop().browse(event.getURL().toURI());
-                } catch (Exception ignored) {
-                    // Help remains useful even when the desktop cannot open links.
-                }
-            }
-        });
-        helpPane.setBorder(BorderFactory.createEmptyBorder(
-            HELP_PADDING, HELP_PADDING, HELP_PADDING, HELP_PADDING));
-        helpPane.setCaretPosition(0);
-        Dimension naturalSize = helpPane.getPreferredSize();
-        int maxPaddedWidth = HELP_MAX_TEXT_WIDTH + HELP_PADDING * 2;
-        int viewportWidth = Math.min(naturalSize.width, maxPaddedWidth);
-        // Re-measure after constraining the width: the HTML renderer may wrap a long line into
-        // several rows, making its laid-out height larger than its unconstrained natural height.
-        helpPane.setSize(new Dimension(viewportWidth, Short.MAX_VALUE));
-        Dimension laidOutSize = helpPane.getPreferredSize();
-        int viewportHeight = Math.min(laidOutSize.height, HELP_MAX_HEIGHT);
-        boolean needsHorizontalScroll = naturalSize.width > viewportWidth;
-        boolean needsVerticalScroll = laidOutSize.height > viewportHeight;
-
-        JScrollPane scrollPane = new JScrollPane(helpPane);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder());
-        scrollPane.setHorizontalScrollBarPolicy(needsHorizontalScroll
-            ? ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
-            : ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setVerticalScrollBarPolicy(needsVerticalScroll
-            ? ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED
-            : ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        scrollPane.getViewport().setBackground(helpBackground());
-        int preferredWidth = viewportWidth + (needsVerticalScroll
-            ? scrollPane.getVerticalScrollBar().getPreferredSize().width : 0);
-        int preferredHeight = viewportHeight + (needsHorizontalScroll
-            ? scrollPane.getHorizontalScrollBar().getPreferredSize().height : 0)
-            + HELP_LAYOUT_ALLOWANCE;
-        scrollPane.setPreferredSize(new Dimension(preferredWidth, preferredHeight));
-        return scrollPane;
+    static void openUrl(String url) {
+        try {
+            Desktop.getDesktop().browse(new URI(url));
+        } catch (Exception ignored) {
+            // Help remains useful even when the desktop cannot open links.
+        }
     }
 
     static void closeHelpPopup() {
-        if (openHelpPopup != null) {
-            JPopupMenu popup = openHelpPopup;
-            openHelpPopup = null;
-            popup.setVisible(false);
-        }
+        SettingHelpCard.hideCard();
     }
 
     static String formatHelpHtml(String helpText) {
@@ -420,13 +334,15 @@ public class CalibrationFieldFactory {
 
     private static JComboBox<String> createComboBox(EnumIniField enumField, IniField iniField, String currentValue,
                                                      ConfigurationImage workingImage, Runnable onChange,
-                                                     int fieldEditorWidth) {
+                                                     int fieldEditorWidth, boolean valueTooltip) {
         String cleanValue = currentValue.replace("\"", "");
         String[] comboValues = getComboValues(enumField);
         JComboBox<String> comboBox = new JComboBox<>(comboValues);
         applyStyle(comboBox);
         comboBox.setSelectedItem(cleanValue);
-        comboBox.setToolTipText(cleanValue);
+        if (valueTooltip) {
+            comboBox.setToolTipText(cleanValue);
+        }
         applyBackgroundColor(comboBox, cleanValue);
         Dimension size = comboBox.getPreferredSize();
         size.width = fieldEditorWidth > 0
@@ -439,7 +355,9 @@ public class CalibrationFieldFactory {
             if (workingImage == null) return;
             String selected = (String) comboBox.getSelectedItem();
             if (selected != null) {
-                comboBox.setToolTipText(selected);
+                if (valueTooltip) {
+                    comboBox.setToolTipText(selected);
+                }
                 ConfigurationImageGetterSetter.setValue2(iniField, workingImage, iniField.getName(), selected);
                 if (onChange != null) onChange.run();
             }
@@ -602,8 +520,9 @@ public class CalibrationFieldFactory {
         return label + ": " + value;
     }
 
-    private static void installCopyListener(JLabel label, String labelText, Supplier<String> value) {
-        if (label.getToolTipText() == null) {
+    private static void installCopyListener(JLabel label, String labelText, Supplier<String> value,
+                                            boolean copyTooltip) {
+        if (copyTooltip && label.getToolTipText() == null) {
             label.setToolTipText("Double-click to copy");
         }
         label.addMouseListener(new MouseAdapter() {
@@ -646,8 +565,8 @@ public class CalibrationFieldFactory {
     }
 
     /** Background of the setting help popup [tag:console_theme]. */
-    private static Color helpBackground() {
-        return TuningStyle.color("Console.Tuning.help.background", new Color(255, 255, 190));
+    static Color helpBackground() {
+        return TuningStyle.color("Console.Tuning.help.background", Color.WHITE);
     }
 
     public static void applyStyle(JComponent component) {

@@ -1146,8 +1146,38 @@ public class CalibrationDialogWidgetTest {
         JButton helpButton = findButtonByName(widget.getContentPane(), "settingHelpButton");
         assertNotNull(helpButton);
         assertNotNull(helpButton.getIcon());
-        assertTrue(helpButton.getToolTipText().contains("First line<br>Second line"));
         assertEquals(1, helpButton.getActionListeners().length);
+        // the row's help card replaces the icon's tooltip
+        assertNull(helpButton.getToolTipText());
+        JComponent row = SettingHelpCard.findRow(helpButton);
+        assertNotNull(row);
+        SettingHelpCard.Help help = (SettingHelpCard.Help) row.getClientProperty(SettingHelpCard.KEY);
+        assertEquals("Helped field", help.name);
+        assertEquals("First line", help.summary());
+        assertTrue(help.hasMore());
+    }
+
+    @Test
+    public void testRowsWithHelpDropTooltipsThatRepeatTheRow() {
+        IniFileModel iniFileModel = mock(IniFileModel.class);
+        when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
+        when(iniFileModel.getTooltips()).thenReturn(Collections.singletonMap("helped", "Help text"));
+        com.opensr5.ini.field.StringIniField helped = new com.opensr5.ini.field.StringIniField("helped", 0, 4);
+        com.opensr5.ini.field.StringIniField unhelped = new com.opensr5.ini.field.StringIniField("unhelped", 4, 4);
+        when(iniFileModel.findIniField("helped")).thenReturn(java.util.Optional.of(helped));
+        when(iniFileModel.findIniField("unhelped")).thenReturn(java.util.Optional.of(unhelped));
+
+        DialogModel dialog = new DialogModel("main", "Main", Arrays.asList(
+            new DialogModel.Field("helped", "Helped"),
+            new DialogModel.Field("unhelped", "Unhelped")), Collections.emptyList());
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        widget.update(dialog, iniFileModel, new ConfigurationImage(new byte[8]));
+
+        JPanel helpedRow = (JPanel) widget.getContentPane().getComponent(0);
+        JPanel unhelpedRow = (JPanel) widget.getContentPane().getComponent(1);
+        assertNull(findLabel(helpedRow, "Helped").getToolTipText());
+        assertEquals("Double-click to copy", findLabel(unhelpedRow, "Unhelped").getToolTipText());
+        assertNull(SettingHelpCard.findRow(unhelpedRow));
     }
 
     @Test
@@ -1158,32 +1188,6 @@ public class CalibrationDialogWidgetTest {
         assertTrue(html.contains("Use &lt;unsafe&gt; &amp; value<br>See "));
         assertTrue(html.contains(
             "<a href='https://rusefi.com/docs'>https://rusefi.com/docs</a>"));
-    }
-
-    @Test
-    public void testSettingHelpFitsShortTextAndScrollsWideText() {
-        JScrollPane shortHelp = CalibrationFieldFactory.createHelpScrollPane(
-            "Cylinder diameter in mm");
-        JComponent shortEditor = (JComponent) shortHelp.getViewport().getView();
-        assertEquals(new Insets(8, 8, 8, 8), shortEditor.getBorder().getBorderInsets(shortEditor));
-        assertTrue(shortHelp.getPreferredSize().width < 516);
-        assertEquals(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER,
-            shortHelp.getHorizontalScrollBarPolicy());
-        assertEquals(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
-            shortHelp.getVerticalScrollBarPolicy());
-
-        JScrollPane wideHelp = CalibrationFieldFactory.createHelpScrollPane(
-            String.join("", Collections.nCopies(100, "wide-content")));
-        assertEquals(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED,
-            wideHelp.getHorizontalScrollBarPolicy());
-        assertTrue(wideHelp.getPreferredSize().width <= 516);
-        assertTrue(wideHelp.getHorizontalScrollBar().getPreferredSize().height > 0);
-
-        JScrollPane tallHelp = CalibrationFieldFactory.createHelpScrollPane(
-            String.join("\\n", Collections.nCopies(100, "tall content")));
-        assertEquals(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-            tallHelp.getVerticalScrollBarPolicy());
-        assertEquals(0, ((JEditorPane) tallHelp.getViewport().getView()).getCaretPosition());
     }
 
     @Test
