@@ -104,7 +104,8 @@ public class CalibrationFieldFactory {
                                  String helpText) {
         JPanel row = createRowPanel();
         // a row with help shows its help card; tooltips that only repeat the row would compete with it
-        boolean hasHelp = helpText != null && !helpText.trim().isEmpty();
+        helpText = SettingHelpCard.usefulHelp(helpText);
+        boolean hasHelp = helpText != null;
         row.add(Box.createHorizontalStrut(10));
         row.add(createHelpSlot(helpText));
 
@@ -157,8 +158,50 @@ public class CalibrationFieldFactory {
             value = textField::getText;
         }
         installCopyListener(label, labelText, value, !hasHelp);
+        fixRowHeight(row);
+        String description = SettingHelpCard.isShowDescriptions() ? SettingHelpCard.descriptionWithHint(helpText) : null;
+        if (description != null) {
+            row = withDescription(row, description);
+        }
         SettingHelpCard.attach(row, labelText, iniField.getUnits(), helpText);
+        return row;
+    }
 
+    /**
+     * The row with its description on a second line, under the name ("Descriptions" on the Tuning
+     * toolbar). The text wraps within the width of the setting line above it, so descriptions never
+     * make a dialog wider. It stays one panel, so a hidden or disabled setting hides or greys its
+     * description too.
+     */
+    private static JPanel withDescription(JPanel line, String text) {
+        int indent = 10 + HELP_COLUMN_WIDTH;
+        int width = Math.max(120, line.getPreferredSize().width - indent);
+        JTextArea description = new JTextArea(text);
+        description.setName("settingDescription");
+        description.setLineWrap(true);
+        description.setWrapStyleWord(true);
+        description.setEditable(false);
+        description.setFocusable(false);
+        description.setHighlighter(null);
+        description.setOpaque(false);
+        description.setFont(UIManager.getFont("Label.font"));
+        Color muted = TuningStyle.color("Console.Tuning.mutedForeground", Color.GRAY);
+        description.setForeground(muted);
+        description.setDisabledTextColor(UIManager.getColor("Label.disabledForeground"));
+        description.setBorder(BorderFactory.createEmptyBorder(0, indent, 4, 0));
+        // measure the wrapped height at the line's width
+        description.setSize(new Dimension(width + indent, Short.MAX_VALUE));
+        Dimension size = new Dimension(width + indent, description.getPreferredSize().height);
+        description.setPreferredSize(size);
+        description.setMaximumSize(size);
+        description.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JPanel row = new JPanel();
+        row.setLayout(new BoxLayout(row, BoxLayout.Y_AXIS));
+        row.setAlignmentX(Component.LEFT_ALIGNMENT);
+        line.setAlignmentX(Component.LEFT_ALIGNMENT);
+        row.add(line);
+        row.add(description);
         fixRowHeight(row);
         return row;
     }

@@ -15,6 +15,7 @@ import com.rusefi.maintenance.OfflineEditMigration;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.widgets.TextGaugeStrip;
+import com.rusefi.ui.widgets.SegmentedControl;
 import com.rusefi.ui.widgets.StatusPanel;
 import com.rusefi.ui.widgets.tune.CalibrationDialogWidget;
 import com.rusefi.ui.widgets.tune.CalibrationPanelWorkspace;
@@ -47,8 +48,8 @@ public class TuningPane {
     private static final Logging log = Logging.getLogging(TuningPane.class);
     private static final String TUNING_CARD = "tuning";
     private static final String LOAD_CARD = "load";
-    /** Tuning setting: setting help cards open by themselves on hover and Tab. */
-    static final String HELP_CARDS = "help_cards";
+    /** Tuning setting: how setting help is offered, a {@link SettingHelpCard.Mode} name. */
+    static final String HELP_MODE = "help_mode";
 
     private final JPanel content = new JPanel(new CardLayout());
     private final JPanel tuningContent = new JPanel(new BorderLayout());
@@ -284,7 +285,7 @@ public class TuningPane {
         TuningStyle.styleBar(northPanel);
         northPanel.setBorder(BorderFactory.createCompoundBorder(northPanel.getBorder(),
             BorderFactory.createEmptyBorder(0, 4, 6, 4)));
-        northPanel.add(withHelpCardsChoice(toolbar.getPanel(), config));
+        northPanel.add(withHelpChoices(toolbar.getPanel(), config, workspace::rebuildViews));
         frontPageIndicatorPanel = buildFrontendIndicatorPanel(uiContext);
         if (frontPageIndicatorPanel != null) {
             frontPageIndicatorPanel.getPanel().setOpaque(false);
@@ -393,32 +394,70 @@ public class TuningPane {
     }
 
     /**
-     * The toolbar with the "Help cards" choice at its right end, beside the dialogs it affects. With
-     * no settings node (tests, sandboxes) the cards keep their default and there is no choice.
+     * The toolbar with the Help choice at its right end, beside the dialogs it affects: Cards (a card
+     * on hover and Tab), Descriptions (each setting's first help sentence under its name) or Off; see
+     * {@link SettingHelpCard.Mode}. {@code rebuildViews} redraws open dialogs when descriptions turn on
+     * or off. With no settings node (tests, sandboxes) the mode keeps its default and there is no choice.
      */
-    static JComponent withHelpCardsChoice(JComponent toolbar, Node config) {
+    static JComponent withHelpChoices(JComponent toolbar, Node config, Runnable rebuildViews) {
         if (config == null) {
             return toolbar;
         }
-        SettingHelpCard.setAutoShow(config.getBoolProperty(HELP_CARDS, true));
-        JCheckBox helpCards = new JCheckBox("Help cards", SettingHelpCard.isAutoShow());
-        helpCards.setName("helpCardsChoice");
-        helpCards.setOpaque(false);
-        helpCards.setToolTipText("Show a setting's help when the mouse rests on it or Tab reaches it. "
-            + "Its ? icon opens the help either way.");
-        helpCards.addActionListener(e -> {
-            SettingHelpCard.setAutoShow(helpCards.isSelected());
-            config.setBoolProperty(HELP_CARDS, helpCards.isSelected());
-        });
-        JPanel right = new JPanel(new GridBagLayout());
+        SettingHelpCard.setMode(savedHelpMode(config));
+        ButtonGroup group = new ButtonGroup();
+        JToggleButton cards = helpModeSegment("Cards", SettingHelpCard.Mode.CARDS,
+            "Show a setting's help in a card when the mouse rests on it or Tab reaches it",
+            group, config, rebuildViews);
+        JToggleButton descriptions = helpModeSegment("Descriptions", SettingHelpCard.Mode.DESCRIPTIONS,
+            "Show a short description under each setting's name", group, config, rebuildViews);
+        JToggleButton off = helpModeSegment("Off", SettingHelpCard.Mode.OFF,
+            "No help unless you click a setting's ? icon", group, config, rebuildViews);
+
+        JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT, 6, 0));
         right.setOpaque(false);
         right.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 8));
-        right.add(helpCards);
+        JLabel label = new JLabel("Help");
+        label.setForeground(UIManager.getColor("Label.disabledForeground"));
+        right.add(label);
+        right.add(new SegmentedControl(cards, descriptions, off));
+        JPanel east = new JPanel(new GridBagLayout());
+        east.setOpaque(false);
+        east.add(right);
         JPanel row = new JPanel(new BorderLayout());
         row.setOpaque(false);
         row.add(toolbar, BorderLayout.CENTER);
-        row.add(right, BorderLayout.EAST);
+        row.add(east, BorderLayout.EAST);
         return row;
+    }
+
+    private static SettingHelpCard.Mode savedHelpMode(Node config) {
+        try {
+            return SettingHelpCard.Mode.valueOf(config.getProperty(HELP_MODE, SettingHelpCard.Mode.CARDS.name()));
+        } catch (IllegalArgumentException e) {
+            return SettingHelpCard.Mode.CARDS;
+        }
+    }
+
+    private static JToggleButton helpModeSegment(String text, SettingHelpCard.Mode mode, String tooltip,
+                                                 ButtonGroup group, Node config, Runnable rebuildViews) {
+        JToggleButton segment = SegmentedControl.segment(text);
+        segment.setName("helpMode" + text);
+        segment.setToolTipText(tooltip + ". The ? icon always opens a setting's help.");
+        segment.setSelected(SettingHelpCard.getMode() == mode);
+        group.add(segment);
+        segment.addActionListener(e -> {
+            SettingHelpCard.Mode previous = SettingHelpCard.getMode();
+            if (previous == mode) {
+                return;
+            }
+            SettingHelpCard.setMode(mode);
+            config.setProperty(HELP_MODE, mode.name());
+            // rows read descriptions when built
+            if (previous == SettingHelpCard.Mode.DESCRIPTIONS || mode == SettingHelpCard.Mode.DESCRIPTIONS) {
+                rebuildViews.run();
+            }
+        });
+        return segment;
     }
 
     private void showTuningContent() {

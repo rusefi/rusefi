@@ -20,8 +20,8 @@ import java.util.regex.Pattern;
  * heading for it ({@link #headingTo}, the "menu-aim" triangle); then it switches only if the mouse
  * stops on another row. Hiding waits until the mouse rests off the rows and the card. "More" and the
  * help icon pin the card: it then ignores the mouse and closes on its close button, Esc or a click
- * elsewhere. One card at a time. Users who find the cards distracting turn off "Help cards" on the
- * Tuning toolbar ({@link #setAutoShow}); the help icon still opens them.
+ * elsewhere. One card at a time. The Tuning toolbar's Help choice ({@link Mode}) can show
+ * descriptions instead, or neither; the help icon still opens the card.
  * <p>
  * A dialog's, table's or curve's "Help" button (INI topic help) opens the same card, pinned, below
  * the button, so all help in Tuning looks alike.
@@ -38,6 +38,10 @@ public final class SettingHelpCard {
     private static final int GAP = 8;
     private static final int TEXT_WIDTH = 320;
     private static final int MAX_TEXT_HEIGHT = 320;
+    private static final Pattern IDENTIFIER_ONLY = Pattern.compile("[a-z][A-Za-z0-9_]*(\\s+\\d+)?");
+    private static final Pattern LINK_ONLY = Pattern.compile("https?://\\S+");
+    private static final int DESCRIPTION_MAX_CHARS = 140;
+    static final String MORE_HINT = "(click ? for more)";
     private static final Pattern SENTENCE_END = Pattern.compile("(?<=[.!?])\\s+(?=[A-Z])");
 
     /** What a card shows; stored on a setting row as its {@link #KEY} client property. */
@@ -68,36 +72,103 @@ public final class SettingHelpCard {
         }
     }
 
+    /**
+     * How Tuning offers setting help (the Tuning toolbar's Help choice). One way at a time: a card
+     * on hover would only repeat a description already on screen. In every mode the row's help icon
+     * opens the card, the only way to the full text when descriptions are shown.
+     */
+    public enum Mode {
+        /** A card opens when the mouse rests on a setting or Tab reaches it. */
+        CARDS,
+        /** The first sentence of each setting's help under its name; no cards on hover. */
+        DESCRIPTIONS,
+        /** Neither. */
+        OFF
+    }
+
     private static Tracker tracker;
-    private static boolean autoShow = true;
+    private static Mode mode = Mode.CARDS;
     private static final Icon HELP_ICON = loadHelpIcon();
 
     private SettingHelpCard() {
     }
 
-    /**
-     * Whether cards open by themselves on hover and Tab (the Tuning toolbar's "Help cards" choice).
-     * When off, only the row's help icon opens one.
-     */
-    public static void setAutoShow(boolean on) {
-        autoShow = on;
-        if (!on && tracker != null) {
+    /** Rows read the mode when built, so open dialogs are rebuilt after descriptions turn on or off. */
+    public static void setMode(Mode newMode) {
+        mode = newMode;
+        if (mode != Mode.CARDS && tracker != null) {
             tracker.hideUnpinned();
         }
     }
 
-    public static boolean isAutoShow() {
-        return autoShow;
+    public static Mode getMode() {
+        return mode;
+    }
+
+    static boolean isAutoShow() {
+        return mode == Mode.CARDS;
+    }
+
+    static boolean isShowDescriptions() {
+        return mode == Mode.DESCRIPTIONS;
     }
 
     /** Gives a setting row a help card; rows without help text get none. */
     static void attach(JComponent row, String name, String units, String helpText) {
-        if (helpText == null || helpText.trim().isEmpty()) {
+        helpText = usefulHelp(helpText);
+        if (helpText == null) {
             return;
         }
         String plainName = name == null ? "" : name.replaceAll("<[^>]*>", "").trim();
-        row.putClientProperty(KEY, new Help(plainName, units == null ? "" : units.trim(), helpText.trim()));
+        String plainUnits = units == null ? "" : units.trim();
+        // help that is only a link: the card offers "Read more online" instead of the bare address
+        Help help = isLinkOnly(helpText) ? new Help(plainName, plainUnits, "", helpText)
+            : new Help(plainName, plainUnits, helpText);
+        row.putClientProperty(KEY, help);
         tracker();
+    }
+
+    /**
+     * INI help worth showing, or null: blank text and text that is only an internal field name, such
+     * as "triggerInputPins 1" or "vvtMode 2", count as no help (no icon, card or description).
+     */
+    static String usefulHelp(String helpText) {
+        if (helpText == null) {
+            return null;
+        }
+        String text = helpText.trim();
+        return text.isEmpty() || IDENTIFIER_ONLY.matcher(text).matches() ? null : text;
+    }
+
+    static boolean isLinkOnly(String helpText) {
+        return LINK_ONLY.matcher(helpText.trim()).matches();
+    }
+
+    /** What a description line shows: the first sentence, cut to about two lines; none for a bare link. */
+    static String description(String helpText) {
+        String text = usefulHelp(helpText);
+        if (text == null || isLinkOnly(text)) {
+            return null;
+        }
+        String first = firstSentence(text);
+        if (first.length() <= DESCRIPTION_MAX_CHARS) {
+            return first;
+        }
+        int cut = first.lastIndexOf(' ', DESCRIPTION_MAX_CHARS);
+        return first.substring(0, cut > 0 ? cut : DESCRIPTION_MAX_CHARS).trim() + "…";
+    }
+
+    /**
+     * The description line with {@link #MORE_HINT} after it when it leaves part of the help out, so
+     * users know the ? icon has more; null for none.
+     */
+    static String descriptionWithHint(String helpText) {
+        String description = description(helpText);
+        if (description == null) {
+            return null;
+        }
+        String full = usefulHelp(helpText).replace("\\n", "\n").trim();
+        return description.equals(full) ? description : description + " " + MORE_HINT;
     }
 
     /** The card tracker, started with the first help; none without a screen. */
@@ -388,7 +459,7 @@ public final class SettingHelpCard {
                 stopMouseTimers();
                 return;
             }
-            if (!autoShow) {
+            if (!isAutoShow()) {
                 return;
             }
             JComponent hovered = findRow(under);
@@ -442,7 +513,7 @@ public final class SettingHelpCard {
 
         private void onFocus(Component owner) {
             JComponent focused = findRow(owner);
-            if (autoShow && focused != null && lastInputWasKey && focused != row) {
+            if (isAutoShow() && focused != null && lastInputWasKey && focused != row) {
                 show(focused, (Help) focused.getClientProperty(KEY), false, false, false);
             }
         }

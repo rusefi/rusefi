@@ -203,6 +203,25 @@ public final class CalibrationPanelWorkspace {
         });
     }
 
+    /**
+     * Rebuilds the open dialog and every detached panel at the same scroll position, keeping edits;
+     * for display choices that rows read when built ("Descriptions" on the Tuning toolbar).
+     */
+    public void rebuildViews() {
+        if (destroyed || image == null) {
+            return;
+        }
+        synchronizing = true;
+        try {
+            if (primary.getCurrentKey() != null) {
+                refresh(primary, primaryScroll, new CalibrationPanelKey(primary.getCurrentKey()));
+            }
+            refreshDetached(null);
+        } finally {
+            synchronizing = false;
+        }
+    }
+
     private static byte[] copyContent(ConfigurationImage image) {
         return image == null ? null : image.getContent().clone();
     }

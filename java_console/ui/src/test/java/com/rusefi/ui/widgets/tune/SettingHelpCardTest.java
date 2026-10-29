@@ -23,6 +23,51 @@ public class SettingHelpCardTest {
     }
 
     @Test
+    public void internalNamesAreNoHelpAndLinksAreNoDescription() {
+        assertNull(SettingHelpCard.usefulHelp("triggerInputPins 1"));
+        assertNull(SettingHelpCard.usefulHelp("vvtMode 2"));
+        assertNull(SettingHelpCard.usefulHelp("  "));
+        assertEquals("Rising", SettingHelpCard.usefulHelp("Rising"));
+        assertEquals("Allowed range around detection position",
+            SettingHelpCard.usefulHelp(" Allowed range around detection position "));
+
+        String link = "https://wiki.rusefi.com/Trigger-Configuration-Guide";
+        assertNull(SettingHelpCard.description(link));
+        JPanel row = new JPanel();
+        SettingHelpCard.attach(row, "Primary Edge", "", link);
+        SettingHelpCard.Help help = (SettingHelpCard.Help) row.getClientProperty(SettingHelpCard.KEY);
+        assertEquals("", help.text);
+        assertEquals(link, help.link, "the card offers Read more online");
+
+        JPanel internal = new JPanel();
+        SettingHelpCard.attach(internal, "Crank Sensor", "", "triggerInputPins 1");
+        assertNull(SettingHelpCard.findRow(internal));
+    }
+
+    @Test
+    public void longDescriptionsEndAtAWordWithAnEllipsis() {
+        String sentence = "Camshaft input could be used either just for engine phase detection if your trigger shape "
+            + "does not include cam sensor as second channel, or it could be used for Variable Valve timing";
+        String description = SettingHelpCard.description(sentence);
+        assertTrue(description.length() <= 141, description);
+        assertTrue(description.endsWith("…"));
+        assertTrue(sentence.startsWith(description.substring(0, description.length() - 1)));
+        assertEquals("Short one.", SettingHelpCard.description("Short one. Then more."));
+    }
+
+    @Test
+    public void descriptionPointsToTheIconOnlyWhenItLeavesTextOut() {
+        String hint = " " + SettingHelpCard.MORE_HINT;
+        assertEquals("Cylinder bore.", SettingHelpCard.descriptionWithHint("Cylinder bore."), "nothing left out");
+        assertEquals("Cylinder bore.", SettingHelpCard.descriptionWithHint("  Cylinder bore. "));
+        assertEquals("Cylinder bore." + hint, SettingHelpCard.descriptionWithHint("Cylinder bore. Measured at the top."));
+        assertEquals("Cylinder bore." + hint, SettingHelpCard.descriptionWithHint("Cylinder bore.\\nMeasured at the top."), "INI line break");
+        String longSentence = String.join(" ", java.util.Collections.nCopies(40, "word"));
+        assertTrue(SettingHelpCard.descriptionWithHint(longSentence).endsWith("…" + hint), "cut short");
+        assertNull(SettingHelpCard.descriptionWithHint("vvtMode 2"));
+    }
+
+    @Test
     public void rowHelpIsFoundFromAnyControlInTheRowAndHtmlLabelsArePlain() {
         JPanel row = new JPanel();
         JButton pinout = new JButton();
