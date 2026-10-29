@@ -86,7 +86,19 @@ public class TabbedPanel {
                 setBackground(new javax.swing.plaf.ColorUIResource(tabArea));
             }
         }
+
+        @Override
+        public void paint(Graphics g) {
+            super.paint(g);
+            // over the tab row, which the scroll tab layout draws in a child component
+            if (reorder != null) {
+                reorder.paintLine(g);
+            }
+        }
     };
+    /** Drag to reorder; null until {@link #enableReordering}. */
+    private TabReorder reorder;
+    private boolean reordering;
 
     void installGlassPane() {
         JRootPane rootPane = tabbedPane.getRootPane();
@@ -290,6 +302,52 @@ public class TabbedPanel {
             return null;
         }
         return new ImageIcon(icon.getImage().getScaledInstance(TAB_ICON_SIZE, TAB_ICON_SIZE, Image.SCALE_SMOOTH));
+    }
+
+    /** Lets the user drag tabs into their own order, kept in {@code config} between runs. */
+    public void enableReordering(com.rusefi.core.preferences.storage.Node config) {
+        reorder = TabReorder.install(this, config);
+    }
+
+    /** Puts the tabs in the order the user last dragged them into; call once the startup tabs exist. */
+    public void applySavedOrder() {
+        if (reorder != null) {
+            reorder.applySavedOrder();
+        }
+    }
+
+    /**
+     * True while a tab is being moved. JTabbedPane cannot move a tab, so it is removed and inserted
+     * again, which briefly selects a neighbour; selection listeners should ignore those changes.
+     */
+    public boolean isReordering() {
+        return reordering;
+    }
+
+    /** Moves tab {@code from} to {@code to}, keeping its title, icon, title component and selection. */
+    void moveTab(int from, int to) {
+        if (from == to) {
+            return;
+        }
+        String title = tabbedPane.getTitleAt(from);
+        Icon icon = tabbedPane.getIconAt(from);
+        Component content = tabbedPane.getComponentAt(from);
+        String tip = tabbedPane.getToolTipTextAt(from);
+        Component tabTitle = tabbedPane.getTabComponentAt(from);
+        boolean enabled = tabbedPane.isEnabledAt(from);
+        Component selected = tabbedPane.getSelectedComponent();
+        reordering = true;
+        try {
+            tabbedPane.removeTabAt(from);
+            tabbedPane.insertTab(title, icon, content, tip, to);
+            tabbedPane.setTabComponentAt(to, tabTitle);
+            tabbedPane.setEnabledAt(to, enabled);
+            if (selected != null) {
+                tabbedPane.setSelectedComponent(selected);
+            }
+        } finally {
+            reordering = false;
+        }
     }
 
     public void selectTab(String title) {
