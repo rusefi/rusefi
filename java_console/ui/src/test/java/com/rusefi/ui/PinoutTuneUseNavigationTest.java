@@ -118,8 +118,9 @@ class PinoutTuneUseNavigationTest {
                     .anyMatch(label -> label.getText() != null && label.getText().contains("Fuel Pump output")),
                     "with its own label");
 
-                JTree tree = components(tuning.getContent(), JTree.class).get(0);
-                tree.dispatchEvent(new MouseEvent(tree, MouseEvent.MOUSE_PRESSED, 0, 0, 1, 1, 1, false,
+                // a press on any component counts; a plain panel, since clicking the menu tree asks the
+                // toolkit for the menu shortcut key, which throws on headless CI
+                marked.dispatchEvent(new MouseEvent(marked, MouseEvent.MOUSE_PRESSED, 0, 0, 1, 1, 1, false,
                     MouseEvent.BUTTON1));
                 assertNull(tuning.getDialogForTests().getHighlightedFieldForTests(),
                     "The first click anywhere removes the mark");
