@@ -1181,6 +1181,42 @@ public class CalibrationDialogWidgetTest {
     }
 
     @Test
+    public void testDescriptionsShowTheFirstSentenceUnderHelpedSettings() {
+        IniFileModel iniFileModel = mock(IniFileModel.class);
+        when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
+        when(iniFileModel.getTooltips()).thenReturn(Collections.singletonMap(
+            "helped", "Turns the fan on above this. Below it the fan stays off."));
+        com.opensr5.ini.field.StringIniField helped = new com.opensr5.ini.field.StringIniField("helped", 0, 4);
+        com.opensr5.ini.field.StringIniField unhelped = new com.opensr5.ini.field.StringIniField("unhelped", 4, 4);
+        when(iniFileModel.findIniField("helped")).thenReturn(java.util.Optional.of(helped));
+        when(iniFileModel.findIniField("unhelped")).thenReturn(java.util.Optional.of(unhelped));
+        DialogModel dialog = new DialogModel("main", "Main", Arrays.asList(
+            new DialogModel.Field("helped", "Helped"),
+            new DialogModel.Field("unhelped", "Unhelped")), Collections.emptyList());
+
+        SettingHelpCard.setMode(SettingHelpCard.Mode.DESCRIPTIONS);
+        try {
+            CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+            widget.update(dialog, iniFileModel, new ConfigurationImage(new byte[8]));
+            JPanel helpedRow = (JPanel) widget.getContentPane().getComponent(0);
+            JPanel unhelpedRow = (JPanel) widget.getContentPane().getComponent(1);
+
+            JTextArea description = (JTextArea) findComponentByName(helpedRow, "settingDescription");
+            assertNotNull(description);
+            assertEquals("Turns the fan on above this. " + SettingHelpCard.MORE_HINT, description.getText(),
+                "the rest of the help is behind the ? icon");
+            JComponent line = (JComponent) helpedRow.getComponent(0);
+            assertTrue(description.getPreferredSize().width <= line.getPreferredSize().width,
+                "a description never makes its row wider");
+            assertFalse(description.getText().contains("stays off"), "only the first sentence");
+            assertSame(helpedRow, SettingHelpCard.findRow(description), "the description is part of its row");
+            assertNull(findComponentByName(unhelpedRow, "settingDescription"));
+        } finally {
+            SettingHelpCard.setMode(SettingHelpCard.Mode.CARDS);
+        }
+    }
+
+    @Test
     public void testSettingHelpHtmlEscapesTextAndLinksUrls() {
         String html = CalibrationFieldFactory.formatHelpHtml(
             "Use <unsafe> & value\\nSee https://rusefi.com/docs");
