@@ -253,6 +253,8 @@ final class FreeGaugeArea {
         element.setActive(active);
         // Transparent around the dial, so an overlapped gauge shows outside the circle.
         element.getContent().setOpaque(false);
+        // ...and the mouse reaches the gauge below there, so its gear stays reachable.
+        element.getContent().setMouseOnlyOnChildren(true);
         Item item = new Item(node, element);
         items.add(item);
         // Index 0 is painted last, so later gauges stay on top of earlier ones.

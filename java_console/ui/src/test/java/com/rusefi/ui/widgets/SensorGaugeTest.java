@@ -176,6 +176,39 @@ class SensorGaugeTest {
         }
     }
 
+    @Test
+    void rightClickMenuStartsWithTheGaugeOptions() throws Throwable {
+        SwingUtilities.invokeAndWait(() -> {
+            UIContext context = new UIContext();
+            context.iniFileState.setIniFileModelForTest(
+                IniFileModelMocks.withGauges(CircularGaugeTest.model(0, 100, 80, 0)));
+            JMenuItem scale = new JMenuItem("Scale…");
+            boolean[] poppedOut = {false};
+            JPopupMenu menu = SensorGauge.createPopupMenu(context, new JPanelWithListener(new BorderLayout()),
+                name -> { }, java.util.Collections.singletonList(scale), GaugeDisplayKind.ROUND,
+                () -> poppedOut[0] = true);
+
+            JMenu options = (JMenu) menu.getComponent(0);
+            assertEquals(GaugeOptionsButton.TOOLTIP, options.getText(),
+                "The gear's menu is reachable even where another gauge hides the gear");
+            assertSame(scale, options.getMenuComponent(0));
+            JMenuItem popOut = (JMenuItem) options.getMenuComponent(options.getMenuComponentCount() - 1);
+            assertEquals(SensorGauge.POP_OUT, popOut.getText());
+            popOut.doClick(0);
+            assertTrue(poppedOut[0]);
+
+            JTextField search = searchField(menu);
+            int searchIndex = menu.getComponentIndex(search.getParent());
+            assertTrue(searchIndex > 0, "Gauge options is above the search bar");
+            search.setText("no such gauge");
+            Component firstResult = menu.getComponent(searchIndex + 2);
+            assertTrue(firstResult instanceof JMenuItem
+                    && "No matching gauges".equals(((JMenuItem) firstResult).getText()),
+                "Results stay right below the search bar: " + visibleItems(menu));
+            assertTrue(options.isVisible());
+        });
+    }
+
     static JTextField searchField(JPopupMenu menu) {
         return (JTextField) UiUtils.getAllComponents(menu).stream()
             .filter(component -> component instanceof JTextField)

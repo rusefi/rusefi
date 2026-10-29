@@ -16,9 +16,31 @@ public class JPanelWithListener extends JPanel {
     private final List<Runnable> cleanupActions = new LinkedList<>();
     private final List<Consumer<Boolean>> activeStateActions = new LinkedList<>();
     private boolean active = true;
+    private boolean mouseOnlyOnChildren;
 
     public JPanelWithListener(LayoutManager layoutManager) {
         super(layoutManager);
+    }
+
+    /**
+     * When set, this panel takes the mouse only where a visible child does, so a transparent
+     * panel overlapping others lets clicks through to them (free gauge layout).
+     */
+    public void setMouseOnlyOnChildren(boolean mouseOnlyOnChildren) {
+        this.mouseOnlyOnChildren = mouseOnlyOnChildren;
+    }
+
+    @Override
+    public boolean contains(int x, int y) {
+        if (!mouseOnlyOnChildren) {
+            return super.contains(x, y);
+        }
+        for (Component child : getComponents()) {
+            if (child.isVisible() && child.contains(x - child.getX(), y - child.getY())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

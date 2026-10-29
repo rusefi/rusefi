@@ -46,7 +46,7 @@ public class SensorGauge {
 
     static final String POP_OUT = "Pop out to window";
     private static final String HINT_LINE_1 = "Right-click to change gauge, double-click to detach";
-    private static final String HINT_LINE_2 = "Gear (top right) for display options";
+    private static final String HINT_LINE_2 = "Display options: gear (top right) or right-click > Gauge options";
 
     public interface GaugeChangeListener {
         /**
@@ -147,7 +147,8 @@ public class SensorGauge {
 
             private void showMenuOnPopupTrigger(MouseEvent e) {
                 if (e.isPopupTrigger()) {
-                    GaugePopups.show(createPopupMenu(uiContext, wrapper, listener, extraMenuItems, kind), e);
+                    GaugePopups.show(createPopupMenu(uiContext, wrapper, listener, extraMenuItems, kind,
+                        () -> popOut(uiContext, popOutLocation(component), gaugeName)), e);
                 }
             }
 
@@ -185,9 +186,27 @@ public class SensorGauge {
 
     static JPopupMenu createPopupMenu(UIContext uiContext, JPanelWithListener wrapper, GaugeChangeListener listener,
                                       List<JMenuItem> extraMenuItems, GaugeDisplayKind kind) {
+        return createPopupMenu(uiContext, wrapper, listener, extraMenuItems, kind, null);
+    }
+
+    /**
+     * @param popOut when set, the menu starts with "Gauge options", the gear's menu as a submenu:
+     *               the gear can be hidden under another free-layout gauge, a right-click never is.
+     */
+    static JPopupMenu createPopupMenu(UIContext uiContext, JPanelWithListener wrapper, GaugeChangeListener listener,
+                                      List<JMenuItem> extraMenuItems, GaugeDisplayKind kind, Runnable popOut) {
         JPopupMenu pm = new JPopupMenu();
         fillGaugeMenuItems(uiContext, pm, wrapper, listener, extraMenuItems, kind);
         GaugeMenuSearch.addTo(pm);
+        if (popOut != null) {
+            JMenu options = new JMenu(GaugeOptionsButton.TOOLTIP);
+            options.setIcon(new GaugeOptionsButton.GearIcon());
+            for (Component item : createOptionsMenu(extraMenuItems, popOut).getComponents()) {
+                options.getPopupMenu().add(item);
+            }
+            pm.insert(options, 0);
+            pm.insert(new JPopupMenu.Separator(), 1);
+        }
         return pm;
     }
 
