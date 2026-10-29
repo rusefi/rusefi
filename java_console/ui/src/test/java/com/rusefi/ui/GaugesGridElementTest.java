@@ -6,6 +6,7 @@ import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.widgets.BarGauge;
 import com.rusefi.ui.widgets.DigitalGauge;
 import com.rusefi.ui.widgets.GaugeDisplayKind;
+import com.rusefi.ui.widgets.GaugeOptionsButton;
 import com.rusefi.ui.widgets.GaugePopups;
 import com.rusefi.ui.widgets.GaugeScaleOverrides;
 import org.junit.jupiter.api.Test;
@@ -156,8 +157,8 @@ class GaugesGridElementTest {
 
                     rightClick(gauge(element));
                     JPopupMenu menu = shown.get(shown.size() - 1);
-                    assertEquals(Collections.singletonList("Test"), visibleItems(menu),
-                        "Right-click lists the gauge groups directly");
+                    assertEquals(Arrays.asList(GaugeOptionsButton.TOOLTIP, "Test"), visibleItems(menu),
+                        "Right-click starts with the gear's options, then lists the gauge groups");
 
                     findItem(menu, "CustomGauge").doClick(0);
                     assertEquals("CustomGauge", config.getProperty("gauge"));

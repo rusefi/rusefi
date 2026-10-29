@@ -38,6 +38,7 @@ import com.rusefi.ui.widgets.JoinedButtons;
 import com.rusefi.ui.widgets.WandIcon;
 import com.rusefi.ui.widgets.StatusPanel;
 import com.rusefi.ui.widgets.tune.CalibrationPanelWorkspace;
+import com.rusefi.ui.widgets.tune.PinoutLink;
 import com.rusefi.ui.wizard.WizardCatalog;
 import com.rusefi.ui.wizard.WizardContainer;
 import com.rusefi.ui.wizard.WizardStep;
@@ -499,9 +500,17 @@ console live data tab is broken #8402
                             deviceSessionManager.getState() == SessionState.FLASHING));
                 mainFrame.setTuneActions(tp.getLoadTuneAction(), tp.getSaveTuneAction());
                 if (UiProperties.isPinoutEnabled()) {
-                    tp.setNavigateToPinout(enumValue -> {
-                        tabbedPane.selectTab("Pinout");
-                        pinoutPane.highlightByEnumValue(enumValue);
+                    tp.setNavigateToPinout(new PinoutLink() {
+                        @Override
+                        public void show(String enumValue) {
+                            tabbedPane.selectTab("Pinout");
+                            pinoutPane.highlightByEnumValue(enumValue);
+                        }
+
+                        @Override
+                        public JComponent preview(String enumValue) {
+                            return pinoutPane.createPreview(enumValue);
+                        }
                     });
                 }
                 updateOutputPollingForSelectedTab();

@@ -8,8 +8,10 @@ import javax.swing.AbstractButton;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -64,6 +66,21 @@ class PinoutDrawingTest {
     }
 
     @Test
+    void theSelectionRingIsDrawnOverTheNeighbouringPins() {
+        // 20 px between pins and the minimum 9 px markers: the ring reaches into the next marker
+        PinoutDrawing drawing = drawing(232, 112);
+        drawing.setSelectedPin("A2");
+        BufferedImage image = new BufferedImage(232, 112, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = image.createGraphics();
+        drawing.paint(g);
+        g.dispose();
+        PinoutPin a2 = pin("", "", 400, 150);
+        int ringX = drawing.screenX(a2) + drawing.markerRadius() + 5;
+        Color ring = new Color(image.getRGB(ringX, drawing.screenY(a2)));
+        assertEquals(new Color(0x2563eb), ring, "the ring, not the A3 marker painted after it");
+    }
+
+    @Test
     void aClickSelectsThePinUnderIt() {
         PinoutDrawing drawing = drawing(1032, 432);
         List<String> clicked = new ArrayList<>();
@@ -107,6 +124,11 @@ class PinoutDrawingTest {
             assertEquals(1, pane.selectedConnector(), "a pin on another connector switches to it");
             assertTrue(switches.get(1).isSelected());
             assertEquals("B1", page(pane, 1).selected().name);
+
+            PinoutLookup.Match match = pane.findPin("\"B1 Low Side output\"");
+            assertEquals("Connector B", match.connectorTitle, "the same lookup serves the Tuning preview");
+            assertEquals("B1", match.pin.name);
+            assertNull(pane.findPin("NONE"));
         });
     }
 

@@ -20,6 +20,7 @@ import com.rusefi.ui.widgets.StatusPanel;
 import com.rusefi.ui.widgets.tune.CalibrationDialogWidget;
 import com.rusefi.ui.widgets.tune.CalibrationPanelWorkspace;
 import com.rusefi.ui.widgets.tune.IndicatorPanel;
+import com.rusefi.ui.widgets.tune.PinoutLink;
 import com.rusefi.ui.widgets.tune.MainMenuTreeWidget;
 import com.rusefi.ui.widgets.tune.SettingHelpCard;
 import com.rusefi.ui.widgets.tune.TuningStyle;
@@ -67,8 +68,8 @@ public class TuningPane {
     /** [tag:offline_tune] The .ini the offline tune was loaded with — used to migrate edits if a different-signature ECU connects. */
     private IniFileModel offlineIni;
     private volatile boolean firmwareUpdateInProgress;
-    /** Fired when the user opens Wiring/Pinout from a pin-enum field. Wired from ConsoleUI after construction. */
-    private Consumer<String> navigateToPinout;
+    /** Fired by the "Show on connector" button beside a pin-enum field. Wired from ConsoleUI after construction. */
+    private PinoutLink navigateToPinout;
     private Runnable showTuningTab = () -> { };
     private SensorCentral.ResponseListenerToken eventTriggerToken;
     private IndicatorPanel frontPageIndicatorPanel;
@@ -169,10 +170,8 @@ public class TuningPane {
             uiContext.fireConfigImageChanged(image);
         });
 
-        // The Wiring/Pinout button on a pin-enum combo fires the current value upward.
-        workspace.setOnShowInPinout(value -> {
-            if (navigateToPinout != null) navigateToPinout.accept(value);
-        });
+        // The "Show on connector" button on a pin-enum combo fires the current value upward.
+        workspace.setOnShowInPinout(PinoutLink.forwarding(() -> navigateToPinout));
 
         // Per-trigger edge-detection state: maps trigger index → previous boolean value.
         // ConcurrentHashMap because onSensorUpdate runs on the protocol thread while
@@ -375,7 +374,7 @@ public class TuningPane {
         eventTriggerToken.setActive(active && !channels.isEmpty());
     }
 
-    public void setNavigateToPinout(Consumer<String> navigateToPinout) {
+    public void setNavigateToPinout(PinoutLink navigateToPinout) {
         this.navigateToPinout = navigateToPinout;
     }
 
@@ -474,6 +473,13 @@ public class TuningPane {
         if (!left.selectField(fieldKey) && dialogKey != null) {
             left.selectSubMenu(dialogKey);
         }
+        // queued: with a menu search active the page is shown one event later
+        SwingUtilities.invokeLater(() -> right.highlightField(fieldKey));
+    }
+
+    // Package-private so tests check the dialog navigation shows.
+    CalibrationDialogWidget getDialogForTests() {
+        return right;
     }
 
     public Action getLoadTuneAction() {

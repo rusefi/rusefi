@@ -266,11 +266,20 @@ final class PinoutDrawing extends JPanel {
             }
             int r = markerRadius();
             PinoutPin hover = null;
+            PinoutPin selection = null;
             for (PinoutPin pin : pins) {
-                paintMarker(g2, pin, r);
+                if (pin.name.equals(selected)) {
+                    // painted last: its ring reaches over the neighbouring markers
+                    selection = pin;
+                } else {
+                    paintMarker(g2, pin, r);
+                }
                 if (pin.name.equals(hovered)) {
                     hover = pin;
                 }
+            }
+            if (selection != null) {
+                paintMarker(g2, selection, r);
             }
             if (hover != null) {
                 paintCard(g2, hover, r);

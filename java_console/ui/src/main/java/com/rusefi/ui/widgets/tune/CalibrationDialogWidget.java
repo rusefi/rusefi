@@ -26,6 +26,7 @@ import com.rusefi.ui.util.TransparentPanels;
 import com.rusefi.ui.util.ScrollablePanel;
 import com.rusefi.ui.util.SquareGridLayout;
 import com.rusefi.ui.util.SwingUtil;
+import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.util.WrapLayout;
 import com.rusefi.trigger.TriggerImage;
 import com.rusefi.trigger.TriggerWheelInfo;
@@ -81,13 +82,16 @@ public class CalibrationDialogWidget {
     private int gaugeGroupsRendered;
     /** Called after each user edit with the current working image, so listeners can re-evaluate their own expressions. */
     private Consumer<ConfigurationImage> onConfigChange;
-    /** Called when the user opens Wiring/Pinout from a pin-enum field; arg is the current enum value. */
-    private Consumer<String> onShowInPinout;
+    /** Called by the "Show on connector" button beside a pin-enum field; arg is the current enum value. */
+    private PinoutLink onShowInPinout;
     /** Restores the last navigated view; set on every update() call so the VE generator panel can return to it. */
     private Runnable currentViewRestorer;
     private String currentKey;
     private Runnable onViewChanged = () -> { };
     private Runnable onTableOrientationChange = () -> { };
+    /** Client property holding a setting row's field key, for {@link #highlightField}. */
+    private static final String FIELD_KEY = "rusefi.fieldKey";
+    private final FieldHighlight fieldHighlight = new FieldHighlight();
 
     /** Also reports replacements from navigation, undo, discard, and loading another tune. */
     public void setOnViewChanged(Runnable listener) {
@@ -110,7 +114,7 @@ public class CalibrationDialogWidget {
         this.onConfigChange = onConfigChange;
     }
 
-    public void setOnShowInPinout(Consumer<String> onShowInPinout) {
+    public void setOnShowInPinout(PinoutLink onShowInPinout) {
         this.onShowInPinout = onShowInPinout;
     }
 
@@ -364,6 +368,7 @@ public class CalibrationDialogWidget {
     }
 
     public void update(DialogModel dialogModel, IniFileModel iniFileModel, ConfigurationImage ci) {
+        fieldHighlight.clear();
         currentKey = dialogModel == null ? null : dialogModel.getKey();
         viewportPane.fillWidth = false;
         CalibrationFieldFactory.closeHelpPopup();
@@ -417,6 +422,7 @@ public class CalibrationDialogWidget {
     }
 
     public void update(String key, IniFileModel iniFileModel, ConfigurationImage ci) {
+        fieldHighlight.clear();
         currentKey = key;
         currentIniFileModel = iniFileModel;
         viewportPane.fillWidth = false;
@@ -612,7 +618,28 @@ public class CalibrationDialogWidget {
         }
 
         registerFieldExpressions(row, field, iniFileModel, ci);
+        row.putClientProperty(FIELD_KEY, field.getKey());
         container.add(row);
+    }
+
+    /**
+     * Marks the row of setting {@code fieldKey} on the page shown and scrolls it into view, until
+     * the next mouse press; false when the page has no such row.
+     */
+    public boolean highlightField(String fieldKey) {
+        for (Component component : UiUtils.getAllComponents(contentPane)) {
+            if (component instanceof JComponent && fieldKey != null
+                && fieldKey.equals(((JComponent) component).getClientProperty(FIELD_KEY))) {
+                fieldHighlight.show((JComponent) component);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** The marked setting row, or null. */
+    public JComponent getHighlightedFieldForTests() {
+        return fieldHighlight.marked();
     }
 
     private void renderRuntimeValue(JPanel container, DialogModel.Field field, IniFileModel ini,
