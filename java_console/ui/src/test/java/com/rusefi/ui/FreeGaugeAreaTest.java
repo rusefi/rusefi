@@ -163,6 +163,67 @@ class FreeGaugeAreaTest {
     }
 
     @Test
+    void theGaugeBelowIsReachableOutsideTheDialAbove() throws Exception {
+        Node config = twoColumnGrid();
+        config.setProperty("gauges_mode", "free");
+        config.setProperty("free_count", 2);
+        config.getChild("free_0").setProperty("gauge", "CustomGauge");
+        GaugeLayout.setBounds(config.getChild("free_0"), new Rectangle2D.Double(0, 0, 0.5, 1));
+        config.getChild("free_1").setProperty("gauge", "RPMGauge");
+        // On top, covering the lower gauge's gear corner with its own transparent corner.
+        GaugeLayout.setBounds(config.getChild("free_1"), new Rectangle2D.Double(0.4, 0, 0.5, 0.5));
+        onPanel(config, panel -> {
+            JPanel free = panel.getFreePanel();
+            layout(free);
+            // The gear's place comes from the nested layouts too; validate() needs a window.
+            layoutTree(free);
+            FreeGaugeArea area = panel.getFreeArea();
+            Component lower = area.getItem(0).element.getContent();
+            Component upper = area.getItem(1).element.getContent();
+            Component lowerGear = gear(lower);
+            Point gearSpot = SwingUtilities.convertPoint(lowerGear.getParent(),
+                lowerGear.getX() + lowerGear.getWidth() / 2, lowerGear.getY() + lowerGear.getHeight() / 2, free);
+            assertTrue(upper.getBounds().contains(gearSpot),
+                "the fixture overlaps the gear: " + gearSpot + " " + upper.getBounds());
+
+            assertTrue(SwingUtilities.isDescendingFrom(
+                    SwingUtilities.getDeepestComponentAt(free, gearSpot.x, gearSpot.y), lower),
+                "Outside its dial the upper gauge lets the mouse through to the gear below");
+            assertTrue(SwingUtilities.isDescendingFrom(SwingUtilities.getDeepestComponentAt(free, 260, 50), upper),
+                "The upper dial still takes the mouse");
+
+            gear(upper).setVisible(true);
+            assertTrue(SwingUtilities.isDescendingFrom(
+                    SwingUtilities.getDeepestComponentAt(free, gearSpot.x, gearSpot.y), upper),
+                "While hovered, a gauge keeps its whole box so the pointer can reach its own gear");
+        });
+    }
+
+    private static void layoutTree(Container container) {
+        container.doLayout();
+        for (Component child : container.getComponents()) {
+            if (child instanceof Container) {
+                layoutTree((Container) child);
+            }
+        }
+    }
+
+    private static Component gear(Component root) {
+        if (root instanceof com.rusefi.ui.widgets.GaugeOptionsButton) {
+            return root;
+        }
+        if (root instanceof Container) {
+            for (Component child : ((Container) root).getComponents()) {
+                Component found = gear(child);
+                if (found != null) {
+                    return found;
+                }
+            }
+        }
+        return null;
+    }
+
+    @Test
     void stackingAndRemovalKeepTheConfigurationInDrawingOrder() throws Exception {
         Node config = twoColumnGrid();
         onPanel(config, panel -> {

@@ -409,6 +409,31 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
         drawText(g, title, 200, 331, 16, 230, GaugeStyle.label());
     }
 
+    /**
+     * Free-layout gauges overlap, and outside the dial this gauge is transparent: there the
+     * mouse belongs to the gauge below, so its gear stays reachable. The gear's spot always
+     * counts, and while the gear shows (the mouse is over this gauge) the whole box does, so
+     * the pointer can travel from the dial to the gear.
+     */
+    @Override
+    public boolean contains(int x, int y) {
+        if (!super.contains(x, y)) {
+            return false;
+        }
+        for (Component child : getComponents()) {
+            if (child.isVisible() || child.getBounds().contains(x, y)) {
+                return true;
+            }
+        }
+        Insets insets = getInsets();
+        double width = getWidth() - insets.left - insets.right;
+        double height = getHeight() - insets.top - insets.bottom;
+        double radius = Math.min(width, height) / 2;
+        double dx = x - (insets.left + width / 2);
+        double dy = y - (insets.top + height / 2);
+        return dx * dx + dy * dy <= radius * radius;
+    }
+
     int getArtworkRenderCountForTests() {
         return artworkRenderCountForTests;
     }

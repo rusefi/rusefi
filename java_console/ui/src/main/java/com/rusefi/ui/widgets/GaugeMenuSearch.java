@@ -101,7 +101,8 @@ public final class GaugeMenuSearch {
                 } else if (matches > MAX_RESULTS) {
                     results.add(disabledItem((matches - MAX_RESULTS) + " more - keep typing to narrow"));
                 }
-                int index = 2;
+                // Results go right below the search bar; callers may add items above it.
+                int index = popup.getComponentIndex(searchPanel) + 2;
                 for (JMenuItem result : results) {
                     popup.insert(result, index++);
                 }
