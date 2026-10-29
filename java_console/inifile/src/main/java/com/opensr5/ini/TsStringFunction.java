@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
  * - bitStringValue(enumConstantName, expression) — looks up the enum constant by name,
  *   evaluates the expression to get an integer index, returns the corresponding option string.
  * - stringValue(stringConstantName) — reads the ASCII string value from the configuration image.
+ * - condition ? "a" : "b" — a ternary whose branch is a quoted literal or one of the functions above.
  */
 public class TsStringFunction {
     private static final Logging log = Logging.getLogging(TsStringFunction.class);
@@ -34,15 +35,38 @@ public class TsStringFunction {
     private static final Pattern STRING_VALUE_PATTERN =
         Pattern.compile("stringValue\\s*\\(\\s*([a-zA-Z_][a-zA-Z0-9_]*)\\s*\\)");
 
+    private static final Pattern STRING_LITERAL = Pattern.compile("\"[^\"]*\"");
+
     /**
-     * Check if an expression contains a bitStringValue() or stringValue() call.
+     * Check if an expression is a string computed from the tune or live data: a bitStringValue()
+     * or stringValue() call, or a ternary choosing between strings ({ useMetricOnInterface ? "kPa" : "psi" }).
      */
     public static boolean containsStringFunction(String expression) {
         if (expression == null)
             return false;
         String cleaned = stripBraces(expression);
         return BIT_STRING_VALUE_PATTERN.matcher(cleaned).find()
-            || STRING_VALUE_PATTERN.matcher(cleaned).find();
+            || STRING_VALUE_PATTERN.matcher(cleaned).find()
+            || isStringTernary(cleaned);
+    }
+
+    private static boolean isStringTernary(String cleaned) {
+        if (cleaned.indexOf('?') < 0) {
+            return false;
+        }
+        ExpressionEvaluator.TernaryExpression ternary = ExpressionEvaluator.parseTernary(cleaned);
+        return ternary != null && (isStringLiteral(ternary.trueExpr) || isStringLiteral(ternary.falseExpr)
+            || containsStringFunction(ternary.trueExpr) || containsStringFunction(ternary.falseExpr));
+    }
+
+    private static boolean isStringLiteral(String expression) {
+        return STRING_LITERAL.matcher(stripBraces(expression)).matches();
+    }
+
+    /** Text of a quoted literal; anything else unchanged. */
+    private static String unquote(String expression) {
+        String trimmed = stripBraces(expression);
+        return isStringLiteral(trimmed) ? trimmed.substring(1, trimmed.length() - 1) : trimmed;
     }
 
     /**
@@ -73,6 +97,10 @@ public class TsStringFunction {
                 ini, configImage, outputChannelValues);
         }
 
+        if (isStringLiteral(working)) {
+            return unquote(working);
+        }
+
         // Resolve bitStringValue() calls
         working = resolveBitStringValueCalls(working, ini, configImage, outputChannelValues);
         if (working == null)
@@ -93,7 +121,7 @@ public class TsStringFunction {
         if (label == null) {
             return "";
         }
-        if (!label.contains("bitStringValue") && !label.contains("stringValue")) {
+        if (!containsStringFunction(label)) {
             return label;
         }
         String resolved = resolve(label, ini, configImage, outputChannelValues);
@@ -294,6 +322,15 @@ public class TsStringFunction {
     public static List<String> allPossibleResolutions(String expression, IniFileModel ini) {
         if (expression == null || expression.isEmpty()) return Collections.singletonList(" ");
         String cleaned = stripBraces(expression);
+        if (isStringTernary(cleaned)) {
+            ExpressionEvaluator.TernaryExpression ternary = ExpressionEvaluator.parseTernary(cleaned);
+            List<String> results = new ArrayList<>(allPossibleResolutions(ternary.trueExpr, ini));
+            results.addAll(allPossibleResolutions(ternary.falseExpr, ini));
+            return results;
+        }
+        if (isStringLiteral(cleaned)) {
+            return Collections.singletonList(unquote(cleaned));
+        }
         Matcher m = BIT_STRING_VALUE_PATTERN.matcher(cleaned);
         if (!m.find()) {
             return Collections.singletonList(cleaned.trim());
