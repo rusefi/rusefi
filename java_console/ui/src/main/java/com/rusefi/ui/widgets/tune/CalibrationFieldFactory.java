@@ -1,5 +1,7 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.rusefi.ui.PinoutLookup;
+import com.rusefi.ui.widgets.ConnectorIcon;
 import com.rusefi.ui.widgets.TuningIcons;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
@@ -81,26 +83,26 @@ public class CalibrationFieldFactory {
         return createFieldRow(field, iniField, ci, workingImage, onChange, null);
     }
 
-    public static JPanel createFieldRow(DialogModel.Field field, IniField iniField, ConfigurationImage ci, ConfigurationImage workingImage, Runnable onChange, Consumer<String> onShowInPinout) {
+    public static JPanel createFieldRow(DialogModel.Field field, IniField iniField, ConfigurationImage ci, ConfigurationImage workingImage, Runnable onChange, PinoutLink onShowInPinout) {
         return createFieldRow(field, iniField, ci, workingImage, onChange, onShowInPinout, 0);
     }
 
     static JPanel createFieldRow(DialogModel.Field field, IniField iniField, ConfigurationImage ci,
                                  ConfigurationImage workingImage, Runnable onChange,
-                                 Consumer<String> onShowInPinout, int labelWidth) {
+                                 PinoutLink onShowInPinout, int labelWidth) {
         return createFieldRow(field, iniField, ci, workingImage, onChange, onShowInPinout, labelWidth, 0);
     }
 
     static JPanel createFieldRow(DialogModel.Field field, IniField iniField, ConfigurationImage ci,
                                  ConfigurationImage workingImage, Runnable onChange,
-                                 Consumer<String> onShowInPinout, int labelWidth, int fieldEditorWidth) {
+                                 PinoutLink onShowInPinout, int labelWidth, int fieldEditorWidth) {
         return createFieldRow(field, iniField, ci, workingImage, onChange, onShowInPinout,
             labelWidth, fieldEditorWidth, null);
     }
 
     static JPanel createFieldRow(DialogModel.Field field, IniField iniField, ConfigurationImage ci,
                                  ConfigurationImage workingImage, Runnable onChange,
-                                 Consumer<String> onShowInPinout, int labelWidth, int fieldEditorWidth,
+                                 PinoutLink onShowInPinout, int labelWidth, int fieldEditorWidth,
                                  String helpText) {
         JPanel row = createRowPanel();
         // a row with help shows its help card; tooltips that only repeat the row would compete with it
@@ -209,6 +211,8 @@ public class CalibrationFieldFactory {
     private static JComponent createHelpSlot(String helpText) {
         JPanel slot = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         slot.setName("settingHelpSlot");
+        // shows the row's background, including a FieldHighlight tint
+        slot.setOpaque(false);
         Dimension slotSize = new Dimension(HELP_COLUMN_WIDTH, HELP_ICON_SIZE);
         slot.setMinimumSize(slotSize);
         slot.setPreferredSize(slotSize);
@@ -430,27 +434,51 @@ public class CalibrationFieldFactory {
             .toArray(String[]::new);
     }
 
+    static final String SHOW_ON_CONNECTOR = "Show on connector";
+    /** Written beside the connector icon: an icon alone did not read as a connector. */
+    static final String PINOUT_BUTTON_TEXT = "Pinout";
+
+    /** Tooltip of the connector button: names the chosen pin, or says that none is chosen. */
+    static String pinoutButtonToolTip(String pin) {
+        return pin == null ? "Choose a pin to show it on its connector"
+            : "Show " + pin + " on its connector (opens Pinout)";
+    }
+
     /**
-     * For pin-enum fields (name matches .*pins?\d*), adds a button that fires the
+     * For pin-enum fields (name matches .*pins?\d*), adds a connector button that fires the
      * current combo value up to the caller for cross-tab navigation.
      */
-    private static JButton createPinoutButton(JComboBox<String> comboBox, String fieldKey, Consumer<String> onShowInPinout) {
+    private static JButton createPinoutButton(JComboBox<String> comboBox, String fieldKey, PinoutLink onShowInPinout) {
         if (onShowInPinout == null || fieldKey == null) {
             return null;
         }
-        if (!fieldKey.toLowerCase().matches(".*pins?\\d*")) {
+        if (!PinoutLookup.isPinField(fieldKey)) {
             return null;
         }
 
-        JButton button = new JButton("W") {
+        JButton button = new JButton(PINOUT_BUTTON_TEXT, new ConnectorIcon()) {
             @Override
             public void setEnabled(boolean enabled) {
-                super.setEnabled(enabled && getSelectedPin(comboBox) != null);
+                String pin = getSelectedPin(comboBox);
+                super.setEnabled(enabled && pin != null);
+                setToolTipText(pinoutButtonToolTip(pin));
+            }
+
+            /** As tall as the drop-down beside it, so the row reads as one control. */
+            @Override
+            public Dimension getPreferredSize() {
+                Dimension size = super.getPreferredSize();
+                return new Dimension(size.width, Math.max(size.height, comboBox.getPreferredSize().height));
+            }
+
+            @Override
+            public Dimension getMaximumSize() {
+                return getPreferredSize();
             }
         };
-        button.setToolTipText("Wiring/Pinout");
-        button.setMargin(new Insets(0, 6, 0, 6));
-        button.setMaximumSize(button.getPreferredSize());
+        button.getAccessibleContext().setAccessibleName(SHOW_ON_CONNECTOR);
+        button.setIconTextGap(6);
+        button.setMargin(new Insets(0, 6, 0, 8));
         button.setEnabled(comboBox.isEnabled());
         comboBox.addActionListener(e -> button.setEnabled(comboBox.isEnabled()));
         button.addActionListener(e -> {
@@ -458,19 +486,17 @@ public class CalibrationFieldFactory {
             if (value == null) {
                 return;
             }
-            onShowInPinout.accept(value);
+            onShowInPinout.show(value);
+        });
+        HoverPreview.install(button, () -> {
+            String pin = getSelectedPin(comboBox);
+            return pin == null ? null : onShowInPinout.preview(pin);
         });
         return button;
     }
 
     private static String getSelectedPin(JComboBox<String> comboBox) {
-        Object selected = comboBox.getSelectedItem();
-        if (selected == null) {
-            return null;
-        }
-        String value = selected.toString().replace("\"", "").trim();
-        return value.isEmpty() || "NONE".equalsIgnoreCase(value) || "INVALID".equalsIgnoreCase(value)
-            ? null : value;
+        return PinoutLookup.pinChoice(comboBox.getSelectedItem());
     }
 
     private static JTextField createTextField(IniField iniField, String currentValue,

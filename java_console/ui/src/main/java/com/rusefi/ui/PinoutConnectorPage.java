@@ -66,6 +66,8 @@ final class PinoutConnectorPage extends JPanel {
     static final int TUNE_USE_COLUMN = 4;
 
     final String title;
+    /** The connector drawing; null when the board has none. */
+    final BufferedImage image;
     final List<PinoutPin> pins;
     final PinoutDrawing drawing = new PinoutDrawing();
     final JPanel legend = new JPanel(new WrapLayout(FlowLayout.LEFT, 6, 4));
@@ -97,6 +99,7 @@ final class PinoutConnectorPage extends JPanel {
                         Function<PinoutPin, String[]> assignmentOf, Consumer<String[]> openInTuning) {
         super(new BorderLayout(12, 0));
         this.title = title;
+        this.image = image;
         this.pins = pins;
         this.mode = mode;
         this.assignmentOf = assignmentOf;

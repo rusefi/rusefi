@@ -1082,8 +1082,15 @@ public class CalibrationDialogWidgetTest {
 
         JButton button = getButtonFromRow(row);
         assertNotNull(button);
-        assertEquals("W", button.getText());
-        assertEquals("Wiring/Pinout", button.getToolTipText());
+        assertTrue(button.getIcon() instanceof com.rusefi.ui.widgets.ConnectorIcon, "A connector icon, not a cryptic letter");
+        assertEquals(CalibrationFieldFactory.PINOUT_BUTTON_TEXT, button.getText(), "Named, since the icon alone was unclear");
+        JComboBox<?> pinCombo = getComboBoxFromRow(row);
+        assertEquals(pinCombo.getPreferredSize().height, button.getPreferredSize().height,
+            "As tall as the drop-down beside it");
+        assertEquals(button.getPreferredSize(), button.getMaximumSize(), "The row's layout cannot stretch it");
+        assertEquals(CalibrationFieldFactory.SHOW_ON_CONNECTOR, button.getAccessibleContext().getAccessibleName());
+        assertEquals("Show B16 Low Side output 4 on its connector (opens Pinout)", button.getToolTipText(),
+            "The tooltip names the pin and what happens");
         assertTrue(button.isEnabled());
         button.doClick();
         assertEquals("B16 Low Side output 4", selectedPin.get());
@@ -1092,6 +1099,7 @@ public class CalibrationDialogWidgetTest {
         assertNotNull(combo);
         combo.setSelectedItem("NONE");
         assertFalse(button.isEnabled());
+        assertEquals("Choose a pin to show it on its connector", button.getToolTipText());
         button.setEnabled(true);
         assertFalse(button.isEnabled());
         selectedPin.set(null);

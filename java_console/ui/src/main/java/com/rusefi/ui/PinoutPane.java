@@ -548,22 +548,25 @@ public class PinoutPane {
      * No-op if no row matches (e.g. value is NONE, or pin lives on a connector not currently shown).
      */
     public void highlightByEnumValue(String enumValue) {
-        if (enumValue == null || connectorPages == null) return;
-        String target = enumValue.replace("\"", "").trim();
-        if (target.isEmpty() || "NONE".equalsIgnoreCase(target) || "INVALID".equalsIgnoreCase(target)) return;
-        for (int i = 0; i < activeConnectors.size(); i++) {
-            PinoutConnectorPage page = activeConnectors.get(i);
-            for (PinoutPin pin : page.pins) {
-                if (target.equals(pin.tsName)) {
-                    // the pin must be listed: drop a search, chip or filter that hides it
-                    search.setText("");
-                    page.showAll();
-                    selectConnector(i);
-                    page.select(pin);
-                    return;
-                }
-            }
-        }
+        PinoutLookup.Match match = findPin(enumValue);
+        if (match == null) return;
+        PinoutConnectorPage page = activeConnectors.get(match.connector);
+        // the pin must be listed: drop a search, chip or filter that hides it
+        search.setText("");
+        page.showAll();
+        selectConnector(match.connector);
+        page.select(match.pin);
+    }
+
+    /** Where the pin chosen by a pin selector value is on this board, or null when it is not shown here. */
+    PinoutLookup.Match findPin(String enumValue) {
+        return connectorPages == null ? null : PinoutLookup.find(activeConnectors, enumValue);
+    }
+
+    /** The hover card for a Tuning pin choice, or null when this board's pinout does not have it. */
+    public JComponent createPreview(String enumValue) {
+        PinoutLookup.Match match = findPin(enumValue);
+        return match == null ? null : PinoutPreview.create(match);
     }
 
     /**
@@ -580,15 +583,14 @@ public class PinoutPane {
             IniField field = entry.getValue();
             if (!(field instanceof EnumIniField)) continue;
             String key = entry.getKey();
-            if (!key.toLowerCase().matches(".*pins?\\d*")) continue;
+            if (!PinoutLookup.isPinField(key)) continue;
 
-            String rawValue;
+            String value;
             try {
-                rawValue = ConfigurationImageGetterSetter.getStringValue(field, ci);
+                value = PinoutLookup.pinChoice(ConfigurationImageGetterSetter.getStringValue(field, ci));
             } catch (Exception ignored) {
                 continue;
             }
-            String value = rawValue.replace("\"", "").trim();
             if (!iniKey.equals(value)) continue;
 
             String dialogKey = findDialogForField(ini, key);
@@ -640,16 +642,15 @@ public class PinoutPane {
             IniField field = entry.getValue();
             if (!(field instanceof EnumIniField)) continue;
             String key = entry.getKey();
-            if (!key.toLowerCase().matches(".*pins?\\d*")) continue;
+            if (!PinoutLookup.isPinField(key)) continue;
 
-            String rawValue;
+            String value;
             try {
-                rawValue = ConfigurationImageGetterSetter.getStringValue(field, ci);
+                value = PinoutLookup.pinChoice(ConfigurationImageGetterSetter.getStringValue(field, ci));
             } catch (Exception ignored) {
                 continue;
             }
-            String value = rawValue.replace("\"", "").trim();
-            if (value.isEmpty() || "NONE".equalsIgnoreCase(value) || "INVALID".equalsIgnoreCase(value)) continue;
+            if (value == null) continue;
 
             DialogModel.Field meta = fieldsInOrder.get(key);
             String displayName = (meta != null && meta.getUiName() != null && !meta.getUiName().isEmpty())

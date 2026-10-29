@@ -37,7 +37,9 @@ public final class CalibrationPanelWorkspace {
     private final WindowFactory windowFactory;
     private final Supplier<List<Rectangle>> screens;
     private Consumer<ConfigurationImage> onConfigChange = image -> { };
-    private Consumer<String> onShowInPinout = value -> { };
+    private PinoutLink onShowInPinout = value -> { };
+    /** Passes show and preview on to whichever link is set when the button is used. */
+    private final PinoutLink pinoutLink = PinoutLink.forwarding(() -> onShowInPinout);
     private IniFileModel ini;
     private ConfigurationImage image;
     private String primaryKey;
@@ -81,7 +83,7 @@ public final class CalibrationPanelWorkspace {
         primary.setOnViewChanged(this::primaryViewChanged);
         primary.setOnTableOrientationChange(() -> orientationChanged(primary));
         primary.setOnConfigChange(changed -> edited(primary, changed));
-        primary.setOnShowInPinout(value -> onShowInPinout.accept(value));
+        primary.setOnShowInPinout(pinoutLink);
         for (int i = 0; i < this.config.getIntProperty("count", 0); i++) {
             Node saved = this.config.getChild("panel" + i);
             String key = saved.getProperty("key");
@@ -112,7 +114,7 @@ public final class CalibrationPanelWorkspace {
         onConfigChange = listener;
     }
 
-    public void setOnShowInPinout(Consumer<String> listener) {
+    public void setOnShowInPinout(PinoutLink listener) {
         onShowInPinout = listener;
     }
 
@@ -273,7 +275,7 @@ public final class CalibrationPanelWorkspace {
         panel.widget.setOnConfigChange(changed -> edited(panel.widget, changed));
         CalibrationDialogWidget widget = panel.widget;
         panel.widget.setOnTableOrientationChange(() -> orientationChanged(widget));
-        panel.widget.setOnShowInPinout(value -> onShowInPinout.accept(value));
+        panel.widget.setOnShowInPinout(pinoutLink);
         refresh(panel.widget, panel.scroll, panel.key);
         panel.window = windowFactory.create(owner, title(panel.key), panel.scroll,
             () -> closePanel(panel.key), () -> splitPanel(panel.key), !panel.key.splitParts(ini).isEmpty(), bounds -> {

@@ -114,10 +114,18 @@ The drawing, the table and the pin card on the right always show the same
 selected pin. The card gives its function, tune use, type (marked when
 inferred), pigtail, tune name and class. For a used pin, **Open in Tuning**,
 a click on the table's Tune use link or a double-click on the row opens the
-setting's Tuning page; for a free pin the card names the choice to pick in a
-pin setting. Conversely, the **W** button beside a pin selector in Tuning
+setting's Tuning page and marks the setting's row there (`FieldHighlight`: a
+tint and an accent bar in the Pinout selection colour) until the next mouse
+press anywhere in the console or another page is shown; for a free pin the card names the choice to pick in a
+pin setting. Conversely, the **Pinout** button (connector icon) beside a pin selector in Tuning
 opens Pinout and selects that enum value, clearing any search or filter that
-would hide it. Both directions depend on an exact `ts_name` match. Pinout is
+would hide it. Resting the mouse on that button shows a hover card
+(`PinoutPreview`, via `PinoutLink.preview` and `HoverPreview`): the pin and its
+connector, the connector drawing with the pin ringed and the other pins faded,
+and the pin's type, pigtail and tune use. Without a drawing, or when the YAML
+does not place the pin, the card has the text only; when the board's pinout
+lacks the pin the button keeps its plain tooltip. The card stays until the
+mouse leaves, unlike a tooltip. Both directions depend on an exact `ts_name` match. Pinout is
 a viewer and navigator; assigning a pin happens in Tuning.
 
 ## When changing the helper
