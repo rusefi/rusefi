@@ -190,6 +190,8 @@ final class ShortcutsDialog extends JDialog {
             "F1     Open this Shortcuts window from the main Console.",
             "Alt reveals underlined menu/button letters on platforms using Alt mnemonics.",
             "Tab / Shift+Tab moves between controls; Space activates a focused button.",
+            "Mouse: drag a main tab (Gauges, Tuning, ...) along the tab row to move it; the order is kept.",
+            "       Right-click a tab > Reset tab order restores the original order.",
             "In firmware selection, rollback, update-blocked and emergency-wipe dialogs, "
                     + "Esc cancels or closes. Esc or Alt+C closes this Shortcuts window.",
             "At the connection screen, Enter activates the Connect button.",

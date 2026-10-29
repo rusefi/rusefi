@@ -656,13 +656,17 @@ console live data tab is broken #8402
                     toolTabs.open(title);
                 }
             }
+            // the order the user dragged the tabs into
+            tabbedPane.enableReordering(getConfig().getRoot());
+            tabbedPane.applySavedOrder();
             savedTab.select(tabbedPane.tabbedPane);
         }
 
         tabbedPane.tabbedPane.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                if (e.getSource() instanceof JTabbedPane) {
+                // a tab being dragged to a new place briefly selects a neighbour; it is not a tab switch
+                if (e.getSource() instanceof JTabbedPane && !tabbedPane.isReordering()) {
                     JTabbedPane pane = (JTabbedPane) e.getSource();
                     int selectedIndex = pane.getSelectedIndex();
                     System.out.println("Selected paneNo: " + selectedIndex);
