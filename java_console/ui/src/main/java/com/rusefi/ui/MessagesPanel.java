@@ -67,6 +67,11 @@ public class MessagesPanel {
         return messagesView.messages.getFont();
     }
 
+    /** The message text, e.g. for {@link com.rusefi.ui.widgets.TextZoom}. */
+    public JComponent getText() {
+        return messagesView.messages;
+    }
+
     public MessagesView getMessagesView() {
         return messagesView;
     }

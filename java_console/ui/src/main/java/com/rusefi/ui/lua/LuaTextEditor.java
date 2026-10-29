@@ -226,6 +226,11 @@ public class LuaTextEditor {
         });
     }
 
+    /** The script text, e.g. for {@link com.rusefi.ui.widgets.TextZoom}. */
+    public JComponent getTextArea() {
+        return textArea;
+    }
+
     public JComponent getControl() {
         return area;
     }

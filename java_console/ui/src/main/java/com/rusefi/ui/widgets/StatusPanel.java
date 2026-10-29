@@ -43,6 +43,11 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
         clear();
     }
 
+    /** The log text, e.g. for {@link TextZoom}. */
+    public JComponent getLogTextArea() {
+        return logTextArea;
+    }
+
     public void setErrorState() {
         logTextArea.setBackground(failureBackground());
         copyContentToClipboard();

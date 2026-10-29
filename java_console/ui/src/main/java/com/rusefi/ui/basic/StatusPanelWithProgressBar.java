@@ -41,6 +41,11 @@ public class StatusPanelWithProgressBar implements UpdateOperationCallbacks {
         content.add(progressBar);
     }
 
+    /** The log text, e.g. for {@link com.rusefi.ui.widgets.TextZoom}. */
+    public JComponent getLogTextArea() {
+        return statusPanelFirmwareTab.getLogTextArea();
+    }
+
     public JPanel getContent() {
         return content;
     }

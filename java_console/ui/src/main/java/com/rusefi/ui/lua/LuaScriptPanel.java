@@ -261,6 +261,11 @@ public class LuaScriptPanel {
         return config.getProperty(SCRIPT_FOLDER_CONFIG_KEY, System.getProperty("user.home"));
     }
 
+    /** The script and its output, the text Ctrl+wheel resizes. */
+    public JComponent[] getZoomableText() {
+        return new JComponent[]{scriptText.getTextArea(), mp.getText()};
+    }
+
     public JPanel getPanel() {
         return mainPanel;
     }
