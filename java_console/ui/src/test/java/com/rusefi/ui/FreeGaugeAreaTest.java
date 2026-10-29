@@ -101,6 +101,68 @@ class FreeGaugeAreaTest {
     }
 
     @Test
+    void undoRedoAndResetWhileArranging() throws Exception {
+        Node config = twoColumnGrid();
+        onPanel(config, panel -> {
+            assertFalse(panel.getUndoButton().isVisible(), "Undo only appears while arranging");
+            FreeGaugeArea area = startEditing(panel);
+            FreeGaugeArea.Editor editor = area.getEditor();
+            assertTrue(panel.getUndoButton().isVisible());
+            assertTrue(panel.getResetArrangeButton().isVisible());
+            assertFalse(panel.getUndoButton().isEnabled(), "Nothing to undo yet");
+            assertFalse(panel.getRedoButton().isEnabled());
+
+            // A press without movement is not a change.
+            mouse(editor, MouseEvent.MOUSE_PRESSED, 100, 100);
+            mouse(editor, MouseEvent.MOUSE_RELEASED, 100, 100);
+            assertFalse(area.canUndo());
+
+            // A whole drag is a single step.
+            mouse(editor, MouseEvent.MOUSE_PRESSED, 100, 100);
+            mouse(editor, MouseEvent.MOUSE_DRAGGED, 120, 100);
+            mouse(editor, MouseEvent.MOUSE_DRAGGED, 140, 100);
+            mouse(editor, MouseEvent.MOUSE_RELEASED, 140, 100);
+            assertBounds(0.10, 0, 0.5, 1, GaugeLayout.getBounds(config.getChild("free_0")), "dragged");
+            assertTrue(panel.getUndoButton().isEnabled());
+            key(editor, KeyEvent.VK_DELETE, 0);
+            assertEquals(1, config.getIntProperty("free_count", 0));
+
+            panel.getUndoButton().doClick(0);
+            assertEquals(2, config.getIntProperty("free_count", 0), "Undo brings the removed gauge back");
+            assertEquals(2, area.getGaugeCount());
+            assertEquals("CustomGauge", config.getChild("free_0").getProperty("gauge"));
+            assertBounds(0.10, 0, 0.5, 1, GaugeLayout.getBounds(config.getChild("free_0")), "after undoing removal");
+            key(editor, KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK);
+            assertBounds(0, 0, 0.5, 1, GaugeLayout.getBounds(config.getChild("free_0")), "Ctrl+Z undoes the drag");
+            assertFalse(panel.getUndoButton().isEnabled());
+            assertTrue(panel.getRedoButton().isEnabled());
+
+            key(editor, KeyEvent.VK_Y, InputEvent.CTRL_DOWN_MASK);
+            assertBounds(0.10, 0, 0.5, 1, GaugeLayout.getBounds(config.getChild("free_0")), "Ctrl+Y redoes");
+            panel.getRedoButton().doClick(0);
+            assertEquals(1, config.getIntProperty("free_count", 0), "Redo removes the gauge again");
+            assertFalse(panel.getRedoButton().isEnabled());
+
+            panel.getResetArrangeButton().doClick(0);
+            assertEquals(2, config.getIntProperty("free_count", 0), "Reset returns to the grid");
+            assertBounds(0, 0, 0.5, 1, GaugeLayout.getBounds(config.getChild("free_0")), "after reset");
+            assertTrue(area.isEditing(), "Reset keeps arranging");
+            key(editor, KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK);
+            assertEquals(1, config.getIntProperty("free_count", 0), "Reset can be undone");
+
+            // A new change discards the redo history.
+            key(editor, KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK);
+            assertTrue(area.canRedo());
+            area.addGauge("RPMGauge");
+            assertFalse(area.canRedo());
+
+            panel.getDoneEditingButton().doClick(0);
+            panel.getEditLayoutItem().doClick(0);
+            assertFalse(panel.getUndoButton().isEnabled(), "Each arranging session starts a new history");
+        });
+    }
+
+    @Test
     void stackingAndRemovalKeepTheConfigurationInDrawingOrder() throws Exception {
         Node config = twoColumnGrid();
         onPanel(config, panel -> {

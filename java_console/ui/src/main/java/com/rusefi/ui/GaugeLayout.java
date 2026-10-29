@@ -86,6 +86,27 @@ final class GaugeLayout {
             && key.substring(FREE_ELEMENT.length()).matches("\\d+") || key.equals(FREE_COUNT));
     }
 
+    /** Independent copy of the free layout, for undo. */
+    static Node copyFreeLayout(Node config) {
+        Node snapshot = new Node();
+        int count = freeCount(config);
+        for (int i = 0; i < count; i++) {
+            copy(config.getChild(FREE_ELEMENT + i), snapshot.getChild(FREE_ELEMENT + i));
+        }
+        snapshot.setProperty(FREE_COUNT, count);
+        return snapshot;
+    }
+
+    /** Replaces the free layout with a copy of one taken by {@link #copyFreeLayout}. */
+    static void restoreFreeLayout(Node config, Node snapshot) {
+        clearFreeLayout(config);
+        int count = freeCount(snapshot);
+        for (int i = 0; i < count; i++) {
+            copy(snapshot.getChild(FREE_ELEMENT + i), config.getChild(FREE_ELEMENT + i));
+        }
+        config.setProperty(FREE_COUNT, count);
+    }
+
     static void setBounds(Node element, Rectangle2D.Double bounds) {
         element.setProperty(X, bounds.x);
         element.setProperty(Y, bounds.y);

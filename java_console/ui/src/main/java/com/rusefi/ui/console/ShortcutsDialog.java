@@ -165,7 +165,11 @@ final class ShortcutsDialog extends JDialog {
             "Arrow keys    Move the selected gauge by 1% of the gauge area.",
             "Shift+arrows  Move the selected gauge by 5%.",
             "Delete / Backspace  Remove the selected gauge.",
+            "Ctrl+Z        Undo the last layout change (same as the Undo button).",
+            "Ctrl+Y / Ctrl+Shift+Z  Redo (same as the Redo button).",
             "Esc           Finish editing (same as the Done button).",
+            "Reset returns to the grid you started from and can itself be undone; "
+                    + "the history starts over each time you arrange gauges.",
             "Mouse: drag to move, drag the blue corner to resize, click the red cross to remove, "
                     + "right-click to bring to front or send to back.",
             "",
