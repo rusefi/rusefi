@@ -50,6 +50,9 @@ public class GaugesPanel {
     static final String EDIT_DASHBOARD = "Edit dashboard";
     static final String EDIT_LAYOUT = "Arrange gauges";
     static final String DONE_EDITING = "Done";
+    static final String UNDO = "Undo";
+    static final String REDO = "Redo";
+    static final String RESET_ARRANGE = "Reset";
     static final String RESET_LAYOUT = "Reset Layout";
     static final String SAVE_LAYOUT = "Save layout…";
     static final String LOAD_LAYOUT = "Load layout…";
@@ -61,7 +64,7 @@ public class GaugesPanel {
     private final JPanel layoutArea = new JPanel(new BorderLayout());
     /*
      * Dashboard editing lives in one "Edit dashboard" menu; the toolbar only shows the current
-     * layout and, while gauges are being arranged, a Done button to leave that mode.
+     * layout and, while gauges are being arranged, Undo / Redo / Reset and a Done button to leave that mode.
      */
     private final JPopupMenu editMenu = new JPopupMenu();
     private final JRadioButtonMenuItem gridModeItem = new JRadioButtonMenuItem("Grid layout");
@@ -71,6 +74,9 @@ public class GaugesPanel {
     private final JMenuItem editLayoutItem = new JMenuItem(EDIT_LAYOUT);
     private final JButton editDashboardButton = new JButton(EDIT_DASHBOARD, new EditIcon());
     private final JButton doneEditingButton = new JButton(DONE_EDITING);
+    private final JButton undoButton = new JButton(UNDO);
+    private final JButton redoButton = new JButton(REDO);
+    private final JButton resetArrangeButton = new JButton(RESET_ARRANGE);
     private final JLabel layoutModeLabel = new JLabel();
     private final Node config;
     private final UIContext uiContext;
@@ -130,6 +136,24 @@ public class GaugesPanel {
 
         layoutModeLabel.setForeground(UIManager.getColor("Label.disabledForeground"));
         rightUpperPanel.add(layoutModeLabel);
+
+        // shown only while gauges are being arranged; return focus to the editor so its keys keep working
+        undoButton.setToolTipText("Undo the last layout change (Ctrl+Z)");
+        undoButton.addActionListener(e -> {
+            freeArea.undo();
+            freeArea.getEditor().requestFocusInWindow();
+        });
+        redoButton.setToolTipText("Redo the last undone layout change (Ctrl+Y)");
+        redoButton.addActionListener(e -> {
+            freeArea.redo();
+            freeArea.getEditor().requestFocusInWindow();
+        });
+        resetArrangeButton.setToolTipText("Return to the grid you started from; Undo brings your arrangement back");
+        resetArrangeButton.addActionListener(e -> {
+            freeArea.resetToGrid();
+            freeArea.getEditor().requestFocusInWindow();
+        });
+        rightUpperPanel.add(new JoinedButtons(undoButton, redoButton, resetArrangeButton));
 
         // shown only while gauges are being arranged: the way out of that mode (Esc works too)
         // a plain button (not a JoinedButtons group) so it shows and hides in step with the editor
@@ -267,16 +291,16 @@ public class GaugesPanel {
     /**
      * Grid: the default gauges in the default grid, each shown as a round gauge.
      * Free: a fresh copy of the current grid, which Free mode never changes, so this
-     * undoes every free-layout edit and stays in Free mode.
+     * undoes every free-layout edit and stays in Free mode; while arranging, Undo reverts it.
      */
     // Package-private so tests reset without the confirmation dialog.
     void resetLayout() {
         if (GaugeLayout.isFreeMode(config)) {
-            GaugeLayout.seedFreeFromGrid(config);
-        } else {
-            config.getConfig().keySet().removeIf(key -> key.matches("element_\\d+"));
-            saveConfig(DEFAULT_ROWS, DEFAULT_COLUMNS);
+            freeArea.resetToGrid();
+            return;
         }
+        config.getConfig().keySet().removeIf(key -> key.matches("element_\\d+"));
+        saveConfig(DEFAULT_ROWS, DEFAULT_COLUMNS);
         showLayout();
     }
 
@@ -344,7 +368,7 @@ public class GaugesPanel {
         }
     }
 
-    /** Keeps the layout label, the Edit dashboard menu and Done in step with the mode and the editor. */
+    /** Keeps the layout label, the Edit dashboard menu and the arranging buttons in step with the mode and the editor. */
     private void updateFreeControls() {
         boolean free = GaugeLayout.isFreeMode(config);
         boolean editing = freeArea.isEditing();
@@ -357,6 +381,11 @@ public class GaugesPanel {
         addGaugeItem.setEnabled(free);
         editLayoutItem.setEnabled(free && !editing);
         doneEditingButton.setVisible(editing);
+        undoButton.setVisible(editing);
+        redoButton.setVisible(editing);
+        resetArrangeButton.setVisible(editing);
+        undoButton.setEnabled(freeArea.canUndo());
+        redoButton.setEnabled(freeArea.canRedo());
     }
 
     /** Gauge catalog with search; the chosen gauge is added to the free layout. */
@@ -400,6 +429,18 @@ public class GaugesPanel {
 
     JButton getDoneEditingButton() {
         return doneEditingButton;
+    }
+
+    JButton getUndoButton() {
+        return undoButton;
+    }
+
+    JButton getRedoButton() {
+        return redoButton;
+    }
+
+    JButton getResetArrangeButton() {
+        return resetArrangeButton;
     }
 
     JLabel getLayoutModeLabel() {
