@@ -31,6 +31,8 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
     private static final int SWEEP_DEGREES = 270;
     // Dial colours come from GaugeStyle, so the round gauge follows the light or dark console theme.
     private static final Font FONT = new Font(Font.SANS_SERIF, Font.PLAIN, 16);
+    // Units are small and muted grey; bold keeps them readable against the face.
+    private static final Font UNITS_FONT = FONT.deriveFont(Font.BOLD);
     // Clockwise label centers from ui_gauge_resize(), relative to the dial center.
     private static final int[] LABEL_X = {-127, -169, -165, -139, -83, -1, 83, 139, 165, 163, 129};
     private static final int[] LABEL_Y = {112, 55, -26, -98, -146, -174, -146, -100, -25, 54, 105};
@@ -403,7 +405,7 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
         g.draw(new Ellipse2D.Double(100, 100, 200, 200));
         drawText(g, current.text, 200, 200, 60, 165,
             zone == Zone.DANGER ? GaugeStyle.danger() : zone == Zone.WARNING ? GaugeStyle.warningText() : GaugeStyle.text());
-        drawText(g, units, 202, 246, 16, 160, GaugeStyle.label());
+        drawText(g, units, 202, 246, UNITS_FONT, 16, 160, GaugeStyle.label());
         drawText(g, title, 200, 331, 16, 230, GaugeStyle.label());
     }
 
@@ -438,13 +440,18 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
     }
 
     private static void drawText(Graphics2D g, String text, double x, double y, float size, int maxWidth, Color color) {
+        drawText(g, text, x, y, FONT, size, maxWidth, color);
+    }
+
+    private static void drawText(Graphics2D g, String text, double x, double y, Font font, float size, int maxWidth,
+                                 Color color) {
         if (text == null || text.isEmpty()) {
             return;
         }
-        g.setFont(FONT.deriveFont(size));
+        g.setFont(font.deriveFont(size));
         int width = g.getFontMetrics().stringWidth(text);
         if (width > maxWidth) {
-            g.setFont(FONT.deriveFont(size * maxWidth / width));
+            g.setFont(font.deriveFont(size * maxWidth / width));
         }
         FontMetrics metrics = g.getFontMetrics();
         g.setColor(color);
