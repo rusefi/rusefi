@@ -521,4 +521,31 @@ public class TsStringFunctionTest {
         when(ini.findIniField(field.getName())).thenReturn(Optional.of(field));
         return ini;
     }
+
+    /** Gauge units written as a string ternary, as in the ECU-served INI of OilPressGauge. */
+    @Test
+    public void testStringTernaryGaugeUnits() {
+        String iniContent = "[Constants]\n" +
+            "page = 1\n" +
+            "useMetricOnInterface = bits, U32, 772, [29:29], \"Imperial\", \"Metric\"\n" +
+            "[GaugeConfigurations]\n" +
+            "gaugeCategory = Sensors\n" +
+            "OilPressGauge = OilPressure, \"Oil Pressure\", { useMetricOnInterface ? \"kPa\" : \"psi\" }, 0, 750, 35, 75, 550, 700, 0, 0\n";
+        IniFileModel model = readLines(IniFileReaderUtil.read(new ByteArrayInputStream(iniContent.getBytes())));
+        GaugeModel gauge = model.getGauge("OilPressGauge");
+        byte[] metric = new byte[800];
+        metric[775] = 0x20;
+
+        assertTrue(TsStringFunction.containsStringFunction(gauge.getUnits()),
+            "A string ternary is a computed label, so gauges resolve it instead of showing the expression");
+        assertEquals("kPa", TsStringFunction.resolve(gauge.getUnits(), model, new ConfigurationImage(metric), new HashMap<>()));
+        assertEquals("psi", TsStringFunction.resolve(gauge.getUnits(), model, new ConfigurationImage(new byte[800]), new HashMap<>()));
+        assertEquals("psi", TsStringFunction.resolveDisplayLabel(gauge.getUnits(), model, new ConfigurationImage(new byte[800]), null));
+        assertEquals(java.util.Collections.singleton("useMetricOnInterface"),
+            com.opensr5.ini.ExpressionEvaluator.extractVariables(gauge.getUnits()), "Quoted text is not a channel");
+        assertEquals(java.util.Arrays.asList("kPa", "psi"), TsStringFunction.allPossibleResolutions(gauge.getUnits(), model));
+
+        assertFalse(TsStringFunction.containsStringFunction("{ useMetricOnInterface ? 750 : 108.77 }"),
+            "A numeric ternary is not a string label");
+    }
 }
