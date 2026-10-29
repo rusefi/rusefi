@@ -17,9 +17,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Status strip at the bottom of the Gauges, Messages and Engine Sniffer tabs: the latest firmware
- * warning or error (critical errors blink), Clear warning, the log folder and the on-screen log
- * buffer size. Colours from the theme files [tag:console_theme].
+ * Status strip at the bottom of the console window, under every tab (built once in ConsoleUI): the
+ * latest firmware warning or error (critical errors blink), Clear warning, the log folder and the
+ * on-screen log buffer size. Colours from the theme files [tag:console_theme].
  */
 public class WarningPanel {
 

@@ -20,6 +20,7 @@ import com.rusefi.ui.widgets.tune.CalibrationDialogWidget;
 import com.rusefi.ui.widgets.tune.CalibrationPanelWorkspace;
 import com.rusefi.ui.widgets.tune.IndicatorPanel;
 import com.rusefi.ui.widgets.tune.MainMenuTreeWidget;
+import com.rusefi.ui.widgets.tune.SettingHelpCard;
 import com.rusefi.ui.widgets.tune.TuningStyle;
 import com.rusefi.ui.widgets.tune.TuningToolbarWidget;
 
@@ -46,6 +47,8 @@ public class TuningPane {
     private static final Logging log = Logging.getLogging(TuningPane.class);
     private static final String TUNING_CARD = "tuning";
     private static final String LOAD_CARD = "load";
+    /** Tuning setting: setting help cards open by themselves on hover and Tab. */
+    static final String HELP_CARDS = "help_cards";
 
     private final JPanel content = new JPanel(new CardLayout());
     private final JPanel tuningContent = new JPanel(new BorderLayout());
@@ -281,7 +284,7 @@ public class TuningPane {
         TuningStyle.styleBar(northPanel);
         northPanel.setBorder(BorderFactory.createCompoundBorder(northPanel.getBorder(),
             BorderFactory.createEmptyBorder(0, 4, 6, 4)));
-        northPanel.add(toolbar.getPanel());
+        northPanel.add(withHelpCardsChoice(toolbar.getPanel(), config));
         frontPageIndicatorPanel = buildFrontendIndicatorPanel(uiContext);
         if (frontPageIndicatorPanel != null) {
             frontPageIndicatorPanel.getPanel().setOpaque(false);
@@ -387,6 +390,35 @@ public class TuningPane {
     private void showLoadResult(boolean failed) {
         loadStatusCard.showResult("Tune loaded successfully", "Tune load failed", failed);
         ((CardLayout) content.getLayout()).show(content, LOAD_CARD);
+    }
+
+    /**
+     * The toolbar with the "Help cards" choice at its right end, beside the dialogs it affects. With
+     * no settings node (tests, sandboxes) the cards keep their default and there is no choice.
+     */
+    static JComponent withHelpCardsChoice(JComponent toolbar, Node config) {
+        if (config == null) {
+            return toolbar;
+        }
+        SettingHelpCard.setAutoShow(config.getBoolProperty(HELP_CARDS, true));
+        JCheckBox helpCards = new JCheckBox("Help cards", SettingHelpCard.isAutoShow());
+        helpCards.setName("helpCardsChoice");
+        helpCards.setOpaque(false);
+        helpCards.setToolTipText("Show a setting's help when the mouse rests on it or Tab reaches it. "
+            + "Its ? icon opens the help either way.");
+        helpCards.addActionListener(e -> {
+            SettingHelpCard.setAutoShow(helpCards.isSelected());
+            config.setBoolProperty(HELP_CARDS, helpCards.isSelected());
+        });
+        JPanel right = new JPanel(new GridBagLayout());
+        right.setOpaque(false);
+        right.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 8));
+        right.add(helpCards);
+        JPanel row = new JPanel(new BorderLayout());
+        row.setOpaque(false);
+        row.add(toolbar, BorderLayout.CENTER);
+        row.add(right, BorderLayout.EAST);
+        return row;
     }
 
     private void showTuningContent() {

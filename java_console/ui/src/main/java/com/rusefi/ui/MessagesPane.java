@@ -54,8 +54,6 @@ public class MessagesPane {
         middlePanel.add(messages.getMessagesScroll(), BorderLayout.CENTER);
         middlePanel.add(new RecentCommands(uiContext).getContent(), BorderLayout.EAST);
         content.add(middlePanel, BorderLayout.CENTER);
-
-        content.add(new WarningPanel(config, uiContext).getPanel(config), BorderLayout.SOUTH);
     }
 
     public JComponent getContent() {

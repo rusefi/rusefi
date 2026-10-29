@@ -13,6 +13,7 @@ import com.rusefi.binaryprotocol.ShortcutsHelper;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.net.ConnectionAndMeta;
+import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
@@ -268,8 +269,15 @@ public class ConsoleUI {
 
         // Wizard container and CardLayout for switching between console and wizard modes
         JPanel rootPanel = new JPanel(new CardLayout());
-        rootPanel.add(tabbedPane.getContent(), "console");
+        JPanel consoleCard = new JPanel(new BorderLayout());
+        consoleCard.add(tabbedPane.getContent(), BorderLayout.CENTER);
+        rootPanel.add(consoleCard, "console");
         MainFrame mainFrame = new MainFrame(this, tabbedPane, reuseFrame, unsupportedEcuHost);
+        // One status strip under every tab, after MainFrame has set the Record button factory. Its
+        // on-screen log buffer size is the Messages tab's setting.
+        Node messagesConfig = getConfig().getRoot().getChild("messages");
+        WarningPanel statusStrip = new WarningPanel(messagesConfig, uiContext);
+        consoleCard.add(statusStrip.getPanel(messagesConfig), BorderLayout.SOUTH);
 
         WizardContainer wizardContainer = new WizardContainer(uiContext);
         rootPanel.add(wizardContainer, "wizard");
