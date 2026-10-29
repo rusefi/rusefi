@@ -314,8 +314,10 @@ The console workflow's `./gradlew test` step runs on Ubuntu without
 desktop run is not headless. Drag and drop setup differs: headless Swing
 installs no `DropTarget` (`getDropTarget()` returns null after
 `setTransferHandler`), and `JList.setDragEnabled(true)` throws
-`HeadlessException`. Guard such calls, and reproduce CI locally with
-`JAVA_TOOL_OPTIONS=-Djava.awt.headless=true ./gradlew :ui:test`.
+`HeadlessException`. A synthetic mouse press on a `JTree` throws too: its
+look and feel reads the toolkit's menu shortcut key, so send test clicks to a
+plain component when only the press itself matters. Guard such calls, and
+reproduce CI locally with `JAVA_TOOL_OPTIONS=-Djava.awt.headless=true ./gradlew :ui:test`.
 
 ### Swing clicks on drag-enabled components
 
