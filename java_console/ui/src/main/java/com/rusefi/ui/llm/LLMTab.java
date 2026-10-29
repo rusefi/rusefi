@@ -793,6 +793,11 @@ public final class LLMTab implements AutoCloseable {
 
     public JPanel getContent() { return content; }
 
+    /** The conversation and the message being typed, the text Ctrl+wheel resizes. */
+    public JComponent[] getZoomableText() {
+        return new JComponent[]{terminal, prompt};
+    }
+
     private void append(String text) {
         if (closed) { return; }
         terminal.append(text);

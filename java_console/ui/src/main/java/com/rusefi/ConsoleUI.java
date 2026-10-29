@@ -37,6 +37,7 @@ import com.rusefi.ui.widgets.ConnectionStatusIcon;
 import com.rusefi.ui.widgets.JoinedButtons;
 import com.rusefi.ui.widgets.WandIcon;
 import com.rusefi.ui.widgets.StatusPanel;
+import com.rusefi.ui.widgets.TextZoom;
 import com.rusefi.ui.widgets.tune.CalibrationPanelWorkspace;
 import com.rusefi.ui.widgets.tune.PinoutLink;
 import com.rusefi.ui.wizard.WizardCatalog;
@@ -395,18 +396,22 @@ public class ConsoleUI {
             }, logViewer::recordingStopped);
 
             MessagesPane messagesPane = new MessagesPane(uiContext, getConfig().getRoot().getChild("messages"));
+            installTextZoom(messagesPane.getContent(), "messages", messagesPane.getZoomableText());
             toolTabAdd(toolTabs, "Messages", messagesPane.getContent(), messagesPane.getTabSelectedListener());
 
             int luaIndex = tabbedPane.tabbedPane.getTabCount();
             if (savedTab.is("Lua Scripting", luaIndex)) {
                 LuaScriptPanel luaScriptPanel = new LuaScriptPanel(uiContext, getConfig().getRoot().getChild("lua"));
+                installTextZoom(luaScriptPanel.getPanel(), "lua", luaScriptPanel.getZoomableText());
                 tabbedPaneAdd("Lua Scripting", luaScriptPanel.getPanel(), luaScriptPanel.getTabSelectedListener());
             } else {
                 // Build the (heavy) Lua editor only when its tab is first shown (#9715).
                 tabbedPane.addTab("Lua Scripting", new InitOnFirstPaintPanel() {
                     @Override
                     protected JPanel createContent() {
-                        return new LuaScriptPanel(uiContext, getConfig().getRoot().getChild("lua")).getPanel();
+                        LuaScriptPanel lua = new LuaScriptPanel(uiContext, getConfig().getRoot().getChild("lua"));
+                        installTextZoom(lua.getPanel(), "lua", lua.getZoomableText());
+                        return lua.getPanel();
                     }
                 }.getContent());
             }
@@ -583,6 +588,9 @@ console live data tab is broken #8402
                 consoleJobExecutor, deviceStatusPanel,
                 showFullScreenPanel, closeFullScreenPanel);
             tabbedPane.addTab("Device", devicePane.getContent());
+            if (devicePane.getContent() instanceof JComponent) {
+                installTextZoom((JComponent) devicePane.getContent(), "device", deviceStatusPanel.getLogTextArea());
+            }
             mainFrame.setUpdateEcuAction(() -> {
                 tabbedPane.selectTab("Device");
                 devicePane.triggerAutoUpdate();
@@ -637,6 +645,7 @@ console live data tab is broken #8402
                 @Override protected JPanel createContent() {
                     llmTab = new LLMTab(Paths.get(
                             System.getProperty("user.home"), ".rusefi", "llm-access"), linkManager);
+                    installTextZoom(llmTab.getContent(), "ai", llmTab.getZoomableText());
                     return llmTab.getContent();
                 }
             }.getContent());
@@ -874,6 +883,11 @@ console live data tab is broken #8402
     private void toolTabAdd(ToolTabs toolTabs, String title, JComponent component, ActionListener tabSelectedListener) {
         tabSelectedListeners.put(component, tabSelectedListener);
         toolTabs.register(title, component);
+    }
+
+    /** Ctrl+wheel and Ctrl + plus / minus / 0 resize the text of a text-heavy tab; kept per tab. */
+    private static void installTextZoom(JComponent tab, String key, JComponent... texts) {
+        TextZoom.install(tab, getConfig().getRoot().getChild("text_zoom"), key, texts);
     }
 
     private void updateOutputPollingForSelectedTab() {

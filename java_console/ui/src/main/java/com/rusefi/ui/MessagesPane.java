@@ -27,10 +27,11 @@ public class MessagesPane {
         }
     };
     private final AnyCommand command;
+    private final MessagesPanel messages;
 
     public MessagesPane(UIContext uiContext, final Node config) {
         command = AnyCommand.createArea(uiContext, config, config.getProperty(AnyCommand.KEY), true, false);
-        final MessagesPanel messages = new MessagesPanel(null, config);
+        messages = new MessagesPanel(null, config);
         messages.loadFont(config);
         messages.getMessagesScroll().setBorder(BorderFactory.createEmptyBorder());
 
@@ -54,6 +55,11 @@ public class MessagesPane {
         middlePanel.add(messages.getMessagesScroll(), BorderLayout.CENTER);
         middlePanel.add(new RecentCommands(uiContext).getContent(), BorderLayout.EAST);
         content.add(middlePanel, BorderLayout.CENTER);
+    }
+
+    /** The message log, the text Ctrl+wheel resizes. */
+    public JComponent getZoomableText() {
+        return messages.getText();
     }
 
     public JComponent getContent() {
