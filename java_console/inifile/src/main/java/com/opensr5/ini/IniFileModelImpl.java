@@ -225,9 +225,10 @@ public class IniFileModelImpl implements IniFileModel {
             }
 
             if (!list.isEmpty() && list.get(0).equals(SECTION_PAGE)) {
-                if (list.size() >= 2) {
-                    currentPageIndex = Integer.parseInt(list.get(1));
+                if (list.size() != 2) {
+                    throw new IllegalStateException("Invalid page declaration: " + rawText);
                 }
+                currentPageIndex = Integer.parseInt(list.get(1));
                 isInsidePageDefinition = true;
                 return;
             }
@@ -396,11 +397,14 @@ public class IniFileModelImpl implements IniFileModel {
                 registerField(EnumIniField.parse(list, line, this));
                 break;
             default:
-                throw new IllegalStateException("Unexpected " + list);
+                log.info("Skipping unsupported field definition: " + list);
         }
     }
 
     private void registerField(IniField field) {
+        if (field instanceof ArrayIniField && ((ArrayIniField) field).getMultiplier() == 0) {
+            throw new IllegalArgumentException("Multiplier should not be zero for " + field.getName());
+        }
         if (currentPageIndex != 1) {
             log.info("Skipping field from secondary page: " + field);
             secondaryIniFields.put(field.getName(), field);

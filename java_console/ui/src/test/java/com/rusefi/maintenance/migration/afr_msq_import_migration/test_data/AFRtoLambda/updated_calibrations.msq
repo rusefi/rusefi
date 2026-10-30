@@ -2,7 +2,7 @@
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
     <page number="0" size="46496">
-            <constant cols="16" digits="2" name="lambdaTable" rows="16" units="lambda">
+            <constant cols="16" digits="{useLambdaOnInterface ? 2 : 1}" name="lambdaTable" rows="16" units="{useLambdaOnInterface ? &quot;lambda&quot; : &quot;afr&quot;}">
                    1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
                    1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
                    1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0

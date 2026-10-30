@@ -27,6 +27,50 @@ public class IniFileReaderTest {
         assertEquals(0.1, IniField.parseDouble("{1/10}"), EPS);
         assertEquals(0.1, IniField.parseDouble("{0.1}"), EPS);
         assertEquals(0.1, IniField.parseDouble("0.1"), EPS);
+        assertEquals(2.0, IniField.parseDouble("{useLambdaOnInterface ? 2 : 1}"), EPS);
+    }
+
+    @Test
+    public void skipsUnsupportedFieldWithoutAbortingIni() {
+        String string = "[Constants]\n" +
+            "page = 1\n" +
+            "unsupported = unsupported, F32, 0\n" +
+            "valid = scalar, F32, 0, \"\", 1, 0, 0, 10, 1\n";
+        IniFileModel model = IniFileModelImpl.readIniFile(fromString(string), false, "");
+        assertTrue(model.getAllIniFields().containsKey("valid"));
+        assertFalse(model.getAllIniFields().containsKey("unsupported"));
+    }
+
+    @Test
+    public void parserFailureCharacterization() {
+        assertThrows(NumberFormatException.class, () -> IniField.parseDouble("unsupportedExpression"));
+        assertThrows(NumberFormatException.class, () -> IniField.parseDouble("useLambdaOnInterface ? 2"));
+        assertThrows(NumberFormatException.class, () -> IniField.parseDouble("useLambdaOnInterface ? 2 : unsupportedExpression"));
+        assertThrows(NumberFormatException.class, () -> IniField.parseDouble("useLambdaOnInterface ? 2 : useLambdaOnInterface ? 3 : 4"));
+    }
+
+    @Test
+    public void invalidPageCharacterization() {
+        String string = "[Constants]\n" +
+            "page = 1\n" +
+            "first = scalar, F32, 0, \"\", 1, 0, 0, 10, 1\n" +
+            "page = invalid\n" +
+            "afterInvalidPage = scalar, F32, 4, \"\", 1, 0, 0, 10, 1\n";
+        IllegalStateException error = assertThrows(IllegalStateException.class,
+            () -> IniFileModelImpl.readIniFile(fromString(string), false, ""));
+        assertInstanceOf(NumberFormatException.class, error.getCause());
+        assertTrue(error.getMessage().contains("page = invalid"));
+    }
+
+    @Test
+    public void zeroArrayMultiplierIsRejected() {
+        String string = "[Constants]\n" +
+            "page = 1\n" +
+            "zeroMultiplier = array, U16, 0, [1], \"\", 0, 0, 0, 1, 0\n";
+        IllegalStateException error = assertThrows(IllegalStateException.class,
+            () -> IniFileModelImpl.readIniFile(fromString(string), false, ""));
+        assertInstanceOf(IllegalArgumentException.class, error.getCause());
+        assertTrue(error.getMessage().contains("zeroMultiplier = array, U16"));
     }
 
     @Test

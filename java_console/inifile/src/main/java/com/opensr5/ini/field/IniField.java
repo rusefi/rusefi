@@ -17,10 +17,23 @@ public abstract class IniField {
 
     public static double parseDouble(String s) {
         // todo: real implementation
-        s = s.replaceAll("\\{", "").replaceAll("\\}", "");
+        s = s.replace("{", "").replace("}", "").trim();
+        if (s.contains("?")) {
+            // The console only needs a storage approximation; it does not evaluate INI expressions.
+            int questionIndex = s.indexOf('?');
+            int colonIndex = s.indexOf(':', questionIndex + 1);
+            if (questionIndex == 0 || colonIndex < 0 || colonIndex == questionIndex + 1
+                || colonIndex == s.length() - 1 || s.indexOf('?', questionIndex + 1) >= 0
+                || s.indexOf(':', colonIndex + 1) >= 0) {
+                throw new NumberFormatException("Malformed conditional expression: " + s);
+            }
+            double whenTrue = parseDouble(s.substring(questionIndex + 1, colonIndex).trim());
+            parseDouble(s.substring(colonIndex + 1).trim());
+            return whenTrue;
+        }
         int dividerIndex = s.indexOf('/');
         if (dividerIndex != -1) {
-            return Double.parseDouble(s.substring(0, dividerIndex)) / Double.parseDouble(s.substring(dividerIndex + 1));
+            return Double.parseDouble(s.substring(0, dividerIndex).trim()) / Double.parseDouble(s.substring(dividerIndex + 1).trim());
         } else {
             return Double.parseDouble(s);
         }
