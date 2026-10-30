@@ -170,6 +170,55 @@ TEST(AirmassModes, VeOverride) {
 	EXPECT_FLOAT_EQ(engine->engineState.veTableYAxis, 30.0f);
 }
 
+TEST(AirmassModes, SpeedDensityCompensatedMap) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->displacement = 2.0f;
+	engineConfiguration->cylindersCount = 4;
+
+	StrictMock<MockVp3d> veTable;
+	StrictMock<MockVp3d> mapFallback;
+
+	{
+		InSequence is;
+
+		// Feature disabled: VE is looked up at actual MAP
+		EXPECT_CALL(veTable, getValue(1200, FloatNear(80.0f, EPS4D))).WillOnce(Return(50.0f));
+		// Enabled with baro at 80% of standard atmosphere: VE is looked up at MAP_ref = 80 / 0.8 = 100
+		EXPECT_CALL(veTable, getValue(1200, FloatNear(100.0f, EPS4D))).WillOnce(Return(50.0f));
+		// Enabled but no baro sensor: no compensation
+		EXPECT_CALL(veTable, getValue(1200, FloatNear(80.0f, EPS4D))).WillOnce(Return(50.0f));
+	}
+
+	SpeedDensityAirmass dut(veTable, mapFallback);
+
+	float tChargeK = 273.15f + 20.0f;
+	engine->engineState.sd.tChargeK = tChargeK;
+
+	float map = 80;
+	mass_t expectedAirmass = SpeedDensityBase::getAirmassImpl(0.5f, map, tChargeK);
+
+	// Feature disabled: load axis is actual MAP
+	auto result = dut.getAirmass(1200, map, false);
+	EXPECT_NEAR(result.CylinderAirmass, expectedAirmass, EPS4D);
+	EXPECT_NEAR(result.EngineLoadPercent, 80.0f, EPS4D);
+
+	// Enable with a baro sensor at 80% of standard atmosphere
+	engineConfiguration->useCompensatedMap = true;
+	Sensor::setMockValue(SensorType::BarometricPressure, 0.8f * STD_ATMOSPHERE);
+
+	result = dut.getAirmass(1200, map, false);
+	// Physical air mass calculation still uses actual MAP
+	EXPECT_NEAR(result.CylinderAirmass, expectedAirmass, EPS4D);
+	// Load axis is normalized to standard atmosphere
+	EXPECT_NEAR(result.EngineLoadPercent, 100.0f, EPS4D);
+
+	// Enabled but baro sensor missing: no compensation applied
+	Sensor::resetMockValue(SensorType::BarometricPressure);
+	result = dut.getAirmass(1200, map, false);
+	EXPECT_NEAR(result.CylinderAirmass, expectedAirmass, EPS4D);
+	EXPECT_NEAR(result.EngineLoadPercent, 80.0f, EPS4D);
+}
+
 TEST(AirmassModes, FallbackMap) {
 	StrictMock<MockVp3d> veTable;
 	StrictMock<MockVp3d> mapFallback;

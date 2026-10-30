@@ -29,6 +29,9 @@
 #include "value_lookup.h"
 #include "can_msg_tx.h"
 #include "gm_sbc.h" // setStepperHw
+#if EFI_PROD_CODE
+#include "mass_storage_init.h"
+#endif // EFI_PROD_CODE
 
 #include "fw_configuration.h"
 #include "board_overrides.h"
@@ -666,6 +669,23 @@ static void processCanRequestCalibration(const CANRxFrame& frame) {
 #endif // EFI_LUA_LOOKUP
 }
 
+// totally wrong place for this code but well
+static void sendECU_IMAGE_INFO() {
+	  CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::ECU_IMAGE_INFO, 8, /*bus*/0, /*isExtended*/true);
+#if EFI_PROD_CODE
+   #if EFI_EMBED_INI_MSD
+    #if EFI_USE_COMPRESSED_INI_MSD
+     msg[0] = 1;
+     msg.setIntValueLsb(getStorageImageSize(), /*offset*/4);
+    #else // EFI_USE_COMPRESSED_INI_MSD
+     msg[0] = 2;
+     msg.setIntValueLsb(getStorageImageSize(), /*offset*/4);
+    #endif // EFI_USE_COMPRESSED_INI_MSD
+   #endif //EFI_EMBED_INI_MSD
+#endif// EFI_PROD_CODE
+  efiPrintf("ECU_IMAGE_INFO %d", msg[0]);
+}
+
 void processCanEcuControl(const CANRxFrame& frame) {
 	if (frame.data8[0] != (int)bench_test_magic_numbers_e::BENCH_HEADER) {
 		return;
@@ -676,6 +696,8 @@ void processCanEcuControl(const CANRxFrame& frame) {
     processCanSetCalibration(frame);
   } else if (eid == (int)bench_test_packet_ids_e::ECU_REQ_CALIBRATION) {
     processCanRequestCalibration(frame);
+  } else if (eid == (int)bench_test_packet_ids_e::DASH_ALIVE) {
+    sendECU_IMAGE_INFO();
   } else if (eid == (int)bench_test_packet_ids_e::ECU_CAN_BUS_USER_CONTROL) {
     processCanUserControl(frame);
   }

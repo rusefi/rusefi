@@ -57,6 +57,7 @@ EngineTestHelperBase::EngineTestHelperBase(Engine * eng, engine_configuration_s 
 }
 
 EngineTestHelperBase::~EngineTestHelperBase() {
+	DisableToothLogger();
 	engine = nullptr;
 	engineConfiguration = nullptr;
 	config = nullptr;
@@ -284,13 +285,13 @@ void EngineTestHelper::smartFireFall(float delayMs) {
  */
 void EngineTestHelper::firePrimaryTriggerRise() {
 	efitick_t nowNt = getTimeNowNt();
-	LogTriggerTooth(SHAFT_PRIMARY_RISING, nowNt);
+	LogPrimaryTriggerTooth(nowNt, true);
 	handleShaftSignal(0, true, nowNt);
 }
 
 void EngineTestHelper::firePrimaryTriggerFall() {
 	efitick_t nowNt = getTimeNowNt();
-	LogTriggerTooth(SHAFT_PRIMARY_FALLING, nowNt);
+	LogPrimaryTriggerTooth(nowNt, false);
 	handleShaftSignal(0, false, nowNt);
 }
 

@@ -85,7 +85,7 @@ jobs:
       run: arm-none-eabi-gcc -v
 
     - name: Configuration Definition and Enum to String CI, without pushing new .jar
-      working-directory: ./java_tools
+      working-directory: .
       run: |
         ./gradlew :config_definition:shadowJar :enum_to_string:shadowJar
 

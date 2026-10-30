@@ -24,9 +24,13 @@ TEST(realCrankingNB2, normalCranking) {
 
 	// Check the number of times VVT information was used to adjust crank phase
 	// This should happen exactly once: once we sync, we shouldn't lose it.
-	EXPECT_EQ(engine->triggerCentral.triggerState.camResyncCounter, 2);
+	EXPECT_EQ(engine->triggerCentral.triggerState.phaseResyncCounter, 2);
 
 	ASSERT_EQ(876, round(Sensor::getOrZero(SensorType::Rpm)));
+
+	// engine is actually firing up at the end of this recording, so the range is
+	// noticeably larger than in no-plugs recordings (see test_real_k24a2.cpp)
+	EXPECT_NEAR(12.09f, engine->triggerCentral.instantRpm.getInstantRpmRange(), 0.1);
 
 	EXPECT_EQ(2u, eth.recentWarnings()->getCount());
 	EXPECT_EQ(ObdCode::CUSTOM_PRIMARY_NOT_ENOUGH_TEETH, eth.recentWarnings()->get(0).Code);

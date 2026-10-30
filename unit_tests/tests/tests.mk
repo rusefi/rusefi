@@ -38,6 +38,7 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_map_cam.cpp \
 	tests/trigger/test_rpm_multiplier.cpp \
 	tests/trigger/test_rpm_acceleration.cpp \
+	tests/trigger/test_instant_rpm.cpp \
 	tests/trigger/test_quad_cam.cpp \
 	tests/trigger/test_nissan_vq_vvt.cpp \
 	tests/trigger/test_override_gaps.cpp \
@@ -165,6 +166,7 @@ TESTS_SRC_CPP = \
 	tests/test_hpfp_integrated.cpp \
 	tests/test_fuel_math.cpp \
 	tests/test_binary_log.cpp \
+	tests/test_tooth_logger.cpp \
 	tests/binary_log/test_bit_logger_field.cpp \
 	tests/test_dynoview.cpp \
 	tests/test_gpio.cpp \

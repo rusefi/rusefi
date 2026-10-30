@@ -36,7 +36,7 @@ TEST(Toyota3ToothCam, RealEngineRunning) {
 		}
 	}
 
-	EXPECT_EQ(getTriggerCentral()->triggerState.camResyncCounter, 0);
+	EXPECT_EQ(getTriggerCentral()->triggerState.phaseResyncCounter, 0);
 
 	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0), 0, 1);
 	ASSERT_EQ(3078, round(Sensor::getOrZero(SensorType::Rpm)));
@@ -47,7 +47,7 @@ TEST(Toyota3ToothCam, RealEngineRunning) {
 	ASSERT_EQ(ObdCode::CUSTOM_PRIMARY_TOO_MANY_TEETH, eth.recentWarnings()->get(0).Code);
 }
 
-static void test3tooth(size_t revsBeforeVvt, size_t teethBeforeVvt, bool expectSync, int expectCamResyncCounter) {
+static void test3tooth(size_t revsBeforeVvt, size_t teethBeforeVvt, bool expectSync, int expectphaseResyncCounter) {
 	extern bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
 	unitTestTaskNoFastCallWhileAdvancingTimeHack = true;
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
@@ -105,7 +105,7 @@ static void test3tooth(size_t revsBeforeVvt, size_t teethBeforeVvt, bool expectS
 	// should set VVT position
 	hwHandleVvtCamSignal(true, getTimeNowNt(), 0);
 
-	EXPECT_EQ(expectCamResyncCounter, getTriggerCentral()->triggerState.camResyncCounter);
+	EXPECT_EQ(expectphaseResyncCounter, getTriggerCentral()->triggerState.phaseResyncCounter);
 	EXPECT_EQ(expectSync, getTriggerCentral()->triggerState.hasSynchronizedPhase());
 
 	if (expectSync) {

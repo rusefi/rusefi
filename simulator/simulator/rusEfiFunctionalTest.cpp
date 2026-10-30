@@ -123,7 +123,7 @@ static void runToothLoggerTest() {
 
 	for (int i = 0;i < 400;i++) {
 		efitick_t nowNt = getTimeNowNt();
-		LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt);
+		LogPrimaryTriggerTooth(nowNt, true);
 	}
 
 	{

@@ -1,5 +1,6 @@
 .dep*
 build/
+triggers/*
 build_kinetis/
 pinouts
 workarea

@@ -61,7 +61,7 @@ jobs:
         java-version: '17'
 
     - name: Code generation tools
-      working-directory: ./java_tools
+      working-directory: .
       run: ./gradlew :config_definition:shadowJar
 
     - name: Install Arm GNU Toolchain (arm-none-eabi-gcc)

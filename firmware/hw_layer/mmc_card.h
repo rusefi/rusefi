@@ -24,7 +24,7 @@ typedef enum {
 void initEarlyMmcCard();
 void initMmcCard();
 
-void onUsbConnectedNotifyMmcI(void);
+void onUsbConnectedNotifyMmcI(bool connected);
 
 void updateSdCardLiveFlags(void);
 

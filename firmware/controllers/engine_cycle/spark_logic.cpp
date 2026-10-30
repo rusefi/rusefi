@@ -224,7 +224,7 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	efitick_t nowNt = getTimeNowNt();
 
 #if EFI_TOOTH_LOGGER
-	LogTriggerCoilState(nowNt, false, event->coilIndex);
+	LogTriggerCoilState(nowNt, event->coilIndex, false);
 #endif // EFI_TOOTH_LOGGER
 	if (!event->wasSparkLimited) {
 		/**
@@ -360,7 +360,7 @@ void turnSparkPinHighStartCharging(IgnitionEvent *event) {
 #endif
 
 #if EFI_TOOTH_LOGGER
-  	LogTriggerCoilState(nowNt, true, event->coilIndex);
+		LogTriggerCoilState(nowNt, event->coilIndex, true);
 #endif // EFI_TOOTH_LOGGER
   }
 

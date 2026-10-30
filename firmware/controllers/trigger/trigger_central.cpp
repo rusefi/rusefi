@@ -153,6 +153,15 @@ angle_t TriggerCentral::syncEnginePhaseAndReport(int divider, int remainder) {
 
 		// Reset schedulers to avoid "out-of-order" warnings/errors when transitioning phase
 		engine->injectionEvents.resetOverlapping();
+
+		// On a crank-speed trigger the sync counter parity picks which trigger cycle starts the
+		// engine cycle, so a parity-changing shift means the next trigger index 0 is no longer one
+		// full engine cycle after the previous one - that cycle-RPM sample must be discarded.
+		// On a cam-speed trigger (crank divider 1) index 0 cadence is not affected.
+		int crankDivider = getCrankDivider(triggerShape.getWheelOperationMode());
+		if ((newSyncCounter - oldSyncCounter) % crankDivider != 0) {
+			engine->rpmCalculator.onEnginePhaseResync();
+		}
 	}
 	return totalShift;
 }
@@ -211,6 +220,7 @@ static angle_t adjustCrankPhase(int camIndex) {
 	case VVT_HONDA_K_EXHAUST:
 	case VVT_HONDA_CBR_600:
 	case VVT_SUBARU_7TOOTH:
+	case VVT_MITSUBISHI_6G75:
 		return tc->syncEnginePhaseAndReport(crankDivider, 0);
 	case VVT_CUSTOM_25:
 	case VVT_CUSTOM_26:
@@ -222,6 +232,8 @@ static angle_t adjustCrankPhase(int camIndex) {
         [[fallthrough]];
 	case VVT_CUSTOM_1:
 	case VVT_CUSTOM_2:
+	case VVT_CUSTOM_3:
+	case VVT_CUSTOM_4:
 	case VVT_INACTIVE:
 		// do nothing
 		return 0;
@@ -247,22 +259,19 @@ static void logVvtFront(bool useOnlyRise, bool isImportantFront, TriggerValue fr
 	if (!useOnlyRise || engineConfiguration->displayLogicLevelsInEngineSniffer) {
 		// If we care about both edges OR displayLogicLevel is set, log every front exactly as it is
 		addEngineSnifferVvtEvent(index, front == TriggerValue::RISE ? FrontDirection::UP : FrontDirection::DOWN);
-
-#if EFI_TOOTH_LOGGER
-		LogTriggerCamTooth(front == TriggerValue::RISE, nowNt, index);
-#endif /* EFI_TOOTH_LOGGER */
 	} else {
 		if (isImportantFront) {
 			// On the important edge, log a rise+fall pair, and nothing on the real falling edge
 			addEngineSnifferVvtEvent(index, FrontDirection::UP);
 			addEngineSnifferVvtEvent(index, FrontDirection::DOWN);
-
-#if EFI_TOOTH_LOGGER
-			LogTriggerCamTooth(true, nowNt, index);
-			LogTriggerCamTooth(false, nowNt, index);
-#endif /* EFI_TOOTH_LOGGER */
 		}
 	}
+
+#if EFI_TOOTH_LOGGER
+	LogCamTriggerTooth(nowNt, index, front == TriggerValue::RISE);
+#else
+	UNUSED(nowNt);
+#endif /* EFI_TOOTH_LOGGER */
 }
 
 static bool tooSoonToHandleSignal() {
@@ -527,13 +536,7 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 	// We want to do this before anything else as we
 	// actually want to capture any noise/jitter that may be occurring
 
-	bool logLogicState = engineConfiguration->displayLogicLevelsInEngineSniffer && getTriggerCentral()->triggerShape.useOnlyRisingEdges;
-
-	if (!logLogicState) {
-		// we log physical state even if displayLogicLevelsInEngineSniffer if both fronts are used by decoder
-		LogTriggerTooth(signal, timestamp);
-	}
-
+	LogPrimaryTriggerTooth(timestamp, isRising);
 #endif /* EFI_TOOTH_LOGGER */
 
 	// for effective noise filtering, we need both signal edges,
@@ -546,19 +549,6 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 			return;
 		}
 	}
-
-#if EFI_TOOTH_LOGGER
-	if (logLogicState) {
-		// first log rising normally
-		LogTriggerTooth(signal, timestamp);
-		// in 'logLogicState' mode we log opposite front right after logical rising away
-		if (signal == SHAFT_PRIMARY_RISING) {
-			LogTriggerTooth(SHAFT_PRIMARY_FALLING, timestamp);
-		} else {
-			LogTriggerTooth(SHAFT_SECONDARY_FALLING, timestamp);
-		}
-	}
-#endif /* EFI_TOOTH_LOGGER */
 
 	uint32_t triggerHandlerEntryTime = getTimeNowLowerNt();
 	if (triggerReentrant > maxTriggerReentrant)

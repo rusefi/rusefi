@@ -9,7 +9,7 @@ struct trigger_state_primary_s {
 	 * sync: Phase Re-Sync Counter
 	 * offset 0
 	 */
-	uint8_t camResyncCounter = (uint8_t)0;
+	uint8_t phaseResyncCounter = (uint8_t)0;
 	/**
 	 * need 4 byte alignment
 	 * units: units

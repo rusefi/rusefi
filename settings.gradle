@@ -3,8 +3,6 @@ plugins {
   id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
 }
 
-var rootRelativePath='../'
-
 include ':trigger-image'
 project(':trigger-image').projectDir = new File(rootRelativePath + 'java_tools/trigger-image')
 include ':tune-tools'
@@ -25,6 +23,7 @@ project(':trigger-ui').projectDir = new File(rootRelativePath + 'java_console/tr
 include ':logging-api'
 project(':logging-api').projectDir = new File(rootRelativePath + 'java_console/logging-api')
 include ':gcc_map_reader'
+project(':gcc_map_reader').projectDir = new File(rootRelativePath + 'java_tools/gcc_map_reader')
 
 include ':enum_to_string'
 project(':enum_to_string').projectDir = new File(rootRelativePath + 'java_tools/enum_to_string')

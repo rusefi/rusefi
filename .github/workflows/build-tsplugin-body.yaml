@@ -31,7 +31,7 @@ jobs:
           sudo apt-get install sshpass
 
       - name: Build TS plugin body
-        working-directory: ./java_tools/
+        working-directory: .
         run: ./gradlew :ts_plugin:shadowJar
 
       - name: Upload plugin artifact

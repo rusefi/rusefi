@@ -51,11 +51,11 @@ bool TriggerDecoderBase::getShaftSynchronized() const {
 }
 
 void TriggerDecoderBase::setShaftSynchronized(bool value) {
-#if EFI_UNIT_TEST
+#if EFI_TOOTH_LOGGER
 	if (value != shaft_is_synchronized) {
-		LogTriggerSync(value, getTimeNowNt());
+		LogTriggerSync(getTimeNowNt(), value);
 	}
-#endif
+#endif /* EFI_TOOTH_LOGGER */
 
 	if (value) {
 		if (!shaft_is_synchronized) {
@@ -87,6 +87,12 @@ void TriggerDecoderBase::resetState() {
 
 	totalEventCountBase = 0;
 	isFirstEvent = true;
+
+	vvtToothDurations0 = 0;
+	vvtCurrentPosition = 0;
+	setArrayValues(vvtToothPosition, 0);
+	triggerSyncGapRatio = 0;
+	triggerStateIndex = 0;
 
 	call_board_override(custom_board_TriggerResetState);
 }
@@ -189,6 +195,9 @@ void PrimaryTriggerDecoder::resetState() {
 	TriggerDecoderBase::resetState();
 
 	resetHasFullSync();
+	m_hasSynchronizedCrank = false;
+	phaseResyncCounter = 0;
+	m_phaseAdjustment = 0;
 }
 
 
@@ -236,7 +245,8 @@ angle_t PrimaryTriggerDecoder::syncEnginePhase(int divider, int remainder, angle
 	m_hasSynchronizedPhase = true;
 
 	if (totalShift > 0) {
-		camResyncCounter++;
+		m_phaseAdjustment = totalShift;
+		phaseResyncCounter++;
 		onTransitionEvent(TransitionEvent::EngineResync);
 	}
 

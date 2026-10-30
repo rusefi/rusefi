@@ -1067,6 +1067,10 @@ case VVT_CUSTOM_25:
   return "VVT_CUSTOM_25";
 case VVT_CUSTOM_26:
   return "VVT_CUSTOM_26";
+case VVT_CUSTOM_3:
+  return "VVT_CUSTOM_3";
+case VVT_CUSTOM_4:
+  return "VVT_CUSTOM_4";
 case VVT_DEV:
   return "VVT_DEV";
 case VVT_FORD_COYOTE:
@@ -1099,6 +1103,8 @@ case VVT_MITSUBISHI_4G69:
   return "VVT_MITSUBISHI_4G69";
 case VVT_MITSUBISHI_6G72:
   return "VVT_MITSUBISHI_6G72";
+case VVT_MITSUBISHI_6G75:
+  return "VVT_MITSUBISHI_6G75";
 case VVT_NISSAN_MR:
   return "VVT_NISSAN_MR";
 case VVT_NISSAN_VQ:

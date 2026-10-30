@@ -22,7 +22,7 @@ shadowJar {
   duplicatesStrategy = DuplicatesStrategy.FAIL
   base {
     archiveFileName = 'rusefi_autoupdate.jar'
-    destinationDirectory = file("${rootDir}/../console")
+    destinationDirectory = file("${rootDir}/console")
     archiveClassifier = ''
   }
 

@@ -46,4 +46,9 @@ public interface IniFileModel {
     String getYBin(String tableName);
 
     Map<String, DialogModel> getDialogs();
+
+    /**
+     * @return the field owning the given byte offset within the main settings page, or null
+     */
+    IniField findByOffset(int offset);
 }

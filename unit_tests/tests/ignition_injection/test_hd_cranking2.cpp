@@ -8,7 +8,7 @@
 
 static void runCrankGapCrankingSyncData2(const char *fileName,
 		int expectedSyncAtIndex,
-		int expectedCamResyncCounter,
+		int expectedphaseResyncCounter,
 		int expectedFirstPhaseSyncAtIndex) {
 	EngineTestHelper eth(engine_type_e::HARLEY);
 
@@ -54,15 +54,18 @@ static void runCrankGapCrankingSyncData2(const char *fileName,
 	}
 	EXPECT_TRUE(reader.gotSync);
 	EXPECT_TRUE(reader.gotPhaseSync);
-	EXPECT_EQ(expectedCamResyncCounter,
-			eth.engine.triggerCentral.triggerState.camResyncCounter);
+	EXPECT_EQ(expectedphaseResyncCounter,
+			eth.engine.triggerCentral.triggerState.phaseResyncCounter);
 
 	// Total injection / spark counts observed at end of CSV playback.
 	// Captured from the data points "Fuel: Injection counter"
 	// (engineState.fuelInjectionCounter) and "Ign: Spark counter"
 	// (engineState.globalSparkCounter) visible in the TS log screenshot.
 	EXPECT_EQ(10, (int)engine->engineState.fuelInjectionCounter);
-	EXPECT_EQ(9, (int)engine->engineState.globalSparkCounter);
+	// The screenshot of the original run showed 9 sparks, but that run scheduled sparks off a
+	// momentarily doubled RPM right after phase re-sync; with that bogus cycle-RPM sample now
+	// discarded, spark scheduling continues at the true RPM and two more sparks fire.
+	EXPECT_EQ(11, (int)engine->engineState.globalSparkCounter);
 }
 
 TEST(harleyCrank, orange2truncated) {
