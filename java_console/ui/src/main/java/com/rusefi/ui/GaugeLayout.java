@@ -3,6 +3,8 @@ package com.rusefi.ui;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.widgets.GaugeDisplayKind;
 import com.rusefi.ui.widgets.GaugeScaleOverrides;
+import com.rusefi.ui.widgets.tune.IndicatorStripSettings;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
@@ -23,6 +25,9 @@ import java.util.Properties;
  * switching back to Grid discards it. Free gauges store their position and size as
  * fractions of the gauge area; a higher index is drawn on top. Grid-mode files are
  * written as version 1, so they stay readable by older consoles.
+ * <p>
+ * The indicator strip (order, hidden chips, custom indicators) is written under {@link #INDICATORS}.
+ * Older consoles ignore those keys; a file without them leaves the strip as it is when loaded.
  */
 final class GaugeLayout {
     static final String ROWS = "gauges_rows";
@@ -38,6 +43,7 @@ final class GaugeLayout {
     static final String WIDTH = "w";
     static final String HEIGHT = "h";
     static final int MAX_FREE_GAUGES = 64;
+    static final String INDICATORS = "indicators.";
     /** Smallest free gauge, as a fraction of the gauge area. */
     static final double MIN_FREE_SIZE = 0.02;
     // Tolerates rounding in fractions written by Double.toString.
@@ -138,6 +144,10 @@ final class GaugeLayout {
     }
 
     static void save(Path file, Node config) throws IOException {
+        save(file, config, null);
+    }
+
+    static void save(Path file, Node config, @Nullable IndicatorStripSettings indicators) throws IOException {
         boolean free = isFreeMode(config) && hasFreeLayout(config);
         Properties properties = new Properties();
         properties.setProperty("format", "rusefi-gauges");
@@ -156,6 +166,9 @@ final class GaugeLayout {
                 elementToFile(properties, FREE_ELEMENT + i, element);
                 copyToFile(properties, FREE_ELEMENT + i + ".", element, BOUNDS_PROPERTIES);
             }
+        }
+        if (indicators != null) {
+            indicators.toFile(properties, INDICATORS);
         }
         // Validate before opening (and potentially truncating) the destination.
         decode(properties);
@@ -211,6 +224,10 @@ final class GaugeLayout {
                 elementFromFile(properties, FREE_ELEMENT + i, element);
                 setBounds(element, boundsFromFile(properties, FREE_ELEMENT + i + "."));
             }
+        }
+        Node indicators = IndicatorStripSettings.fromFile(properties, INDICATORS);
+        if (indicators != null) {
+            layout.getConfig().put(IndicatorStripSettings.NODE, indicators);
         }
         return layout;
     }

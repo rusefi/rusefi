@@ -319,6 +319,15 @@ look and feel reads the toolkit's menu shortcut key, so send test clicks to a
 plain component when only the press itself matters. Guard such calls, and
 reproduce CI locally with `JAVA_TOOL_OPTIONS=-Djava.awt.headless=true ./gradlew :ui:test`.
 
+### Option-pane dialogs keep their first size
+
+`JOptionPane.showConfirmDialog` sizes its dialog once and does not grow it. If the content's
+preferred size then increases (a row shown, a taller preview), `GridBagLayout` is short of space and
+drops every row to its minimum size: a `JScrollPane` collapses to about one row. Keep such content's
+preferred size constant while it is edited: give scroll panes a minimum equal to their preferred
+size, reserve fixed-size slots for changing content, and switch alternatives with `CardLayout`
+rather than `setVisible` (see `CustomIndicatorDialog`, `contentKeepsItsSizeWhileEditing`).
+
 ### Swing clicks on drag-enabled components
 
 AWT sends no `MOUSE_CLICKED` once the pointer moved between press and
@@ -586,6 +595,9 @@ builds garble non-ASCII literals. On a Windows checkout, `SensorLoggerTest` (tem
 directory still locked at cleanup), `FirmwareSourceCodeDownloaderTest` (two
 rollback-failure cases that expect an `IOException` Windows does not raise) and
 `CalibrationPanelWorkspaceTest` fail independently of the change being tested.
+`ConsoleThemeTest` asserts light-theme colours but `UiHelper.configureLaf()` honours the saved
+console theme, so with "Follow system" on a Windows desktop in dark mode it fails; run the Java
+tests with `-Dconsole.theme=light` (e.g. in `JAVA_TOOL_OPTIONS`) to pin the theme.
 
 - When modifying Java code (`java_console/`, `java_tools/`), bump `UiVersion.CONSOLE_VERSION` in `java_tools/version/src/main/java/com/rusefi/UiVersion.java` to the current date in `YYYYMMDD` format as part of the same change (no-op if it already shows today's date).
 - `Autoupdate.AUTOUPDATE_VERSION` in `java_console/autoupdate/src/main/java/com/rusefi/autoupdate/Autoupdate.java` is a separate, manually managed version for the updater executable. Bump it (same `YYYYMMDD` format) only when the change affects updater behavior, i.e. code that runs inside `rusefi_autoupdate.exe`.

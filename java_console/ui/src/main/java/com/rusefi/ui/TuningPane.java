@@ -5,8 +5,6 @@ import com.opensr5.ConfigurationImageMetaVersion0_0;
 import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.EventTriggerModel;
 import com.opensr5.ini.ExpressionEvaluator;
-import com.opensr5.ini.FrontPageModel;
-import com.opensr5.ini.IndicatorModel;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.SensorCentral;
@@ -19,7 +17,7 @@ import com.rusefi.ui.widgets.SegmentedControl;
 import com.rusefi.ui.widgets.StatusPanel;
 import com.rusefi.ui.widgets.tune.CalibrationDialogWidget;
 import com.rusefi.ui.widgets.tune.CalibrationPanelWorkspace;
-import com.rusefi.ui.widgets.tune.IndicatorPanel;
+import com.rusefi.ui.widgets.tune.IndicatorStrip;
 import com.rusefi.ui.widgets.tune.PinoutLink;
 import com.rusefi.ui.widgets.tune.MainMenuTreeWidget;
 import com.rusefi.ui.widgets.tune.SettingHelpCard;
@@ -72,7 +70,7 @@ public class TuningPane {
     private PinoutLink navigateToPinout;
     private Runnable showTuningTab = () -> { };
     private SensorCentral.ResponseListenerToken eventTriggerToken;
-    private IndicatorPanel frontPageIndicatorPanel;
+    private IndicatorStrip indicatorStrip;
     private ConnectionStatusLogic.Listener connectionStatusListener;
     private boolean active;
     private boolean destroyed;
@@ -285,11 +283,9 @@ public class TuningPane {
         northPanel.setBorder(BorderFactory.createCompoundBorder(northPanel.getBorder(),
             BorderFactory.createEmptyBorder(0, 4, 6, 4)));
         northPanel.add(withHelpChoices(toolbar.getPanel(), config, workspace::rebuildViews));
-        frontPageIndicatorPanel = buildFrontendIndicatorPanel(uiContext);
-        if (frontPageIndicatorPanel != null) {
-            frontPageIndicatorPanel.getPanel().setOpaque(false);
-            northPanel.add(frontPageIndicatorPanel.getPanel());
-        }
+        indicatorStrip = new IndicatorStrip(() -> uiContext.iniFileState.getIniFileModel(),
+            uiContext.indicatorStripSettings);
+        northPanel.add(indicatorStrip.getContent());
         if (gaugeStrip != null) {
             northPanel.add(gaugeStrip.getContent());
         }
@@ -310,22 +306,6 @@ public class TuningPane {
     }
 
 
-    private static IndicatorPanel buildFrontendIndicatorPanel(UIContext uiContext) {
-        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
-        if (ini == null) {
-            return null;
-        }
-        FrontPageModel frontPage = ini.getFrontPage();
-        if (frontPage == null) {
-            return null;
-        }
-        List<IndicatorModel> indicators = frontPage.getIndicators();
-        if (indicators.isEmpty()) {
-            return null;
-        }
-        return new IndicatorPanel(indicators, ini, 0);
-    }
-
     public JPanel getContent() {
         return content;
     }
@@ -339,9 +319,7 @@ public class TuningPane {
             gaugeStrip.setActive(active);
         }
         right.setActive(active);
-        if (frontPageIndicatorPanel != null) {
-            frontPageIndicatorPanel.setActive(active);
-        }
+        indicatorStrip.setActive(active);
         updateEventTriggerDemand();
     }
 
@@ -355,9 +333,7 @@ public class TuningPane {
             gaugeStrip.destroy();
         }
         workspace.destroy();
-        if (frontPageIndicatorPanel != null) {
-            frontPageIndicatorPanel.destroy();
-        }
+        indicatorStrip.destroy();
         eventTriggerToken.remove();
         ConnectionStatusLogic.INSTANCE.removeListener(connectionStatusListener);
     }

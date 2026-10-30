@@ -36,6 +36,7 @@ import com.rusefi.ui.util.JustOneInstance;
 import com.rusefi.ui.widgets.ConnectionStatusIcon;
 import com.rusefi.ui.widgets.JoinedButtons;
 import com.rusefi.ui.widgets.WandIcon;
+import com.rusefi.ui.widgets.tune.IndicatorStripSettings;
 import com.rusefi.ui.widgets.StatusPanel;
 import com.rusefi.ui.widgets.TextZoom;
 import com.rusefi.ui.widgets.tune.CalibrationPanelWorkspace;
@@ -373,6 +374,8 @@ public class ConsoleUI {
         SavedTab savedTab = SavedTab.read(getConfig().getRoot());
         // developer tabs opened from the Tools menu instead of always sitting in the tab row
         ToolTabs toolTabs = new ToolTabs(tabbedPane);
+        // before the Gauges and Tuning tabs build their indicator strips
+        uiContext.indicatorStripSettings.bind(getConfig().getRoot().getChild(IndicatorStripSettings.NODE));
         if (isOffline || !linkManager.isLogViewer()) {
             gaugesPanel = new GaugesPanel(uiContext, getConfig().getRoot().getChild("gauges"));
             gaugesTab = gaugesPanel.getContent();
