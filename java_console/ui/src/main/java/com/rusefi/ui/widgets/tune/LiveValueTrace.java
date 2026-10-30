@@ -102,12 +102,12 @@ public class LiveValueTrace {
         return Math.max(0, Math.min(1, (value - min) / (max - min)));
     }
 
-    double fraction() {
+    public double fraction() {
         return fraction(value, min, max);
     }
 
     /** Samples kept for the history line. */
-    int historySize() {
+    public int historySize() {
         return historySize;
     }
 

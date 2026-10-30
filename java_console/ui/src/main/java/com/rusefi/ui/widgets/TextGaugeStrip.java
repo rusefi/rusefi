@@ -33,7 +33,7 @@ public class TextGaugeStrip {
         for (int i = 0; i < GAUGE_COUNT; i++) {
             final int index = i;
             String channel = config.getChild("gauge_" + index).getProperty(GAUGE_CHANNEL, defaults.get(index));
-            TextGauge gauge = new TextGauge(uiContext, channel, newName -> {
+            TextGauge gauge = new TextGauge(uiContext, channel, config.getChild("gauge_" + index), newName -> {
                 config.getChild("gauge_" + index).setProperty(GAUGE_CHANNEL, newName);
             });
             gauges.add(gauge);

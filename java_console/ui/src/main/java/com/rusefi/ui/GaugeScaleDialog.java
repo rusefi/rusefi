@@ -11,7 +11,7 @@ import java.awt.*;
  * "Scale…" dialog of a gauge slot: optional replacements for the .ini min, max, high danger
  * value and value decimals. Empty fields show, and keep, the .ini value.
  */
-final class GaugeScaleDialog {
+public final class GaugeScaleDialog {
     static final String TITLE = "Gauge Scale";
     static final String RESET = "Reset to INI";
 
@@ -23,7 +23,7 @@ final class GaugeScaleDialog {
     private final GaugeScale ini;
     private final JPanel content = new JPanel(new GridBagLayout());
 
-    GaugeScaleDialog(String gaugeTitle, @Nullable String units, GaugeScale ini, GaugeScaleOverrides current) {
+    public GaugeScaleDialog(String gaugeTitle, @Nullable String units, GaugeScale ini, GaugeScaleOverrides current) {
         this.ini = ini;
         String unitSuffix = units == null || units.trim().isEmpty() ? "" : " " + units.trim();
         setUp(min, number(ini.getMin()) + unitSuffix, current.getMin());
@@ -86,7 +86,7 @@ final class GaugeScaleDialog {
 
     /** Shows the dialog until the entry is valid or cancelled; {@code null} when cancelled. */
     @Nullable
-    GaugeScaleOverrides show(Component parent) {
+    public GaugeScaleOverrides show(Component parent) {
         while (true) {
             int choice = JOptionPane.showConfirmDialog(parent, content, TITLE, JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE);
