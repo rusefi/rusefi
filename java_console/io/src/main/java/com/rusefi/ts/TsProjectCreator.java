@@ -25,7 +25,7 @@ import static com.devexperts.logging.Logging.getLogging;
  *  - Writes a generated {@code dashboard/dashboard.dash}
  *  - Updates {@code ~/.efiAnalytics/tsUser.properties} so TS auto-opens the project
  * <p>
- * See /com/rusefi/ts/ts_project_format.md for the full on-disk contract.
+ * See docs/AI/tunerstudio-user-folders.md for the files written and the open issues.
  */
 public final class TsProjectCreator {
 

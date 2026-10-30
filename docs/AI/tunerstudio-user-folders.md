@@ -20,7 +20,7 @@ TunerStudio keeps two per-user locations:
 | # | Integration | TS path | R/W | Code | Trigger |
 |---|---|---|---|---|---|
 | 1 | Plugin launcher install | `~/.efiAnalytics/TunerStudio/plugins/rusefi_ts_plugin_launcher.jar` | W, delete | `TsPluginInstaller.installTsPlugin()` | Autoupdate bundle unzip |
-| 2 | Developer plugin install | `~/.efianalytics/TunerStudio/plugins/` | W | Gradle `launcher_local_install` | Manual Gradle task |
+| 2 | Developer plugin install | `~/.efiAnalytics/TunerStudio/plugins/` | W | Gradle `launcher_local_install` | Manual Gradle task |
 | 3 | ecuDef cache priming | `~/.efiAnalytics/TunerStudio/config/ecuDef/<signature>.ini` | W | `PrimeTunerStudioCache.prime()` | Console start-up; every `.ini` resolved by `RealIniFileProvider` |
 | 4 | ecuDef cache as `.ini` source | same | R | `PrimeTunerStudioCache.findInTunerStudioCache()` | `RealIniFileProvider.provide()` fallback step 4 |
 | 5 | TS project auto-creation | `~/TunerStudioProjects/<name>/...` + `tsUser.properties` | R/W | `TsProjectCreator` | Console connect, opt-in |
@@ -52,11 +52,10 @@ TunerStudio folder.
 ## 2. Developer plugin install
 
 `java_tools/ts_plugin_launcher/build.gradle`, task `launcher_local_install`,
-copies the shadow JAR to `user.home + '/.efianalytics/TunerStudio/plugins'`.
-The folder name is spelled in lower case, unlike `TsHelper.TS_ROOT`
-(`.efiAnalytics`). On Windows the file system ignores the difference; on Linux
-and macOS this task writes to a different folder from the one the console
-installer uses.
+copies the shadow JAR to `user.home + '/.efiAnalytics/TunerStudio/plugins'`.
+The folder name must match `TsHelper.TS_ROOT` exactly: Windows ignores case,
+but on Linux and macOS a differently spelled folder is a separate folder that
+TunerStudio does not read.
 
 ## 3. ecuDef cache priming
 
@@ -127,8 +126,6 @@ Constraints:
   Windows, TunerStudio's default is `Documents\TunerStudioProjects`, so a user
   with existing projects there has `projectsDir` redirected and no longer sees
   them in TunerStudio's default project list.
-- The class comment refers to `/com/rusefi/ts/ts_project_format.md`, which is
-  not in the repository.
 
 ## 6. Post-migration project check
 
@@ -168,3 +165,48 @@ The tune the plugin uploads is written to `~/.rusEFI/output.msq`
 TunerStudio. Each file has an Upload button (`Online.uploadFile`, sent directly
 without the outbox) and a Delete button, which removes the file from the
 TunerStudio project after confirmation.
+
+## Open issues
+
+Problems in the integrations above, most significant first.
+
+1. **Project creation ignores and overwrites `projectsDir`.** `TsProjectCreator`
+   always uses `user.home/TunerStudioProjects`, both for the new project and for
+   the duplicate-project scan, and writes that folder into `projectsDir`. It
+   should read `projectsDir` from `tsUser.properties` (as `TsTuneReader` does)
+   and fall back to TunerStudio's default only when the key is missing.
+   Otherwise a Windows user's existing `Documents\TunerStudioProjects` projects
+   are neither found as duplicates nor listed by TunerStudio afterwards.
+2. **Two different fallback projects folders.** When `tsUser.properties` is
+   unreadable, `TsTuneReader.getProjectsDir()` uses the `JFileChooser` default
+   directory (Documents on Windows) while `TsProjectCreator` uses `user.home`.
+   One shared helper in `TsHelper` should decide the folder for both.
+3. **Firmware updates leave the TunerStudio project stale**
+   ([#8357](https://github.com/rusefi/rusefi/issues/8357), open).
+   `TsProjectUpdater` only logs a signature mismatch. TunerStudio's
+   project/ECU difference dialog is triggered by a signature change and by a
+   difference between the cached `ecuDef` `.ini` and the project's
+   `projectCfg/mainController.ini`; the signature is also stored in
+   `CurrentTune.msq`. Resolving the issue requires updating
+   `mainController.ini`, `CurrentTune.msq` and possibly `dashboard/dashboard.dash`
+   in `lastProjectPath`. A user with several ECUs, one project each, must not
+   have the project of a different, non-updated ECU rewritten; matching by
+   `ecuUid` as in `TsProjectCreator` addresses this.
+4. **`tsUser.properties` is rewritten by `java.util.Properties`.**
+   `TsProjectCreator.writeTsUserProperties()` keeps all keys but drops
+   TunerStudio's comments and key order, and escapes values in Java properties
+   syntax. A targeted line update would leave the rest of TunerStudio's file
+   untouched.
+5. **The project on-disk format is not documented separately.** The
+   `TsProjectCreator` class comment pointed to a `ts_project_format.md` that was
+   never added to the repository; it now points to this document. The details
+   of `project.properties` and `tsUser.properties` keys are known only from the
+   code and the investigation in
+   [#9431](https://github.com/rusefi/rusefi/issues/9431) and
+   [#9432](https://github.com/rusefi/rusefi/issues/9432) (for example, a trailing
+   NUL in the signature makes TunerStudio report the project as corrupt, and a
+   missing `.dash` file produces a warning on first open).
+6. **No installer flow for new users**
+   ([#7408](https://github.com/rusefi/rusefi/issues/7408), open). Plugin install
+   (section 1) and `ecuDef` priming (section 3) require TunerStudio to have run
+   once: priming skips a missing `ecuDef` folder.
