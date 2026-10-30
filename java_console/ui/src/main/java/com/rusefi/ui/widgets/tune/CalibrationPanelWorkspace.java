@@ -249,6 +249,34 @@ public final class CalibrationPanelWorkspace {
         saveLayout();
     }
 
+    /**
+     * Opens a menu page in its own window from any tab, centred on the console, or brings the page's
+     * window to the front when it is already open.
+     *
+     * @return false while there is no tune to show or the loaded INI has no such page
+     */
+    public boolean openPanel(String key) {
+        CalibrationPanelKey panelKey = new CalibrationPanelKey(key);
+        if (destroyed || image == null || !panelKey.isSupported(ini)) {
+            return false;
+        }
+        DetachedPanel panel = panels.get(panelKey);
+        if (panel == null) {
+            panel = new DetachedPanel(panelKey, null);
+            panels.put(panelKey, panel);
+        }
+        if (panel.window == null) {
+            Rectangle screen = owner == null ? screens.get().get(0) : screenForBounds(owner.getBounds(), screens.get());
+            openPanel(panel, null, screen);
+        }
+        // the windows of other pages saved earlier open too, as after a detach
+        restoring = true;
+        refreshDetached(null);
+        panel.window.toFront();
+        saveLayout();
+        return true;
+    }
+
     private void refreshDetached(CalibrationDialogWidget source) {
         for (DetachedPanel panel : panels.values()) {
             if (image == null || !panel.key.isSupported(ini)) {
@@ -269,6 +297,7 @@ public final class CalibrationPanelWorkspace {
         }
     }
 
+    /** @param position where a fresh window goes, or null to centre it on the owner */
     private void openPanel(DetachedPanel panel, Point position, Rectangle screen) {
         panel.widget = new CalibrationDialogWidget(uiContext, tableOrientationConfig);
         panel.scroll = new JScrollPane(panel.widget.getViewportPane());
@@ -285,7 +314,8 @@ public final class CalibrationPanelWorkspace {
         boolean fresh = panel.bounds == null;
         if (fresh) {
             panel.bounds = panel.window.getBounds();
-            panel.bounds.setLocation(position);
+            panel.bounds.setLocation(position != null ? position
+                : centred(owner == null ? screen : owner.getBounds(), panel.bounds.getSize()));
         }
         panel.bounds = fitBounds(panel.bounds, fresh ? Collections.singletonList(screen) : screens.get());
         panel.window.setBounds(panel.bounds);
@@ -436,6 +466,10 @@ public final class CalibrationPanelWorkspace {
         int height = Math.min(screen.height, Math.max(1, bounds.height));
         return new Rectangle(Math.max(screen.x, Math.min(bounds.x, screen.x + screen.width - width)),
             Math.max(screen.y, Math.min(bounds.y, screen.y + screen.height - height)), width, height);
+    }
+
+    private static Point centred(Rectangle area, Dimension size) {
+        return new Point(area.x + (area.width - size.width) / 2, area.y + (area.height - size.height) / 2);
     }
 
     private static Rectangle screenForBounds(Rectangle bounds, List<Rectangle> screens) {

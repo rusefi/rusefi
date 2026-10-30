@@ -620,7 +620,8 @@ public class MainMenuTreeWidget {
         tree.repaint();
     }
 
-    private boolean isDisabledByExpressions(SubMenuModel subMenu, IniFileModel iniFileModel, ConfigurationImage ci) {
+    /** Shared with {@link SettingsPageIndex}, so search offers the pages the tree lets you open. */
+    static boolean isDisabledByExpressions(SubMenuModel subMenu, IniFileModel iniFileModel, ConfigurationImage ci) {
         if (subMenu.getEnableExpression() != null) {
             Boolean enabled = ExpressionEvaluator.evaluateBooleanExpression(subMenu.getEnableExpression(), iniFileModel, ci);
             if (Boolean.FALSE.equals(enabled)) return true;

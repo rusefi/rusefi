@@ -41,6 +41,8 @@ import com.rusefi.ui.widgets.StatusPanel;
 import com.rusefi.ui.widgets.TextZoom;
 import com.rusefi.ui.widgets.tune.CalibrationPanelWorkspace;
 import com.rusefi.ui.widgets.tune.PinoutLink;
+import com.rusefi.ui.widgets.tune.SettingsPageIndex;
+import com.rusefi.ui.widgets.tune.SettingsSearchPopup;
 import com.rusefi.ui.wizard.WizardCatalog;
 import com.rusefi.ui.wizard.WizardContainer;
 import com.rusefi.ui.wizard.WizardStep;
@@ -111,6 +113,13 @@ public class ConsoleUI {
     private GaugesPanel gaugesPanel;
     private LogViewerHost logViewer;
     private TuningPane tuningPane;
+    /** Set up with the Tuning tab; until then (and in log viewer mode) the tab bar's search box is hidden. */
+    private SettingsSearchPopup.Launcher settingsSearch;
+    private final JTextField settingsSearchBox = SettingsSearchPopup.createSearchBox((text, anchor) -> {
+        if (settingsSearch != null) {
+            settingsSearch.show(text, anchor);
+        }
+    });
     private Component gaugesTab;
     private Component tuningTab;
     private SensorCentral.FullOutputLease unclassifiedTabLease;
@@ -340,7 +349,8 @@ public class ConsoleUI {
             });
         });
 
-        tabbedPane.setCornerComponent(createCornerPanel(connectionStatus,
+        settingsSearchBox.setVisible(false);
+        tabbedPane.setCornerComponent(createCornerPanel(settingsSearchBox, connectionStatus,
             UiProperties.isLaunchWizardEnabled() ? launchWizardButton : null));
 
         // ---------------
@@ -543,6 +553,19 @@ console live data tab is broken #8402
                 lazyTuneAction(LoadTuneHelper.LOAD_TUNE_TEXT, buildTuning, () -> tuningHolder[0].getLoadTuneAction()),
                 lazyTuneAction(LoadTuneHelper.SAVE_TUNE_TEXT, buildTuning, () -> tuningHolder[0].getSaveTuneAction()));
 
+            // Ctrl+K: search the Tuning pages from any tab and open one floating over it, without
+            // switching to Tuning (built in the background when needed).
+            JFrame consoleFrame = mainFrame.getFrame().getFrame();
+            settingsSearch = SettingsSearchPopup.install(consoleFrame, () -> {
+                if (deviceSessionManager.getState() == SessionState.FLASHING) {
+                    return null;
+                }
+                buildTuning.run();
+                return SettingsPageIndex.build(uiContext.iniFileState.getIniFileModel(),
+                    tuningHolder[0].getTuneImage());
+            }, page -> tuningHolder[0].openSettingsWindow(consoleFrame, page.getKey()));
+            settingsSearchBox.setVisible(true);
+
             // Restore detached calibration windows even when another tab was selected at exit.
             if (getConfig().getRoot().getChild("tuning").getChild(
                     CalibrationPanelWorkspace.CONFIG_KEY).getIntProperty("count", 0) > 0) {
@@ -730,7 +753,7 @@ console live data tab is broken #8402
      * the Gauges toolbar (JoinedButtons.ROW_END_INSET), so Launch Wizard's right edge lines up
      * with Edit dashboard's.
      */
-    static JPanel createCornerPanel(Component connectionStatus, JButton launchWizardButton) {
+    static JPanel createCornerPanel(JComponent settingsSearchBox, Component connectionStatus, JButton launchWizardButton) {
         // GridBagLayout centres the controls vertically in the tab row
         JPanel cornerPanel = new JPanel(new GridBagLayout());
         cornerPanel.setOpaque(false);
@@ -740,6 +763,9 @@ console live data tab is broken #8402
         filler.weightx = 1;
         cornerPanel.add(Box.createHorizontalGlue(), filler);
         GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(0, JoinedButtons.ROW_GAP, 0, JoinedButtons.ROW_GAP);
+        cornerPanel.add(settingsSearchBox, c);
+        c.insets = new Insets(0, 0, 0, 0);
         cornerPanel.add(connectionStatus, c);
         if (launchWizardButton != null) {
             c.insets = new Insets(0, JoinedButtons.ROW_GAP, 0, 0);
