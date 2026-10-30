@@ -516,7 +516,7 @@ console live data tab is broken #8402
                         tp.requestExit(mainFrame,
                             () -> mainFrame.getFrame().getFrame().dispose(),
                             deviceSessionManager.getState() == SessionState.FLASHING));
-                mainFrame.setTuneActions(tp.getLoadTuneAction(), tp.getSaveTuneAction());
+                mainFrame.setTuneActions(tp.getLoadTuneAction(), tp.getSaveTuneAction(), tp.getSaveTuneAsAction());
                 if (UiProperties.isPinoutEnabled()) {
                     tp.setNavigateToPinout(new PinoutLink() {
                         @Override
@@ -551,7 +551,8 @@ console live data tab is broken #8402
             // built, buildTuning re-points the menu at the real actions.
             mainFrame.setTuneActions(
                 lazyTuneAction(LoadTuneHelper.LOAD_TUNE_TEXT, buildTuning, () -> tuningHolder[0].getLoadTuneAction()),
-                lazyTuneAction(LoadTuneHelper.SAVE_TUNE_TEXT, buildTuning, () -> tuningHolder[0].getSaveTuneAction()));
+                lazyTuneAction(LoadTuneHelper.SAVE_TUNE_TEXT, buildTuning, () -> tuningHolder[0].getSaveTuneAction()),
+                lazyTuneAction(LoadTuneHelper.SAVE_TUNE_AS_TEXT, buildTuning, () -> tuningHolder[0].getSaveTuneAsAction()));
 
             // Ctrl+K: search the Tuning pages from any tab and open one floating over it, without
             // switching to Tuning (built in the background when needed).
