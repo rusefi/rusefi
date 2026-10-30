@@ -318,6 +318,10 @@ installs no `DropTarget` (`getDropTarget()` returns null after
 look and feel reads the toolkit's menu shortcut key, so send test clicks to a
 plain component when only the press itself matters. Guard such calls, and
 reproduce CI locally with `JAVA_TOOL_OPTIONS=-Djava.awt.headless=true ./gradlew :ui:test`.
+`Component.dispatchEvent` does not deliver key or mouse events to a component that is not
+displayed (key events are retargeted to the absent focus owner), so a test can silently exercise
+nothing. Invoke the component's own listeners or bound actions directly (see
+`SettingsSearchPopupTest.theTabBarBoxOpensTheSearchWithWhatWasTyped`).
 
 ### Option-pane dialogs keep their first size
 

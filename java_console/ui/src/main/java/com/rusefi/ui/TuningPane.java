@@ -305,6 +305,22 @@ public class TuningPane {
         workspace.restore(owner);
     }
 
+    /**
+     * Opens a menu page in a floating settings window over whatever tab is shown, without switching
+     * to Tuning. Works before the Tuning tab was ever opened.
+     *
+     * @return false while there is no tune to show or the loaded INI has no such page
+     */
+    public boolean openSettingsWindow(Window owner, String pageKey) {
+        workspace.restore(owner);
+        return workspace.openPanel(pageKey);
+    }
+
+    /** The tune being edited, including unsaved edits; null before one is loaded. */
+    public ConfigurationImage getTuneImage() {
+        return sessionImage.get();
+    }
+
 
     public JPanel getContent() {
         return content;

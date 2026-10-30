@@ -614,6 +614,65 @@ class CalibrationPanelWorkspaceTest {
         });
     }
 
+    /** From another tab: any page opens floating, without changing the page shown in Tuning. */
+    @Test
+    void pagesOpenByNameCentredOnTheConsole() throws Throwable {
+        IniFileModel ini = ini();
+        SwingUtilities.invokeAndWait(() -> {
+            Node config = new Node();
+            try (Fixture fixture = new Fixture(ini, config)) {
+                Window owner = mock(Window.class);
+                when(owner.getBounds()).thenReturn(new Rectangle(100, 50, 1000, 800));
+                fixture.workspace.restore(owner);
+                fixture.select("first");
+
+                assertTrue(fixture.workspace.openPanel("curve"));
+                assertEquals(1, fixture.windows.size());
+                FakeWindow curve = fixture.windows.get(0);
+                assertEquals("Curve", curve.title);
+                Rectangle bounds = curve.bounds;
+                assertEquals(new Point(100 + (1000 - bounds.width) / 2, 50 + (800 - bounds.height) / 2),
+                    bounds.getLocation(), "centred on the console");
+                assertEquals("first", fixture.primary.getCurrentKey(), "Tuning keeps its page");
+                assertEquals("curve", config.getChild("panel0").getProperty("key"), "restored like a detached page");
+
+                int raised = curve.raised;
+                assertTrue(fixture.workspace.openPanel("curve"));
+                assertEquals(1, fixture.windows.size(), "one window per page");
+                assertEquals(raised + 1, curve.raised, "the open window comes to the front");
+
+                assertTrue(fixture.workspace.openPanel("second"));
+                assertEquals("Second", fixture.windows.get(1).title, "several pages at once");
+                assertFalse(curve.disposed);
+
+                assertFalse(fixture.workspace.openPanel("missing"), "not in this INI");
+                assertFalse(fixture.workspace.openPanel(null));
+                assertEquals(2, fixture.windows.size());
+            }
+        });
+    }
+
+    @Test
+    void pageOpensWhereItWasLeftAndNotWithoutATune() throws Throwable {
+        IniFileModel ini = ini();
+        SwingUtilities.invokeAndWait(() -> {
+            Node config = new Node();
+            try (Fixture first = new Fixture(ini, config)) {
+                first.workspace.openPanel("first");
+                first.windows.get(0).move(new Rectangle(210, 130, 640, 410));
+            }
+            try (Fixture second = new Fixture(ini, roundTrip(config))) {
+                second.workspace.openPanel("first");
+                assertEquals(new Rectangle(210, 130, 640, 410), second.windows.get(0).bounds);
+
+                second.primary.reset();
+                assertTrue(second.windows.get(0).disposed);
+                assertFalse(second.workspace.openPanel("second"), "nothing to edit before a tune is loaded");
+                assertEquals(1, second.windows.size());
+            }
+        });
+    }
+
     @Test
     void layoutSurvivesSerializationAndShutdownButExplicitCloseRemovesPanel() throws Throwable {
         IniFileModel ini = ini();
@@ -721,6 +780,7 @@ class CalibrationPanelWorkspaceTest {
         Rectangle bounds;
         boolean disposed;
         boolean canSplit;
+        int raised;
 
         FakeWindow(String title, JScrollPane content, Runnable close, Runnable split, boolean canSplit,
                    Consumer<Rectangle> moved) {
@@ -739,7 +799,7 @@ class CalibrationPanelWorkspaceTest {
         }
 
         public void show() { }
-        public void toFront() { }
+        public void toFront() { raised++; }
         public Rectangle getBounds() { return new Rectangle(bounds); }
         public void setBounds(Rectangle bounds) { this.bounds = new Rectangle(bounds); }
         public void setCanSplit(boolean canSplit) { this.canSplit = canSplit; }
