@@ -5,13 +5,12 @@ import com.opensr5.ini.ExpressionEvaluator;
 import com.opensr5.ini.GaugeModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.TsStringFunction;
-import com.rusefi.core.ISensorCentral;
 import com.rusefi.core.ISensorHolder;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.SensorSubscription;
 import com.rusefi.io.ConnectionStatusLogic;
-import com.opensr5.ConfigurationImage;
-import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.core.preferences.storage.Node;
+import com.rusefi.ui.GaugeScaleDialog;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.widgets.tune.LiveValueTrace;
 import com.rusefi.ui.widgets.tune.TuningStyle;
@@ -38,6 +37,7 @@ import static com.devexperts.logging.Logging.getLogging;
 public class TextGauge {
     private static final Logging log = getLogging(TextGauge.class);
     private static final String NO_CONNECTION = "---";
+    static final String SCALE = "Scale…";
 
     private final LiveValueTrace trace = new LiveValueTrace();
     private final JPanel content = new JPanel(new BorderLayout(0, 0)) {
@@ -63,13 +63,22 @@ public class TextGauge {
     private final JLabel unitsLabel = new JLabel();
     private final JPanel header = new JPanel(new BorderLayout());
 
-    private ISensorCentral.ListenerToken valueToken;
+    private SensorCentral.ResponseListenerToken valueToken;
     private SensorCentral.ResponseListenerToken responseToken;
     private final ConnectionStatusLogic.Listener connectionStatusListener;
     private boolean active;
     private GaugeModel gaugeModel;
+    private String gaugeName;
+    /** The .ini scale with the user's "Scale…" settings; null for a name the .ini does not know. */
+    private GaugeScale scale;
+    /** This strip slot's preferences: holds the "Scale…" settings, like a Gauges tab slot. */
+    private final Node slot;
 
-    public TextGauge(UIContext uiContext, String channelName, Consumer<String> onChannelChange) {
+    /**
+     * @param slot this strip slot's preferences, where the "Scale…" settings are kept
+     */
+    public TextGauge(UIContext uiContext, String channelName, Node slot, Consumer<String> onChannelChange) {
+        this.slot = slot;
         TuningStyle.styleLiveValue(content, 3, 8);
 
         Font baseFont = UIManager.getFont("Label.font");
@@ -102,7 +111,7 @@ public class TextGauge {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e)) {
-                    showPopupMenu(uiContext, e, channelName, onChannelChange);
+                    showPopupMenu(uiContext, e, onChannelChange);
                 }
             }
         });
@@ -130,10 +139,10 @@ public class TextGauge {
 
         final String channel = (gaugeModel != null) ? gaugeModel.getChannel() : gaugeName;
         this.gaugeModel = gaugeModel;
-        if (gaugeModel != null) {
-            BinaryProtocol bp = uiContext.getBinaryProtocol();
-            ConfigurationImage image = bp == null ? null : bp.getControllerConfiguration();
-            GaugeScale scale = GaugeScale.fromIni(gaugeModel, ini, image);
+        this.gaugeName = gaugeName;
+        scale = gaugeModel == null ? null
+            : SensorGauge.iniScale(uiContext, gaugeModel).with(GaugeScaleOverrides.read(slot));
+        if (scale != null) {
             trace.setRange(scale.getMin(), scale.getMax());
             trace.setZones(CircularGauge.Zones.of(scale));
         } else {
@@ -198,13 +207,14 @@ public class TextGauge {
             responseToken = null;
         }
 
-        valueToken = SensorCentral.getInstance().addListener(channel, value ->
+        // Every output frame with this channel, not only changes: a steady reading still feeds the
+        // history line (a per-channel listener is told only when the value changes).
+        valueToken = SensorCentral.getInstance().addListener(() ->
             SwingUtilities.invokeLater(() -> {
                 if (ConnectionStatusLogic.INSTANCE.isConnected()) {
-                    showValue(value, gaugeModel);
+                    showValue(SensorCentral.getInstance().getValue(channel), gaugeModel);
                 }
-            })
-        );
+            }), new SensorSubscription(channel));
         setActive(active);
 
         Double currentValue = SensorCentral.getInstance().getValue(channel);
@@ -220,7 +230,7 @@ public class TextGauge {
     private void showValue(double value, GaugeModel gaugeModel, long nowMs) {
         this.gaugeModel = gaugeModel;
         trace.add(value, nowMs);
-        valueLabel.setText(formatValue(value, gaugeModel));
+        valueLabel.setText(formatValue(value, scale));
         valueLabel.setForeground(trace.textColor(TuningStyle.text()));
         content.repaint();
     }
@@ -235,15 +245,24 @@ public class TextGauge {
         return trace;
     }
 
-    private static String formatValue(double value, GaugeModel gaugeModel) {
-        int decimals = (gaugeModel != null) ? gaugeModel.getValueDecimalPlaces() : 1;
+    private static String formatValue(double value, GaugeScale scale) {
+        int decimals = (scale != null) ? scale.getValueDecimals() : 1;
         if (decimals == 0) {
             return String.valueOf((long) value);
         }
         return String.format("%." + decimals + "f", value);
     }
 
-    private void showPopupMenu(UIContext uiContext, MouseEvent e, String currentChannel, Consumer<String> onChannelChange) {
+    private void showPopupMenu(UIContext uiContext, MouseEvent e, Consumer<String> onChannelChange) {
+        JPopupMenu pm = createPopupMenu(uiContext, onChannelChange);
+        if (pm.getComponentCount() > 0) {
+            pm.show(e.getComponent(), e.getX(), e.getY());
+        }
+    }
+
+    /** "Scale…" for the current gauge, then the gauge catalog to switch to another. */
+    // Package-private so tests drive the same menu users see.
+    JPopupMenu createPopupMenu(UIContext uiContext, Consumer<String> onChannelChange) {
         JPopupMenu pm = new JPopupMenu();
         IniFileModel ini = uiContext.iniFileState.getIniFileModel();
         if (ini != null) {
@@ -253,6 +272,8 @@ public class TextGauge {
                 for (GaugeModel gauge : ini.getGaugeCategories().get(category).getGauges()) {
                     JMenuItem mi = new JMenuItem(GaugeMenuLabel.getTitle(uiContext, gauge));
                     mi.addActionListener(ev -> {
+                        // scale settings were chosen for the previous gauge, as on the Gauges tab
+                        GaugeScaleOverrides.clear(slot);
                         setChannel(uiContext, gauge.getName());
                         onChannelChange.accept(gauge.getName());
                     });
@@ -261,9 +282,41 @@ public class TextGauge {
             }
         }
         if (pm.getSubElements().length > 0) {
+            // indexes the gauge catalog only, so add "Scale…" afterwards
             GaugeMenuSearch.addTo(pm);
-            pm.show(e.getComponent(), e.getX(), e.getY());
         }
+        if (gaugeModel != null) {
+            pm.insert(createScaleMenuItem(uiContext), 0);
+            if (pm.getComponentCount() > 1) {
+                pm.insert(new JPopupMenu.Separator(), 1);
+            }
+        }
+        return pm;
+    }
+
+    /** "Scale…": the Gauges tab's dialog, replacing the .ini min, max, danger value and decimals of this card. */
+    private JMenuItem createScaleMenuItem(UIContext uiContext) {
+        JMenuItem item = new JMenuItem(SCALE);
+        item.setToolTipText("Set this card's min, max, danger value and decimals");
+        item.addActionListener(e -> {
+            GaugeScaleOverrides overrides = createScaleDialog(uiContext).show(content);
+            if (overrides != null) {
+                setScaleOverrides(uiContext, overrides);
+            }
+        });
+        return item;
+    }
+
+    // Package-private so tests check the dialog the menu opens.
+    GaugeScaleDialog createScaleDialog(UIContext uiContext) {
+        String units = gaugeModel.getUnitsValue().isExpression() ? null : gaugeModel.getUnits();
+        return new GaugeScaleDialog(GaugeMenuLabel.getTitle(uiContext, gaugeModel), units,
+            SensorGauge.iniScale(uiContext, gaugeModel), GaugeScaleOverrides.read(slot));
+    }
+
+    void setScaleOverrides(UIContext uiContext, GaugeScaleOverrides overrides) {
+        overrides.writeTo(slot);
+        setChannel(uiContext, gaugeName);
     }
 
     private void cleanup() {
