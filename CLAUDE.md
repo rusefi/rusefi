@@ -287,6 +287,7 @@ For detailed technical documentation intended for AI assistants, see:
 - [Sensor Rate-of-Change Handling](docs/sensor-rate-of-change-filtering.md) - per-sensor inventory of low-pass cutoffs, ExpAverage smoothing, slew limiting and rate-based control inputs; notably there are NO rate-of-change plausibility warnings anywhere.
 - [Java Gradle Structure Review](docs/java-gradle-structure-review.md) - Gradle subproject inventory, dependency graph, and known structural issues in `java_console/` + `java_tools/`.
 - [Java Frontend App](docs/AI/frontend-app.md) - Console startup, ECU connection and data flow, main user workflows, and module boundaries.
+- [TunerStudio User Folders](docs/AI/tunerstudio-user-folders.md) - Every read/write of `~/.efiAnalytics` and TunerStudio project folders: plugin install, ecuDef cache priming and fallback, project auto-creation, post-migration check, plugin tune/log access.
 - [Console Pinout Tab](docs/AI/pinout-tab.md) - Connector YAML packaging, cache validation, pin rendering, tune assignments, and Tuning navigation.
 - [PatchCordHelper Pinout Tool](docs/AI/pinout-helper.md) - Patchcord wiring matches, assembly steps, connector images, and generated instructions.
 - [Java Connectivity & UI Unit Testing](docs/java-connectivity-ui-unit-testing.md) - Test approach for the console connectivity/flashing/session layer and Swing UI: established fake/seam patterns and a refactoring-cost-ordered test backlog.
