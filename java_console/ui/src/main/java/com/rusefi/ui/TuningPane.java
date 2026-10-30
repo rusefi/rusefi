@@ -261,7 +261,10 @@ public class TuningPane {
                         return;
                     }
 
-                    // Default: adopt the ECU's current tune.
+                    // Default: adopt the ECU's current tune; it no longer comes from the loaded file.
+                    if (uiContext.isOfflineMode()) {
+                        uiContext.setTuneFilePath(null);
+                    }
                     uiContext.setOfflineMode(false);
                     toolbar.onEcuConnected();
                     sessionImage.set(bp.getControllerConfiguration().clone());
@@ -482,6 +485,10 @@ public class TuningPane {
         return toolbar.getSaveTuneAction();
     }
 
+    public Action getSaveTuneAsAction() {
+        return toolbar.getSaveTuneAsAction();
+    }
+
     public void setErrorHandler(Consumer<String> errorHandler) {
         toolbar.setErrorHandler(errorHandler);
     }
@@ -522,7 +529,7 @@ public class TuningPane {
         }
 
         boolean burn = prompt == ExitPrompt.BURN;
-        String offlineTunePath = uiContext.getOfflineTunePath();
+        String offlineTunePath = uiContext.getTuneFilePath();
         boolean autoSaveOfflineTune = uiContext.isOfflineMode() && offlineTunePath != null;
         String action = burn ? "Burn to ECU and Exit" : autoSaveOfflineTune ? "Save and Exit" : "Save Tune and Exit";
         String message = burn

@@ -69,7 +69,8 @@ public class UIContext {
 
     /** [tag:offline_tune] True when the console was opened in offline mode (no ECU connection, tune loaded from file). */
     private boolean offlineMode;
-    private String offlineTunePath;
+    private String tuneFilePath;
+    private final List<Runnable> tuneFileListeners = new ArrayList<>();
 
     @NotNull
     public LinkManager getLinkManager() {
@@ -96,13 +97,23 @@ public class UIContext {
         for (Consumer<Boolean> l : offlineModeListeners) l.accept(offlineMode);
     }
 
-    public String getOfflineTunePath() {
-        return offlineTunePath;
+    /** The .msq being worked on: last loaded or saved, null once the ECU's own tune was adopted instead. */
+    public String getTuneFilePath() {
+        return tuneFilePath;
     }
 
-    /** [tag:offline_tune] Original MSQ path used for automatic offline-save on exit. */
-    public void setOfflineTunePath(String offlineTunePath) {
-        this.offlineTunePath = offlineTunePath;
+    /**
+     * [tag:offline_tune] Also the file an offline session saves to on exit. Shown in the title bar;
+     * File > Save Tune writes to it without asking.
+     */
+    public void setTuneFilePath(String tuneFilePath) {
+        this.tuneFilePath = tuneFilePath;
+        for (Runnable l : tuneFileListeners) l.run();
+    }
+
+    /** Notified (on the calling thread) whenever the current tune file changes. */
+    public void addTuneFileListener(Runnable listener) {
+        tuneFileListeners.add(listener);
     }
 
     /** [tag:offline_tune] Notified (on the calling thread) whenever offline mode is toggled. */

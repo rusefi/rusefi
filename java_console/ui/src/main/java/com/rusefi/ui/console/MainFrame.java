@@ -258,6 +258,7 @@ public class MainFrame {
 
     private JMenuItem loadTuneItem;
     private JMenuItem saveTuneItem;
+    private JMenuItem saveTuneAsItem;
     private JMenuItem openLogItem;
     /**
      * user experience overview at Autoupdate.java
@@ -374,6 +375,11 @@ public class MainFrame {
         saveTuneItem.setMnemonic(KeyEvent.VK_S);
         saveTuneItem.setEnabled(false);
         fileMenu.add(saveTuneItem);
+
+        saveTuneAsItem = new JMenuItem(LoadTuneHelper.SAVE_TUNE_AS_TEXT);
+        saveTuneAsItem.setMnemonic(KeyEvent.VK_A);
+        saveTuneAsItem.setEnabled(false);
+        fileMenu.add(saveTuneAsItem);
 
         fileMenu.addSeparator();
 
@@ -956,6 +962,7 @@ public class MainFrame {
         // [tag:offline_tune] Refresh the OFFLINE title when offline mode toggles (e.g. Load Tune while
         // disconnected) — otherwise the title would lag until the next connection event. #9730
         consoleUI.uiContext.addOfflineModeListener(o -> SwingUtilities.invokeLater(this::setTitle));
+        consoleUI.uiContext.addTuneFileListener(() -> SwingUtilities.invokeLater(this::setTitle));
 
         // Offer manual update whenever the launch-time silent update did not run - either because
         // the user preference is off or because the bundle hard-disables auto-update (#9775).
@@ -1057,7 +1064,7 @@ public class MainFrame {
         binaryLoggingMenu.refresh();
     }
 
-    public void setTuneActions(Action loadAction, Action saveAction) {
+    public void setTuneActions(Action loadAction, Action saveAction, Action saveAsAction) {
         loadTuneItem.setAction(loadAction);
         loadTuneItem.setIcon(loadMenuIcon("folder-open"));
         loadTuneItem.setText(LoadTuneHelper.LOAD_TUNE_TEXT);
@@ -1066,8 +1073,14 @@ public class MainFrame {
         saveTuneItem.setIcon(loadMenuIcon("floppy"));
         saveTuneItem.setText(LoadTuneHelper.SAVE_TUNE_TEXT);
         saveTuneItem.setMnemonic(KeyEvent.VK_S);
+        saveTuneItem.setToolTipText("Save to the current tune file, or choose one if there is none yet");
+        saveTuneAsItem.setAction(saveAsAction);
+        saveTuneAsItem.setText(LoadTuneHelper.SAVE_TUNE_AS_TEXT);
+        saveTuneAsItem.setMnemonic(KeyEvent.VK_A);
+        saveTuneAsItem.setToolTipText("Save the tune to a new file and keep working on that file");
         loadAction.addPropertyChangeListener(e -> refreshActionsAfterActionStateChange(e.getPropertyName()));
         saveAction.addPropertyChangeListener(e -> refreshActionsAfterActionStateChange(e.getPropertyName()));
+        saveAsAction.addPropertyChangeListener(e -> refreshActionsAfterActionStateChange(e.getPropertyName()));
         refreshFirmwareUpdateExclusion();
     }
 
@@ -1107,9 +1120,11 @@ public class MainFrame {
     private void refreshFirmwareUpdateExclusion() {
         Action loadAction = loadTuneItem.getAction();
         Action saveAction = saveTuneItem.getAction();
+        Action saveAsAction = saveTuneAsItem.getAction();
         boolean applicationActionsAllowed = !firmwareUpdateInProgress && !unsupportedEcuBlocking;
         loadTuneItem.setEnabled(applicationActionsAllowed && loadAction != null && loadAction.isEnabled());
         saveTuneItem.setEnabled(applicationActionsAllowed && saveAction != null && saveAction.isEnabled());
+        saveTuneAsItem.setEnabled(applicationActionsAllowed && saveAsAction != null && saveAsAction.isEnabled());
         updateSoftwareItem.setEnabled(applicationActionsAllowed && updateSoftwareAvailable);
         // DevicePane disables these tabs while flashing; a tab opened now would miss that
         toolsMenu.setEnabled(applicationActionsAllowed);
@@ -1159,10 +1174,26 @@ public class MainFrame {
             frameTitle = "DISCONNECTED " + consoleVersion;
             chips = java.util.Collections.singletonList("DISCONNECTED");
         }
+        String tuneFile = tuneFileLabel(consoleUI.uiContext.getTuneFilePath());
+        if (tuneFile != null && !Boolean.TRUE.equals(tabbedPane.tabbedPane.getClientProperty("isUpdating"))
+                && bootloaderMode == null) {
+            // first, so a narrow title bar drops the firmware and port labels before the file name
+            frameTitle = tuneFile + " - " + frameTitle;
+            chips = new java.util.ArrayList<>(chips);
+            chips.add(0, tuneFile);
+        }
         frame.getFrame().setTitle(frameTitle);
         if (titleBarPanel != null) {
             titleBarPanel.update(String.valueOf(Launcher.CONSOLE_VERSION), chips, frameTitle);
         }
+    }
+
+    /** "base.msq" for the title bar; null when no tune file is loaded. */
+    static String tuneFileLabel(String tuneFilePath) {
+        if (tuneFilePath == null || tuneFilePath.isEmpty()) {
+            return null;
+        }
+        return new java.io.File(tuneFilePath).getName();
     }
 
     private void showConnectionFailedDialog(String errorMessage) {

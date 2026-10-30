@@ -429,7 +429,7 @@ public class TuneManagementTab {
         if (result == null) {
             return;
         }
-        uiContext.setOfflineTunePath(path);
+        uiContext.setTuneFilePath(path);
 
         // Hand off to the splash, which disposes itself and opens the console on the shared uiContext
         // (keeping the scanner alive so a later ECU connect transitions this console online — no 2nd window).

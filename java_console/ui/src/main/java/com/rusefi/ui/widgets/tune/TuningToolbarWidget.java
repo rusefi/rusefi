@@ -64,6 +64,7 @@ public class TuningToolbarWidget {
 
     private AbstractAction loadTuneAction;
     private AbstractAction saveTuneAction;
+    private AbstractAction saveTuneAsAction;
     private final JFileChooser saveTuneChooser = createMsqFileChooser();
 
     private final Timer undoCommitTimer;
@@ -361,8 +362,8 @@ public class TuningToolbarWidget {
                                         // [tag:offline_tune] Loading a tune with no ECU attached is an offline session.
                                         if (loadedWhileDisconnected) {
                                             uiContext.setOfflineMode(true);
-                                            uiContext.setOfflineTunePath(path);
                                         }
+                                        uiContext.setTuneFilePath(path);
                                         String key = currentKey.get();
                                         right.update(key, targetIni, newImage);
                                         // Adopt the loaded tune as baseline (enables discard + refreshes state label).
@@ -420,9 +421,26 @@ public class TuningToolbarWidget {
                 saveTuneAndThen(right, null);
             }
         };
+        saveTuneAsAction = new AbstractAction(LoadTuneHelper.SAVE_TUNE_AS_TEXT) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveTuneAsAndThen(right, null);
+            }
+        };
     }
 
+    /** Saves to the current tune file without asking; asks for a file when there is none yet. */
     public void saveTuneAndThen(CalibrationDialogWidget right, Runnable onSuccess) {
+        String current = uiContext.getTuneFilePath();
+        if (current != null) {
+            saveTuneToPathAndThen(right, current, onSuccess);
+        } else {
+            saveTuneAsAndThen(right, onSuccess);
+        }
+    }
+
+    /** Asks for a file, starting at the current tune file, and makes the chosen file the current one. */
+    public void saveTuneAsAndThen(CalibrationDialogWidget right, Runnable onSuccess) {
         IniFileModel ini = uiContext.iniFileState.getIniFileModel();
         BinaryProtocol bp = uiContext.getBinaryProtocol();
         ConfigurationImage image = imageToSave(
@@ -435,7 +453,13 @@ public class TuningToolbarWidget {
             errorHandler.accept("No configuration loaded");
             return;
         }
-        TuneFileFolder.openIn(saveTuneChooser);
+        String current = uiContext.getTuneFilePath();
+        if (current != null) {
+            saveTuneChooser.setSelectedFile(new File(current));
+        } else {
+            saveTuneChooser.setSelectedFile(null);
+            TuneFileFolder.openIn(saveTuneChooser);
+        }
         if (saveTuneChooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
             return;
         }
@@ -444,6 +468,13 @@ public class TuningToolbarWidget {
         String path = selected.getAbsolutePath();
         if (!path.toLowerCase().endsWith(".msq")) {
             path += ".msq";
+        }
+        // JFileChooser does not ask before replacing a file; the current file is replaced by plain Save anyway
+        if (new File(path).exists() && !new File(path).equals(current == null ? null : new File(current))
+                && JOptionPane.showConfirmDialog(null, new File(path).getName() + " already exists. Replace it?",
+                LoadTuneHelper.SAVE_TUNE_AS_TEXT, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)
+                != JOptionPane.YES_OPTION) {
+            return;
         }
         saveTuneToPathAndThen(ini, image, path, onSuccess);
     }
@@ -470,9 +501,12 @@ public class TuningToolbarWidget {
         new Thread(() -> {
             try {
                 MsqFactory.valueOf(finalImage, ini).writeXmlFile(finalPath);
-                if (onSuccess != null) {
-                    SwingUtilities.invokeLater(onSuccess);
-                }
+                SwingUtilities.invokeLater(() -> {
+                    uiContext.setTuneFilePath(finalPath);
+                    if (onSuccess != null) {
+                        onSuccess.run();
+                    }
+                });
             } catch (Exception ex) {
                 SwingUtilities.invokeLater(() -> errorHandler.accept("Failed to save tune: " + ex.getMessage()));
             }
@@ -502,6 +536,10 @@ public class TuningToolbarWidget {
 
     public AbstractAction getSaveTuneAction() {
         return saveTuneAction;
+    }
+
+    public AbstractAction getSaveTuneAsAction() {
+        return saveTuneAsAction;
     }
 
     /**
