@@ -12,9 +12,13 @@ import com.rusefi.ui.widgets.JoinedButtons;
 import com.rusefi.ui.widgets.DetachedSensor;
 import com.rusefi.ui.widgets.GaugeMenuSearch;
 import com.rusefi.ui.widgets.SensorGauge;
+import com.rusefi.ui.widgets.tune.IndicatorStrip;
+import com.rusefi.ui.widgets.tune.IndicatorStripSettings;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
@@ -57,6 +61,7 @@ public class GaugesPanel {
     static final String SAVE_LAYOUT = "Save layout…";
     static final String LOAD_LAYOUT = "Load layout…";
     static final String RESET = "Reset layout…";
+    static final String INDICATORS = "Indicators";
 
     private final JPanel content = new JPanel(new BorderLayout());
     private final GaugesGrid gauges;
@@ -72,6 +77,7 @@ public class GaugesPanel {
     private final JMenu gridSizeMenu = new JMenu("Grid size");
     private final JMenuItem addGaugeItem = new JMenuItem("Add gauge…");
     private final JMenuItem editLayoutItem = new JMenuItem(EDIT_LAYOUT);
+    private final JMenu indicatorsMenu = new JMenu(INDICATORS);
     private final JButton editDashboardButton = new JButton(EDIT_DASHBOARD, new EditIcon());
     private final JButton doneEditingButton = new JButton(DONE_EDITING);
     private final JButton undoButton = new JButton(UNDO);
@@ -83,6 +89,7 @@ public class GaugesPanel {
     /** Tracked so we can call destroy() before replacing on grid resize. */
     private final List<GaugesGridElement> gaugeElements = new ArrayList<>();
     private final ISensorCentral.ListenerToken rpmDemandToken;
+    private final IndicatorStrip indicatorStrip;
     private RpmLabel rpmLabel;
     private boolean active;
 
@@ -94,6 +101,8 @@ public class GaugesPanel {
         rpmDemandToken = SensorCentral.getInstance().addListener(
             WellKnownGauges.RPMGauge.getOutputChannelName(), value -> { });
         rpmDemandToken.setActive(false);
+        indicatorStrip = new IndicatorStrip(() -> uiContext.iniFileState.getIniFileModel(),
+            uiContext.indicatorStripSettings);
 
         int rows = config.getIntProperty(GaugeLayout.ROWS, DEFAULT_ROWS);
         int columns = config.getIntProperty(GaugeLayout.COLUMNS, DEFAULT_COLUMNS);
@@ -107,7 +116,7 @@ public class GaugesPanel {
     @NotNull
     private JPanel createTopPanel() {
         // white toolbar with a divider below, matching the status strip at the bottom (WarningPanel)
-        JPanel upperPanel = new JPanel(new BorderLayout()) {
+        JPanel toolbar = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 Color background = UIManager.getColor("Console.Toolbar.background");
@@ -118,16 +127,27 @@ public class GaugesPanel {
                 g.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
             }
         };
+        toolbar.setLayout(new BoxLayout(toolbar, BoxLayout.Y_AXIS));
         // same right inset as the tab row above, so Edit dashboard stacks under Launch Wizard
-        upperPanel.setBorder(BorderFactory.createEmptyBorder(8, 0, 9,
-            JoinedButtons.ROW_END_INSET - JoinedButtons.ROW_GAP));
+        int rightInset = JoinedButtons.ROW_END_INSET - JoinedButtons.ROW_GAP;
+        toolbar.setBorder(BorderFactory.createEmptyBorder(8, 0, 5, rightInset));
+
+        JPanel commandRow = new JPanel(new BorderLayout());
+        commandRow.setOpaque(false);
+        commandRow.setBorder(BorderFactory.createEmptyBorder(0, 0, 4, 0));
         JPanel left = createLeftTopPanel();
         JPanel right = createRightTopPanel();
         left.setOpaque(false);
         right.setOpaque(false);
-        upperPanel.add(left, BorderLayout.CENTER);
-        upperPanel.add(right, BorderLayout.EAST);
-        return upperPanel;
+        commandRow.add(left, BorderLayout.CENTER);
+        commandRow.add(right, BorderLayout.EAST);
+        toolbar.add(commandRow);
+
+        // the indicator chips, under the command bar; the strip's 6px gap plus 2 lines them up with the RPM label
+        JComponent indicators = indicatorStrip.getContent();
+        indicators.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 0));
+        toolbar.add(indicators);
+        return toolbar;
     }
 
     @NotNull
@@ -193,6 +213,26 @@ public class GaugesPanel {
         editMenu.add(editLayoutItem);
         editMenu.addSeparator();
 
+        // the same menu as right-clicking the indicator strip, filled when opened since it lists the hidden chips
+        indicatorsMenu.setToolTipText("Show hidden indicators or reset their order; drag a chip to move it");
+        indicatorsMenu.addMenuListener(new MenuListener() {
+            @Override
+            public void menuSelected(MenuEvent e) {
+                indicatorsMenu.removeAll();
+                indicatorStrip.fillMenu(indicatorsMenu, null);
+            }
+
+            @Override
+            public void menuDeselected(MenuEvent e) {
+            }
+
+            @Override
+            public void menuCanceled(MenuEvent e) {
+            }
+        });
+        editMenu.add(indicatorsMenu);
+        editMenu.addSeparator();
+
         JMenuItem saveLayout = new JMenuItem(SAVE_LAYOUT);
         saveLayout.setToolTipText("Save the gauge layout and graph settings to a file");
         saveLayout.addActionListener(e -> chooseLayoutFile(true));
@@ -252,11 +292,16 @@ public class GaugesPanel {
 
     // Package-private so tests exercise the same file operations as the chooser.
     void saveLayout(Path file) throws IOException {
-        GaugeLayout.save(file, config);
+        GaugeLayout.save(file, config, uiContext.indicatorStripSettings);
     }
 
     void loadLayout(Path file) throws IOException {
         Node layout = GaugeLayout.load(file);
+        // the indicator strip travels with the layout but is kept apart from the gauges
+        Object indicators = layout.getConfig().remove(IndicatorStripSettings.NODE);
+        if (indicators instanceof Node) {
+            uiContext.indicatorStripSettings.replaceWith((Node) indicators);
+        }
         // Leave warning and command preferences intact; discard old, including hidden, slots.
         // A version 1 file has no free layout, so it returns to Grid.
         config.getConfig().keySet().removeIf(key -> key.matches("element_\\d+") || key.equals(GaugeLayout.MODE));
@@ -402,6 +447,11 @@ public class GaugesPanel {
         return menu;
     }
 
+    // Package-private so tests see the indicator strip under the command bar.
+    IndicatorStrip getIndicatorStrip() {
+        return indicatorStrip;
+    }
+
     // Package-private so tests drive the free layout and its editor.
     FreeGaugeArea getFreeArea() {
         return freeArea;
@@ -463,6 +513,7 @@ public class GaugesPanel {
     public void setActive(boolean active) {
         this.active = active;
         rpmDemandToken.setActive(active);
+        indicatorStrip.setActive(active);
         for (GaugesGridElement element : gaugeElements) {
             element.setActive(active);
         }
@@ -476,6 +527,7 @@ public class GaugesPanel {
         gaugeElements.clear();
         freeArea.destroy();
         rpmDemandToken.remove();
+        indicatorStrip.destroy();
         rpmLabel.destroy();
     }
 

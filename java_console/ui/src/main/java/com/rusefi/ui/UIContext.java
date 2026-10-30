@@ -6,7 +6,9 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.ini.IniFileState;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
+import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.sensor_logs.SensorLogger;
+import com.rusefi.ui.widgets.tune.IndicatorStripSettings;
 import com.rusefi.ui.wizard.WizardStepDescriptor;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,6 +63,8 @@ public class UIContext {
     public Supplier<JComponent> recordButtonFactory = () -> null;
 
     public IniFileState iniFileState = new IniFileState(this);
+    /** Order and hidden chips of the indicator strip, shared by the Gauges and Tuning tabs; ConsoleUI binds it to the saved preferences. */
+    public final IndicatorStripSettings indicatorStripSettings = new IndicatorStripSettings(new Node());
     public GaugesPanel.DetachedRepository DetachedRepositoryINSTANCE = new GaugesPanel.DetachedRepository(this);
 
     /** [tag:offline_tune] True when the console was opened in offline mode (no ECU connection, tune loaded from file). */
