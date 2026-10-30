@@ -10,13 +10,17 @@ import com.rusefi.core.ISensorHolder;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.SensorSubscription;
 import com.rusefi.io.ConnectionStatusLogic;
+import com.opensr5.ConfigurationImage;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.ui.UIContext;
+import com.rusefi.ui.widgets.tune.LiveValueTrace;
 import com.rusefi.ui.widgets.tune.TuningStyle;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.RoundRectangle2D;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -25,7 +29,9 @@ import static com.devexperts.logging.Logging.getLogging;
 
 /**
  * Compact text-only gauge showing channel title, value, and units.
- * Used in the Tuning view strip for always-visible live data.
+ * Used in the Tuning view strip for always-visible live data. Behind the text the card fills by
+ * where the value sits in the gauge's range and draws its last seconds as a faint line
+ * ({@link LiveValueTrace}), so oscillation shows at a glance.
  * Handles expression-based labels via SensorCentral resolved labels,
  * matching the pattern used by SensorGauge.
  */
@@ -33,15 +39,35 @@ public class TextGauge {
     private static final Logging log = getLogging(TextGauge.class);
     private static final String NO_CONNECTION = "---";
 
-    private final JPanel content = new JPanel(new BorderLayout(0, 0));
+    private final LiveValueTrace trace = new LiveValueTrace();
+    private final JPanel content = new JPanel(new BorderLayout(0, 0)) {
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            // below the title row, so title and units stay on the plain card; inside the 1 px card
+            // outline, which the border paints on top
+            int top = header.getY() + header.getHeight();
+            Graphics2D g2 = (Graphics2D) g.create();
+            try {
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.clip(new RoundRectangle2D.Double(1, 1, getWidth() - 2, getHeight() - 2,
+                    TuningStyle.ARC - 1, TuningStyle.ARC - 1));
+                trace.paint(g2, new Rectangle(1, top, getWidth() - 2, getHeight() - 1 - top), null, valueLabel.getForeground());
+            } finally {
+                g2.dispose();
+            }
+        }
+    };
     private final JLabel titleLabel = new JLabel();
     private final JLabel valueLabel = new JLabel();
     private final JLabel unitsLabel = new JLabel();
+    private final JPanel header = new JPanel(new BorderLayout());
 
     private ISensorCentral.ListenerToken valueToken;
     private SensorCentral.ResponseListenerToken responseToken;
     private final ConnectionStatusLogic.Listener connectionStatusListener;
     private boolean active;
+    private GaugeModel gaugeModel;
 
     public TextGauge(UIContext uiContext, String channelName, Consumer<String> onChannelChange) {
         TuningStyle.styleLiveValue(content, 3, 8);
@@ -62,7 +88,6 @@ public class TextGauge {
         unitsLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         unitsLabel.setBorder(BorderFactory.createEmptyBorder(0, 6, 0, 0));
 
-        JPanel header = new JPanel(new BorderLayout());
         header.setOpaque(false);
         header.add(titleLabel, BorderLayout.CENTER);
         header.add(unitsLabel, BorderLayout.EAST);
@@ -89,6 +114,8 @@ public class TextGauge {
                 SwingUtilities.invokeLater(() -> {
                     valueLabel.setText(NO_CONNECTION);
                     valueLabel.setForeground(TuningStyle.muted());
+                    trace.clear();
+                    content.repaint();
                 });
             }
         };
@@ -102,6 +129,18 @@ public class TextGauge {
         GaugeModel gaugeModel = (ini != null) ? ini.getGauge(gaugeName) : null;
 
         final String channel = (gaugeModel != null) ? gaugeModel.getChannel() : gaugeName;
+        this.gaugeModel = gaugeModel;
+        if (gaugeModel != null) {
+            BinaryProtocol bp = uiContext.getBinaryProtocol();
+            ConfigurationImage image = bp == null ? null : bp.getControllerConfiguration();
+            GaugeScale scale = GaugeScale.fromIni(gaugeModel, ini, image);
+            trace.setRange(scale.getMin(), scale.getMax());
+            trace.setZones(CircularGauge.Zones.of(scale));
+        } else {
+            trace.setRange(Double.NaN, Double.NaN);
+            trace.setZones(null);
+        }
+        content.repaint();
 
         // Handle dynamic string labels the same way SensorGauge does.
         boolean dynamicTitle = gaugeModel != null && gaugeModel.getTitleValue().isExpression()
@@ -162,8 +201,7 @@ public class TextGauge {
         valueToken = SensorCentral.getInstance().addListener(channel, value ->
             SwingUtilities.invokeLater(() -> {
                 if (ConnectionStatusLogic.INSTANCE.isConnected()) {
-                    valueLabel.setText(formatValue(value, gaugeModel));
-                    valueLabel.setForeground(TuningStyle.text());
+                    showValue(value, gaugeModel);
                 }
             })
         );
@@ -171,9 +209,30 @@ public class TextGauge {
 
         Double currentValue = SensorCentral.getInstance().getValue(channel);
         if (currentValue != null && ConnectionStatusLogic.INSTANCE.isConnected()) {
-            valueLabel.setText(formatValue(currentValue, gaugeModel));
-            valueLabel.setForeground(TuningStyle.text());
+            showValue(currentValue, gaugeModel);
         }
+    }
+
+    private void showValue(double value, GaugeModel gaugeModel) {
+        showValue(value, gaugeModel, System.currentTimeMillis());
+    }
+
+    private void showValue(double value, GaugeModel gaugeModel, long nowMs) {
+        this.gaugeModel = gaugeModel;
+        trace.add(value, nowMs);
+        valueLabel.setText(formatValue(value, gaugeModel));
+        valueLabel.setForeground(trace.textColor(TuningStyle.text()));
+        content.repaint();
+    }
+
+    /** Shows a reading taken at {@code nowMs}, as a live update would. */
+    void showValueForTests(double value, long nowMs) {
+        showValue(value, gaugeModel, nowMs);
+    }
+
+    /** Package-private so tests check what the card draws behind its text. */
+    LiveValueTrace getTraceForTests() {
+        return trace;
     }
 
     private static String formatValue(double value, GaugeModel gaugeModel) {

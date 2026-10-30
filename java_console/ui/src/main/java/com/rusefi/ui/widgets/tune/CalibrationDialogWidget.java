@@ -20,6 +20,7 @@ import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.widgets.CircularGauge;
+import com.rusefi.ui.widgets.GaugeScale;
 import com.rusefi.ui.laf.GradientTitleBorder;
 import com.rusefi.ui.util.ConstrainedBorderLayout;
 import com.rusefi.ui.util.TransparentPanels;
@@ -140,22 +141,18 @@ public class CalibrationDialogWidget {
     /** Tracks a readout value label for live update from SensorCentral. */
     private static class ReadoutLabelEntry {
         final JLabel titleLabel;
-        final JLabel valueLabel;
+        final LiveValueBar valueLabel;
         final String channel;
         final String units;
         final String title;
         final int valDigits;
         final boolean compact;
 
-        ReadoutLabelEntry(JLabel valueLabel, String channel, String units, int valDigits) {
-            this(valueLabel, channel, units, valDigits, false);
-        }
-
-        ReadoutLabelEntry(JLabel valueLabel, String channel, String units, int valDigits, boolean compact) {
+        ReadoutLabelEntry(LiveValueBar valueLabel, String channel, String units, int valDigits, boolean compact) {
             this(null, valueLabel, channel, null, units, valDigits, compact);
         }
 
-        ReadoutLabelEntry(JLabel titleLabel, JLabel valueLabel, String channel, String title,
+        ReadoutLabelEntry(JLabel titleLabel, LiveValueBar valueLabel, String channel, String title,
                           String units, int valDigits, boolean compact) {
             this.titleLabel = titleLabel;
             this.valueLabel = valueLabel;
@@ -646,8 +643,15 @@ public class CalibrationDialogWidget {
                                     ConfigurationImage ci) {
         JPanel row = CalibrationFieldFactory.createLabelRow(field);
         row.add(Box.createHorizontalStrut(10));
-        JLabel value = new JLabel("---");
+        LiveValueBar value = new LiveValueBar("---");
         value.setFont(value.getFont().deriveFont(Font.BOLD));
+        // runtimeValue has no range of its own; the bar uses a gauge on the same channel
+        GaugeModel gauge = ini.findGaugeByChannel(field.getKey());
+        if (gauge != null) {
+            GaugeScale scale = GaugeScale.fromIni(gauge, ini, ci);
+            value.setRange(scale.getMin(), scale.getMax());
+            value.setZones(CircularGauge.Zones.of(scale));
+        }
         row.add(value);
         CalibrationFieldFactory.fixRowHeight(row);
         // runtimeValue has no precision/units arguments; show up to three decimal places.
@@ -977,6 +981,7 @@ public class CalibrationDialogWidget {
                         String.format("%." + entry.valDigits + "f", val)) +
                     (!units.isEmpty() ? " " + units : "");
             entry.valueLabel.setText(text);
+            entry.valueLabel.setValue(val);
         }
         for (GaugeReadoutEntry entry : gaugeReadoutEntries) {
             double val = SensorCentral.getInstance().getValue(entry.channel);
@@ -1034,15 +1039,34 @@ public class CalibrationDialogWidget {
         titleLabel.setForeground(TuningStyle.muted());
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel valueLabel = new JLabel("---");
+        LiveValueBar valueLabel = new LiveValueBar("---");
         valueLabel.setFont(valueLabel.getFont().deriveFont(Font.BOLD, 13f));
         valueLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        applyReadoutScale(valueLabel, readout, gauge != null ? gauge : ini.findGaugeByChannel(channel), ini);
 
         cell.add(titleLabel);
         cell.add(valueLabel);
 
         readoutEntries.add(new ReadoutLabelEntry(titleLabel, valueLabel, channel, title, units, valDig, false));
         return cell;
+    }
+
+    /** The readout's own min/max and limits, else its gauge's; a plain label when neither gives a range. */
+    private void applyReadoutScale(LiveValueBar valueLabel, ReadoutModel readout, GaugeModel gauge, IniFileModel ini) {
+        if (readout.getMin() != null && readout.getMax() != null) {
+            valueLabel.setRange(readout.getMin(), readout.getMax());
+            valueLabel.setZones(CircularGauge.Zones.of(readout.getMin(), readout.getMax(),
+                orNaN(readout.getLowDanger()), orNaN(readout.getLowWarn()),
+                orNaN(readout.getHighWarn()), orNaN(readout.getHighDang())));
+        } else if (gauge != null) {
+            GaugeScale scale = GaugeScale.fromIni(gauge, ini, workingImage);
+            valueLabel.setRange(scale.getMin(), scale.getMax());
+            valueLabel.setZones(CircularGauge.Zones.of(scale));
+        }
+    }
+
+    private static double orNaN(Double value) {
+        return value == null ? Double.NaN : value;
     }
 
     private JComponent buildGaugeCell(GaugeModel gaugeModel) {

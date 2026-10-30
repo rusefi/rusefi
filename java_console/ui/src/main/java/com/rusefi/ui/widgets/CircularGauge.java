@@ -50,6 +50,7 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
     private double lowDangerThreshold;
     private double lowWarningThreshold;
     private double highWarningThreshold;
+    private Zones zones;
     private String title;
     private String units;
     // Sensor callbacks can run off the EDT. Publishing one immutable reading
@@ -116,56 +117,95 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
 
     /** Configuration/label setters are called on the EDT. */
     public void setHighDangerValue(double highDangerValue) {
-        if (!Double.isFinite(highDangerValue)) {
-            highDangerValue = maxValue;
-        }
-        // The dashboard stores its end-of-scale danger zone in whole percent.
-        int dangerPercent = (int) Math.max(0, Math.min(100,
-            (maxValue - highDangerValue) / (maxValue - minValue) * 100));
-        dangerThreshold = maxValue - dangerPercent / 100.0 * (maxValue - minValue);
+        dangerThreshold = Zones.dangerThreshold(minValue, maxValue, highDangerValue);
         updateZones();
         repaint();
     }
 
-    /**
-     * Orders the TS limits min <= lowDanger <= lowWarning <= highWarning <= highDanger <= max,
-     * so a malformed definition still draws non-overlapping zones. A missing limit leaves its
-     * zone empty.
-     */
     private void updateZones() {
-        highWarningThreshold = Double.isFinite(highWarningValue)
-            ? Math.max(minValue, Math.min(dangerThreshold, highWarningValue)) : dangerThreshold;
-        lowDangerThreshold = Double.isFinite(lowDangerValue)
-            ? Math.max(minValue, Math.min(highWarningThreshold, lowDangerValue)) : minValue;
-        lowWarningThreshold = Double.isFinite(lowWarningValue)
-            ? Math.max(lowDangerThreshold, Math.min(highWarningThreshold, lowWarningValue)) : lowDangerThreshold;
+        zones = new Zones(minValue, dangerThreshold, lowDangerValue, lowWarningValue, highWarningValue);
+        highWarningThreshold = zones.highWarning;
+        lowDangerThreshold = zones.lowDanger;
+        lowWarningThreshold = zones.lowWarning;
     }
 
-    enum Zone {NORMAL, WARNING, DANGER}
+    public enum Zone {NORMAL, WARNING, DANGER}
 
     /**
-     * High zones include their threshold, as the end-of-scale danger zone always has; low zones
-     * exclude it, so a limit equal to the minimum (common in the .ini) adds no zone. Readings
-     * below the minimum are not flagged: TS shows a disconnected 0 AFR or 0 C sensor
-     * temperature, both below their scales, on a normal dial.
+     * The warning and danger zones of a gauge scale, shared by the round gauge and the Tuning
+     * dialogs' live value bars so both flag a reading the same way.
      */
+    public static final class Zones {
+        private final double min;
+        private final double danger;
+        final double lowDanger;
+        final double lowWarning;
+        final double highWarning;
+
+        public static Zones of(GaugeScale scale) {
+            return of(scale.getMin(), scale.getMax(), scale.getLowDanger(), scale.getLowWarning(),
+                scale.getHighWarning(), scale.getHighDanger());
+        }
+
+        /** From TS limits; NaN leaves that limit's zone out. */
+        public static Zones of(double min, double max, double lowDanger, double lowWarning,
+                               double highWarning, double highDanger) {
+            return new Zones(min, dangerThreshold(min, max, highDanger), lowDanger, lowWarning, highWarning);
+        }
+
+        /** Without a danger value the zone starts at the maximum, in whole percent as the dashboard stores it. */
+        static double dangerThreshold(double min, double max, double highDanger) {
+            if (!Double.isFinite(highDanger)) {
+                highDanger = max;
+            }
+            int dangerPercent = (int) Math.max(0, Math.min(100, (max - highDanger) / (max - min) * 100));
+            return max - dangerPercent / 100.0 * (max - min);
+        }
+
+        /**
+         * Orders the TS limits min <= lowDanger <= lowWarning <= highWarning <= highDanger <= max,
+         * so a malformed definition still draws non-overlapping zones. A missing limit leaves its
+         * zone empty.
+         */
+        Zones(double min, double danger, double lowDangerValue, double lowWarningValue, double highWarningValue) {
+            this.min = min;
+            this.danger = danger;
+            highWarning = Double.isFinite(highWarningValue)
+                ? Math.max(min, Math.min(danger, highWarningValue)) : danger;
+            lowDanger = Double.isFinite(lowDangerValue)
+                ? Math.max(min, Math.min(highWarning, lowDangerValue)) : min;
+            lowWarning = Double.isFinite(lowWarningValue)
+                ? Math.max(lowDanger, Math.min(highWarning, lowWarningValue)) : lowDanger;
+        }
+
+        /**
+         * High zones include their threshold, as the end-of-scale danger zone always has; low zones
+         * exclude it, so a limit equal to the minimum (common in the .ini) adds no zone. Readings
+         * below the minimum are not flagged: TS shows a disconnected 0 AFR or 0 C sensor
+         * temperature, both below their scales, on a normal dial.
+         */
+        public Zone zoneOf(double value, double tolerance) {
+            if (!Double.isFinite(value)) {
+                return Zone.NORMAL;
+            }
+            if (value >= danger - tolerance) {
+                return Zone.DANGER;
+            }
+            if (value < min) {
+                return Zone.NORMAL;
+            }
+            if (value < lowDanger - tolerance) {
+                return Zone.DANGER;
+            }
+            if (value >= highWarning - tolerance || value < lowWarning - tolerance) {
+                return Zone.WARNING;
+            }
+            return Zone.NORMAL;
+        }
+    }
+
     Zone zoneOf(double value, double tolerance) {
-        if (!Double.isFinite(value)) {
-            return Zone.NORMAL;
-        }
-        if (value >= dangerThreshold - tolerance) {
-            return Zone.DANGER;
-        }
-        if (value < minValue) {
-            return Zone.NORMAL;
-        }
-        if (value < lowDangerThreshold - tolerance) {
-            return Zone.DANGER;
-        }
-        if (value >= highWarningThreshold - tolerance || value < lowWarningThreshold - tolerance) {
-            return Zone.WARNING;
-        }
-        return Zone.NORMAL;
+        return zones.zoneOf(value, tolerance);
     }
 
     Zone getZone() {
