@@ -293,9 +293,11 @@ public class TuningToolbarWidget {
                 if (firmwareUpdateInProgress) {
                     return;
                 }
+                TuneFileFolder.openIn(chooser);
                 if (chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) {
                     return;
                 }
+                TuneFileFolder.remember(chooser.getSelectedFile());
                 final String path = chooser.getSelectedFile().getAbsolutePath();
                 final String fileName = chooser.getSelectedFile().getName();
 
@@ -433,10 +435,12 @@ public class TuningToolbarWidget {
             errorHandler.accept("No configuration loaded");
             return;
         }
+        TuneFileFolder.openIn(saveTuneChooser);
         if (saveTuneChooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
             return;
         }
         File selected = saveTuneChooser.getSelectedFile();
+        TuneFileFolder.remember(selected);
         String path = selected.getAbsolutePath();
         if (!path.toLowerCase().endsWith(".msq")) {
             path += ".msq";

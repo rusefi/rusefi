@@ -19,6 +19,7 @@ import com.rusefi.tune_manifest.TuneManifestHelper;
 import com.rusefi.tune_manifest.TuneModel;
 import com.rusefi.ui.table.ButtonEditor;
 import com.rusefi.ui.table.ButtonRenderer;
+import com.rusefi.ui.widgets.tune.TuneFileFolder;
 import com.rusefi.ui.widgets.StatusPanel;
 import org.jetbrains.annotations.Nullable;
 import org.json.simple.parser.ParseException;
@@ -417,9 +418,11 @@ public class TuneManagementTab {
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         chooser.setFileFilter(new FileNameExtensionFilter("Tune files (.msq)", "msq"));
+        TuneFileFolder.openIn(chooser);
         if (chooser.showOpenDialog(totalContent) != JFileChooser.APPROVE_OPTION) {
             return;
         }
+        TuneFileFolder.remember(chooser.getSelectedFile());
 
         String path = chooser.getSelectedFile().getAbsolutePath();
         OfflineTuneLoader.Result result = OfflineTuneLoader.loadTuneFromFile(path, totalContent);
