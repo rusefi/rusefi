@@ -324,6 +324,32 @@ todo: spllit into smaller tests?
     }
 
     @Test
+    public void testDisabledNodesStayDisabledInSearchResults() throws FileNotFoundException {
+        UIContext uiContext = new UIContext();
+        String iniPath = "../../java_console/io/src/test/java/com/rusefi/io/pin_output_mode_with_and_without_dollar/test_data/rusefi_uaefi.ini";
+        IniFileModel model = IniFileReaderUtil.readIniFile(iniPath);
+        uiContext.iniFileState.setIniFileModelForTest(model);
+
+        MainMenuTreeWidget widget = new MainMenuTreeWidget(uiContext);
+        JTextField searchField = (JTextField) ((JPanel) widget.getContentPane().getComponent(0)).getComponent(0);
+        JTree tree = (JTree) ((JScrollPane) widget.getContentPane().getComponent(1)).getViewport().getView();
+        widget.refreshExpressions(new ConfigurationImage(new byte[model.getMetaInfo().getPageSize(0)]));
+
+        // search results are built from copies of the tree nodes
+        searchField.setText("Fuel trim cyl 5");
+        DefaultMutableTreeNode filteredRoot = (DefaultMutableTreeNode) tree.getModel().getRoot();
+        DefaultMutableTreeNode disabled = findNode(findNode(findNode(filteredRoot, "Fuel"), "Cylinder fuel trims"), "Fuel trim cyl 5");
+        assertNotNull(disabled);
+
+        Component rendered = tree.getCellRenderer().getTreeCellRendererComponent(
+            tree, disabled, false, false, true, 0, false);
+        assertEquals(UIManager.getColor("Label.disabledForeground"), rendered.getForeground(),
+            "a disabled item must stay greyed out in search results");
+        tree.setSelectionPaths(new TreePath[]{new TreePath(disabled.getPath())});
+        assertNull(tree.getSelectionPath(), "a disabled search result should not be selectable");
+    }
+
+    @Test
     public void testKeyboardNavigationSkipsUnavailableRows() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
             for (String blockedItem : Arrays.asList(
