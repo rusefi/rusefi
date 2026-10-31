@@ -58,9 +58,10 @@ class LLMTabSourcePreparationTest {
         edt(() -> {
             assertEquals(1, visible(JButton.class).size());
             assertEquals(1, visible(JProgressBar.class).size());
-            assertTrue(visible(JTextArea.class).isEmpty());
+            assertTrue(visible(JTextArea.class).stream().noneMatch(area -> area.getAccessibleContext().getAccessibleName() != null),
+                    "neither the transcript nor the message box is shown");
             assertTrue(visible(JComboBox.class).isEmpty());
-            assertTrue(visible(JLabel.class).stream().anyMatch(label -> label.getText().contains("source code gist")));
+            assertTrue(visible(JLabel.class).stream().anyMatch(label -> label.getText() != null && label.getText().contains("source code gist")));
             return null;
         });
         assertEquals(0, sources.downloads.get());
@@ -84,7 +85,9 @@ class LLMTabSourcePreparationTest {
         await(() -> button("Continue with ChatGPT") != null && button("Continue with ChatGPT").isEnabled());
         edt(() -> {
             assertNull(button("Start Download"));
-            assertFalse(visible(JTextArea.class).isEmpty());
+            assertTrue(visible(JLabel.class).stream().anyMatch(label -> "Ready".equals(label.getText())),
+                    "the knowledge step shows it is done");
+            assertNotNull(button("New conversation"), "the sidebar appears once the knowledge is there");
             return null;
         });
         assertTrue(Files.exists(directory.resolve("accounts/session.lock")));
@@ -97,40 +100,71 @@ class LLMTabSourcePreparationTest {
         assertEquals(0, sources.downloads.get());
     }
 
-    @Test void troubleshootingInputsAndButtonsUseConsoleToolbarStyle() throws Exception {
+    @Test void conversationPageUsesConsoleControlStyle() throws Exception {
         sources.cached = true;
-        open();
-        await(() -> button("Continue with ChatGPT") != null && button("Continue with ChatGPT").isEnabled());
+        seedExpiredAndReadyAccounts("ready-id");
+        UiTransport transport = new UiTransport();
+        open(transport, uri -> { throw new AssertionError("Startup must not launch a browser"); });
+        await(() -> transport.models.get() == 1 && button("Send") != null && button("Send").isEnabled());
         edt(() -> {
-            Font themeButtonFont = new JButton().getFont();
-            int styledButtons = 0;
-            for (String label : new String[]{"Continue with ChatGPT", "Sign out", "Cancel sign-in", "Send", "Stop",
-                    "New conversation", "Resume", "Delete session"}) {
-                JButton actual = button(label);
-                assertNotNull(actual, label);
-                if (!"Send".equals(label)) {
-                    // the primary Send button gets its bold font from the theme style class
-                    assertEquals(themeButtonFont, actual.getFont(), label + " font");
-                }
-                styledButtons++;
-            }
-            assertEquals(8, styledButtons);
-            assertEquals(JoinedButtons.HEIGHT, button("Send").getPreferredSize().height);
+            assertNull(button("Continue with ChatGPT"), "setup controls are hidden while chatting");
+            assertNull(button("Stop"), "Stop takes Send's place only while a request runs");
             List<?> combos = visible(JComboBox.class);
-            assertEquals(3, combos.size());
-            int[] intendedWidths = {320, 220, 360};
-            Font themeComboFont = new JComboBox<>().getFont();
-            for (int i = 0; i < combos.size(); i++) {
-                JComboBox<?> combo = (JComboBox<?>) combos.get(i);
-                assertEquals(themeComboFont, combo.getFont());
-                assertEquals(intendedWidths[i], combo.getPreferredSize().width);
-                assertEquals(JoinedButtons.HEIGHT, combo.getPreferredSize().height);
-            }
+            assertEquals(1, combos.size(), "only the model picker; accounts live in the account menu");
+            JComboBox<?> model = (JComboBox<?>) combos.get(0);
+            assertEquals(new JComboBox<>().getFont(), model.getFont());
+            assertEquals(220, model.getPreferredSize().width);
+            assertEquals(JoinedButtons.HEIGHT, model.getPreferredSize().height);
             JTextArea prompt = visible(JTextArea.class).stream().filter(area -> "Message to ChatGPT".equals(
                     area.getAccessibleContext().getAccessibleName())).findFirst().orElseThrow();
             assertEquals(new JTextArea().getFont(), prompt.getFont());
+            InputMap keys = prompt.getInputMap(JComponent.WHEN_FOCUSED);
+            assertEquals("send-prompt", keys.get(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER, 0)));
+            assertEquals(javax.swing.text.DefaultEditorKit.insertBreakAction, keys.get(KeyStroke.getKeyStroke(
+                    java.awt.event.KeyEvent.VK_ENTER, java.awt.event.InputEvent.SHIFT_DOWN_MASK)));
+            assertTrue(visible(JLabel.class).stream().anyMatch(label -> LLMTab.PRIVACY_NOTE.equals(label.getText())));
+            assertTrue(visible(JLabel.class).stream().anyMatch(label -> "ready@example.com".equals(label.getText())),
+                    "the account card shows the e-mail, not the generated connection name");
+            assertNotNull(menuItem("Add account..."));
+            assertTrue(menuItem("Sign out").isEnabled());
+            assertTrue(visible(JLabel.class).stream().anyMatch(label -> label.getText() != null
+                    && label.getText().startsWith("No ECU connected")));
             return null;
         });
+        Path log = directory.resolve("cruise.msl");
+        Files.write(log, "Time\tRPM\n0\t850\n".getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        Path binary = directory.resolve("log.mlg");
+        Files.write(binary, new byte[]{'M', 'L', 0, 1});
+        edt(() -> {
+            assertNotNull(visible(JButton.class).stream().filter(b -> "Attach files".equals(
+                    b.getAccessibleContext().getAccessibleName())).findFirst().orElse(null));
+            assertTrue(visible(AttachmentBar.class).isEmpty(), "no attachment strip until something is attached");
+            tab.attachFiles(java.util.Arrays.asList(log, binary));
+            return null;
+        });
+        await(() -> tab.attachmentsForTest().pending().size() == 1
+                && tab.attachmentsForTest().noteForTest().contains(".msl or .csv export"));
+        edt(() -> {
+            assertTrue(visible(JLabel.class).stream().anyMatch(label -> "cruise.msl".equals(label.getText())),
+                    "the attached file shows as a chip");
+            assertNotNull(visible(JButton.class).stream().filter(b -> "Remove cruise.msl".equals(
+                    b.getAccessibleContext().getAccessibleName())).findFirst().orElse(null));
+            return null;
+        });
+        try {
+            com.rusefi.io.ConnectionStatusLogic.INSTANCE.setValue(com.rusefi.io.ConnectionStatusValue.CONNECTED);
+            await(() -> visible(JLabel.class).stream().anyMatch(label -> label.getText() != null
+                    && label.getText().startsWith("ECU connected")));
+        } finally {
+            com.rusefi.io.ConnectionStatusLogic.INSTANCE.setValue(com.rusefi.io.ConnectionStatusValue.NOT_CONNECTED);
+        }
+    }
+
+    @Test void relativeTimesNameTodayAndYesterday() {
+        long now = System.currentTimeMillis();
+        assertTrue(LLMTab.relativeTime(now).startsWith("Today, "));
+        assertTrue(LLMTab.relativeTime(now - TimeUnit.DAYS.toMillis(1)).startsWith("Yesterday, "));
+        assertFalse(LLMTab.relativeTime(now - TimeUnit.DAYS.toMillis(400)).contains(","));
     }
 
     @Test void firstRegistrationOffersContinueInsteadOfDuplicateAddAccount() throws Exception {
@@ -138,7 +172,7 @@ class LLMTabSourcePreparationTest {
         open();
         await(() -> button("Continue with ChatGPT") != null && button("Continue with ChatGPT").isEnabled());
         edt(() -> {
-            assertNull(button("Add account"));
+            assertNull(button("Use another account"));
             return null;
         });
         assertTrue(Files.exists(directory.resolve("accounts/session.lock")));
@@ -149,11 +183,10 @@ class LLMTabSourcePreparationTest {
         seedExpiredAndReadyAccounts("ready-id");
         UiTransport transport = new UiTransport();
         open(transport, uri -> { throw new AssertionError("Startup must not launch a browser"); });
-        await(() -> transport.models.get() == 1 && button("Add account") != null && button("Add account").isEnabled());
+        await(() -> transport.models.get() == 1 && button("Send") != null);
         edt(() -> {
-            @SuppressWarnings("unchecked") JComboBox<ChatGptClient.Account> picker = (JComboBox<ChatGptClient.Account>) visible(JComboBox.class).get(0);
-            assertEquals("ready-id", ((ChatGptClient.Account) picker.getSelectedItem()).id);
-            assertFalse(button("Continue with ChatGPT").isEnabled());
+            assertEquals("ready-id", tab.selectedAccountForTest().id);
+            assertNull(button("Continue with ChatGPT"), "a ready account goes straight to the conversation");
             return null;
         });
     }
@@ -171,19 +204,25 @@ class LLMTabSourcePreparationTest {
         saved.save(session);
         UiTransport transport = new UiTransport();
         open(transport, uri -> { throw new AssertionError("Resume must not launch a browser"); });
-        await(() -> transport.models.get() == 1 && visible(JComboBox.class).size() == 3
-                && ((JComboBox<?>) visible(JComboBox.class).get(2)).getItemCount() == 1
-                && button("Resume") != null);
+        await(() -> transport.models.get() == 1 && tab.conversationsForTest().getModel().getSize() == 1
+                && tab.conversationsForTest().isEnabled());
         edt(() -> {
-            JComboBox<?> recent = (JComboBox<?>) visible(JComboBox.class).get(2);
-            recent.setSelectedIndex(0);
-            button("Resume").doClick();
+            LLMTab.ConversationList list = tab.conversationsForTest();
+            list.setSelectedIndex(0);
+            list.getActionMap().get("open-conversation").actionPerformed(null);
             return null;
         });
         await(() -> visible(JTextArea.class).stream().anyMatch(area -> area.getText().contains("Check voltage.")));
         edt(() -> {
+            assertTrue(visible(JLabel.class).stream().anyMatch(label -> "Why did RPM drop?".equals(label.getText())),
+                    "the header names the open conversation");
+            assertEquals(0, tab.conversationsForTest().getSelectedIndex(), "the open conversation is highlighted");
+            assertTrue(button("Export case").isEnabled(), "a conversation with a finished turn can be exported");
             button("New conversation").doClick();
-            assertEquals(1, ((JComboBox<?>) visible(JComboBox.class).get(2)).getItemCount());
+            assertFalse(button("Export case").isEnabled(), "a new conversation has nothing to export yet");
+            assertEquals(1, tab.conversationsForTest().getModel().getSize());
+            assertEquals(-1, tab.conversationsForTest().getSelectedIndex());
+            assertTrue(visible(JLabel.class).stream().anyMatch(label -> "New conversation".equals(label.getText())));
             return null;
         });
         assertEquals(history, saved.load("ready-id", session.id).history);
@@ -194,10 +233,9 @@ class LLMTabSourcePreparationTest {
         seedExpiredAndReadyAccounts("expired-id");
         UiTransport transport = new UiTransport();
         open(transport, uri -> { throw new AssertionError("Startup must not launch a browser"); });
-        await(() -> transport.models.get() == 1 && button("Add account") != null && button("Add account").isEnabled());
+        await(() -> transport.models.get() == 1 && button("Send") != null);
         edt(() -> {
-            @SuppressWarnings("unchecked") JComboBox<ChatGptClient.Account> picker = (JComboBox<ChatGptClient.Account>) visible(JComboBox.class).get(0);
-            assertEquals("ready-first", ((ChatGptClient.Account) picker.getSelectedItem()).id);
+            assertEquals("ready-first", tab.selectedAccountForTest().id);
             return null;
         });
     }
@@ -221,18 +259,20 @@ class LLMTabSourcePreparationTest {
         UiTransport transport = new UiTransport();
         open(transport, uri -> { browserRequested.countDown(); return true; });
         // Account-store startup briefly enables controls before queuing the initial model load.
-        await(() -> transport.models.get() == 1 && button("Add account") != null && button("Add account").isEnabled());
-        edt(() -> { button("Add account").doClick(); return null; });
+        await(() -> transport.models.get() == 1 && menuItem("Add account...").isEnabled());
+        edt(() -> { menuItem("Add account...").doClick(); return null; });
         assertTrue(browserRequested.await(5, TimeUnit.SECONDS));
         await(() -> button("Cancel sign-in") != null && button("Cancel sign-in").isEnabled());
-        edt(() -> { button("Cancel sign-in").doClick(); return null; });
-        await(() -> button("Add account") != null && button("Add account").isEnabled()
-                && button("Cancel sign-in") != null && !button("Cancel sign-in").isEnabled());
         edt(() -> {
-            @SuppressWarnings("unchecked") JComboBox<ChatGptClient.Account> picker = (JComboBox<ChatGptClient.Account>) visible(JComboBox.class).get(0);
-            assertEquals("ready-id", ((ChatGptClient.Account) picker.getSelectedItem()).id);
-            assertEquals(3, picker.getItemCount());
-            assertFalse(button("Continue with ChatGPT").isEnabled());
+            assertNull(button("Send"), "the sign-in card replaces the conversation while signing in");
+            button("Cancel sign-in").doClick();
+            return null;
+        });
+        await(() -> button("Send") != null && button("Cancel sign-in") == null && menuItem("Add account...").isEnabled());
+        edt(() -> {
+            assertEquals("ready-id", tab.selectedAccountForTest().id);
+            assertEquals(3, accountItems());
+            assertNull(button("Continue with ChatGPT"));
             return null;
         });
     }
@@ -245,6 +285,12 @@ class LLMTabSourcePreparationTest {
         await(() -> button("Continue with ChatGPT") != null && button("Continue with ChatGPT").isEnabled());
         edt(() -> { button("Continue with ChatGPT").doClick(); return null; });
         assertTrue(fallback.shown.await(5, TimeUnit.SECONDS));
+        await(() -> visible(JTextField.class).stream().anyMatch(field -> field.getText().equals(fallback.uri.get().toString())));
+        edt(() -> {
+            assertNotNull(button("Cancel sign-in"), "the sign-in card offers the link and a way out");
+            assertTrue(button("Copy").isEnabled());
+            return null;
+        });
         fallback.onCancel.get().run();
         await(() -> button("Continue with ChatGPT") != null && button("Continue with ChatGPT").isEnabled());
         assertTrue(fallback.handle.disposed);
@@ -279,7 +325,7 @@ class LLMTabSourcePreparationTest {
         open();
         start();
         await(() -> button("Start Download") != null && button("Start Download").isEnabled()
-                && visible(JLabel.class).stream().anyMatch(label -> label.getText().contains("Network unavailable")));
+                && visible(JLabel.class).stream().anyMatch(label -> label.getText() != null && label.getText().contains("Network unavailable")));
         assertFalse(Files.exists(directory.resolve("accounts")));
         sources.failDownload = false;
         start();
@@ -332,13 +378,27 @@ class LLMTabSourcePreparationTest {
     private JButton button(String text) {
         return visible(JButton.class).stream().filter(button -> text.equals(button.getText())).findFirst().orElse(null);
     }
+    private JMenuItem menuItem(String text) {
+        for (Component item : tab.buildAccountMenu().getComponents()) {
+            if (item instanceof JMenuItem && text.equals(((JMenuItem) item).getText())) { return (JMenuItem) item; }
+        }
+        return null;
+    }
+    private int accountItems() {
+        int count = 0;
+        for (Component item : tab.buildAccountMenu().getComponents()) {
+            if (item instanceof JRadioButtonMenuItem) { count++; }
+        }
+        return count;
+    }
     private <T> List<T> visible(Class<T> type) {
         List<T> result = new ArrayList<>();
         collect(tab.getContent(), type, result);
         return result;
     }
     private static <T> void collect(Component component, Class<T> type, List<T> result) {
-        if (!component.isVisible()) { return; }
+        // scroll bars bring arrow buttons of their own
+        if (!component.isVisible() || component instanceof JScrollBar) { return; }
         if (type.isInstance(component)) { result.add(type.cast(component)); }
         if (component instanceof Container) {
             for (Component child : ((Container) component).getComponents()) { collect(child, type, result); }
@@ -406,9 +466,11 @@ class LLMTabSourcePreparationTest {
     private static final class FakeFallbackDialog implements LLMTab.FallbackDialogFactory {
         final CountDownLatch shown = new CountDownLatch(1);
         final AtomicReference<Runnable> onCancel = new AtomicReference<>();
+        final AtomicReference<URI> uri = new AtomicReference<>();
         final FakeDialogHandle handle = new FakeDialogHandle();
         @Override public LLMTab.AuthDialogHandle show(URI uri, Runnable onCancel) {
             this.onCancel.set(onCancel);
+            this.uri.set(uri);
             shown.countDown();
             return handle;
         }
