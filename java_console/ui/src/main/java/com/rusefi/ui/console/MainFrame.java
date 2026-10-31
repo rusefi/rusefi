@@ -432,7 +432,7 @@ public class MainFrame {
 
         binaryLoggingMenu = new BinaryLoggingMenu(consoleUI.uiContext, frame.getFrame(),
                 loadMenuIcon("player-play"), loadMenuIcon("player-stop"), loadMenuIcon("view"),
-                getConfig().getRoot().getChild("binary_logging"));
+                getConfig().getRoot().getChild("binary_logging"), LoggingProfiles.defaultFolder());
         menuBar.add(binaryLoggingMenu.getMenu());
         // the tabs' status strips each get a Start Data Logging / Stop Logging button and the logging profile
         // choice, driven by this menu

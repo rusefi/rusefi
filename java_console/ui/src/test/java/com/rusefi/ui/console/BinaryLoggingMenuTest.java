@@ -36,7 +36,7 @@ class BinaryLoggingMenuTest {
                 ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
                 UIContext context = mock(UIContext.class);
                 context.sensorLogger = mock(SensorLogger.class);
-                BinaryLoggingMenu logging = new BinaryLoggingMenu(context, null, null, null, null, new Node());
+                BinaryLoggingMenu logging = new BinaryLoggingMenu(context, null, null, null, null, new Node(), null);
                 JMenuItem start = logging.startItem();
                 JMenuItem stop = logging.stopItem();
                 KeyStroke toggle = KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK);
@@ -84,10 +84,10 @@ class BinaryLoggingMenuTest {
             when(context.sensorLogger.start(eq(recording), isNull(), any())).thenReturn(true);
             // the console config node outlives the menu, like the saved config across restarts
             Node settings = new Node();
-            BinaryLoggingMenu beforeRestart = new BinaryLoggingMenu(context, null, null, null, null, settings);
+            BinaryLoggingMenu beforeRestart = new BinaryLoggingMenu(context, null, null, null, null, settings, null);
             beforeRestart.start(recording, null);
 
-            BinaryLoggingMenu afterRestart = new BinaryLoggingMenu(context, null, null, null, null, settings);
+            BinaryLoggingMenu afterRestart = new BinaryLoggingMenu(context, null, null, null, null, settings, null);
             List<File> viewed = new ArrayList<>();
             afterRestart.setViewLogAction(viewed::add);
             assertEquals(recording.getAbsoluteFile(), afterRestart.lastLog());
@@ -105,7 +105,7 @@ class BinaryLoggingMenuTest {
             context.sensorLogger = mock(SensorLogger.class);
             when(context.sensorLogger.start(eq(recording), isNull(), any())).thenReturn(true);
             when(context.sensorLogger.getLastRecordingSeconds()).thenReturn(12.5);
-            BinaryLoggingMenu logging = new BinaryLoggingMenu(context, null, null, null, null, new Node());
+            BinaryLoggingMenu logging = new BinaryLoggingMenu(context, null, null, null, null, new Node(), null);
             List<String> stopped = new ArrayList<>();
             logging.addRecordingStoppedListener((file, seconds) -> stopped.add(file.getName() + " " + seconds));
 
@@ -126,7 +126,7 @@ class BinaryLoggingMenuTest {
         SwingUtilities.invokeAndWait(() -> {
             UIContext context = mock(UIContext.class);
             context.sensorLogger = mock(SensorLogger.class);
-            BinaryLoggingMenu logging = new BinaryLoggingMenu(context, null, null, null, null, settings);
+            BinaryLoggingMenu logging = new BinaryLoggingMenu(context, null, null, null, null, settings, null);
             logging.setViewLogAction(file -> {
             });
             assertFalse(logging.viewLastItem().isEnabled());
@@ -140,7 +140,7 @@ class BinaryLoggingMenuTest {
             UIContext context = mock(UIContext.class);
             context.sensorLogger = mock(SensorLogger.class);
             when(context.sensorLogger.start(eq(recording), isNull(), any())).thenReturn(true);
-            BinaryLoggingMenu logging = new BinaryLoggingMenu(context, null, null, null, null, new Node());
+            BinaryLoggingMenu logging = new BinaryLoggingMenu(context, null, null, null, null, new Node(), null);
             JMenuItem viewLast = logging.viewLastItem();
             List<File> viewed = new ArrayList<>();
 

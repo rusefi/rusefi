@@ -63,7 +63,7 @@ class LoggingProfilesEditorTest {
 
     @Test
     void opensOnTheRecordingProfileWithItsRecommendedSignals() throws Exception {
-        LoggingProfiles profiles = new LoggingProfiles(new Node());
+        LoggingProfiles profiles = new LoggingProfiles(new Node(), null);
         profiles.select(LoggingProfile.TRIGGER_ID);
         LoggingProfilesEditor editor = editor(profiles, ini());
         assertEquals("Trigger", editor.title.getText());
@@ -80,7 +80,7 @@ class LoggingProfilesEditorTest {
 
     @Test
     void removedRecommendedSignalsCanBeRestoredOrAllChangesReset() throws Exception {
-        LoggingProfiles profiles = new LoggingProfiles(new Node());
+        LoggingProfiles profiles = new LoggingProfiles(new Node(), null);
         List<String> told = new ArrayList<>();
         profiles.addListener(() -> told.add("changed"));
         LoggingProfilesEditor editor = editor(profiles, ini());
@@ -107,7 +107,7 @@ class LoggingProfilesEditorTest {
 
     @Test
     void fullIsReadOnlyAndDuplicatesIntoAnEditableProfile() throws Exception {
-        LoggingProfiles profiles = new LoggingProfiles(new Node());
+        LoggingProfiles profiles = new LoggingProfiles(new Node(), null);
         IniFileModel ini = ini();
         LoggingProfilesEditor editor = editor(profiles, ini);
         assertEquals("Full", editor.title.getText());
@@ -133,7 +133,7 @@ class LoggingProfilesEditorTest {
 
     @Test
     void aNewProfileStartsEmptyAndCanBeRenamedAndDeleted() throws Exception {
-        LoggingProfiles profiles = new LoggingProfiles(new Node());
+        LoggingProfiles profiles = new LoggingProfiles(new Node(), null);
         LoggingProfilesEditor editor = editor(profiles, ini());
         editor.namePrompt = (title, initial) -> initial;
         editor.newButton.doClick();
@@ -166,7 +166,7 @@ class LoggingProfilesEditorTest {
 
     @Test
     void groupsStartClosedAndTheTotalIsShownAboveThem() throws Exception {
-        LoggingProfiles profiles = new LoggingProfiles(new Node());
+        LoggingProfiles profiles = new LoggingProfiles(new Node(), null);
         profiles.select(LoggingProfile.IDLE_ID);
         LoggingProfilesEditor editor = editor(profiles, ini());
         assertEquals(Arrays.asList("GROUP Sensors [4]", "GROUP Idle [2]", "GROUP Boost [1]",
@@ -189,7 +189,7 @@ class LoggingProfilesEditorTest {
 
     @Test
     void withoutTheIniNothingCanBeAdded() {
-        LoggingProfiles profiles = new LoggingProfiles(new Node());
+        LoggingProfiles profiles = new LoggingProfiles(new Node(), null);
         profiles.select(LoggingProfile.IDLE_ID);
         LoggingProfilesEditor editor = editor(profiles, null);
         assertTrue(editor.addModel.isEmpty());

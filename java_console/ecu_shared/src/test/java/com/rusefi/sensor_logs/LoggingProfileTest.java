@@ -71,7 +71,7 @@ class LoggingProfileTest {
 
     @Test
     void recommendedSetsComeFromTheIniCategoryPlusContextInLogOrder() {
-        LoggingProfiles profiles = new LoggingProfiles(new Node());
+        LoggingProfiles profiles = new LoggingProfiles(new Node(), null);
         assertEquals(Arrays.asList("RPM", "Trigger Error Counter", "MAP", "VBatt"),
                 recorded(profiles.get(LoggingProfile.TRIGGER_ID)));
         assertEquals(Arrays.asList("RPM", "Idle: Position", "MAP", "CLT", "VBatt", "Idle: Target RPM"),
@@ -82,7 +82,7 @@ class LoggingProfileTest {
 
     @Test
     void editsToARecommendedProfileAreKeptAsChanges() {
-        LoggingProfile trigger = new LoggingProfiles(new Node()).get(LoggingProfile.TRIGGER_ID);
+        LoggingProfile trigger = new LoggingProfiles(new Node(), null).get(LoggingProfile.TRIGGER_ID);
         assertFalse(trigger.isEdited());
 
         trigger.remove("VBatt", ini);
@@ -104,7 +104,7 @@ class LoggingProfileTest {
 
     @Test
     void fullCannotBeEditedAndCustomStartsEmpty() {
-        LoggingProfiles profiles = new LoggingProfiles(new Node());
+        LoggingProfiles profiles = new LoggingProfiles(new Node(), null);
         LoggingProfile full = profiles.get(LoggingProfile.FULL_ID);
         full.remove("MAPValue", ini);
         assertEquals(8, recorded(full).size());
@@ -120,7 +120,7 @@ class LoggingProfileTest {
 
     @Test
     void duplicatingFullStartsFromEverything() {
-        LoggingProfiles profiles = new LoggingProfiles(new Node());
+        LoggingProfiles profiles = new LoggingProfiles(new Node(), null);
         LoggingProfile copy = profiles.duplicate(profiles.get(LoggingProfile.FULL_ID), "Almost all", ini);
         assertEquals(LoggingProfile.Kind.CUSTOM, copy.getKind());
         copy.remove("coolant", ini);
@@ -129,7 +129,7 @@ class LoggingProfileTest {
 
     @Test
     void channelsTheIniLacksAreSkipped() {
-        LoggingProfile custom = new LoggingProfiles(new Node()).create("Old ECU");
+        LoggingProfile custom = new LoggingProfiles(new Node(), null).create("Old ECU");
         custom.add("noSuchChannel");
         assertEquals(Arrays.asList("RPM"), recorded(custom));
     }
@@ -137,7 +137,7 @@ class LoggingProfileTest {
     @Test
     void profilesAndTheChoiceSurviveARestart() {
         Node node = new Node();
-        LoggingProfiles profiles = new LoggingProfiles(node);
+        LoggingProfiles profiles = new LoggingProfiles(node, tempDir.toFile());
         assertSame(profiles.get(LoggingProfile.FULL_ID), profiles.selected(), "Full until chosen otherwise");
         LoggingProfile trigger = profiles.get(LoggingProfile.TRIGGER_ID);
         trigger.remove("VBatt", ini);
@@ -146,7 +146,7 @@ class LoggingProfileTest {
         custom.add("MAPValue");
         profiles.select(custom.getId());
 
-        LoggingProfiles restarted = new LoggingProfiles(node);
+        LoggingProfiles restarted = new LoggingProfiles(node, tempDir.toFile());
         assertEquals("Boost run", restarted.selected().getName());
         assertEquals(Arrays.asList("RPM", "MAP"), recorded(restarted.selected()));
         assertEquals(Arrays.asList("RPM", "Trigger Error Counter", "MAP", "Boost: duty"),
@@ -156,7 +156,7 @@ class LoggingProfileTest {
     @Test
     void deletingTheChosenProfileFallsBackToFull() {
         Node node = new Node();
-        LoggingProfiles profiles = new LoggingProfiles(node);
+        LoggingProfiles profiles = new LoggingProfiles(node, tempDir.toFile());
         LoggingProfile custom = profiles.create("Short");
         profiles.select(custom.getId());
         profiles.delete(LoggingProfile.TRIGGER_ID);
@@ -164,8 +164,77 @@ class LoggingProfileTest {
 
         profiles.delete(custom.getId());
         assertEquals(LoggingProfile.FULL_ID, profiles.selected().getId());
-        LoggingProfiles restarted = new LoggingProfiles(node);
+        LoggingProfiles restarted = new LoggingProfiles(node, tempDir.toFile());
         assertNull(restarted.get(custom.getId()));
         assertEquals(3, restarted.list().size());
+    }
+
+    @Test
+    void ownProfilesAreOneFileEachNamedAfterTheProfile() throws Exception {
+        Path folder = tempDir.resolve("logging_profiles");
+        LoggingProfiles profiles = new LoggingProfiles(new Node(), folder.toFile());
+        LoggingProfile custom = profiles.create("Boost run");
+        custom.add("MAPValue");
+        custom.add("boostDuty");
+        profiles.save();
+
+        Path file = folder.resolve("Boost run.txt");
+        assertEquals(Arrays.asList("# rusEFI logging profile: one .ini output channel per line", "boostDuty", "MAPValue"),
+                Files.readAllLines(file));
+        assertFalse(Files.exists(tempDir.resolve(LoggingProfile.TRIGGER_ID + ".txt")), "built-in profiles stay in the config");
+
+        profiles.rename(custom, "boost Run 2");
+        assertFalse(Files.exists(file), "renaming moves the file");
+        assertTrue(Files.exists(folder.resolve("boost Run 2.txt")));
+
+        profiles.delete(custom.getId());
+        assertFalse(Files.exists(folder.resolve("boost Run 2.txt")), "deleting removes the file");
+    }
+
+    @Test
+    void aSharedFileDroppedIntoTheFolderIsAProfile() throws Exception {
+        Path folder = Files.createDirectories(tempDir.resolve("logging_profiles"));
+        Files.write(folder.resolve("From a friend.txt"), Arrays.asList("# shared", "", "  MAPValue ", "coolant"));
+        Files.write(folder.resolve("notes.md"), Arrays.asList("MAPValue"));
+
+        LoggingProfiles profiles = new LoggingProfiles(new Node(), folder.toFile());
+        assertEquals(4, profiles.list().size(), "only .txt files are profiles");
+        LoggingProfile shared = profiles.list().get(3);
+        assertEquals("From a friend", shared.getName());
+        assertEquals(Arrays.asList("RPM", "MAP", "CLT"), recorded(shared));
+    }
+
+    @Test
+    void profilesKeptInTheConfigByOlderConsolesMoveToFiles() throws Exception {
+        Node node = new Node();
+        node.setProperty(LoggingProfiles.CUSTOM, "custom1,custom2");
+        node.setProperty(LoggingProfiles.SELECTED, "custom2");
+        node.getChild("custom1").setProperty(LoggingProfiles.NAME, "Idle tune");
+        node.getChild("custom1").setProperty(LoggingProfiles.ADDED, "coolant");
+        node.getChild("custom2").setProperty(LoggingProfiles.NAME, "Boost/MAP");
+        node.getChild("custom2").setProperty(LoggingProfiles.ADDED, "MAPValue,boostDuty");
+        Path folder = tempDir.resolve("logging_profiles");
+
+        LoggingProfiles profiles = new LoggingProfiles(node, folder.toFile());
+        assertEquals("Boost_MAP", profiles.selected().getName(), "a name a file can't hold is cleaned up");
+        assertEquals(Arrays.asList("RPM", "MAP", "Boost: duty"), recorded(profiles.selected()));
+        assertTrue(Files.exists(folder.resolve("Idle tune.txt")));
+        assertTrue(Files.exists(folder.resolve("Boost_MAP.txt")));
+        assertNull(node.getConfig().get(LoggingProfiles.CUSTOM));
+        assertNull(node.getConfig().get("custom1"));
+
+        LoggingProfiles restarted = new LoggingProfiles(node, folder.toFile());
+        assertEquals(5, restarted.list().size(), "moved once, not again");
+        assertEquals("Boost_MAP", restarted.selected().getName());
+    }
+
+    @Test
+    void namesMustWorkAsFileNames() {
+        LoggingProfiles profiles = new LoggingProfiles(new Node(), null);
+        assertTrue(profiles.problem("a/b").contains("can't contain"));
+        assertTrue(profiles.problem("what?").contains("can't contain"));
+        assertTrue(profiles.problem(".hidden").contains("dot"));
+        assertTrue(profiles.problem("trigger").contains("already"));
+        assertNull(profiles.problem("Track day 2"));
     }
 }

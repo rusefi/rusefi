@@ -55,7 +55,7 @@ class RecordButtonTest {
     }
 
     private static BinaryLoggingMenu menu(UIContext context) {
-        BinaryLoggingMenu logging = new BinaryLoggingMenu(context, null, null, null, null, new Node());
+        BinaryLoggingMenu logging = new BinaryLoggingMenu(context, null, null, null, null, new Node(), null);
         logging.saveTuneItem().setSelected(false);
         return logging;
     }
@@ -148,7 +148,7 @@ class RecordButtonTest {
     void loggingMenuShowsAndHidesTheButtonAndRemembersIt() throws Exception {
         withConnection(ConnectionStatusValue.CONNECTED, () -> {
             Node settings = new Node();
-            BinaryLoggingMenu logging = new BinaryLoggingMenu(context(), null, null, null, null, settings);
+            BinaryLoggingMenu logging = new BinaryLoggingMenu(context(), null, null, null, null, settings, null);
             RecordButton button = new RecordButton(logging);
             assertTrue(logging.showRecordButtonItem().isSelected(), "shown by default");
             assertTrue(button.isVisible());
@@ -156,7 +156,7 @@ class RecordButtonTest {
             logging.showRecordButtonItem().doClick();
             assertFalse(button.isVisible());
 
-            BinaryLoggingMenu afterRestart = new BinaryLoggingMenu(context(), null, null, null, null, settings);
+            BinaryLoggingMenu afterRestart = new BinaryLoggingMenu(context(), null, null, null, null, settings, null);
             assertFalse(new RecordButton(afterRestart).isVisible(), "the choice is kept in the console config");
         });
     }
