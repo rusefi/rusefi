@@ -40,7 +40,7 @@ public class LegacyOnlineTuneTest {
 
         ConfigurationImage image = tune.asImage(currentIni);
         IniField field = currentIni.findIniField("boostControlPin").orElseThrow();
-        assertEquals("\"B17 Low Side output 3 or injector 7 (has flyback D4)\"",
+        assertEquals("\"B17 Low Side output 3 (has flyback D4)\"",
             ConfigurationImageGetterSetter.getStringValue(field, image));
     }
 
