@@ -25,9 +25,10 @@ public class PortDetector {
     public static final String AUTO = "auto";
 
     /**
-     * Connect to all serial ports and find out which one respond first
-     * @param callback
-     * @return port name on which rusEFI was detected or null if none
+     * Connect to all serial ports and find out which one respond first.
+     * Only detects rusEFI ECUs (sends HELLO and waits for a signature response);
+     * OpenBLT bootloaders are ignored.
+     * @see SerialPortScanner#inspectPort for detection that includes OpenBLT
      */
     @NotNull
     public static SerialAutoChecker.AutoDetectResult autoDetectSerial(Function<SerialAutoChecker.CallbackContext, Void> callback) {
@@ -44,6 +45,11 @@ public class PortDetector {
         return getSignatureFromPorts(callback, serialPorts);
     }
 
+    /**
+     * Probes the given serial ports in parallel, returning the first one that responds with a valid rusEFI signature.
+     * Each port is checked on its own thread; a {@link CountDownLatch} unblocks as soon as any port answers.
+     * Remaining threads are interrupted after the first match or after a 5-second timeout.
+     */
     @NotNull
     private static SerialAutoChecker.AutoDetectResult getSignatureFromPorts(Function<SerialAutoChecker.CallbackContext, Void> callback, Set<String> serialPorts) {
         List<Thread> serialFinder = new ArrayList<>();

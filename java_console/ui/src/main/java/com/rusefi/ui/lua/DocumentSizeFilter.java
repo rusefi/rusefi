@@ -75,6 +75,8 @@ public class DocumentSizeFilter extends DocumentFilter {
         if (bp == null)
             return true;
         StringIniField field = LuaScriptPanel.getLuaScriptField(bp);
+        if (field == null)
+            return true; // no image from controller yet
         int limit = field.getSize();
         return (document.getLength() + str.length() + delta) <= limit;
     }

@@ -57,7 +57,7 @@ public class IncomingDataBuffer {
      * todo: there is a very similar BinaryProtocolServer#readPromisedBytes which throws exception in case of timeout
      */
     public byte[] getPacket(int timeoutMs, String msg, long start) throws EOFException {
-        boolean isTimeout = waitForBytes(msg + " header", start, 2);
+        boolean isTimeout = waitForBytes(timeoutMs, msg + " header", start, 2);
         if (isTimeout) {
             if (Bug3923.obscene)
                 log.info("Timeout waiting for header");

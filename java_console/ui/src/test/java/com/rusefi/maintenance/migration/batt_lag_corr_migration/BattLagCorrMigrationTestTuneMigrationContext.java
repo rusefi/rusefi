@@ -6,7 +6,7 @@ import com.rusefi.config.FieldType;
 import com.rusefi.maintenance.TestTuneMigrationContext;
 import com.rusefi.tune.xml.Constant;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 
 import java.util.Map;
 
@@ -219,3 +219,4 @@ public class BattLagCorrMigrationTestTuneMigrationContext {
         return result;
     }
 }
+

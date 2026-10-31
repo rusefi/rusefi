@@ -8,7 +8,11 @@ import org.jetbrains.annotations.NotNull;
  */
 public class WriteCommand {
     public static byte @NotNull [] getWritePacket(BinaryProtocol binaryProtocol, byte[] content, int contentOffset, int ecuOffset, int size) {
-        byte[] header = binaryProtocol.smartPacketPrefix(ecuOffset, size);
+        return getWritePacket(binaryProtocol, content, contentOffset, ecuOffset, size, 0);
+    }
+
+    public static byte @NotNull [] getWritePacket(BinaryProtocol binaryProtocol, byte[] content, int contentOffset, int ecuOffset, int size, int page) {
+        byte[] header = binaryProtocol.smartPacketPrefix(page, ecuOffset, size);
 
         byte[] packet = new byte[header.length + size];
         // dynamic size header first

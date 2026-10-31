@@ -7,7 +7,8 @@ import com.rusefi.f4discovery.PTraceTest;
 import com.rusefi.proteus.ProteusAnalogTest;
 
 /**
- * See ProteusAnalogTest for jumper configuration documentation
+ * See ProteusAnalogTest for jumper configuration documentation.
+ * LTS omits AdcHardwareTest: its slowAdcScanCount channel is not available.
  */
 public class HwCiProteus {
     public static void main(String[] args) {

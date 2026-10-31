@@ -8,7 +8,7 @@ import com.rusefi.core.SignatureHelper;
 import com.rusefi.core.io.BundleInfo;
 import com.rusefi.core.io.BundleInfoStrategy;
 import com.rusefi.updater.PlainSerialPortScanner;
-import com.rusefi.wizard.BackgroundWizard;
+import com.rusefi.ts_plugin.wizard.BackgroundWizard;
 
 /**
  * this class is invoked by TsHeadlessPlugin via reflection
@@ -31,7 +31,7 @@ public class TsHeadlessPluginImpl implements TsHeadlessPlugin {
         RusEfiSignature s = SignatureHelper.parse(iniFileModel.getSignature());
         System.out.println(port + " with OpenBlt, signature=" + s);
 
-        BackgroundWizard.displayPlugin(s.getBundleTarget());
+        BackgroundWizard.onEcuDiscovery(s.getBundleTarget());
 
         String updateUrl = TsHeadlessPluginImpl.getUpdateUrl(iniFileModel);
         String isObfuscated = iniFileModel.getProtocolMeta().get("RE_obfuscated");

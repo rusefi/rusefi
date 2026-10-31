@@ -11,7 +11,7 @@ import com.rusefi.io.CommandQueue;
  * PD1 (output) <=> PC6 (PAL/ICU input)
  * PD2 (output) <=> PA5 (PAL/ICU input)
  *
- * Proteus has more advanced jumpers allowing for some analog domain coverage see ProteusAnalogTest
+ * New ADC/MAP tests require firmware telemetry and analog fixtures not backported to LTS.
  *
  * <p>
  * <p>

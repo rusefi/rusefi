@@ -2,12 +2,12 @@ package com.rusefi.maintenance.migration.migrators;
 
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
-import com.rusefi.CompatibilitySet;
 import com.rusefi.config.FieldType;
 import com.rusefi.io.UpdateOperationCallbacks;
-import com.rusefi.tune.xml.Msq;
 import org.jetbrains.annotations.NotNull;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -15,9 +15,6 @@ import java.util.stream.Collectors;
 
 class BinsIniFieldMigratorStrategy {
     private static final int BINS_INI_FIELD_COLS = 1;
-    private static final double BINS_INI_FIELD_MULTIPLIER = 1;
-    private static final String BINS_INI_FIELD_DIGITS = "0";
-    private static final FieldType BINS_INI_FIELD_TYPE = FieldType.UINT16;
 
     private final String iniFieldName;
     private final int prevCount;
@@ -38,56 +35,145 @@ class BinsIniFieldMigratorStrategy {
         Optional<String> result = Optional.empty();
         final Optional<ArrayIniField> prevValidatedBinsIniField = getValidatedBinsArrayIniField(
             prevField,
+            prevCount,
             callbacks
         );
         final Optional<ArrayIniField> newValidatedBinsIniField = getValidatedBinsArrayIniField(
             newField,
+            newCount,
             callbacks
         );
         if (prevValidatedBinsIniField.isPresent() && newValidatedBinsIniField.isPresent()) {
             final ArrayIniField prevBinsField = prevValidatedBinsIniField.get();
             final ArrayIniField newBinsField = newValidatedBinsIniField.get();
+            if (prevBinsField.getType() != newBinsField.getType()) {
+                callbacks.logLine(String.format(
+                    "WARNING! Type of `%s` ini-field is changed: `%s` -> `%s`",
+                    iniFieldName,
+                    prevBinsField.getType(),
+                    newBinsField.getType()
+                ));
+                return Optional.empty();
+            }
+            if (Double.compare(prevBinsField.getMultiplier(), newBinsField.getMultiplier()) != 0) {
+                callbacks.logLine(String.format(
+                    "WARNING! Multiplier of `%s` ini-field is changed: `%s` -> `%s`",
+                    iniFieldName,
+                    prevBinsField.getMultiplier(),
+                    newBinsField.getMultiplier()
+                ));
+                return Optional.empty();
+            }
+
             final int binsToAddCount = newBinsField.getRows() - prevBinsField.getRows();
             if (0 < binsToAddCount) {
                 final List<String> prevValues = Arrays.stream(prevBinsField.getValues(prevValue))
                     .map(e -> e[0])
                     .collect(Collectors.toList());
-                final List<Long> prevLongValues = prevValues.stream()
-                    .map(Double::parseDouble)
-                    .map(Math::round)
-                    .collect(Collectors.toList());
-                final long lastValue = prevLongValues.get(prevLongValues.size() - 1);
-                final String max = newBinsField.getMax();
-
-                Optional<Long> recommendedStep;
-                if (max != null) {
-                    final long maxPossibleStep = (long)(
-                        (Double.parseDouble(max) - lastValue) / binsToAddCount
-                    );
-                    if (1 <= maxPossibleStep) {
-                        recommendedStep = Optional.of(chooseStep(prevLongValues, maxPossibleStep));
+                try {
+                    final BigDecimal quantum = getQuantum(newBinsField);
+                    final List<Long> prevRawValues = prevValues.stream()
+                        .map(BigDecimal::new)
+                        .map(value -> value.divide(quantum, 0, RoundingMode.HALF_UP).longValueExact())
+                        .collect(Collectors.toList());
+                    final long lastValue = prevRawValues.get(prevRawValues.size() - 1);
+                    final String max = newBinsField.getMax();
+                    final Optional<Long> maximumValue = getMaximumValue(newBinsField, quantum);
+                    final long recommendedStep;
+                    if (maximumValue.isPresent()) {
+                        final long maxPossibleStep = (maximumValue.get() - lastValue) / binsToAddCount;
+                        if (1 <= maxPossibleStep) {
+                            recommendedStep = chooseStep(prevRawValues, maxPossibleStep);
+                        } else {
+                            callbacks.logLine(String.format(
+                                "WARNING! `%s` ini-field cannot be propagated with increasing values, because max value is %s",
+                                iniFieldName,
+                                max == null ? newBinsField.getType() + " storage limit" : max
+                            ));
+                            return Optional.empty();
+                        }
+                    } else if (prevRawValues.size() > 1) {
+                        recommendedStep = lastValue - prevRawValues.get(prevRawValues.size() - 2);
                     } else {
                         callbacks.logLine(String.format(
-                            "WARNING! `%s` ini-field cannot be propagated with increasing values, because max value is %s",
-                            iniFieldName,
-                            max
+                            "WARNING! `%s` ini-field cannot be propagated without a maximum or two previous values",
+                            iniFieldName
                         ));
                         return Optional.empty();
                     }
-                } else {
-                    final long valueBeforeLast = prevLongValues.get(prevLongValues.size() - 2);
-                    recommendedStep = Optional.of(lastValue - valueBeforeLast);
-                }
-                if (recommendedStep.isPresent()) {
-                    final String[][] newValues = expandValues(prevValues, lastValue, recommendedStep);
+
+                    if (recommendedStep <= 0) {
+                        callbacks.logLine(String.format(
+                            "WARNING! `%s` ini-field cannot be propagated with increasing values",
+                            iniFieldName
+                        ));
+                        return Optional.empty();
+                    }
+
+                    final String[][] newValues = expandValues(
+                        prevValues,
+                        lastValue,
+                        recommendedStep,
+                        quantum,
+                        Math.max(1, (int)IniField.parseDouble(newBinsField.getDigits()))
+                    );
                     result = Optional.of(newBinsField.formatValue(newValues));
+                } catch (ArithmeticException | NumberFormatException e) {
+                    callbacks.logLine(String.format(
+                        "WARNING! `%s` ini-field contains an invalid numeric value",
+                        iniFieldName
+                    ));
                 }
             }
         }
         return result;
     }
 
-    private String[] @NotNull [] expandValues(List<String> prevValues, long lastValue, Optional<Long> recommendedStep) {
+    private BigDecimal getQuantum(final ArrayIniField field) {
+        if (field.getType() == FieldType.FLOAT) {
+            return BigDecimal.ONE.scaleByPowerOfTen(-(int)IniField.parseDouble(field.getDigits()));
+        }
+
+        return BigDecimal.valueOf(Math.abs(field.getMultiplier()));
+    }
+
+    private Optional<Long> getMaximumValue(final ArrayIniField field, final BigDecimal quantum) {
+        final String max = field.getMax();
+        final Long storageMax = getStorageMax(field.getType());
+        if (max == null) {
+            return Optional.ofNullable(storageMax);
+        }
+
+        final long configuredMax = BigDecimal.valueOf(IniField.parseDouble(max))
+            .divide(quantum, 0, RoundingMode.FLOOR)
+            .longValueExact();
+        return Optional.of(storageMax == null ? configuredMax : Math.min(configuredMax, storageMax));
+    }
+
+    private Long getStorageMax(final FieldType type) {
+        switch (type) {
+            case UINT8:
+                return 0xFFL;
+            case UINT16:
+                return 0xFFFFL;
+            case INT8:
+                return (long)Byte.MAX_VALUE;
+            case INT16:
+                return (long)Short.MAX_VALUE;
+            case INT:
+                return (long)Integer.MAX_VALUE;
+            default:
+                return null;
+        }
+    }
+
+    private String[] @NotNull [] expandValues(
+        final List<String> prevValues,
+        final long lastValue,
+        final long recommendedStep,
+        final BigDecimal quantum,
+        final int digits
+    ) {
         final String[][] newValues = new String[newCount][1];
         // copy prev values:
         for (int i = 0; i < prevCount; i++) {
@@ -96,8 +182,10 @@ class BinsIniFieldMigratorStrategy {
         long lastBin = lastValue;
         // add missed bins with recommended step:
         for (int i = prevCount; i < newCount; i++) {
-            lastBin += recommendedStep.get();
-            newValues[i] = new String[] { String.format(Msq.TS_INTEGRATION_LOCALE, "%.1f", (double)lastBin) };
+            lastBin = Math.addExact(lastBin, recommendedStep);
+            newValues[i] = new String[] {
+                quantum.multiply(BigDecimal.valueOf(lastBin)).setScale(digits, RoundingMode.HALF_UP).toPlainString()
+            };
         }
         return newValues;
     }
@@ -105,6 +193,7 @@ class BinsIniFieldMigratorStrategy {
 
     private Optional<ArrayIniField> getValidatedBinsArrayIniField(
         final IniField field,
+        final int expectedRows,
         final UpdateOperationCallbacks callbacks
     ) {
         if (!(field instanceof ArrayIniField)) {
@@ -117,11 +206,10 @@ class BinsIniFieldMigratorStrategy {
         }
         final ArrayIniField arrayField = (ArrayIniField) field;
         final FieldType arrayFieldType = arrayField.getType();
-        if (arrayFieldType != BINS_INI_FIELD_TYPE) {
+        if (!arrayFieldType.isNumeric()) {
             callbacks.logLine(String.format(
-                "WARNING! Type of `%s` ini-field is expected to be `%s` instead of `%s`",
+                "WARNING! Type of `%s` ini-field is expected to be numeric instead of `%s`",
                 iniFieldName,
-                BINS_INI_FIELD_TYPE,
                 arrayFieldType
             ));
             return Optional.empty();
@@ -136,35 +224,14 @@ class BinsIniFieldMigratorStrategy {
             ));
             return Optional.empty();
         }
-        final double arrayFieldMultiplier = arrayField.getMultiplier();
-        if (arrayFieldMultiplier != BINS_INI_FIELD_MULTIPLIER) {
-            callbacks.logLine(String.format(
-                "WARNING! Multiplier of `%s` ini-field is expected to be %f instead of %f",
-                iniFieldName,
-                BINS_INI_FIELD_MULTIPLIER,
-                arrayFieldMultiplier
-            ));
-            return Optional.empty();
-        }
-        final String arrayFieldDigits = arrayField.getDigits();
-        if (!BINS_INI_FIELD_DIGITS.equals(arrayFieldDigits)) {
-            callbacks.logLine(String.format(
-                "WARNING! Digits of `%s` ini-field is expected to be `%s` instead of `%s`",
-                iniFieldName,
-                BINS_INI_FIELD_DIGITS,
-                arrayFieldDigits
-            ));
-            return Optional.empty();
-        }
         final int arrayFieldRows = arrayField.getRows();
-        if (CompatibilitySet.of(prevCount, newCount).contains(arrayFieldRows)) {
+        if (arrayFieldRows == expectedRows) {
             return Optional.of(arrayField);
         } else {
             callbacks.logLine(String.format(
-                "WARNING! `%s` ini-field is expected to contain %d or %d rows instead of %d",
+                "WARNING! `%s` ini-field is expected to contain %d rows instead of %d",
                 iniFieldName,
-                prevCount,
-                newCount,
+                expectedRows,
                 arrayFieldRows
             ));
             return Optional.empty();

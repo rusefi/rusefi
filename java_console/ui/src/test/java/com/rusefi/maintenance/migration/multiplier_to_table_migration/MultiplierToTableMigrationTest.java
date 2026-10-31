@@ -8,7 +8,7 @@ import com.rusefi.tune.xml.Constant;
 
 import org.junit.jupiter.api.Test;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import java.util.Map;
 import java.util.Optional;
 
@@ -65,3 +65,4 @@ public class MultiplierToTableMigrationTest {
     }
 
 }
+

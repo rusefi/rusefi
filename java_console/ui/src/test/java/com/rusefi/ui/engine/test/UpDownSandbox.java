@@ -13,6 +13,8 @@ import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
 /**
+ * Visual sandbox for the engine-sniffer up/down scaling control.
+ *
  * Date: 6/23/13
  * Andrey Belomutskiy, (c) 2013-2020
  * @see WavePanelSandbox

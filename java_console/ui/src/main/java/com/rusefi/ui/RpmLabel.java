@@ -1,7 +1,5 @@
 package com.rusefi.ui;
 
-import com.rusefi.core.Sensor;
-import com.rusefi.core.SensorCentral;
 import com.rusefi.io.ConnectionStatusLogic;
 
 import javax.swing.*;
@@ -19,6 +17,8 @@ public class RpmLabel {
 
     private final JLabel rpmValue = new JLabel();
     private final JLabel rpmCaption = new JLabel("RPM:");
+    private final RpmModel.RpmListener rpmListener;
+    private final ConnectionStatusLogic.Listener connectionStatusListener;
 
     public RpmLabel(UIContext uiContext) {
         this(uiContext, 1);
@@ -34,33 +34,41 @@ public class RpmLabel {
         rpmValue.setForeground(Color.red);
 
         content.setBorder(BorderFactory.createLineBorder(Color.white));
-        if (withCaption)
+        if (withCaption) {
             content.add(rpmCaption);
+        }
         content.add(rpmValue, "grow, wrap");
 
-        RpmModel.getInstance().addListener(new RpmModel.RpmListener() {
-            public void onRpmChange(RpmModel rpm) {
-                int value = rpm.getSmoothedValue();
-                if (value == -1)
-                    rpmValue.setText("Noise");
-                else
-                    rpmValue.setText(value + "");
+        rpmListener = rpm -> {
+            if (ConnectionStatusLogic.INSTANCE.isConnected()) {
+                updateRpmValue(rpm.getSmoothedValue());
+                rpmValue.setForeground(Color.green);
             }
-        });
+        };
+        RpmModel.getInstance().addListener(rpmListener);
 
-        ConnectionStatusLogic.INSTANCE.addListener(new ConnectionStatusLogic.Listener() {
+        connectionStatusListener = new ConnectionStatusLogic.Listener() {
             @Override
             public void onConnectionStatus(boolean isConnected) {
                 if (isConnected) {
-                    rpmValue.setText("" + SensorCentral.getInstance().getValue(Sensor.RPMValue));
+                    updateRpmValue(RpmModel.getInstance().getSmoothedValue());
                     rpmValue.setForeground(Color.green);
                 } else {
                     rpmValue.setText(NO_CONNECTION);
                     rpmValue.setForeground(Color.red);
                 }
             }
-        });
+        };
+        ConnectionStatusLogic.INSTANCE.addAndFireListener(connectionStatusListener);
         setSize(size);
+    }
+
+    private void updateRpmValue(int value) {
+        if (value == -1) {
+            rpmValue.setText("Noise");
+        } else {
+            rpmValue.setText(value + "");
+        }
     }
 
     public JPanel getContent() {
@@ -73,6 +81,11 @@ public class RpmLabel {
         Font font = new Font(f.getName(), f.getStyle(), fontSize);
         setFont(font);
         return this;
+    }
+
+    public void destroy() {
+        RpmModel.getInstance().removeListener(rpmListener);
+        ConnectionStatusLogic.INSTANCE.removeListener(connectionStatusListener);
     }
 
     private void setFont(Font font) {

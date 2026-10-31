@@ -6,7 +6,7 @@ import com.rusefi.tune.xml.Constant;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import java.util.Map;
 
 import static com.rusefi.maintenance.migration.migrators.TableAddColumnsMigrator.MAP_SAMPLING_FIELD_NAME;
@@ -50,3 +50,4 @@ public class MapstartMigrationTest {
         assertEquals(0, migratedConstants.size());
     }
 }
+

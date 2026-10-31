@@ -13,9 +13,23 @@ public interface UpdateOperationCallbacks extends StatusConsumer {
         log(message, true, true);
     }
 
+    /** Whether maintenance may ask the user through Swing dialogs. */
+    default boolean isInteractive() {
+        return this != DUMMY && this != LOGGER;
+    }
+
     void done();
     void warning();
     void error();
+
+    /** Reports a pre-handoff rejection. UI clients may prominently display the reason. */
+    default void firmwareUpdateBlocked(String reason) {
+        logLine(reason);
+    }
+
+    /** Runs after eligibility passes and before an automatic firmware job takes over the connection. */
+    default void firmwareHandoffStarted() {
+    }
 
     void clear();
 
@@ -113,4 +127,8 @@ public interface UpdateOperationCallbacks extends StatusConsumer {
         public void clear() {
         }
     };
+
+    default void updateProgress(int percent) {
+        logLine("Progress: " + percent + "%");
+    }
 }

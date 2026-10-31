@@ -1,14 +1,15 @@
 package com.rusefi.autoupdate;
 
+import com.rusefi.core.FindFileHelper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -33,60 +34,60 @@ class ObsoleteFilesArchiverTest {
         TEST_OBSOLETE_FILES_TO_ARCHIVE.stream()
     ).collect(Collectors.toList());
 
-    private static final Path ARCHIVE_FOLDER_PATH = Paths.get("archive");
+    @TempDir
+    Path bundleRoot;
 
-    private static final List<Path> TEST_ARCHIVED_OBSOLETE_FILES = TEST_OBSOLETE_FILES_TO_ARCHIVE.stream().map(
-        ARCHIVE_FOLDER_PATH::resolve
-    ).collect(Collectors.toList());
+    private String savedInputFilesPath;
+    private Path archiveFolderPath;
+    private List<Path> testArchivedObsoleteFiles;
 
     @BeforeEach
     void setUp() {
-        cleanUpTestFiles();
-        ALL_TEST_FILES.forEach(this::createTestFile);
+        savedInputFilesPath = FindFileHelper.INPUT_FILES_PATH;
+        FindFileHelper.INPUT_FILES_PATH = bundleRoot.toString();
+        archiveFolderPath = bundleRoot.resolve("archive");
+        testArchivedObsoleteFiles = TEST_OBSOLETE_FILES_TO_ARCHIVE.stream()
+            .map(archiveFolderPath::resolve)
+            .collect(Collectors.toList());
+        ALL_TEST_FILES.forEach(fileName -> createTestFile(bundleRoot.resolve(fileName), fileName));
     }
 
     @AfterEach
     void tearDown() {
-        cleanUpTestFiles();
+        FindFileHelper.INPUT_FILES_PATH = savedInputFilesPath;
     }
 
     @Test
     void archiveObsoleteFilesWithMissingArchiveFolder() {
-        assertFalse(Files.exists(ARCHIVE_FOLDER_PATH));
+        assertFalse(Files.exists(archiveFolderPath));
         doTest();
     }
 
     @Test
     void archiveObsoleteFilesWithExistingArchiveFolder() throws IOException {
-        Files.createDirectories(ARCHIVE_FOLDER_PATH);
-        assertTrue(Files.exists(ARCHIVE_FOLDER_PATH));
+        Files.createDirectories(archiveFolderPath);
+        assertTrue(Files.exists(archiveFolderPath));
 
         doTest();
     }
 
     @Test
     void archiveObsoleteFilesWithOverwritingAlreadyExistingFiles() throws IOException {
-        Files.createDirectories(ARCHIVE_FOLDER_PATH);
-        assertTrue(Files.exists(ARCHIVE_FOLDER_PATH));
+        Files.createDirectories(archiveFolderPath);
+        assertTrue(Files.exists(archiveFolderPath));
 
-        TEST_ARCHIVED_OBSOLETE_FILES.forEach(filePath -> createTestFile(filePath.toString()));
+        testArchivedObsoleteFiles.forEach(filePath -> createTestFile(filePath, filePath.getFileName().toString()));
 
         doTest();
-    }
-
-    private void cleanUpTestFiles() {
-        ALL_TEST_FILES.stream().map(Paths::get).forEach(this::safeDelete);
-        TEST_ARCHIVED_OBSOLETE_FILES.forEach(this::safeDelete);
-        safeDelete(ARCHIVE_FOLDER_PATH);
     }
 
     private void doTest() {
         ObsoleteFilesArchiver.INSTANCE.archiveObsoleteFiles();
 
-        ALL_TEST_FILES.forEach(fileName -> assertFalse(Files.exists(Paths.get(fileName)), fileName));
-        TEST_ARCHIVED_OBSOLETE_FILES.forEach(filePath -> assertTrue(Files.exists(filePath), filePath.toString()));
+        ALL_TEST_FILES.forEach(fileName -> assertFalse(Files.exists(bundleRoot.resolve(fileName)), fileName));
+        testArchivedObsoleteFiles.forEach(filePath -> assertTrue(Files.exists(filePath), filePath.toString()));
         TEST_OBSOLETE_FILES_TO_ARCHIVE.forEach(fileToArchiveName -> {
-            final Path testArchivedFile = ARCHIVE_FOLDER_PATH.resolve(fileToArchiveName);
+            final Path testArchivedFile = archiveFolderPath.resolve(fileToArchiveName);
             checkFileContent(testArchivedFile, fileToArchiveName);
         });
     }
@@ -106,25 +107,16 @@ class ObsoleteFilesArchiverTest {
         }
     }
 
-    private void safeDelete(final Path path) {
-        try {
-            Files.deleteIfExists(path);
-        } catch (final IOException e) {
-            fail(String.format("Failed to delete `%s`: %s", path, e.getMessage()));
-        }
-    }
-
-    private void createTestFile(final String testFileName){
-        final Path testFilePath = Paths.get(testFileName);
+    private void createTestFile(final Path testFilePath, final String content) {
         assertDoesNotThrow(() -> {
             try (final Writer fileWriter = new BufferedWriter(new OutputStreamWriter(
                 Files.newOutputStream(testFilePath),
                 StandardCharsets.UTF_8
             ))) {
-                fileWriter.write(testFileName);
+                fileWriter.write(content);
             }
         });
         assertTrue(Files.exists(testFilePath));
-        checkFileContent(testFilePath, testFileName);
+        checkFileContent(testFilePath, content);
     }
 }

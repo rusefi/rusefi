@@ -5,7 +5,8 @@ import com.efiAnalytics.plugin.ecu.ControllerException;
 import com.efiAnalytics.plugin.ecu.ControllerParameter;
 import com.efiAnalytics.plugin.ecu.servers.ControllerParameterServer;
 import com.efiAnalytics.plugin.ecu.servers.OutputChannelServer;
-import com.opensr5.ini.IniFileModelImpl;
+import com.opensr5.ini.IniFileModel;
+import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.TsTuneReader;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.ts_plugin.knock.KnockAnalyzerTab;
@@ -41,7 +42,7 @@ public class PluginBodySandbox {
 
     public static void main(String[] args) throws ControllerException, FileNotFoundException {
         String iniFile = TsTuneReader.getProjectModeFileName(PROJECT_NAME);
-        IniFileModelImpl model = IniFileModelImpl.readIniFile(iniFile);
+        IniFileModel model = IniFileReaderUtil.readIniFile(iniFile);
         Objects.requireNonNull(model, "model");
         java.util.List<String> fieldNamesList = new ArrayList<>(model.getAllIniFields().keySet());
         String[] parameterNames = fieldNamesList.toArray(new String[0]);
@@ -49,8 +50,7 @@ public class PluginBodySandbox {
         ControllerAccess controllerAccess = getControllerAccess(parameterNames);
 
         SwingUtilities.invokeLater(() -> {
-            FrameHelper frameHelper = new FrameHelper();
-            frameHelper.getFrame().setDefaultCloseOperation(JDialog.EXIT_ON_CLOSE);
+            FrameHelper frameHelper = new FrameHelper(JDialog.EXIT_ON_CLOSE);
             frameHelper.showFrame(new TsPluginUiImpl(() -> controllerAccess).getContent());
         });
     }

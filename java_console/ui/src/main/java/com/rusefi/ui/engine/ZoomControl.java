@@ -41,7 +41,7 @@ class ZoomControl extends JPanel {
                 zoomIn();
             }
         });
-        plus.setToolTipText("Zoom in");
+        plus.setToolTipText("Zoom in (Numpad + or Alt+X)");
         add(plus);
 
         resetZoom.addActionListener(new ActionListener() {
@@ -61,7 +61,7 @@ class ZoomControl extends JPanel {
                 zoomOut();
             }
         });
-        minus.setToolTipText("Zoom out");
+        minus.setToolTipText("Zoom out (Numpad -)");
         add(minus);
 
         bindKeyStrokeActions();

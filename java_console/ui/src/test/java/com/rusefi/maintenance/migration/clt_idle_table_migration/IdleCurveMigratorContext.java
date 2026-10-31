@@ -2,7 +2,7 @@ package com.rusefi.maintenance.migration.clt_idle_table_migration;
 
 import com.rusefi.maintenance.TestTuneMigrationContext;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 
 import java.io.FileNotFoundException;
 
@@ -30,3 +30,4 @@ public class IdleCurveMigratorContext {
                 return result;
             }
 }
+

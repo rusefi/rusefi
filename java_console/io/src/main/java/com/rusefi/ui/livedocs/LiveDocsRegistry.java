@@ -3,7 +3,6 @@ package com.rusefi.ui.livedocs;
 import com.rusefi.config.Field;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.enums.live_data_e;
-import com.rusefi.io.commands.ByteRange;
 import com.rusefi.ldmp.StateDictionary;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,6 +18,13 @@ public enum LiveDocsRegistry {
 
     private final List<LiveDocHolder> liveDocs = new ArrayList<>();
 
+    public static int getStructureSize(Field[] values) {
+        Field last = values[values.length - 1];
+        // todo: at the moment we do not support arrays and
+        // todo: a lot of information is missing for example for Bit type, but this implementation is good enough for now
+        return last.getOffset() + 4;
+    }
+
     public void register(LiveDocHolder holder) {
         liveDocs.add(holder);
     }
@@ -31,6 +37,15 @@ public enum LiveDocsRegistry {
                 refresh(holder, context, liveDataProvider);
             }
         }
+    }
+
+    public boolean hasVisible() {
+        for (LiveDocHolder holder : liveDocs) {
+            if (holder.isVisible()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void refresh(LiveDocHolder holder, live_data_e context, LiveDataProvider liveDataProvider) {
@@ -46,7 +61,7 @@ public enum LiveDocsRegistry {
     public static LiveDataProvider getLiveDataProvider() {
         return context -> {
             Field[] values = StateDictionary.INSTANCE.getFields(context);
-            int size = Field.getStructureSize(values);
+            int size = getStructureSize(values);
             /*
             byte[] packet = new byte[4];
             int offset = context.ordinal();
@@ -54,12 +69,18 @@ public enum LiveDocsRegistry {
 */
             int structOffset = StateDictionary.INSTANCE.getOffset(context);
             byte[] overallOutputs = SensorCentral.getInstance().getResponse();
-
-            byte[] response = new byte[size];
-
-            System.arraycopy(overallOutputs, structOffset, overallOutputs, 0, size);
-            return response;
+            return sliceOutput(overallOutputs, structOffset, size);
         };
+    }
+
+    static byte[] sliceOutput(byte[] overallOutputs, int structOffset, int size) {
+        if (overallOutputs == null || structOffset < 0 || size < 0
+                || structOffset > overallOutputs.length - 1 - size) {
+            return null;
+        }
+        byte[] response = new byte[size];
+        System.arraycopy(overallOutputs, structOffset + 1, response, 0, size);
+        return response;
     }
 
     public interface LiveDataProvider {

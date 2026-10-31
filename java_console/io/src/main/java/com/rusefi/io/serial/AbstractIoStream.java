@@ -8,7 +8,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class AbstractIoStream implements IoStream {
-    private boolean isClosed;
+    // Closed by the transport thread, observed by communication/polling threads.
+    private volatile boolean isClosed;
 
     // todo: this ioLock needs better documentation!
     private final Object ioLock = new Object();

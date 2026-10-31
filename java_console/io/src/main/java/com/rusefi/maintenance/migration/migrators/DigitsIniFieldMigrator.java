@@ -77,6 +77,10 @@ public enum DigitsIniFieldMigrator implements TuneMigrator {
         new IntDigitField("tpsMax", (v) -> v * 0.0048828125, "0" , "2"),
         new IntDigitField("tps1SecondaryMin", (v) -> v * 0.0048828125, "0" , "2"),
         new IntDigitField("tps1SecondaryMax", (v) -> v * 0.0048828125, "0" , "2"),
+        new IntDigitField("tps2Min", (v) -> v * 0.0048828125, "0" , "2"),
+        new IntDigitField("tps2Max", (v) -> v * 0.0048828125, "0" , "2"),
+        new IntDigitField("tps2SecondaryMin", (v) -> v * 0.0048828125, "0" , "2"),
+        new IntDigitField("tps2SecondaryMax", (v) -> v * 0.0048828125, "0" , "2"),
     };
 
     @Override

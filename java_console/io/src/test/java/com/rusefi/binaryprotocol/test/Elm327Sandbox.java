@@ -1,5 +1,8 @@
 package com.rusefi.binaryprotocol.test;
 
+/**
+ * Manual harness for talking to an ECU over an ELM327 adapter (body currently disabled).
+ */
 
 /*
 

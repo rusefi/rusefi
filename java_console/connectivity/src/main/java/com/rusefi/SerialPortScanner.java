@@ -1,0 +1,527 @@
+package com.rusefi;
+
+import com.devexperts.logging.Logging;
+import com.rusefi.io.LinkManager;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+/**
+ * We have too many programming / ECU possible states
+ * 1) the oldest one: discovery board has on-board St-link debug interface (discovery board second microcontrollers on board which is used to debug the primary one), same if we have a modern ECU with external st-link hooked up. Open question if it's time to remove support of st-link programming since all nicer ECUs do not on-board debug interface. Orthogonal to USB port.
+ * 2) stm32 build-in bootloader, aka "DFU", regardless if PROG/BOOT0 button or software reboot into DFU
+ * 3) live ECU with software reboot into DFU, aka "Auto DFU", not suitable for obfuscated firmware
+ * 4) OpenBLT USB device, ala "Manual OpenBLT", regardless if primary firmware has not been uploaded yet or software reboot into OpenBLT
+ * 5) live ECU compiled with OpenBLT support
+ * <p>
+ * This class is the scan *policy* — caching, Unknown-retry, listener notification, device-probe
+ * throttling, suspend choreography. The actual hardware/OS probing is injected via
+ * {@link HardwareProbes}; the production implementation ({@code EcuHardwareProbes} in the ui
+ * module) depends on the flashing tools and the binary protocol.
+ *
+ * @author Andrey Belomutskiy
+ */
+public class SerialPortScanner implements PortScanner {
+    private final static Logging log = Logging.getLogging(SerialPortScanner.class);
+
+    private static final long DETECTED_ECU_CACHE_MS = 3000;
+
+    /**
+     * The hardware/OS probes the scan loop performs, separated from the scan *policy* (caching,
+     * Unknown-retry, listener notification, suspend/probe-throttle choreography) so the policy can
+     * be unit tested with scripted probe results. {@code EcuHardwareProbes} (ui module) is the real
+     * implementation. See docs/java-connectivity-context-review.md.
+     */
+    public interface HardwareProbes {
+        /** Serial discovery candidates, or transport-qualified SLCAN/PCAN endpoints in CAN mode. */
+        Set<String> listSerialPorts();
+
+        /** @return detected port type, or null for a dead/stale OS node that must be dropped entirely */
+        @Nullable
+        PortResult inspectPort(String serialPort);
+
+        Collection<String> listTcpPorts();
+
+        PortResult inspectTcpPort(String tcpPort);
+
+        /**
+         * @return null when SocketCAN is unavailable, CAN when the interface opens without an ECU reply,
+         * or an ECU classification when rusEFI replies
+         */
+        @Nullable
+        PortResult inspectSocketCan();
+
+        /**
+         * @return null when PCAN is unavailable, CAN when the adapter opens without an ECU reply,
+         * or an ECU classification when rusEFI replies
+         */
+        @Nullable
+        PortResult inspectPcan();
+
+        boolean isLiveEcuConnected();
+
+        boolean isDfuDeviceConnected();
+
+        boolean isStLinkConnected();
+
+        /** Clock used for the device-probe throttle; injectable so tests can script time. */
+        long now();
+    }
+
+    private final HardwareProbes probes;
+    // Tests construct a scanner that never starts the background scan thread and drive
+    // findAllAvailablePorts directly instead.
+    private final boolean startTimerOnFirstListener;
+    private final RecurringStep portsScanner;
+
+    public SerialPortScanner(HardwareProbes probes, boolean startTimerOnFirstListener) {
+        this.probes = probes;
+        this.startTimerOnFirstListener = startTimerOnFirstListener;
+        this.portsScanner = new RecurringStep(
+            () -> findAllAvailablePorts(false),
+            () -> findAllAvailablePorts(true),
+            "Ports Scanner"
+        );
+    }
+
+    private final Object lock = new Object();
+    @NotNull
+    private AvailableHardware knownHardware = new AvailableHardware(
+        Collections.emptyList(), false, false, false, false);
+
+    private final List<PortScanner.Listener> listeners = new CopyOnWriteArrayList<>();
+
+    @Override
+    public AvailableHardware getCurrentHardware() {
+        synchronized (lock) {
+            return knownHardware;
+        }
+    }
+
+    @Override
+    public void addListener(PortScanner.Listener listener) {
+        boolean shouldStart = listeners.isEmpty();
+        listeners.add(listener);
+        if (shouldStart && startTimerOnFirstListener)
+            startTimer();
+    }
+
+    // Keep timed-out threads keyed by port until they exit: native serial opens may ignore
+    // interruption. This also lets suspend() wait for probes to release their port handles.
+    // [tag:better_ux_for_flashing]
+    private final Map<String, Thread> probeThreads = new HashMap<>();
+
+    /**
+     * Probe ports concurrently with a shared timeout. A port with an earlier probe still alive
+     * is reported as Unknown without starting another thread. Dead ports (null) are dropped.
+     */
+    static List<PortResult> inspectPorts(final List<String> ports, final Map<String, Thread> probeThreadsRef,
+                                         final Function<String, PortResult> inspector) {
+        synchronized (probeThreadsRef) {
+            probeThreadsRef.values().removeIf(t -> !t.isAlive());
+        }
+        if (ports.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        final Object resultsLock = new Object();
+        final Map<String, PortResult> results = new HashMap<>();
+        final AtomicBoolean acceptingResults = new AtomicBoolean(true);
+        final CountDownLatch completed = new CountDownLatch(ports.size());
+        final List<Thread> threads = new ArrayList<>();
+
+        for (String port : ports) {
+            // Checking, registering and starting must be atomic with respect to other scans
+            // and suspend(). Do not remove an entry just because its port disappeared.
+            synchronized (probeThreadsRef) {
+                Thread previous = probeThreadsRef.get(port);
+                if (previous != null && previous.isAlive()) {
+                    synchronized (resultsLock) {
+                        results.put(port, new PortResult(port, SerialPortType.Unknown));
+                    }
+                    completed.countDown();
+                    continue;
+                }
+
+                final String threadName = "SerialPortScanner inspectPort " + port;
+                Thread thread = new Thread(() -> {
+                    log.trace(String.format("Thread `%s` is starting...", threadName));
+                    try {
+                        PortResult result;
+                        try {
+                            result = inspector.apply(port);
+                        } catch (Throwable e) {
+                            // A failed probe must not kill the scan. [tag:better_ux_for_flashing]
+                            log.warn("inspectPort crashed for " + port + ", treating as Unknown: " + e);
+                            result = new PortResult(port, SerialPortType.Unknown);
+                        }
+
+                        synchronized (resultsLock) {
+                            // A native call may consume the interrupt before returning. Explicitly
+                            // reject late results as well as results from an interrupted probe.
+                            if (acceptingResults.get() && !Thread.currentThread().isInterrupted()) {
+                                results.put(port, result);
+                            }
+                        }
+                        log.trace(String.format("Thread `%s` has finished.", threadName));
+                    } finally {
+                        // The inspector (including any port-handle cleanup) has returned, so
+                        // the next scan may retry even if this thread is still unwinding.
+                        synchronized (probeThreadsRef) {
+                            probeThreadsRef.remove(port, Thread.currentThread());
+                        }
+                        completed.countDown();
+                    }
+                }, threadName);
+                thread.setDaemon(true);
+                probeThreadsRef.put(port, thread);
+                thread.start();
+                threads.add(thread);
+            }
+        }
+
+        try {
+            completed.await(5, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            // The scanner was interrupted (for example, to suspend for flashing).
+        }
+
+        List<PortResult> scanResults;
+        synchronized (resultsLock) {
+            acceptingResults.set(false);
+            ScannerHelper.interruptThreads(threads);
+            for (String port : ports) {
+                if (!results.containsKey(port)) {
+                    log.info("Port " + port + " timed out, adding as Unknown.");
+                    results.put(port, new PortResult(port, SerialPortType.Unknown));
+                }
+            }
+            scanResults = results.values().stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        }
+
+        synchronized (probeThreadsRef) {
+            probeThreadsRef.values().removeIf(t -> !t.isAlive());
+        }
+        return scanResults;
+    }
+
+    private final SerialPortCache portCache = new SerialPortCache();
+
+    // The DFU/STLink/PCAN device probes shell out to PowerShell (~800ms each). Running all three
+    // every 300ms scan cycle starves the ECU re-detection this same thread performs after a reboot,
+    // which is what makes the reconnect "loading" state drag on. Throttle them to a few seconds and
+    // skip them entirely while a live ECU is connected (a board cannot be a connected ECU and a DFU
+    // device at the same time, and the scan thread must stay responsive for the reconnect). The
+    // last-known results are reused between probes so the ProgramSelector menu stays stable.
+    // [tag:better_ux_for_flashing]
+    private static final long DEVICE_PROBE_INTERVAL_MS = 3000;
+    // CAN transport invalidation is also requested by the firmware-update thread while scanning is suspended.
+    private volatile long lastDeviceProbeMs = 0;
+    private boolean lastDfuConnected = false;
+    private boolean lastStLinkConnected = false;
+    private volatile boolean lastPcanConnected = false;
+    private volatile boolean lastSocketCanAvailable = false;
+    private volatile boolean pcanPortPinned = false;
+    private volatile boolean socketCanPortPinned = false;
+    @Nullable
+    private volatile PortResult lastPcanPort;
+    @Nullable
+    private volatile PortResult lastSocketCanPort;
+    private long pcanPortGeneration;
+    private long socketCanPortGeneration;
+    private long deviceProbeInvalidationGeneration;
+
+    /**
+     * Find all available serial ports and checks if simulator local TCP port is available.
+     * Package-private so scan-policy unit tests can drive scan cycles directly with scripted probes.
+     */
+    void findAllAvailablePorts(boolean includeSlowLookup) {
+        List<PortResult> ports = new ArrayList<>();
+        boolean dfuConnected;
+        boolean stLinkConnected;
+        boolean PCANConnected;
+        boolean socketCanAvailable;
+
+        // ttyS* are legacy motherboard UARTs on Linux — never a rusEFI ECU and they stall
+        // the binary protocol handshake for seconds.  Drop them before the scan pipeline.
+        final Set<String> serialPorts = probes.listSerialPorts().stream()
+            .filter(name -> !name.startsWith("ttyS"))
+            // PCAN uses its own probe; SLCAN stays in this list.
+            .filter(name -> !LinkManager.PCAN.equals(name))
+            .collect(Collectors.toCollection(TreeSet::new));
+        log.info("getCommPorts (filtered): " + serialPorts);
+
+        List<String> portsToInspect = new ArrayList<>();
+
+        for (String serialPort : serialPorts) {
+            // First, check the port cache
+            final Optional<PortResult> cachedPort = portCache.get(serialPort, probes.now());
+            if (cachedPort.isPresent()) {
+                ports.add(cachedPort.get());
+            } else {
+                portsToInspect.add(serialPort);
+            }
+        }
+
+        for (PortResult p : inspectPorts(portsToInspect, probeThreads, probes::inspectPort)) {
+            log.info("Port " + p.port + " detected as: " + p.type.friendlyString);
+            ports.add(p);
+            // Do not cache Unknown — keep the port uninspected so the next scan cycle retries
+            // detection automatically without waiting for the port to disappear and reappear.
+            if (p.type != SerialPortType.Unknown && p.type != SerialPortType.UnsupportedEcu) {
+                cacheDetectedPort(p);
+            }
+        }
+
+        final Collection<String> tcpPorts = includeSlowLookup
+            ? probes.listTcpPorts()
+            : Collections.emptyList();
+
+        final Set<String> livePortNames = new HashSet<>(serialPorts);
+        livePortNames.addAll(tcpPorts);
+        portCache.retainAll(livePortNames);
+
+        if (includeSlowLookup) {
+            for (String tcpPort : tcpPorts) {
+                final Optional<PortResult> cachedPort = portCache.get(tcpPort, probes.now());
+                if (cachedPort.isPresent()) {
+                    ports.add(cachedPort.get());
+                } else {
+                    final PortResult tcpResult = probes.inspectTcpPort(tcpPort);
+                    ports.add(tcpResult);
+
+                    // Preserve the previous policy: cache only a positively identified usable ECU.
+                    if (tcpResult.isEcu()) {
+                        cacheDetectedPort(tcpResult);
+                    }
+                }
+            }
+            // Skip the expensive OS device probes while a live ECU is connected, and otherwise run them
+            // no more than once per DEVICE_PROBE_INTERVAL_MS. Reuse the last-known values in between so
+            // the update menu doesn't flicker. [tag:better_ux_for_flashing]
+            final boolean liveEcuConnected = probes.isLiveEcuConnected();
+            final long now = probes.now();
+            if (!liveEcuConnected && (now - lastDeviceProbeMs) >= DEVICE_PROBE_INTERVAL_MS) {
+                final long invalidationGeneration;
+                synchronized (lock) {
+                    invalidationGeneration = deviceProbeInvalidationGeneration;
+                }
+                lastDfuConnected = probes.isDfuDeviceConnected();
+                lastStLinkConnected = probes.isStLinkConnected();
+                final long pcanGeneration;
+                final boolean pcanPinned;
+                synchronized (lock) {
+                    pcanGeneration = pcanPortGeneration;
+                    pcanPinned = pcanPortPinned;
+                }
+                if (!pcanPinned) {
+                    PortResult pcanResult = probes.inspectPcan();
+                    synchronized (lock) {
+                        if (pcanGeneration == pcanPortGeneration && !pcanPortPinned) {
+                            lastPcanConnected = pcanResult != null;
+                            lastPcanPort = pcanResult != null
+                                && pcanResult.type != SerialPortType.CAN
+                                && pcanResult.type != SerialPortType.Unknown
+                                ? pcanResult
+                                : null;
+                        }
+                    }
+                }
+                final long socketCanGeneration;
+                final boolean socketCanPinned;
+                synchronized (lock) {
+                    socketCanGeneration = socketCanPortGeneration;
+                    socketCanPinned = socketCanPortPinned;
+                }
+                if (!socketCanPinned) {
+                    PortResult socketCanResult = probes.inspectSocketCan();
+                    synchronized (lock) {
+                        if (socketCanGeneration == socketCanPortGeneration && !socketCanPortPinned) {
+                            lastSocketCanAvailable = socketCanResult != null;
+                            lastSocketCanPort = socketCanResult != null
+                                && socketCanResult.type != SerialPortType.CAN
+                                && socketCanResult.type != SerialPortType.Unknown
+                                ? socketCanResult
+                                : null;
+                        }
+                    }
+                }
+                synchronized (lock) {
+                    if (invalidationGeneration == deviceProbeInvalidationGeneration) {
+                        lastDeviceProbeMs = now;
+                    }
+                }
+            }
+            dfuConnected = lastDfuConnected;
+            stLinkConnected = lastStLinkConnected;
+        } else {
+            dfuConnected = false;
+            stLinkConnected = false;
+        }
+        // Surface a DFU device (STM32 built-in bootloader) as a synthetic, non-connectable port so a
+        // running console can offer DFU flashing in-session [tag:better_ux_for_flashing]. dfuConnected stays exposed via
+        // AvailableHardware.isDfuFound() for the existing ProgramSelector menu logic.
+        if (dfuConnected) {
+            ports.add(new PortResult(LinkManager.DFU, SerialPortType.Dfu));
+        }
+        // Sort after every transport and synthetic device has been added.
+        boolean isListUpdated;
+        AvailableHardware currentHardware;
+        synchronized (lock) {
+            PCANConnected = lastPcanConnected;
+            socketCanAvailable = lastSocketCanAvailable;
+            if (lastPcanPort != null) {
+                ports.add(lastPcanPort);
+            }
+            if (lastSocketCanPort != null) {
+                ports.add(lastSocketCanPort);
+            }
+            ports.sort(Comparator.comparingInt(a -> a.type.sortOrder));
+            currentHardware = new AvailableHardware(
+                ports, dfuConnected, stLinkConnected, PCANConnected, socketCanAvailable);
+            isListUpdated = !knownHardware.equals(currentHardware);
+            knownHardware = currentHardware;
+        }
+        if (isListUpdated) {
+            for (PortScanner.Listener listener : listeners)
+                listener.onChange(currentHardware);
+        }
+    }
+
+    private void startTimer() {
+        portsScanner.start();
+    }
+
+    private void cacheDetectedPort(PortResult port) {
+        if (port.isEcu()) {
+            portCache.put(port, probes.now() + DETECTED_ECU_CACHE_MS);
+        } else {
+            portCache.put(port);
+        }
+    }
+
+    public void stopTimer() {
+        portsScanner.stop();
+    }
+
+    @Override
+    public void restartTimer() {
+        portsScanner.restart();
+    }
+
+    @Override
+    public void resume() {
+        portsScanner.resume();
+    }
+
+    /**
+     * Suspend the scanner and wait for all in-flight probe threads to finish,
+     * ensuring they release any open port handles before a flash job proceeds.
+     * [tag:better_ux_for_flashing]
+     */
+    @Override
+    public CountDownLatch suspend() {
+        CountDownLatch latch = portsScanner.suspend();
+        // Interrupt all in-flight probe threads so they close their port handles
+        synchronized (probeThreads) {
+            for (Thread t : probeThreads.values()) {
+                if (t.isAlive()) {
+                    t.interrupt();
+                }
+            }
+        }
+        // Wait for probe threads to finish (max 10 seconds)
+        long deadline = System.currentTimeMillis() + 10_000;
+        while (System.currentTimeMillis() < deadline) {
+            boolean allDone = true;
+            synchronized (probeThreads) {
+                for (Thread t : probeThreads.values()) {
+                    if (t.isAlive()) {
+                        allDone = false;
+                        break;
+                    }
+                }
+            }
+            if (allDone) {
+                break;
+            }
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
+        return latch;
+    }
+
+    /**
+     * Pre-populate the port cache with a known result so the scanner does not
+     * re-inspect an actively-used port on the next scan cycle.  Call this
+     * before resuming the scanner after a reconnect to prevent the scanner from
+     * opening the port and competing with a BinaryProtocol connection on the
+     * same serial stream or process-wide CAN channel.
+     */
+    @Override
+    public void cachePort(PortResult port) {
+        synchronized (lock) {
+            if (LinkManager.PCAN.equals(port.port)) {
+                lastPcanConnected = true;
+                lastPcanPort = port;
+                pcanPortPinned = true;
+                pcanPortGeneration++;
+                return;
+            }
+            if (LinkManager.SOCKET_CAN.equals(port.port)) {
+                lastSocketCanAvailable = true;
+                lastSocketCanPort = port;
+                socketCanPortPinned = true;
+                socketCanPortGeneration++;
+                return;
+            }
+        }
+        portCache.put(port);
+    }
+
+    /**
+     * Remove a port from the cache so the scanner re-inspects it on the next
+     * scan cycle.  Call this before sending a reboot-to-OpenBLT command so that
+     * the scanner does not keep reporting the port as {@code EcuWithOpenblt}
+     * after the ECU has already transitioned to OpenBLT mode.
+     */
+    @Override
+    public void invalidatePort(String portName) {
+        portCache.invalidate(portName);
+        if (LinkManager.SOCKET_CAN.equals(portName) || LinkManager.PCAN.equals(portName)) {
+            synchronized (lock) {
+                if (LinkManager.SOCKET_CAN.equals(portName)) {
+                    socketCanPortPinned = false;
+                    lastSocketCanPort = null;
+                    socketCanPortGeneration++;
+                } else {
+                    pcanPortPinned = false;
+                    lastPcanPort = null;
+                    pcanPortGeneration++;
+                }
+                deviceProbeInvalidationGeneration++;
+                lastDeviceProbeMs = probes.now() - DEVICE_PROBE_INTERVAL_MS;
+                final List<PortResult> ports = knownHardware.getKnownPorts().stream()
+                    .filter(port -> !portName.equals(port.port))
+                    .collect(Collectors.toList());
+                knownHardware = new AvailableHardware(
+                    ports,
+                    knownHardware.isDfuFound(),
+                    knownHardware.isStLinkConnected(),
+                    knownHardware.isPCANConnected(),
+                    knownHardware.isSocketCanAvailable());
+            }
+        }
+    }
+}

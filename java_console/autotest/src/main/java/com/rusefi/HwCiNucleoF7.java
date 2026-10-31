@@ -5,6 +5,7 @@ import com.rusefi.f4discovery.*;
 import com.rusefi.nucleo.NucleoPwmHardwareTest;
 import com.rusefi.nucleo.NucleoVssHardwareTest;
 
+/** LTS suite: newer ADC/MAP checks require unported firmware telemetry and analog fixtures. */
 public class HwCiNucleoF7 {
     public static void main(String[] args) {
         CmdJUnitRunner.runHardwareTestAndExit(new Class[]{

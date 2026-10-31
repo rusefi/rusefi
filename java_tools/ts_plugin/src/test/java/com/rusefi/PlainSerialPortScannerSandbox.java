@@ -5,6 +5,9 @@ import com.rusefi.core.SignatureHelper;
 import com.rusefi.ts_plugin.headless.TsHeadlessPluginImpl;
 import com.rusefi.updater.PlainSerialPortScanner;
 
+/**
+ * Manual harness that scans serial ports for an ECU and resolves its update URL.
+ */
 public class PlainSerialPortScannerSandbox {
 
     public static void main(String[] args) {

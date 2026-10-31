@@ -31,7 +31,7 @@ public class LiveDataConventionTest {
 
     private void assertFile(String fileName, Field[] values) throws IOException, URISyntaxException {
         VariableValueSource valueSource = name -> {
-            Field f = Field.findFieldOrNull(Arrays.asList(values), "", name);
+            Field f = LiveDataParserPanel.findFieldOrNull(Arrays.asList(values), "", name);
             if (f == null) {
                 return null;
             }
