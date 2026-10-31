@@ -53,9 +53,10 @@ public class MainMenuTreeWidget {
     private final UIContext uiContext;
     /** Nodes whose SubMenuModel has at least one enable/visible expression. */
     private final List<ExpressionEntry> expressionEntries = new ArrayList<>();
-    /** Nodes currently evaluated as disabled (expression false). Used by renderer and click guard. */
-    private final Set<DefaultMutableTreeNode> disabledNodes = new HashSet<>();
-    /** Keys of currently disabled submenus for a quick lookup during click handling. */
+    /**
+     * Keys of currently disabled submenus (expression false). Used by renderer and click guard.
+     * Keyed by submenu rather than tree node because search results are built from copied nodes.
+     */
     private final Set<String> disabledKeys = new HashSet<>();
 
     /** Renders a "std_separator" menu entry as a horizontal line. */
@@ -236,7 +237,7 @@ public class MainMenuTreeWidget {
                         setIcon(groupIcon);
                     }
 
-                    if (disabledNodes.contains(node)) {
+                    if (userObject instanceof SubMenuModel && disabledKeys.contains(((SubMenuModel) userObject).getKey())) {
                         setForeground(UIManager.getColor("Label.disabledForeground"));
                     }
                 }
@@ -603,12 +604,10 @@ public class MainMenuTreeWidget {
     }
 
     private void refreshExpressions(IniFileModel iniFileModel, ConfigurationImage ci) {
-        disabledNodes.clear();
         disabledKeys.clear();
 
         for (ExpressionEntry entry : expressionEntries) {
             if (isDisabledByExpressions(entry.subMenu, iniFileModel, ci)) {
-                disabledNodes.add(entry.node);
                 disabledKeys.add(entry.subMenu.getKey());
             }
         }
