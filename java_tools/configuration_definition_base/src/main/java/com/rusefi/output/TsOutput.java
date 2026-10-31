@@ -77,6 +77,16 @@ public class TsOutput {
         return settingContextHelp.toString();
     }
 
+    private static boolean isBigEndianBitOrder(ReaderState state) {
+        try {
+            String value = state.getVariableRegistry().applyVariables("@@TS_INI_ENDIANNESS@@");
+            return "big".equals(value.trim());
+        } catch (IllegalStateException e) {
+            // not defined, e.g. live data generation outside rusefi_config.txt: little-endian
+            return false;
+        }
+    }
+
     public int run(ReaderState state, ConfigStructure structure, int structureStartingTsPosition, String temporaryLineComment, String variableNamePrefix) {
         FieldsStrategy strategy = new FieldsStrategy() {
 
@@ -209,7 +219,8 @@ public class TsOutput {
                     if (!configField.getName().startsWith(ConfigStructureImpl.UNUSED_BIT_PREFIX)) {
                         tsHeader.append(temporaryLineComment + nameWithPrefix + " = bits, U32,");
                         tsHeader.append(" " + tsPosition + ", [");
-                        tsHeader.append(bitIndex + ":" + bitIndex);
+                        int tsBit = isBigEndianBitOrder(state) ? 31 - bitIndex : bitIndex;
+                        tsHeader.append(tsBit + ":" + tsBit);
                         tsHeader.append("]");
                         if (isConstantsSection)
                             tsHeader.append(", \"" + configField.getFalseName() + "\", \"" + configField.getTrueName() + "\"");

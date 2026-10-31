@@ -571,11 +571,13 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 	// add some marker
 	uint32_t tmp = 0xfffffa11;
 #endif
+#if defined(CoreDebug)
 	// Attempt to break in to the debugger, if attached
 	if (CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk)
 	{
 		bkpt();
 	}
+#endif // CoreDebug, Cortex-M only
 #endif // EFI_PROD_CODE
 
 #if EFI_BACKUP_SRAM

@@ -423,7 +423,7 @@ void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint32_t page, uint
 		return;
 	}
 
-	uint32_t crc = SWAP_UINT32(crc32(start, count));
+	uint32_t crc = wireBe32(crc32(start, count));
 	tsChannel->sendResponse(TS_CRC, (const uint8_t *) &crc, 4);
 	if (page == TS_PAGE_SETTINGS && offset == 0 && count == sizeof(persistent_config_s)) {
 		finishPendingBurn(tsChannel);
@@ -491,7 +491,7 @@ void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
 //	printf("CRC %x\n", crc);
 #endif /* EFI_SIMULATOR */
 	// now write total CRC
-	*(uint32_t*)dataBuffer = SWAP_UINT32(crc);
+	*(uint32_t*)dataBuffer = wireBe32(crc);
 	tsChannel->write(dataBuffer, 4, true);
 	tsChannel->flush();
 }
@@ -848,7 +848,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 
 	uint32_t expectedCrc = *(uint32_t*) (tsChannel->scratchBuffer + incomingPacketSize);
 
-	expectedCrc = SWAP_UINT32(expectedCrc);
+	expectedCrc = wireBe32(expectedCrc);
 
 	uint32_t actualCrc = crc32(tsChannel->scratchBuffer, incomingPacketSize);
 	if (actualCrc != expectedCrc) {
@@ -1086,8 +1086,8 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		//	I need test this functionality with simulator as well. We need to review the cases when we really need to turn off
 		//	`TS_IO_TEST_COMMAND` processing. Do we really need guards below?
 		{
-			uint16_t subsystem = SWAP_UINT16(data16[0]);
-			uint16_t index = SWAP_UINT16(data16[1]);
+			uint16_t subsystem = wireBe16(data16[0]);
+			uint16_t index = wireBe16(data16[1]);
 
 			executeTSCommand(subsystem, index);
 		}

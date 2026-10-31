@@ -20,11 +20,16 @@
 #define _CHIBIOS_RT_CONF_
 #define _CHIBIOS_RT_CONF_VER_7_0_
 
+#ifndef PORT_IDLE_THREAD_STACK_SIZE
 #define PORT_IDLE_THREAD_STACK_SIZE     32
+#endif
 
 // See global_shared.h notes about stack requirements
 // see also http://www.chibios.org/dokuwiki/doku.php?id=chibios:kb:stacks
+// ports where interrupts run on the thread stacks (e.g. e200) override this
+#ifndef PORT_INT_REQUIRED_STACK
 #define PORT_INT_REQUIRED_STACK 	128
+#endif
 
 #define CHPRINTF_USE_FLOAT          	TRUE
 

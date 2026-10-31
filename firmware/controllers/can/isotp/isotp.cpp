@@ -152,10 +152,10 @@ TODO: refactor into child class if we ever choose to revive this logic
 		uint32_t crc = crc32((void *) srcBuf, numBytesAvailable);
 		// we need a separate buffer for crc because srcBuf may not be word-aligned for direct copy
 		uint8_t crcBuffer[sizeof(uint32_t)];
-		*(uint32_t *) (crcBuffer) = SWAP_UINT32(crc);
+		*(uint32_t *) (crcBuffer) = wireBe32(crc);
 
 		// now set the packet size
-		*(uint16_t *) shortCrcPacketStagingArea = SWAP_UINT16(numBytesAvailable);
+		*(uint16_t *) shortCrcPacketStagingArea = wireBe16(numBytesAvailable);
 		// copy the data
 		if (numBytesAvailable > 0)
 			memcpy(shortCrcPacketStagingArea + sizeof(uint16_t), srcBuf, numBytesAvailable);

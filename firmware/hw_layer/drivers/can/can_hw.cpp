@@ -28,7 +28,9 @@ static bool isCanEnabled = false;
 #if EFI_PROD_CODE
 
 #include "can_sniffer.h"
+#if HAL_USE_SERIAL_USB
 #include "usbcfg.h"
+#endif
 
 #if HAL_USE_USB_CDC_2
 CanSniffer canSniffer(SDU[1]);

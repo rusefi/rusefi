@@ -42,7 +42,7 @@ void TsChannelBase::crcAndWriteBuffer(uint8_t responseCode, size_t size) {
 	criticalAssertVoid(!isBigPacket(size), "crcAndWriteBuffer tried to transmit too large a packet")
 
 	// Index 0/1 = packet size (big endian)
-	*(uint16_t*)scratchBuffer = SWAP_UINT16(size + 1);
+	*(uint16_t*)scratchBuffer = wireBe16(size + 1);
 	// Index 2 = response code
 	scratchBuffer[2] = responseCode;
 
@@ -50,7 +50,7 @@ void TsChannelBase::crcAndWriteBuffer(uint8_t responseCode, size_t size) {
 	uint32_t crc = crc32(&scratchBuffer[2], size + 1); // command part of CRC
 
 	// Place the CRC at the end
-	crc = SWAP_UINT32(crc);
+	crc = wireBe32(crc);
 	memcpy(scratchBuffer + size + TS_PACKET_HEADER_SIZE, &crc, sizeof(crc));
 
 	// Write to the underlying stream
@@ -60,7 +60,7 @@ void TsChannelBase::crcAndWriteBuffer(uint8_t responseCode, size_t size) {
 
 uint32_t TsChannelBase::writePacketHeader(const uint8_t responseCode, const size_t size) {
 	uint8_t headerBuffer[3];
-	*(uint16_t*)headerBuffer = SWAP_UINT16(size + 1);
+	*(uint16_t*)headerBuffer = wireBe16(size + 1);
 	*(uint8_t*)(headerBuffer + 2) = responseCode;
 	// Write header
 	write(headerBuffer, sizeof(headerBuffer), /*isEndOfPacket*/false);
@@ -76,7 +76,7 @@ void TsChannelBase::writeCrcPacketLarge(const uint8_t responseCode, const uint8_
 	uint32_t crc = writePacketHeader(responseCode, size);
 	// Data part of CRC
 	crc = crc32inc((void*)buf, crc, size);
-	*(uint32_t*)crcBuffer = SWAP_UINT32(crc);
+	*(uint32_t*)crcBuffer = wireBe32(crc);
 
 	// If data, write that
 	if (size) {
@@ -101,7 +101,7 @@ uint32_t TsChannelBase::writePacketBody(const uint8_t* buf, const size_t size, u
 void TsChannelBase::writeCrcPacketTail(uint32_t crc) {
 	uint8_t crcBuffer[4];
 
-	*(uint32_t *)crcBuffer = SWAP_UINT32(crc);
+	*(uint32_t *)crcBuffer = wireBe32(crc);
 
 	write(crcBuffer, sizeof(crcBuffer), /*isEndOfPacket*/true);
 	flush();

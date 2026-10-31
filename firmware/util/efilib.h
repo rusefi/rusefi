@@ -33,6 +33,22 @@ inline uint64_t SWAP_UINT64(uint64_t x) {
     return __builtin_bswap64(x);
 }
 
+inline uint16_t wireBe16(uint16_t x) {
+#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+	return x;
+#else
+	return SWAP_UINT16(x);
+#endif
+}
+
+inline uint32_t wireBe32(uint32_t x) {
+#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+	return x;
+#else
+	return SWAP_UINT32(x);
+#endif
+}
+
 #define BIT(n) (UINT32_C(1) << (n))
 
 // also known as 'HUMAN_INDEX'
