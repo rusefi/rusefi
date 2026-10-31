@@ -178,7 +178,8 @@ public class CommonFunctionalTest extends RusefiTestBase {
 
     @Test
     public void test2003DodgeNeon() {
-        ecu.setEngineType(engine_type_e.DODGE_NEON_2003_CRANK);
+        // Firmware wire ID 46 is stable across generated enum name changes.
+        ecu.setEngineType(engine_type_e.values()[46]);
         ecu.sendCommand("set wwaeTau 0");
         ecu.sendCommand("set wwaeBeta 0");
         ecu.sendCommand(CMD_SET_SENSOR_MOCK + " " + SensorType.Map.name() + " 69.12");
