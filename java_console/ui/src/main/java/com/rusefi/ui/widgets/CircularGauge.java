@@ -44,7 +44,10 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
     private final String[] scaleLabels = new String[11];
     private double dangerThreshold;
     // Raw .ini limits (NaN when absent); updateZones() derives the drawn, ordered thresholds.
+    /** Shown for a reading below the scale (see {@link Zone#BELOW_SCALE}). */
+    public static final String NO_SENSOR = "NO SENSOR?";
     private final double lowDangerValue;
+    private final boolean engineSpeed;
     private final double lowWarningValue;
     private final double highWarningValue;
     private double lowDangerThreshold;
@@ -84,6 +87,7 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
     }
 
     public CircularGauge(GaugeScale scale, GaugeModel model) {
+        engineSpeed = scale.isEngineSpeed();
         minValue = scale.getMin();
         maxValue = scale.getMax();
         valueDecimals = scale.getValueDecimals();
@@ -103,7 +107,7 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
         setOpaque(false);
     }
 
-    static double resolve(IniValue value, IniFileModel ini, ConfigurationImage configuration, double fallback) {
+    public static double resolve(IniValue value, IniFileModel ini, ConfigurationImage configuration, double fallback) {
         if (!value.isExpression()) {
             return value.getNumericValue();
         }
@@ -123,13 +127,18 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
     }
 
     private void updateZones() {
-        zones = new Zones(minValue, dangerThreshold, lowDangerValue, lowWarningValue, highWarningValue);
+        zones = new Zones(minValue, dangerThreshold, lowDangerValue, lowWarningValue, highWarningValue, engineSpeed);
         highWarningThreshold = zones.highWarning;
         lowDangerThreshold = zones.lowDanger;
         lowWarningThreshold = zones.lowWarning;
     }
 
-    public enum Zone {NORMAL, WARNING, DANGER}
+    /**
+     * Where a reading falls. {@link #BELOW_SCALE} is a reading under the gauge's minimum: it almost always means a
+     * missing or unplugged sensor (rusEFI reports an open temperature sensor at about -40 C or lower), so it is
+     * shown as "no sensor?" rather than as danger, as TunerStudio leaves it unflagged.
+     */
+    public enum Zone {NORMAL, WARNING, DANGER, BELOW_SCALE}
 
     /**
      * The warning and danger zones of a gauge scale, shared by the round gauge and the Tuning
@@ -141,16 +150,18 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
         final double lowDanger;
         final double lowWarning;
         final double highWarning;
+        /** 0 is a stopped engine, not below a low limit. */
+        private final boolean engineSpeed;
 
         public static Zones of(GaugeScale scale) {
-            return of(scale.getMin(), scale.getMax(), scale.getLowDanger(), scale.getLowWarning(),
-                scale.getHighWarning(), scale.getHighDanger());
+            return new Zones(scale.getMin(), dangerThreshold(scale.getMin(), scale.getMax(), scale.getHighDanger()),
+                scale.getLowDanger(), scale.getLowWarning(), scale.getHighWarning(), scale.isEngineSpeed());
         }
 
         /** From TS limits; NaN leaves that limit's zone out. */
         public static Zones of(double min, double max, double lowDanger, double lowWarning,
                                double highWarning, double highDanger) {
-            return new Zones(min, dangerThreshold(min, max, highDanger), lowDanger, lowWarning, highWarning);
+            return new Zones(min, dangerThreshold(min, max, highDanger), lowDanger, lowWarning, highWarning, false);
         }
 
         /** Without a danger value the zone starts at the maximum, in whole percent as the dashboard stores it. */
@@ -167,8 +178,10 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
          * so a malformed definition still draws non-overlapping zones. A missing limit leaves its
          * zone empty.
          */
-        Zones(double min, double danger, double lowDangerValue, double lowWarningValue, double highWarningValue) {
+        Zones(double min, double danger, double lowDangerValue, double lowWarningValue, double highWarningValue,
+              boolean engineSpeed) {
             this.min = min;
+            this.engineSpeed = engineSpeed;
             this.danger = danger;
             highWarning = Double.isFinite(highWarningValue)
                 ? Math.max(min, Math.min(danger, highWarningValue)) : danger;
@@ -178,21 +191,50 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
                 ? Math.max(lowDanger, Math.min(highWarning, lowWarningValue)) : lowDanger;
         }
 
+        /** The scale minimum; readings below it are not flagged. */
+        public double getMin() {
+            return min;
+        }
+
+        /** Readings at or above this are danger: the danger value, or the maximum without one. */
+        public double getDanger() {
+            return danger;
+        }
+
+        /** Readings at or above this (and below {@link #getDanger()}) are warning. */
+        public double getHighWarning() {
+            return highWarning;
+        }
+
+        /** Readings from the minimum up to below this are danger; equal to the minimum when there is none. */
+        public double getLowDanger() {
+            return lowDanger;
+        }
+
+        /** Readings from {@link #getLowDanger()} up to below this are warning. */
+        public double getLowWarning() {
+            return lowWarning;
+        }
+
         /**
          * High zones include their threshold, as the end-of-scale danger zone always has; low zones
          * exclude it, so a limit equal to the minimum (common in the .ini) adds no zone. Readings
-         * below the minimum are not flagged: TS shows a disconnected 0 AFR or 0 C sensor
-         * temperature, both below their scales, on a normal dial.
+         * below the minimum are {@link Zone#BELOW_SCALE}, never danger: a disconnected 0 AFR or
+         * open temperature sensor reads below its scale. On the engine speed gauge, 0 is a stopped
+         * engine and normal although the .ini puts it under the low danger value.
          */
         public Zone zoneOf(double value, double tolerance) {
             if (!Double.isFinite(value)) {
+                return Zone.NORMAL;
+            }
+            if (engineSpeed && value == 0) {
                 return Zone.NORMAL;
             }
             if (value >= danger - tolerance) {
                 return Zone.DANGER;
             }
             if (value < min) {
-                return Zone.NORMAL;
+                return Zone.BELOW_SCALE;
             }
             if (value < lowDanger - tolerance) {
                 return Zone.DANGER;
@@ -444,7 +486,12 @@ public final class CircularGauge extends JComponent implements GaugeDisplay {
         g.setStroke(new BasicStroke(1.5f));
         g.draw(new Ellipse2D.Double(100, 100, 200, 200));
         drawText(g, current.text, 200, 200, 60, 165,
-            zone == Zone.DANGER ? GaugeStyle.danger() : zone == Zone.WARNING ? GaugeStyle.warningText() : GaugeStyle.text());
+            zone == Zone.DANGER ? GaugeStyle.danger() : zone == Zone.WARNING ? GaugeStyle.warningText()
+                : zone == Zone.BELOW_SCALE ? GaugeStyle.tick() : GaugeStyle.text());
+        if (zone == Zone.BELOW_SCALE) {
+            // above the value, where the hub is still wide enough for it
+            drawText(g, NO_SENSOR, 200, 150, 15, 150, GaugeStyle.tick());
+        }
         drawText(g, units, 202, 246, UNITS_FONT, 16, 160, GaugeStyle.label());
         drawText(g, title, 200, 331, 16, 230, GaugeStyle.label());
     }

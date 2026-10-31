@@ -234,4 +234,44 @@ class SensorLiveGraphTest {
         }
         return paths;
     }
+
+    @Test
+    void zoneBandsFollowTheRoundGaugeZones() {
+        // coolant-like: only high warning and danger in the .ini; the danger value snaps to a whole percent of the
+        // scale as on the round gauge (105 on -40..140 is 105.8), so both flag the same readings
+        assertEquals("[BELOW_SCALE -Infinity..-40.0, WARNING 95.0..105.8, DANGER 105.8..Infinity]", SensorLiveGraph.bands(
+            com.rusefi.ui.widgets.CircularGauge.Zones.of(-40, 140, Double.NaN, Double.NaN, 95, 105)).toString());
+        assertEquals("[BELOW_SCALE -Infinity..0.0, DANGER 0.0..10.0, WARNING 10.0..20.0, WARNING 80.0..90.0, DANGER 90.0..Infinity]",
+            SensorLiveGraph.bands(com.rusefi.ui.widgets.CircularGauge.Zones.of(0, 100, 10, 20, 80, 90)).toString());
+    }
+
+    @Test
+    void graphsShowTheFullScaleUnlessZoomedToTheReadings() throws Throwable {
+        SwingUtilities.invokeAndWait(() -> {
+            UIContext context = GaugesPanelLayoutTest.createContext();
+            Node config = new Node();
+            config.setBoolProperty("auto_scale", true); // the older setting: such graphs now start at full scale
+            SensorLiveGraph graph = new SensorLiveGraph(context, config, "RPMGauge", null);
+            try {
+                graph.setActive(false);
+                GaugeModel model = context.iniFileState.getIniFileModel().getGauge("RPMGauge");
+                SensorLiveGraph.VisibleRange range = graph.getRange(new double[] {1000, 2000}, model);
+                assertEquals(0, range.minValue);
+                assertEquals(8000, range.maxValue);
+
+                JMenu scale = (JMenu) java.util.Arrays.stream(graph.createOptionsMenu().getComponents())
+                    .filter(c -> c instanceof JMenu && "Scale".equals(((JMenu) c).getText())).findFirst().orElseThrow();
+                JRadioButtonMenuItem full = (JRadioButtonMenuItem) scale.getMenuComponent(0);
+                JRadioButtonMenuItem zoom = (JRadioButtonMenuItem) scale.getMenuComponent(1);
+                assertEquals(SensorLiveGraph.FULL_SCALE, full.getText());
+                assertTrue(full.isSelected());
+                zoom.doClick();
+                assertTrue(config.getBoolProperty("zoom_to_readings"));
+                range = graph.getRange(new double[] {1000, 2000}, model);
+                assertTrue(range.minValue > 900 && range.maxValue < 2100, "zoomed to the readings");
+            } finally {
+                graph.destroy();
+            }
+        });
+    }
 }

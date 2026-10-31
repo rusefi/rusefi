@@ -31,4 +31,26 @@ public final class GaugeMenuLabel {
         // Keep unnamed or unavailable expressions selectable without exposing INI syntax.
         return title == null || title.trim().isEmpty() ? gauge.getName() : title;
     }
+
+    /**
+     * The gauge's units, with an expression such as the coolant gauge's metric/imperial choice resolved like
+     * {@link #getTitle}; empty while an expression cannot be resolved, never INI syntax.
+     */
+    public static String getUnits(UIContext context, GaugeModel gauge) {
+        if (!gauge.getUnitsValue().isExpression()) {
+            return gauge.getUnits();
+        }
+        String units = null;
+        IniFileModel ini = context.iniFileState.getIniFileModel();
+        if (ini != null && TsStringFunction.containsStringFunction(gauge.getUnits())) {
+            units = TsStringFunction.resolve(gauge.getUnits(), ini, context.getCurrentConfigurationImage(), null);
+        }
+        if (units == null && !context.isOfflineMode()) {
+            ISensorHolder.ResolvedGaugeLabels labels = SensorCentral.getInstance().getResolvedLabels(gauge.getName());
+            if (labels != null && !gauge.getUnits().equals(labels.getUnits())) {
+                units = labels.getUnits();
+            }
+        }
+        return units == null ? "" : units;
+    }
 }

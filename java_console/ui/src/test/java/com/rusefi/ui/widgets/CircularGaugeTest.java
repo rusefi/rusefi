@@ -207,7 +207,7 @@ class CircularGaugeTest {
         // afr1Gauge from gauge_declarations.ini
         CircularGauge afr = new CircularGauge(10, 19.4, model(10, 19.4, 12, 13, 15, 16, 2));
         for (Object[] sample : new Object[][] {
-            {0.0, CircularGauge.Zone.NORMAL}, // disconnected sensor, below the scale: TS shows no alarm
+            {0.0, CircularGauge.Zone.BELOW_SCALE}, // disconnected sensor, below the scale: "no sensor?", not danger
             {11.0, CircularGauge.Zone.DANGER},
             {12.5, CircularGauge.Zone.WARNING},
             {14.0, CircularGauge.Zone.NORMAL},
@@ -224,6 +224,30 @@ class CircularGaugeTest {
         CircularGauge tps = new CircularGauge(0, 100, model(0, 100, 0, 0, 100, 100, 0));
         tps.setValue(0);
         assertEquals(CircularGauge.Zone.NORMAL, tps.getZone());
+    }
+
+    @Test
+    void aStoppedEngineIsNotFlaggedOnTheEngineSpeedGauge() {
+        // RPMGauge: low danger 200 rpm, so without the rule 0 rpm (engine off) would read as danger
+        GaugeModel rpm = new GaugeModel("RPMGauge", GaugeScale.ENGINE_SPEED_CHANNEL,
+            IniValue.ofString("RPM"), IniValue.ofString("RPM"), IniValue.ofNumeric(0), IniValue.ofNumeric(9000),
+            IniValue.ofNumeric(200), IniValue.ofNumeric(400), IniValue.ofNumeric(7000), IniValue.ofNumeric(8000),
+            IniValue.ofNumeric(0), IniValue.ofNumeric(0));
+        GaugeScale scale = GaugeScale.fromIni(rpm, null, null);
+        assertTrue(scale.isEngineSpeed());
+        assertTrue(scale.with(new GaugeScaleOverrides(null, null, 7500.0, null)).isEngineSpeed(), "kept with user overrides");
+        CircularGauge.Zones zones = CircularGauge.Zones.of(scale);
+        assertEquals(CircularGauge.Zone.NORMAL, zones.zoneOf(0, 0), "engine stopped");
+        assertEquals(CircularGauge.Zone.DANGER, zones.zoneOf(100, 0), "turning, but below the low danger value");
+        assertEquals(CircularGauge.Zone.WARNING, zones.zoneOf(300, 0));
+
+        CircularGauge gauge = new CircularGauge(scale, rpm);
+        gauge.setValue(0);
+        assertEquals(CircularGauge.Zone.NORMAL, gauge.getZone());
+
+        GaugeModel other = model(0, 9000, 200, 400, 7000, 8000, 0);
+        assertEquals(CircularGauge.Zone.DANGER, CircularGauge.Zones.of(GaugeScale.fromIni(other, null, null)).zoneOf(0, 0),
+            "other gauges keep the .ini meaning of 0");
     }
 
     @Test

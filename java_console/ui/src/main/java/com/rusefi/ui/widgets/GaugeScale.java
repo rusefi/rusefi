@@ -20,9 +20,11 @@ public final class GaugeScale {
     private final double highDanger;
     private final int valueDecimals;
     private final int labelDecimals;
+    /** The engine speed gauge, where 0 means a stopped engine rather than a fault. */
+    private final boolean engineSpeed;
 
     private GaugeScale(double min, double max, double lowDanger, double lowWarning, double highWarning,
-                       double highDanger, int valueDecimals, int labelDecimals) {
+                       double highDanger, int valueDecimals, int labelDecimals, boolean engineSpeed) {
         if (!Double.isFinite(min)) {
             min = 0;
         }
@@ -41,6 +43,7 @@ public final class GaugeScale {
         this.highDanger = finiteOrNaN(highDanger);
         this.valueDecimals = boundedDecimals(valueDecimals);
         this.labelDecimals = boundedDecimals(labelDecimals);
+        this.engineSpeed = engineSpeed;
     }
 
     /** A scale from plain numbers; {@code highDanger} NaN means no danger value. */
@@ -49,13 +52,16 @@ public final class GaugeScale {
     }
 
     /** A scale with all four TS limits; NaN leaves that limit's zone out. */
-    static GaugeScale of(double min, double max, double lowDanger, double lowWarning, double highWarning,
-                         double highDanger, int valueDecimals, int labelDecimals) {
-        return new GaugeScale(min, max, lowDanger, lowWarning, highWarning, highDanger, valueDecimals, labelDecimals);
+    public static GaugeScale of(double min, double max, double lowDanger, double lowWarning, double highWarning,
+                                double highDanger, int valueDecimals, int labelDecimals) {
+        return new GaugeScale(min, max, lowDanger, lowWarning, highWarning, highDanger, valueDecimals, labelDecimals, false);
     }
 
+    /** The output channel of engine speed in rusEFI's .ini. */
+    static final String ENGINE_SPEED_CHANNEL = "RPMValue";
+
     public static GaugeScale fromIni(GaugeModel model, IniFileModel ini, ConfigurationImage configuration) {
-        return of(CircularGauge.resolve(model.getLowValueValue(), ini, configuration, 0),
+        GaugeScale scale = of(CircularGauge.resolve(model.getLowValueValue(), ini, configuration, 0),
             CircularGauge.resolve(model.getHighValueValue(), ini, configuration, 0),
             CircularGauge.resolve(model.getLowDangerValueValue(), ini, configuration, Double.NaN),
             CircularGauge.resolve(model.getLowWarningValueValue(), ini, configuration, Double.NaN),
@@ -63,6 +69,17 @@ public final class GaugeScale {
             CircularGauge.resolve(model.getHighDangerValueValue(), ini, configuration, Double.NaN),
             (int) CircularGauge.resolve(model.getValueDecimalPlacesValue(), ini, configuration, 0),
             (int) CircularGauge.resolve(model.getLabelDecimalPlacesValue(), ini, configuration, 0));
+        return ENGINE_SPEED_CHANNEL.equals(model.getChannel()) ? scale.asEngineSpeed() : scale;
+    }
+
+    /** This scale for the engine speed gauge: a stopped engine (0) is not flagged. */
+    public GaugeScale asEngineSpeed() {
+        return new GaugeScale(min, max, lowDanger, lowWarning, highWarning, highDanger, valueDecimals, labelDecimals, true);
+    }
+
+    /** Whether this is the engine speed gauge, where 0 means a stopped engine. */
+    public boolean isEngineSpeed() {
+        return engineSpeed;
     }
 
     public static GaugeScale resolve(GaugeModel model, IniFileModel ini, ConfigurationImage configuration,
@@ -86,7 +103,7 @@ public final class GaugeScale {
             lowDanger, lowWarning, highWarning,
             overrides.getDanger() != null ? overrides.getDanger() : highDanger,
             decimals != null ? decimals : valueDecimals,
-            labelDecimals);
+            labelDecimals, engineSpeed);
     }
 
     public double getMin() {
