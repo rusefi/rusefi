@@ -8,6 +8,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Properties;
 
+/**
+ * See TsHelper
+ */
 public class TsHelper {
     public static final String TS_ROOT = System.getProperty("user.home") + File.separator + ".efiAnalytics" + File.separator;
     public static final String CURRENT_TUNE_MSQ = "CurrentTune.msq";

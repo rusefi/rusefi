@@ -2,6 +2,7 @@ package com.rusefi.ui.lua;
 
 import com.opensr5.ini.field.StringIniField;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.ShortcutsHelper;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.util.UiUtils;
@@ -51,6 +52,7 @@ public class LuaTextEditor {
         textArea.setAutoIndentEnabled(true);
         textArea.setBracketMatchingEnabled(true);
         textArea.setTabSize(2);
+        textArea.setToolTipText("Edit Lua script; Ctrl+Z to undo, Ctrl+Y to redo, Ctrl+Space for completions");
         Font current = textArea.getFont();
         textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, current != null ? current.getSize() : 12));
 		textArea.requestFocusInWindow();
@@ -117,6 +119,11 @@ public class LuaTextEditor {
         if (bp == null)
             return;
         StringIniField field = LuaScriptPanel.getLuaScriptField(bp);
+        // field is null when the active .ini has no luaScript field yet — e.g. during config
+        // migration before the ini is wired up. Match the bp==null guard above instead of NPEing
+        // on every document change (see #9709).
+        if (field == null)
+            return;
         int limit = field.getSize();
         sizeLabel.setText(textArea.getText().length() + "/" + limit);
     }
@@ -133,7 +140,7 @@ public class LuaTextEditor {
         document.addUndoableEditListener(e -> undoManager.addEdit(e.getEdit()));
 
         // Map undo action
-        installKeyAction(undoKeyStroke, "undoKeyStroke", textArea, new AbstractAction() {
+        ShortcutsHelper.installKeyAction(undoKeyStroke, "undoKeyStroke", textArea, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -144,7 +151,7 @@ public class LuaTextEditor {
             }
         });
         // Map redo action
-        installKeyAction(redoKeyStroke, "redoKeyStroke", textArea, new AbstractAction() {
+        ShortcutsHelper.installKeyAction(redoKeyStroke, "redoKeyStroke", textArea, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -154,11 +161,6 @@ public class LuaTextEditor {
                 }
             }
         });
-    }
-
-    public static void installKeyAction(KeyStroke undoKeyStroke, String actionName, JComponent control, AbstractAction action) {
-        control.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(undoKeyStroke, actionName);
-        control.getActionMap().put(actionName, action);
     }
 
     public JComponent getControl() {
@@ -197,5 +199,5 @@ public class LuaTextEditor {
             provider.addCompletion(new BasicCompletion(provider, f));
         }
     }
-    
+
 }

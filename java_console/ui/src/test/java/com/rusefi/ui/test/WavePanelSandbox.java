@@ -10,6 +10,8 @@ import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 
 /**
+ * Visual sandbox for the engine-sniffer wave panel.
+ *
  * 7/25/13
  * Andrey Belomutskiy, (c) 2013-2020
  */

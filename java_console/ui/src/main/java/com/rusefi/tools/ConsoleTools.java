@@ -1,5 +1,7 @@
 package com.rusefi.tools;
 
+import com.rusefi.core.OsUtil;
+
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.io.ConfigurationImageFile;
@@ -10,7 +12,6 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.*;
-import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
@@ -21,10 +22,9 @@ import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.ServerSocketReference;
 import com.rusefi.maintenance.ExecHelper;
 import com.rusefi.tools.online.Online;
-import com.rusefi.ui.AuthTokenPanel;
+import com.rusefi.ts_plugin.ui.AuthTokenPanel;
 import com.rusefi.ui.StatusConsumer;
 import com.rusefi.io.UiLinkManagerHelper;
-import com.rusefi.ui.basic.BasicStartupFrame;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -57,7 +57,6 @@ public class ConsoleTools {
     static {
         registerTool("help", args -> printTools(), "Print this help.");
         registerTool("headless", ConsoleTools::runHeadless, "Connect to rusEFI controller and start saving logs.");
-        registerTool("basic-ui", BasicStartupFrame::runTool, "Basic UI");
 
         registerTool("functional_test", ConsoleTools::runFunctionalTest, "NOT A USER TOOL. Development tool related to functional testing");
 //        registerTool("convert_binary_configuration_to_xml", ConsoleTools::convertBinaryToXml, "NOT A USER TOOL. Development tool to convert binary configuration into XML form.");
@@ -73,7 +72,7 @@ public class ConsoleTools {
             PCanIoStream stream = PCanIoStream.createStream();
             CANConnectorStartup.start(stream, statusListener);
         }, "Connect your rusEFI ECU using PCAN CAN-bus adapter");
-        if (!FileLog.isWindows()) {
+        if (!OsUtil.isWindows()) {
             registerTool("socketcan_connector", strings -> CANConnectorStartup.start(SocketCANIoStream.create(), statusListener), "Connect your rusEFI ECU using SocketCAN CAN-bus adapter");
         }
         registerTool("print_auth_token", args -> printAuthToken(), "Print current rusEFI Online authentication token.");
@@ -82,6 +81,7 @@ public class ConsoleTools {
         registerTool("upload_tune", ConsoleTools::uploadTune, "Upload specified tune file to rusEFI Online using auth token from settings");
 
         registerTool("read_tune", args -> readTune(), "Read tune from controller");
+        registerTool("set_lua", SetLuaTool::setLua, "Find ECU on USB and apply/burn lua script from specified file");
         registerTool("get_performance_trace", args -> PerformanceTraceHelper.getPerformanceTune(), "DEV TOOL: Get performance trace from ECU");
 
         registerTool("version", ConsoleTools::version, "Only print version");
@@ -102,7 +102,9 @@ public class ConsoleTools {
                 String command = CommandHelper.assembleCommand(args);
                 log.info("Sending command [" + command + "]");
                 IoStream stream = sendNonBlockingCommandDoNotWaitForConfirmation(command);
-                stream.close(); // this would close connector non-daemon thread
+                if (stream != null) {
+                    stream.close(); // this would close connector non-daemon thread
+                }
 //                sleepAndPrintNonDaemons(4000);
             }
         }, "Sends command specified as second argument");
@@ -270,7 +272,10 @@ public class ConsoleTools {
             return;
         }
         LinkManager linkManager = new LinkManager();
-        linkManager.startAndConnect(autoDetectedPort, new ConnectionStateListener() {
+        linkManager.startAndConnect(autoDetectedPort, new ConnectionStatusLogic.Listener() {
+            @Override
+            public void onConnectionStatus(boolean isConnected) {}
+
             @Override
             public void onConnectionEstablished() {
                 onConnectionEstablished.apply(linkManager);

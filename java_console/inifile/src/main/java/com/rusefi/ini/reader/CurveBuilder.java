@@ -1,0 +1,129 @@
+package com.rusefi.ini.reader;
+
+import com.opensr5.ini.AxisModel;
+import com.opensr5.ini.CurveModel;
+
+import java.util.LinkedList;
+
+public class CurveBuilder {
+    // TunerStudio treats the axis step (grid divisions) as optional, e.g. "yAxis = -5, 5,"
+    private static final int DEFAULT_AXIS_STEP = 10;
+
+    private String curveId;
+    private String title;
+    private String xLabel;
+    private String yLabel;
+    private AxisModel xAxis;
+    private AxisModel yAxis;
+    private String xBins;
+    private String yBins;
+    private String topicHelp;
+
+    public void setCurveDefinition(String curveId, String title) {
+        this.curveId = curveId;
+        this.title = title;
+    }
+
+    public void setColumnLabels(String xLabel, String yLabel) {
+        this.xLabel = xLabel;
+        this.yLabel = yLabel;
+    }
+
+    public void setXAxis(double min, double max, int step) {
+        this.xAxis = new AxisModel(min, max, step);
+    }
+
+    public void setYAxis(double min, double max, int step) {
+        this.yAxis = new AxisModel(min, max, step);
+    }
+
+    public void setXBins(String xBins) {
+        this.xBins = xBins;
+    }
+
+    public void setYBins(String yBins) {
+        this.yBins = yBins;
+    }
+
+    public boolean isComplete() {
+        return curveId != null && xAxis != null && yAxis != null;
+    }
+
+    public boolean isActive() {
+        return curveId != null;
+    }
+
+    public String getCurveId() {
+        return curveId;
+    }
+
+    public CurveModel build() {
+        return new CurveModel(curveId, title, xLabel, yLabel, xAxis, yAxis, xBins, yBins, topicHelp);
+    }
+
+    public void reset() {
+        curveId = null;
+        title = null;
+        xLabel = null;
+        yLabel = null;
+        xAxis = null;
+        yAxis = null;
+        xBins = null;
+        yBins = null;
+        topicHelp = null;
+    }
+
+    public boolean handleLine(LinkedList<String> list, java.util.function.Consumer<String> addField, Runnable finishCurrentCurve) {
+        String first = list.getFirst();
+        if (first.equalsIgnoreCase("curve")) {
+            finishCurrentCurve.run();
+            list.removeFirst();
+            String curveId = list.removeFirst();
+            String title = list.isEmpty() ? "" : list.removeFirst();
+            setCurveDefinition(curveId, title);
+            return true;
+        }
+
+        if (!isActive()) {
+            return false;
+        }
+
+        if (first.equalsIgnoreCase("topicHelp")) {
+            list.removeFirst();
+            topicHelp = list.isEmpty() ? null : list.removeFirst();
+            return true;
+        } else if (first.equalsIgnoreCase("columnLabel")) {
+            list.removeFirst();
+            setColumnLabels(list.removeFirst(), list.removeFirst());
+            return true;
+        } else if (first.equalsIgnoreCase("xAxis")) {
+            list.removeFirst();
+            String min = list.removeFirst();
+            String max = list.removeFirst();
+            int step = list.isEmpty() ? DEFAULT_AXIS_STEP : (int) com.opensr5.ini.field.IniField.parseDouble(list.removeFirst());
+            xAxis = new AxisModel(min, max, step);
+            return true;
+        } else if (first.equalsIgnoreCase("yAxis")) {
+            list.removeFirst();
+            String min = list.removeFirst();
+            String max = list.removeFirst();
+            int step = list.isEmpty() ? DEFAULT_AXIS_STEP : (int) com.opensr5.ini.field.IniField.parseDouble(list.removeFirst());
+            yAxis = new AxisModel(min, max, step);
+            return true;
+        } else if (first.equalsIgnoreCase("xBins")) {
+            list.removeFirst();
+            String bins = list.removeFirst();
+            setXBins(bins);
+            addField.accept(bins);
+            return true;
+        } else if (first.equalsIgnoreCase("yBins")) {
+            list.removeFirst();
+            String bins = list.removeFirst();
+            setYBins(bins);
+            addField.accept(bins);
+            return true;
+        }
+
+        return false;
+    }
+}

@@ -12,7 +12,7 @@ public class ConfigFieldParserIssue1057Test {
         ReaderStateImpl state = new ReaderStateImpl();
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
 
-        String inputString = "struct pid_s\nbit activateAuxPid1;\n" +
+        String inputString = "struct pid_s\nbit activateAuxPid1,\"true\",\"false\";\n" +
                 "int fieldName;\n" +
                 "end_struct\n";
 

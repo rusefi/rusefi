@@ -15,13 +15,22 @@ import java.util.*;
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.maintenance.migration.IniFieldMigrationUtils.checkIfUnitsCanBeMigrated;
 
+/**
+ * DefaultTuneMigrator is the final stage of the migration process.
+ * It handles simple field-to-field migration where names and units match between the old and new .ini files.
+ *
+ * This migrator is executed last in {@link com.rusefi.maintenance.migration.migrators.ComposedTuneMigrator}.
+ * It will skip any fields that have already been handled by more specialized migrators.
+ *
+ * It automatically ignores fields marked as "unused" in `rusefi_config.txt` and certain board-specific fields.
+ */
 public enum DefaultTuneMigrator implements TuneMigrator {
     INSTANCE;
 
     private static final Logging log = getLogging(DefaultTuneMigrator.class);
 
     // ini fields to ignore on all boards
-    private static final Set<String> INI_FIELDS_TO_IGNORE = CompatibilitySet.of("byFirmwareVersion");
+    private static final Set<String> INI_FIELDS_TO_IGNORE = CompatibilitySet.of("byFirmwareVersion", "hash3");
 
     private static final Set<String> boardSpecificIniFieldsToIgnore = ConnectionAndMeta.getNonMigratableIniFields();
 
@@ -29,7 +38,13 @@ public enum DefaultTuneMigrator implements TuneMigrator {
     @Override
     public void migrateTune(final TuneMigrationContext context) {
         final IniFileModel prevIni = context.getPrevIniFile();
-        final Map<String, IniField> prevIniFields = prevIni.getAllIniFields();
+        final Map<String, IniField> prevIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        prevIniFields.putAll(prevIni.getAllIniFields());
+        prevIni.getSecondaryIniFields().forEach((name, field) -> {
+            if (field.getPageIndex() != 0 && isBurnablePage(prevIni, field.getPageIndex())) {
+                prevIniFields.put(name, field);
+            }
+        });
         for (final Map.Entry<String, IniField> prevFieldEntry : prevIniFields.entrySet()) {
             migrateIniField(context, prevFieldEntry);
         }
@@ -51,8 +66,11 @@ public enum DefaultTuneMigrator implements TuneMigrator {
         final IniFileModel newIni = context.getUpdatedIniFile();
         final Map<String, Constant> newValues = context.getUpdatedTune().getConstantsAsMap();
         final Map<String, Constant> prevValues = context.getPrevTune().getConstantsAsMap();
-        final Map<String, IniField> newIniFields = newIni.getAllIniFields();
-        final IniField newField = newIniFields.get(prevFieldName);
+        // findIniField (not getAllIniFields().get) so fields that live on a secondary TS page in the
+        // new .ini are still resolved. getAllIniFields() only holds main-page (page 1) fields; any
+        // field moved to a dedicated page — e.g. luaScript on its own page since #9693 — would
+        // otherwise look "missed in new .ini file" and be silently dropped from the migrated tune.
+        final IniField newField = newIni.findIniField(prevFieldName).orElse(null);
         final Constant prevValue = prevValues.get(prevFieldName);
 
         if (newField == null) {
@@ -62,6 +80,10 @@ public enum DefaultTuneMigrator implements TuneMigrator {
                     prevFieldName
                 ));
             }
+            return;
+        }
+
+        if (!isBurnablePage(newIni, newField.getPageIndex())) {
             return;
         }
 
@@ -154,5 +176,17 @@ public enum DefaultTuneMigrator implements TuneMigrator {
 
     private static boolean isUnusedField(final String fieldName) {
         return fieldName.startsWith(UnusedPrefix.UNUSED_ANYTHING_PREFIX);
+    }
+
+    private static boolean isBurnablePage(IniFileModel ini, int pageIdentifier) {
+        if (pageIdentifier == 0) {
+            return true;
+        }
+        for (int pageIndex = 0; pageIndex < ini.getMetaInfo().getnPages(); pageIndex++) {
+            if (ini.getMetaInfo().getPageIdentifier(pageIndex) == pageIdentifier) {
+                return !ini.getMetaInfo().getBurnCommand(pageIndex).isEmpty();
+            }
+        }
+        return false;
     }
 }

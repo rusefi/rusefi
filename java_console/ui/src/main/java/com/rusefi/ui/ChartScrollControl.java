@@ -29,7 +29,7 @@ public class ChartScrollControl {
         setInfoText(index);
 
         JButton prev = new JButton("<");
-        prev.setToolTipText("Previous page");
+        prev.setToolTipText("Previous page (Left arrow)");
         prev.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -39,7 +39,7 @@ public class ChartScrollControl {
 
 
         JButton next = new JButton(">");
-        next.setToolTipText("Next page");
+        next.setToolTipText("Next page (Right arrow)");
         next.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -114,4 +114,3 @@ public class ChartScrollControl {
         setInfoText(index);
     }
 }
-

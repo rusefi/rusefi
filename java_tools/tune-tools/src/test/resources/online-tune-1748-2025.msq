@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- Reduced from https://rusefi.com/online/download.php?msq=1748 -->
+<msq xmlns="http://www.msefi.com/:msq">
+  <versionInfo fileFormat="5.0" firmwareInfo="rusEFI+v20250509%4065034" nPages="1" signature="rusEFI master.2025.05.09.uaefi.628880644"/>
+  <page number="0" size="32244">
+    <constant name="boostControlPin">"B17 Low Side output 3"</constant>
+  </page>
+</msq>

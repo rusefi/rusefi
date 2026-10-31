@@ -4,7 +4,8 @@ import com.devexperts.logging.Logging;
 import com.rusefi.Listener;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.Timeouts;
-import com.rusefi.core.Sensor;
+import com.rusefi.core.SensorNames;
+import com.rusefi.core.WellKnownGauges;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
@@ -299,8 +300,8 @@ public class Backend implements Closeable {
         for (ControllerConnectionState client : clients) {
             // todo: at the moment we use current OutputChannel layout - a better way would be to take
             // todo: OutputChannel from .ini file based on controller signature
-            int rpm = (int) client.getSensorsHolder().getValue(Sensor.RPMValue);
-            double clt = client.getSensorsHolder().getValue(Sensor.COOLANT);
+            int rpm = (int) client.getSensorsHolder().getValue(WellKnownGauges.RPMGauge.getOutputChannelName());
+            double clt = client.getSensorsHolder().getValue(SensorNames.COOLANT);
             UserDetails owner = client.getTwoKindSemaphore().getOwner();
             SessionDetails sessionDetails = client.getSessionDetails();
             ControllerInfo controllerInfo = sessionDetails.getControllerInfo();

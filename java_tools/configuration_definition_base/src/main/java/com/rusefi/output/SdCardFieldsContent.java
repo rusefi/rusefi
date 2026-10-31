@@ -37,7 +37,7 @@ public class SdCardFieldsContent {
             output.write(additionalHeaders);
         }
         output.write("static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {\n" +
-                "\t{packedTime, GAUGE_NAME_TIME, \"sec\", 0},\n");
+                "\t{packedTime, GAUGE_NAME_TIME, \"sec\", 3},\n");
         output.write(content);
         output.write("};\n");
     }

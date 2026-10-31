@@ -30,6 +30,10 @@ public class SerialAutoChecker {
      * @return ECU signature from specified stream
      */
     public static String checkResponse(IoStream stream, Function<CallbackContext, Void> callback) {
+        return checkResponse(stream, callback, com.rusefi.Timeouts.BINARY_IO_TIMEOUT);
+    }
+
+    public static String checkResponse(IoStream stream, Function<CallbackContext, Void> callback, int timeoutMs) {
         if (stream == null)
             return null;
 //        if (mode == PortDetector.DetectorMode.DETECT_ELM327) {
@@ -42,7 +46,7 @@ public class SerialAutoChecker {
         IncomingDataBuffer incomingData = stream.getDataBuffer();
         try {
             HelloCommand.send(stream);
-            final String signature = getStringResponse("auto detect", incomingData);
+            final String signature = getStringResponse("auto detect", incomingData, timeoutMs);
             if ((signature == null) || !isSignatureWithValidPrefix(signature)) {
                 return null;
             }

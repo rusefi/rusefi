@@ -4,6 +4,12 @@ configurations {
 }
 
 dependencies {
+    implementation project(':ecu_shared')
+    implementation project(':mcp_ecu')
+    implementation 'com.nimbusds:nimbus-jose-jwt:10.10'
+    implementation project(':autoupdate')
+    implementation project(':connectivity')
+    implementation project(':ts_plugin')
     implementation project(':trigger-ui')
     implementation project(':autotest')
     implementation project(':luaformatter')
@@ -23,10 +29,105 @@ dependencies {
     implementation files('../lib/dfu/IntelHexParser.jar')
 */
     testFixturesApi testFixtures(project(':ecu_io'))
+    testImplementation testFixtures(project(':connectivity'))
+    testFixturesApi project(':connectivity')
+    testFixturesImplementation project(':ecu_shared')
+    implementation global_libs.jaxb_runtime
+}
+
+// Auth/UI development without opening an ECU port. Use Console for live tools.
+tasks.register('runLLMTabSandbox', JavaExec) {
+    dependsOn testClasses
+    group = 'Execution'
+    description = 'Open the ChatGPT authentication/UI sandbox (no ECU port opened)'
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.rusefi.ui.LLMTabSandbox'
+    if (project.hasProperty('llmStore')) {
+        args project.property('llmStore')
+    }
+}
+
+// Explicit release check: downloads the published ZIP, without ECU access or ChatGPT authorization.
+tasks.register('verifyHostedKnowledgeDelivery', JavaExec) {
+    dependsOn testClasses
+    group = 'Verification'
+    description = 'Verify published knowledge against a workflow revision/artifact hash through case export'
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.rusefi.ui.llm.HostedKnowledgeDeliveryCheck'
+}
+
+// Headless soak: cycles the SD card ECU/logging <-> PC/MSD 10 times, 20s in each mode, and
+// reports a pass/fail tally. Auto-detects the serial port, or pass -PecuPort=COM7.
+task runSdCycle(type: JavaExec) {
+    dependsOn testClasses
+    group = "Execution"
+    description = "Run SdEcuPcCycleSandbox against a connected ECU"
+    workingDir = rootProject.projectDir
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.rusefi.SdEcuPcCycleSandbox'
+    standardInput = System.in
+    maxHeapSize = '2g'
+    jvmArgs '-Djava.awt.headless=true'
+    if (project.hasProperty('ecuPort')) {
+        args project.property('ecuPort')
+    }
+}
+
+// Writes a JVM argument file (build/scanAndUpdate.args) holding the -classpath for the test
+// source set, so bin/ScanAndUpdateBoardSandbox.bat can launch the sandbox via `java @argfile`.
+// An argument file is required because this classpath is ~9 KB, well over the Windows
+// command-line / environment-variable length limit. Depends on testClasses so the compiled
+// sandbox is on the path.
+task writeScanAndUpdateArgs {
+    // capture at configuration time so doLast holds no Project reference (configuration-cache safe)
+    def testRuntimeClasspath = sourceSets.test.runtimeClasspath
+    // depend on the classpath itself so every producer runs (test classes, the testFixtures
+    // jar that carries ScanAndUpdateFlow, dependency-project jars), not just testClasses
+    dependsOn testRuntimeClasspath
+    def argsFile = layout.buildDirectory.file("scanAndUpdate.args")
+    outputs.file(argsFile).withPropertyName("argsFile")
+    doLast {
+        // forward slashes: the JVM argument-file parser treats backslash as an escape character
+        def cp = testRuntimeClasspath.asPath.replace('\\', '/')
+        argsFile.get().asFile.text = "-classpath \"" + cp + "\"\n"
+    }
+}
+
+def customJavaUi = findProject(':custom-java-ui')
+
+// Build-time Git only: installed clients read this resource without Git or Gradle.
+def clientRevision = providers.exec {
+    workingDir rootDir
+    commandLine 'git', 'rev-parse', 'HEAD'
+}.standardOutput.asText.map { it.trim() }
+def clientDirty = providers.exec {
+    workingDir rootDir
+    commandLine 'git', 'status', '--porcelain', '--untracked-files=no'
+}.standardOutput.asText.map { (!it.trim().isEmpty()).toString() }
+def clientProvenanceFile = layout.buildDirectory.file('generated-resources/provenance/com/rusefi/ui/llm/client-build.properties')
+def clientProvenance = tasks.register('generateClientProvenance') {
+    inputs.property('revision', clientRevision)
+    inputs.property('dirty', clientDirty)
+    outputs.file(clientProvenanceFile)
+    doLast {
+        def target = clientProvenanceFile.get().asFile
+        target.parentFile.mkdirs()
+        target.text = "revision=${inputs.properties.revision}\ndirty=${inputs.properties.dirty}\n"
+    }
+}
+processResources {
+    dependsOn clientProvenance
+    from(layout.buildDirectory.dir('generated-resources/provenance'))
 }
 
 shadowJar {
+    if (customJavaUi != null) {
+        dependsOn ':custom-java-ui:classes'
+        from { customJavaUi.sourceSets.main.output }
+    }
+
     base {
+      // [dark-magic-jar] see https://github.com/rusefi/rusefi/pull/9051 for important very not obvious issue
         archiveFileName = 'rusefi_console.jar'
         destinationDirectory = file("${rootDir}/console")
         archiveClassifier = ''
@@ -38,5 +139,20 @@ shadowJar {
           'Build-Jdk'      : "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
           'Built-Date': new Date().toString()
         )
+    }
+    if (customJavaUi != null) {
+        // Board build provenance (git hashes, build time) generated by the custom UI project.
+        def buildInfoFile = customJavaUi.layout.buildDirectory.file('generated-resources/m749/com/rusefi/m749/build.properties')
+        doFirst {
+            def file = buildInfoFile.get().asFile
+            if (file.exists()) {
+                def properties = new Properties()
+                file.withInputStream { properties.load(it) }
+                manifest.attributes(
+                    'Board-Git': properties.getProperty('board.git', 'unknown'),
+                    'Rusefi-Git': properties.getProperty('rusefi.git', 'unknown'),
+                    'Build-Date': properties.getProperty('build.date', 'unknown'))
+            }
+        }
     }
 }

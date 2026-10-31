@@ -8,8 +8,16 @@ import com.rusefi.maintenance.migration.TuneMigrationContext;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.config.FieldType;
 
+/**
+ * STFTFieldMigrator handles specialized migration for Short Term Fuel Trim fields,
+ * including type changes (INT8 to FLOAT) and sign changes.
+ *
+ * <h3>Testing and Coverage Examples:</h3>
+ * This migrator is tested as part of the integration tests in {@code DefaultTuneMigratorTest}.
+ * It covers fields like {@code stftBin_table}.
+ */
 public enum STFTFieldMigrator implements TuneMigrator {
-	INSTANCE;
+    INSTANCE;
 
 	private static final String stftMaxAddTemplate = "stft_cellCfgs%_maxAdd";
 	private static final String stftMaxRemoveTemplate = "stft_cellCfgs%_maxRemove";

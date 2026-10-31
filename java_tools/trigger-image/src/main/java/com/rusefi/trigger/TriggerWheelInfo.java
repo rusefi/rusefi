@@ -14,7 +14,7 @@ import static com.rusefi.config.generated.TriggerVariableRegistryValues.*;
 public class TriggerWheelInfo {
     private static final Logging log = Logging.getLogging(TriggerWheelInfo.class);
     private static final String TRIGGERTYPE = "TRIGGERTYPE";
-    static final String DEFAULT_WORK_FOLDER = ".." + File.separator + "unit_tests";
+    public static final String DEFAULT_WORK_FOLDER = ".." + File.separator + "unit_tests";
 
     private final int id;
     private final boolean isSecondWheelCam;
@@ -45,7 +45,7 @@ public class TriggerWheelInfo {
         this.syncEdge = syncEdge;
     }
 
-    private static TriggerWheelInfo readTriggerWheelInfo(String line, BufferedReader reader) throws IOException {
+    public static TriggerWheelInfo readTriggerWheelInfo(String line, BufferedReader reader) throws IOException {
         String[] tokens = line.split(" ");
         String idStr = tokens[1];
         int eventCount = Integer.parseInt(tokens[2]);
@@ -76,7 +76,7 @@ public class TriggerWheelInfo {
             String value = keyValue[1];
             if (key.startsWith(TRIGGER_GAP_FROM)) {
                 int index = getIndex(key);
-                gaps.gapFrom[index] = Double.parseDouble(value);
+                gaps.gapFrom[index] = "nan".equalsIgnoreCase(value) ? Double.NaN : Double.parseDouble(value);
                 continue;
             }
             if (key.startsWith(TRIGGER_GAP_TO)) {
@@ -110,6 +110,10 @@ public class TriggerWheelInfo {
                 case TRIGGER_SYNC_EDGE:
                     syncEdge = value;
                     break;
+                case "operationMode":
+                case "useOnlyPrimaryForSync":
+                case "shapeWithoutTdc":
+                    break;
                 default:
                     throw new IllegalStateException("Unexpected key/value: " + line);
             }
@@ -132,13 +136,23 @@ public class TriggerWheelInfo {
         return Integer.parseInt(key.split("\\.")[1]);
     }
 
-    static void readWheels(String workingFolder, TriggerWheelInfoConsumer consumer) {
+    public static void readWheels(String workingFolder, TriggerWheelInfoConsumer consumer) {
         String fileName = workingFolder + File.separator + TRIGGERS_FILE_NAME;
         BufferedReader br;
         try {
-            br = new BufferedReader(new FileReader(fileName));
+            File file = new File(fileName);
+            if (file.exists()) {
+                log.info("Reading file " + fileName);
+                br = new BufferedReader(new FileReader(file));
+            } else {
+                InputStream stream = TriggerWheelInfo.class.getResourceAsStream("/" + TRIGGERS_FILE_NAME);
+                if (stream == null) {
+                    throw new IOException("File not found " + fileName + " and no resource /" + TRIGGERS_FILE_NAME);
+                }
+                log.info("Reading resource " + TRIGGERS_FILE_NAME);
+                br = new BufferedReader(new InputStreamReader(stream));
+            }
 
-            log.info("Reading " + fileName);
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.trim().startsWith("#")) {
@@ -247,7 +261,7 @@ public class TriggerWheelInfo {
         void onWheel(TriggerWheelInfo wheelInfo);
     }
 
-    static class TriggerGaps {
+    public static class TriggerGaps {
         public double[] gapFrom;
         public double[] gapTo;
 

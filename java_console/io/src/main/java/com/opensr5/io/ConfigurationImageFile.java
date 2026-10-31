@@ -10,7 +10,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.util.Enumeration;
+import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
@@ -33,6 +35,7 @@ public class ConfigurationImageFile {
     private static final Logging log = getLogging(ConfigurationImageFile.class);
 
     private static final String IMAGE_ZIP_ENTRY_NAME = "Image.bin";
+    private static final String PAGE_ZIP_ENTRY_FORMAT = "Page-%04X.bin";
 
     private ConfigurationImageFile() {
     }
@@ -53,7 +56,7 @@ public class ConfigurationImageFile {
                         );
                         meta = Optional.of(metaVersion0_0);
                     }
-                } else if (IMAGE_ZIP_ENTRY_NAME.equals(zipEntryName)) {
+                } else if (IMAGE_ZIP_ENTRY_NAME.equals(zipEntryName) || isPageEntry(zipEntryName)) {
                     // just skip
                 } else {
                     log.warn(String.format("Unexpected entry: `%s` in file `%s`", zipEntryName, fileName));
@@ -103,7 +106,18 @@ public class ConfigurationImageFile {
         final ConfigurationImageWithMeta configurationImageWithMeta,
         final String fileName
     ) throws IOException {
-        ConfigurationImage configurationImage = configurationImageWithMeta.getConfigurationImage();
+        saveToFile(java.util.Collections.singletonMap(0, configurationImageWithMeta), fileName);
+    }
+
+    public static void saveToFile(
+        final Map<Integer, ConfigurationImageWithMeta> pages,
+        final String fileName
+    ) throws IOException {
+        ConfigurationImageWithMeta mainImage = pages.get(0);
+        if (mainImage == null) {
+            throw new IllegalArgumentException("Main configuration page is missing");
+        }
+        ConfigurationImage configurationImage = mainImage.getConfigurationImage();
         if (configurationImage == null) {
             log.warn("No image to save");
             return;
@@ -122,11 +136,59 @@ public class ConfigurationImageFile {
             zos.write(calibrationsFileContent);
             zos.closeEntry();
 
-            final ConfigurationImageMeta meta = configurationImageWithMeta.getMeta();
+            for (Map.Entry<Integer, ConfigurationImageWithMeta> page : pages.entrySet()) {
+                if (page.getKey() == 0) {
+                    continue;
+                }
+                final ZipEntry pageEntry = new ZipEntry(String.format(PAGE_ZIP_ENTRY_FORMAT, page.getKey()));
+                zos.putNextEntry(pageEntry);
+                zos.write(getFileContent(page.getValue().getConfigurationImage()));
+                zos.closeEntry();
+            }
+
+            final ConfigurationImageMeta meta = mainImage.getMeta();
             final ZipEntry metaZipEntry = new ZipEntry(meta.getZipEntryName());
             zos.putNextEntry(metaZipEntry);
             ConfigurationImageMetaYamlUtil.dump(meta, zos);
             zos.closeEntry();
         }
+    }
+
+    public static Map<Integer, ConfigurationImageWithMeta> readPagesFromFile(final String fileName) throws IOException {
+        final Map<Integer, ConfigurationImageWithMeta> pages = new TreeMap<>();
+        final ConfigurationImageWithMeta mainImage = readFromFile(fileName);
+        pages.put(0, mainImage);
+        try (final ZipFile zipFile = new ZipFile(fileName)) {
+            final Enumeration<? extends ZipEntry> entries = zipFile.entries();
+            while (entries.hasMoreElements()) {
+                final ZipEntry entry = entries.nextElement();
+                if (!isPageEntry(entry.getName())) {
+                    continue;
+                }
+                final int pageIdentifier = Integer.parseInt(entry.getName().substring(5, 9), 16);
+                final byte[] content;
+                try (InputStream input = zipFile.getInputStream(entry)) {
+                    ByteArrayOutputStream output = new ByteArrayOutputStream();
+                    byte[] buffer = new byte[4096];
+                    int count;
+                    while ((count = input.read(buffer)) != -1) {
+                        output.write(buffer, 0, count);
+                    }
+                    content = output.toByteArray();
+                }
+                pages.put(
+                    pageIdentifier,
+                    new ConfigurationImageWithMeta(
+                        new ConfigurationImageMetaVersion0_0(content.length, mainImage.getMeta().getEcuSignature()),
+                        content
+                    )
+                );
+            }
+        }
+        return pages;
+    }
+
+    private static boolean isPageEntry(String name) {
+        return name.matches("Page-[0-9A-Fa-f]{4}\\.bin");
     }
 }

@@ -14,25 +14,40 @@ import com.rusefi.config.generated.Integration;
 import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.test.Bug3923;
 import com.rusefi.core.Pair;
+import com.rusefi.core.ISensorHolder;
+import com.rusefi.core.OutputChannelDemand;
+import com.rusefi.core.OutputChannelSnapshot;
+import com.rusefi.core.RusEfiSignature;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.SignatureHelper;
+import com.rusefi.core.io.BoardCompatibility;
+import com.rusefi.core.io.BundleInfo;
+import com.rusefi.core.io.BundleUtil;
+import com.rusefi.core.io.UnsupportedEcuInfo;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.io.*;
+import com.rusefi.io.can.PCanIoStream;
 import com.rusefi.io.commands.*;
+import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.ui.livedocs.LiveDocsRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
+import java.util.BitSet;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.*;
+import java.util.function.LongSupplier;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.IoHelper.*;
 import static com.rusefi.config.generated.VariableRegistryValues.*;
+import static com.rusefi.core.net.ConnectionAndMeta.RUSEFI_WIKI_DOWNLOAD_PAGE;
 import static com.rusefi.util.TuneBackupUtil.saveConfigurationImageToFiles;
 
 /**
@@ -45,12 +60,26 @@ import static com.rusefi.util.TuneBackupUtil.saveConfigurationImageToFiles;
  * 3/6/2015
  */
 public class BinaryProtocol {
+    public static final String CONFIG_ERROR_CHANNEL = "hasCriticalError";
     private static final Logging log = getLogging(BinaryProtocol.class);
     private static final ThreadFactory THREAD_FACTORY = new NamedThreadFactory("ECU text pull", true);
+    // Intended for high-latency TCP links to firmware built with CUSTOM_TS_BUFFER_SIZE.
+    private static final Integer BLOCKING_FACTOR_OVERRIDE = Integer.getInteger("blockingFactorOverride");
 
     private final LinkManager linkManager;
     private final IoStream stream;
+    // Serialize response publication with disconnect cleanup. Never hold this during device I/O:
+    // close must be able to clear the UI while a command is waiting for a response.
+    private final Object publicationLock = new Object();
+    private final Integer blockingFactorOverride;
+    private final LongSupplier currentTimeMillis;
     private boolean isBurnPending;
+    private long lastOutputFallbackGeneration = Long.MIN_VALUE;
+    private volatile boolean lastOutputPollWasFull = true;
+    private long nextTextPullNanos;
+    private long nextConfigErrorReadNanos;
+    private boolean configErrorReadScheduled;
+    private volatile String configErrorMessage;
     public String signature;
     public boolean isGoodOutputChannels;
     // NotNull once connected
@@ -61,6 +90,9 @@ public class BinaryProtocol {
     static {
         log.info("BINARY_IO_TIMEOUT=" + Timeouts.BINARY_IO_TIMEOUT);
         log.info("CONNECTION_RESTART_DELAY=" + Timeouts.CONNECTION_RESTART_DELAY);
+        if (BLOCKING_FACTOR_OVERRIDE != null) {
+            log.info("blockingFactorOverride=" + BLOCKING_FACTOR_OVERRIDE);
+        }
     }
 
     private final BinaryProtocolLogger binaryProtocolLogger;
@@ -68,6 +100,14 @@ public class BinaryProtocol {
 
     public @NotNull IniFileModel getIniFile() {
         return Objects.requireNonNull(iniFile);
+    }
+
+    public @Nullable IniFileModel getIniFileNullable() {
+        return iniFile;
+    }
+
+    public void setIniFileForUnitTest(IniFileModel iniFile) {
+        this.iniFile = iniFile;
     }
 
     public static String findCommand(byte command) {
@@ -84,6 +124,8 @@ public class BinaryProtocol {
                 return "READ";
             case Integration.TS_GET_TEXT:
                 return "TS_GET_TEXT";
+            case Integration.TS_GET_CONFIG_ERROR:
+                return "TS_GET_CONFIG_ERROR";
             case Integration.TS_GET_FIRMWARE_VERSION:
                 return "GET_FW_VERSION";
             case Integration.TS_CHUNK_WRITE_COMMAND:
@@ -104,13 +146,45 @@ public class BinaryProtocol {
     public final CommunicationLoggingListener communicationLoggingListener;
 
     public BinaryProtocol(LinkManager linkManager, IoStream stream) {
+        this(linkManager, stream, BLOCKING_FACTOR_OVERRIDE, System::currentTimeMillis);
+    }
+
+    BinaryProtocol(LinkManager linkManager, IoStream stream, Integer blockingFactorOverride) {
+        this(linkManager, stream, blockingFactorOverride, System::currentTimeMillis);
+    }
+
+    BinaryProtocol(LinkManager linkManager, IoStream stream, Integer blockingFactorOverride,
+                   LongSupplier currentTimeMillis) {
         this.linkManager = linkManager;
         this.stream = Objects.requireNonNull(stream);
+        this.blockingFactorOverride = blockingFactorOverride;
+        this.currentTimeMillis = Objects.requireNonNull(currentTimeMillis);
 
         communicationLoggingListener = linkManager.messageListener::postMessage;
 
         binaryProtocolLogger = new BinaryProtocolLogger(linkManager);
         stream.addCloseListener(binaryProtocolLogger::close);
+        // When the stream dies (cable yank, ECU reboot, etc.) mark NOT_CONNECTED and purge
+        // stale sensor data so a subsequent ECU doesn't inherit values from this one.
+        // This is the only mechanism that fires NOT_CONNECTED on the splash screen — the
+        // ConnectionWatchdog exists only inside ConsoleUI and is not created during splash.
+        // Skip the global status change for short-lived scanner probes (notifyGlobalStatusOnClose=false)
+        // so they don't disrupt the main console connection.
+        stream.addCloseListener(() -> {
+            synchronized (publicationLock) {
+                if (linkManager.getNotifyGlobalStatusOnClose()) {
+                    ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
+                }
+                SensorCentral.getInstance().reset();
+            }
+        });
+    }
+
+    int getBlockingFactor() {
+        int configuredBlockingFactor = getIniFile().getBlockingFactor();
+        return blockingFactorOverride != null && stream instanceof TcpIoStream
+            ? blockingFactorOverride
+            : configuredBlockingFactor;
     }
 
     public boolean isClosed() {
@@ -159,8 +233,13 @@ public class BinaryProtocol {
 
     @Nullable
     public static String getSignature(IoStream stream) throws IOException {
+        // Drop bytes that arrived between port open and now
+        IncomingDataBuffer buffer = stream.getDataBuffer();
+        if (buffer.getPendingCount() > 0) {
+            buffer.dropPending();
+        }
         HelloCommand.send(stream);
-        return HelloCommand.getHelloResponse(stream.getDataBuffer());
+        return HelloCommand.getHelloResponse(buffer);
     }
 
     /**
@@ -169,6 +248,7 @@ public class BinaryProtocol {
      * @return null if everything fine, message instead
      */
     public String connectAndReadConfiguration(Arguments arguments, DataListener listener) {
+        log.info("connectAndReadConfiguration: starting");
         try {
             signature = getSignature(stream);
             if (signature == null) {
@@ -178,11 +258,40 @@ public class BinaryProtocol {
             }
             log.info(stream + ": Got [" + signature + "] signature");
         } catch (IOException e) {
+            log.info("Failed to read signature: " + e);
             return "Failed to read signature " + e;
         }
+
+        // Check for bundle/ECU mismatch before attempting to read configuration
+        // Skip check if bundle target is unknown (e.g., simulator, local development)
+        RusEfiSignature ecuSignature = SignatureHelper.parse(signature);
+        String bundleTarget = BundleUtil.getBundleTarget();
+        if (ecuSignature != null && bundleTarget != null && !"unknown".equalsIgnoreCase(bundleTarget)) {
+            // exact target, _QC_ hack and board_compatibility (* / allowlist) all handled here [tag:QC_firmware]
+            if (!com.rusefi.core.io.BoardCompatibility.isEcuCompatible(bundleTarget, ecuSignature.getBundleTarget())) {
+                UnsupportedEcuInfo unsupported = new UnsupportedEcuInfo(
+                    ecuSignature.getBundleTarget(), bundleTarget);
+                linkManager.reportUnsupportedEcu(unsupported);
+                String errorMsg = unsupported.getMessage();
+                log.info(errorMsg);
+                close();
+                return errorMsg;
+            }
+        }
+        if (ecuSignature != null) {
+            linkManager.reportCompatibleEcu(ecuSignature);
+            // Remember only a target this bundle is allowed to serve.
+            linkManager.getConnectedEcuTarget().set(ecuSignature.getBundleTarget());
+        }
+
         try {
             iniFile = Objects.requireNonNull(iniFileProvider.provide(signature));
+            // SensorLogger is in the UI module, we can't easily access it from the IO module if it's not on the classpath
+            // However, BinaryProtocol is often used in the context where UI is also present.
+            // Let's check if we can use reflection or if there is a better way.
+            // For now, let's try to fix the import or use the full name if it's available.
         } catch (IniNotFoundException e) {
+            log.info("INI not found for signature: " + signature);
             close();
             return "Failed to located .ini";
         }
@@ -192,13 +301,22 @@ public class BinaryProtocol {
 
         int pageSize = iniFile.getMetaInfo().getPageSize(0);
         log.info("pageSize=" + pageSize);
-        readImage(arguments, new ConfigurationImageMetaVersion0_0(pageSize, signature));
+        try {
+            if (!readImage(arguments, new ConfigurationImageMetaVersion0_0(pageSize, signature))) {
+                close();
+                return "Failed to read calibration image from controller";
+            }
+        } catch (IllegalStateException e) {
+            close();
+            return e.getMessage();
+        }
         if (stream.isClosed())
             return "Failed to read calibration";
 
         if (linkManager.getNeedPullData())
             startPullThread(listener);
         binaryProtocolLogger.start();
+        log.info("connectAndReadConfiguration: completed successfully");
         return null;
     }
 
@@ -209,9 +327,11 @@ public class BinaryProtocol {
         Runnable textPull = new Runnable() {
             @Override
             public void run() {
+                Future<?> pendingPoll = null;
                 while (!stream.isClosed()) {
-                    if (linkManager.COMMUNICATION_QUEUE.isEmpty() && linkManager.getNeedPullData()) {
-                        linkManager.submit(new Runnable() {
+                    if ((pendingPoll == null || pendingPoll.isDone())
+                            && linkManager.COMMUNICATION_QUEUE.isEmpty() && linkManager.getNeedPullData()) {
+                        pendingPoll = linkManager.submit(new Runnable() {
                             @Override
                             public void run() {
                                 isGoodOutputChannels = requestOutputChannels();
@@ -219,7 +339,9 @@ public class BinaryProtocol {
                                 if (isGoodOutputChannels)
                                     HeartBeatListeners.onDataArrived();
                                 binaryProtocolLogger.compositeLogic(BinaryProtocol.this);
-                                if (linkManager.isNeedPullText()) {
+                                long now = System.nanoTime();
+                                if (linkManager.isNeedPullText() && now >= nextTextPullNanos) {
+                                    nextTextPullNanos = now + TimeUnit.MILLISECONDS.toNanos(Timeouts.TEXT_PULL_PERIOD);
                                     String text = requestPendingTextMessages();
                                     if (text != null) {
                                         textListener.onDataArrived((text + "\r\n").getBytes());
@@ -230,12 +352,13 @@ public class BinaryProtocol {
                                 if (linkManager.isNeedPullLiveData()) {
                                     LiveDocsRegistry.LiveDataProvider liveDataProvider = LiveDocsRegistry.getLiveDataProvider();
                                     LiveDocsRegistry.INSTANCE.refresh(liveDataProvider);
-                                    log.info(stream + ": Got livedata");
                                 }
                             }
                         });
                     }
-                    sleep(Timeouts.TEXT_PULL_PERIOD);
+                    sleep(lastOutputPollWasFull
+                        ? Timeouts.FULL_OUTPUT_CHANNEL_PULL_PERIOD
+                        : Timeouts.OUTPUT_CHANNEL_PULL_PERIOD);
                 }
                 log.info("Port shutdown: Stopping text pull");
             }
@@ -253,10 +376,16 @@ public class BinaryProtocol {
     }
 
     /**
-     * this method patches configuration inside ECU by writing only regions with different content
+     * Patches configuration inside ECU RAM by writing only regions with different content.
+     * Does not burn to flash or update the local configuration image.
      */
-    public void uploadChanges(ConfigurationImage newVersion) {
+    public void uploadChangesWithoutBurn(ConfigurationImage newVersion) {
         ConfigurationImage current = getControllerConfiguration();
+        if (current.getSize() != newVersion.getSize()) {
+            throw new IllegalStateException("Calibration size mismatch: ECU has " + current.getSize()
+                + " bytes but image has " + newVersion.getSize()
+                + " bytes. Calibrations may be from a different firmware version.");
+        }
         // let's have our own copy which no one would be able to change
         newVersion = newVersion.clone();
         int offset = 0;
@@ -276,33 +405,72 @@ public class BinaryProtocol {
 
             offset = range.second;
         }
+    }
+
+    /**
+     * this method patches configuration inside ECU by writing only regions with different content
+     */
+    public void uploadChanges(ConfigurationImage newVersion) {
+        uploadChangesWithoutBurn(newVersion);
         burn();
         setConfigurationImage(newVersion);
     }
 
-    private static byte[] receivePacket(String msg, IoStream stream) throws IOException {
+    private static byte[] receivePacket(String msg, IoStream stream, int timeoutMs) throws IOException {
         long start = System.currentTimeMillis();
         synchronized (stream.getIoLock()) {
-            return stream.getDataBuffer().getPacket(Timeouts.BINARY_IO_TIMEOUT, msg, start);
+            return stream.getDataBuffer().getPacket(timeoutMs, msg, start);
         }
     }
 
     /**
      * read complete tune from physical data stream
+     * @return true if image was successfully read (or not needed), false if read failed
      */
-    public void readImage(final Arguments arguments, final ConfigurationImageMeta meta) {
+    public boolean readImage(final Arguments arguments, final ConfigurationImageMeta meta) {
+        if (stream.isClosed()) {
+            return false;
+        }
+        ConfigurationImage loadedImage = null;
         if (arguments.needImage) {
             ConfigurationImageWithMeta image = BinaryProtocolLocalCache.getAndValidateLocallyCached(this);
 
             if (image.isEmpty()) {
+                // Drop any stale bytes (e.g. a duplicate error code left in the buffer by a prior failed CRC-check command)
+                // prior 2026 we have a bug sending duplicate error codes from validateOffsetCount, see #9145
+                dropPending(stream);
                 image = readFullImageFromController(arguments, meta);
-                if (image.isEmpty())
-                    return;
+                if (image.isEmpty()) {
+                    // Image read failed — revert to NOT_CONNECTED so the watchdog can retry.
+                    // Without this, the status stays LOADING indefinitely.
+                    synchronized (publicationLock) {
+                        // A closed session has already reported disconnect. It must not
+                        // overwrite the status of a replacement connection.
+                        if (!stream.isClosed() && linkManager.getNotifyGlobalStatusOnClose()) {
+                            ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
+                        }
+                    }
+                    return false;
+                }
             }
-            setConfigurationImage(image.getConfigurationImage());
-            log.info(stream + ": Got configuration from controller " + meta.getImageSize() + " byte(s)");
+            loadedImage = image.getConfigurationImage();
         }
-        ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
+        synchronized (publicationLock) {
+            // Also covers a cached image validated just before the stream closed.
+            if (stream.isClosed()) {
+                return false;
+            }
+            if (loadedImage != null) {
+                setConfigurationImage(loadedImage);
+                state.setCachedImage(loadedImage);
+                log.info(stream + ": Got configuration from controller " + meta.getImageSize() + " byte(s)");
+            }
+            // Only update global connection status for persistent connections (not scanner probes)
+            if (linkManager.getNotifyGlobalStatusOnClose()) {
+                ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
+            }
+            return true;
+        }
     }
 
     public static class Arguments {
@@ -322,19 +490,20 @@ public class BinaryProtocol {
     @NotNull
     public ConfigurationImageWithMeta readFullImageFromController(final ConfigurationImageMeta meta) {
         log.info("Reading from controller " + meta.getEcuSignature());
+
         final ConfigurationImageWithMeta imageWithMeta = new ConfigurationImageWithMeta(meta);
         final ConfigurationImage image = imageWithMeta.getConfigurationImage();
 
         int offset = 0;
 
-        long start = System.currentTimeMillis();
+        long start = currentTimeMillis.getAsLong();
 
-        while (offset < image.getSize() && (System.currentTimeMillis() - start < Timeouts.READ_IMAGE_TIMEOUT)) {
+        while (offset < image.getSize() && (currentTimeMillis.getAsLong() - start < Timeouts.READ_IMAGE_TIMEOUT)) {
             if (stream.isClosed())
                 return ConfigurationImageWithMeta.VOID;
 
             int remainingSize = image.getSize() - offset;
-            int requestSize = Math.min(remainingSize, iniFile.getBlockingFactor());
+            int requestSize = Math.min(remainingSize, getBlockingFactor());
 
             byte[] packet = smartPacketPrefix(offset, requestSize);
 
@@ -342,42 +511,91 @@ public class BinaryProtocol {
 
             if (!checkResponseCode(response) || response.length != requestSize + 1) {
                 if (extractCode(response) == TS_RESPONSE_OUT_OF_RANGE) {
-                    throw new IllegalStateException("TS_RESPONSE_OUT_OF_RANGE ECU/console version mismatch? " + offset + "/" + requestSize);
+                    RusEfiSignature ecuSig = SignatureHelper.parse(signature);
+                    BundleInfo bundleInfo = BundleUtil.readBundleFullNameNotNull();
+
+                    String ecuDesc = (ecuSig != null)
+                        ? String.format("%s (branch=%s, %s-%s-%s, hash=%s)",
+                            ecuSig.getBundleTarget(), ecuSig.getBranch(),
+                            ecuSig.getYear(), ecuSig.getMonth(), ecuSig.getDay(), ecuSig.getHash())
+                        : signature;
+                    String bundleDesc = BundleInfo.isUndefined(bundleInfo)
+                        ? "unknown"
+                        : bundleInfo.getTarget() + " (release=" + bundleInfo.getBranchName() + ")";
+
+                    throw new IllegalStateException(
+                        "ECU rejected memory read at offset=" + offset + " size=" + requestSize + ".\n\n" +
+                        "Bundle: " + bundleDesc + "\n" +
+                        "Connected ECU: " + ecuDesc + "\n\n" +
+                        "This usually means the .ini file doesn't match your ECU.\n" +
+                        "Download the correct bundle from" + RUSEFI_WIKI_DOWNLOAD_PAGE
+                    );
                 }
                 String code = (response == null || response.length == 0) ? "empty" : "ERROR_CODE=" + getCode(response);
                 String info = response == null ? "NO RESPONSE" : (code + " length=" + response.length);
-                log.info(stream + ": readImage: ERROR UNEXPECTED Something is wrong, retrying... " + info);
-                // todo: looks like forever retry? that's weird
+                if (stream instanceof PCanIoStream) {
+                    // Reconnect to discard any partial ISO-TP response.
+                    log.error(stream + ": image read failed at offset " + offset + ": " + info);
+                    stream.close();
+                    return ConfigurationImageWithMeta.VOID;
+                }
+                log.info(stream + ": image read failed at offset " + offset + "; retrying: " + info);
                 continue;
             }
 
-            HeartBeatListeners.onDataArrived();
-            ConnectionStatusLogic.INSTANCE.markConnected();
+            synchronized (publicationLock) {
+                if (stream.isClosed()) {
+                    return ConfigurationImageWithMeta.VOID;
+                }
+                HeartBeatListeners.onDataArrived();
+                // Stay LOADING until the complete image passes CRC validation.
+                ConnectionStatusLogic.INSTANCE.markConnected();
+            }
             System.arraycopy(response, 1, image.getContent(), offset, requestSize);
 
             offset += requestSize;
         }
+
+        // Never save or publish a partial image.
+        if (offset != image.getSize()) {
+            log.error(stream + ": image read timeout: " + offset + "/" + image.getSize() + " bytes");
+            return ConfigurationImageWithMeta.VOID;
+        }
+
+        Integer controllerCrc = getValidatedCrcFromController(image.getSize());
+        if (stream.isClosed()) {
+            return ConfigurationImageWithMeta.VOID;
+        }
+        if (controllerCrc == null) {
+            log.error(stream + ": missing or invalid ECU image CRC");
+            return ConfigurationImageWithMeta.VOID;
+        }
+        int imageCrc = IoHelper.getCrc32(image.getContent());
+        if (imageCrc != controllerCrc) {
+            log.error(String.format("%s: calibration CRC mismatch: image=0x%x controller=0x%x",
+                stream, imageCrc, controllerCrc));
+            return ConfigurationImageWithMeta.VOID;
+        }
+
         return imageWithMeta;
     }
 
     /**
      * Read {@code size} bytes starting at {@code offset} within the specified TS protocol
-     * page (0 = main settings page, the only page on this branch).  Returns null on failure.
-     * Issues one or more TS_READ_COMMAND requests chunked by the .ini's blockingFactor.
+     * page (0 = main settings page).  Returns null on failure.  Issues one or more
+     * TS_READ_COMMAND requests chunked by the .ini's blockingFactor.
      */
     @org.jetbrains.annotations.Nullable
     public byte[] readFromPage(int page, int offset, int size) {
-        if (page != 0)
-            throw new IllegalArgumentException("Only page 0 is supported, got page=" + page);
         byte[] result = new byte[size];
         int idx = 0;
-        int blockingFactor = getIniFile().getBlockingFactor();
+        int blockingFactor = getBlockingFactor();
         while (idx < size) {
             if (stream.isClosed()) {
                 return null;
             }
             int thisRead = Math.min(size - idx, blockingFactor);
-            byte[] packet = smartPacketPrefix(offset + idx, thisRead);
+            byte[] packet = smartPacketPrefix(page, offset + idx, thisRead);
             byte[] response = executeCommand(Integration.TS_READ_COMMAND, packet,
                 "readFromPage page=" + page + " offset=" + (offset + idx) + " size=" + thisRead);
             if (!checkResponseCode(response) || response.length != thisRead + 1) {
@@ -391,15 +609,27 @@ public class BinaryProtocol {
     }
 
     public byte @NotNull [] smartPacketPrefix(int offset, int requestSize) {
+        return smartPacketPrefix(0, offset, requestSize);
+    }
+
+    public byte @NotNull [] smartPacketPrefix(int page, int offset, int requestSize) {
+        return smartPacketPrefix2(page, offset, requestSize, isSinglePageController());
+    }
+
+    static byte @NotNull [] smartPacketPrefix2(int offset, int requestSize, boolean isSinglePageController) {
+        return smartPacketPrefix2(0, offset, requestSize, isSinglePageController);
+    }
+
+    static byte @NotNull [] smartPacketPrefix2(int page, int offset, int requestSize, boolean isSinglePageController) {
         byte[] packet;
-        if (isSinglePageController()) {
+        if (isSinglePageController) {
             // older controller, no page index in read command
             // PS: technically we can/shall actually use command syntax as specified by the .ini
             packet = new byte[4];
             ByteRange.packOffsetAndSize(offset, requestSize, packet);
         } else {
             packet = new byte[6];
-            ByteRange.packPageOffsetAndSize(offset, requestSize, packet);
+            ByteRange.packPageOffsetAndSize(page, offset, requestSize, packet);
         }
         return packet;
     }
@@ -416,14 +646,9 @@ public class BinaryProtocol {
     ) {
         Objects.requireNonNull(arguments);
         final ConfigurationImageWithMeta imageWithMeta = readFullImageFromController(meta);
-        if (arguments.saveFile) {
+        if (arguments.saveFile && !imageWithMeta.isEmpty()) {
             try {
-                saveConfigurationImageToFiles(
-                    imageWithMeta,
-                    iniFile,
-                    (ConnectionAndMeta.saveSettingsToFile() ? BinaryProtocolLocalCache.CONFIGURATION_RUSEFI_BINARY : null),
-                    BinaryProtocolLocalCache.CONFIGURATION_RUSEFI_XML
-                );
+                saveConfigurationImage(imageWithMeta, iniFile);
             } catch (JAXBException e) {
                 log.error("JAXBException", e);
             } catch (final IOException | OrdinalOutOfRangeException e) {
@@ -434,6 +659,15 @@ public class BinaryProtocol {
             }
         }
         return imageWithMeta;
+    }
+
+    void saveConfigurationImage(ConfigurationImageWithMeta image, IniFileModel iniFile) throws JAXBException, IOException {
+        saveConfigurationImageToFiles(
+            image,
+            iniFile,
+            (ConnectionAndMeta.saveSettingsToFile() ? BinaryProtocolLocalCache.CONFIGURATION_RUSEFI_BINARY : null),
+            BinaryProtocolLocalCache.CONFIGURATION_RUSEFI_XML
+        );
     }
 
     private static String getCode(byte[] response) {
@@ -460,6 +694,12 @@ public class BinaryProtocol {
     }
 
     public int getCrcFromController(int configSize) {
+        Integer crc = getValidatedCrcFromController(configSize);
+        return crc == null ? -1 : crc;
+    }
+
+    @Nullable
+    Integer getValidatedCrcFromController(int configSize) {
         byte[] packet = createRequestCrcPayload(configSize);
         byte[] response = executeCommand(Integration.TS_CRC_CHECK_COMMAND, packet, "get CRC32");
 
@@ -474,7 +714,7 @@ public class BinaryProtocol {
             log.info(String.format("rusEFI says tune CRC16 0x%x %d\n", crc16FromController, crc16FromController));
             return crc32FromController;
         } else {
-            return  -1;
+            return null;
         }
     }
 
@@ -492,11 +732,27 @@ public class BinaryProtocol {
      * @return null in case of IO issues
      */
     public byte[] executeCommand(char opcode, byte[] packet, String msg) {
-        linkManager.assertCommunicationThread();
-        return doExecute(opcode, packet, msg, stream);
+        return executeCommand(opcode, packet, msg, Timeouts.BINARY_IO_TIMEOUT);
     }
 
-    private static byte @Nullable [] doExecute(char opcode, byte[] packet, String msg, IoStream stream) {
+    /**
+     * @param timeoutMs how long to wait for the response, overriding the default
+     *                  {@link Timeouts#BINARY_IO_TIMEOUT}. Use a larger value for commands
+     *                  whose firmware handler blocks for a while before replying.
+     */
+    public byte[] executeCommand(char opcode, byte[] packet, String msg, int timeoutMs) {
+        linkManager.assertCommunicationThread();
+        byte[] response = doExecute(opcode, packet, msg, stream, timeoutMs);
+        if (response != null) {
+            // any completed binary round trip proves the link is alive; without this a long
+            // operation monopolizing the communication thread (e.g. SD card file transfer)
+            // starves the output-channel poll and ConnectionWatchdog restarts a healthy link
+            HeartBeatListeners.onDataArrived();
+        }
+        return response;
+    }
+
+    private static byte @Nullable [] doExecute(char opcode, byte[] packet, String msg, IoStream stream, int timeoutMs) {
         if (stream.isClosed())
             return null;
 
@@ -507,7 +763,7 @@ public class BinaryProtocol {
             if (Bug3923.obscene)
                 log.info("Sending opcode " + opcode + " payload " + packet.length);
             stream.sendPacket(fullRequest);
-            return receivePacket(msg, stream);
+            return receivePacket(msg, stream, timeoutMs);
         } catch (IOException e) {
             log.error(msg + ": executeCommand failed: " + e);
             stream.close();
@@ -535,15 +791,19 @@ public class BinaryProtocol {
     }
 
     public void writeInBlocks(byte[] content, int contentOffset, int ecuOffset, int size) {
+        writeInBlocks(content, contentOffset, ecuOffset, size, 0);
+    }
+
+    public void writeInBlocks(byte[] content, int contentOffset, int ecuOffset, int size, int page) {
         int idx = 0;
         int remaining;
-        int blockingFactor = getIniFile().getBlockingFactor();
+        int blockingFactor = getBlockingFactor();
 
         do {
             remaining = size - idx;
             int thisWrite = Math.min(remaining, blockingFactor);
 
-            writeData(content, contentOffset + idx, ecuOffset + idx, thisWrite);
+            writeData(content, contentOffset + idx, ecuOffset + idx, thisWrite, page);
 
             idx += thisWrite;
 
@@ -551,10 +811,10 @@ public class BinaryProtocol {
         } while (remaining > 0);
     }
 
-    private void writeData(byte[] content, int contentOffset, int ecuOffset, int size) {
+    private void writeData(byte[] content, int contentOffset, int ecuOffset, int size, int page) {
         isBurnPending = true;
 
-        byte[] packet = WriteCommand.getWritePacket(this, content, contentOffset, ecuOffset, size);
+        byte[] packet = WriteCommand.getWritePacket(this, content, contentOffset, ecuOffset, size, page);
 
         long start = System.currentTimeMillis();
         while (!stream.isClosed() && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
@@ -580,19 +840,27 @@ public class BinaryProtocol {
             return;
         log.info("Need to burn");
 
-        while (true) {
-            if (stream.isClosed())
+        long start = System.currentTimeMillis();
+        while (!stream.isClosed() && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
+            if (BurnCommand.execute(this)) {
+                log.info("BURN OK");
+                isBurnPending = false;
                 return;
-            boolean isGoodBurn = BurnCommand.execute(this);
-            if (!isGoodBurn) {
-                log.warn("BURN HAS FAILED?! Will retry");
-                continue;
             }
-            log.info("BURN OK");
-            break;
+            log.warn("BURN HAS FAILED?! Will retry");
         }
-        log.info("DONE");
-        isBurnPending = false;
+        // Burn did not succeed within the timeout — close the stream so the watchdog
+        // can trigger a reconnection rather than leaving the executor permanently blocked.
+        log.error("Burn timed out or stream closed, giving up");
+        stream.close();
+    }
+
+    public boolean burnPage(int pageIdentifier) {
+        boolean result = BurnCommand.execute(this, pageIdentifier);
+        if (result) {
+            isBurnPending = false;
+        }
+        return result;
     }
 
     public void setConfigurationImage(ConfigurationImage configurationImage) {
@@ -604,6 +872,33 @@ public class BinaryProtocol {
      */
     public ConfigurationImage getControllerConfiguration() {
         return state.getConfigurationImage();
+    }
+
+    /**
+     * @return the cached baseline image (snapshot taken when the tune was loaded), or null if not set
+     */
+    @Nullable
+    public ConfigurationImage getCachedImage() {
+        return state.getCachedImage();
+    }
+
+    /**
+     * Snapshot the current in-memory image as the new diff baseline.
+     */
+    public void cacheCurrentImage() {
+        ConfigurationImage current = state.getConfigurationImage();
+        if (current != null)
+            state.setCachedImage(current);
+    }
+
+    /**
+     * Reset the current in-memory image back to the cached baseline.
+     * Does NOT write to the ECU — call burn separately if needed.
+     *
+     * @return true if a cached image existed and the reset was applied
+     */
+    public boolean resetToCachedImage() {
+        return state.resetToCached();
     }
 
     /**
@@ -640,60 +935,122 @@ public class BinaryProtocol {
     public String requestPendingTextMessages() {
         if (stream.isClosed())
             return null;
-        try {
-            byte[] response = executeCommand(Integration.TS_GET_TEXT, "text");
-            if (response == null) {
-                log.error("ERROR: TS_GET_TEXT failed");
-                return null;
-            }
-            if (response != null && response.length == 1) {
-                // todo: what is this sleep doing exactly?
-                Thread.sleep(100);
-            }
-            return new String(response, 1, response.length - 1);
-        } catch (InterruptedException e) {
-            log.error(e.toString());
+        byte[] response = executeCommand(Integration.TS_GET_TEXT, "text");
+        if (response == null) {
+            log.error("ERROR: TS_GET_TEXT failed");
             return null;
         }
+        return new String(response, 1, response.length - 1);
     }
 
+    /**
+     * This is a blocking method which would fetch all output channels from the controller.
+     *
+     * @return true if successful
+     */
     public boolean requestOutputChannels() {
+        OutputChannelDemand demand = SensorCentral.getInstance().getOutputChannelDemand();
+        if (linkManager.isNeedPullLiveData() && LiveDocsRegistry.INSTANCE.hasVisible()) {
+            demand = OutputChannelDemand.full(demand.getGeneration());
+        }
+        return requestOutputChannels(demand);
+    }
+
+    boolean requestOutputChannels(OutputChannelDemand demand) {
         if (stream.isClosed())
             return false;
 
+        OutputChannelPollPlan plan = OutputChannelPollPlan.create(iniFile, demand);
+        lastOutputPollWasFull = plan.isFull();
+        if (plan.isFull() && !demand.isFull() && !demand.getChannels().isEmpty()
+                && demand.getGeneration() != lastOutputFallbackGeneration) {
+            lastOutputFallbackGeneration = demand.getGeneration();
+            log.warn("Falling back to full output polling for unresolved demand " + demand.getChannels());
+        }
         // TODO: Get rid of the +1.  This adds a byte at the front to tack a fake TS response code on the front
         //  of the reassembled packet.
         int ochBlockSize = iniFile.getMetaInfo().getOchBlockSize();
         byte[] reassemblyBuffer = new byte[ochBlockSize + 1];
         reassemblyBuffer[0] = Integration.TS_RESPONSE_OK;
+        BitSet validBytes = new BitSet(ochBlockSize);
 
-        int reassemblyIdx = 0;
-        int remaining = ochBlockSize;
+        for (OutputChannelPollPlan.Range range : plan.getRanges()) {
+            int reassemblyIdx = range.getOffset();
+            int remaining = range.getSize();
 
-        while (remaining > 0) {
-            // If less than one full chunk left, do a smaller read
-            int chunkSize = Math.min(remaining, iniFile.getBlockingFactor());
+            while (remaining > 0) {
+                // If less than one full chunk left, do a smaller read
+                int chunkSize = Math.min(remaining, getBlockingFactor());
 
-            byte[] response = executeCommand(
-                Integration.TS_OUTPUT_COMMAND,
-                GetOutputsCommand.createRequest(reassemblyIdx, chunkSize),
-                "output channels"
-            );
+                byte[] response = executeCommand(
+                    Integration.TS_OUTPUT_COMMAND,
+                    GetOutputsCommand.createRequest(reassemblyIdx, chunkSize),
+                    "output channels"
+                );
 
-            if (response == null || response.length != (chunkSize + 1) || response[0] != Integration.TS_RESPONSE_OK) {
-                return false;
+                if (stream.isClosed() || response == null || response.length != (chunkSize + 1)
+                        || response[0] != Integration.TS_RESPONSE_OK) {
+                    return false;
+                }
+
+                // Copy this chunk in to the reassembly buffer
+                System.arraycopy(response, 1, reassemblyBuffer, reassemblyIdx + 1, chunkSize);
+                validBytes.set(reassemblyIdx, reassemblyIdx + chunkSize);
+                reassemblyIdx += chunkSize;
+                remaining -= chunkSize;
             }
-
-            // Copy this chunk in to the reassembly buffer
-            System.arraycopy(response, 1, reassemblyBuffer, reassemblyIdx + 1, chunkSize);
-            reassemblyIdx += chunkSize;
-            remaining -= chunkSize;
         }
 
-        state.setCurrentOutputs(reassemblyBuffer);
+        OutputChannelSnapshot snapshot = new OutputChannelSnapshot(
+            reassemblyBuffer, validBytes, demand.getChannels(), plan.getGeneration(), plan.isFull());
+        // May issue another command. Keep it outside the publication lock, then recheck closure.
+        updateConfigError(snapshot, System.nanoTime());
+        synchronized (publicationLock) {
+            if (stream.isClosed()) {
+                return false;
+            }
+            state.setCurrentOutputs(plan.isFull() ? reassemblyBuffer : null);
+            SensorCentral.getInstance().grabSensorValues(snapshot, getIniFile(), getControllerConfiguration());
+            return true;
+        }
+    }
 
-        SensorCentral.getInstance().grabSensorValues(reassemblyBuffer, getIniFile());
-        return true;
+    /** Read on the communication thread, before publishing the output snapshot to UI listeners. */
+    void updateConfigError(OutputChannelSnapshot snapshot, long nowNanos) {
+        Double active = ISensorHolder.tryReadOutputChannel(snapshot, snapshot.getResponse(),
+                CONFIG_ERROR_CHANNEL, getIniFile(), CONFIG_ERROR_CHANNEL);
+        if (active == null) {
+            return; // This selective poll did not include the indicator, or the INI lacks it.
+        }
+        if (active == 0) {
+            configErrorMessage = null;
+            configErrorReadScheduled = false;
+            return;
+        }
+        if (configErrorReadScheduled && nowNanos - nextConfigErrorReadNanos < 0) {
+            return;
+        }
+        // Retry unavailable text, and detect a changed error even if the indicator stays set.
+        // Limit traffic to one request per second instead of one per gauge refresh.
+        configErrorReadScheduled = true;
+        nextConfigErrorReadNanos = nowNanos + TimeUnit.SECONDS.toNanos(1);
+        byte[] response = executeCommand(Integration.TS_GET_CONFIG_ERROR, "configuration error");
+        if (response == null || response.length == 0 || response[0] != Integration.TS_RESPONSE_OK) {
+            return;
+        }
+        int end = 1;
+        while (end < response.length && response[end] != 0) {
+            end++;
+        }
+        String message = new String(response, 1, end - 1, StandardCharsets.US_ASCII).trim();
+        if (!message.isEmpty()) {
+            configErrorMessage = message;
+        }
+    }
+
+    @Nullable
+    public String getConfigErrorMessage() {
+        return configErrorMessage;
     }
 
     public BinaryProtocolState getBinaryProtocolState() {

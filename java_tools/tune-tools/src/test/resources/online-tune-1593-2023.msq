@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- Reduced from https://rusefi.com/online/download.php?msq=1593 -->
+<msq xmlns="http://www.msefi.com/:msq">
+  <versionInfo fileFormat="5.0" firmwareInfo="rusEFI+v20231206%4065034" nPages="1" signature="rusEFI master.2023.12.07.alphax-4chan.2130227398"/>
+  <page number="0" size="23880">
+    <constant name="mainRelayPin">"F5 - MAIN"</constant>
+  </page>
+</msq>

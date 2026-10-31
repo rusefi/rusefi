@@ -1,0 +1,10 @@
+// ECU application services shared by the console and MCP. No dependency on :ui.
+// Existing maintenance dialogs/download helpers still use :core_ui/:autoupdate.
+dependencies {
+    api project(':connectivity')
+    implementation project(':autoupdate')
+    api project(':core_ui')
+
+    testImplementation testFixtures(project(':ecu_io'))
+    testImplementation testFixtures(project(':connectivity'))
+}

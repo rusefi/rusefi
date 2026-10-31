@@ -1,14 +1,15 @@
 package com.rusefi.xml;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElementWrapper;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DialogModel {
     private String dialogTitle;
     private String imageName;
+    private String topicHelp;
     @XmlElementWrapper
     @XmlElement(name = "field")
     public List<FieldModel> fields = new ArrayList<>();
@@ -16,9 +17,10 @@ public class DialogModel {
     public DialogModel() {
     }
 
-    public DialogModel(String dialogTitle, String imageName) {
+    public DialogModel(String dialogTitle, String imageName, String topicHelp) {
         this.dialogTitle = dialogTitle;
         this.imageName = imageName;
+        this.topicHelp = topicHelp;
     }
 
     @XmlAttribute
@@ -39,6 +41,11 @@ public class DialogModel {
         this.dialogTitle = dialogTitle;
     }
 
+    @XmlAttribute
+    public String getTopicHelp() {
+        return topicHelp;
+    }
+
     @Override
     public String toString() {
         return "DialogModel{" +
@@ -48,3 +55,4 @@ public class DialogModel {
                 '}';
     }
 }
+

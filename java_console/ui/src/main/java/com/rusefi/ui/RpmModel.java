@@ -1,10 +1,10 @@
 package com.rusefi.ui;
 
-import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.WellKnownGauges;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Model for RPM reading with a feature of smoothing the displayed value: new value is not displayed if updated
@@ -19,7 +19,7 @@ public class RpmModel {
     private static final double SMOOTHING_RATIO = 0.05;
     private int displayedValue;
     private int value;
-    private final List<RpmListener> listeners = new ArrayList<>();
+    private final List<RpmListener> listeners = new CopyOnWriteArrayList<>();
     private long timeAtLastUpdate;
 
     public static RpmModel getInstance() {
@@ -27,14 +27,16 @@ public class RpmModel {
     }
 
     private RpmModel() {
-        SensorCentral.getInstance().addListener(Sensor.RPMValue, value -> setValue((int) value));
+        SensorCentral.getInstance().addPassiveListener(
+            WellKnownGauges.RPMGauge.getOutputChannelName(), value -> setValue((int) value));
     }
 
     public void setValue(int rpm) {
         value = rpm;
 
-        for (RpmListener listener : listeners)
+        for (RpmListener listener : listeners) {
             listener.onRpmChange(this);
+        }
     }
 
     public int getValue() {
@@ -53,6 +55,10 @@ public class RpmModel {
 
     public void addListener(RpmListener listener) {
         listeners.add(listener);
+    }
+
+    public void removeListener(RpmListener listener) {
+        listeners.remove(listener);
     }
 
     interface RpmListener {

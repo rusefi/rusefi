@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- *
+ * Visual sandbox for the live-data parser panel using mocked variable values.
  */
 public class LiveDataParserSandbox {
     public static void main(String[] args) {

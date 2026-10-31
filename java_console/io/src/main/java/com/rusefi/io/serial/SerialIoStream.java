@@ -47,6 +47,9 @@ public abstract class SerialIoStream extends AbstractIoStream {
             // todo: leverage jSerialComm method once we start using version 2.9+
             return null;
         }
+        // Discard any stale bytes left in the RX/TX queues by a prior
+        // open/close cycle (e.g. scanner probe, prior console connection).
+        serialPort.flushIOBuffers();
         return serialPort;
     }
 
