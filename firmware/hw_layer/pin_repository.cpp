@@ -34,10 +34,10 @@ bool isBrainPinValid(brain_pin_e brainPin) {
 }
 
 int brainPin_to_index(Gpio brainPin) {
-	if (brainPin < Gpio::A0)
+	if (brainPin < BRAIN_PIN_ONCHIP_FIRST)
 		return -1;
 
-	size_t i = brainPin - Gpio::A0;
+	size_t i = brainPin - BRAIN_PIN_ONCHIP_FIRST;
 
 	if (i >= getBrainPinTotalNum())
 		return -1;
@@ -132,7 +132,7 @@ void pinDiag2string(char *buffer, size_t size, brain_pin_diag_e pin_diag) {
 static brain_pin_e index_to_brainPin(unsigned int i)
 {
 	if (i < getBrainPinTotalNum())
-		return Gpio::A0 + i;
+		return BRAIN_PIN_ONCHIP_FIRST + i;
 
 	return Gpio::Invalid;
 }
@@ -261,7 +261,7 @@ void initPinRepository(void) {
 
 bool brain_pin_is_onchip(brain_pin_e brainPin)
 {
-	if ((brainPin < Gpio::A0) || (brainPin > BRAIN_PIN_ONCHIP_LAST))
+	if ((brainPin < BRAIN_PIN_ONCHIP_FIRST) || (brainPin > BRAIN_PIN_ONCHIP_LAST))
 		return false;
 
 	return true;

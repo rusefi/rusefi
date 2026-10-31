@@ -15,7 +15,7 @@ bool Mcp4728::initPins(brain_pin_e scl, brain_pin_e sda, brain_pin_e ldac) {
 		return m_scl == scl && m_sda == sda && m_ldac == ldac;
 	}
 
-	auto onChip = [](brain_pin_e pin) { return pin >= Gpio::A0 && pin <= BRAIN_PIN_ONCHIP_LAST; };
+	auto onChip = [](brain_pin_e pin) { return pin >= BRAIN_PIN_ONCHIP_FIRST && pin <= BRAIN_PIN_ONCHIP_LAST; };
 	if (!onChip(scl) || !onChip(sda) || !onChip(ldac)
 		|| scl == sda || scl == ldac || sda == ldac) {
 		return false;

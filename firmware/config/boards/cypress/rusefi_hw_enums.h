@@ -230,6 +230,7 @@ enum class Gpio : uint16_t {
 };
 
 /* Please keep updating this defines */
+#define BRAIN_PIN_ONCHIP_FIRST	Gpio::A0
 #define BRAIN_PIN_ONCHIP_LAST	Gpio::K15
 #define BRAIN_PIN_ONCHIP_PINS	(BRAIN_PIN_ONCHIP_LAST - Gpio::A0 + 1)
 #define BRAIN_PIN_LAST 			Gpio::CAN_PIN_7

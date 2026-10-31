@@ -27,6 +27,23 @@ endif
 
 -include $(BOARD_DIR)/config.mk
 
+# Hardware enums: STM32 by default. A platform can provide its own Gpio and
+# adc_channel_e headers through HW_PIN_ENUMS_FILE / HW_ADC_ENUMS_FILE in
+# meta-info.env (paths relative to BOARD_DIR); the same files feed the
+# config generator (rusefi_config.mk, gen_config_board.sh).
+ifneq ($(HW_PIN_ENUMS_FILE),)
+  HW_PIN_ENUMS = $(BOARD_DIR)/$(HW_PIN_ENUMS_FILE)
+  DDEFS += -DEFI_HW_PIN_ENUMS_FILE=\"$(abspath $(HW_PIN_ENUMS))\"
+else
+  HW_PIN_ENUMS = $(PROJECT_DIR)/controllers/algo/rusefi_hw_stm32_enums.h
+endif
+ifneq ($(HW_ADC_ENUMS_FILE),)
+  HW_ADC_ENUMS = $(BOARD_DIR)/$(HW_ADC_ENUMS_FILE)
+  DDEFS += -DEFI_HW_ADC_ENUMS_FILE=\"$(abspath $(HW_ADC_ENUMS))\"
+else
+  HW_ADC_ENUMS = $(PROJECT_DIR)/controllers/algo/rusefi_hw_adc_enums.h
+endif
+
 # Build the generated pin code only if the connector directory exists
 ifneq ("$(wildcard $(BOARD_DIR)/connectors/*.yaml)","")
   ALLCPPSRC += $(BOARD_DIR)/connectors/generated_ts_name_by_pin.cpp
@@ -61,8 +78,9 @@ else ifeq ($(PROJECT_CPU),ARCH_AT32F4)
   CPU_PLATFORM = $(CHIBIOS)/os/hal/ports/AT32/AT32F4xx/platform.mk
   # Reuse STM32F4 port
   CPU_HWLAYER = ports/stm32/stm32f4
-else ifeq ($(PROJECT_CPU),custom_platform)
-  include $(BOARD_DIR)/custom_platform.mk
+else ifneq ("$(wildcard $(BOARD_DIR)/$(PROJECT_CPU).mk)","")
+  # the board ships its own platform: PROJECT_CPU names a makefile in the board directory
+  include $(BOARD_DIR)/$(PROJECT_CPU).mk
   $(info Using custom CPU_STARTUP_DIR $(CPU_STARTUP_DIR))
   $(info Using custom CPU_PLATFORM $(CPU_PLATFORM))
   $(info Using custom CPU_HWLAYER $(CPU_HWLAYER))

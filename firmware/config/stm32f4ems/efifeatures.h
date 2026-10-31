@@ -335,7 +335,9 @@
 #define EFI_INTERNAL_ADC TRUE
 #endif
 
+#ifndef EFI_USE_FAST_ADC
 #define EFI_USE_FAST_ADC TRUE
+#endif
 
 #ifndef EFI_CAN_SUPPORT
 #define EFI_CAN_SUPPORT TRUE

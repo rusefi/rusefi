@@ -283,6 +283,11 @@ CHECKSUM_ADDRESS = $(or $(shell \
 ifneq ($(BOARD_IMAGE_SCRIPT),)
 $(BUILDDIR)/rusefi.srec: $(BUILDDIR)/$(PROJECT).elf
 	$(PYTHON) $(BOARD_IMAGE_SCRIPT) --format srec $< $@
+else ifneq ($(CPU_ARCH),ARMCMx)
+# no Cortex-M vector table, so no image CRC slot at .vectors + 0x1C;
+# the SREC keeps the ELF load addresses
+$(BUILDDIR)/rusefi.srec: $(BUILDDIR)/$(PROJECT).elf
+	$(CP) -O srec $< $@
 else
 $(BUILDDIR)/rusefi.srec: $(BUILDDIR)/$(PROJECT).hex
 	# make sure we create the srec from a binary with crc

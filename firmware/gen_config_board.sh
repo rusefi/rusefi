@@ -55,6 +55,14 @@ BOARD_DIR=$(realpath --relative-to "$FDIR" "$BOARD_DIR")
 cd "$FDIR"
 
 source gen_config_common.sh
+
+# Hardware enums, see rusefi.mk: HW_PIN_ENUMS_FILE / HW_ADC_ENUMS_FILE from
+# meta-info.env are relative to the board directory.
+HW_PIN_ENUMS="controllers/algo/rusefi_hw_stm32_enums.h"
+HW_ADC_ENUMS="controllers/algo/rusefi_hw_adc_enums.h"
+[ -n "$HW_PIN_ENUMS_FILE" ] && HW_PIN_ENUMS="$BOARD_DIR/$HW_PIN_ENUMS_FILE"
+[ -n "$HW_ADC_ENUMS_FILE" ] && HW_ADC_ENUMS="$BOARD_DIR/$HW_ADC_ENUMS_FILE"
+echo "$SCRIPT_NAME: hardware enums $HW_PIN_ENUMS $HW_ADC_ENUMS"
 echo "Using COMMON_GEN_CONFIG [$COMMON_GEN_CONFIG]"
 
 JAVA_REMOTE_DEBUG="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005"
@@ -65,8 +73,8 @@ java \
  $COMMON_GEN_CONFIG_PREFIX \
  	-tool gen_config.sh \
  $COMMON_GEN_CONFIG \
-	-enumInputFile controllers/algo/rusefi_hw_stm32_enums.h \
-	-enumInputFile controllers/algo/rusefi_hw_adc_enums.h \
+	-enumInputFile "$HW_PIN_ENUMS" \
+	-enumInputFile "$HW_ADC_ENUMS" \
   -c_defines        controllers/generated/rusefi_generated_${SHORT_BOARD_NAME}.h \
   -c_destination    controllers/generated/engine_configuration_generated_structures_${SHORT_BOARD_NAME}.h
 
