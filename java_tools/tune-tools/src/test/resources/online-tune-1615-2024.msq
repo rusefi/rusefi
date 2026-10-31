@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- Reduced from https://rusefi.com/online/download.php?msq=1615 -->
+<msq xmlns="http://www.msefi.com/:msq">
+  <versionInfo fileFormat="5.0" firmwareInfo="rusEFI+v20240122%4065034" nPages="1" signature="rusEFI master.2024.01.22.uaefi.2699380588"/>
+  <page number="0" size="22176">
+    <constant name="mainRelayPin">"B9 Main Relay Weak Low Side output 1"</constant>
+    <constant name="fuelPumpPin">"B16 Low Side output 4 / Fuel Pump Relay"</constant>
+    <constant name="fanPin">"B8 Fan Relay Weak Low Side output 2"</constant>
+    <constant name="triggerInputPins1">"C17 VR2-/HALL max9924"</constant>
+  </page>
+</msq>

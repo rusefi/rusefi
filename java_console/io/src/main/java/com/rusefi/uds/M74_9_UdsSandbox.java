@@ -9,6 +9,9 @@ import java.nio.ByteOrder;
 
 import static com.devexperts.logging.Logging.getLogging;
 
+/**
+ * Manual harness exercising UDS communication (incl. security access) over CAN/SocketCAN with a BMW M74.9 ECU.
+ */
 public class M74_9_UdsSandbox {
     public static final byte RND = (byte) 0xA1;
     private static final Logging log = getLogging(M74_9_UdsSandbox.class);

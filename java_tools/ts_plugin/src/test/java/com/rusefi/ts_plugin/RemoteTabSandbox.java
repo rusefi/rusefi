@@ -3,6 +3,8 @@ package com.rusefi.ts_plugin;
 import com.rusefi.core.ui.FrameHelper;
 
 /**
+ * Visual sandbox for the TS plugin "remote" tab.
+ *
  * @see PluginBodySandbox
  */
 public class RemoteTabSandbox {

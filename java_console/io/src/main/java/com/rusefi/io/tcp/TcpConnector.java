@@ -3,6 +3,7 @@ package com.rusefi.io.tcp;
 import com.devexperts.logging.Logging;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Collection;
 import java.util.Collections;
@@ -72,13 +73,16 @@ public class TcpConnector {
     }
 
     public static boolean isTcpPortOpened() {
+        return isPortOpened("" + DEFAULT_PORT);
+    }
+
+    public static boolean isPortOpened(String port) {
         long now = System.currentTimeMillis();
-        try {
-            Socket s = new Socket(LOCALHOST, DEFAULT_PORT);
-            s.close();
+        try (Socket s = new Socket()) {
+            s.connect(new InetSocketAddress(getHostname(port), getTcpPort(port)), 200);
             return true;
         } catch (IOException e) {
-            log.info("Connection refused in getAvailablePorts(): simulator not running in " + (System.currentTimeMillis() - now) + "ms");
+            log.info("Connection refused for " + port + " in " + (System.currentTimeMillis() - now) + "ms");
             return false;
         }
     }

@@ -1,17 +1,17 @@
 package com.rusefi.maintenance.jobs;
 
-import com.opensr5.ConfigurationImageWithMeta;
 import com.rusefi.PortResult;
+import com.rusefi.maintenance.CalibrationsInfo;
 
 public class UpdateCalibrationsJobContext extends SerialPortJobContext {
-    private final ConfigurationImageWithMeta calibrations;
+    private final CalibrationsInfo calibrations;
 
-    UpdateCalibrationsJobContext(final PortResult port, final ConfigurationImageWithMeta calibrations) {
+    UpdateCalibrationsJobContext(final PortResult port, final CalibrationsInfo calibrations) {
         super(port);
         this.calibrations = calibrations;
     }
 
-    public ConfigurationImageWithMeta getCalibrations() {
+    public CalibrationsInfo getCalibrations() {
         return calibrations;
     }
 }

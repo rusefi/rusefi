@@ -13,6 +13,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import static com.rusefi.ui.util.UiUtils.createOnTopParent;
+
 /**
  * This tab is about uploading log files from ECU.
  *
@@ -78,7 +80,7 @@ public class LogDownloader {
         removeFile.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int i = JOptionPane.showConfirmDialog(ConsoleUI.getFrame(), ("Do you really want to delete " + name + "?"),
+                int i = JOptionPane.showConfirmDialog(createOnTopParent(), ("Do you really want to delete " + name + "?"),
                         UIManager.getString("OptionPane.titleText"),
                         JOptionPane.YES_NO_OPTION);
                 if (i == JOptionPane.YES_OPTION) {

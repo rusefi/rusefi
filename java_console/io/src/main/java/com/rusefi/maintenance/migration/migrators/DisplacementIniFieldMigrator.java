@@ -10,6 +10,14 @@ import java.util.Optional;
 import static com.devexperts.logging.Logging.getLogging;
 import static java.lang.Double.parseDouble;
 
+/**
+ * DisplacementIniFieldMigrator is an example of a unit conversion migrator
+ * (e.g., Liters to Cubic Inches).
+ *
+ * <h3>Testing and Coverage Examples:</h3>
+ * This migrator is tested in {@code DisplacementIniFieldMigratorTest} in the {@code java_console/ui} module.
+ * It covers the {@code displacement} field.
+ */
 public enum DisplacementIniFieldMigrator implements TuneMigrator {
     INSTANCE;
 

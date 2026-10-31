@@ -1,8 +1,7 @@
 package com.rusefi.tune;
 
-import com.devexperts.logging.Logging;
 import com.opensr5.ini.IniFileModel;
-import com.opensr5.ini.IniFileModelImpl;
+import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.opensr5.ini.IniMemberNotFound;
 import com.opensr5.ini.field.ScalarIniField;
 import com.opensr5.ini.field.StringIniField;
@@ -17,12 +16,10 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import static com.devexperts.logging.Logging.getLogging;
 import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LoadOlderTuneTest {
-    private static final Logging log = getLogging(LoadOlderTuneTest.class);
 
     @Test
     public void loadOlderTuneAgainstCurrentIni() throws Exception {
@@ -32,7 +29,7 @@ public class LoadOlderTuneTest {
 
         Msq lessOldDefaultTune = Msq.readTune(LoadOlderTuneTest.class.getResource("/simulator_tune-2023-06.xml").getFile());
 
-        IniFileModel ini = IniFileModelImpl.readIniFile(TuneReadWriteTest.TEST_INI);
+        IniFileModel ini = IniFileReaderUtil.readIniFile(TuneReadWriteTest.TEST_INI);
         assertEquals(256, ini.getBlockingFactor());
         assertFalse(ini.getFieldsInUiOrder().isEmpty());
 
@@ -167,7 +164,7 @@ public class LoadOlderTuneTest {
 
     @Test
     public void findFieldByName() throws IniMemberNotFound, FileNotFoundException {
-        IniFileModel ini = IniFileModelImpl.readIniFile(TuneReadWriteTest.TEST_INI);
+        IniFileModel ini = IniFileReaderUtil.readIniFile(TuneReadWriteTest.TEST_INI);
         StringIniField make = (StringIniField) ini.getIniField("ENGINEMAKE");
         assertNotNull(make);
         ScalarIniField tps = (ScalarIniField) ini.getOutputChannel("RPMVALUE");

@@ -5,7 +5,7 @@ package com.rusefi.enums;
 
 
 public enum ts_command_e {
-	TS_DEBUG_MODE,
+	TS_UNUSED_0,
 	TS_COMMAND_1,
 	TS_COMMAND_2,
 	TS_COMMAND_3,
@@ -43,4 +43,6 @@ public enum ts_command_e {
 	TS_WIDEBAND_FLASH_BY_ID,
 	TS_STOP_ENGINE,
 	TS_WIDEBAND_SET_SENS_BY_ID,
+	TS_WIDEBAND_FLASH_BY_ID_FILE,
+	TS_WIDEBAND_RESTART,
 }

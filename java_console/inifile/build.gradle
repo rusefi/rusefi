@@ -2,8 +2,28 @@
 
 dependencies {
     api project(':logging-api')
-    api project(':core_io')
-    // intention is to have happy self-contained shadowJar compatible both with java 8 and 11+
-    api global_libs.jaxb
+    api project(':version')
+
+    testImplementation global_libs.mockito
     api 'javax.activation:activation:1.1.1'
+    api 'net.objecthunter:exp4j:0.4.8'
+}
+
+// source/targetCompatibility alone still allow calls to newer JDK APIs.
+tasks.named('compileJava', JavaCompile) {
+    options.release = 8
+}
+
+// Exercise the runtime bundled with TunerStudio, not just Java 8 bytecode.
+tasks.register('java8Test', Test) {
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    useJUnitPlatform()
+    if (project.hasProperty('java8Executable')) {
+        executable = project.property('java8Executable')
+    } else {
+        javaLauncher = javaToolchains.launcherFor {
+            languageVersion = JavaLanguageVersion.of(8)
+        }
+    }
 }

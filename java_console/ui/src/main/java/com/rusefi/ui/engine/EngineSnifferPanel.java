@@ -1,7 +1,7 @@
 package com.rusefi.ui.engine;
 
+import com.devexperts.logging.FileLogger;
 import com.devexperts.logging.Logging;
-import com.rusefi.FileLog;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.Sensor;
@@ -266,8 +266,8 @@ public class EngineSnifferPanel {
 
     private void saveImage() {
         int rpm = RpmModel.getInstance().getValue();
-        double maf = SensorCentral.getInstance().getValue(Sensor.MAFMEASURED);
-        String fileName = FileLog.getDate() + "rpm_" + rpm + "_maf_" + maf + ".png";
+        double maf = 0;
+        String fileName = FileLogger.getDate() + "rpm_" + rpm + "_maf_" + maf + ".png";
 
         UiUtils.saveImageWithPrompt(fileName, mainPanel, imagePanel);
     }

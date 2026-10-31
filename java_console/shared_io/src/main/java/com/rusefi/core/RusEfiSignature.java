@@ -9,6 +9,7 @@ public class RusEfiSignature {
     private final String day;
     private final String bundleTarget;
     private final String hash;
+    private final Boolean isLegacyFormat;
 
     public RusEfiSignature(
         final String branch,
@@ -16,7 +17,8 @@ public class RusEfiSignature {
         final String month,
         final String day,
         final String bundleTarget,
-        final String hash
+        final String hash,
+        Boolean isLegacyFormat
     ) {
         this.branch = branch;
         this.year = year;
@@ -24,6 +26,7 @@ public class RusEfiSignature {
         this.day = day;
         this.bundleTarget = bundleTarget;
         this.hash = hash;
+        this.isLegacyFormat = isLegacyFormat;
     }
 
     public String getBranch() {
@@ -49,6 +52,11 @@ public class RusEfiSignature {
     public String getHash() {
         return hash;
     }
+
+    public Boolean getIsLegacyFormat() {
+        return isLegacyFormat;
+    }
+
 
     @Override
     public String toString() {

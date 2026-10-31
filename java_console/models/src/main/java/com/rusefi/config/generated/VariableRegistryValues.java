@@ -1344,6 +1344,10 @@ public class VariableRegistryValues {
 	public static final int operation_mode_e_FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR = 6;
 	public static final int operation_mode_e_OM_NONE = 0;
 	public static final int operation_mode_e_TWO_STROKE = 3;
+	// Channel names used by migrated Java consumers, not Kansas layout metadata.
+	public static final String OUTPUT_CHANNEL_SD_LOGGING_INTERNAL = "sd_logging_internal";
+	public static final String OUTPUT_CHANNEL_SD_MSD = "sd_msd";
+	public static final String OUTPUT_CHANNEL_SD_PRESENT = "sd_present";
 	public static final int PACK_ADD_TEMPERATURE = 40;
 	public static final int PACK_MULT_AFR = 1000;
 	public static final int PACK_MULT_AFR_CFG = 10;
@@ -1624,6 +1628,8 @@ public class VariableRegistryValues {
 	public static final int trigger_type_e_TT_UNUSED29 = 29;
 	public static final int trigger_type_e_TT_VVT_BARRA_3_PLUS_1 = 56;
 	public static final int trigger_type_e_TT_VVT_BOSCH_QUICK_START = 47;
+	// Values used by the migrated Java UI; intentionally not a Kansas firmware registry snapshot.
+	public static final int trigger_type_e_TT_VVT_MITSUBISHI_6G75 = 97;
 	public static final int trigger_type_e_TT_VVT_FORD_COYOTE = 4;
 	public static final int trigger_type_e_TT_VVT_MAZDA_L = 82;
 	public static final int trigger_type_e_TT_VVT_MAZDA_SKYACTIV = 13;
@@ -1815,6 +1821,7 @@ public class VariableRegistryValues {
 	public static final String VVT_25_NAME = "INVALID";
 	public static final String VVT_26_NAME = "INVALID";
 	public static final int vvt_mode_e_VVT_BARRA_3_PLUS_1 = 8;
+	public static final int vvt_mode_e_VVT_BMW_N63TU = 17;
 	public static final int vvt_mode_e_VVT_BOSCH_QUICK_START = 5;
 	public static final int vvt_mode_e_VVT_CHRYSLER_PHASER = 14;
 	public static final int vvt_mode_e_VVT_CUSTOM_1 = 29;

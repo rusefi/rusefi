@@ -65,12 +65,13 @@ public class TS2C {
         return sb.toString();
     }
 
+    /*
     private static String writeTableLine(CurveData loadBins, CurveData rpmBins, ValueSource valueSource, int loadIndex) {
         StringBuilder sb = new StringBuilder("{");
 
-        sb.append("/* " + loadIndex + " " + String.format("%3.3f", loadBins.getRawData()[loadIndex]) + "\t*/");
+        sb.append("/" + "* " + loadIndex + " " + String.format("%3.3f", loadBins.getRawData()[loadIndex]) + "\t*" + "/");
         for (int rpmIndex = 0; rpmIndex < rpmBins.getRawData().length; rpmIndex++) {
-            sb.append("/* " + rpmIndex + " " + rpmBins.getRawData()[rpmIndex] + "*/" + String.format("%3.3f", valueSource.getValue(loadIndex, rpmIndex)) + ",\t");
+            sb.append("/* " + rpmIndex + " " + rpmBins.getRawData()[rpmIndex] + "*" + "/" + String.format("%3.3f", valueSource.getValue(loadIndex, rpmIndex)) + ",\t");
         }
         sb.append("},\n");
 
@@ -87,6 +88,7 @@ public class TS2C {
             "\tcopyTable(" + tableReference + "Table, hardCoded" + tableName + ");\n";
         return x;
     }
+*/
 
     public interface ValueSource {
         float getValue(int rowIndex, int columnIndex);

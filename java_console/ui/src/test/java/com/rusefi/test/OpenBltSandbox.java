@@ -7,9 +7,12 @@ import com.rusefi.libopenblt.transport.XcpNet;
 
 import java.io.IOException;
 
+/**
+ * Manual harness that clears flash memory over OpenBLT XCP-on-Ethernet.
+ */
 public class OpenBltSandbox {
     public static void main(String[] args) throws IOException {
-        IXcpTransport transport = new XcpNet("192.168.10.1", 29000);
+        IXcpTransport transport = new XcpNet("192.168.10.1", 29001);
         try {
             XcpLoader loader = new XcpLoader(transport, new XcpSettings());
 

@@ -13,6 +13,26 @@ public class PCanHelper {
 
     public static final TPCANHandle CHANNEL = TPCANHandle.PCAN_USBBUS1;
 
+    /**
+     * Whether the PCANBasic native layer can be used in this process, without touching any CAN channel.
+     * <p>
+     * On Windows the JNI DLL links PEAK's PCANBasic.dll, so a successful load means the driver is installed.
+     * On macOS the JNI bridge (misc/pcanbasic_jni_macos) dlopen()s MacCAN's libPCBUSB lazily, so the class
+     * may load fine while {@code initializeAPI()} still reports that MacCAN is missing. Linux has no
+     * PCANBasic binding at all (SocketCAN is used there) and the class fails to link.
+     * <p>
+     * Never throws: the port scanner calls this on every scan cycle.
+     */
+    public static boolean isNativeApiAvailable() {
+        try {
+            return new PCANBasic().initializeAPI();
+        } catch (Throwable e) {
+            // UnsatisfiedLinkError / NoClassDefFoundError when neither JNI library is on java.library.path
+            log.info("PCANBasic native API unavailable: " + e);
+            return false;
+        }
+    }
+
     @NotNull
     public static PCANBasic create() {
         PCANBasic can = new PCANBasic();

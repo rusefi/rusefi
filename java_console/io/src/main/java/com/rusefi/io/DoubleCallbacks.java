@@ -16,6 +16,18 @@ public class DoubleCallbacks implements UpdateOperationCallbacks {
     }
 
     @Override
+    public void firmwareHandoffStarted() {
+        one.firmwareHandoffStarted();
+        two.firmwareHandoffStarted();
+    }
+
+    @Override
+    public void firmwareUpdateBlocked(String reason) {
+        one.firmwareUpdateBlocked(reason);
+        two.firmwareUpdateBlocked(reason);
+    }
+
+    @Override
     public void done() {
         one.done();
         two.done();
@@ -38,6 +50,12 @@ public class DoubleCallbacks implements UpdateOperationCallbacks {
     public void clear() {
         one.clear();
         two.clear();
+    }
+
+    @Override
+    public void updateProgress(int percent) {
+        one.updateProgress(percent);
+        two.updateProgress(percent);
     }
 
     @Override

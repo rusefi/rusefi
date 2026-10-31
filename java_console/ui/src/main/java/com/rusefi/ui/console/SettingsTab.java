@@ -1,26 +1,5 @@
 package com.rusefi.ui.console;
 
-import com.opensr5.ini.DialogModel;
-import com.rusefi.config.Field;
-import com.rusefi.config.FieldType;
-import com.rusefi.config.generated.Integration;
-import com.rusefi.io.LinkManager;
-import com.rusefi.ui.RecentCommands;
-import com.rusefi.ui.UIContext;
-import com.rusefi.ui.config.*;
-import com.rusefi.ui.util.UiUtils;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import static com.opensr5.ini.IniFileModelImpl.RUSEFI_INI_PREFIX;
-import static com.opensr5.ini.IniFileModelImpl.RUSEFI_INI_SUFFIX;
-
 /**
  * @see EnumConfigField
  */

@@ -1,11 +1,13 @@
 package com.opensr5.ini;
 
-public class IniFileModeSingleton {
-    private static IniFileModelImpl INSTANCE;
+import com.rusefi.ini.reader.IniFileReader;
 
-    public static synchronized IniFileModelImpl getInstance() {
+public class IniFileModeSingleton {
+    private static IniFileModel INSTANCE;
+
+    public static synchronized IniFileModel getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = IniFileModelImpl.findAndReadIniFile(IniFileModelImpl.INI_FILE_PATH);
+            INSTANCE = IniFileModelTestHelper.findAndReadIniFile(IniFileReader.INI_FILE_PATH);
         }
         return INSTANCE;
     }

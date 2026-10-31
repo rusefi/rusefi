@@ -14,6 +14,8 @@ import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.Timeouts.SECOND;
 
 /**
+ * Manual harness that reads an ECU signature over a PCAN (Peak CAN) adapter.
+ *
  * @see Elm327Sandbox
  */
 public class PCanSandbox {

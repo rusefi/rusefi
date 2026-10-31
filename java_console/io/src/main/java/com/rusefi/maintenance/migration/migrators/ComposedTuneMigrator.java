@@ -16,8 +16,10 @@ public enum ComposedTuneMigrator implements TuneMigrator {
         TableAddColumnsMigrator.IGNITION_TABLE_MIGRATOR,
         TableAddColumnsMigrator.INJECTION_PHASE_MIGRATOR,
         TableAddColumnsMigrator.MAP_SAMPLING_MIGRATOR,
+        TableAddColumnsMigrator.PEDAL_TO_TPS_MIGRATOR,
         // rest of migrators
         AfrLambdaTableMigrator.INSTANCE,
+        ArrayFieldScaleMigrator.INSTANCE,
         BattLagCorrExtensionMigrator.INSTANCE,
         CltIdleCorrMigrator.INSTANCE,
         DisplacementIniFieldMigrator.INSTANCE,
@@ -28,8 +30,10 @@ public enum ComposedTuneMigrator implements TuneMigrator {
         STFTFieldMigrator.INSTANCE,
         IdleCurveMigrator.INSTANCE,
         MultiplierToTableMigrator.INSTANCE,
+        CrankingFlexTableMigrator.INSTANCE,
         ScalarToArrayMigrator.INSTANCE,
         MapSamplingValuesMigrator.INSTANCE,
+        ImperialUnitsMigrator.INSTANCE,
 
         // leave the default as the final migrator!
         DefaultTuneMigrator.INSTANCE
