@@ -50,6 +50,8 @@ public final class ChatGptClient implements Closeable {
     public static final class Account {
         public final String id;
         public final String label;
+        /** The account's e-mail address, or empty if the sign-in did not report one. */
+        public final String email;
         public final boolean connected;
         public final boolean planEnabled;
         public final boolean reLoginRequired;
@@ -63,7 +65,8 @@ public final class ChatGptClient implements Closeable {
             reLoginRequired = Boolean.TRUE.equals(profile.get("relogin_required"))
                     || (!hasAccessToken && !hasRefreshToken)
                     || (hasAccessToken && !hasRefreshToken && accessTokenNeedsRefresh(profile));
-            label = string(profile, "label") + " - " + string(profile, "email")
+            email = string(profile, "email");
+            label = string(profile, "label") + " - " + email
                     + (connected ? "" : " (signed out)");
         }
 
