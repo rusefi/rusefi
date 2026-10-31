@@ -17,8 +17,14 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_URL: ${{ github.event.pull_request.html_url }}
           CHANGED_FILES: ${{ github.event.pull_request.changed_files }}
+          EVENT_ACTION: ${{ github.event.action }}
         shell: bash
         run: |
+          if [ "$EVENT_ACTION" = "reopened" ]; then
+            echo "PR was manually reopened; not auto-closing it again."
+            exit 0
+          fi
+
           if [[ ! "$CHANGED_FILES" =~ ^[0-9]+$ ]]; then
             echo "::error::Missing or invalid changed file count."
             exit 1
