@@ -212,7 +212,7 @@ class SensorLoggerTest {
         when(protocol.getIniFileNullable()).thenReturn(ini);
         when(ini.getAllOutputChannels()).thenReturn(outputChannels);
 
-        LoggingProfile profile = new LoggingProfiles(new com.rusefi.core.preferences.storage.Node()).create("Short");
+        LoggingProfile profile = new LoggingProfiles(new com.rusefi.core.preferences.storage.Node(), null).create("Short");
         profile.add("coolant");
         SensorLogger logger = new SensorLogger(() -> protocol);
         Path file = tempDir.resolve("profile.mlg");

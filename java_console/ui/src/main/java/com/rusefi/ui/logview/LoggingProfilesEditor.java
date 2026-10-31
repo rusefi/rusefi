@@ -33,6 +33,7 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -46,6 +47,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
@@ -229,6 +232,22 @@ public final class LoggingProfilesEditor extends JPanel {
         close.addActionListener(e -> dialog.dispose());
         JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 8));
         buttons.setOpaque(false);
+        File folder = profiles.getFolder();
+        if (folder != null && Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
+            JButton openFolder = new JButton("Open folder");
+            openFolder.setToolTipText("<html>Your own profiles are one file each in " + folder
+                    + "<br>Copy a file to share a profile; files put there appear after the console restarts</html>");
+            openFolder.addActionListener(e -> {
+                try {
+                    folder.mkdirs();
+                    Desktop.getDesktop().open(folder);
+                } catch (IOException | RuntimeException ex) {
+                    JOptionPane.showMessageDialog(dialog, "Could not open " + folder + ": " + ex.getMessage(),
+                            "Logging profiles", JOptionPane.WARNING_MESSAGE);
+                }
+            });
+            buttons.add(openFolder);
+        }
         buttons.add(close);
         editor.remove(editor.footer);
         JPanel bottom = new JPanel(new BorderLayout());

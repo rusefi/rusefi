@@ -116,7 +116,7 @@ class LogViewerProfilesTest {
     @Test
     void profilesFollowTheListsClosedAndShowWhatTheLogLacks() throws Exception {
         SidebarState state = new SidebarState();
-        LoggingProfiles profiles = new LoggingProfiles(new Node());
+        LoggingProfiles profiles = new LoggingProfiles(new Node(), null);
         LogViewerPanel panel = panel(state, ini(), profiles);
         assertEquals(Arrays.asList("PROFILE closed"), section(panel, "Profile: Trigger"));
         assertEquals(Arrays.asList("PROFILE closed"), section(panel, "Profile: Idle"));
@@ -132,7 +132,7 @@ class LogViewerProfilesTest {
 
     @Test
     void profileMenuPlotsTheSignalsTheLogHas() throws Exception {
-        LogViewerPanel panel = panel(new SidebarState(), ini(), new LoggingProfiles(new Node()));
+        LogViewerPanel panel = panel(new SidebarState(), ini(), new LoggingProfiles(new Node(), null));
         JPopupMenu menu = panel.rowMenu(heading(panel, "Profile: Idle"));
         JMenuItem plotAll = (JMenuItem) menu.getComponent(0);
         assertEquals("Plot all", plotAll.getText());
@@ -145,7 +145,7 @@ class LogViewerProfilesTest {
 
     @Test
     void plottedSignalsSaveAsAProfileTheRecordButtonOffers() throws Exception {
-        LoggingProfiles profiles = new LoggingProfiles(new Node());
+        LoggingProfiles profiles = new LoggingProfiles(new Node(), null);
         List<Runnable> told = new ArrayList<>();
         profiles.addListener(() -> told.add(null));
         LogViewerPanel panel = panel(new SidebarState(), ini(), profiles);
@@ -180,7 +180,7 @@ class LogViewerProfilesTest {
 
     @Test
     void aListSavesUnderItsNameUnlessTaken() throws Exception {
-        LoggingProfiles profiles = new LoggingProfiles(new Node());
+        LoggingProfiles profiles = new LoggingProfiles(new Node(), null);
         LogViewerPanel panel = panel(new SidebarState(), ini(), profiles);
         List<String> offered = new ArrayList<>();
         List<String> warnings = new ArrayList<>();
@@ -205,7 +205,7 @@ class LogViewerProfilesTest {
 
     @Test
     void savingNeedsTheIni() throws Exception {
-        LogViewerPanel panel = panel(new SidebarState(), null, new LoggingProfiles(new Node()));
+        LogViewerPanel panel = panel(new SidebarState(), null, new LoggingProfiles(new Node(), null));
         JMenuItem save = (JMenuItem) panel.plotsMenu().getComponent(0);
         assertFalse(save.isEnabled());
         assertTrue(save.getToolTipText().startsWith("Needs the ECU's .ini"));
@@ -218,7 +218,7 @@ class LogViewerProfilesTest {
 
     @Test
     void theSidebarFollowsProfilesChangedElsewhere() throws Exception {
-        LoggingProfiles profiles = new LoggingProfiles(new Node());
+        LoggingProfiles profiles = new LoggingProfiles(new Node(), null);
         IniFileModel ini = ini();
         SwingUtilities.invokeAndWait(() -> {
             try {

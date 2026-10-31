@@ -57,7 +57,7 @@ class ProfileButtonTest {
     }
 
     private static BinaryLoggingMenu menu(UIContext context, Node settings) {
-        BinaryLoggingMenu logging = new BinaryLoggingMenu(context, null, null, null, null, settings);
+        BinaryLoggingMenu logging = new BinaryLoggingMenu(context, null, null, null, null, settings, null);
         logging.saveTuneItem().setSelected(false);
         return logging;
     }

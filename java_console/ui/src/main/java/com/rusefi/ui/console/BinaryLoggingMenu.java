@@ -59,15 +59,18 @@ final class BinaryLoggingMenu {
     private long recordingSince;
     private File logsFolder = new File(FileLogger.DIR);
 
-    /** @param settings where the last recording's path is kept; saved with the console config on exit */
+    /**
+     * @param settings       where the last recording's path is kept; saved with the console config on exit
+     * @param profilesFolder where the user's own logging profiles are kept, or null to not keep them
+     */
     BinaryLoggingMenu(UIContext uiContext, Component parent, Icon startIcon, Icon stopIcon, Icon viewIcon,
-                      Node settings) {
+                      Node settings, File profilesFolder) {
         this.uiContext = uiContext;
         this.parent = parent;
         this.settings = settings;
         String lastPath = settings.getProperty(LAST_LOG, null);
         lastLog = lastPath == null || lastPath.isEmpty() ? null : new File(lastPath);
-        profiles = new LoggingProfiles(settings.getChild(PROFILES));
+        profiles = new LoggingProfiles(settings.getChild(PROFILES), profilesFolder);
         // e.g. a profile saved from the Log Viewer appears in the menu and beside the record button
         profiles.addListener(this::refresh);
         menu = new JMenu("Logging");
