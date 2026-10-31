@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.rusefi.config.ConsoleConstants;
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
@@ -169,7 +170,7 @@ public class TriggerImageHelper {
             case VariableRegistryValues.vvt_mode_e_VVT_MAZDA_L:
                 return VariableRegistryValues.trigger_type_e_TT_VVT_MAZDA_L;
             case VariableRegistryValues.vvt_mode_e_VVT_MITSUBISHI_6G75:
-                return VariableRegistryValues.trigger_type_e_TT_VVT_MITSUBISHI_6G75;
+                return ConsoleConstants.trigger_type_e_TT_VVT_MITSUBISHI_6G75;
             case VariableRegistryValues.vvt_mode_e_VVT_NISSAN_VQ:
                 return VariableRegistryValues.trigger_type_e_TT_VVT_NISSAN_VQ35;
             case VariableRegistryValues.vvt_mode_e_VVT_TOYOTA_4_1:
@@ -188,7 +189,7 @@ public class TriggerImageHelper {
                 return VariableRegistryValues.trigger_type_e_TT_TOYOTA_3_TOOTH_UZ;
             case VariableRegistryValues.vvt_mode_e_VVT_NISSAN_MR:
                 return VariableRegistryValues.trigger_type_e_TT_NISSAN_MR18_CAM_VVT;
-            case VariableRegistryValues.vvt_mode_e_VVT_BMW_N63TU:
+            case ConsoleConstants.vvt_mode_e_VVT_BMW_N63TU:
             case VariableRegistryValues.vvt_mode_e_VVT_MITSUBISHI_4G63:
                 return VariableRegistryValues.trigger_type_e_TT_MITSU_4G63_CAM;
             case VariableRegistryValues.vvt_mode_e_VVT_HR12DDR_IN:

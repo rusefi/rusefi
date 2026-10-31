@@ -5,23 +5,19 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.*;
-import com.rusefi.tune.xml.MsqFactory;
 import com.rusefi.tools.tune.FileLinesHelper;
 import com.rusefi.tune.xml.Msq;
+import com.rusefi.tune.xml.MsqFactory;
 import com.rusefi.util.LazyFileImpl;
 import com.rusefi.util.Output;
 import org.jetbrains.annotations.NotNull;
 
 import jakarta.xml.bind.JAXBException;
 import java.io.*;
-import java.nio.file.Path;
-import java.util.ArrayList;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.TreeSet;
 
 import static com.rusefi.ReaderStateImpl.INCLUDE_FILE;
-import static com.rusefi.VariableRegistry.unquote;
-import static com.rusefi.util.LazyFile.CHARSET;
 
 /**
  * [Constants]
@@ -33,14 +29,6 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     private static final String CONFIG_DEFINITION_START = "CONFIG_DEFINITION_START";
     private static final String CONFIG_DEFINITION_END = "CONFIG_DEFINITION_END";
     private static final String TS_CONDITION = "@@if_";
-    // multi-line variant of @@if_<token>: drops every line between the markers when the token's
-    // registry boolean is false, so guarding a whole block does not need a directive per line.
-    // Conditions require explicitly declared booleans. No nesting support.
-    private static final String TS_IF_BLOCK_START = "@@if_block";
-    private static final String TS_IF_BLOCK_END = "@@endif_block";
-    private static final java.util.regex.Pattern TS_CONDITION_TOKEN = java.util.regex.Pattern.compile("\\w+");
-    private static final java.util.regex.Pattern CONDITION_MARKER = java.util.regex.Pattern.compile("(@+)(?:if_|endif_block)");
-    private static final String TEMPLATE_TAG = "@@";
     public static final String SETTING_CONTEXT_HELP_END = "SettingContextHelpEnd";
     public static final String SETTING_CONTEXT_HELP = "SettingContextHelp";
     public static final String TS_DROP_TEMPLATE_COMMENTS = "ts_drop_template_comments";
@@ -73,21 +61,12 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     private final GaugeIgnoreList ignoreList;
 
     public TSProjectConsumer(String tsPath, ReaderStateImpl state) {
-        this(tsPath, state, new TreeSet<>(String.CASE_INSENSITIVE_ORDER));
+        this(tsPath, state, new GaugeIgnoreList());
     }
 
     public TSProjectConsumer(String tsPath, ReaderStateImpl state, GaugeIgnoreList ignoreList) {
-        this(tsPath, state, ignoreList, new TreeSet<>(String.CASE_INSENSITIVE_ORDER));
-    }
-
-    public TSProjectConsumer(String tsPath, ReaderStateImpl state, TreeSet<String> usedNames) {
-        this(tsPath, state, new GaugeIgnoreList(), usedNames);
-    }
-
-    public TSProjectConsumer(String tsPath, ReaderStateImpl state, GaugeIgnoreList ignoreList, TreeSet<String> usedNames) {
         this.tsPath = tsPath;
-        // [tag:wue_analyzer] Main calibration aliases use page 1 offsets.
-        consumerState = new TSProjectConsumerState(state, new TsOutput(true, usedNames, 1));
+        consumerState = new TSProjectConsumerState(state, new TsOutput(true));
         this.state = state;
         this.ignoreList = ignoreList;
     }
@@ -97,152 +76,13 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         return consumerState.tsOutput.getSettingContextHelp();
     }
 
-    // [tag:ts_page_table] Page identifiers must match the TS_PAGE_* constants in console/binary/tunerstudio.h.
-    // One row per TS page, in wire order. Columns:
-    //   identifier  - pageIdentifier wire bytes (TS_PAGE_* in tunerstudio.h)
-    //   sizeVar     - registry variable holding the page size
-    //   contentVar  - registry variable holding the page's field definitions (null for page 1,
-    //                 whose fields are emitted directly by writeContent)
-    //   burnable    - whether the page is burned to flash (burnCommand entry)
-    //   refreshFlag - [EventTriggers] triggeredPageRefresh flag for the page, or null
-    //   guardFlag   - feature flag (read from a board prepend) that drops the page when FALSE
-    //   enabledFlag - boolean the generator publishes so @@if[_block] guards can drop this page's
-    //                 scattered references (tooltips, table editors), or null
-    // A page is dropped when its guardFlag is FALSE or its size is zero; nPages, every parallel
-    // command list, the page=N field blocks and the triggeredPageRefresh ordinals are then all
-    // rebuilt from the surviving pages so they stay consistent. See issue #9699.
-    // A guarded page is dropped from the .ini when its guardFlag is FALSE in the registry (read
-    // from a board prepend). The board's prepend.txt is the single declaration point for a guard
-    // flag: firmware/Makefile lifts flags listed in TS_PAGE_GUARD_FLAGS from prepend.txt into
-    // DDEFS (keep that list in sync with this column), and tunerstudio.cpp static_asserts that
-    // the compile flag matches the generated *_PAGE_ENABLED value. IMPORTANT: a page
-    // that has a reference surface (tooltips, [TableEditor], menus, triggeredPageRefresh that name
-    // its fields) also needs an enabledFlag and those references wrapped in @@if_block <enabledFlag>,
-    // exactly as LTFT does - otherwise the drop leaves dangling references. LTFT has such a surface
-    // (enabledFlag = LTFT_PAGE_ENABLED); Lua does not - its only page-5 entity is the luaScript
-    // field, which is dropped with the field block, so it needs no enabledFlag. The size==0 rule is
-    // generic but only safe for a genuinely empty page (no fields, hence nothing to reference).
-    // NOTE: EFI_LUA gates the .ini only; the firmware still serves the Lua page (identifier
-    // \x00\x04 - it is not gated on EFI_LUA), which is the safe direction - TS simply never
-    // requests the dropped page. Refer to pages by wire identifier, not 1-based ordinal:
-    // ordinals shift when a guarded page is dropped.
-    private static final TsPage[] TS_PAGES = {
-        new TsPage("\\x00\\x00", "persistent_config_s_size", null,            true,  "triggerPageRefreshFlag", null,               null),
-        new TsPage("\\x00\\x01", "PAGE_SIZE_2",              "PAGE_CONTENT_2", false, null,                     null,               null),
-        new TsPage("\\x00\\x02", "PAGE_SIZE_3",              "PAGE_CONTENT_3", false, "ltftPageRefreshFlag",    "EFI_LTFT_CONTROL", "LTFT_PAGE_ENABLED"),
-        new TsPage("\\x00\\x03", "PAGE_SIZE_4",              "PAGE_CONTENT_4", true,  "triggerPageRefreshFlag", null,               null),
-        new TsPage("\\x00\\x04", "PAGE_SIZE_5",              "PAGE_CONTENT_5", true,  null,                     "EFI_LUA",          null),
-    };
-
-    private static class TsPage {
-        final String identifier;
-        final String sizeVar;
-        final String contentVar;
-        final boolean burnable;
-        final String refreshFlag;
-        final String guardFlag;
-        final String enabledFlag;
-
-        TsPage(String identifier, String sizeVar, String contentVar, boolean burnable,
-               String refreshFlag, String guardFlag, String enabledFlag) {
-            this.identifier = identifier;
-            this.sizeVar = sizeVar;
-            this.contentVar = contentVar;
-            this.burnable = burnable;
-            this.refreshFlag = refreshFlag;
-            this.guardFlag = guardFlag;
-            this.enabledFlag = enabledFlag;
-        }
-
-        boolean isEnabled(VariableRegistry registry) {
-            if (guardFlag != null) {
-                String flag = registry.get(guardFlag);
-                if (flag != null && flag.trim().equalsIgnoreCase("false"))
-                    return false;
-            }
-            String size = registry.get(sizeVar);
-            if (size == null)
-                return false; // page size never computed - page is not present
-            try {
-                return Integer.parseInt(size.trim()) > 0;
-            } catch (NumberFormatException e) {
-                return true; // non-numeric size expression - keep the page
-            }
-        }
-    }
-
-    /**
-     * Emits everything in the .ini that depends on the set of enabled pages: the [Constants]
-     * page table (nPages + the parallel pageIdentifier / pageSize / read / burn / write / crc
-     * lists), the page=N field blocks, the [EventTriggers] triggeredPageRefresh ordinals, and a
-     * boolean enabled-flag per guarded page (consumed by @@if[_block] guards of that page's
-     * tooltips and table editors). Building it all from one ordered pass keeps the page ordinals
-     * and the parallel lists consistent automatically when a page is added or compiled out,
-     * fixing issue #9699.
-     */
-    protected void registerTsPagesBlock() {
-        VariableRegistry registry = state.getVariableRegistry();
-        if (registry.get("TS_PAGE_COUNT") != null)
-            return; // already registered (defensive against double invocation)
-
-        String read = registry.get("TS_READ_COMMAND_char");
-        String burn = registry.get("TS_BURN_COMMAND_char");
-        String write = registry.get("TS_CHUNK_WRITE_COMMAND_char");
-        String crc = registry.get("TS_CRC_CHECK_COMMAND_char");
-
-        List<String> ids = new ArrayList<>();
-        List<String> sizes = new ArrayList<>();
-        List<String> readCmds = new ArrayList<>();
-        List<String> burnCmds = new ArrayList<>();
-        List<String> writeCmds = new ArrayList<>();
-        List<String> crcCmds = new ArrayList<>();
-        StringBuilder fieldBlocks = new StringBuilder();
-        StringBuilder refreshTriggers = new StringBuilder();
-
-        int ordinal = 0;
-        for (TsPage page : TS_PAGES) {
-            boolean enabled = page.isEnabled(registry);
-            // publish the enabled flag so @@if[_block] can drop this page's scattered references
-            if (page.enabledFlag != null)
-                registry.register(page.enabledFlag, Boolean.toString(enabled));
-            if (!enabled)
-                continue;
-            ordinal++;
-            ids.add("\"" + page.identifier + "\"");
-            sizes.add(registry.get(page.sizeVar));
-            readCmds.add("\"" + read + "%2i%2o%2c\"");
-            burnCmds.add(page.burnable ? "\"" + burn + "%2i\"" : "\"\"");
-            writeCmds.add("\"" + write + "%2i%2o%2c%v\"");
-            crcCmds.add("\"" + crc + "%2i%2o%2c\"");
-            // page 1's fields are emitted by writeContent; pages 2+ come from PAGE_CONTENT_N
-            if (page.contentVar != null)
-                fieldBlocks.append("page = ").append(ordinal).append("\n\t@@")
-                           .append(page.contentVar).append("@@\n");
-            if (page.refreshFlag != null)
-                refreshTriggers.append("  triggeredPageRefresh = ").append(ordinal)
-                               .append(", { ").append(page.refreshFlag).append(" }\n");
-        }
-
-        registry.register("TS_PAGE_COUNT", Integer.toString(ids.size()));
-        registry.register("TS_PAGE_IDENTIFIERS", String.join(", ", ids));
-        registry.register("TS_PAGE_SIZES", String.join(", ", sizes));
-        registry.register("TS_PAGE_READ_COMMANDS", String.join(", ", readCmds));
-        registry.register("TS_PAGE_BURN_COMMANDS", String.join(", ", burnCmds));
-        registry.register("TS_PAGE_VALUE_WRITE", String.join(", ", writeCmds));
-        registry.register("TS_PAGE_CHUNK_WRITE", String.join(", ", writeCmds));
-        registry.register("TS_PAGE_CRC_CHECK", String.join(", ", crcCmds));
-        registry.register("TS_PAGE_FIELD_BLOCKS", fieldBlocks.toString());
-        registry.register("TS_PAGE_REFRESH_TRIGGERS", refreshTriggers.toString());
-    }
-
     protected void writeTunerStudioFile(String tsPath, String fieldsSection) throws IOException {
-        registerTsPagesBlock();
         TsFileContent tsContent = readTsTemplateInputFile(tsPath);
         log.info("Got " + tsContent.getPrefix().length() + "/" + tsContent.getPostfix().length() + " of " + TS_FILE_INPUT_NAME);
 
         // File.getPath() would eliminate potential separator at the end of the path
         String fileName = getTsFileOutputName(new File(ConfigDefinitionRootOutputFolder.getValue() + tsPath).getPath());
-        Output tsHeader = new LazyFileImpl(fileName, ConfigDefinitionRootOutputFolder.getValue() + "generated.patch");
+        Output tsHeader = new LazyFileImpl(fileName);
         writeContent(fieldsSection, tsContent, tsHeader);
         try {
             testFreshlyProducedIniFile(fileName);
@@ -253,7 +93,6 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
     private void testFreshlyProducedIniFile(String fileName) {
         try {
-            GeneratedIniValidator.validate(Path.of(fileName));
             IniFileModel ini = IniFileReaderUtil.readIniFile(fileName);
             ConfigurationImage ci = new ConfigurationImage(ini.getMetaInfo().getPageSize(0));
             Msq msq = MsqFactory.valueOf(ci, ini);
@@ -288,16 +127,13 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     private TsFileContent readTsTemplateInputFile(String tsPath) throws IOException {
         String fileName = getTsFileInputName(tsPath);
         FileInputStream in = new FileInputStream(fileName);
-        return getTsFileContent(in, fileName);
+        return getTsFileContent(in);
     }
 
     @NotNull
     public TsFileContent getTsFileContent(InputStream in) throws IOException {
-        return getTsFileContent(in, TS_FILE_INPUT_NAME);
-    }
+        BufferedReader r = new BufferedReader(new InputStreamReader(in, StandardCharsets.ISO_8859_1));
 
-    @NotNull
-    public TsFileContent getTsFileContent(InputStream in, String source) throws IOException {
         StringBuilder prefix = new StringBuilder();
         StringBuilder postfix = new StringBuilder();
 
@@ -305,102 +141,29 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
         boolean isBeforeStartTag = true;
         boolean isAfterEndTag = false;
-        skippingBlock = false;
-        blockStart = null;
-        String location = source;
         String line;
-        try (BufferedReader r = new BufferedReader(new InputStreamReader(in, CHARSET))) {
-            int lineNumber = 0;
-            while ((line = r.readLine()) != null) {
-                location = source + ":" + ++lineNumber;
-                if (isConditionalBlockSkip(line, location))
-                    continue;
-                if (line.startsWith(INCLUDE_FILE)) {
-                    String fileName = line.substring(INCLUDE_FILE.length()).trim();
-                    fileName = unquote(state.getVariableRegistry().applyVariables(fileName));
-                    log.info("Including " + fileName);
-                    List<String> lines = FileLinesHelper.readAllLinesWithRoot(fileName);
-                    int includedLineNumber = 0;
-                    for (String includedLine : lines) {
-                        location = RootHolder.ROOT + fileName + ":" + ++includedLineNumber;
-                        if (isConditionalBlockSkip(includedLine, location))
-                            continue;
-                        processAndUse(includedLine, isBeforeStartTag, prefix, isAfterEndTag, postfix);
-                    }
-                    continue;
+        while ((line = r.readLine()) != null) {
+            if (line.startsWith(INCLUDE_FILE)) {
+                String fileName = line.substring(INCLUDE_FILE.length()).trim();
+                log.info("Including " + fileName);
+                List<String> lines = FileLinesHelper.readAllLinesWithRoot(fileName);
+                for (String includedLine : lines) {
+                    processAndUse(includedLine, isBeforeStartTag, prefix, isAfterEndTag, postfix);
                 }
-                if (line.contains(CONFIG_DEFINITION_START)) {
-                    isBeforeStartTag = false;
-                    continue;
-                }
-                if (line.contains(CONFIG_DEFINITION_END)) {
-                    isAfterEndTag = true;
-                    continue;
-                }
-                processAndUse(line, isBeforeStartTag, prefix, isAfterEndTag, postfix);
+                continue;
             }
-            if (blockStart != null)
-                throw new IllegalStateException("Unterminated conditional block opened at " + blockStart);
-        } catch (IllegalStateException e) {
-            throw new IllegalStateException(location + ": " + e.getMessage(), e);
+            if (line.contains(CONFIG_DEFINITION_START)) {
+                isBeforeStartTag = false;
+                continue;
+            }
+            if (line.contains(CONFIG_DEFINITION_END)) {
+                isAfterEndTag = true;
+                continue;
+            }
+            processAndUse(line, isBeforeStartTag, prefix, isAfterEndTag, postfix);
         }
+        r.close();
         return new TsFileContent(prefix.toString(), postfix.toString());
-    }
-
-    private boolean skippingBlock;
-    private String blockStart;
-
-    private boolean conditionValue(String token) {
-        if (!TS_CONDITION_TOKEN.matcher(token).matches())
-            throw new IllegalStateException("Malformed condition name [" + token + "]");
-        String value = state.getVariableRegistry().get(token);
-        if (value == null)
-            throw new IllegalStateException("Unknown condition [" + token + "]; declare an explicit true/false default");
-        if (!value.equalsIgnoreCase("true") && !value.equalsIgnoreCase("false"))
-            throw new IllegalStateException("Condition [" + token + "] must be true or false, got [" + value + "]");
-        return Boolean.parseBoolean(value);
-    }
-
-    /**
-     * Handles the multi-line conditional: @@if_block &lt;token&gt; ... @@endif_block. Returns true
-     * when the line is a block marker (consume it) or falls inside a region whose token is false
-     * (skip it). Works for both template and included-file lines. No nesting.
-     */
-    private boolean isConditionalBlockSkip(String line, String location) {
-        String active = GeneratedIniValidator.withoutComment(line);
-        java.util.regex.Matcher markers = CONDITION_MARKER.matcher(active);
-        while (markers.find()) {
-            // A substitution immediately before a condition ends in @@ too:
-            // @@LABEL@@@@if_FLAG is valid, while an odd number of @ characters is not.
-            if (markers.group(1).length() % TEMPLATE_TAG.length() != 0)
-                throw new IllegalStateException("Malformed condition marker [" + markers.group() + "]; expected @@");
-        }
-        String trimmed = active.trim();
-        if (trimmed.equals(TS_IF_BLOCK_START) || trimmed.startsWith(TS_IF_BLOCK_START + " ")
-                || trimmed.startsWith(TS_IF_BLOCK_START + "\t")) {
-            if (blockStart != null)
-                throw new IllegalStateException("Nested conditional block; previous block opened at " + blockStart);
-            String token = trimmed.substring(TS_IF_BLOCK_START.length()).trim();
-            if (token.endsWith(TEMPLATE_TAG))
-                token = token.substring(0, token.length() - TEMPLATE_TAG.length()).trim();
-            skippingBlock = !conditionValue(token);
-            blockStart = location;
-            return true;
-        }
-        if (trimmed.startsWith(TS_IF_BLOCK_END)) {
-            if (!trimmed.equals(TS_IF_BLOCK_END) || blockStart == null)
-                throw new IllegalStateException("Unexpected or malformed " + TS_IF_BLOCK_END);
-            skippingBlock = false;
-            blockStart = null;
-            return true;
-        }
-        // Validate names even inside a disabled block, without expanding its variables.
-        if (active.contains(TS_CONDITION)) {
-            if (active.indexOf(TS_CONDITION) != active.lastIndexOf(TS_CONDITION))
-                throw new IllegalStateException("Only one inline condition is supported per line");
-            conditionValue(getToken(active));
-        }
-        return skippingBlock;
     }
 
     private void processAndUse(String line, boolean isBeforeStartTag, StringBuilder prefix, boolean isAfterEndTag, StringBuilder postfix) {
@@ -408,20 +171,16 @@ public class TSProjectConsumer implements ConfigurationConsumer {
             return;
         }
 
-        String active = GeneratedIniValidator.withoutComment(line);
-        if (active.contains(TS_CONDITION)) {
-            String token = getToken(active);
-            boolean value = conditionValue(token);
+        if (line.contains(TS_CONDITION)) {
+            String token = getToken(line);
+            String strValue = state.getVariableRegistry().get(token);
+            boolean value = Boolean.parseBoolean(strValue);
             if (!value)
                 return; // skipping this line
-            line = removeToken(active) + line.substring(active.length());
+            line = removeToken(line);
         }
 
         line = state.getVariableRegistry().applyVariables(line);
-
-        // Substitutions can insert multiple lines, including board-provided fragments.
-        for (String expandedLine : line.split("\\R"))
-            GeneratedIniValidator.validateLine(expandedLine);
 
         line = ignoreList.filterGauges(line);
         if (line == null)
@@ -453,12 +212,6 @@ public class TSProjectConsumer implements ConfigurationConsumer {
             token += line.charAt(index);
             index++;
         }
-        // anything glued to the token (e.g. "East@@if_ts_show_exhaust_vvt, { ... }") would make
-        // the registry lookup silently resolve to false and drop the line, so fail fast instead
-        if (!TS_CONDITION_TOKEN.matcher(token).matches())
-            throw new IllegalStateException("Malformed " + TS_CONDITION + " condition: token [" + token
-                + "] is not a plain identifier in line [" + line.trim()
-                + "] - separate the token from following syntax with whitespace");
         return token;
     }
 

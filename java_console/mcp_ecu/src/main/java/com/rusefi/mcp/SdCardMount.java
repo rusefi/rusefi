@@ -1,5 +1,6 @@
 package com.rusefi.mcp;
 
+import com.rusefi.config.ConsoleConstants;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Integration;
@@ -24,7 +25,7 @@ final class SdCardMount {
     // Newer firmware exposes this channel; LTS metadata does not define it.
     // Keep the runtime capability check below before sending any mount command.
     private static final String MODE_CHANNEL = "sdCardMode";
-    private static final String PRESENT_CHANNEL = VariableRegistryValues.OUTPUT_CHANNEL_SD_PRESENT;
+    private static final String PRESENT_CHANNEL = ConsoleConstants.OUTPUT_CHANNEL_SD_PRESENT;
 
     private SdCardMount() {
     }

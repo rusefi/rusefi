@@ -159,10 +159,6 @@ public interface ConfigField {
         @Override
         public void setTsInfo(String newtsInfo) {
         }
-        @Override
-        public boolean isWithinStruct(String structName) {
-            return false;
-        }
     };
 
     default boolean isUnusedField() {
@@ -242,6 +238,4 @@ public interface ConfigField {
     String getCommentTemplated();
 
     void setTsInfo(String tsInfo);
-
-    boolean isWithinStruct(String structName);
 }
