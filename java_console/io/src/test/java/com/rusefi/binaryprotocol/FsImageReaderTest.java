@@ -1,5 +1,6 @@
 package com.rusefi.binaryprotocol;
 
+import com.rusefi.config.ConsoleConstants;
 import com.rusefi.config.generated.Integration;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +22,7 @@ class FsImageReaderTest {
         IllegalStateException error = assertThrows(IllegalStateException.class,
                 () -> FsImageReader.readImage(protocol));
         assertEquals("FS image not available, size=0", error.getMessage());
-        verify(protocol).executeCommand(eq(Integration.TS_READ32_COMMAND),
+        verify(protocol).executeCommand(eq(ConsoleConstants.TS_READ32_COMMAND),
                 eq(request(0x52450000, 0, 4)), anyString());
         verifyNoMoreInteractions(protocol);
     }
@@ -35,7 +36,7 @@ class FsImageReaderTest {
         stubCrc(image, crc(image));
 
         assertArrayEquals(image, FsImageReader.readImage(protocol));
-        verify(protocol).executeCommand(eq(Integration.TS_CRC32_CHECK_COMMAND),
+        verify(protocol).executeCommand(eq(ConsoleConstants.TS_CRC32_CHECK_COMMAND),
                 eq(request(0x52450001, 0, image.length)), anyString());
     }
 
@@ -43,7 +44,7 @@ class FsImageReaderTest {
     void rejectedLargeReadFallsBackToSmallerChunks() {
         byte[] image = image(2500);
         stubSize(image.length);
-        when(protocol.executeCommand(eq(Integration.TS_READ32_COMMAND),
+        when(protocol.executeCommand(eq(ConsoleConstants.TS_READ32_COMMAND),
                 eq(request(0x52450001, 0, 2500)), anyString()))
                 .thenReturn(new byte[]{(byte) Integration.TS_RESPONSE_OUT_OF_RANGE});
         stubData(image, 0, 1000);
@@ -67,19 +68,19 @@ class FsImageReaderTest {
     }
 
     private void stubSize(int size) {
-        when(protocol.executeCommand(eq(Integration.TS_READ32_COMMAND),
+        when(protocol.executeCommand(eq(ConsoleConstants.TS_READ32_COMMAND),
                 eq(request(0x52450000, 0, 4)), anyString()))
                 .thenReturn(reply(ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(size).array()));
     }
 
     private void stubData(byte[] image, int offset, int length) {
-        when(protocol.executeCommand(eq(Integration.TS_READ32_COMMAND),
+        when(protocol.executeCommand(eq(ConsoleConstants.TS_READ32_COMMAND),
                 eq(request(0x52450001, offset, length)), anyString()))
                 .thenReturn(reply(Arrays.copyOfRange(image, offset, offset + length)));
     }
 
     private void stubCrc(byte[] image, int crc) {
-        when(protocol.executeCommand(eq(Integration.TS_CRC32_CHECK_COMMAND),
+        when(protocol.executeCommand(eq(ConsoleConstants.TS_CRC32_CHECK_COMMAND),
                 eq(request(0x52450001, 0, image.length)), anyString()))
                 .thenReturn(reply(ByteBuffer.allocate(4).putInt(crc).array()));
     }

@@ -64,15 +64,15 @@ public class EnumToString {
 
         new File(outputPath).mkdirs();
         state.writeCppAndHeaderFiles(outputPath + File.separator + "auto_generated_" +
-            invokeReader.getFileSuffix());
+                InvokeReader.fileSuffix);
     }
 
     private void writeCppAndHeaderFiles(String outFileName) throws IOException {
-        LazyFile bw = new LazyFileImpl(outFileName + ".cpp", "generated.patch");
+        LazyFile bw = new LazyFileImpl(outFileName + ".cpp");
         bw.write(cppFileContent.toString());
         bw.close();
 
-        bw = new LazyFileImpl(outFileName + ".h", "generated.patch");
+        bw = new LazyFileImpl(outFileName + ".h");
         bw.write(headerFileContent.toString());
         bw.close();
     }
@@ -107,21 +107,21 @@ public class EnumToString {
     private static String makeCode(String enumName, EnumsReader.EnumState enumState) {
         StringBuilder sb = new StringBuilder();
         Collection<Value> values = enumState.values.values();
-        sb.append(getMethodSignature(enumName) + " {\n");
+        sb.append(getMethodSignature(enumName) + "{\n");
 
-        sb.append("\tswitch (value) {\n");
+        sb.append("switch(value) {\n");
 
         for (Value e : values) {
-            sb.append("\t\tcase ");
+            sb.append("case ");
             if (enumState.isEnumClass) {
                 sb.append(enumState.enumName).append("::");
             }
             sb.append(e.getName() + ":\n");
-            sb.append("\t\t\treturn \"" + e.getName() + "\";\n");
+            sb.append("  return \"" + e.getName() + "\";\n");
         }
 
-        sb.append("\t}\n");
-        sb.append("\treturn NULL;\n");
+        sb.append("  }\n");
+        sb.append(" return NULL;\n");
         sb.append("}\n");
 
         return sb.toString();

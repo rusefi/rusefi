@@ -1,5 +1,6 @@
 package com.rusefi.binaryprotocol;
 
+import com.rusefi.config.ConsoleConstants;
 import com.rusefi.config.generated.Integration;
 
 /**
@@ -56,7 +57,7 @@ public class FsImageReader {
      * @return size of the filesystem image in bytes, zero if the firmware has no embedded image
      */
     public static int readImageSize(BinaryProtocol bp) {
-        byte[] response = bp.executeCommand(Integration.TS_READ32_COMMAND,
+        byte[] response = bp.executeCommand(ConsoleConstants.TS_READ32_COMMAND,
                 makePageOffsetCountPayload(TS_PAGE_FS_IMAGE_SIZE, 0, 4),
                 "read FS image size");
         assertOkResponse(response, 4, "FS image size");
@@ -75,7 +76,7 @@ public class FsImageReader {
         int offset = 0;
         while (offset < totalSize) {
             int toRead = Math.min(chunkSize, totalSize - offset);
-            byte[] response = bp.executeCommand(Integration.TS_READ32_COMMAND,
+            byte[] response = bp.executeCommand(ConsoleConstants.TS_READ32_COMMAND,
                     makePageOffsetCountPayload(TS_PAGE_FS_IMAGE_DATA, offset, toRead),
                     "read FS image offset=" + offset + " size=" + toRead);
             if (response == null) {
@@ -96,7 +97,7 @@ public class FsImageReader {
     }
 
     private static int readImageCrc(BinaryProtocol bp, int totalSize) {
-        byte[] response = bp.executeCommand(Integration.TS_CRC32_CHECK_COMMAND,
+        byte[] response = bp.executeCommand(ConsoleConstants.TS_CRC32_CHECK_COMMAND,
                 makePageOffsetCountPayload(TS_PAGE_FS_IMAGE_DATA, 0, totalSize),
                 "FS image CRC");
         assertOkResponse(response, 4, "FS image CRC");

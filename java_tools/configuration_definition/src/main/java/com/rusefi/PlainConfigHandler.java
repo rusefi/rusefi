@@ -4,22 +4,15 @@ import com.rusefi.output.PlainTsProjectConsumer;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.TreeSet;
 
 /**
  * used to prepare secondary pages in TS .ini file
  */
 class PlainConfigHandler {
     ReaderStateImpl readerState = new ReaderStateImpl();
-    PlainTsProjectConsumer tsProjectConsumer;
+    PlainTsProjectConsumer tsProjectConsumer = new PlainTsProjectConsumer(readerState);
 
     public PlainConfigHandler(String definitionInputFile, int pageIndex, List<String> softPrepends) {
-        this(definitionInputFile, pageIndex, softPrepends, new TreeSet<>(String.CASE_INSENSITIVE_ORDER));
-    }
-
-    public PlainConfigHandler(String definitionInputFile, int pageIndex, List<String> softPrepends, TreeSet<String> usedNames) {
-        // [tag:wue_analyzer] Pass the page number through for alias offset names.
-        tsProjectConsumer = new PlainTsProjectConsumer(readerState, usedNames, pageIndex);
         readerState.setDefinitionInputFile(definitionInputFile);
         for (String soft : softPrepends)
             readerState.addSoftPrepend(soft);
@@ -28,9 +21,7 @@ class PlainConfigHandler {
 
         readerState.addDestination(tsProjectConsumer);
         readerState.setWithC_Defines(false);
-        // Path is relative to META_OUTPUT_ROOT_FOLDER (prepended in ReaderStateImpl.addCHeaderDestination)
-        // so it redirects correctly when building custom-fw repos that keep generated files outside the rusefi submodule.
-        readerState.addCHeaderDestination(RootHolder.ROOT + "controllers/generated/page_" + pageIndex + "_generated.h");
+        readerState.addCHeaderDestination(RootHolder.ROOT + "../firmware/controllers/generated/page_" + pageIndex + "_generated.h");
     }
 
     public void doJob() throws IOException {

@@ -4,9 +4,9 @@ import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.StringIniField;
+import com.rusefi.config.ConsoleConstants;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.config.generated.Integration;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.BurnCommand;
@@ -170,7 +170,7 @@ public class LuaService {
     private static boolean sendLuaResetConfirmed(LinkManager linkManager) throws InterruptedException {
         for (int attempt = 1; attempt <= LUARESET_ATTEMPTS; attempt++) {
             CountDownLatch confirmed = new CountDownLatch(1);
-            linkManager.getCommandQueue().write(Integration.CMD_LUA_RESET,
+            linkManager.getCommandQueue().write(ConsoleConstants.CMD_LUA_RESET,
                     (int) LUARESET_CONFIRM_WAIT_MS, confirmed::countDown);
             if (confirmed.await(LUARESET_CONFIRM_WAIT_MS + 500, TimeUnit.MILLISECONDS))
                 return true;
@@ -232,7 +232,7 @@ public class LuaService {
 
     /** Send {@code luareset} via the standard command queue. */
     public static void luaReset(LinkManager linkManager) {
-        linkManager.getCommandQueue().write(Integration.CMD_LUA_RESET);
+        linkManager.getCommandQueue().write(ConsoleConstants.CMD_LUA_RESET);
     }
 
     /** Send an arbitrary text command via the standard command queue. */

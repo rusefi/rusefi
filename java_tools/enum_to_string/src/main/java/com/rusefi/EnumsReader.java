@@ -72,7 +72,6 @@ public class EnumsReader {
         String line;
         String enumName = null;
         boolean isEnumClass = false;
-        boolean isInsideMultiLineComment = false;
         Map<String, Value> currentValues = new TreeMap<>();
         Map<String, EnumState> enums = new TreeMap<>();
         int lastNumericValue = -1;
@@ -80,53 +79,9 @@ public class EnumsReader {
         boolean withAutoValue = false;
 
         while ((line = reader.readLine()) != null) {
-            line = line.trim();
-            StringBuilder processedLine = new StringBuilder();
-            
-            while (!line.isEmpty()) {
-                if (isInsideMultiLineComment) {
-                    int endOfComment = line.indexOf("*/");
-                    if (endOfComment != -1) {
-                        isInsideMultiLineComment = false;
-                        line = line.substring(endOfComment + 2).trim();
-                    } else {
-                        line = "";
-                    }
-                } else {
-                    int startOfSingleLine = line.indexOf("//");
-                    int startOfMultiLine = line.indexOf("/*");
-                    
-                    if (startOfSingleLine != -1 && (startOfMultiLine == -1 || startOfSingleLine < startOfMultiLine)) {
-                        processedLine.append(line.substring(0, startOfSingleLine));
-                        line = "";
-                    } else if (startOfMultiLine != -1) {
-                        processedLine.append(line.substring(0, startOfMultiLine));
-                        line = line.substring(startOfMultiLine + 2);
-                        int endOfMultiLine = line.indexOf("*/");
-                        if (endOfMultiLine != -1) {
-                            line = line.substring(endOfMultiLine + 2);
-                        } else {
-                            isInsideMultiLineComment = true;
-                            line = "";
-                        }
-                    } else {
-                        processedLine.append(line);
-                        line = "";
-                    }
-                }
-            }
-            
-            line = processedLine.toString().trim();
-            if (line.isEmpty()) {
-                continue;
-            }
-
             line = removeSpaces(line);
-            if (line.isEmpty()) {
-                continue;
-            }
-            // log.info("DEBUG: line=[" + line + "]");
 
+            line = line.replaceAll("//.+", "");
             if (line.startsWith("typedefenum{") || line.startsWith("typedefenum__attribute__")) {
                 if (log.debugEnabled())
                     log.debug("  EnumsReader: Entering legacy enum");

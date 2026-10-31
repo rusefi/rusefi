@@ -12,11 +12,11 @@ public class InvokeReader {
     private final static String KEY_OUTPUT = "-outputPath";
     private final static String KEY_OUTPUT_FILE = "-generatedFile";
     private static final String KEY_DEFINITION = "-definition";
-    private String fileSuffix = null;
+    public static String fileSuffix = "enums";
 
     private String[] args;
     private String outputPath;
-    private final List<String> definitionInputFiles = new ArrayList<>();
+    private List<String> definitionInputFiles = new ArrayList<>();
     private List<String> inputFiles = new ArrayList<>();
     private String inputPath = ".";
 
@@ -77,9 +77,5 @@ public class InvokeReader {
             }
         }
         return this;
-    }
-
-    public String getFileSuffix() {
-        return Objects.requireNonNull(fileSuffix);
     }
 }

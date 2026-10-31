@@ -55,8 +55,8 @@ public class LiveDataProcessor {
     }
 
     public static void main(String[] args) throws IOException {
-        if (args.length != 5) {
-            System.err.println("Five arguments expected: name of live data yaml input file and else but got " + args.length + ": " + Arrays.toString(args));
+        if (args.length != 6) {
+            System.err.println("Six arguments expected: name of live data yaml input file and else but got " + args.length + ": " + Arrays.toString(args));
             System.exit(-1);
         }
         log.info("Invoked with " + Arrays.toString(args));
@@ -65,8 +65,9 @@ public class LiveDataProcessor {
         String definitionInputFileName = args[1];
         String headerFileName = args[2];
         String javaDestinationFolder = args[3];
-        String destinationFolder = args[4];
-        TriggerMetaGenerator.doJob(definitionInputFileName, headerFileName, javaDestinationFolder);
+        String javaDestinationFileName = args[4];
+        String destinationFolder = args[5];
+        TriggerMetaGenerator.doJob(definitionInputFileName, headerFileName, javaDestinationFolder, javaDestinationFileName);
         List<LinkedHashMap> totalContent = new ArrayList<>();
         for (String fileName : yamlFileNames.split(",")) {
             List<LinkedHashMap> yamlContent = getStringObjectMap(new FileReader(fileName));
@@ -145,7 +146,7 @@ public class LiveDataProcessor {
 
         SdCardFieldsContent sdCardFieldsConsumer = new SdCardFieldsContent();
 
-        GetOutputValueConsumer outputValueConsumer = new GetOutputValueConsumer(destinationFolder + getOutputLookupFileName(), fileFactory);
+        GetOutputValueConsumer outputValueConsumer = new GetOutputValueConsumer(getOutputLookupFileName(), fileFactory);
 
         EntryHandler handler = new EntryHandler() {
             @Override
@@ -226,8 +227,6 @@ public class LiveDataProcessor {
                 } else if (engineModule != null) {
                     outputValueConsumer.currentEngineModule = engineModule;
                     outputValueConsumer.moduleMode = true;
-                    outputValueConsumer.expressions = new String[] {""};
-                    outputValueConsumer.names = outputNames;
                     outputValueConsumer.conditional = conditional;
                     outputValueConsumer.isPtr = isPtr;
                     state.addDestination(outputValueConsumer::handleEndStruct);
