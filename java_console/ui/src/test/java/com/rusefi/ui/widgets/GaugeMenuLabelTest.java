@@ -33,7 +33,8 @@ class GaugeMenuLabelTest {
             + "gpPwmNote1 = string, ASCII, 0, 16\n"
             + "[GaugeConfigurations]\ngaugeCategory = GPPWM Outputs\n"
             + "gppwmGauge1 = gppwmOutput1, { stringValue(gpPwmNote1) }, \"%\", 0, 100, 0, 0, 100, 100, 1, 1\n"
-            + "rpmGauge = rpm, \"Engine speed\", \"rpm\", 0, 8000, 0, 0, 7000, 7000, 0, 0\n";
+            + "rpmGauge = rpm, \"Engine speed\", \"rpm\", 0, 8000, 0, 0, 7000, 7000, 0, 0\n"
+            + "unitsGauge = coolant, \"Coolant\", { stringValue(gpPwmNote1) }, -40, 140, 0, 0, 95, 105, 1, 1\n";
         ini = IniFileReaderUtil.readIniFile(IniFileReaderUtil.read(
             new ByteArrayInputStream(text.getBytes(StandardCharsets.US_ASCII))),
             "menu-labels.ini", mock(IniFileMetaInfo.class));
@@ -93,6 +94,18 @@ class GaugeMenuLabelTest {
             assertEquals("Cooling fan", title());
             context.setOfflineMode(true);
             assertEquals("gppwmGauge1", title(), "Offline menus must not use another session's live labels");
+        });
+    }
+
+    @Test
+    void unitsExpressionsResolveLikeTitles() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            assertEquals("", GaugeMenuLabel.getUnits(context, ini.getGauge("unitsGauge")),
+                "nothing to resolve against yet: no units rather than INI syntax");
+            assertEquals("rpm", GaugeMenuLabel.getUnits(context, ini.getGauge("rpmGauge")));
+            context.setOfflineMode(true);
+            context.fireConfigImageChanged(image("C"));
+            assertEquals("C", GaugeMenuLabel.getUnits(context, ini.getGauge("unitsGauge")));
         });
     }
 

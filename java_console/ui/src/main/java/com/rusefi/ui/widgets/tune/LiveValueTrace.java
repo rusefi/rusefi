@@ -91,7 +91,8 @@ public class LiveValueTrace {
     public Color textColor(Color normal) {
         CircularGauge.Zone zone = zone();
         return zone == CircularGauge.Zone.DANGER ? GaugeStyle.danger()
-            : zone == CircularGauge.Zone.WARNING ? GaugeStyle.warningText() : normal;
+            : zone == CircularGauge.Zone.WARNING ? GaugeStyle.warningText()
+            : zone == CircularGauge.Zone.BELOW_SCALE ? GaugeStyle.tick() : normal;
     }
 
     /** Filled share of the bar, clamped to 0..1; NaN without a range or value. */

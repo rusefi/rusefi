@@ -52,6 +52,9 @@ public final class GaugeStyle {
         m.put("graph.line", 0xFFE0A100);
         m.put("graph.grid", 0xFFEDEFF2);
         m.put("graph.dangerBand", 0x6EFFCDD2);
+        m.put("graph.warningBand", 0x5CFFCC80);
+        // the graph line is amber already, so its warning part is a deeper orange
+        m.put("graph.warningLine", 0xFFEF6C00);
         m.put("graph.areaTop", 0x78F6C445);
         m.put("graph.areaBottom", 0x00F6C445);
         // free layout editing: selection, item outlines, remove button and snap grid
@@ -106,6 +109,8 @@ public final class GaugeStyle {
     public static Color graphLine() { return color("graph.line"); }
     public static Color graphGrid() { return color("graph.grid"); }
     public static Color graphDangerBand() { return color("graph.dangerBand"); }
+    public static Color graphWarningBand() { return color("graph.warningBand"); }
+    public static Color graphWarningLine() { return color("graph.warningLine"); }
     public static Color graphAreaTop() { return color("graph.areaTop"); }
     public static Color graphAreaBottom() { return color("graph.areaBottom"); }
     public static Color editAccent() { return color("edit.accent"); }

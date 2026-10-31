@@ -57,7 +57,7 @@ class LiveValueBarTest {
         afr.setZones(CircularGauge.Zones.of(10, 19.4, 12, 13, 15, 16));
         Color normal = afr.getForeground();
         for (Object[] sample : new Object[][] {
-            {0.0, CircularGauge.Zone.NORMAL}, // disconnected sensor below the scale is not flagged
+            {0.0, CircularGauge.Zone.BELOW_SCALE}, // disconnected sensor below the scale: "no sensor?", not danger
             {11.0, CircularGauge.Zone.DANGER},
             {12.5, CircularGauge.Zone.WARNING},
             {14.0, CircularGauge.Zone.NORMAL},

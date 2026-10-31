@@ -8,7 +8,11 @@ import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCategory;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.preferences.storage.Node;
+import com.rusefi.ui.widgets.CircularGauge;
+import com.rusefi.ui.widgets.CircularGauge.Zone;
 import com.rusefi.ui.widgets.GaugeMenuSearch;
+import com.rusefi.ui.widgets.GaugeScale;
+import com.rusefi.ui.widgets.SensorGauge;
 import com.rusefi.ui.widgets.GaugeOptionsButton;
 import com.rusefi.ui.widgets.GaugePopups;
 import com.rusefi.ui.widgets.GaugeStyle;
@@ -23,7 +27,9 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ThreadFactory;
 
@@ -37,7 +43,8 @@ public class SensorLiveGraph extends JPanel {
     private static final int COUNT = 30;
     private static final String SENSOR_TYPE = "sensor";
     private static final String PERIOD = "period";
-    private static final String USE_AUTO_SCALE = "auto_scale";
+    /** Zoom to the readings instead of the full gauge range; the older "auto_scale" setting is ignored. */
+    private static final String ZOOM_TO_READINGS = "zoom_to_readings";
     private static final String UPPER = "upper";
     private static final String LOWER = "lower";
     static final String WAITING = "Waiting for data" + GaugeStyle.ELLIPSIS;
@@ -68,7 +75,7 @@ public class SensorLiveGraph extends JPanel {
         if (period == null) {
             period = ChangePeriod._200;
         }
-        autoScale = config.getBoolProperty(USE_AUTO_SCALE);
+        autoScale = config.getBoolProperty(ZOOM_TO_READINGS);
         customUpper = config.getDoubleProperty(UPPER, Double.NaN);
         customLower = config.getDoubleProperty(LOWER, Double.NaN);
         updateDemandToken();
@@ -150,18 +157,20 @@ public class SensorLiveGraph extends JPanel {
     JPopupMenu createOptionsMenu() {
         JPopupMenu pm = new JPopupMenu();
         addChangePeriodItems(pm);
-        JMenuItem scale = new JMenu("Scale");
+        JMenu scale = new JMenu("Scale");
 
-        final JCheckBoxMenuItem as = new JCheckBoxMenuItem("Auto scale");
-        as.setSelected(autoScale);
-        as.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                autoScale = as.isSelected();
-                config.setBoolProperty(USE_AUTO_SCALE, autoScale);
-            }
-        });
-        scale.add(as);
+        JRadioButtonMenuItem full = new JRadioButtonMenuItem(FULL_SCALE, !autoScale);
+        full.setToolTipText("Show the gauge's whole range, so its warning and danger zones are always in view");
+        JRadioButtonMenuItem zoom = new JRadioButtonMenuItem(ZOOM_TO_FIT, autoScale);
+        zoom.setToolTipText("Fit the scale to the recent readings to see small changes");
+        ButtonGroup mode = new ButtonGroup();
+        mode.add(full);
+        mode.add(zoom);
+        full.addActionListener(e -> setAutoScale(false));
+        zoom.addActionListener(e -> setAutoScale(true));
+        scale.add(full);
+        scale.add(zoom);
+        scale.addSeparator();
 
         final JCheckBoxMenuItem lowerValue = new JCheckBoxMenuItem("Use custom lower");
         lowerValue.addActionListener(new ActionListener() {
@@ -203,6 +212,15 @@ public class SensorLiveGraph extends JPanel {
             pm.add(extraItem);
         }
         return pm;
+    }
+
+    static final String FULL_SCALE = "Full scale";
+    static final String ZOOM_TO_FIT = "Zoom to readings";
+
+    private void setAutoScale(boolean zoom) {
+        autoScale = zoom;
+        config.setBoolProperty(ZOOM_TO_READINGS, zoom);
+        repaint();
     }
 
     enum ChangePeriod {
@@ -380,15 +398,17 @@ public class SensorLiveGraph extends JPanel {
         double right = face.x + face.width - pad;
         double bottom = face.y + face.height - pad;
         double last = samples.length == 0 ? Double.NaN : samples[samples.length - 1];
-        double danger = dangerThreshold(model);
-        boolean inDanger = Double.isFinite(last) && last >= danger;
+        // the same .ini limits and zones as the round gauge, so every presentation flags a reading alike
+        GaugeScale scale = model == null ? null : SensorGauge.iniScale(uiContext, model);
+        CircularGauge.Zones zones = scale == null ? null : CircularGauge.Zones.of(scale);
+        Zone zone = zones == null || !Double.isFinite(last) ? Zone.NORMAL : zones.zoneOf(last, 0);
 
         // Header: title on the left, the latest value and its units on the right.
         Font valueFont = GaugeStyle.font(Font.BOLD, (float) clamp(face.height * 0.13, 12, 28));
         Font unitsFont = GaugeStyle.font(Font.PLAIN, valueFont.getSize2D() * 0.5f);
         FontMetrics valueMetrics = g.getFontMetrics(valueFont);
         double headerBaseline = face.y + pad + valueMetrics.getAscent() * 0.9;
-        String units = units(model);
+        String units = model == null ? "" : GaugeMenuLabel.getUnits(uiContext, model);
         g.setFont(unitsFont);
         g.setColor(GaugeStyle.scale());
         double unitsWidth = g.getFontMetrics().stringWidth(units);
@@ -396,11 +416,16 @@ public class SensorLiveGraph extends JPanel {
         int decimals = model == null ? 2 : Math.max(0, Math.min(6, model.getValueDecimalPlaces()));
         String text = Double.isFinite(last) ? format(last, decimals) : "---";
         g.setFont(valueFont);
-        g.setColor(!Double.isFinite(last) ? GaugeStyle.tick() : inDanger ? GaugeStyle.danger() : GaugeStyle.text());
+        g.setColor(!Double.isFinite(last) ? GaugeStyle.tick() : zoneColor(zone, GaugeStyle.text()));
         double valueRight = right - unitsWidth - (units.isEmpty() ? 0 : valueFont.getSize2D() * 0.2);
         GaugeStyle.drawText(g, text, valueRight, headerBaseline, 1);
         double valueLeft = valueRight - valueMetrics.stringWidth(text);
-        g.setFont(GaugeStyle.font(Font.PLAIN, (float) clamp(face.height * 0.08, 10, 15)));
+        Font titleFont = GaugeStyle.font(Font.PLAIN, (float) clamp(face.height * 0.08, 10, 15));
+        if (zone != Zone.NORMAL) {
+            // the zone in words beside the value: readable however the plot is scaled
+            valueLeft = paintZoneChip(g, zone, valueLeft - valueFont.getSize2D() * 0.4, headerBaseline, titleFont);
+        }
+        g.setFont(titleFont);
         g.setColor(GaugeStyle.scale());
         GaugeStyle.drawText(g, GaugeStyle.fit(g, getTitle(model), valueLeft - left - pad), left, headerBaseline, -1);
 
@@ -427,10 +452,13 @@ public class SensorLiveGraph extends JPanel {
         }
         Plot plot = new Plot(plotLeft, plotTop, right, plotBottom, range);
 
-        if (danger < range.maxValue) {
-            double y = plot.y(Math.max(danger, range.minValue));
-            g.setColor(GaugeStyle.graphDangerBand());
-            g.fill(new Rectangle2D.Double(plotLeft, plotTop, right - plotLeft, y - plotTop));
+        List<ZoneBand> bands = zones == null ? new ArrayList<>() : bands(zones);
+        for (ZoneBand band : bands) {
+            Rectangle2D.Double area = band.area(plot);
+            if (area != null && band.zone != Zone.BELOW_SCALE) {
+                g.setColor(band.zone == Zone.DANGER ? GaugeStyle.graphDangerBand() : GaugeStyle.graphWarningBand());
+                g.fill(area);
+            }
         }
         g.setStroke(new BasicStroke(1f));
         g.setColor(GaugeStyle.graphGrid());
@@ -449,6 +477,7 @@ public class SensorLiveGraph extends JPanel {
         g.clip(new Rectangle2D.Double(plotLeft, plotTop - 6, right - plotLeft + 1, plotBottom - plotTop + 12));
         // New readings enter on the right; a missing reading breaks the line.
         double step = (right - plotLeft) / COUNT;
+        List<Path2D.Double> lines = new ArrayList<>();
         int start = 0;
         while (start < samples.length) {
             if (!Double.isFinite(samples[start])) {
@@ -459,10 +488,35 @@ public class SensorLiveGraph extends JPanel {
             while (end + 1 < samples.length && Double.isFinite(samples[end + 1])) {
                 end++;
             }
-            paintSegment(g, plot, samples, start, end, step);
+            lines.add(paintSegment(g, plot, samples, start, end, step));
             start = end + 1;
         }
+        // the line again in the zone's colour wherever it runs inside a warning or danger band
+        Shape plotClip = g.getClip();
+        g.setStroke(new BasicStroke(2.2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        for (ZoneBand band : bands) {
+            Rectangle2D.Double area = band.area(plot);
+            if (area == null) {
+                continue;
+            }
+            g.setClip(plotClip);
+            // a reading on the plot's edge is drawn a few pixels past it; a band that goes on beyond the edge reaches
+            // out to cover it. One that ends at the scale minimum does not: readings below the minimum are not flagged.
+            double above = band.to > range.maxValue ? 6 : 0;
+            double below = band.from < range.minValue ? 6 : 0;
+            double bottomEdge = area.y + area.height + below;
+            if (scale != null && scale.isEngineSpeed() && band.from <= 0 && band.to > 0) {
+                // a stopped engine (0 rpm) is not flagged, so the line along 0 keeps its colour
+                bottomEdge = Math.min(bottomEdge, plot.y(0) - 2);
+            }
+            g.clip(new Rectangle2D.Double(area.x, area.y - above, area.width, Math.max(0, bottomEdge - area.y + above)));
+            g.setColor(lineColor(band.zone));
+            for (Path2D.Double line : lines) {
+                g.draw(line);
+            }
+        }
         g.setClip(oldClip);
+
         if (!hasReading(samples)) {
             g.setFont(GaugeStyle.font(Font.PLAIN, (float) clamp(face.height * 0.08, 10, 14)));
             g.setColor(GaugeStyle.tick());
@@ -475,14 +529,14 @@ public class SensorLiveGraph extends JPanel {
             // the last value: a dot in the card colour, ringed in the line colour
             g.setColor(GaugeStyle.cardTop());
             g.fill(new Ellipse2D.Double(x - 4.5, y - 4.5, 9, 9));
-            g.setColor(inDanger ? GaugeStyle.danger() : GaugeStyle.graphLine());
+            g.setColor(lineColor(zone));
             g.setStroke(new BasicStroke(2.5f));
             g.draw(new Ellipse2D.Double(x - 4.5, y - 4.5, 9, 9));
         }
     }
 
-    /** A smooth line through consecutive readings, over a fill that fades towards the bottom. */
-    private void paintSegment(Graphics2D g, Plot plot, double[] samples, int start, int end, double step) {
+    /** A smooth line through consecutive readings, over a fill that fades towards the bottom; returns the line. */
+    private Path2D.Double paintSegment(Graphics2D g, Plot plot, double[] samples, int start, int end, double step) {
         int count = end - start + 1;
         double[] xs = new double[count];
         double[] ys = new double[count];
@@ -512,6 +566,90 @@ public class SensorLiveGraph extends JPanel {
         g.setColor(GaugeStyle.graphLine());
         g.setStroke(new BasicStroke(2.2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g.draw(line);
+        return line;
+    }
+
+    private static Color lineColor(Zone zone) {
+        return zone == Zone.DANGER ? GaugeStyle.danger() : zone == Zone.WARNING ? GaugeStyle.graphWarningLine()
+            : zone == Zone.BELOW_SCALE ? GaugeStyle.tick() : GaugeStyle.graphLine();
+    }
+
+    private static Color zoneColor(Zone zone, Color normal) {
+        return zone == Zone.DANGER ? GaugeStyle.danger() : zone == Zone.WARNING ? GaugeStyle.warning()
+            : zone == Zone.BELOW_SCALE ? GaugeStyle.tick() : normal;
+    }
+
+    /** "WARNING", "DANGER" or "NO SENSOR?" on a tinted chip ending at {@code right}; returns the chip's left edge. */
+    private static double paintZoneChip(Graphics2D g, Zone zone, double right, double baseline, Font font) {
+        Font chipFont = font.deriveFont(Font.BOLD, font.getSize2D() * 0.8f);
+        g.setFont(chipFont);
+        FontMetrics metrics = g.getFontMetrics();
+        String text = zone == Zone.DANGER ? "DANGER" : zone == Zone.WARNING ? "WARNING" : CircularGauge.NO_SENSOR;
+        double padX = metrics.getHeight() * 0.45;
+        double width = padX + metrics.stringWidth(text) + padX;
+        double height = metrics.getAscent() * 1.5;
+        double x = right - width;
+        double y = baseline - metrics.getAscent() * 1.15;
+        g.setColor(zone == Zone.DANGER ? GaugeStyle.dangerFill() : zone == Zone.WARNING ? GaugeStyle.warningFill()
+            : GaugeStyle.track());
+        g.fill(new RoundRectangle2D.Double(x, y, width, height, height, height));
+        Color ink = zone == Zone.DANGER ? GaugeStyle.danger() : zone == Zone.WARNING ? GaugeStyle.warningText()
+            : GaugeStyle.scale();
+        g.setColor(ink);
+        double textBaseline = y + (height + metrics.getAscent() - metrics.getDescent()) / 2;
+        GaugeStyle.drawText(g, text, x + padX, textBaseline, -1);
+        return x;
+    }
+
+    /** Where a warning or danger zone lies on the value axis; {@code to} is infinite for the danger zone above. */
+    static final class ZoneBand {
+        final double from;
+        final double to;
+        final Zone zone;
+
+        ZoneBand(double from, double to, Zone zone) {
+            this.from = from;
+            this.to = to;
+            this.zone = zone;
+        }
+
+        /** The part of the plot this band covers, or null when it lies outside the visible range. */
+        Rectangle2D.Double area(Plot plot) {
+            double low = Math.max(from, plot.range.minValue);
+            double high = Math.min(to, plot.range.maxValue);
+            if (!(high > low)) {
+                // below the scale at full scale: no area, but the line drawn just under the plot's edge belongs to it
+                return zone == Zone.BELOW_SCALE && to >= plot.range.minValue
+                    ? new Rectangle2D.Double(plot.left, plot.bottom, plot.right - plot.left, 0) : null;
+            }
+            double top = plot.y(high);
+            return new Rectangle2D.Double(plot.left, top, plot.right - plot.left, plot.y(low) - top);
+        }
+
+        @Override
+        public String toString() {
+            return zone + " " + from + ".." + to;
+        }
+    }
+
+    /**
+     * The zones from low to high, as the round gauge flags them; empty zones are left out. Below the scale is a
+     * band too, unfilled, so the line there turns grey.
+     */
+    static List<ZoneBand> bands(CircularGauge.Zones zones) {
+        List<ZoneBand> bands = new ArrayList<>();
+        bands.add(new ZoneBand(Double.NEGATIVE_INFINITY, zones.getMin(), Zone.BELOW_SCALE));
+        if (zones.getLowDanger() > zones.getMin()) {
+            bands.add(new ZoneBand(zones.getMin(), zones.getLowDanger(), Zone.DANGER));
+        }
+        if (zones.getLowWarning() > zones.getLowDanger()) {
+            bands.add(new ZoneBand(zones.getLowDanger(), zones.getLowWarning(), Zone.WARNING));
+        }
+        if (zones.getDanger() > zones.getHighWarning()) {
+            bands.add(new ZoneBand(zones.getHighWarning(), zones.getDanger(), Zone.WARNING));
+        }
+        bands.add(new ZoneBand(zones.getDanger(), Double.POSITIVE_INFINITY, Zone.DANGER));
+        return bands;
     }
 
     private static boolean hasReading(double[] samples) {
@@ -531,19 +669,6 @@ public class SensorLiveGraph extends JPanel {
         return s == null ? gaugeName : s.getName();
     }
 
-    private static String units(GaugeModel model) {
-        return model == null || model.getUnitsValue().isExpression() ? "" : model.getUnits();
-    }
-
-    /** Readings at or above this are drawn as danger; infinite when the gauge defines none. */
-    private static double dangerThreshold(GaugeModel model) {
-        if (model == null || model.getHighDangerValueValue().isExpression()) {
-            return Double.POSITIVE_INFINITY;
-        }
-        double danger = model.getHighDangerValue();
-        return Double.isFinite(danger) && danger < model.getHighValue() ? danger : Double.POSITIVE_INFINITY;
-    }
-
     private static int labelDecimals(VisibleRange range) {
         double span = range.maxValue - range.minValue;
         return span >= 100 ? 0 : span >= 10 ? 1 : 2;
@@ -557,7 +682,7 @@ public class SensorLiveGraph extends JPanel {
         return Math.max(min, Math.min(max, value));
     }
 
-    private static final class Plot {
+    static final class Plot {
         final double left;
         final double top;
         final double right;
@@ -577,11 +702,14 @@ public class SensorLiveGraph extends JPanel {
         }
     }
 
-    /** Fixed .ini (or custom) bounds, or the readings' own range when auto scaling or no bounds are known. */
+    /**
+     * The full gauge range (the .ini bounds, expressions resolved against the tune, or the custom ones), or the
+     * readings' own range when zooming to them or when the range is unknown.
+     */
     VisibleRange getRange(double[] samples, GaugeModel model) {
         if (!autoScale) {
-            double min = model == null || model.getLowValueValue().isExpression() ? Double.NaN : model.getLowValue();
-            double max = model == null || model.getHighValueValue().isExpression() ? Double.NaN : model.getHighValue();
+            double min = model == null ? Double.NaN : resolvedBound(model.getLowValueValue());
+            double max = model == null ? Double.NaN : resolvedBound(model.getHighValueValue());
             min = Double.isNaN(customLower) ? min : customLower;
             max = Double.isNaN(customUpper) ? max : customUpper;
             if (Double.isFinite(min) && Double.isFinite(max) && max > min) {
@@ -589,6 +717,15 @@ public class SensorLiveGraph extends JPanel {
             }
         }
         return VisibleRange.findRange(samples);
+    }
+
+    /** A range bound, NaN while an expression cannot be resolved (e.g. before the tune is read). */
+    private double resolvedBound(com.opensr5.ini.IniValue value) {
+        if (!value.isExpression()) {
+            return value.getNumericValue();
+        }
+        return CircularGauge.resolve(value, uiContext.iniFileState.getIniFileModel(),
+            uiContext.getCurrentConfigurationImage(), Double.NaN);
     }
 
     static class VisibleRange {
