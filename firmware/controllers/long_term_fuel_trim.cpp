@@ -141,8 +141,8 @@ void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fue
 	auto y = priv::getClosestBin(rpm, config->veRpmBins);
 
 	// Skip learning if current load point falls far outside the table
-	if ((abs(x.Frac) > 0.5) ||
-		(abs(y.Frac) > 0.5)) {
+	if ((std::abs(x.Frac) > 0.5) ||
+		(std::abs(y.Frac) > 0.5)) {
 		// we are outside table
 		ltftCntMiss++;
 		ltftLearning = false;
