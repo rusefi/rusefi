@@ -1,7 +1,8 @@
 // This file asserts that the compiler is appropriate for rusEFI use.
 
 // non-MCU builds are significantly more tolerant
-#if EFI_PROD_CODE
+// clang firmware builds (USE_CLANG) report __GNUC__ 4 and are not checked here
+#if EFI_PROD_CODE && !defined(__clang__)
 
 #define GCC_VERSION ((__GNUC__ * 100) + (__GNUC_MINOR__ * 10) + ( __GNUC_PATCHLEVEL__ ))
 

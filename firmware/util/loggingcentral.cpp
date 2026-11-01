@@ -42,7 +42,11 @@ struct LogLineBuffer : LogBuffer<128>{
 };
 
 // These buffers store lines
-constexpr size_t lineBufferCount = 64;
+// RAM-constrained boards can reduce the number of queued log lines
+#ifndef EFI_LOG_LINE_BUFFER_COUNT
+#define EFI_LOG_LINE_BUFFER_COUNT 64
+#endif
+constexpr size_t lineBufferCount = EFI_LOG_LINE_BUFFER_COUNT;
 static LogLineBuffer lineBuffers[lineBufferCount];
 
 // freeBuffers contains a queue of line buffers that are not in use
