@@ -163,7 +163,7 @@ void PwmConfig::handleCycleStart() {
 	}
 
 	// Compute the maximum number of iterations without overflowing a uint32_t worth of timestamp
-	uint32_t iterationLimitInt32 = (0xFFFFFFFF / periodNt) - 2;
+	uint32_t iterationLimitInt32 = static_cast<uint32_t>(0xFFFFFFFF / periodNt) - 2;
 
 	// Maximum number of iterations that don't lose precision due to 32b float (~7 decimal significant figures)
 	// We want at least 0.01% timing precision (aka 1/10000 cycle, 0.072 degree for trigger stimulator), which

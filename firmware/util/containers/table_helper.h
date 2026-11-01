@@ -152,14 +152,14 @@ void setLinearCurve(TValue (&array)[TSize], float from, float to, float precisio
 		/**
 		 * rounded values look nicer, also we want to avoid precision mismatch with Tuner Studio
 		 */
-		array[i] = efiRound(value, precision);
+		array[i] = static_cast<TValue>(efiRound(value, precision));
 	}
 }
 
 template<typename TValue, int TSize>
 void setArrayValues(TValue (&array)[TSize], float value) {
 	for (int i = 0; i < TSize; i++) {
-		array[i] = value;
+		array[i] = static_cast<TValue>(value);
 	}
 }
 
@@ -167,7 +167,7 @@ template <typename TElement, typename VElement, size_t N, size_t M>
 constexpr void setTable(TElement (&dest)[N][M], const VElement value) {
 	for (size_t n = 0; n < N; n++) {
 		for (size_t m = 0; m < M; m++) {
-			dest[n][m] = value;
+			dest[n][m] = static_cast<TElement>(value);
 		}
 	}
 }
@@ -176,7 +176,7 @@ template <typename TDest, typename TSource, size_t N, size_t M>
 constexpr void copyTable(TDest (&dest)[N][M], const TSource (&source)[N][M], float multiply = 1.0f) {
 	for (size_t n = 0; n < N; n++) {
 		for (size_t m = 0; m < M; m++) {
-			dest[n][m] = source[n][m] * multiply;
+			dest[n][m] = static_cast<TDest>(source[n][m] * multiply);
 		}
 	}
 }
@@ -189,7 +189,7 @@ constexpr void copyTable(
 ) {
 	for (size_t n = 0; n < N; n++) {
 		for (size_t m = 0; m < M; m++) {
-			dest[n][m] = source[n][m] * multiply;
+			dest[n][m] = static_cast<TDest>(source[n][m] * multiply);
 		}
 	}
 }
@@ -208,12 +208,12 @@ constexpr void copyTable(TDest (&dest)[N][M], const TDest (&source)[N][M]) {
 template<typename kType>
 void setRpmBin(kType array[], int size, float idleRpm, float topRpm) {
 	// feature: special handling of first two cells
-	array[0] = idleRpm - 150;
+	array[0] = static_cast<kType>(idleRpm - 150);
 	int rpmStep = (int)(efiRound((topRpm - idleRpm) / (size - 2), 50) - 150);
 	for (int i = 1; i < size - 1;i++)
-		array[i] = idleRpm + rpmStep * (i - 1);
+		array[i] = static_cast<kType>(idleRpm + rpmStep * (i - 1));
 	// kind of not perfect: because of nice round step, we accumulate error and end up with a gap between value before last, and last one
-	array[size - 1] = topRpm;
+	array[size - 1] = static_cast<kType>(topRpm);
 }
 
 /**

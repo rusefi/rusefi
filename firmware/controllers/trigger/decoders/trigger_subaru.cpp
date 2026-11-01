@@ -52,8 +52,8 @@ void initialize36_2_2_2(TriggerWaveform *s) {
     // 36/2/2/2 data from https://rusefi.com/online/view.php?log=1287
     // todo: probably should be unified with EZ30 below?
 	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 0.25, 0.5);
-	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 0.7, 1.7);
-	s->setTriggerSynchronizationGap3(/*gapIndex*/2, 2.25, 4.2);
+	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 0.7f, 1.7f);
+	s->setTriggerSynchronizationGap3(/*gapIndex*/2, 2.25f, 4.2f);
 }
 
 void initializeSubaruEZ30(TriggerWaveform *s) {
@@ -62,7 +62,7 @@ void initializeSubaruEZ30(TriggerWaveform *s) {
     s->tdcPosition = 240;
 
 	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 0.25, 0.5);
-	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 0.7, 1.5);
+	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 0.7f, 1.5f);
 	s->setTriggerSynchronizationGap3(/*gapIndex*/2, 2, 4);
 }
 
@@ -149,9 +149,9 @@ static void initializeSubaru7_6(TriggerWaveform *s, bool withCrankWheel) {
 	SUBARU76_CAM_PULSE(4, 0);
 
 	// why is this trigger gap wider than average?
-	s->setTriggerSynchronizationGap3(/*index*/0, 6.53 * TRIGGER_GAP_DEVIATION_LOW, 15);
-	s->setTriggerSynchronizationGap3(/*index*/1, 0.3, 1 * TRIGGER_GAP_DEVIATION_HIGH);
-	s->setTriggerSynchronizationGap3(/*index*/2, 0.08, 0.3);
+	s->setTriggerSynchronizationGap3(/*index*/0, 6.53f * TRIGGER_GAP_DEVIATION_LOW, 15);
+	s->setTriggerSynchronizationGap3(/*index*/1, 0.3f, 1 * TRIGGER_GAP_DEVIATION_HIGH);
+	s->setTriggerSynchronizationGap3(/*index*/2, 0.08f, 0.3f);
 
 	s->useOnlyPrimaryForSync = withCrankWheel;
 }
@@ -202,9 +202,9 @@ void initializeSubaru7_6_camOnly(TriggerWaveform *s) {
 	//s->setTriggerSynchronizationGap3(1,  0.50,  1.50);
 	//s->setTriggerSynchronizationGap3(2,  7.00, 15.00);
 
-	s->setTriggerSynchronizationGap3(/*index*/0, 6.53 * TRIGGER_GAP_DEVIATION_LOW, 15);
-	s->setTriggerSynchronizationGap3(/*index*/1, 0.3, 1 * TRIGGER_GAP_DEVIATION_HIGH);
-	s->setTriggerSynchronizationGap3(/*index*/2, 0.08, 0.3);
+	s->setTriggerSynchronizationGap3(/*index*/0, 6.53f * TRIGGER_GAP_DEVIATION_LOW, 15);
+	s->setTriggerSynchronizationGap3(/*index*/1, 0.3f, 1 * TRIGGER_GAP_DEVIATION_HIGH);
+	s->setTriggerSynchronizationGap3(/*index*/2, 0.08f, 0.3f);
 }
 
 void initializeSubaruOnly7(TriggerWaveform *s) {
@@ -279,7 +279,7 @@ void initializeSubaru_SVX(TriggerWaveform *s) {
 //#define SVX_CRANK_2			T_CHANNEL_3
 #define SVX_CAM				TriggerWheel::T_PRIMARY
 
-#define CRANK_1_FALL(n)		(20.0 + offset + 30.0 * (n))
+#define CRANK_1_FALL(n)		(20.0f + offset + 30.0f * (n))
 #define CRANK_1_RISE(n)		(CRANK_1_FALL(n) - width)
 
 #define SUBARU_SVX_CRANK1_PULSE(n) \

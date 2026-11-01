@@ -19,7 +19,7 @@
 #define DELTA_THRESHOLD_CNT_HIGH (GPT_FREQ_FAST / GPT_PERIOD_FAST / 4)		// ~1/4 second?
 
 #if HAL_USE_ADC || EFI_UNIT_TEST
-#define triggerVoltsToAdcDivided(volts) (voltsToAdc(volts) / trigAdcState.triggerInputDividerCoefficient)
+#define triggerVoltsToAdcDivided(volts) static_cast<triggerAdcSample_t>(voltsToAdc(volts) / trigAdcState.triggerInputDividerCoefficient)
 #endif // HAL_USE_ADC || EFI_UNIT_TEST
 
 // hardware-dependent part

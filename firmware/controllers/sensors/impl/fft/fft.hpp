@@ -178,19 +178,19 @@ void hann(float * w, unsigned n, bool sflag)
 
 void hamming(float * w, unsigned n, bool sflag)
 {
-    const float coeff[2] = { 0.54, -0.46 };
+    const float coeff[2] = { 0.54f, -0.46f };
     cosine_window(w, n, coeff, sizeof(coeff) / sizeof(float), sflag);
 }
 
 void blackman(float * w, unsigned n, bool sflag)
 {
-    const float coeff[3] = { 0.42, -0.5, 0.08 };
+    const float coeff[3] = { 0.42f, -0.5f, 0.08f };
     cosine_window(w, n, coeff, sizeof(coeff) / sizeof(float), sflag);
 }
 
 void blackmanharris(float * w, unsigned n, bool sflag)
 {
-    const float coeff[4] = { 0.35875, -0.48829, 0.14128, -0.01168 };
+    const float coeff[4] = { 0.35875f, -0.48829f, 0.14128f, -0.01168f };
     cosine_window(w, n, coeff, sizeof(coeff) / sizeof(float), sflag);
 }
 

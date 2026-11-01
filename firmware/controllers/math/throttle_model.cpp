@@ -7,7 +7,7 @@
 #if EFI_ENGINE_CONTROL
 
 static const float pressureRatioCorrectionBins[] =   { 0.53125, 0.546875, 0.5625, 0.578125, 0.59375, 0.609375, 0.625, 0.640625, 0.65625, 0.671875, 0.6875, 0.703125, 0.71875, 0.734375, 0.750, 0.765625, 0.78125, 0.796875, 0.8125, 0.828125, 0.84375, 0.859375, 0.875, 0.890625, 0.90625, 0.921875, 0.9375, 0.953125 };
-static const float pressureRatioCorrectionValues[] = {       1,   0.9993, 0.998,  0.995,    0.991,   0.986,    0.979, 0.972,    0.963,   0.953,    0.942,  0.930,    0.916,   0.901,    0.884, 0.866,    0.845,   0.824,    0.800,  0.774,    0.745,   0.714,    0.679, 0.642,    0.600,   0.553,    0.449,  0.449    };
+static const float pressureRatioCorrectionValues[] = {       1,   0.9993f, 0.998f,  0.995f,    0.991f,   0.986f,    0.979f, 0.972f,    0.963f,   0.953f,    0.942f,  0.930f,    0.916f,   0.901f,    0.884f, 0.866f,    0.845f,   0.824f,    0.800f,  0.774f,    0.745f,   0.714f,    0.679f, 0.642f,    0.600f,   0.553f,    0.449f,  0.449f    };
 static float pressureRatioFlowCorrection(float pr) {
 	if (pr < 0.531) {
 		return 1.0;
@@ -69,7 +69,7 @@ private:
 		// but it is continuous, so we can use a finite difference approximation over some
 		// "small" step size (0.1 degree ~= 0 for throttle purposes)
 		// Too small a step may provoke numerical instability.
-		return (fx(x + 0.1) - fx(x - 0.1)) / 0.2;
+		return (fx(x + 0.1f) - fx(x - 0.1f)) / 0.2f;
 	}
 };
 
@@ -86,7 +86,7 @@ float ThrottleModelBase::throttlePositionForFlow(float flow, float pressureRatio
 	}
 
 	InverseFlowSolver solver(this, flow, pressureRatio, p_up, iat);
-	return solver.solve(50, 0.1).value_or(0);
+	return solver.solve(50, 0.1f).value_or(0);
 }
 
 float ThrottleModelBase::estimateThrottleFlow(float tip, float tps, float map, float iat) {

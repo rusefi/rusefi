@@ -12,7 +12,7 @@
 #include "scheduler.h"
 #include "efi_gpio.h"
 
-#define PERCENT_TO_DUTY(x) (x) * 0.01
+#define PERCENT_TO_DUTY(x) ((x) * 0.01f)
 
 #define NAN_FREQUENCY_SLEEP_PERIOD_MS 100
 

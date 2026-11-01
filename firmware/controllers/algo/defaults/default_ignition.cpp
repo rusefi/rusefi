@@ -67,15 +67,15 @@ static float getAdvanceForRpm(float rpm, float advanceMax) {
 	return interpolateMsg("advance", 600, 10, 3000, advanceMax, rpm);
 }
 
-#define round10(x) efiRound(x, 0.1)
+#define round10(x) efiRound(x, 0.1f)
 
 float getInitialAdvance(float rpm, float map, float advanceMax) {
 	map = std::min(map, 100.0f);
 	float advance = getAdvanceForRpm(rpm, advanceMax);
 
 	if (rpm >= 3000)
-		return round10(advance + 0.1 * (100 - map));
-	return round10(advance + 0.1 * (100 - map) * rpm / 3000);
+		return round10(advance + 0.1f * (100 - map));
+	return round10(advance + 0.1f * (100 - map) * rpm / 3000);
 }
 
 /**
@@ -111,7 +111,7 @@ void setDefaultIgnition() {
 	// Dwell table - a bit conservative but reasonable
 	setConstantDwell(4);
 
-	setLinearCurve(config->dwellVoltageCorrVoltBins, 8, 15, 0.1);
+	setLinearCurve(config->dwellVoltageCorrVoltBins, 8, 15, 0.1f);
 	setLinearCurve(config->dwellVoltageCorrValues, 1, 1, 1);
 
 	// Dwell Duty Mode - disabled by default; 50% is the standard TFI module target.

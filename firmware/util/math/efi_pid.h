@@ -24,7 +24,7 @@
 
 #define GET_PERIOD_LIMITED(pid_s_ptr) maxI(PID_MINIMAL_PERIOD_MS, ((pid_s_ptr)->periodMs))
 
-#define MS2SEC(x) (x * 0.001)
+#define MS2SEC(x) ((x) * 0.001f)
 
 struct pid_s;
 

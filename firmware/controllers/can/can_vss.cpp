@@ -96,7 +96,7 @@ float processNissan(const CANRxFrame& frame) {
 
 	nissanFrontAxle = left + right;
 
-	return nissanFrontAxle / (100.0 * 2);
+	return nissanFrontAxle / (100.0f * 2);
 }
 
 float processBMW_e90(const CANRxFrame& frame) {
@@ -107,10 +107,10 @@ float processW202(const CANRxFrame& frame) {
   // todo: reuse one of the getTwoBytes methods!
 	uint16_t tmp = (frame.data8[2] << 8);
 	tmp |= frame.data8[3];
-	return tmp * 0.0625;
+	return tmp * 0.0625f;
 }
 
-#define SLIP_RATIO(frontAxle, rearAxle) (((frontAxle) == 0 || (rearAxle) == 0) ? 1 : 1.0 * (frontAxle) / (rearAxle))
+#define SLIP_RATIO(frontAxle, rearAxle) (((frontAxle) == 0 || (rearAxle) == 0) ? 1 : 1.0f * (frontAxle) / (rearAxle))
 
 float processHyundai(const CANRxFrame& frame, efitick_t nowNt) {
   int frontL = getBitRangeLsb(frame.data8, 16, 12);
