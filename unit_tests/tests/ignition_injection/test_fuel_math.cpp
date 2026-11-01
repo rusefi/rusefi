@@ -134,7 +134,7 @@ TEST(AirmassModes, AlphaNFailedTps) {
 TEST(AirmassModes, MafNormal) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->cylindersCount = 4;
-	engineConfiguration->displacement = 1.3;
+	engineConfiguration->displacement = 1.3f;
 	engineConfiguration->fuelAlgorithm = engine_load_mode_e::LM_REAL_MAF;
 	engineConfiguration->injector.flow = 200;
 

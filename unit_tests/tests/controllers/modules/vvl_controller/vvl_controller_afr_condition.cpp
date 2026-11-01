@@ -14,7 +14,7 @@
 namespace {
     static constexpr float TEST_DEFAULT_LAMBDA1 = engine_configuration_defaults::NITROUS_MAXIMUM_AFR / STOICH_RATIO;
 
-    static constexpr float TEST_MAXIMUM_AFR = 12.3;
+    static constexpr float TEST_MAXIMUM_AFR = 12.3f;
     static constexpr float TEST_LAMBDA1 = TEST_MAXIMUM_AFR / STOICH_RATIO;
 
     struct AfrConditionTestData {

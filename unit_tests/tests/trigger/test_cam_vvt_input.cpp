@@ -242,9 +242,9 @@ TEST(trigger, LateToothDuringRequestedStop) {
 }
 
 TEST(trigger, DoubledToothDuringRequestedStop) {
-	checkToothTimingAfterStop(true, 0.001, ObdCode::CUSTOM_PRIMARY_DOUBLED_EDGE);
+	checkToothTimingAfterStop(true, 0.001f, ObdCode::CUSTOM_PRIMARY_DOUBLED_EDGE);
 }
 
 TEST(trigger, DoubledToothWithoutStopRequest) {
-	checkToothTimingAfterStop(false, 0.001, ObdCode::CUSTOM_PRIMARY_DOUBLED_EDGE);
+	checkToothTimingAfterStop(false, 0.001f, ObdCode::CUSTOM_PRIMARY_DOUBLED_EDGE);
 }

@@ -16,7 +16,7 @@ TEST(Actuators, AntiLag) {
 
 	engineConfiguration->antiLagActivationMode = SWITCH_INPUT_ANTILAG;
 	engine->periodicFastCallback();
-	float fuelWithCorrections = 1.01;
+	float fuelWithCorrections = 1.01f;
 	ASSERT_NEAR(fuelWithCorrections, getRunningFuel(1), EPS4D);
 	// in unit tests we pretend that physical swiych is always OFF
 	ASSERT_EQ(0, engine->antilagController.ALSSwitchCondition);

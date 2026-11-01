@@ -5,7 +5,7 @@ TEST(LuaBasic, configLookup) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	{
 		const char * name = "ignitionDwellForCrankingMs";
-		setConfigValueByName(name, 1.6);
+		setConfigValueByName(name, 1.6f);
 		ASSERT_NEAR(1.6, getConfigValueByName(name), EPS3D);
 	}
 
@@ -56,7 +56,7 @@ TEST(LuaBasic, configLookup) {
 	{
 		//scaled_channel<uint16_t, 1000, 1> vssGearRatio;
 		const char * name = "vssGearRatio";
-		setConfigValueByName(name, 1.999);
+		setConfigValueByName(name, 1.999f);
 		ASSERT_EQ(engineConfiguration->vssGearRatio, getConfigValueByName(name));
 		ASSERT_NEAR(1.999, engineConfiguration->vssGearRatio, EPS3D);
 	}

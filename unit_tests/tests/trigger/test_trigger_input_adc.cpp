@@ -59,7 +59,7 @@ static void simulateTrigger(EngineTestHelper &eth, TriggerAdcDetector &detector,
 		efitick_t stampNt = US2NT(stampUs);
 
 		// convert into mcu-adc voltage
-		value = minF(maxF(value / voltageDiv, 0), adcMaxVoltage);
+		value = minF(maxF(static_cast<float>(value / voltageDiv), 0), adcMaxVoltage);
 		if (detector.curAdcMode == TRIGGER_ADC_EXTI) {
 			int logicValue = 0;
 			// imitate Schmitt trigger input
@@ -74,7 +74,7 @@ static void simulateTrigger(EngineTestHelper &eth, TriggerAdcDetector &detector,
 				prevLogicValue = logicValue;
 			}
 		} else if (detector.curAdcMode == TRIGGER_ADC_ADC) {
-			triggerAdcSample_t sampleValue = value * ADC_MAX_VALUE / adcMaxVoltage;
+			triggerAdcSample_t sampleValue = static_cast<triggerAdcSample_t>(value * ADC_MAX_VALUE / adcMaxVoltage);
 			
 //			printf("--> ANALOG %d\r\n", sampleValue);
 

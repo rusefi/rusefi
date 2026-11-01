@@ -10,13 +10,13 @@ TEST(ScaledChannel, Basic) {
 		scaled_channel<int16_t, 10> i1;
 		i1 = 10;    EXPECT_FLOAT_EQ(i1, 10);
 		i1 =  1;    EXPECT_FLOAT_EQ(i1,  1);
-		i1 =  0.11; EXPECT_FLOAT_EQ(i1,  0.1); // round
-		i1 =  0.1;  EXPECT_FLOAT_EQ(i1,  0.1);
-		i1 =  0.09; EXPECT_FLOAT_EQ(i1,  0.1); // round
-		i1 =  0.01; EXPECT_FLOAT_EQ(i1,  0.); // out of range
-		i1 = -0.09; EXPECT_FLOAT_EQ(i1, -0.1); // round
-		i1 = -0.1;  EXPECT_FLOAT_EQ(i1, -0.1);
-		i1 = -0.11; EXPECT_FLOAT_EQ(i1, -0.1); // round
+		i1 =  0.11f; EXPECT_FLOAT_EQ(i1,  0.1f); // round
+		i1 =  0.1f;  EXPECT_FLOAT_EQ(i1,  0.1f);
+		i1 =  0.09f; EXPECT_FLOAT_EQ(i1,  0.1f); // round
+		i1 =  0.01f; EXPECT_FLOAT_EQ(i1,  0.); // out of range
+		i1 = -0.09f; EXPECT_FLOAT_EQ(i1, -0.1f); // round
+		i1 = -0.1f;  EXPECT_FLOAT_EQ(i1, -0.1f);
+		i1 = -0.11f; EXPECT_FLOAT_EQ(i1, -0.1f); // round
 	}
 
 	{

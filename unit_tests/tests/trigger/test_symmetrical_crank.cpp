@@ -52,7 +52,7 @@ TEST(engine, testSymmetricalCrank) {
 
 	ASSERT_EQ(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, getEngineRotationState()->getOperationMode());
 
-	float mult = 0.02;
+	float mult = 0.02f;
 
 	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "RPM#0";
 

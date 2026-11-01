@@ -159,7 +159,7 @@ TEST(unitTestLog, sourcesFollowEngineAndMockReplacement) {
 					EXPECT_NEAR(engineering, field.readValueAsDouble(), 0.00001) << name;
 					ASSERT_LE(offset + field.getSize(), record.bytes.size());
 					if (floating) {
-						EXPECT_FLOAT_EQ(raw, readFloatBE(record.bytes.data() + offset)) << name;
+						EXPECT_FLOAT_EQ(static_cast<float>(raw), readFloatBE(record.bytes.data() + offset)) << name;
 					} else {
 						uint32_t stored = 0;
 						for (size_t i = 0; i < field.getSize(); i++) {

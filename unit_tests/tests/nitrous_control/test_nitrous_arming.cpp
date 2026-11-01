@@ -12,7 +12,7 @@ namespace {
         static constexpr switch_input_pin_e TEST_NITROUS_CONTROL_ARMING_PIN = Gpio::A13;
         static constexpr lua_gauge_e TEST_NITROUS_LUA_GAUGE = LUA_GAUGE_3;
         static constexpr SensorType TEST_NITROUS_LUA_GAUGE_SENSOR = SensorType::LuaGauge3;
-        static constexpr float TEST_NITROUS_LUA_GAUGE_ARMING_VALUE = 239.17;
+        static constexpr float TEST_NITROUS_LUA_GAUGE_ARMING_VALUE = 239.17f;
 
         static const EngineConfig TEST_ENGINE_CONFIG;
 

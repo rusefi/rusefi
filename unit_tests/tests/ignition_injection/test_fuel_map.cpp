@@ -18,7 +18,7 @@ TEST(misc, testFuelMap) {
 	printf("Setting up TEST_ENGINE\r\n");
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
-	setFlatInjectorLag(0.2);
+	setFlatInjectorLag(0.2f);
 
 	eth.engine.updateSlowSensors();
 
@@ -84,19 +84,19 @@ TEST(misc, testFuelMap) {
 static void configureFordAspireTriggerWaveform(TriggerWaveform * s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 
-	s->addEvent720(53.747, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
-	s->addEvent720(121.90, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
-	s->addEvent720(232.76, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
-	s->addEvent720(300.54, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(53.747f, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(121.90f, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(232.76f, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(300.54f, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 	s->addEvent720(360, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 
-	s->addEvent720(409.8412, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
-	s->addEvent720(478.6505, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
-	s->addEvent720(588.045, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
-	s->addEvent720(657.03, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(409.8412f, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(478.6505f, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(588.045f, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(657.03f, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 	s->addEvent720(720, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-	ASSERT_FLOAT_EQ(53.747 / 720, s->wave.getSwitchTime(0));
+	ASSERT_FLOAT_EQ(53.747f / 720, s->wave.getSwitchTime(0));
 	ASSERT_EQ( TriggerValue::RISE,  s->wave.getChannelState(1, 0)) << "@0";
 	ASSERT_EQ( TriggerValue::RISE,  s->wave.getChannelState(1, 0)) << "@0";
 
@@ -112,15 +112,15 @@ static void configureFordAspireTriggerWaveform(TriggerWaveform * s) {
 	ASSERT_EQ( TriggerValue::RISE,  s->wave.getChannelState(0, 4)) << "@4";
 	ASSERT_EQ( TriggerValue::RISE,  s->wave.getChannelState(1, 5)) << "@5";
 	ASSERT_EQ( TriggerValue::FALL,  s->wave.getChannelState(1, 8)) << "@8";
-	ASSERT_FLOAT_EQ(121.90 / 720, s->wave.getSwitchTime(1));
-	ASSERT_FLOAT_EQ(657.03 / 720, s->wave.getSwitchTime(8));
+	ASSERT_FLOAT_EQ(121.90f / 720, s->wave.getSwitchTime(1));
+	ASSERT_FLOAT_EQ(657.03f / 720, s->wave.getSwitchTime(8));
 
-	ASSERT_EQ(0, s->wave.findAngleMatch(53.747 / 720.0).value_or(-1)) << "expecting 0";
-	ASSERT_FALSE(s->wave.findAngleMatch(53 / 720.0).Valid) << "expecting not found";
-	ASSERT_EQ(7, s->wave.findAngleMatch(588.045 / 720.0).value_or(-1));
+	ASSERT_EQ(0, s->wave.findAngleMatch(53.747f / 720.0f).value_or(-1)) << "expecting 0";
+	ASSERT_FALSE(s->wave.findAngleMatch(53 / 720.0f).Valid) << "expecting not found";
+	ASSERT_EQ(7, s->wave.findAngleMatch(588.045f / 720.0f).value_or(-1));
 
-	ASSERT_EQ( 0,  s->wave.findInsertionAngle(23.747 / 720.0)) << "expecting 0";
-	ASSERT_EQ( 1,  s->wave.findInsertionAngle(63.747 / 720.0)) << "expecting 1";
+	ASSERT_EQ( 0,  s->wave.findInsertionAngle(23.747f / 720.0f)) << "expecting 0";
+	ASSERT_EQ( 1,  s->wave.findInsertionAngle(63.747f / 720.0f)) << "expecting 1";
 }
 
 TEST(misc, testAngleResolver) {

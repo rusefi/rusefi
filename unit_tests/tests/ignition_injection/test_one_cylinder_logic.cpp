@@ -35,7 +35,7 @@ TEST(issues, issueOneCylinderSpecialCase968) {
 	ASSERT_EQ(engine->engineState.timingAdvance[0], timing);
 
   angle_t expectedAngle = 180 - Gy6139_globalTriggerAngleOffset + timing;
-  int expectedDeltaTimeUs = eth.angleToTimeUs(expectedAngle);
+  int expectedDeltaTimeUs = static_cast<int>(eth.angleToTimeUs(expectedAngle));
 
 	ASSERT_EQ( 2,  engine->scheduler.size()) << "first revolution(s)";
 

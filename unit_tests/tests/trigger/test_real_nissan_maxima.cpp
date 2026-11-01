@@ -68,7 +68,7 @@ static void runMaximaVvtTest(const char* fileName, double startTimeStamp) {
 	engineConfiguration->gapVvtTrackingLengthOverride = 2;
 	engineConfiguration->triggerVVTGapOverrideFrom[0] = 2;
 	engineConfiguration->triggerVVTGapOverrideTo[0] = 20;
-	engineConfiguration->triggerVVTGapOverrideFrom[1] = 0.2;
+	engineConfiguration->triggerVVTGapOverrideFrom[1] = 0.2f;
 	engineConfiguration->triggerVVTGapOverrideTo[1] = 1.5;
 	// re-apply the trigger/cam shapes so the gap override takes effect
 	engine->triggerCentral.applyShapesConfiguration();

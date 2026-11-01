@@ -13,7 +13,7 @@ TEST(exp_average, length1) {
 
 TEST(exp_average, length2) {
     ExpAverage ea;
-    ea.setSmoothingFactor(0.6666666666666666666666666);
+    ea.setSmoothingFactor(0.6666666666666666666666666f);
     ASSERT_NEAR(ea.average(3), 2, EPS2D);
     ASSERT_NEAR(ea.average(8), 6, EPS2D);
     ASSERT_NEAR(ea.average(3), 4, EPS2D);
@@ -22,7 +22,7 @@ TEST(exp_average, length2) {
 
 TEST(exp_average, nicerLength2) {
     ExpAverage ea;
-    ea.setSmoothingFactor(0.6666666666666666666666666);
+    ea.setSmoothingFactor(0.6666666666666666666666666f);
     ASSERT_NEAR(ea.initOrAverage(3), 3, EPS2D);
     ASSERT_NEAR(ea.initOrAverage(8), 6.33333333333, EPS2D);
     ASSERT_NEAR(ea.initOrAverage(3), 4.11111068, EPS2D);

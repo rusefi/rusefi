@@ -34,5 +34,5 @@ TEST(util, luaBiQuad1000_01) {
   LuaBiQuad b;
 
   // This cutoff cannot be represented reliably by the float filter.
-  EXPECT_FATAL_ERROR(b.configureLowpass(1000, 0.1));
+  EXPECT_FATAL_ERROR(b.configureLowpass(1000, 0.1f));
 }

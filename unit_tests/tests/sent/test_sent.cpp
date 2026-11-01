@@ -37,9 +37,9 @@ static int sentTest_feedWithFile(sent_channel &channel, const char *file)
 		// we care only about falling edges
 		if (value < 0.5) {
 			double diff = stamp - prevTimeStamp;
-			uint32_t clocks = diff * TIMER_CLOCK;
+			uint32_t clocks = static_cast<uint32_t>(diff * TIMER_CLOCK);
 
-			uint32_t last_tickPerUnit = channel.getTickTime();
+			uint32_t last_tickPerUnit = static_cast<uint32_t>(channel.getTickTime());
 
 			ret = channel.Decoder(clocks);
 			if ((ret < 0) && (printDebug)) {

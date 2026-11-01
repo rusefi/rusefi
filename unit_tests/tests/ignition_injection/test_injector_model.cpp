@@ -341,8 +341,8 @@ TEST(InjectorModel, Deadtime) {
 	static const float injectorLagPressureBins[VBAT_INJECTOR_CURVE_PRESSURE_SIZE] = { 300, 600 };
 	static const float injectorLagVbattBins[VBAT_INJECTOR_CURVE_SIZE] = { 6.0, 8.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0 };
 	static const float injectorLagCorrection[VBAT_INJECTOR_CURVE_PRESSURE_SIZE][VBAT_INJECTOR_CURVE_SIZE] = {
-		{ 3.371, 1.974, 1.383, 1.194, 1.040, 0.914, 0.767, 0.726 },
-		{ 3.371, 1.974, 1.383, 1.194, 1.040, 0.914, 0.767, 0.726 },
+		{ 3.371f, 1.974f, 1.383f, 1.194f, 1.040f, 0.914f, 0.767f, 0.726f },
+		{ 3.371f, 1.974f, 1.383f, 1.194f, 1.040f, 0.914f, 0.767f, 0.726f },
 	};
 
 	copyArray(engineConfiguration->injector.battLagCorrBattBins, injectorLagVbattBins);

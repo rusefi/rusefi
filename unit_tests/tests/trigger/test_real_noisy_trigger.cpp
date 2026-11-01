@@ -15,7 +15,7 @@ static void testNoOverdwell(const char* file, bool instantRpm, const int expecte
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
 	engineConfiguration->timingMode = TM_FIXED;
-	engineConfiguration->fixedTiming = 14.69;
+	engineConfiguration->fixedTiming = 14.69f;
 
 	engineConfiguration->trigger.customTotalToothCount = 36;
 	engineConfiguration->trigger.customSkippedToothCount = 2;

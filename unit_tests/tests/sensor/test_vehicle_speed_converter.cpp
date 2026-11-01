@@ -9,7 +9,7 @@ float GetVssFor(float revPerKm, float axle, float teeth, float hz) {
 
 	engineConfiguration->driveWheelRevPerKm = revPerKm;
 	engineConfiguration->vssGearRatio = axle;
-	engineConfiguration->vssToothCount = teeth;
+	engineConfiguration->vssToothCount = static_cast<uint8_t>(teeth);
 
 	return dut.convert(hz).value_or(-1);
 }
@@ -36,13 +36,13 @@ TEST(VehicleSpeed, RealCases) {
 	// 205/50R16 tire -> 521 rev/km
 	// 3.73 axle ratio
 	// 17 tooth speedo gear
-	EXPECT_NEAR_M3(108.970f, GetVssFor(521, 3.73, 17, 1000));
+	EXPECT_NEAR_M3(108.970f, GetVssFor(521, 3.73f, 17, 1000));
 
 	// NB miata
 	// 205/50R15 tire -> 544 rev/km
 	// 4.3 axle ratio
 	// 21 tooth speedo gear
-	EXPECT_NEAR_M3(73.285f, GetVssFor(544, 4.3, 21, 1000));
+	EXPECT_NEAR_M3(73.285f, GetVssFor(544, 4.3f, 21, 1000));
 
 	// Some truck with ABS sensors
 	// 265/65R18 tire -> 391 rev/km

@@ -68,7 +68,7 @@ TEST(LongTermIdleTrim, isValidConditionsForLearning){
 
     // isStableIdle update
     advanceTimeUs(MS2US(1000));
-    engine->m_ltit.update(mocked_rpm,0,false,false,false,0.45);
+    engine->m_ltit.update(mocked_rpm,0,false,false,false,0.45f);
     EXPECT_TRUE(engine->m_ltit.isValidConditionsForLearning(4.5f));
 };
 
@@ -156,7 +156,7 @@ TEST(LongTermIdleTrim, update_not_enabled) {
  	engineConfiguration->ltitEnabled = false;
 	constexpr int mocked_rpm = 920;
 
-	engine->m_ltit.update(mocked_rpm,0,false,false,false,0.45);
+	engine->m_ltit.update(mocked_rpm,0,false,false,false,0.45f);
 	EXPECT_FALSE(engine->m_ltit.updatedLtit);
 }
 
@@ -167,7 +167,7 @@ TEST(LongTermIdleTrim, update_not_Initialized) {
 	mockedLTIT ltit_controller;
 
 	EXPECT_CALL(ltit_controller, loadLtitFromConfig());
-	ltit_controller.update(mocked_rpm,0,false,false,false,0.45);
+	ltit_controller.update(mocked_rpm,0,false,false,false,0.45f);
 	EXPECT_FALSE(ltit_controller.updatedLtit);
 }
 
@@ -180,7 +180,7 @@ TEST(LongTermIdleTrim, update_ignition_delay) {
 
 	engine->m_ltit.loadLtitFromConfig();
 	engine->m_ltit.onIgnitionStateChanged(true);
-	engine->m_ltit.update(mocked_rpm,0,false,false,false,0.45);
+	engine->m_ltit.update(mocked_rpm,0,false,false,false,0.45f);
 
 	EXPECT_FALSE(engine->m_ltit.updatedLtit);
 	EXPECT_FALSE(engine->m_ltit.isStableIdle);
@@ -205,7 +205,7 @@ TEST(LongTermIdleTrim, update_idle) {
 	idler.m_lastPhase = ICP::Running;
 
 	// Phase::Idling expect
-	engine->m_ltit.update(mocked_rpm, 0, false, false, false, 0.45);
+	engine->m_ltit.update(mocked_rpm, 0, false, false, false, 0.45f);
 
 	EXPECT_FALSE(engine->m_ltit.updatedLtit);
 	EXPECT_FALSE(engine->m_ltit.isStableIdle);
@@ -213,14 +213,14 @@ TEST(LongTermIdleTrim, update_idle) {
 	// rpm range expect
 	idler.m_lastPhase = ICP::Idling;
 	// rpm too high for learn!
-	engine->m_ltit.update(mocked_rpm + 200, 0, false, false, false, 0.45);
+	engine->m_ltit.update(mocked_rpm + 200, 0, false, false, false, 0.45f);
 
 	EXPECT_FALSE(engine->m_ltit.updatedLtit);
 	EXPECT_FALSE(engine->m_ltit.isStableIdle);
 
 	// stable idle check (false & still not in time)
 	engine->m_ltit.isStableIdle = false;
-	engine->m_ltit.update(mocked_rpm, 0, false, false, false, 0.45);
+	engine->m_ltit.update(mocked_rpm, 0, false, false, false, 0.45f);
 
 	EXPECT_FALSE(engine->m_ltit.updatedLtit);
 	EXPECT_FALSE(engine->m_ltit.isStableIdle);
@@ -229,7 +229,7 @@ TEST(LongTermIdleTrim, update_idle) {
 	engine->m_ltit.isStableIdle = false;
 	engine->m_ltit.onIgnitionStateChanged(true);
 	advanceTimeUs(MS2US(2500));
-	engine->m_ltit.update(mocked_rpm, 0, false, false, false, 0.45);
+	engine->m_ltit.update(mocked_rpm, 0, false, false, false, 0.45f);
 
 	EXPECT_FALSE(engine->m_ltit.updatedLtit);
 	EXPECT_TRUE(engine->m_ltit.isStableIdle);

@@ -4,7 +4,7 @@
 
 TEST(errorAccumulator, ignoreSmallError) {
 	ErrorAccumulator dut;
-	dut.init(5, 0.01);
+	dut.init(5, 0.01f);
 
 	for (size_t i = 0; i < 1'000'000; i++) {
 		// An error just below the threshold should never trip
@@ -14,7 +14,7 @@ TEST(errorAccumulator, ignoreSmallError) {
 
 TEST(errorAccumulator, integrateError) {
 	ErrorAccumulator dut;
-	dut.init(5, 0.01);
+	dut.init(5, 0.01f);
 
 	for (size_t i = 0; i < 100; i++) {
 		// error of 1 over the ignore value
@@ -27,7 +27,7 @@ TEST(errorAccumulator, integrateError) {
 
 TEST(errorAccumulator, integrateNegativeError) {
 	ErrorAccumulator dut;
-	dut.init(5, 0.01);
+	dut.init(5, 0.01f);
 
 	for (size_t i = 0; i < 100; i++) {
 		// error of 1 over the ignore value, but negative
@@ -40,7 +40,7 @@ TEST(errorAccumulator, integrateNegativeError) {
 
 TEST(errorAccumulator, integrateErrorBothSigns) {
 	ErrorAccumulator dut;
-	dut.init(5, 0.01);
+	dut.init(5, 0.01f);
 
 	for (size_t i = 0; i < 100; i++) {
 		// These should collectively integrate 1 * dt worth of error

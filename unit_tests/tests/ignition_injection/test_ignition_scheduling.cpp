@@ -381,19 +381,19 @@ TEST(ignition, oddCylinderWastedSpark) {
 		// Should schedule one dwell+fire pair:
 		// Dwell 5 deg from now
 		float nt1deg = USF2NT(engine->rpmCalculator.oneDegreeUs);
-		efitick_t startTime = nowNt1 + nt1deg * 5;
+		efitick_t startTime = static_cast<efitick_t>(nowNt1 + nt1deg * 5);
 		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime, _));
 		// Spark 15 deg from now
-		efitick_t endTime = startTime + nt1deg * 10;
+		efitick_t endTime = static_cast<efitick_t>(startTime + nt1deg * 10);
 		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, endTime, _));
 
 
 		// Should schedule second dwell+fire pair, the out of phase copy
 		// Dwell 5 deg from now
-		startTime = nowNt2 + nt1deg * 5;
+		startTime = static_cast<efitick_t>(nowNt2 + nt1deg * 5);
 		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime, _));
 		// Spark 15 deg from now
-		endTime = startTime + nt1deg * 10;
+		endTime = static_cast<efitick_t>(startTime + nt1deg * 10);
 		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, endTime, _));
 	}
 

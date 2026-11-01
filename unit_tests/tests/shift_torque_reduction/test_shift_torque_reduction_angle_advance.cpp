@@ -6,7 +6,7 @@
 
 #include "flat_shift_condition_test_base.h"
 
-constexpr float TEST_IGNITION_RETARD = 17.4;
+constexpr float TEST_IGNITION_RETARD = 17.4f;
 constexpr float TEST_TORQUE_REDUCTION_IGNITION_RETARD = 23.0f;
 
 namespace {

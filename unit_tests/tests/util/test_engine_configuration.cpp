@@ -255,7 +255,7 @@ void TestEngineConfiguration::configureTorqueReductionTime(std::optional<float> 
 
 void TestEngineConfiguration::configureTorqueReductionArmingRpm(const std::optional<float> armingRpm) {
     if (armingRpm.has_value()) {
-        engineConfiguration->torqueReductionArmingRpm = armingRpm.value();
+        engineConfiguration->torqueReductionArmingRpm = static_cast<uint16_t>(armingRpm.value());
     } else {
         ASSERT_EQ(
             engineConfiguration->torqueReductionArmingRpm,
@@ -266,7 +266,7 @@ void TestEngineConfiguration::configureTorqueReductionArmingRpm(const std::optio
 
 void TestEngineConfiguration::configureTorqueReductionArmingApp(const std::optional<float> armingApp) {
     if (armingApp.has_value()) {
-        engineConfiguration->torqueReductionArmingApp = armingApp.value();
+        engineConfiguration->torqueReductionArmingApp = static_cast<int>(armingApp.value());
     } else {
         ASSERT_EQ(
             engineConfiguration->torqueReductionArmingApp,

@@ -69,7 +69,7 @@ TEST(ignition_state, getRunningAdvanceIdleTable) {
   EXPECT_TRUE(engine->module<IdleController>()->isIdlingOrTaper());
 
   // 0% of idle threshold -> idle table
-  Sensor::setMockValue(SensorType::DriverThrottleIntent, 0.001);
+  Sensor::setMockValue(SensorType::DriverThrottleIntent, 0.001f);
   EXPECT_NEAR(5, getRunningAdvance(rpm, load), EPS2D);
 
   // 50% of idle threshold -> idle table
@@ -114,7 +114,7 @@ TEST(ignition_state, getRunningAdvanceTractionDrop) {
   EXPECT_NEAR(-5, getRunningAdvance(rpm, load), EPS2D);
 
   Sensor::setMockValue(SensorType::VehicleSpeed, 120.0);
-  Sensor::setMockValue(SensorType::WheelSlipRatio, 1.2);
+  Sensor::setMockValue(SensorType::WheelSlipRatio, 1.2f);
   EXPECT_NEAR(25, getRunningAdvance(rpm, load), EPS2D);
 }
 
@@ -151,7 +151,7 @@ TEST(ignition_state, getRunningAdvanceTractionSparkSkip) {
   EXPECT_NEAR(0, engine->engineState.tractionControlSparkSkip, EPS2D);
 
   Sensor::setMockValue(SensorType::VehicleSpeed, 120.0);
-  Sensor::setMockValue(SensorType::WheelSlipRatio, 1.2);
+  Sensor::setMockValue(SensorType::WheelSlipRatio, 1.2f);
   getRunningAdvance(rpm, load);
   EXPECT_NEAR(50, engine->engineState.tractionControlSparkSkip, EPS2D);
 }
@@ -175,7 +175,7 @@ TEST(ignition_state, tsAdvanceIndicators) {
   EXPECT_TRUE(engine->module<IdleController>()->isIdlingOrTaper());
 
   // 0% of idle threshold -> idle table
-  Sensor::setMockValue(SensorType::DriverThrottleIntent, 0.001);
+  Sensor::setMockValue(SensorType::DriverThrottleIntent, 0.001f);
   EXPECT_NEAR(5, getRunningAdvance(rpm, load), EPS2D);
   EXPECT_EQ(-1, engine->ignitionState.rpmForIgnitionTableDot);
   EXPECT_EQ(-1, engine->ignitionState.loadForIgnitionTableDot);

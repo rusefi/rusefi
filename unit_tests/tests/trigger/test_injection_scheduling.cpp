@@ -34,7 +34,7 @@ TEST(injectionScheduling, InjectionIsScheduled) {
 		// Should schedule one normal injection:
 		// rising edge 5 degrees from now
 		float nt5deg = USF2NT(engine->rpmCalculator.oneDegreeUs * 5);
-		efitick_t startTime = nowNt + nt5deg;
+		efitick_t startTime = static_cast<efitick_t>(nowNt + nt5deg);
 		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime, Property(&action_s::getArgumentRaw, Eq(InjectorContext(1, 0xF, false).raw))));
 		// falling edge 20ms later
 		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime + MS2NT(20), Property(&action_s::getArgumentRaw, Eq(InjectorContext(1, 0xF, false).raw))));
@@ -64,7 +64,7 @@ TEST(injectionScheduling, InjectionIsScheduledDualStage) {
 
 	// Some nonzero fuel quantity on both stages
 	engine->engineState.injectionMass[0] = 50;
-	engine->engineState.injectionStage2Fraction = 0.2;
+	engine->engineState.injectionStage2Fraction = 0.2f;
 
 	{
 		InSequence is;
@@ -80,7 +80,7 @@ TEST(injectionScheduling, InjectionIsScheduledDualStage) {
 		// Should schedule one normal injection:
 		// rising edge 5 degrees from now
 		float nt5deg = USF2NT(engine->rpmCalculator.oneDegreeUs * 5);
-		efitick_t startTime = nowNt + nt5deg;
+		efitick_t startTime = static_cast<efitick_t>(nowNt + nt5deg);
 		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime, Property(&action_s::getArgumentRaw, Eq(InjectorContext(1, 0xF, true).raw))));
 		// falling edge (primary) 20ms later
 		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime + MS2NT(20), Property(&action_s::getArgumentRaw, Eq(InjectorContext(1, 0xF, true).raw))));
@@ -152,7 +152,7 @@ TEST(injectionScheduling, InjectionIsScheduledBeforeWraparound) {
 		// Should schedule one normal injection:
 		// rising edge 5 degrees from now
 		float nt5deg = USF2NT(engine->rpmCalculator.oneDegreeUs * 5);
-		efitick_t startTime = nowNt + nt5deg;
+		efitick_t startTime = static_cast<efitick_t>(nowNt + nt5deg);
 		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime, Property(&action_s::getArgumentRaw, Eq(InjectorContext(1, 0xF, false).raw))));
 		// falling edge 20ms later
 		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime + MS2NT(20), Property(&action_s::getArgumentRaw, Eq(InjectorContext(1, 0xF, false).raw))));
@@ -188,7 +188,7 @@ TEST(injectionScheduling, InjectionIsScheduledAfterWraparound) {
 		// Should schedule one normal injection:
 		// rising edge 15 degrees from now
 		float nt5deg = USF2NT(engine->rpmCalculator.oneDegreeUs * 15);
-		efitick_t startTime = nowNt + nt5deg;
+		efitick_t startTime = static_cast<efitick_t>(nowNt + nt5deg);
 		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime, Property(&action_s::getArgumentRaw, Eq(InjectorContext(1, 0xF, false).raw))));
 		// falling edge 20ms later
 		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime + MS2NT(20), Property(&action_s::getArgumentRaw, Eq(InjectorContext(1, 0xF, false).raw))));

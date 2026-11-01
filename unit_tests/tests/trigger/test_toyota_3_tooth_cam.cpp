@@ -11,7 +11,7 @@ TEST(Toyota3ToothCam, RealEngineRunning) {
 	engineConfiguration->alwaysInstantRpm = true;
 
 	engineConfiguration->vvtMode[0] = VVT_TOYOTA_3_TOOTH;
-	engineConfiguration->vvtOffsets[0] = 152.58;
+	engineConfiguration->vvtOffsets[0] = 152.58f;
 
 	engineConfiguration->trigger.customTotalToothCount = 36;
 	engineConfiguration->trigger.customSkippedToothCount = 2;

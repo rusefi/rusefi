@@ -12,8 +12,8 @@ TEST(subaru, overrideGap) {
 
 	engineConfiguration->overrideTriggerGaps = true;
 	engineConfiguration->gapTrackingLengthOverride = 2;
-	engineConfiguration->triggerGapOverrideFrom[0] = 0.75 * 11.3;
-	engineConfiguration->triggerGapOverrideTo[0] = 1.75 * 11.3;
+	engineConfiguration->triggerGapOverrideFrom[0] = 0.75f * 11.3f;
+	engineConfiguration->triggerGapOverrideTo[0] = 1.75f * 11.3f;
 	engineConfiguration->triggerGapOverrideFrom[1] = 0.75;
 	engineConfiguration->triggerGapOverrideTo[1] = 1.25;
 

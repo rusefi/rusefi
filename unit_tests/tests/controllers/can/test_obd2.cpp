@@ -187,7 +187,7 @@ TEST(CanObd2, handleGetDataRequest_PID_RPM)
     EXPECT_EQ(rxFrame.data8[1], 0x41);	// correct header
     EXPECT_EQ(rxFrame.data8[2], PID_RPM); // correct PID
 
-    int rpm = Sensor::getOrZero(SensorType::Rpm) * ODB_RPM_MULT;
+    int rpm = static_cast<int>(Sensor::getOrZero(SensorType::Rpm) * ODB_RPM_MULT);
 
     EXPECT_EQ(rxFrame.data8[3], (rpm >> 0) & 0xff); // correct value
     EXPECT_EQ(rxFrame.data8[4], (rpm >> 8) & 0xff); // correct value
@@ -252,7 +252,7 @@ TEST(CanObd2, handleGetDataRequest_PID_INTAKE_MAF)
     EXPECT_EQ(rxFrame.data8[1], 0x41);	// correct header
     EXPECT_EQ(rxFrame.data8[2], PID_INTAKE_MAF); // correct PID
 
-    int maf = Sensor::getOrZero(SensorType::Maf) * 100.0f;
+    int maf = static_cast<int>(Sensor::getOrZero(SensorType::Maf) * 100.0f);
 
     EXPECT_EQ(rxFrame.data8[3], (maf >> 0) & 0xff); // correct value
     EXPECT_EQ(rxFrame.data8[4], (maf >> 8) & 0xff); // correct value
@@ -298,7 +298,7 @@ TEST(CanObd2, handleGetDataRequest_PID_FUEL_AIR_RATIO_1)
     EXPECT_EQ(rxFrame.data8[2], PID_FUEL_AIR_RATIO_1); // correct PID
 
     float lambda = clampF(0, Sensor::getOrZero(SensorType::Lambda1), 1.99f);
-    uint16_t scaled = (lambda * 32768);
+    uint16_t scaled = static_cast<uint16_t>((lambda * 32768));
 
     EXPECT_EQ(rxFrame.data8[3], ((scaled << 16) >> 0) & 0xff); // correct value
     EXPECT_EQ(rxFrame.data8[4], ((scaled << 16) >> 8) & 0xff); // correct value

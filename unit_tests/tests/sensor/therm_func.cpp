@@ -63,7 +63,7 @@ TEST(Thermistor, Option1) {
                                                  	});
 
 
-    setAtSensor(&engineConfiguration->auxTempSensor1, /*temp low*/-13.9, 73300, /*temp mid*/23.7, 10630 , /*temp high*/ 60, 2280);
+    setAtSensor(&engineConfiguration->auxTempSensor1, /*temp low*/-13.9f, 73300, /*temp mid*/23.7f, 10630 , /*temp high*/ 60, 2280);
 	initNewSensors();
 
 	FunctionalSensor * aatSensor = (FunctionalSensor*)Sensor::getSensorOfType(SensorType::AuxTemp1);
@@ -82,7 +82,7 @@ TEST(Thermistor, Option2) {
                                                  	});
 
 
-    setAtSensor(&engineConfiguration->auxTempSensor1, /*temp low*/-13.9, 73300, /*temp mid*/23.5, 53100 , /*temp high*/ 60, 2280);
+    setAtSensor(&engineConfiguration->auxTempSensor1, /*temp low*/-13.9f, 73300, /*temp mid*/23.5f, 53100 , /*temp high*/ 60, 2280);
 
   EXPECT_FATAL_ERROR(
 	  initNewSensors()
@@ -99,7 +99,7 @@ TEST(Thermistor, Option3) {
                                                  	});
 
 
-    setAtSensor(&engineConfiguration->auxTempSensor1, /*temp low*/-13.9, 73300, /*temp mid*/45, 3810, /*temp high*/ 90, 952);
+    setAtSensor(&engineConfiguration->auxTempSensor1, /*temp low*/-13.9f, 73300, /*temp mid*/45, 3810, /*temp high*/ 90, 952);
 
 	  initNewSensors();
 

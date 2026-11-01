@@ -8,7 +8,7 @@
 
 namespace {
     constexpr switch_input_pin_e TEST_TORQUE_REDUCTION_BUTTON_PIN = Gpio::F13;
-    constexpr float TEST_TORQUE_REDUCTION_TIME = 239.17;
+    constexpr float TEST_TORQUE_REDUCTION_TIME = 239.17f;
     constexpr float IMMEDIATELY = 0.0f;
 
     class ShiftTorqueReductionTimeConditionTest : public TestBase<> {

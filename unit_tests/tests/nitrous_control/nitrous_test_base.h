@@ -14,7 +14,7 @@ protected:
     static constexpr uint8_t TEST_MIN_CLT = 51;
     static constexpr int TEST_MAX_MAP = 45;
 
-    static constexpr float TEST_MAXIMUM_AFR = 12.3;
+    static constexpr float TEST_MAXIMUM_AFR = 12.3f;
     static constexpr float TEST_LAMBDA1 = TEST_MAXIMUM_AFR / STOICH_RATIO;
 
     static constexpr uint16_t TEST_ACTIVATION_RPM = 239;

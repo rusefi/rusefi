@@ -15,7 +15,7 @@ TEST(Vvt, TestSetPoint) {
 
 	EXPECT_CALL(targetMap, getValue(1500, 55))
 		.WillRepeatedly(Return(20)); // one from onFastCallback() then getSetpoint()
-	EXPECT_CALL(pwm, setSimplePwmDutyCycle(0.730005));
+	EXPECT_CALL(pwm, setSimplePwmDutyCycle(0.730005f));
 
 	// set up VVT config
 	engineConfiguration->vvtActivationDelayMs = 5;

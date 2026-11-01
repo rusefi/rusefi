@@ -168,7 +168,7 @@ namespace {
         initTestCltBoostCorr();
         initTestIatBoostCorr();
 
-        constexpr float TEST_LUA_OPEN_LOOP_ADD = 239.17;
+        constexpr float TEST_LUA_OPEN_LOOP_ADD = 239.17f;
         initLuaOpenLoopAdd(TEST_LUA_OPEN_LOOP_ADD);
 
         checkOpenLoop(

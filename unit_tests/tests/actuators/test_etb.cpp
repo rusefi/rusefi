@@ -544,11 +544,11 @@ TEST(etb, setpointLuaAdder) {
 	EXPECT_EQ(60, etb.getSetpoint().value_or(-1));
 
 	// Adjustment works 0.19 second after setting
-	setTimeNowUs(startTime + 0.19 * 1e6);
+	setTimeNowUs(startTime + 0.19f * 1e6);
 	EXPECT_EQ(60, etb.getSetpoint().value_or(-1));
 
 	// Adjustment resets to 0 after 0.21 second
-	setTimeNowUs(startTime + 0.21 * 1e6);
+	setTimeNowUs(startTime + 0.21f * 1e6);
 	EXPECT_EQ(50, etb.getSetpoint().value_or(-1));
 }
 
@@ -876,7 +876,7 @@ TEST(etb, tractionControlEtbDrop) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	setTable(engineConfiguration->tractionControlEtbDrop, -10);
-	setLinearCurve(engineConfiguration->tractionControlSlipBins, /*from*/0.9, /*to*/1.2, 0.05);
+	setLinearCurve(engineConfiguration->tractionControlSlipBins, /*from*/0.9f, /*to*/1.2f, 0.05f);
 	setLinearCurve(engineConfiguration->tractionControlSpeedBins, /*from*/10, /*to*/120, 5);
 
 	// Mock pedal map that's just passthru pedal -> target
@@ -899,7 +899,7 @@ TEST(etb, tractionControlEtbDrop) {
 
 	// test correct X/Y on table
 	Sensor::setMockValue(SensorType::VehicleSpeed, 40.0);
-	Sensor::setMockValue(SensorType::WheelSlipRatio, 0.9);
+	Sensor::setMockValue(SensorType::WheelSlipRatio, 0.9f);
 
 	engineConfiguration->tractionControlEtbDrop[0][0] = -15;
 	engineConfiguration->tractionControlEtbDrop[0][1] = -15;
@@ -915,7 +915,7 @@ TEST(etb, tractionControlEtbDrop) {
 	EXPECT_EQ(37, etb.getSetpoint().value_or(-1));
 
 	Sensor::setMockValue(SensorType::VehicleSpeed, 120.0);
-	Sensor::setMockValue(SensorType::WheelSlipRatio, 1.2);
+	Sensor::setMockValue(SensorType::WheelSlipRatio, 1.2f);
 
 	EXPECT_EQ(62, etb.getSetpoint().value_or(-1));
 }

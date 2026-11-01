@@ -63,7 +63,7 @@ TEST(LTFT, testLearning)
 	ITERATE_TIME(100, ltft.learn(clInput, rpm, load))
 
 	// test hiting maxAdd limit
-	ASSERT_LTFT_RESULT(ltft.getTrims(rpm, load), 1.15, 1.15);
+	ASSERT_LTFT_RESULT(ltft.getTrims(rpm, load), 1.15f, 1.15f);
 
 	// Other cells should not be affected
 	ASSERT_LTFT_RESULT(ltft.getTrims(5000, 50), 1.0, 1.0);
@@ -73,7 +73,7 @@ TEST(LTFT, testLearning)
 	ITERATE_TIME(100, ltft.learn(clInput, rpm, load))
 
 	// test hiting maxRemove limit
-	ASSERT_LTFT_RESULT(ltft.getTrims(rpm, load), 0.95, 0.95);
+	ASSERT_LTFT_RESULT(ltft.getTrims(rpm, load), 0.95f, 0.95f);
 
 	// Other cells should not be affected
 	ASSERT_LTFT_RESULT(ltft.getTrims(5000, 50), 1.0, 1.0);
@@ -131,7 +131,7 @@ TEST(LTFT, pausedDuringTwoStepLaunch)
 	engine->launchController.isPreLaunchCondition = false;
 	ITERATE_TIME(100, ltft.learn(clInput, rpm, load))
 	EXPECT_TRUE(ltft.ltftLearning);
-	ASSERT_LTFT_RESULT(ltft.getTrims(rpm, load), 1.15, 1.15);
+	ASSERT_LTFT_RESULT(ltft.getTrims(rpm, load), 1.15f, 1.15f);
 }
 
 TEST(LTFT, testSlowCallbackLoadError) {
