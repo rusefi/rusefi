@@ -9,6 +9,11 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}
     permissions:
+      # A permissions block resets every unlisted scope to none. contents: read is
+      # required for checkout on a private repository; actions: read lets the coverage
+      # report download the baseline artifact from an earlier run.
+      contents: read
+      actions: read
       pull-requests: write
 
     strategy:
