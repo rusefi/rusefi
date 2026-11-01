@@ -595,7 +595,10 @@ todo: spllit into smaller tests?
         assertEquals(model.getMenus().size(), ((DefaultMutableTreeNode) tree.getModel().getRoot()).getChildCount());
 
         // 2. Search for "setup limit"
-        searchField.setText("setup limit");
+        // Every Swing mutation below runs on the EDT: the widget reacts to a selection with invokeLater,
+        // and a selection made from the test thread races that runnable inside the selection model's
+        // listener loop (a null selection array inside BasicTreeUI, seen as a flaky NPE on CI).
+        SwingUtilities.invokeAndWait(() -> searchField.setText("setup limit"));
         DefaultMutableTreeNode filteredRoot = (DefaultMutableTreeNode) tree.getModel().getRoot();
         // Should only have "Setup" at top level
         assertEquals(1, filteredRoot.getChildCount());
@@ -607,9 +610,9 @@ todo: spllit into smaller tests?
         assertNotNull(limitsNode);
 
         // 3. Reset search by clicking (simulated)
-        tree.setSelectionPath(new TreePath(limitsNode.getPath()));
+        SwingUtilities.invokeAndWait(() -> tree.setSelectionPath(new TreePath(limitsNode.getPath())));
         // Selection listener should trigger search reset
-            SwingUtilities.invokeAndWait(() -> {});
+        SwingUtilities.invokeAndWait(() -> {});
         assertTrue(searchField.getText().isEmpty(), "Search field should be empty after click");
         assertEquals(model.getMenus().size(), ((DefaultMutableTreeNode) tree.getModel().getRoot()).getChildCount(), "Tree should be fully restored");
 
@@ -621,34 +624,19 @@ todo: spllit into smaller tests?
         assertTrue(tree.isExpanded(new TreePath(fuelNode.getPath())), "Fuel node should be expanded");
 
         // 4. Second search
-        searchField.setText("fuel");
-        try {
-            SwingUtilities.invokeAndWait(() -> {});
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        SwingUtilities.invokeAndWait(() -> searchField.setText("fuel"));
         filteredRoot = (DefaultMutableTreeNode) tree.getModel().getRoot();
         assertTrue(filteredRoot.getChildCount() > 0, "Filtered root should have children");
         // Verify we found "Fuel"
         assertNotNull(findNode(filteredRoot, "Fuel"), "Should find 'Fuel' in second search");
 
         // 5. Search for something non-existent
-        searchField.setText("nonexistentstuff");
-        try {
-            SwingUtilities.invokeAndWait(() -> {});
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        SwingUtilities.invokeAndWait(() -> searchField.setText("nonexistentstuff"));
         filteredRoot = (DefaultMutableTreeNode) tree.getModel().getRoot();
         assertEquals(0, filteredRoot.getChildCount(), "Should have no results");
 
         // 6. Backspace/Remove some text
-        searchField.setText("fuel");
-        try {
-            SwingUtilities.invokeAndWait(() -> {});
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        SwingUtilities.invokeAndWait(() -> searchField.setText("fuel"));
         filteredRoot = (DefaultMutableTreeNode) tree.getModel().getRoot();
         assertTrue(filteredRoot.getChildCount() > 0, "Should have results again");
     }
