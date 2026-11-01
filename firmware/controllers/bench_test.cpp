@@ -890,6 +890,11 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 			setWidebandSensorType(hwIndex, sensType);
 		}
 		break;
+	case TS_WIDEBAND_SET_BITRATE_BY_ID:
+		if (!running) {
+			setWidebandBitrate(index >> 8, index & 0xff);
+		}
+		break;
 	case TS_WIDEBAND_PING_BY_ID:
 		pingWideband(index >> 8);
 		break;
