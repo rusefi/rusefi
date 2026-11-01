@@ -6,6 +6,10 @@ name: Update rusEFI Reference
 
 on:
   workflow_call:
+    secrets:
+      MY_REPO_PAT:
+        description: 'Token for ext/rusefi submodule (callers normally use secrets: inherit); empty is fine for public submodules'
+        required: false
 
 jobs:
   update-git:
@@ -18,8 +22,17 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      # [tag:submodule_auth] see .github/actions/submodule-init/action.yml; checkout's token covers the
+      # superproject only, so both steps that touch ext/rusefi carry the credentials themselves
       - name: Git Checkout Submodules
+        env:
+          SUBMODULES_TOKEN: ${{ secrets.MY_REPO_PAT }}
         run: |
+          if [ -n "$SUBMODULES_TOKEN" ]; then
+            export GIT_CONFIG_COUNT=1
+            export GIT_CONFIG_KEY_0="url.https://x-access-token:${SUBMODULES_TOKEN}@github.com/.insteadOf"
+            export GIT_CONFIG_VALUE_0="https://github.com/"
+          fi
           git submodule update --init --depth=1 ext/rusefi
 
       - name: Dump GitHub context
@@ -30,8 +43,15 @@ jobs:
       - name: Git Update Submodules
         env:
           CALLER_REF: ${{ github.ref }}
+          SUBMODULES_TOKEN: ${{ secrets.MY_REPO_PAT }}
         run: |
           set -euo pipefail
+          # [tag:submodule_auth]
+          if [ -n "$SUBMODULES_TOKEN" ]; then
+            export GIT_CONFIG_COUNT=1
+            export GIT_CONFIG_KEY_0="url.https://x-access-token:${SUBMODULES_TOKEN}@github.com/.insteadOf"
+            export GIT_CONFIG_VALUE_0="https://github.com/"
+          fi
           case "$CALLER_REF" in
             refs/heads/*) caller_branch="${CALLER_REF#refs/heads/}" ;;
             *) echo "Expected a branch ref, got '$CALLER_REF'" >&2; exit 1 ;;
