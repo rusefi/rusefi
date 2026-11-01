@@ -1,4 +1,5 @@
 #!/bin/bash
+# [tag:submodule_auth] in GitHub Actions call this through .github/actions/submodule-init (or custom-board-build's submodule_token), which supplies the credentials.
 
         git submodule update --init --depth=1 .github/workflows/hw-ci/gethla
         git submodule update --init --depth=1 firmware/libfirmware

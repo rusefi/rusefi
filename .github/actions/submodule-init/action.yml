@@ -1,0 +1,36 @@
+# [tag:submodule_auth] Shared entry point for misc/git_scripts/common_submodule_init*.sh.
+# actions/checkout v6+ attaches its token only to the superproject's gitdir (includeIf), so the
+# `git submodule update` calls in those scripts get no credentials of their own. When a token is
+# given, this action passes it to git through GIT_CONFIG_* environment variables for this step only,
+# for github.com submodule URLs; nothing is written to .git/config (matters on the self-hosted HW CI
+# runner). Public submodules need no token: with an empty one the scripts run unchanged.
+# Every caller of the scripts carries this tag; custom-board-build/action.yaml inlines the same logic.
+name: 'rusEFI Submodule Init'
+description: 'Initialize the submodules used by CI builds, optionally with credentials'
+inputs:
+  token:
+    description: 'Optional token for submodule fetches (normally secrets.MY_REPO_PAT); empty is fine for public submodules'
+    required: false
+    default: ''
+  chibios:
+    description: "'true' runs common_submodule_init.sh, 'false' runs common_submodule_init_without_chibios.sh"
+    required: false
+    default: 'true'
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout Submodules
+      shell: bash
+      env:
+        SUBMODULES_TOKEN: ${{ inputs.token }}
+      run: |
+        if [ -n "$SUBMODULES_TOKEN" ]; then
+          export GIT_CONFIG_COUNT=1
+          export GIT_CONFIG_KEY_0="url.https://x-access-token:${SUBMODULES_TOKEN}@github.com/.insteadOf"
+          export GIT_CONFIG_VALUE_0="https://github.com/"
+        fi
+        if [ "${{ inputs.chibios }}" = "true" ]; then
+          misc/git_scripts/common_submodule_init.sh
+        else
+          misc/git_scripts/common_submodule_init_without_chibios.sh
+        fi
