@@ -40,8 +40,8 @@ TEST(fuel, wallWettingTelemetryMass) {
 	EXPECT_NEAR(0.004f, wall.getWallFuel(), 1e-7f);
 	EXPECT_NEAR(4, getOutputValueByName("wallFuel"), 1e-5f);
 	EXPECT_NEAR(4, getOutputValueByName("wallFuelCorrection"), 1e-5f);
-	EXPECT_FLOAT_EQ(EFI_ERROR_CODE, getOutputValueByName("wallFuelAmount"));
-	EXPECT_FLOAT_EQ(EFI_ERROR_CODE, getOutputValueByName("wallFuelCorrectionValue"));
+	EXPECT_FLOAT_EQ(static_cast<float>(EFI_ERROR_CODE), getOutputValueByName("wallFuelAmount"));
+	EXPECT_FLOAT_EQ(static_cast<float>(EFI_ERROR_CODE), getOutputValueByName("wallFuelCorrectionValue"));
 
 	int matches = 0;
 	MLG::forEachField([&](const MLG::Entries::Field& field) {

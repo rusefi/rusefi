@@ -19,7 +19,7 @@ const ConfigParameter* findParamByHash(uint32_t hash) {
 
 float getConfigValueByHash(const int hash) {
 	const ConfigParameter* param = findParamByHash((uint32_t)hash);
-	if (!param || !param->getter) return EFI_ERROR_CODE;
+	if (!param || !param->getter) return static_cast<float>(EFI_ERROR_CODE);
 	return param->getter();
 }
 

@@ -102,7 +102,7 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
                 additionalHeaders +
                 "float getOutputValueByHash(const int hash) {\n" +
                 fullSwitch +
-                getterBody + "\treturn EFI_ERROR_CODE;\n" +
+                getterBody + "\treturn static_cast<float>(EFI_ERROR_CODE);\n" +
                     "}\n" +
                     "float getOutputValueByName(const char *name) {\n" +
                     "\tint hash = djb2lowerCase(name);\n" +

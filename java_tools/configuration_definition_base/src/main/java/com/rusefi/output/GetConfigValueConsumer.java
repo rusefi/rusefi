@@ -32,7 +32,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
                 "#include \"value_lookup.h\"\n";
     }
 
-    static final String GET_METHOD_FOOTER = "\treturn EFI_ERROR_CODE;\n" +
+    static final String GET_METHOD_FOOTER = "\treturn static_cast<float>(EFI_ERROR_CODE);\n" +
         "}\n" +
         "float getConfigValueByName(const char *name) {\n" +
             "\tint hash = djb2lowerCase(name);\n"

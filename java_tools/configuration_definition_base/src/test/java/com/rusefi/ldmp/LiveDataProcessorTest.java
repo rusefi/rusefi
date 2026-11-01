@@ -215,7 +215,7 @@ public class LiveDataProcessorTest {
                 "\t\t\treturn engine->wbo2.esr;\n" +
                 "#endif\n" +
                 "\t}\n" +
-                "\treturn EFI_ERROR_CODE;\n" +
+                "\treturn static_cast<float>(EFI_ERROR_CODE);\n" +
                 "}\n" +
                 "float getOutputValueByName(const char *name) {\n" +
                 "\tint hash = djb2lowerCase(name);\n" +
