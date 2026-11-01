@@ -23,7 +23,7 @@
 void setFordEscortGt() {
 	engineConfiguration->trigger.type = trigger_type_e::TT_MAZDA_DOHC_1_4;
 
-	engineConfiguration->displacement = 1.839;
+	engineConfiguration->displacement = 1.839f;
 	setAlgorithm(engine_load_mode_e::LM_SPEED_DENSITY);
 
 	// in case of DOHC distributor we have two signals

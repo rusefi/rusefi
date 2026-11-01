@@ -53,7 +53,7 @@ void initializeVvt6G72(TriggerWaveform *s) {
     //happy ratio 3.875000 @ 7
 
     // real working ranges for all of the engine states
-    s->setTriggerSynchronizationGap3(0, 1.3, 3.2);
+    s->setTriggerSynchronizationGap3(0, 1.3f, 3.2f);
     s->setTriggerSynchronizationGap3(1, 0.3f, 0.66f);
     s->setTriggerSynchronizationGap3(2, 1.3f, 3.2f);
     s->setTriggerSynchronizationGap3(3, 0.3f, 0.66f);

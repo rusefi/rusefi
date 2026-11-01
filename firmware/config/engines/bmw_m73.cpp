@@ -90,7 +90,7 @@ void m73engine() {
 	engineConfiguration->injector.flow = 180; // cc/min, who knows if this number is real - no good source of info
 
 	engineConfiguration->cylindersCount = 12;
-	engineConfiguration->displacement = 5.4;
+	engineConfiguration->displacement = 5.4f;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_BMW);
 	strcpy(engineConfiguration->engineCode, "M73");
 	engineConfiguration->firingOrder = FO_1_7_5_11_3_9_6_12_2_8_4_10;
@@ -195,6 +195,6 @@ void setEngineBMW_M73_Proteus() {
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	setProteusHitachiEtbDefaults();
 #endif // EFI_ELECTRONIC_THROTTLE_BODY
- 	setPPSCalibration(0.73, 4.0, 0.34, 1.86);
+ 	setPPSCalibration(0.73f, 4.0f, 0.34f, 1.86f);
 }
 #endif // HW_PROTEUS

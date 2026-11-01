@@ -142,7 +142,7 @@ void configureQuickStartSenderWheel(TriggerWaveform *s) {
 
 	// our preference is to sync not too close to crank sync point
 	s->setTriggerSynchronizationGap(0.645f);
-	s->setSecondTriggerSynchronizationGap(1.556);
+	s->setSecondTriggerSynchronizationGap(1.556f);
 
 	s->addToothRiseFall(90, /* width*/ 70);
 	s->addToothRiseFall(130, /* width*/ 20);
@@ -182,7 +182,7 @@ void configure12ToothCrank(TriggerWaveform* s) {
 
 void configure3ToothCrank(TriggerWaveform* s) {
 	s->initialize(FOUR_STROKE_THREE_TIMES_CRANK_SENSOR, SyncEdge::RiseOnly);
-  commonSymmetrical(s, 3, 0.5, 1.4);
+  commonSymmetrical(s, 3, 0.5f, 1.4f);
 }
 
 void configure6ToothCrank(TriggerWaveform* s) {

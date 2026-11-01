@@ -25,9 +25,9 @@ void setMazdaMiata96() {
 
 	engineConfiguration->idleMode = idle_mode_e::IM_AUTO;
 	// below 20% this valve seems to be opening for fail-safe idle air
-	engineConfiguration->idleRpmPid.pFactor = 0.0065;
-	engineConfiguration->idleRpmPid.iFactor = 0.3;
-	engineConfiguration->idleRpmPid.dFactor = 0.002;
+	engineConfiguration->idleRpmPid.pFactor = 0.0065f;
+	engineConfiguration->idleRpmPid.iFactor = 0.3f;
+	engineConfiguration->idleRpmPid.dFactor = 0.002f;
 	engineConfiguration->idleRpmPid.minValue = -20;
 	engineConfiguration->idleRpmPid.maxValue = 20;
 	engineConfiguration->idlerpmpid_iTermMin = -15;
@@ -39,7 +39,7 @@ void setMazdaMiata96() {
 	engineConfiguration->iacByTpsTaper = 6;
 	engineConfiguration->useIdleTimingPidControl = true;
 
-	engineConfiguration->wwaeTau = 0.1;
+	engineConfiguration->wwaeTau = 0.1f;
 	setTable(config->alternatorVoltageTargetTable, 14.2);
 	setArrayValues(config->cltCrankingCorr, 36);
 	setArrayValues(config->afterCrankingIACtaperDuration, 189);
@@ -48,7 +48,7 @@ void setMazdaMiata96() {
 	engineConfiguration->ignitionDwellForCrankingMs = 4;
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
 
-	engineConfiguration->displacement = 1.839;
+	engineConfiguration->displacement = 1.839f;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);
 	strcpy(engineConfiguration->engineCode, "NA8");
 

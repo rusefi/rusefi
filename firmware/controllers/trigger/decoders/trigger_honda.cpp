@@ -14,7 +14,7 @@ void configureHondaCbr600(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
   s->tdcPosition = 0; // todo: hard-code TDC position once we know it
-  s->setTriggerSynchronizationGap2(/*from*/3.9, /*to*/8);
+  s->setTriggerSynchronizationGap2(/*from*/3.9f, /*to*/8);
 
 	s->addEvent720(350.0f, TriggerValue::FALL);
 	s->addEvent720(360.0f, TriggerValue::RISE);
@@ -57,7 +57,7 @@ void configureHondaK_4_1(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
 	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 1.5, 4.5);	// nominal 2.27
-	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 0.1, 0.5);	// nominal 0.28
+	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 0.1f, 0.5f);	// nominal 0.28
 
 	angle_t end = 70.5;
 	int w = 15;
@@ -100,9 +100,9 @@ void configureHondaJ30A2_24_1_1(TriggerWaveform *s) {
 
     s->tdcPosition = 0;
 
- s->setTriggerSynchronizationGap3(/*gapIndex*/0, 1.6, 4);
+ s->setTriggerSynchronizationGap3(/*gapIndex*/0, 1.6f, 4);
   for (size_t i = 1 ; i < count ; i++) {
-    s->setTriggerSynchronizationGap3(/*gapIndex*/i, 0.65, 1.4);
+    s->setTriggerSynchronizationGap3(/*gapIndex*/i, 0.65f, 1.4f);
   }
-  s->setTriggerSynchronizationGap3(/*gapIndex*/count, 0.2, 0.55);
+  s->setTriggerSynchronizationGap3(/*gapIndex*/count, 0.2f, 0.55f);
   }

@@ -12,7 +12,7 @@ void setMercedesTwoSegment(TriggerWaveform* s) {
 
 	s->addToothRiseFall(360);
 
-	s->setTriggerSynchronizationGap(1.35);
-	s->setSecondTriggerSynchronizationGap(2.84);
-	s->setThirdTriggerSynchronizationGap(0.26);
+	s->setTriggerSynchronizationGap(1.35f);
+	s->setSecondTriggerSynchronizationGap(2.84f);
+	s->setThirdTriggerSynchronizationGap(0.26f);
 }

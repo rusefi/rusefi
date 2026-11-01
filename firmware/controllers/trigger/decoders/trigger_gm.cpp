@@ -25,7 +25,7 @@ void configureGm60_2_2_2(TriggerWaveform *s) {
 	s->isSynchronizationNeeded = false;
 	s->isSecondWheelCam = true;
 
-	int offset = 1;
+	float offset = 1;
 
 	for (int i=0;i<12;i++) {
 		offset = addTooth(offset, s);
@@ -66,8 +66,8 @@ void configureGmTriggerWaveform(TriggerWaveform *s) {
 
 static int gm_tooth_pair(float startAngle, bool isShortLong, TriggerWaveform* s, float shortToothWidth)
 {
-	int window = (isShortLong ? shortToothWidth : (15 - shortToothWidth));
-	int end = startAngle + 15;
+	int window = static_cast<int>(isShortLong ? shortToothWidth : (15 - shortToothWidth));
+	int end = static_cast<int>(startAngle + 15);
 
 	s->addEvent360(startAngle + window, TriggerValue::RISE);
 	s->addEvent360(end, TriggerValue::FALL);

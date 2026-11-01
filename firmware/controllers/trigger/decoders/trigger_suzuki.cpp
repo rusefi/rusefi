@@ -60,7 +60,7 @@ void initializeSuzukiG13B(TriggerWaveform *s) {
 	s->addEvent720(720 - w, TriggerValue::RISE);
 	s->addEvent720(720, TriggerValue::FALL);
 
-	s->setTriggerSynchronizationGap(0.22);
+	s->setTriggerSynchronizationGap(0.22f);
 	s->setSecondTriggerSynchronizationGap(1);
 }
 
@@ -72,7 +72,7 @@ void initializeSuzukiG16B(TriggerWaveform *s) {
 	// Calculate gaps: 15,40,35,40,15,35,55,35,40,15,35 (degrees)
 	// Largest is 55° between 180-235, one before is 35°
 	// Ratio largest/previous 1.57
-	s->setTriggerSynchronizationGap(1.57);
+	s->setTriggerSynchronizationGap(1.57f);
 }
 
 void initializeSuzukiK6A(TriggerWaveform *s) {
@@ -99,6 +99,6 @@ void initializeSuzukiK6A(TriggerWaveform *s) {
 	// a bit lame: we end with rising front of first tooth
 	s->addEvent360(360, TriggerValue::RISE);
 
-	s->setTriggerSynchronizationGap(4.47);
-	s->setSecondTriggerSynchronizationGap(0.65);
+	s->setTriggerSynchronizationGap(4.47f);
+	s->setSecondTriggerSynchronizationGap(0.65f);
 }

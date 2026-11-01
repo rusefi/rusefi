@@ -22,7 +22,7 @@ void setMercedesM111EngineConfiguration() {
 	engineConfiguration->cylindersCount = 4;
 	engineConfiguration->firingOrder = FO_1_3_4_2;
 	engineConfiguration->displacement = 2.295f;
-	engineConfiguration->cylinderBore = 89.9;
+	engineConfiguration->cylinderBore = 89.9f;
 	config->dynoCarCarMassKg = 1250;
 	engineConfiguration->injector.flow = 196;
 	engineConfiguration->enableCanVss = true;
@@ -49,12 +49,12 @@ void setMercedesM111EngineConfiguration() {
     // todo: i wonder if these custom IAT and CLT curves are effectively same?
     setAtSensor(&engineConfiguration->clt, /*temp low*/0, 5750, /*temp mid*/30, 1750, /*temp high*/ 50, 750);
 
-	setCustomMap(/*lowValue*/ 20, 0.3, 250, 4.65);
+	setCustomMap(/*lowValue*/ 20, 0.3f, 250, 4.65f);
 
 	engineConfiguration->idle.solenoidPin = Gpio::Unassigned;
-	engineConfiguration->etb.pFactor = 5.12;
+	engineConfiguration->etb.pFactor = 5.12f;
 	engineConfiguration->etb.iFactor = 47;
-	engineConfiguration->etb.dFactor = 0.088;
+	engineConfiguration->etb.dFactor = 0.088f;
 	engineConfiguration->etb.offset = 0;
 
     strcpy(engineConfiguration->gpPwmNote[0], "SC Bypass");
@@ -81,7 +81,7 @@ void setMercedesM111EngineConfiguration() {
     // note how these numbers are very flipped hyundai154 defaults?
     setTPS1Calibration(891, 69, 98, 926);
     // honda cable position sensor
-    setPPSCalibration(0.38, 4.77, 4.64, 2.47);
+    setPPSCalibration(0.38f, 4.77f, 4.64f, 2.47f);
 
 #if HW_PROTEUS && EFI_PROD_CODE
     engineConfiguration->triggerInputPins[0] = PROTEUS_VR_1;

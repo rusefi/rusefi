@@ -6,7 +6,7 @@ void setMitsubishi3A92() {
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->cylindersCount = 3.0;
-	engineConfiguration->displacement = 1.2;
+	engineConfiguration->displacement = 1.2f;
     engineConfiguration->globalTriggerAngleOffset = -360.0;
 	engineConfiguration->vvtMode[0] = VVT_MITSUBISHI_3A92;
     engineConfiguration->vvtOffsets[0] = 316.0;

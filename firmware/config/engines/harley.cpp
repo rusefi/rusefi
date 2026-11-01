@@ -15,7 +15,7 @@ static void harleyEngine() {
  */
 void setHarley() {
     harleyEngine();
-    engineConfiguration->displacement = 1.9;
+    engineConfiguration->displacement = 1.9f;
     engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
     engineConfiguration->injectionMode = IM_SEQUENTIAL;
     for (size_t i = engineConfiguration->cylindersCount;i < MAX_CYLINDER_COUNT;i++) {
@@ -43,9 +43,9 @@ void setHarley() {
   engineConfiguration->gapTrackingLengthOverride = 3;
   engineConfiguration->triggerGapOverrideFrom[0] = 0.75;
   engineConfiguration->triggerGapOverrideTo[0] = 1.25;
-  engineConfiguration->triggerGapOverrideFrom[1] = 0.05; // this one is custom
+  engineConfiguration->triggerGapOverrideFrom[1] = 0.05f; // this one is custom
   engineConfiguration->triggerGapOverrideTo[1] = 0.5;
-  engineConfiguration->triggerGapOverrideFrom[2] = 1.850; // this one is custom
+  engineConfiguration->triggerGapOverrideFrom[2] = 1.850f; // this one is custom
   engineConfiguration->triggerGapOverrideTo[2] = 6;
 
 	engineConfiguration->vvtMode[0] = VVT_MAP_V_TWIN;
@@ -53,7 +53,7 @@ void setHarley() {
 	engineConfiguration->mainRelayPin = Gpio::Unassigned;
 	engineConfiguration->mapCamDetectionAnglePosition = 50;
 
-	setCustomMap(/*lowValue*/ 20, /*mapLowValueVoltage*/ 0.79, /*highValue*/ 101.3, /*mapHighValueVoltage*/ 4);
+	setCustomMap(/*lowValue*/ 20, /*mapLowValueVoltage*/ 0.79f, /*highValue*/ 101.3f, /*mapHighValueVoltage*/ 4);
 
 #if HW_PROTEUS && EFI_PROD_CODE
     engineConfiguration->acrPin = Gpio::PROTEUS_IGN_8;

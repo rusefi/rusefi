@@ -44,7 +44,7 @@ static inline void commonPassatB6() {
 	strcpy(engineConfiguration->engineCode, "BPY");
 	strcpy(engineConfiguration->vehicleName, "test");
 
-	setPPSCalibration(0.36, 2.13, 0.73, 4.30);
+	setPPSCalibration(0.36f, 2.13f, 0.73f, 4.30f);
 
 	engineConfiguration->invertCamVVTSignal = true;
 
@@ -119,9 +119,9 @@ static const float hardCodedFreqBins[] = {139,
 
 // MAF grams per second
 static const float hardCodedGperSValues[] {
-		3.58,
+		3.58f,
 		4.5,
-		6.7,
+		6.7f,
 		11,
 		22,
 		25,

@@ -382,16 +382,16 @@ static void setMazdaMiataEngineNB2Defaults() {
 
 	// Vehicle speed/gears
 	engineConfiguration->totalGearsCount = 6;
-	engineConfiguration->gearRatio[0] = 3.760;
-	engineConfiguration->gearRatio[1] = 2.269;
-	engineConfiguration->gearRatio[2] = 1.646;
-	engineConfiguration->gearRatio[3] = 1.257;
+	engineConfiguration->gearRatio[0] = 3.760f;
+	engineConfiguration->gearRatio[1] = 2.269f;
+	engineConfiguration->gearRatio[2] = 1.646f;
+	engineConfiguration->gearRatio[3] = 1.257f;
 	engineConfiguration->gearRatio[4] = 1.000;
-	engineConfiguration->gearRatio[5] = 0.843;
+	engineConfiguration->gearRatio[5] = 0.843f;
 
 	// These may need to change based on your real car
 	engineConfiguration->driveWheelRevPerKm = 538;
-	engineConfiguration->finalGearRatio = 3.909;
+	engineConfiguration->finalGearRatio = 3.909f;
 }
 #endif // HW_HELLEN
 
@@ -417,7 +417,7 @@ void setMiataNB2_Proteus_TCU() {
 	engineConfiguration->vehicleSpeedSensorInputPin = PROTEUS_VR_2;
 
 	engineConfiguration->driveWheelRevPerKm = 544;	// 205/50R15
-	engineConfiguration->vssGearRatio = 4.3;
+	engineConfiguration->vssGearRatio = 4.3f;
 	engineConfiguration->vssToothCount = 22;
 
 	// "Highside 2"
@@ -463,15 +463,15 @@ void setMazdaMiataNB1() {
 
 	// Vehicle speed/gears
 	engineConfiguration->totalGearsCount = 5;
-	engineConfiguration->gearRatio[0] = 3.136;
-	engineConfiguration->gearRatio[1] = 1.888;
-	engineConfiguration->gearRatio[2] = 1.330;
+	engineConfiguration->gearRatio[0] = 3.136f;
+	engineConfiguration->gearRatio[1] = 1.888f;
+	engineConfiguration->gearRatio[2] = 1.330f;
 	engineConfiguration->gearRatio[3] = 1.000;
-	engineConfiguration->gearRatio[4] = 0.814;
+	engineConfiguration->gearRatio[4] = 0.814f;
 
 	// These may need to change based on your real car
 	engineConfiguration->driveWheelRevPerKm = 551;
-	engineConfiguration->finalGearRatio = 4.3;
+	engineConfiguration->finalGearRatio = 4.3f;
 }
 
 void setMazdaMiataNB2() {

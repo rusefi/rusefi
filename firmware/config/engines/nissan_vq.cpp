@@ -48,7 +48,7 @@ static void setNissanVqEngineConfig() {
 	// VVT closed loop
 	engineConfiguration->auxPid[0].pFactor = 2;
 	engineConfiguration->auxPid[0].iFactor = 0.5;
-	engineConfiguration->auxPid[0].dFactor = 0.05;
+	engineConfiguration->auxPid[0].dFactor = 0.05f;
 	engineConfiguration->auxPid[0].offset = 50;
 //	engineConfiguration->auxPid[0].minValue = 20;
 //	engineConfiguration->auxPid[0].maxValue = 90;
@@ -81,7 +81,7 @@ void setHellen121nissanAltimaN16() {
 	// https://en.wikipedia.org/wiki/Nissan_QG_engine
 	// https://en.wikipedia.org/wiki/N-VCT
 	setHellen121nissanQR();
-	engineConfiguration->displacement = 1.8;
+	engineConfiguration->displacement = 1.8f;
 	strcpy(engineConfiguration->engineCode, "N16");
 
 }

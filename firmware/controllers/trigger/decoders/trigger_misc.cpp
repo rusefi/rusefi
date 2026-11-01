@@ -41,13 +41,13 @@ void configureTriTach(TriggerWaveform * s) {
 	float angleDown = engineCycle / totalTeethCount * (0 + (1 - toothWidth));
 	float angleUp = engineCycle / totalTeethCount * (0 + 1);
 	s->addEventClamped(offset + angleDown, TriggerValue::RISE, TriggerWheel::T_PRIMARY, NO_LEFT_FILTER, NO_RIGHT_FILTER);
-	s->addEventClamped(offset + angleDown + 0.1, TriggerValue::RISE, TriggerWheel::T_SECONDARY, NO_LEFT_FILTER, NO_RIGHT_FILTER);
+	s->addEventClamped(offset + angleDown + 0.1f, TriggerValue::RISE, TriggerWheel::T_SECONDARY, NO_LEFT_FILTER, NO_RIGHT_FILTER);
 	s->addEventClamped(offset + angleUp, TriggerValue::FALL, TriggerWheel::T_PRIMARY, NO_LEFT_FILTER, NO_RIGHT_FILTER);
-	s->addEventClamped(offset + angleUp + 0.1, TriggerValue::FALL, TriggerWheel::T_SECONDARY, NO_LEFT_FILTER, NO_RIGHT_FILTER);
+	s->addEventClamped(offset + angleUp + 0.1f, TriggerValue::FALL, TriggerWheel::T_SECONDARY, NO_LEFT_FILTER, NO_RIGHT_FILTER);
 
 
 	addSkippedToothTriggerEvents(TriggerWheel::T_SECONDARY, s, totalTeethCount, /* skipped */ 0, toothWidth, offset, engineCycle,
-			1.0 * FOUR_STROKE_ENGINE_CYCLE / 135,
+			1.0f * FOUR_STROKE_ENGINE_CYCLE / 135,
 			NO_RIGHT_FILTER);
 }
 
@@ -74,7 +74,7 @@ void configureDaihatsu3cyl(TriggerWaveform * s) {
 
 void configureDaihatsu4cyl(TriggerWaveform * s) {
 	daihatsu(s, 4);
-	s->setTriggerSynchronizationGap(0.17);
+	s->setTriggerSynchronizationGap(0.17f);
 }
 
 void configureBarra3plus1cam(TriggerWaveform *s) {

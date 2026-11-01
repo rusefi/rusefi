@@ -75,7 +75,7 @@ void setGmSbc() {
 	engineConfiguration->cylindersCount = 8;
   // that's original firing order before gen 3
 	engineConfiguration->firingOrder = FO_1_8_4_3_6_5_7_2;
-	engineConfiguration->displacement = 5.2;
+	engineConfiguration->displacement = 5.2f;
 
     // see engine sniffer at https://github.com/rusefi/rusefi/issues/5353
     // if injectors are wired in groups of four best to use channels 1 and 4
@@ -183,7 +183,7 @@ static void setGmGdi() {
 	setGmCltSensor(&engineConfiguration->clt);
 #endif // HW_HELLEN_8CHAN
 
-  setPPSCalibration(1, 4.25, 0.5, 2.14);
+  setPPSCalibration(1, 4.25f, 0.5f, 2.14f);
 
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_GM);
 	engineConfiguration->etbFunctions[1] = DC_None;
@@ -251,13 +251,13 @@ void setGmLtg() {
 void setGmSbcGen5() {
   setGmEcotec3();
   engineConfiguration->hpfpCamLobes = 3;
-  engineConfiguration->displacement = 5.3;
+  engineConfiguration->displacement = 5.3f;
 	engineConfiguration->cylindersCount = 8;
 	engineConfiguration->firingOrder = FO_1_8_7_2_6_5_4_3;
 	engineConfiguration->map.sensor.type = MT_GM_1_BAR;
 
   // engineConfiguration->hpfpPumpVolume = 0.623; // LT4
-	engineConfiguration->hpfpPumpVolume = 0.49; // cc per stroke
+	engineConfiguration->hpfpPumpVolume = 0.49f; // cc per stroke
 
   // LT 17.7 g/sec at 100bar which 1440
   // todo: real flow!

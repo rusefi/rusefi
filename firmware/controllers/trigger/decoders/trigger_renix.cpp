@@ -89,7 +89,7 @@ void initializeJeepRenix66_2_2(TriggerWaveform *s) {
 
 	// 6 cylinder = 66 tooth wheel, missing 2 teeth in 3 spots
 	JeepRenix66_2_2(s, 3, 66, 2);
-	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 0.2, 0.5);
+	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 0.2f, 0.5f);
 	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 2, 4);
-	s->setTriggerSynchronizationGap3(/*gapIndex*/2, 0.6, 1.4);
+	s->setTriggerSynchronizationGap3(/*gapIndex*/2, 0.6f, 1.4f);
 }

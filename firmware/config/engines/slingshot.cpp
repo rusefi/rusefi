@@ -22,7 +22,7 @@ void setSlingshot() {
     engineConfiguration->globalTriggerAngleOffset = 110;
 
 	// GM TMAP is recommended
-	setCustomMap(/*lowValue*/ 20, 0.3, 250, 4.65);
+	setCustomMap(/*lowValue*/ 20, 0.3f, 250, 4.65f);
 
 #if HW_PROTEUS
   engineConfiguration->triggerInputPins[0] = PROTEUS_VR_1;

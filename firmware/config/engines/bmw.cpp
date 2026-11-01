@@ -52,8 +52,8 @@ void bmwN52() {
     // TPS/PPS calibration captured from a real N52 throttle body + pedal (see "super N52" reference tune).
     // TPS min/max are stored as 10-bit ADC counts, so convert the measured volts.
     // Throttle 1: primary min/max, then secondary min/max.
-    setTPS1Calibration(convertVoltageTo10bitADC(4.545), convertVoltageTo10bitADC(0.58),
-                       convertVoltageTo10bitADC(0.75), convertVoltageTo10bitADC(4.72));
+    setTPS1Calibration(convertVoltageTo10bitADC(4.545f), convertVoltageTo10bitADC(0.58f),
+                       convertVoltageTo10bitADC(0.75f), convertVoltageTo10bitADC(4.72f));
     // Pedal: primary up/WOT, then secondary up/WOT (volts).
-    setPPSCalibration(0.625, 2.230, 0.947, 4.197);
+    setPPSCalibration(0.625f, 2.230f, 0.947f, 4.197f);
 }

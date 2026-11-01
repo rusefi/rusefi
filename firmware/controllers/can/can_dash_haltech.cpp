@@ -18,10 +18,10 @@ void canDashboardHaltech(CanCycle cycle) {
 		/* 0x360 - 50Hz rate */
 		{
 			CanTxMessage msg(CanCategory::NBC, 0x360, 8, DEFAULT_BUS_INDEX);
-			msg.setShortValueMsb(Sensor::getOrZero(SensorType::Rpm), 0);
-			msg.setShortValueMsb(Sensor::getOrZero(SensorType::Map) * 10, 2);
+			msg.setShortValueMsb(static_cast<uint16_t>(Sensor::getOrZero(SensorType::Rpm)), 0);
+			msg.setShortValueMsb(static_cast<uint16_t>(Sensor::getOrZero(SensorType::Map) * 10), 2);
 			/* TPS  y = x/10 */
-			msg.setShortValueMsb(Sensor::getOrZero(SensorType::Tps1) * 10, 4);
+			msg.setShortValueMsb(static_cast<uint16_t>(Sensor::getOrZero(SensorType::Tps1) * 10), 4);
 			/* Coolant pressure */
 			msg[6] = 0;
 			msg[7] = 0;
@@ -31,11 +31,11 @@ void canDashboardHaltech(CanCycle cycle) {
 		{
 			CanTxMessage msg(CanCategory::NBC, 0x361, 8, DEFAULT_BUS_INDEX);
 			/* Fuel pressure */
-			msg.setShortValueMsb((Sensor::getOrZero(SensorType::FuelPressureLow) + STD_ATMOSPHERE) * 10, 0);
+			msg.setShortValueMsb(static_cast<uint16_t>((Sensor::getOrZero(SensorType::FuelPressureLow) + STD_ATMOSPHERE) * 10), 0);
 			/* Oil pressure */
-			msg.setShortValueMsb((Sensor::getOrZero(SensorType::OilPressure) + STD_ATMOSPHERE) * 10, 2);
+			msg.setShortValueMsb(static_cast<uint16_t>((Sensor::getOrZero(SensorType::OilPressure) + STD_ATMOSPHERE) * 10), 2);
 			/* Engine Demand */
-			msg.setShortValueMsb(Sensor::getOrZero(SensorType::Map), 4);
+			msg.setShortValueMsb(static_cast<uint16_t>(Sensor::getOrZero(SensorType::Map)), 4);
 			/* Wastegate Pressure */
 			msg[6] = 0;
 			msg[7] = 0;
@@ -46,14 +46,14 @@ void canDashboardHaltech(CanCycle cycle) {
 		{
 			CanTxMessage msg(CanCategory::NBC, 0x362, 6, DEFAULT_BUS_INDEX);
 			/* Injection Stage 1 Duty Cycle - y = x/10 */
-			uint16_t rpm = Sensor::getOrZero(SensorType::Rpm);
+			uint16_t rpm = static_cast<uint16_t>(Sensor::getOrZero(SensorType::Rpm));
 			msg.setShortValueMsb(getInjectorDutyCycle(rpm) * 10, 0);
 			/* Injection Stage 2 Duty Cycle */
 			msg[2] = 0x00;
 			msg[3] = 0x00;
 			/* Ignition Angle (Leading) - y = x/10 */
 			float timing = engine->engineState.timingAdvance[0];
-			int16_t ignAngle = ((timing > 360 ? timing - 720 : timing) * 10);
+			int16_t ignAngle = static_cast<int16_t>((timing > 360 ? timing - 720 : timing) * 10);
 			msg.setShortValueMsb(ignAngle, 4);
 		}
 #endif // EFI_ENGINE_CONTROL
@@ -122,7 +122,7 @@ void canDashboardHaltech(CanCycle cycle) {
 			CanTxMessage msg(CanCategory::NBC, 0x471, 6, DEFAULT_BUS_INDEX);
 			msg[0] = 0x00;				//0-1 Injector Pressure Differential
 			msg[1] = 0x00;
-			msg.setShortValueMsb(Sensor::getOrZero(SensorType::AcceleratorPedal) * 10, 2);
+			msg.setShortValueMsb(static_cast<uint16_t>(Sensor::getOrZero(SensorType::AcceleratorPedal) * 10), 2);
 			msg[4] = 0x00;				//4-5 Exhaust Manifold Pressure
 			msg[5] = 0x00;
 		}
@@ -145,9 +145,9 @@ void canDashboardHaltech(CanCycle cycle) {
 		{
 			CanTxMessage msg(CanCategory::NBC, 0x368, 8, DEFAULT_BUS_INDEX);
 			/* Wideband Sensor 1 */
-			msg.setShortValueMsb(Sensor::getOrZero(SensorType::Lambda1) * 1000, 0);
+			msg.setShortValueMsb(static_cast<uint16_t>(Sensor::getOrZero(SensorType::Lambda1) * 1000), 0);
 			/* Wideband Sensor 2 */
-			msg.setShortValueMsb(Sensor::getOrZero(SensorType::Lambda2) * 1000, 2);
+			msg.setShortValueMsb(static_cast<uint16_t>(Sensor::getOrZero(SensorType::Lambda2) * 1000), 2);
 			/* Wideband Sensor 3 */
 			msg[4] = 0x00;
 			msg[5] = 0x00;
@@ -178,7 +178,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		{
 			CanTxMessage msg(CanCategory::NBC, 0x36A, 4, DEFAULT_BUS_INDEX);
 			/* Knock Level 1 */
-			int knock100 = engine->module<KnockController>()->m_knockLevel * 100;
+			int knock100 = static_cast<int>(engine->module<KnockController>()->m_knockLevel * 100);
 			msg.setShortValueMsb(knock100, 0);
 			/* Knock Level 2 */
 			msg.setShortValueMsb(knock100, 2);
@@ -205,7 +205,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		{
 			CanTxMessage msg(CanCategory::NBC, 0x36C, 8, DEFAULT_BUS_INDEX);
 			/* Wheel Speed Front Left */
-			auto vehicleSpeed10 = Sensor::getOrZero(SensorType::VehicleSpeed) * 10;
+			uint16_t vehicleSpeed10 = static_cast<uint16_t>(Sensor::getOrZero(SensorType::VehicleSpeed) * 10);
 			msg.setShortValueMsb(vehicleSpeed10, 0);
 			/* Wheel Speed Front Right */
 			msg.setShortValueMsb(vehicleSpeed10, 2);
@@ -263,7 +263,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		{
 			CanTxMessage msg(CanCategory::NBC, 0x370, 8, DEFAULT_BUS_INDEX);
 			/* Vehicle Speed */
-			auto vehicleSpeed10 = Sensor::getOrZero(SensorType::VehicleSpeed) * 10;
+			uint16_t vehicleSpeed10 = static_cast<uint16_t>(Sensor::getOrZero(SensorType::VehicleSpeed) * 10);
 			msg.setShortValueMsb(vehicleSpeed10, 0);
 			/* unused */
 			msg[2] = 0x00;
@@ -365,7 +365,7 @@ void canDashboardHaltech(CanCycle cycle) {
 			msg[5] = 0x00;
 			// todo: open question what are Haltech Special Values for gear encoding
 			msg[6] = 0x00;				//Gear Selector Position
-			msg[7] = Sensor::getOrZero(SensorType::DetectedGear);
+			msg[7] = static_cast<uint8_t>(Sensor::getOrZero(SensorType::DetectedGear));
 		}
 
 		/* todo: 0x472 = 20Hz rate */
@@ -399,7 +399,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		{
 			CanTxMessage msg(CanCategory::NBC, 0x372, 8, DEFAULT_BUS_INDEX);
 			/* Battery Voltage */
-			msg.setShortValueMsb(Sensor::getOrZero(SensorType::BatteryVoltage) * 10, 0);
+			msg.setShortValueMsb(static_cast<uint16_t>(Sensor::getOrZero(SensorType::BatteryVoltage) * 10), 0);
 			/* unused */
 			msg[2] = 0x00;
 			msg[3] = 0x00;
@@ -407,20 +407,20 @@ void canDashboardHaltech(CanCycle cycle) {
 			msg[4] = 0x00;
 			msg[5] = 0x00;
 			/* Barometric pressure */
-			msg.setShortValueMsb(Sensor::getOrZero(SensorType::BarometricPressure) * 10, 6);
+			msg.setShortValueMsb(static_cast<uint16_t>(Sensor::getOrZero(SensorType::BarometricPressure) * 10), 6);
 		}
 
 		/* 0x373 = 10Hz rate */
 		{
 			CanTxMessage msg(CanCategory::NBC, 0x373, 8, DEFAULT_BUS_INDEX);
 			/* EGT1 */
-			msg.setShortValueMsb(Sensor::getOrZero(SensorType::EGT1) * 10, 0);
+			msg.setShortValueMsb(static_cast<uint16_t>(Sensor::getOrZero(SensorType::EGT1) * 10), 0);
 			/* EGT2 */
-			msg.setShortValueMsb(Sensor::getOrZero(SensorType::EGT2) * 10, 2);
+			msg.setShortValueMsb(static_cast<uint16_t>(Sensor::getOrZero(SensorType::EGT2) * 10), 2);
 			/* EGT3 */
-			msg.setShortValueMsb(Sensor::getOrZero(SensorType::EGT3) * 10, 4);
+			msg.setShortValueMsb(static_cast<uint16_t>(Sensor::getOrZero(SensorType::EGT3) * 10), 4);
 			/* EGT4 */
-			msg.setShortValueMsb(Sensor::getOrZero(SensorType::EGT4) * 10, 6);
+			msg.setShortValueMsb(static_cast<uint16_t>(Sensor::getOrZero(SensorType::EGT4) * 10), 6);
 		}
 
 		/* 0x374 = 10Hz rate */
@@ -480,11 +480,11 @@ void canDashboardHaltech(CanCycle cycle) {
 		{
 			CanTxMessage msg(CanCategory::NBC, 0x3E0, 8, DEFAULT_BUS_INDEX);
 			/* Coolant temperature in K y = x/10 */
-			msg.setShortValueMsb((Sensor::getOrZero(SensorType::Clt) + C_K_OFFSET) * 10, 0);
+			msg.setShortValueMsb(static_cast<uint16_t>((Sensor::getOrZero(SensorType::Clt) + C_K_OFFSET) * 10), 0);
 			/* Air Temperature */
-			msg.setShortValueMsb((Sensor::getOrZero(SensorType::Iat) + C_K_OFFSET) * 10, 2);
+			msg.setShortValueMsb(static_cast<uint16_t>((Sensor::getOrZero(SensorType::Iat) + C_K_OFFSET) * 10), 2);
 			/* Fuel Temperature */
-			msg.setShortValueMsb((Sensor::getOrZero(SensorType::FuelTemperature) + C_K_OFFSET) * 10, 4);
+			msg.setShortValueMsb(static_cast<uint16_t>((Sensor::getOrZero(SensorType::FuelTemperature) + C_K_OFFSET) * 10), 4);
 			/* Oil Temperature */
 			msg[6] = 0x00;
 			msg[7] = 0x00;
@@ -500,14 +500,14 @@ void canDashboardHaltech(CanCycle cycle) {
 			msg[2] = 0x00;
 			msg[3] = 0x00;
 			/* Fuel Composition */
-			msg.setShortValueMsb(Sensor::getOrZero(SensorType::FuelEthanolPercent) * 10, 4);
+			msg.setShortValueMsb(static_cast<uint16_t>(Sensor::getOrZero(SensorType::FuelEthanolPercent) * 10), 4);
 		}
 
 		/* 0x3E2 = 5Hz rate */
 		{
 			CanTxMessage msg(CanCategory::NBC, 0x3E2, 2, DEFAULT_BUS_INDEX);
 			/* Fuel Level in Liters */
-			msg.setShortValueMsb(Sensor::getOrZero(SensorType::FuelLevel) * 10, 0);
+			msg.setShortValueMsb(static_cast<uint16_t>(Sensor::getOrZero(SensorType::FuelLevel) * 10), 0);
 		}
 
 		/* 0x3E3 = 5Hz rate */

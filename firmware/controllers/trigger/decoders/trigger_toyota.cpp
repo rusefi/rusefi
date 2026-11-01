@@ -89,5 +89,5 @@ void initializeUzCam(TriggerWaveform *s) {
 	initializeRiseOnlyTrigger(s, 5, angles, efi::size(angles));
 
 	s->setTriggerSynchronizationGap4(/*gapIndex*/0, 1.5);
-	s->setTriggerSynchronizationGap4(/*gapIndex*/1, 0.67);
+	s->setTriggerSynchronizationGap4(/*gapIndex*/1, 0.67f);
 }

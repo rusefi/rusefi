@@ -2,14 +2,14 @@
 
 static void cannedsparkDwellValues() {
 #if DWELL_CURVE_SIZE == 8
-	static const float hardCodedsparkDwellValues[8] = {4.0, 3.3, 3.2, 3.1, 3.05, 2.97, 2.88, 2.8};
+	static const float hardCodedsparkDwellValues[8] = {4.0f, 3.3f, 3.2f, 3.1f, 3.05f, 2.97f, 2.88f, 2.8f};
 	copyArray(config->sparkDwellValues, hardCodedsparkDwellValues);
 #endif
 }
 
 static void canneddwellVoltageCorrValues() {
 #if DWELL_CURVE_SIZE == 8
-	static const float hardCodeddwellVoltageCorrValues[8] = {1.26, 1.2, 1.16, 1.1, 1.06, 1.0, 0.9, 0.8};
+	static const float hardCodeddwellVoltageCorrValues[8] = {1.26f, 1.2f, 1.16f, 1.1f, 1.06f, 1.0f, 0.9f, 0.8f};
 	copyArray(config->dwellVoltageCorrValues, hardCodeddwellVoltageCorrValues);
 #endif
 }
@@ -26,7 +26,7 @@ static void cannedcltIdleRpm() {
 
 static void cannedidleAdvance() {
 #if IDLE_ADVANCE_CURVE_SIZE == 8
-	static const float hardCodedidleAdvance[8] = {10.0, 10.571428, 11.142858, 11.714286, 12.285714, 12.857142, 13.428572, 14.0};
+	static const float hardCodedidleAdvance[8] = {10.0f, 10.571428f, 11.142858f, 11.714286f, 12.285714f, 12.857142f, 13.428572f, 14.0f};
 	copyArray(config->idleAdvance, hardCodedidleAdvance);
 #endif
 }
@@ -81,6 +81,6 @@ static void cannedcltIdleCorr() {
 }
 
 static void cannedcltCrankingCorr() {
-	static const float hardCodedcltCrankingCorr[8] = {1.0, 1.0, 1.0, 0.8, 0.8, 0.8, 0.8, 0.8};
+	static const float hardCodedcltCrankingCorr[8] = {1.0f, 1.0f, 1.0f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f};
 	copyArray(config->cltCrankingCorr, hardCodedcltCrankingCorr);
 }

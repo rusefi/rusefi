@@ -298,7 +298,7 @@ void proteusDcWastegateTest() {
 	setTPS1Calibration(98, 926, 891, 69);
 
 	engineConfiguration->wastegatePositionSensor = EFI_ADC_6;
-	engineConfiguration->wastegatePositionClosedVoltage = 0.7;
+	engineConfiguration->wastegatePositionClosedVoltage = 0.7f;
 	engineConfiguration->wastegatePositionOpenedVoltage = 4.0;
 
 	setLuaScript(R"(
@@ -401,7 +401,7 @@ static const float hardCodedHpfpLobeProfileQuantityBins[16] = {0.0, 1.0, 4.5, 9.
 	setLinearCurve(config->hpfpDeadtimeVoltsBins, 8, 16, 0.5);
 
 	setRpmTableBin(config->hpfpCompensationRpmBins);
-	setLinearCurve(config->hpfpCompensationLoadBins, 0.005, 0.120, 0.001);
+	setLinearCurve(config->hpfpCompensationLoadBins, 0.005f, 0.120f, 0.001f);
 
 	// This is the configuration for bosch HDEV 5 injectors
 	// all times in microseconds/us

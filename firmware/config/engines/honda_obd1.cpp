@@ -28,7 +28,7 @@ void setHondaObd1() {
 	engineConfiguration->globalTriggerAngleOffset = 80;
 
   // what's average displacement for Honda OBD1? :)
-  engineConfiguration->displacement = 1.645;
+  engineConfiguration->displacement = 1.645f;
 
 	// Keihin 06164-P0A-A00
 	engineConfiguration->injector.flow = 248;

@@ -11,7 +11,7 @@ void initializeVvtVanosReluctor(TriggerWaveform *s) {
 
 	// SyncEdge::Fall tracks fall-to-fall durations 155/90/115, ratios 0.58/1.28/1.35:
 	// sync on the unique short-after-long 0.58 gap, the other two are too close to each other
-	s->setTriggerSynchronizationGap2(0.4, 0.8);
+	s->setTriggerSynchronizationGap2(0.4f, 0.8f);
 
     // cam-degree teeth (19.5, 44), (109.5, 199), (219.5, 289) measured from a real N52
     // capture (unit_tests/tests/trigger/resources/real-bmw-e90.teeth, TEST(realBmwE90, realCams)),

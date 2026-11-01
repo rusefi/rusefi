@@ -14,7 +14,7 @@
 
 void setHondaK() {
 	engineConfiguration->cylindersCount = 4;
-	engineConfiguration->displacement = 2.4;
+	engineConfiguration->displacement = 2.4f;
 	engineConfiguration->firingOrder = FO_1_3_4_2;
 	engineConfiguration->engineSyncCam = SC_Exhaust_First;
 	engineConfiguration->trigger.type = trigger_type_e::TT_HONDA_K_CRANK_12_1;

@@ -20,7 +20,7 @@ void initializeRoverK(TriggerWaveform *s) {
 
 	s->setTriggerSynchronizationGap(2.0);
 	// wow that's odd
-	s->setSecondTriggerSynchronizationGap2(0.0001, 100000);
+	s->setSecondTriggerSynchronizationGap2(0.0001f, 100000);
 	s->setThirdTriggerSynchronizationGap(2);
 
 	float base = 0;

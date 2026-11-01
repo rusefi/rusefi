@@ -73,7 +73,7 @@ void setEngineBMW_M73_microRusEfi() {
 
 	engineConfiguration->globalTriggerAngleOffset = 90;
 	engineConfiguration->cylindersCount = 6;
-	engineConfiguration->displacement = 5.4 / 2;
+	engineConfiguration->displacement = 5.4f / 2;
 	engineConfiguration->firingOrder = FO_1_5_3_6_2_4;
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
@@ -81,7 +81,7 @@ void setEngineBMW_M73_microRusEfi() {
 	engineConfiguration->injectionMode = IM_BATCH;
 
 	engineConfiguration->etb.pFactor = 2.00;
-	engineConfiguration->etb.iFactor = 0.35;
+	engineConfiguration->etb.iFactor = 0.35f;
 
 	// 22 - AN Temp 4, orange wire
 	engineConfiguration->startStopButtonPin = Gpio::A3;

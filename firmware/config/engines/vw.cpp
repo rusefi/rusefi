@@ -71,7 +71,7 @@ void setHellen121Vag_vr6_cyl() {
 
 void setHellen121Vag_v6_cyl() {
 	engineConfiguration->cylindersCount = 6;
-	engineConfiguration->displacement = 2.7;
+	engineConfiguration->displacement = 2.7f;
 
 	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = Gpio::A7; // 87a
 
@@ -80,6 +80,6 @@ void setHellen121Vag_v6_cyl() {
 
 void setHellen121Vag_8_cyl() {
 	engineConfiguration->cylindersCount = 8;
-	engineConfiguration->displacement = 4.2;
+	engineConfiguration->displacement = 4.2f;
 	engineConfiguration->firingOrder = FO_1_5_4_8_6_3_7_2;
 }

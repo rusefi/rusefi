@@ -54,7 +54,7 @@ void setDodgeNeonNGCEngineConfiguration() {
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
-	engineConfiguration->displacement = 1.996;
+	engineConfiguration->displacement = 1.996f;
 	engineConfiguration->cylindersCount = 4;
 
 	/**
@@ -152,8 +152,8 @@ void setDodgeNeonNGCEngineConfiguration() {
 	setTable(config->alternatorVoltageTargetTable, 14.0);
 	engineConfiguration->alternatorControl.offset = 20;
 	engineConfiguration->alternatorControl.pFactor = 20;
-	engineConfiguration->alternatorControl.iFactor = 0.2;
-	engineConfiguration->alternatorControl.dFactor = 0.1;
+	engineConfiguration->alternatorControl.iFactor = 0.2f;
+	engineConfiguration->alternatorControl.dFactor = 0.1f;
 	engineConfiguration->alternatorControl.periodMs = 10;
 
 	engineConfiguration->tpsAccelEnrichmentThreshold = 10;

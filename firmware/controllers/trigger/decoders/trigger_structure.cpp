@@ -171,7 +171,7 @@ size_t TriggerWaveform::getLength() const {
 	 * 2 for FOUR_STROKE_CRANK_SENSOR
 	 * 1 otherwise
 	 */
-	int multiplier = getEngineCycle(operationMode) / getCycleDuration();
+	int multiplier = static_cast<int>(getEngineCycle(operationMode) / getCycleDuration());
 	return multiplier * getSize();
 }
 
@@ -567,7 +567,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 
     case trigger_type_e::TT_VVT_TOYOTA_4_1:
 		initializeSkippedToothTrigger(this, 4, 1, triggerOperationMode, SyncEdge::RiseOnly);
-		setTriggerSynchronizationGap3(/*gapIndex*/0, /*from*/1.60, 2.40);
+		setTriggerSynchronizationGap3(/*gapIndex*/0, /*from*/1.60f, 2.40f);
 		setTriggerSynchronizationGap3(/*gapIndex*/1, /*from*/0.75, 1.25);
 		break;
 
@@ -685,8 +685,8 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 
 	case trigger_type_e::TT_TOOTHED_WHEEL_36_2:
 		initializeSkippedToothTrigger(this, 36, 2, triggerOperationMode, SyncEdge::RiseOnly);
-		setTriggerSynchronizationGap3(/*gapIndex*/0, /*from*/1.6, 3.5);
-		setTriggerSynchronizationGap3(/*gapIndex*/1, /*from*/0.7, 1.3); // second gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
+		setTriggerSynchronizationGap3(/*gapIndex*/0, /*from*/1.6f, 3.5f);
+		setTriggerSynchronizationGap3(/*gapIndex*/1, /*from*/0.7f, 1.3f); // second gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
 		break;
 
 	case trigger_type_e::TT_60_2_WRONG_POLARITY:
