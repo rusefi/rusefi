@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import static com.rusefi.AssertCompatibility.assertEquals;
 import static com.rusefi.AssertCompatibility.assertThrows;
+import static com.rusefi.AssertCompatibility.assertTrue;
 
 public class GetConfigValueConsumerTest {
   @Test
@@ -304,6 +305,32 @@ public class GetConfigValueConsumerTest {
       "};\n" +
       "\n" +
       "const size_t allParametersCount = efi::size(allParameters);\n", table);
+  }
+
+  @Test
+  public void tableSettersCastIntegerStorage() {
+    ReaderStateImpl state = new ReaderStateImpl();
+    state.getVariableRegistry().register("PACK_MULT_PERCENT", 100);
+    String test = "struct total\n" +
+      "float plainFloat;;\"\", 1, 0, 0, 100, 0\n" +
+      "int16_t plainShort;;\"\", 1, 0, 0, 100, 0\n" +
+      "uint16_t autoscale scaledShort;;\"\",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0\n" +
+      "uint8_t autoscale unityScaled;;\"\", 1, 0, 0, 0, 0\n" +
+      "uint8_t[3] alignmentFill;;\"unit\", 1, 0, 0, 100, 0\n" +
+      "bit flag\n" +
+      "end_struct\n";
+    GetConfigValueConsumer getConfigValueConsumer = new GetConfigValueConsumer();
+    state.readBufferedReader(test, getConfigValueConsumer);
+
+    String table = getConfigValueConsumer.getTableContent();
+    // float and bit storage take the float as is
+    assertTrue(table, table.contains("[](float value) { config->plainFloat = value; }"));
+    assertTrue(table, table.contains("[](float value) { config->flag = value; }"));
+    // non-unity scaled_channel storage goes through its float constructor
+    assertTrue(table, table.contains("[](float value) { config->scaledShort = value; }"));
+    // integer storage, including scaled_channel<T, 1, 1>, needs an explicit cast
+    assertTrue(table, table.contains("[](float value) { config->plainShort = static_cast<int16_t>(value); }"));
+    assertTrue(table, table.contains("[](float value) { config->unityScaled = static_cast<uint8_t>(value); }"));
   }
 
   @Test
