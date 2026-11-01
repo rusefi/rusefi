@@ -2377,7 +2377,7 @@ float getOutputValueByHash(const int hash) {
 			return static_cast<live_data_rotational_idle_s&>(engine->rotationalIdleController).rotIdleTpsTooHigh;
 #endif
 	}
-	return EFI_ERROR_CODE;
+	return static_cast<float>(EFI_ERROR_CODE);
 }
 float getOutputValueByName(const char *name) {
 	int hash = djb2lowerCase(name);

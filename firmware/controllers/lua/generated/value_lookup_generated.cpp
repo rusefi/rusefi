@@ -2435,7 +2435,7 @@ float getConfigValueByHash(const int hash) {
 		case 346417305:
 			return config->wizardVeTable;
 	}
-	return EFI_ERROR_CODE;
+	return static_cast<float>(EFI_ERROR_CODE);
 }
 float getConfigValueByName(const char *name) {
 	int hash = djb2lowerCase(name);
