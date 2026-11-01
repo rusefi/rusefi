@@ -68,15 +68,15 @@ static void initEgoSensor(afr_sensor_s *sensor, ego_sensor_e type) {
 
 	case ES_Innovate_MTX_L:
 		sensor->v1 = 0;
-		sensor->value1 = 7.35;
+		sensor->value1 = 7.35f;
 		sensor->v2 = 5;
-		sensor->value2 = 22.39;
+		sensor->value2 = 22.39f;
 		break;
 	case ES_14Point7_Free:
 		sensor->v1 = 0;
-		sensor->value1 = 9.996;
+		sensor->value1 = 9.996f;
 		sensor->v2 = 5;
-		sensor->value2 = 19.992;
+		sensor->value2 = 19.992f;
 		break;
 		// technically 14Point7 and PLX use the same scale
 	case ES_PLX:

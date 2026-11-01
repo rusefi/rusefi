@@ -42,7 +42,7 @@ void Dac::SetVoltage(int channel, float voltage) {
     voltage = clampF(0, voltage, engineConfiguration->adcVcc);
     m_voltageFloat[channel] = voltage;
 
-    dacPutChannelX(m_driver, channel, voltage / engineConfiguration->adcVcc * ((1 << 12) - 1));
+    dacPutChannelX(m_driver, channel, static_cast<unsigned>(voltage / engineConfiguration->adcVcc * ((1 << 12) - 1)));
 }
 
 float Dac::GetLastVoltage(int channel)

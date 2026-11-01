@@ -38,7 +38,7 @@ void setCommonNTCSensorParameters(ThermistorConf *thermistorConf) {
 	 * http://www.rexbo.eu/hella/coolant-temperature-sensor-6pt009107121?c=100334&at=3130
 	 */
     thermistorConf->config.tempC_1 = -20;
-    thermistorConf->config.tempC_2 = 23.8889;
+    thermistorConf->config.tempC_2 = 23.8889f;
     thermistorConf->config.tempC_3 = 120;
     thermistorConf->config.resistance_1 = 18000;
     thermistorConf->config.resistance_2 = 2100;

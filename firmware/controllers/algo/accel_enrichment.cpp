@@ -294,7 +294,7 @@ void TpsAccelEnrichment::onConfigurationChange(engine_configuration_s const* /*p
 		for (int i = 0; i < TPS_TPS_ACCEL_CLT_CORR_TABLE; i++) {
 			maxBlendDuration = maxF(maxBlendDuration, config->predictiveMapBlendDurationValues[i]);
 		}
-		length = maxF(2, ceilf(maxBlendDuration / slowCallbackPeriodSecond));
+		length = static_cast<int>(maxF(2, ceilf(maxBlendDuration / slowCallbackPeriodSecond)));
 	} else {
 		length = engineConfiguration->tpsAccelLookback / slowCallbackPeriodSecond;
 

@@ -25,7 +25,7 @@
 #define LONG_MAX_INT 0x7fffffffffffffffL
 #define SBI_SIZE 1000
 
-static float confidence_bounds[] = { 0.5 - H_CONFIDENCE * 0.5, 0.5, 0.5 + H_CONFIDENCE * 0.5 };
+static float confidence_bounds[] = { 0.5f - H_CONFIDENCE * 0.5f, 0.5f, 0.5f + H_CONFIDENCE * 0.5f };
 
 /**
  * magic curve lookup table
@@ -134,7 +134,7 @@ int hsReport(histogram_s *h, int* report) {
 	int64_t acc = 0;
 	// 'acc' is accumulated number of samples in [0, min - 1].
 	for (int j = 0; j < 3; j++) {
-		int64_t k = confidence_bounds[j] * h->total_count;
+		int64_t k = static_cast<int64_t>(confidence_bounds[j] * h->total_count);
 		// Always drop at least 1 'non-confident' sample...
 		if (k == 0) {
 			k = 1;

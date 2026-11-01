@@ -132,12 +132,12 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
 #if EFI_IDLE_CONTROL
 	// reset ignition table dot, see #8198
 	if(engineConfiguration->useSeparateAdvanceForIdle && engine->module<IdleController>()->isIdlingOrTaper()){
-		engine->ignitionState.rpmForIgnitionIdleTableDot = rpm;
+		engine->ignitionState.rpmForIgnitionIdleTableDot = static_cast<int16_t>(rpm);
 		engine->ignitionState.rpmForIgnitionTableDot = -1;
 		engine->ignitionState.loadForIgnitionTableDot = -1;
 	} else {
 		engine->ignitionState.rpmForIgnitionIdleTableDot = -1;
-		engine->ignitionState.rpmForIgnitionTableDot = rpm;
+		engine->ignitionState.rpmForIgnitionTableDot = static_cast<int16_t>(rpm);
 		engine->ignitionState.loadForIgnitionTableDot = engineLoad;
 	}
 #endif
@@ -332,7 +332,7 @@ size_t getMultiSparkCount(float rpm) {
 		float sparksFitInTime = additionalSparksUs / oneSparkTime;
 
 		// Take the floor (convert to uint8_t) - we want to undershoot, not overshoot
-		uint32_t floored = sparksFitInTime;
+		uint32_t floored = static_cast<uint32_t>(sparksFitInTime);
 
 		// Allow no more than the maximum number of extra sparks
 		return minI(floored, engineConfiguration->multisparkMaxExtraSparkCount);

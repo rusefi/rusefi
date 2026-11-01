@@ -561,7 +561,7 @@ static void prepareIgnitionSchedule() {
 	float maxAllowedDwellAngle;
 
 	if (getCurrentIgnitionMode() == IM_ONE_COIL) {
-		maxAllowedDwellAngle = getEngineCycle(operationMode) / engineConfiguration->cylindersCount / 1.1;
+		maxAllowedDwellAngle = getEngineCycle(operationMode) / engineConfiguration->cylindersCount / 1.1f;
 	} else {
 	  maxAllowedDwellAngle = (int) (getEngineCycle(operationMode) / 2); // the cast is about making Coverity happy
 	}

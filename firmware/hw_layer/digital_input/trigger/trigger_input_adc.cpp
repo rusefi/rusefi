@@ -297,7 +297,7 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 		switchingCnt = maxI(switchingCnt - 1, 0);
 	}
 
-	int delta = value - adcThreshold;
+	int delta = static_cast<int>(value - adcThreshold);
 	int aDelta = absI(delta);
 	if (isSignalWeak) {
 		// todo: detect if the sensor is disconnected (where the signal is always near 'ADC_MAX_VALUE')

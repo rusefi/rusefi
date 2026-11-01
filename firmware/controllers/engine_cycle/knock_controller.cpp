@@ -66,7 +66,7 @@ bool KnockControllerBase::onKnockSenseCompleted(uint8_t cylinderNumber, float db
 
 	// Per-cylinder peak detector
 	float cylPeak = peakDetectors[cylinderNumber].detect(dbv, lastKnockTime);
-	m_knockCyl[cylinderNumber] = roundf(cylPeak);
+	m_knockCyl[cylinderNumber] = static_cast<int8_t>(roundf(cylPeak));
 
 	// All-cylinders peak detector
 	m_knockLevel = allCylinderPeakDetector.detect(dbv, lastKnockTime);
@@ -125,7 +125,7 @@ uint32_t KnockControllerBase::getKnockCount() const {
 }
 
 float KnockControllerBase::getFuelTrimMultiplier() const {
-	return 1.0 + m_knockFuelTrimMultiplier;
+	return 1.0f + m_knockFuelTrimMultiplier;
 }
 
 	/**
@@ -186,11 +186,11 @@ void KnockControllerBase::onFastCallback() {
 	auto load = getIgnitionLoad();
 
 	for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
-		m_gain[i] = interpolate3d(
+		m_gain[i] = static_cast<int8_t>(interpolate3d(
 			config->knockGains[i].table,
 			config->knockGainLoadBins, load,
 			config->knockGainRpmBins, rpm
-		);
+		));
 	}
 }
 

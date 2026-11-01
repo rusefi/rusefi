@@ -140,7 +140,7 @@ LaunchControlBase::LaunchControlBase() {
 }
 
 float LaunchControlBase::getFuelCoefficient() const {
-    return 1 + (isLaunchCondition && engineConfiguration->launchControlEnabled ? engineConfiguration->launchFuelAdderPercent / 100.0 : 0);
+    return 1 + (isLaunchCondition && engineConfiguration->launchControlEnabled ? engineConfiguration->launchFuelAdderPercent / 100.0f : 0);
 }
 
 void LaunchControlBase::update() {

@@ -269,8 +269,8 @@ void AemXSeriesWideband::decodeRusefiDiag(const CANRxFrame& frame) {
 	auto data = reinterpret_cast<const wbo::DiagData*>(&frame.data8[0]);
 
 	// convert to percent
-	heaterDuty = data->HeaterDuty / 2.55f;
-	pumpDuty = data->PumpDuty / 2.55f;
+	heaterDuty = static_cast<uint8_t>(data->HeaterDuty / 2.55f);
+	pumpDuty = static_cast<uint8_t>(data->PumpDuty / 2.55f);
 
 	// convert to volts
 	nernstVoltage = data->NernstDc * 0.001f;

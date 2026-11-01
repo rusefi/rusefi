@@ -126,7 +126,7 @@ void StepperMotorBase::setInitialPosition() {
 }
 
 void StepperMotorBase::doIteration() {
-	int targetPosition = efiRound(getTargetPosition(), 1);
+	int targetPosition = static_cast<int>(efiRound(getTargetPosition(), 1));
 	int currentPosition = m_currentPosition;
 
 	// stepper requires +12V

@@ -413,7 +413,7 @@ static void setDefaultEngineConfiguration() {
 
 	// VVT closed loop, totally random values!
 	engineConfiguration->auxPid[0].pFactor = 2;
-	engineConfiguration->auxPid[0].iFactor = 0.005;
+	engineConfiguration->auxPid[0].iFactor = 0.005f;
 	engineConfiguration->auxPid[0].dFactor = 0;
 	engineConfiguration->auxPid[0].offset = 33;
 	engineConfiguration->auxPid[0].minValue = 10;
@@ -497,7 +497,7 @@ static void setDefaultEngineConfiguration() {
 	setDefaultEngineNoiseTable();
 
     // is this same old setCommonNTCSensor?
-	engineConfiguration->clt.config = {0, 23.8889, 48.8889, 9500, 2100, 1000, 1500};
+	engineConfiguration->clt.config = {0, 23.8889f, 48.8889f, 9500, 2100, 1000, 1500};
 
     setCommonNTCSensorParameters(&engineConfiguration->iat);
 
@@ -518,8 +518,8 @@ static void setDefaultEngineConfiguration() {
 	setDefaultIdleSpeedTarget();
 	//	setTargetRpmCurve(1200);
 
-	engineConfiguration->idleRpmPid.pFactor = 0.05;
-	engineConfiguration->idleRpmPid.iFactor = 0.002;
+	engineConfiguration->idleRpmPid.pFactor = 0.05f;
+	engineConfiguration->idleRpmPid.iFactor = 0.002f;
 
 	engineConfiguration->idleRpmPid.minValue = -20;
 	engineConfiguration->idleRpmPid.maxValue = 20;
@@ -622,7 +622,7 @@ static void setDefaultEngineConfiguration() {
 
 	engineConfiguration->driveWheelRevPerKm = 1000;
 	engineConfiguration->finalGearRatio = 1;
-	engineConfiguration->vssGearRatio = 3.73;
+	engineConfiguration->vssGearRatio = 3.73f;
 	engineConfiguration->vssToothCount = 21;
 
 	engineConfiguration->mapErrorDetectionTooLow = 5;

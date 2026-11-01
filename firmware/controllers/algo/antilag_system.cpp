@@ -44,13 +44,13 @@ bool AntilagSystemBase::isALSMaxRPMCondition(float rpm) const {
 }
 
 bool AntilagSystemBase::isALSMinCLTCondition() const {
-	int clt = Sensor::getOrZero(SensorType::Clt);
+	int clt = static_cast<int>(Sensor::getOrZero(SensorType::Clt));
 
 	return engineConfiguration->ALSMinCLT < clt;
 }
 
 bool AntilagSystemBase::isALSMaxCLTCondition() const {
-	int clt = Sensor::getOrZero(SensorType::Clt);
+	int clt = static_cast<int>(Sensor::getOrZero(SensorType::Clt));
 
 	return engineConfiguration->ALSMaxCLT > clt;
 }

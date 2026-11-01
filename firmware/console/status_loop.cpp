@@ -423,14 +423,14 @@ static void updateThrottles() {
 
 static void updateLambda() {
 #if EFI_ENGINE_CONTROL
-	float lambdaValue = Sensor::getOrDefault(SensorType::Lambda1, 0.5 / STOICH_RATIO, 0.0 / STOICH_RATIO, 30.5 / STOICH_RATIO);
+	float lambdaValue = Sensor::getOrDefault(SensorType::Lambda1, 0.5f / STOICH_RATIO, 0.0f / STOICH_RATIO, 30.5f / STOICH_RATIO);
 	engine->outputChannels.lambdaValue = lambdaValue;
 	engine->outputChannels.AFRValue = lambdaValue * engine->fuelComputer.stoichiometricRatio;
 	// TODO: this can be calculated on PC side!
 	engine->outputChannels.afrGasolineScale = lambdaValue * STOICH_RATIO;
 	engine->outputChannels.SmoothedAFRValue = Sensor::getOrZero(SensorType::SmoothedLambda1) * engine->fuelComputer.stoichiometricRatio;
 
-	float lambda2Value = Sensor::getOrDefault(SensorType::Lambda2, 0.5 / STOICH_RATIO, 0.0 / STOICH_RATIO, 30.5 / STOICH_RATIO);
+	float lambda2Value = Sensor::getOrDefault(SensorType::Lambda2, 0.5f / STOICH_RATIO, 0.0f / STOICH_RATIO, 30.5f / STOICH_RATIO);
 	engine->outputChannels.lambdaValue2 = lambda2Value;
 	engine->outputChannels.AFRValue2 = lambda2Value * engine->fuelComputer.stoichiometricRatio;
 	// TODO: this can be calculated on PC side!
@@ -480,7 +480,7 @@ static void updateVehicleSpeed() {
 	engine->outputChannels.wheelSlipRatio = Sensor::getOrZero(SensorType::WheelSlipRatio);
 #ifdef MODULE_GEAR_DETECTOR
 	engine->outputChannels.speedToRpmRatio = engine->module<GearDetector>()->getGearboxRatio();
-	engine->outputChannels.detectedGear = Sensor::getOr(SensorType::DetectedGear, gear_e::INVALID);
+	engine->outputChannels.detectedGear = static_cast<int8_t>(Sensor::getOr(SensorType::DetectedGear, gear_e::INVALID));
 	engine->outputChannels.transmissionSlipPercent = engine->module<GearDetector>()->getSlipPercent();
 	engine->outputChannels.transmissionSlipValid = engine->module<GearDetector>()->isSlipValid();
 #endif
@@ -576,10 +576,10 @@ static void updateMiscSensors() {
 
 	engine->outputChannels.wastegatePositionSensor = Sensor::getOrZero(SensorType::WastegatePosition);
 
-	engine->outputChannels.ISSValue = Sensor::getOrZero(SensorType::InputShaftSpeed);
+	engine->outputChannels.ISSValue = static_cast<uint16_t>(Sensor::getOrZero(SensorType::InputShaftSpeed));
 	engine->outputChannels.outputShaftSpeed = Sensor::getOrZero(SensorType::OutputShaftSpeed);
-	engine->outputChannels.auxSpeed1 = Sensor::getOrZero(SensorType::AuxSpeed1);
-	engine->outputChannels.auxSpeed2 = Sensor::getOrZero(SensorType::AuxSpeed2);
+	engine->outputChannels.auxSpeed1 = static_cast<uint16_t>(Sensor::getOrZero(SensorType::AuxSpeed1));
+	engine->outputChannels.auxSpeed2 = static_cast<uint16_t>(Sensor::getOrZero(SensorType::AuxSpeed2));
 
 #if	HAL_USE_ADC
 	engine->outputChannels.internalMcuTemperature = getMCUInternalTemperature();
@@ -660,7 +660,7 @@ void updateTunerStudioState() {
 
 
   static Timer blinkIndicatorsTimer;
-  constexpr float blinkHalfPeriod = 0.3;
+  constexpr float blinkHalfPeriod = 0.3f;
   bool isBlinkPhase = blinkIndicatorsTimer.hasElapsedSec(blinkHalfPeriod);
 #if EFI_ELECTRONIC_THROTTLE_BODY
   blinkEtbErrorCodes(isBlinkPhase);
@@ -686,12 +686,12 @@ void updateTunerStudioState() {
 	engine->dc_motors.dcOutput0 = dc->dcMotor.get();
 	engine->dc_motors.isEnabled0_int = dc->msg() == nullptr;
 
-	tsOutputChannels->RPMValue = rpm;
+	tsOutputChannels->RPMValue = static_cast<uint16_t>(rpm);
 #if EFI_SHAFT_POSITION_INPUT
-	tsOutputChannels->instantRpm = engine->triggerCentral.instantRpm.getInstantRpm();
-	tsOutputChannels->instantRpmRange = engine->triggerCentral.instantRpm.getInstantRpmRange();
+	tsOutputChannels->instantRpm = static_cast<uint16_t>(engine->triggerCentral.instantRpm.getInstantRpm());
+	tsOutputChannels->instantRpmRange = static_cast<uint16_t>(engine->triggerCentral.instantRpm.getInstantRpmRange());
 	tsOutputChannels->totalTriggerErrorCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
-	tsOutputChannels->rpmAcceleration = engine->rpmCalculator.getRpmAcceleration();
+	tsOutputChannels->rpmAcceleration = static_cast<int16_t>(engine->rpmCalculator.getRpmAcceleration());
 
 	tsOutputChannels->orderingErrorCounter = engine->triggerCentral.triggerState.orderingErrorCounter;
 #endif // EFI_SHAFT_POSITION_INPUT
@@ -732,7 +732,7 @@ void updateTunerStudioState() {
   tsOutputChannels->torque = -1;
 #endif
 
-	tsOutputChannels->turboSpeed = Sensor::getOrZero(SensorType::TurbochargerSpeed);
+	tsOutputChannels->turboSpeed = static_cast<uint16_t>(Sensor::getOrZero(SensorType::TurbochargerSpeed));
 	extern FrequencySensor inputShaftSpeedSensor;
 	tsOutputChannels->issEdgeCounter = inputShaftSpeedSensor.eventCounter;
 	extern FrequencySensor vehicleSpeedSensor;

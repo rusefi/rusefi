@@ -77,7 +77,7 @@ public:
 		}
 
 		if (frequency != m_frequency[pin]) {
-			if (!setDcMotorFrequency(pin, frequency)) {
+			if (!setDcMotorFrequency(pin, static_cast<int>(frequency))) {
 				return -1;
 			}
 

@@ -66,6 +66,6 @@ void initVrThresholdPwm() {
 void setDefaultVrThresholds() {
 	for (int i = 0;i<VR_THRESHOLD_COUNT;i++) {
 		setRpmTableBin(engineConfiguration->vrThreshold[i].rpmBins);
-		setLinearCurve(engineConfiguration->vrThreshold[i].values, 0.6, 1.2, 0.1);
+		setLinearCurve(engineConfiguration->vrThreshold[i].values, 0.6f, 1.2f, 0.1f);
 	}
 }

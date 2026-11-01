@@ -36,7 +36,7 @@ public:
 		m_driver = pwmConfig.Driver;
 		m_channel = pwmConfig.Channel;
 
-		uint32_t period = c_timerFrequency / frequency;
+		uint32_t period = static_cast<uint32_t>(c_timerFrequency / frequency);
 
 		// These timers are only 16 bit - don't risk overflow
 		if (period > 0xFFF0) {
@@ -93,7 +93,7 @@ private:
 	float m_duty = 0;
 
 	void applyDuty() {
-		pwm_lld_enable_channel(m_driver, m_channel, m_driver->period * m_duty);
+		pwm_lld_enable_channel(m_driver, m_channel, static_cast<pwmcnt_t>(m_driver->period * m_duty));
 	}
 };
 }

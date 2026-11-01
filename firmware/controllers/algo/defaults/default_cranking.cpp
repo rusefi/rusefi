@@ -38,12 +38,12 @@ void setDefaultCranking() {
 #if CRANKING_CURVE_SIZE == 8
 	// Cranking temperature compensation
 	static const float crankingCoef[] = {
-		2.8,
-		2.2,
-		1.8,
-		1.55,
-		1.3,
-		1.1,
+		2.8f,
+		2.2f,
+		1.8f,
+		1.55f,
+		1.3f,
+		1.1f,
 		1.0,
 		1.0
 	};
