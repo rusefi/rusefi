@@ -159,7 +159,7 @@ static TsCalMode functionToCalModeSecMax(dc_function_e func) {
 }
 #endif // EFI_TUNER_STUDIO
 
-#define ETB_DUTY_LIMIT 0.9
+#define ETB_DUTY_LIMIT 0.9f
 // this macro clamps both positive and negative percentages from about -100% to 100%
 #define ETB_PERCENT_TO_DUTY(x) (clampF(-ETB_DUTY_LIMIT, 0.01f * (x), ETB_DUTY_LIMIT))
 
@@ -348,7 +348,7 @@ expected<percent_t> EtbController::getSetpointEtb() {
 
   float vehicleSpeed = Sensor::getOrZero(SensorType::VehicleSpeed);
   float wheelSlip = Sensor::getOrZero(SensorType::WheelSlipRatio);
-  tcEtbDrop = tcEtbDropTable.getValue(wheelSlip, vehicleSpeed);
+  tcEtbDrop = static_cast<int8_t>(tcEtbDropTable.getValue(wheelSlip, vehicleSpeed));
 
 	// Apply any adjustment that this throttle alone needs
 	// Clamped to +-10 to prevent anything too wild
@@ -446,7 +446,7 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, perce
 		float a = m_maxCycleTps - m_minCycleTps;
 
 		// Filter - it's pretty noisy since the ultimate period is not very many loop periods
-		constexpr float alpha = 0.05;
+		constexpr float alpha = 0.05f;
 		m_a  = alpha * a  + (1 - alpha) * m_a;
 		m_tu = alpha * tu + (1 - alpha) * m_tu;
 
@@ -531,7 +531,7 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 		integralError = m_targetErrorAccumulator.accumulate(target - observation);
 
 		float dt = m_cycleTimer.getElapsedSecondsAndReset(getTimeNowNt());
-		m_lastPidDtMs = dt * 1000.0;
+		m_lastPidDtMs = dt * 1000.0f;
 
 		// Normal case - use PID to compute closed loop part
 		return m_pid.getOutput(target, observation, dt);
@@ -835,9 +835,9 @@ void setBoschVAGETB() {
 	engineConfiguration->tps1SecondaryMin = 102;
 	engineConfiguration->tps1SecondaryMax = 891;
 
-	engineConfiguration->etb.pFactor = 5.12;
+	engineConfiguration->etb.pFactor = 5.12f;
 	engineConfiguration->etb.iFactor = 47;
-	engineConfiguration->etb.dFactor = 0.088;
+	engineConfiguration->etb.dFactor = 0.088f;
 	engineConfiguration->etb.offset = 0;
 }
 
@@ -870,7 +870,7 @@ void setDefaultEtbParameters() {
 	engineConfiguration->etb = {
 		1,		// Kp
 		10,		// Ki
-		0.05,	// Kd
+		0.05f,	// Kd
 		0,		// offset
 		0,		// Update rate, unused
 		-100, 100 // min/max
@@ -1078,7 +1078,7 @@ void setEwgLuaAdjustment(percent_t pos) {
 }
 
 void setToyota89281_33010_pedal_position_sensor() {
-	setPPSCalibration(0, 4.1, 0.73, 4.9);
+	setPPSCalibration(0, 4.1f, 0.73f, 4.9f);
 }
 
 void setHitachiEtbCalibration() {
@@ -1086,9 +1086,9 @@ void setHitachiEtbCalibration() {
 
 	setHitachiEtbBiasBins();
 
-	engineConfiguration->etb.pFactor = 2.7999;
+	engineConfiguration->etb.pFactor = 2.7999f;
 	engineConfiguration->etb.iFactor = 25.5;
-	engineConfiguration->etb.dFactor = 0.053;
+	engineConfiguration->etb.dFactor = 0.053f;
 	engineConfiguration->etb.offset = 0.0;
 	engineConfiguration->etb.periodMs = 5.0;
 	engineConfiguration->etb.minValue = -100.0;

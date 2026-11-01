@@ -56,7 +56,7 @@ float ClosedLoopFuelCellImpl::getMaxAdjustment() const {
 		return 0;
 	}
 
-	float raw = 0.01 * m_config->maxAdd;
+	float raw = 0.01f * m_config->maxAdd;
 	// Don't allow maximum less than 0, or more than maximum adjustment
 	return clampF(0, raw, MAX_ADJ);
 }

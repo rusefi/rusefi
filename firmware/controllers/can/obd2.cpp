@@ -161,7 +161,7 @@ void handleGetDataRequest(const CANRxFrame& rx, size_t busIndex) {
 	case PID_FUEL_AIR_RATIO_1: {
 		float lambda = clampF(0, Sensor::getOrZero(SensorType::Lambda1), 1.99f);
 
-		uint16_t scaled = lambda * 32768;
+		uint16_t scaled = static_cast<uint16_t>(lambda * 32768);
 
 		obdSendPacket(1, pid, 4, scaled << 16, busIndex);
 		break;

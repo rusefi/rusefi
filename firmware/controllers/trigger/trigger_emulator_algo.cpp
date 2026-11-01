@@ -83,7 +83,7 @@ static float getRpmMultiplier(operation_mode_e mode) {
 	  case FOUR_STROKE_CRANK_SENSOR:
 	  case FOUR_STROKE_CAM_SENSOR:
 	  case OM_NONE:
-  		return getCrankDivider(mode) / 2.0;
+  		return getCrankDivider(mode) / 2.0f;
 	  case TWO_STROKE:
 		  // unit test coverage still runs if the value below is changed to '2' not a great sign!
 		  // but HW CI insists that we have '1' here
@@ -106,7 +106,7 @@ void setTriggerEmulatorRPM(int rpm) {
 		if (rpm != 0) {
 			// use 0.5 multiplier for cam
 			float rpmM = (channel == 0) ? getRpmMultiplier(getEngineRotationState()->getOperationMode()) : 0.5f;
-			rPerSecond = rpm * rpmM / 60.0; // per minute converted to per second
+			rPerSecond = rpm * rpmM / 60.0f; // per minute converted to per second
 		}
 		triggerEmulatorSignals[channel].setFrequency(rPerSecond);
 	}

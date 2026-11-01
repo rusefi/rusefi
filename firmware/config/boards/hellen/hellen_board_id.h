@@ -31,7 +31,7 @@ class HellenBoardIdSolver : public NewtonsMethodSolver
 {
 public:
 	float fx(float x) override {
-		return exp(k1 / x) - exp(k2 / x) + exp(k3 / x) - 1.0;
+		return exp(k1 / x) - exp(k2 / x) + exp(k3 / x) - 1.0f;
 	}
 
 	// first-order derivative

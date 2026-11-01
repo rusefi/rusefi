@@ -121,7 +121,7 @@ void MapAverager::stop() {
 				minPressure = averagedMapRunningBuffer[i];
 		}
 
-    engine->outputChannels.mapPerCylinder[m_cylinderNumber] = minPressure;
+    engine->outputChannels.mapPerCylinder[m_cylinderNumber] = static_cast<uint8_t>(minPressure);
 		setValidValue(filterMapValue(minPressure), getTimeNowNt());
 	} else {
 #if EFI_PROD_CODE

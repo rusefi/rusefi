@@ -13,7 +13,7 @@
 static Timer channelsRequestTimer;
 
 int getSecondsSinceChannelsRequest() {
-    return channelsRequestTimer.getElapsedSeconds();
+    return static_cast<int>(channelsRequestTimer.getElapsedSeconds());
 }
 
 /**
@@ -29,7 +29,7 @@ void TunerStudio::cmdOutputChannels(TsChannelBase* tsChannel, uint16_t offset, u
 	}
 
 	if (offset < BLOCKING_FACTOR) {
-		engine->outputChannels.outputRequestPeriod = channelsRequestTimer.getElapsedUs();
+		engine->outputChannels.outputRequestPeriod = static_cast<uint32_t>(channelsRequestTimer.getElapsedUs());
 		channelsRequestTimer.reset();
 	}
 

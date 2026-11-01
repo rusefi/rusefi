@@ -36,7 +36,7 @@ using enum idle_mode_e;
  */
 IIdleController::TargetInfo IdleController::getTargetRpm(float clt) {
 	// Base target from the CLT->RPM curve (cold engines idle higher)
-	targetRpmByClt = interpolate2d(clt, config->cltIdleRpmBins, config->cltIdleRpm);
+	targetRpmByClt = static_cast<int>(interpolate2d(clt, config->cltIdleRpmBins, config->cltIdleRpm));
 
   // FIXME: this is running as "RPM target" not "RPM bump" [ie adding to the CLT rpm target]
 	// idle air Bump for AC
@@ -50,7 +50,7 @@ IIdleController::TargetInfo IdleController::getTargetRpm(float clt) {
  	float entryRpm = target + rpmUpperLimit;
 
   // Higher exit than entry to add some hysteresis to avoid bouncing around upper threshold
- 	float exitRpm = target + 1.5 * rpmUpperLimit;
+ 	float exitRpm = target + 1.5f * rpmUpperLimit;
 
  	// Ramp the target down from the transition RPM to normal over a few seconds
   if (engineConfiguration->idleReturnTargetRamp) {
@@ -63,9 +63,9 @@ IIdleController::TargetInfo IdleController::getTargetRpm(float clt) {
  		);
  	}
 
- 	idleTarget = target;
-	idleEntryRpm = entryRpm;
-	idleExitRpm = exitRpm;
+ 	idleTarget = static_cast<uint16_t>(target);
+	idleEntryRpm = static_cast<uint16_t>(entryRpm);
+	idleExitRpm = static_cast<uint16_t>(exitRpm);
  	return { target, entryRpm, exitRpm };
 }
 
@@ -441,7 +441,7 @@ float IdleController::getIdlePosition(float rpm) {
 
 		// Compute the target we're shooting for
 		auto targetRpm = getTargetRpm(clt);
-		m_lastTargetRpm = targetRpm.ClosedLoopTarget;
+		m_lastTargetRpm = static_cast<int>(targetRpm.ClosedLoopTarget);
 
 		// Determine cranking taper (modeled flow does no taper of open loop)
 		float crankingTaper = useModeledFlow ? 1 : getCrankingTaperFraction(clt);
@@ -494,8 +494,8 @@ float IdleController::getIdlePosition(float rpm) {
 		engine->outputChannels.idleStepperTargetPosition = iacMotor.getTargetPosition();
 #endif /* EFI_TUNER_STUDIO */
 		if (useModeledFlow && phase != Phase::Cranking) {
-			float totalAirmass = 0.01 * iacPosition * engineConfiguration->idleMaximumAirmass;
-			idleTargetAirmass = totalAirmass;
+			float totalAirmass = 0.01f * iacPosition * engineConfiguration->idleMaximumAirmass;
+			idleTargetAirmass = static_cast<uint16_t>(totalAirmass);
 
 			bool shouldAdjustTiming = engineConfiguration->useIdleTimingPidControl && phase == Phase::Idling;
 
@@ -507,7 +507,7 @@ float IdleController::getIdlePosition(float rpm) {
 
 			// Handle the residual low frequency content with airflow
 			float idleAirmass = totalAirmass - timingAirmass;
-			float airflowKgPerH = 3.6 * 0.001 * idleAirmass * rpm / 60 * engineConfiguration->cylindersCount / 2;
+			float airflowKgPerH = 3.6f * 0.001f * idleAirmass * rpm / 60 * engineConfiguration->cylindersCount / 2;
 			idleTargetFlow = airflowKgPerH;
 
 			// Convert from desired flow -> idle valve position

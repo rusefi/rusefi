@@ -476,7 +476,7 @@ void TriggerDecoderBase::printGaps(const char * prefix,
 						continue;
 					}
 
-					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
+					float gap = 1.0f * toothDurations[i] / toothDurations[i + 1];
 					if (std::isnan(gap)) {
 						efiPrintf("%s index=%d NaN gap, you have noise issues?", prefix, i);
 					} else {
@@ -619,7 +619,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 #else
 			if (printTriggerTrace) {
 				for (int i = 0;i<triggerShape.gapTrackingLength;i++) {
-					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
+					float gap = 1.0f * toothDurations[i] / toothDurations[i + 1];
 					printf("%sindex=%d: gap=%.2f expected from %.2f to %.2f error=%s\r\n",
 							triggerConfiguration.PrintPrefix,
 							i,

@@ -117,7 +117,7 @@ float InstantRpmCalculator::calculateInstantRpm(
 		return prevInstantRpmValue;
 	}
 
-	float instantRpm = (60000000.0 / 360 * US_TO_NT_MULTIPLIER) * angleDiff / time;
+	float instantRpm = (60000000.0f / 360 * US_TO_NT_MULTIPLIER) * angleDiff / time;
 	assertIsInBoundsWithResult(current_index, instantRpmValue, "instantRpmValue", 0);
 	instantRpmValue[current_index] = instantRpm;
 

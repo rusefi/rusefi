@@ -14,8 +14,8 @@ struct LuaPid final {
 
 		m_params.offset = 0;
 		m_params.periodMs = 0;
-		m_params.minValue = min;
-		m_params.maxValue = max;
+		m_params.minValue = static_cast<int16_t>(min);
+		m_params.maxValue = static_cast<int16_t>(max);
 
 		if (m_params.minValue >= m_params.maxValue) {
 		  criticalError("Lua: minValue %d/maxValue %d", m_params.minValue, m_params.maxValue);
@@ -36,7 +36,7 @@ struct LuaPid final {
 	}
 
 	void setOffset(float offset) {
-		m_params.offset = offset;
+		m_params.offset = static_cast<int16_t>(offset);
 		reset();
 	}
 
@@ -63,8 +63,8 @@ struct LuaIndustrialPid final {
 
 		m_params.offset = 0;
 		m_params.periodMs = 0;
-		m_params.minValue = min;
-		m_params.maxValue = max;
+		m_params.minValue = static_cast<int16_t>(min);
+		m_params.maxValue = static_cast<int16_t>(max);
 
 		if (m_params.minValue >= m_params.maxValue) {
 		  criticalError("Lua: minValue %d/maxValue %d", m_params.minValue, m_params.maxValue);
@@ -85,7 +85,7 @@ struct LuaIndustrialPid final {
 	}
 
 	void setOffset(float offset) {
-		m_params.offset = offset;
+		m_params.offset = static_cast<int16_t>(offset);
 		reset();
 	}
 

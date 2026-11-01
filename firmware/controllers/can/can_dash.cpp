@@ -107,7 +107,7 @@ static void canDashboardBmwE46(CanCycle cycle) {
 		{
    CanTxMessage msg(CanCategory::NBC, CAN_BMW_E46_DME2, 8, DEFAULT_BUS_INDEX);
       msg[0] = 0x11;
-      msg[1] = (Sensor::getOrZero(SensorType::Clt) + 48.373) / 0.75;
+      msg[1] = static_cast<uint8_t>((Sensor::getOrZero(SensorType::Clt) + 48.373f) / 0.75f);
       msg[2] = 0x00; // baro sensor
       msg[3] = 0x08;
       msg[4] = 0x00; // TPS_VIRT_CRU_CAN, not used.
@@ -132,7 +132,7 @@ void canMazdaRX8(CanCycle cycle) {
 			float kph = Sensor::getOrZero(SensorType::VehicleSpeed);
 
       // todo: LSB+SWAP? lol, that's MSB?
-			msg.setShortValue(SWAP_UINT16(Sensor::getOrZero(SensorType::Rpm) * 4), 0);
+			msg.setShortValue(SWAP_UINT16(static_cast<uint16_t>(Sensor::getOrZero(SensorType::Rpm) * 4)), 0);
 			msg.setShortValue(0xFFFF, 2);
       // todo: LSB+SWAP? lol, that's MSB?
 			msg.setShortValue(SWAP_UINT16((int )(100 * kph + 10000)), 4);
@@ -183,7 +183,7 @@ void canDashboardFiat(CanCycle cycle) {
 			//Fiat Dashboard
    CanTxMessage msg(CanCategory::NBC, CAN_FIAT_MOTOR_INFO, 8, DEFAULT_BUS_INDEX);
 			msg.setShortValue((int) (Sensor::getOrZero(SensorType::Clt) - 40), 3); //Coolant Temp
-			msg.setShortValue(Sensor::getOrZero(SensorType::Rpm) / 32, 6); //RPM
+			msg.setShortValue(static_cast<uint16_t>(Sensor::getOrZero(SensorType::Rpm) / 32), 6); //RPM
 		}
 	}
 }
@@ -194,7 +194,7 @@ void canDashboardVAG(CanCycle cycle) {
 			// https://github.com/commaai/opendbc/blob/57c8340a180dd8c75139b18050eb17c72c9cb6e4/vw_golf_mk4.dbc#L394
 			//VAG Dashboard
    CanTxMessage msg(CanCategory::NBC, CAN_VAG_Motor_1, 8, DEFAULT_BUS_INDEX);
-			msg.setShortValue(Sensor::getOrZero(SensorType::Rpm) * 4, 2); //RPM
+			msg.setShortValue(static_cast<uint16_t>(Sensor::getOrZero(SensorType::Rpm) * 4), 2); //RPM
 		}
 
 		float clt = Sensor::getOrZero(SensorType::Clt);
@@ -221,7 +221,7 @@ void canDashboardW202(CanCycle cycle) {
 		{
    CanTxMessage msg(CanCategory::NBC, W202_STAT_1, 8, DEFAULT_BUS_INDEX);
 			msg[0] = 0x08; // Unknown
-			msg.setShortValueMsb(Sensor::getOrZero(SensorType::Rpm), 1);
+			msg.setShortValueMsb(static_cast<uint16_t>(Sensor::getOrZero(SensorType::Rpm)), 1);
 			msg[3] = 0x00; // 0x01 - tank blink, 0x02 - EPC
 			msg[4] = 0x00; // Unknown
 			msg[5] = 0x00; // Unknown
@@ -275,11 +275,11 @@ void canDashboardGenesisCoupe(CanCycle cycle) {
 	if (cycle.isInterval(CI::_50ms)) {
     {
    CanTxMessage msg(CanCategory::NBC, GENESIS_COUPLE_RPM_316, 8, DEFAULT_BUS_INDEX);
-			msg.setShortValueMsb(Sensor::getOrZero(SensorType::Rpm) * 4, /*offset*/ 3);
+			msg.setShortValueMsb(static_cast<uint16_t>(Sensor::getOrZero(SensorType::Rpm) * 4), /*offset*/ 3);
 	  }
 		{
    CanTxMessage msg(CanCategory::NBC, GENESIS_COUPLE_COOLANT_329, 8, DEFAULT_BUS_INDEX);
-			int clt = Sensor::getOrZero(SensorType::Clt) * 2;
+			int clt = static_cast<int>(Sensor::getOrZero(SensorType::Clt) * 2);
 			msg[1] = clt;
 		}
 	}
@@ -299,7 +299,7 @@ void canDashboardVagMqb(CanCycle cycle) {
 
 		{ //RPM
    CanTxMessage msg(CanCategory::NBC, 0x107, 8, DEFAULT_BUS_INDEX);
-			msg.setShortValue(Sensor::getOrZero(SensorType::Rpm) / 3.5, /*offset*/ 3);
+			msg.setShortValue(static_cast<uint16_t>(Sensor::getOrZero(SensorType::Rpm) / 3.5f), /*offset*/ 3);
 		}
 	}
 }
@@ -329,7 +329,7 @@ static void canDashboardBmwE90(CanCycle cycle) {
 				rpmcounter = 0xF0;
    CanTxMessage msg(CanCategory::OBD, E90_RPM, 3, DEFAULT_BUS_INDEX);
 			msg[0] = rpmcounter;
-			msg.setShortValue(Sensor::getOrZero(SensorType::Rpm) * 4, 1);
+			msg.setShortValue(static_cast<uint16_t>(Sensor::getOrZero(SensorType::Rpm) * 4), 1);
 		}
 
 		{ //oil & coolant temp (all in C, despite gauge being F)

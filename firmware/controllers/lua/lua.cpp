@@ -51,7 +51,7 @@ static int lua_setTickRate(lua_State* l) {
 		efiPrintf(TAG "luaCanRxWorkaround recommended at high tick rate!");
 	}
 
-	luaTickPeriodUs = 1000000.0f / freq;
+	luaTickPeriodUs = static_cast<int>(1000000.0f / freq);
 	return 0;
 }
 

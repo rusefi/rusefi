@@ -45,7 +45,7 @@ void AutomaticGearController::shift(float speed, float throttle, uint8_t (*curve
 }
 
 void AutomaticGearController::shift(float speed, float throttle, uint8_t (*curve)[TCU_TABLE_WIDTH], gear_e gear, bool down) {
-	int curveSpeed = interpolate2d(throttle, config->tcu_shiftTpsBins, *curve);
+	int curveSpeed = static_cast<int>(interpolate2d(throttle, config->tcu_shiftTpsBins, *curve));
 
 	if ((down && speed < curveSpeed) || (!down && speed > curveSpeed)) {
 		setDesiredGear(gear);

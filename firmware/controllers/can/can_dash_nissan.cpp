@@ -56,13 +56,13 @@ void canDashboardNissanVQ(CanCycle cycle) {
 	if (cycle.isInterval(CI::_50ms)) {
 		{
 			CanTxMessage msg(CanCategory::NBC, NISSAN_ENGINE_1_RPM_1F9_505, 8, DEFAULT_BUS_INDEX);
-			msg.setShortValueMsb(Sensor::getOrZero(SensorType::Rpm) * 8, /*offset*/ 2);
+			msg.setShortValueMsb(static_cast<uint16_t>(Sensor::getOrZero(SensorType::Rpm) * 8), /*offset*/ 2);
 		}
 
 		{
 			CanTxMessage msg(CanCategory::OBD, NISSAN_ENGINE_5_CLT_551_1361, 8, DEFAULT_BUS_INDEX);
 
-			int clt = Sensor::getOrZero(SensorType::Clt);
+			int clt = static_cast<int>(Sensor::getOrZero(SensorType::Clt));
 			msg[0] = clt + 45;
 		}
 

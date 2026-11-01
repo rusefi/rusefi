@@ -65,8 +65,8 @@ void Generic4TransmissionController::setTccState(gear_e gear) {
 	}
 	// only enable TC in gear 4
 	if (gear == GEAR_4) {
-		int lockSpeed = interpolate2d(tps.Value, config->tcu_tccTpsBins, config->tcu_tccLockSpeed);
-		int unlockSpeed = interpolate2d(tps.Value, config->tcu_tccTpsBins, config->tcu_tccUnlockSpeed);
+		int lockSpeed = static_cast<int>(interpolate2d(tps.Value, config->tcu_tccTpsBins, config->tcu_tccLockSpeed));
+		int unlockSpeed = static_cast<int>(interpolate2d(tps.Value, config->tcu_tccTpsBins, config->tcu_tccUnlockSpeed));
 		if (vss.Value > lockSpeed) {
 			// torqueConverterDuty is only used for a gauge
 			torqueConverterDuty = 100;
@@ -128,7 +128,7 @@ void Generic4TransmissionController::setPcState(gear_e gear) {
 	}
 
 	if (pcts) {
-		pressureControlDuty = interpolate2d(engine->engineState.airflowEstimate, config->tcu_pcAirmassBins, *pcts);
+		pressureControlDuty = static_cast<int8_t>(interpolate2d(engine->engineState.airflowEstimate, config->tcu_pcAirmassBins, *pcts));
 		pcPwm.setSimplePwmDutyCycle(0.01f * pressureControlDuty);
 	}
 }

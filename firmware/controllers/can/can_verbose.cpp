@@ -62,7 +62,7 @@ void populateFrame(Status& msg) {
 	msg.fan = enginePins.fanRelay.getLogicValue();
 	msg.fan2 = enginePins.fanRelay2.getLogicValue();
 
-	msg.gear = Sensor::getOrZero(SensorType::DetectedGear);
+	msg.gear = static_cast<uint8_t>(Sensor::getOrZero(SensorType::DetectedGear));
 
 #ifdef MODULE_ODOMETER
 	// scale to units of 0.1km
@@ -89,7 +89,7 @@ struct Speeds {
 
 void populateFrame(Speeds& msg) {
 	auto rpm = Sensor::getOrZero(SensorType::Rpm);
-	msg.rpm = rpm;
+	msg.rpm = static_cast<uint16_t>(rpm);
 
 	auto timing = engine->engineState.timingAdvance[0];
 	msg.timing = timing > 360 ? timing - 720 : timing;
@@ -99,7 +99,7 @@ void populateFrame(Speeds& msg) {
 #endif // EFI_ENGINE_CONTROL
 	msg.vssKph = Sensor::getOrZero(SensorType::VehicleSpeed);
 
-	msg.EthanolPercent = Sensor::getOrZero(SensorType::FuelEthanolPercent);
+	msg.EthanolPercent = static_cast<uint8_t>(Sensor::getOrZero(SensorType::FuelEthanolPercent));
 }
 
 struct PedalAndTps {
@@ -154,8 +154,8 @@ struct Sensors2 {
 
 void populateFrame(Sensors2& msg) {
 	msg.oilPressure = Sensor::get(SensorType::OilPressure).value_or(-1);
-	msg.oilTemp = Sensor::getOrZero(SensorType::OilTemperature) + PACK_ADD_TEMPERATURE;
-	msg.fuelTemp = Sensor::getOrZero(SensorType::FuelTemperature) + PACK_ADD_TEMPERATURE;
+	msg.oilTemp = static_cast<uint8_t>(Sensor::getOrZero(SensorType::OilTemperature) + PACK_ADD_TEMPERATURE);
+	msg.fuelTemp = static_cast<uint8_t>(Sensor::getOrZero(SensorType::FuelTemperature) + PACK_ADD_TEMPERATURE);
 	msg.vbatt = Sensor::getOrZero(SensorType::BatteryVoltage);
 }
 
@@ -247,8 +247,8 @@ struct Egts {
 };
 
 void populateFrame(Egts& msg) {
-	msg.egt[0] = Sensor::getOrZero(SensorType::EGT1) / 5;
-	msg.egt[1] = Sensor::getOrZero(SensorType::EGT2) / 5;
+	msg.egt[0] = static_cast<uint8_t>(Sensor::getOrZero(SensorType::EGT1) / 5);
+	msg.egt[1] = static_cast<uint8_t>(Sensor::getOrZero(SensorType::EGT2) / 5);
 	// DBC Defines signals Egt3 through Egt8 but we do not have the code
 }
 

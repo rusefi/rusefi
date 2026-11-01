@@ -56,7 +56,7 @@ float TransmissionControllerBase::isShiftCompleted() {
 	} else if (!iss.Valid && m_shiftTime && m_shiftTimer.hasElapsedMs(config->tcu_shiftTime)) {
 		m_shiftTime = false;
 		// convert ms to seconds for gauge
-		return config->tcu_shiftTime * 0.001;
+		return config->tcu_shiftTime * 0.001f;
 	} else {
 		// a return value of 0 means the shift is not completed yet
 		return 0;

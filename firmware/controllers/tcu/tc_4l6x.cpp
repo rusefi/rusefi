@@ -40,8 +40,8 @@ void Gm4l6xTransmissionController::set32State(gear_e gear) {
 			return;
 		}
 
-		int pct = interpolate2d(vss.Value, config->tcu_32SpeedBins, config->tcu_32Vals);
-		shift32Pwm.setSimplePwmDutyCycle(pct*0.01);
+		int pct = static_cast<int>(interpolate2d(vss.Value, config->tcu_32SpeedBins, config->tcu_32Vals));
+		shift32Pwm.setSimplePwmDutyCycle(pct*0.01f);
 	} else {
 		shift32Pwm.setSimplePwmDutyCycle(0);
 	}

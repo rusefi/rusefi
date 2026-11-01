@@ -50,7 +50,7 @@ void canDashboardHondaK(CanCycle cycle) {
         // RPM message (HONDA_TACH_1DC)
         CanTxMessage msg(CanCategory::HONDA_NBC, HONDA_TACH_1DC, 4, DEFAULT_BUS_INDEX);
         msg[0] = 0x02; //This is constant i think
-        msg.setShortValueMsb(Sensor::getOrZero(SensorType::Rpm), /*offset*/ 1);
+        msg.setShortValueMsb(static_cast<uint16_t>(Sensor::getOrZero(SensorType::Rpm)), /*offset*/ 1);
         rollingId = (rollingId + 1) & 0x3;
         msg[3] = (rollingId << 4);
 
@@ -64,8 +64,8 @@ void canDashboardHondaK(CanCycle cycle) {
 
         // Speed message (HONDA_SPEED_158)
         CanTxMessage msg2(CanCategory::HONDA_NBC, HONDA_SPEED_158, 8, DEFAULT_BUS_INDEX);
-        msg2.setShortValueMsb(Sensor::getOrZero(SensorType::VehicleSpeed) * 160, /*offset*/ 0);
-        msg2.setShortValueMsb(Sensor::getOrZero(SensorType::VehicleSpeed) * 160, /*offset*/ 4);
+        msg2.setShortValueMsb(static_cast<uint16_t>(Sensor::getOrZero(SensorType::VehicleSpeed) * 160), /*offset*/ 0);
+        msg2.setShortValueMsb(static_cast<uint16_t>(Sensor::getOrZero(SensorType::VehicleSpeed) * 160), /*offset*/ 4);
         msg2[7] = (rollingId << 4);
 
         uint8_t tempBuffer2[8];
@@ -171,8 +171,8 @@ void canDashboardHondaK(CanCycle cycle) {
 
         // Temperature message (HONDA_TEMP_324)
         CanTxMessage msg9(CanCategory::HONDA_NBC, HONDA_TEMP_324, 8, DEFAULT_BUS_INDEX);
-        msg9[0] = Sensor::getOrZero(SensorType::Clt) + 40;
-        msg9[1] = Sensor::getOrZero(SensorType::Iat) + 40;
+        msg9[0] = static_cast<uint8_t>(Sensor::getOrZero(SensorType::Clt) + 40);
+        msg9[1] = static_cast<uint8_t>(Sensor::getOrZero(SensorType::Iat) + 40);
         msg9[7] = (rollingId << 4);
 
         uint8_t tempBuffer9[8];

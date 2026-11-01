@@ -100,7 +100,7 @@ expected<angle_t> VvtController::getSetpoint() {
 	float target = m_targetMap->getValue(rpm, load);
 
 #if EFI_TUNER_STUDIO
-	engine->outputChannels.vvtTargets[index] = target;
+	engine->outputChannels.vvtTargets[index] = static_cast<int8_t>(target);
 #endif
 
 	// If the target is very near the rest position, disable control entirely
@@ -232,7 +232,7 @@ static void turnVvtPidOn(int index) {
 			&engine->scheduler,
 			engineConfiguration->vvtPins[index],
 			getVvtOutputPin(index),
-			engineConfiguration->vvtOutputFrequency, 0.1,
+			engineConfiguration->vvtOutputFrequency, 0.1f,
 			applyVvtPinState);
 }
 

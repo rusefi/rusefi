@@ -147,7 +147,7 @@ expected<percent_t> BoostController::getOpenLoop(float target) {
 
 		engine->outputChannels.boostOpenLoopBlendParameter[i] = result.BlendParameter;
 		engine->outputChannels.boostOpenLoopBlendBias[i] = result.Bias;
-		engine->outputChannels.boostOpenLoopBlendOutput[i] = result.Value;
+		engine->outputChannels.boostOpenLoopBlendOutput[i] = static_cast<int8_t>(result.Value);
 		engine->outputChannels.boostOpenLoopBlendYAxis[i] = result.TableYAxis;
 
 		openLoop += result.Value;
@@ -299,7 +299,7 @@ void setDefaultBoostParameters() {
 	engineConfiguration->boostPwmFrequency = 33;
 	engineConfiguration->boostPid.offset = 0;
 	engineConfiguration->boostPid.pFactor = 0.5;
-	engineConfiguration->boostPid.iFactor = 0.3;
+	engineConfiguration->boostPid.iFactor = 0.3f;
 	engineConfiguration->boostPid.maxValue = 20;
 	engineConfiguration->boostPid.minValue = -20;
 	engineConfiguration->boostControlPinMode = OM_DEFAULT;

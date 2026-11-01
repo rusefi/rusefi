@@ -163,7 +163,7 @@ uint32_t getLuaArray(lua_State* l, int paramIndex, uint8_t *data, uint32_t size)
 			luaL_error(l, "Input array longer than buffer");
 		}
 		else {
-			data[result - 1] = val;
+			data[result - 1] = static_cast<uint8_t>(val);
 		}
 	}
 	return result;
@@ -234,7 +234,7 @@ static int lua_txCan(lua_State* l) {
 			luaL_error(l, "CAN frame length cannot be longer than 8");
 		}
 
-		msg[dlc - 1] = val;
+		msg[dlc - 1] = static_cast<uint8_t>(val);
 	}
 
 	msg.setDlc(dlc);
@@ -1233,7 +1233,7 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 #if EFI_UNIT_TEST
     hooks.add( "advanceTimeUs", [](lua_State *l){
         auto us = luaL_checknumber(l, 1);
-        advanceTimeUs(us);
+        advanceTimeUs(static_cast<int>(us));
         return 0;
     });
 #endif // EFI_UNIT_TEST

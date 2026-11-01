@@ -85,10 +85,10 @@ void applyIACposition(percent_t position) {
 			idleSolenoidOpen.setSimplePwmDutyCycle(duty);
 		} else {
 			// use 0.01..0.99 range
-			float idle_range = 0.98; // move to config?
+			float idle_range = 0.98f; // move to config?
 
-			float idle_open = 0.01 + idle_range * duty;
-			float idle_close = 0.01 + idle_range * (1.0 - duty);
+			float idle_open = 0.01f + idle_range * duty;
+			float idle_close = 0.01f + idle_range * (1.0f - duty);
 
 			idleSolenoidOpen.setSimplePwmDutyCycle(idle_open);
 			idleSolenoidClose.setSimplePwmDutyCycle(idle_close);
