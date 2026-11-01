@@ -5,6 +5,11 @@
 name: Build Custom Board Firmware
 
 inputs:
+  submodule_token:
+    # [tag:submodule_auth] see .github/actions/submodule-init/action.yml
+    description: 'Optional token for submodule fetches; empty is fine for public submodules'
+    required: false
+    default: ''
   rusefi_dir:
     description: 'Path to rusefi submodule'
     required: false
@@ -133,10 +138,19 @@ runs:
         echo "sim_output=${{inputs.sim_output}}"
 
     - name: Checkout Submodules
+      # [tag:submodule_auth] same logic as .github/actions/submodule-init/action.yml, inlined
+      # because a composite action cannot `uses:` a path built from inputs.rusefi_dir
       working-directory: ${{inputs.rusefi_dir}}
       shell: bash
+      env:
+        SUBMODULES_TOKEN: ${{ inputs.submodule_token }}
       run: |
         : Checkout Submodules
+        if [ -n "$SUBMODULES_TOKEN" ]; then
+          export GIT_CONFIG_COUNT=1
+          export GIT_CONFIG_KEY_0="url.https://x-access-token:${SUBMODULES_TOKEN}@github.com/.insteadOf"
+          export GIT_CONFIG_VALUE_0="https://github.com/"
+        fi
         misc/git_scripts/common_submodule_init.sh
 
     - name: Invoking Post-Checkout Action

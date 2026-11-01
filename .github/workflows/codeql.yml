@@ -48,6 +48,8 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v7
       with:
+        # [tag:submodule_auth] checkout's own submodule fetch authenticates with this token; checkout rejects an empty token, hence the fallback
+        token: ${{ secrets.MY_REPO_PAT || github.token }}
         submodules: recursive
 
     - name: Install mtools

@@ -20,8 +20,10 @@ jobs:
           release: '14.2.Rel1'
 
       - name: Checkout Submodules
-        run: |
-          misc/git_scripts/common_submodule_init.sh
+        # [tag:submodule_auth] see .github/actions/submodule-init/action.yml
+        uses: ./.github/actions/submodule-init
+        with:
+          token: ${{ secrets.MY_REPO_PAT }}
 
       - name: Install required software (macos)
         run: |

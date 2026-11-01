@@ -13,8 +13,10 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Checkout Submodules
-        run: |
-          misc/git_scripts/common_submodule_init.sh
+        # [tag:submodule_auth] see .github/actions/submodule-init/action.yml
+        uses: ./.github/actions/submodule-init
+        with:
+          token: ${{ secrets.MY_REPO_PAT }}
 
       - uses: ./.github/actions/setup-java
 

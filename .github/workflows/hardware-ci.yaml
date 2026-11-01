@@ -65,8 +65,10 @@ jobs:
     - uses: ./.github/actions/setup-java
 
     - name: Checkout Submodules
-      run: |
-        misc/git_scripts/common_submodule_init.sh
+      # [tag:submodule_auth] see .github/actions/submodule-init/action.yml
+      uses: ./.github/actions/submodule-init
+      with:
+        token: ${{ secrets.MY_REPO_PAT }}
 
     - name: Identify Agent
       run: |
