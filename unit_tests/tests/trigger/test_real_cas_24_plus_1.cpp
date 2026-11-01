@@ -45,7 +45,7 @@ void testTwelvePlusOne(
 		}
 
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
-		if (!gotRpm && rpm) {
+		if (!gotRpm && rpm != 0) {
 			gotRpm = true;
 
 			// We should get first RPM on exactly the first (primary) sync point - this means the instant RPM pre-sync

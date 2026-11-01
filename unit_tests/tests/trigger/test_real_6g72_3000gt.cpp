@@ -65,7 +65,7 @@ static void constructTriggerFromRecording(CsvReader *reader) {
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
 //		printf("rpm %f\n", rpm);
 
-		if (!gotRpm && rpm) {
+		if (!gotRpm && rpm != 0) {
 			gotRpm = true;
 
 //			EXPECT_EQ(eventCount, 7);
@@ -109,7 +109,7 @@ void generateLog(const char* filename) {
     while (reader.haveMore()) {
         reader.processLine(&eth);
         auto rpm = Sensor::getOrZero(SensorType::Rpm);
-        if ((rpm) && (!firstRpm)) {
+        if (rpm != 0 && !firstRpm) {
             printf("Got first RPM %f, at %d\n", rpm, n);
             firstRpm = true;
         }

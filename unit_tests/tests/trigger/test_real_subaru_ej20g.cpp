@@ -68,7 +68,7 @@ TEST(real, SubaruEj20gDefaultCrankingSeparateTrigger) {
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
 		bool hasFullSync = getTriggerCentral()->triggerState.hasSynchronizedPhase();
 
-		if (!gotFullSync && hasFullSync && rpm) {
+		if (!gotFullSync && hasFullSync && rpm != 0) {
 			gotFullSync = true;
 
 			// Should get full sync and non-zero RPM
@@ -97,7 +97,7 @@ TEST(real, SubaruEj20gDefaultRev) {
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
 		bool hasFullSync = getTriggerCentral()->triggerState.hasSynchronizedPhase();
 
-		if (!gotFullSync && hasFullSync && rpm) {
+		if (!gotFullSync && hasFullSync && rpm != 0) {
 			gotFullSync = true;
 
 			// Should get full sync and non-zero RPM

@@ -30,7 +30,7 @@ public:
             reader.processLine(&eth);
 
             auto rpm = Sensor::getOrZero(SensorType::Rpm);
-            if (!gotRpm && rpm) {
+            if (!gotRpm && rpm != 0) {
                 gotRpm = true;
                 if (expectedFirstRpm != -1) {
                     EXPECT_NEAR(rpm, expectedFirstRpm, 1);

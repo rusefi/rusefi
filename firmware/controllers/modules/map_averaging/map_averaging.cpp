@@ -54,7 +54,7 @@ static void endAveraging(MapAverager* arg);
 static size_t currentMapAverager = 0;
 
 void startAveraging(mapSampler* s) {
-    if (!engine->engineState.mapAveragingDuration) {
+    if (engine->engineState.mapAveragingDuration == 0) {
         // Zero duration means the engine wasn't spinning or something, abort
         return;
     }

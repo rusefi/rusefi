@@ -49,7 +49,7 @@ public:
   void assertFirstRpm(int expectedRpm, int expectedRpmAtIndex) {
     auto rpm = Sensor::getOrZero(SensorType::Rpm);
 
-		if (!gotRpm && rpm) {
+		if (!gotRpm && rpm != 0) {
 			gotRpm = true;
 
   			EXPECT_NEAR(rpm, expectedRpm, 1);

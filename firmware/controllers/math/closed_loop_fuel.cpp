@@ -108,7 +108,7 @@ stft_state_e ShortTermFuelTrim::getLearningState(SensorType sensor) {
 	// It's probably a transient and poorly tuned transient correction
 	// TODO: use getStoichiometricRatio() instead of STOICH_RATIO
 	auto afr = Sensor::getOrZero(sensor) * STOICH_RATIO;
-	if (!afr || afr < cfg.minAfr || afr > cfg.maxAfr) {
+	if (afr == 0 || afr < cfg.minAfr || afr > cfg.maxAfr) {
 		return stftDisabledAfrOurOfRange;
 	}
 

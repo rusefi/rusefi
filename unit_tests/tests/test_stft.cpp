@@ -328,7 +328,7 @@ protected:
 
 TEST_F(ShortTermFuelTrimBehavior, BanksAndOperatingRegionsKeepIndependentCorrections) {
 	// 50 ms at a 100 ms time constant and +/-0.1 lambda error -> +/-5%.
-	expectBanks(learn(50 / FAST_CALLBACK_PERIOD_MS), 1.05f, 0.95f);
+	expectBanks(learn(static_cast<int>(50 / FAST_CALLBACK_PERIOD_MS)), 1.05f, 0.95f);
 	EXPECT_EQ(ftRegionCruise, stft.stftCorrectionBinIdx);
 	EXPECT_EQ(ftRegionCruise, stft.stftLearningBinIdx);
 	EXPECT_NEAR(0.1f, stft.stftInputError[0], 1e-6f);
@@ -344,20 +344,20 @@ TEST_F(ShortTermFuelTrimBehavior, BanksAndOperatingRegionsKeepIndependentCorrect
 }
 
 TEST_F(ShortTermFuelTrimBehavior, FailedLambdaPausesOnlyItsBankAndRecovers) {
-	expectBanks(learn(50 / FAST_CALLBACK_PERIOD_MS), 1.05f, 0.95f);
+	expectBanks(learn(static_cast<int>(50 / FAST_CALLBACK_PERIOD_MS)), 1.05f, 0.95f);
 	Sensor::setInvalidMockValue(SensorType::Lambda1);
-	expectBanks(learn(50 / FAST_CALLBACK_PERIOD_MS), 1.05f, 0.90f);
+	expectBanks(learn(static_cast<int>(50 / FAST_CALLBACK_PERIOD_MS)), 1.05f, 0.90f);
 	EXPECT_EQ(stftEnabled, stft.stftCorrectionState);
 	EXPECT_EQ(stftDisabledAfrOurOfRange, stft.stftLearningState[0]);
 	EXPECT_EQ(stftEnabled, stft.stftLearningState[1]);
 
 	setLambda(0.9f, 1);
-	expectBanks(learn(50 / FAST_CALLBACK_PERIOD_MS), 1, 0.90f);
+	expectBanks(learn(static_cast<int>(50 / FAST_CALLBACK_PERIOD_MS)), 1, 0.90f);
 	EXPECT_EQ(stftEnabled, stft.stftLearningState[0]);
 }
 
 TEST_F(ShortTermFuelTrimBehavior, DisabledCorrectionReturnsUnityWithoutErasingLearnedTrim) {
-	expectBanks(learn(50 / FAST_CALLBACK_PERIOD_MS), 1.05f, 0.95f);
+	expectBanks(learn(static_cast<int>(50 / FAST_CALLBACK_PERIOD_MS)), 1.05f, 0.95f);
 	engineConfiguration->fuelClosedLoopCorrectionEnabled = false;
 	expectDisabled(stftDisabledSettings);
 	engineConfiguration->fuelClosedLoopCorrectionEnabled = true;
@@ -384,7 +384,7 @@ TEST_F(ShortTermFuelTrimBehavior, DisabledCorrectionReturnsUnityWithoutErasingLe
 }
 
 TEST_F(ShortTermFuelTrimBehavior, VeWriteSuspendsCorrectionUntilTuningTimeout) {
-	expectBanks(learn(50 / FAST_CALLBACK_PERIOD_MS), 1.05f, 0.95f);
+	expectBanks(learn(static_cast<int>(50 / FAST_CALLBACK_PERIOD_MS)), 1.05f, 0.95f);
 	engineConfiguration->isTuningDetectorEnabled = true;
 	::testing::NiceMock<MockTsChannel> channel;
 	TunerStudio ts;
@@ -403,7 +403,7 @@ TEST_F(ShortTermFuelTrimBehavior, VeWriteSuspendsCorrectionUntilTuningTimeout) {
 }
 
 TEST_F(ShortTermFuelTrimBehavior, DfcoPausesLearningAndResumesAtHoldoffBoundary) {
-	expectBanks(learn(50 / FAST_CALLBACK_PERIOD_MS), 1.05f, 0.95f);
+	expectBanks(learn(static_cast<int>(50 / FAST_CALLBACK_PERIOD_MS)), 1.05f, 0.95f);
 	engineConfiguration->coastingFuelCutEnabled = true;
 	engineConfiguration->coastingFuelCutClt = 30;
 	engineConfiguration->coastingFuelCutMap = 100;
@@ -433,7 +433,7 @@ TEST_F(ShortTermFuelTrimBehavior, DfcoPausesLearningAndResumesAtHoldoffBoundary)
 }
 
 TEST_F(ShortTermFuelTrimBehavior, FuelAndSparkCutsPauseLearningForTwoSeconds) {
-	expectBanks(learn(50 / FAST_CALLBACK_PERIOD_MS), 1.05f, 0.95f);
+	expectBanks(learn(static_cast<int>(50 / FAST_CALLBACK_PERIOD_MS)), 1.05f, 0.95f);
 	auto& limp = engine->module<LimpManager>().unmock();
 	for (bool fuelCut : {true, false}) {
 		SCOPED_TRACE(fuelCut ? "fuel cut" : "spark cut");
@@ -460,24 +460,24 @@ TEST_F(ShortTermFuelTrimBehavior, FuelAndSparkCutsPauseLearningForTwoSeconds) {
 }
 
 TEST_F(ShortTermFuelTrimBehavior, CorrectionSaturatesAndCanMoveAwayFromBothLimits) {
-	expectBanks(learn(1000 / FAST_CALLBACK_PERIOD_MS), 1.1f, 0.9f);
+	expectBanks(learn(static_cast<int>(1000 / FAST_CALLBACK_PERIOD_MS)), 1.1f, 0.9f);
 	setLambda(0.9f, 1.1f);
-	expectBanks(learn(50 / FAST_CALLBACK_PERIOD_MS), 1.05f, 0.95f);
+	expectBanks(learn(static_cast<int>(50 / FAST_CALLBACK_PERIOD_MS)), 1.05f, 0.95f);
 
 	// Even the largest representable calibration (25.5%) is capped at 25%.
 	for (auto& cell : engineConfiguration->stft.cellCfgs) {
 		cell.maxAdd = 25.5f;
 		cell.maxRemove = 25.5f;
 	}
-	expectBanks(learn(1000 / FAST_CALLBACK_PERIOD_MS), 0.75f, 1.25f);
+	expectBanks(learn(static_cast<int>(1000 / FAST_CALLBACK_PERIOD_MS)), 0.75f, 1.25f);
 }
 
 TEST_F(ShortTermFuelTrimBehavior, ConstantRateUsesErrorDirectionAndHonorsDeadband) {
 	engineConfiguration->stftIgnoreErrorMagnitude = true;
 	setLambda(1.02f, 0.8f);
-	expectBanks(learn(50 / FAST_CALLBACK_PERIOD_MS), 1.05f, 0.95f);
+	expectBanks(learn(static_cast<int>(50 / FAST_CALLBACK_PERIOD_MS)), 1.05f, 0.95f);
 	setLambda(1.005f, 0.995f);
-	expectBanks(learn(100 / FAST_CALLBACK_PERIOD_MS), 1.05f, 0.95f);
+	expectBanks(learn(static_cast<int>(100 / FAST_CALLBACK_PERIOD_MS)), 1.05f, 0.95f);
 }
 
 TEST_F(ShortTermFuelTrimBehavior, IntegrationUsesTargetLambdaAndClampsTimeConstant) {
@@ -487,12 +487,12 @@ TEST_F(ShortTermFuelTrimBehavior, IntegrationUsesTargetLambdaAndClampsTimeConsta
 		cell.timeConstant = 0;
 	}
 	// A zero calibration uses the 100 ms minimum instead of dividing by zero.
-	expectBanks(learn(50 / FAST_CALLBACK_PERIOD_MS), 1.05f, 0.95f);
+	expectBanks(learn(static_cast<int>(50 / FAST_CALLBACK_PERIOD_MS)), 1.05f, 0.95f);
 	for (auto& cell : engineConfiguration->stft.cellCfgs) {
 		cell.timeConstant = 1000;
 	}
 	// At the 100 second maximum, another 50 ms changes trim by 0.005%.
-	expectBanks(learn(50 / FAST_CALLBACK_PERIOD_MS), 1.05005f, 0.94995f);
+	expectBanks(learn(static_cast<int>(50 / FAST_CALLBACK_PERIOD_MS)), 1.05005f, 0.94995f);
 }
 
 } // namespace

@@ -16,7 +16,7 @@ namespace {
 	class FuelLevelFuncTest: public TestBase<> {
 	protected:
 		static constexpr float TEST_FUEL_LEVEL_UPDATE_PERIOD_SEC = 0.932f;
-		static constexpr float TEST_FUEL_LEVEL_UPDATE_PERIOD_USEC = static_cast<int>(
+		static constexpr int TEST_FUEL_LEVEL_UPDATE_PERIOD_USEC = static_cast<int>(
 			TEST_FUEL_LEVEL_UPDATE_PERIOD_SEC * 1000000.0f
 		);
 		static constexpr float TEST_FUEL_LEVEL_ALPHA = 0.17f;

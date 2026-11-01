@@ -159,21 +159,21 @@ TEST(EngineStateMachine, transientHoldoff) {
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 30.0f);
 	Sensor::setMockValue(SensorType::Tps1, 30.0f);
 	runAndGetState();
-	advanceTimeUs(SLOW_CALLBACK_PERIOD_MS * 1000);
+	advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 	runAndGetState();
-	advanceTimeUs(SLOW_CALLBACK_PERIOD_MS * 1000);
+	advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 
 	// Trigger: step Tps1 to 40% → delta=10% > 5% threshold → AE fires → Transient
 	Sensor::setMockValue(SensorType::Tps1, 40.0f);
 	EXPECT_EQ(EngineStateMachineState::Transient, runAndGetState());
 
 	// AE drops on next callback (buffer is [40,40], delta=0); hold-off starts
-	advanceTimeUs(SLOW_CALLBACK_PERIOD_MS * 1000);
+	advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 	EXPECT_EQ(EngineStateMachineState::Transient, runAndGetState()); // 50 ms into the 100 ms hold
-	advanceTimeUs(SLOW_CALLBACK_PERIOD_MS * 1000);
+	advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 	EXPECT_EQ(EngineStateMachineState::Transient, runAndGetState()); // 100 ms into the 100 ms hold
 	// Hold-off expired — state falls through to Cruising
-	advanceTimeUs(SLOW_CALLBACK_PERIOD_MS * 1000);
+	advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 	EXPECT_NE(EngineStateMachineState::Transient, runAndGetState());
 }
 
@@ -367,7 +367,7 @@ static void seedHistory(int callbacks = 10, float rpm = 2000.0f, float tps = 50.
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, tps);
 	for (int i = 0; i < callbacks; i++) {
 		engine->periodicSlowCallback();
-		advanceTimeUs(SLOW_CALLBACK_PERIOD_MS * 1000);
+		advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 	}
 }
 
@@ -378,7 +378,7 @@ static void seedRampedRpm(float startRpm, float rpmPerCallback, int callbacks, f
 	for (int i = 0; i < callbacks; i++) {
 		engine->rpmCalculator.setRpmValue(startRpm + rpmPerCallback * i);
 		engine->periodicSlowCallback();
-		advanceTimeUs(SLOW_CALLBACK_PERIOD_MS * 1000);
+		advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 	}
 }
 
@@ -668,7 +668,7 @@ TEST(EngineStateMachine, rpmRateHoldsUntilWindowElapsesThenUpdates) {
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 50.0f);
 	engine->periodicSlowCallback();
 	EXPECT_EQ(0.0f, getSm().getLastRpmRate());
-	advanceTimeUs(SLOW_CALLBACK_PERIOD_MS * 1000);
+	advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 
 	// RPM jumps immediately, but the window (200 ms) hasn't elapsed since the anchor yet on any
 	// of the next three ticks (50/100/150 ms in) -- the rate must hold at the old value.
@@ -676,7 +676,7 @@ TEST(EngineStateMachine, rpmRateHoldsUntilWindowElapsesThenUpdates) {
 	for (int i = 0; i < 3; i++) {
 		engine->periodicSlowCallback();
 		EXPECT_EQ(0.0f, getSm().getLastRpmRate());
-		advanceTimeUs(SLOW_CALLBACK_PERIOD_MS * 1000);
+		advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 	}
 
 	// The fourth tick lands exactly on the 200 ms window boundary -- the rate now recomputes
@@ -696,12 +696,12 @@ TEST(EngineStateMachine, shorterWindowRecomputesMoreOften) {
 	engine->rpmCalculator.setRpmValue(2000.0f);
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 50.0f);
 	engine->periodicSlowCallback(); // anchor
-	advanceTimeUs(SLOW_CALLBACK_PERIOD_MS * 1000);
+	advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 
 	engine->rpmCalculator.setRpmValue(2100.0f);
 	engine->periodicSlowCallback(); // 50 ms since anchor -- window not elapsed yet, holds
 	EXPECT_EQ(0.0f, getSm().getLastRpmRate());
-	advanceTimeUs(SLOW_CALLBACK_PERIOD_MS * 1000);
+	advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 
 	engine->periodicSlowCallback(); // 100 ms since anchor -- window elapsed, recomputes
 	EXPECT_NEAR(1000.0f, getSm().getLastRpmRate(), 1.0f); // (2100-2000)/0.1s
@@ -794,26 +794,26 @@ TEST(EngineStateMachine, acceleratingHoldsAfterRateDrops) {
 	engine->rpmCalculator.setRpmValue(2000.0f);
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 50.0f);
 	engine->periodicSlowCallback(); // t=0: establishes the rate anchor, no rate yet
-	advanceTimeUs(SLOW_CALLBACK_PERIOD_MS * 1000);
+	advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 
 	// 500 RPM over one 50 ms tick == 10,000 RPM/s, comfortably above threshold. Not yet visible
 	// to determineState() this same tick (one-tick lag).
 	engine->rpmCalculator.setRpmValue(2500.0f);
 	EXPECT_NE(EngineStateMachineState::Accelerating, runAndGetState()); // t=50 ms
-	advanceTimeUs(SLOW_CALLBACK_PERIOD_MS * 1000);
+	advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 
 	// RPM goes flat from here. The 10,000 RPM/s computed last tick is now visible -- Accelerating
 	// triggers and the hold timer resets, even though the rate itself is about to read 0.
 	EXPECT_EQ(EngineStateMachineState::Accelerating, runAndGetState()); // t=100 ms: trigger
-	advanceTimeUs(SLOW_CALLBACK_PERIOD_MS * 1000);
+	advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 
 	// Rate has now recomputed to 0 (flat RPM) -- below threshold -- but the hold keeps it latched.
 	EXPECT_EQ(EngineStateMachineState::Accelerating, runAndGetState()); // t=150 ms: 50 ms into hold
-	advanceTimeUs(SLOW_CALLBACK_PERIOD_MS * 1000);
+	advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 	EXPECT_EQ(EngineStateMachineState::Accelerating, runAndGetState()); // t=200 ms: 100 ms into hold
 
 	// Past smAccelHoldMs (120 ms since the t=100 ms trigger) -- hold expires, falls through.
-	advanceTimeUs(SLOW_CALLBACK_PERIOD_MS * 1000);
+	advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 	EXPECT_EQ(EngineStateMachineState::Cruising, runAndGetState()); // t=250 ms: 150 ms, expired
 }
 
@@ -833,32 +833,32 @@ TEST(EngineStateMachine, acceleratingHoldResetsOnReTrigger) {
 	engine->rpmCalculator.setRpmValue(2000.0f);
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 50.0f);
 	engine->periodicSlowCallback(); // t=0
-	advanceTimeUs(SLOW_CALLBACK_PERIOD_MS * 1000);
+	advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 
 	engine->rpmCalculator.setRpmValue(2500.0f);
 	engine->periodicSlowCallback(); // t=50 ms: rate computed, not yet visible
-	advanceTimeUs(SLOW_CALLBACK_PERIOD_MS * 1000);
+	advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 
 	EXPECT_EQ(EngineStateMachineState::Accelerating, runAndGetState()); // t=100 ms: trigger #1
-	advanceTimeUs(SLOW_CALLBACK_PERIOD_MS * 1000);
+	advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 
 	// Still within trigger #1's hold. Jump RPM again -- this re-trigger's rate isn't visible yet
 	// (one-tick lag), so this tick is still riding out the *original* hold.
 	engine->rpmCalculator.setRpmValue(3000.0f);
 	EXPECT_EQ(EngineStateMachineState::Accelerating, runAndGetState()); // t=150 ms
-	advanceTimeUs(SLOW_CALLBACK_PERIOD_MS * 1000);
+	advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 
 	// The re-trigger's rate (10,000 RPM/s) is now visible -- Accelerating re-triggers and the
 	// hold timer resets to t=200 ms.
 	EXPECT_EQ(EngineStateMachineState::Accelerating, runAndGetState()); // t=200 ms: re-trigger
-	advanceTimeUs(SLOW_CALLBACK_PERIOD_MS * 1000);
+	advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 
 	// t=250/300 ms: 50/100 ms since the re-trigger -- still held. Without the reset, the
 	// *original* trigger's 120 ms hold (from t=100 ms) would already have expired by t=220 ms.
 	EXPECT_EQ(EngineStateMachineState::Accelerating, runAndGetState()); // t=250 ms
-	advanceTimeUs(SLOW_CALLBACK_PERIOD_MS * 1000);
+	advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 	EXPECT_EQ(EngineStateMachineState::Accelerating, runAndGetState()); // t=300 ms
-	advanceTimeUs(SLOW_CALLBACK_PERIOD_MS * 1000);
+	advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 
 	// Past the reset hold (150 ms since the t=200 ms re-trigger) -- now falls through.
 	EXPECT_EQ(EngineStateMachineState::Cruising, runAndGetState()); // t=350 ms
@@ -885,14 +885,14 @@ TEST(EngineStateMachine, overrunBreaksAcceleratingHoldImmediately) {
 	engine->rpmCalculator.setRpmValue(2000.0f);
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 50.0f);
 	engine->periodicSlowCallback(); // t=0
-	advanceTimeUs(SLOW_CALLBACK_PERIOD_MS * 1000);
+	advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 
 	engine->rpmCalculator.setRpmValue(2500.0f);
 	engine->periodicSlowCallback(); // t=50 ms: rate computed, not yet visible
-	advanceTimeUs(SLOW_CALLBACK_PERIOD_MS * 1000);
+	advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 
 	EXPECT_EQ(EngineStateMachineState::Accelerating, runAndGetState()); // t=100 ms: trigger
-	advanceTimeUs(SLOW_CALLBACK_PERIOD_MS * 1000);
+	advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 
 	// Lift off: throttle closes and the idle controller reports Coasting. Only 50 ms have
 	// elapsed since the trigger, deep inside the 200 ms hold -- but Coasting must override it
@@ -1100,7 +1100,7 @@ static void seedRampedVss(float startVss, float vssPerCallback, int callbacks, f
 	for (int i = 0; i < callbacks; i++) {
 		Sensor::setMockValue(SensorType::VehicleSpeed, startVss + vssPerCallback * i);
 		engine->periodicSlowCallback();
-		advanceTimeUs(SLOW_CALLBACK_PERIOD_MS * 1000);
+		advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 	}
 }
 

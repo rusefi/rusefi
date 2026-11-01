@@ -96,7 +96,7 @@ TEST(real4g93, crankingCamOnly) {
 
 		// Expect that all teeth are in the correct spot
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
-		if (!reader.gotRpm && rpm) {
+		if (!reader.gotRpm && rpm != 0) {
 			reader.gotRpm = true;
 
 			// We should get first RPM on exactly the first sync point - this means the instant RPM pre-sync event copy all worked OK

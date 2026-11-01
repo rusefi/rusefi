@@ -35,7 +35,7 @@ void FuelPumpController::setDefaultConfiguration() {
 	engineConfiguration->fuelPumpControl.pFactor = 0.1f;
 	engineConfiguration->fuelPumpControl.minValue = -50;
 	engineConfiguration->fuelPumpControl.maxValue = 50;
-	engineConfiguration->fuelPumpControl.periodMs = FAST_CALLBACK_PERIOD_MS;
+	engineConfiguration->fuelPumpControl.periodMs = static_cast<int16_t>(FAST_CALLBACK_PERIOD_MS);
 	engineConfiguration->fuelPump_iTermMin = -30;
 	engineConfiguration->fuelPump_iTermMax = 30;
 	engineConfiguration->fuelPumpAggressiveRelief = false;

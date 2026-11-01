@@ -324,7 +324,7 @@ float EngineStateMachine::recordRpmSampleAndComputeRate(float rpm, efitimems_t n
 	// pre-existing raw-tick calculation.
 	uint16_t windowMs = engineConfiguration->smRpmRateWindowMs;
 	if (windowMs < SLOW_CALLBACK_PERIOD_MS) {
-		windowMs = SLOW_CALLBACK_PERIOD_MS;
+		windowMs = static_cast<uint16_t>(SLOW_CALLBACK_PERIOD_MS);
 	}
 
 	efitimems_t elapsedMs = nowMs - m_rpmRateAnchorMs;

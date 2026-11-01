@@ -416,7 +416,7 @@ void EngineTestHelper::moveTimeForwardAndInvokeEventsUs(int deltaTimeUs) {
 void EngineTestHelper::setTimeNtAndInvokeCallBacks(efitick_t nt)
 {
 	// we need to call fast callback every FAST_CALLBACK_PERIOD_MS
-	efitick_t step = MS2US(FAST_CALLBACK_PERIOD_MS) * US_TO_NT_MULTIPLIER;
+	efitick_t step = static_cast<efitick_t>(MS2US(FAST_CALLBACK_PERIOD_MS) * US_TO_NT_MULTIPLIER);
 
 	while (getTimeNowNt() < nt) {
 		// get next FAST_CALLBACK_PERIOD_MS tick time

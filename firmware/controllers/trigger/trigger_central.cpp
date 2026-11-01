@@ -830,7 +830,7 @@ bool TriggerCentral::isToothExpectedNow(efitick_t timestamp) {
 
 			// Absolute error from last tooth
 			float absError = absF(angleError);
-			float isRpmEnough = Sensor::getOrZero(SensorType::Rpm) > 1000;
+			bool isRpmEnough = Sensor::getOrZero(SensorType::Rpm) > 1000;
 			// TODO: configurable threshold
 			bool reportTimingError = isRpmEnough && absError > 10 && absError < 180;
 #if EFI_ENGINE_CONTROL
