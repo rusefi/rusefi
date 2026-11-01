@@ -291,7 +291,7 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 				is_usb_serial_ready() ? 3 * BLINKING_PERIOD_MS :
 #endif // EFI_USB_SERIAL
 				BLINKING_PERIOD_MS;
-				offTimeMs = 0.6 * onTimeMs;
+				offTimeMs = static_cast<int>(0.6f * onTimeMs);
 			}
 
 			enginePins.communicationLedPin.setValue(1, /*force*/true);
@@ -582,7 +582,7 @@ static void updateMiscSensors() {
 	engine->outputChannels.auxSpeed2 = static_cast<uint16_t>(Sensor::getOrZero(SensorType::AuxSpeed2));
 
 #if	HAL_USE_ADC
-	engine->outputChannels.internalMcuTemperature = getMCUInternalTemperature();
+	engine->outputChannels.internalMcuTemperature = static_cast<int8_t>(getMCUInternalTemperature());
 	engine->outputChannels.internalVref = getMCUVref();
 	engine->outputChannels.internalVbat = getMcuVbatVoltage();
 #endif /* HAL_USE_ADC */

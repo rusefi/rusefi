@@ -99,7 +99,7 @@ static void checkOverdwellProtection(bool requestStop) {
 	const efitick_t expectedSparkUpTimestampNt = turnSparkPinHighStartChargingTimestamp.value();
 	const efitimeus_t expectedSparkUpTimestampUs = NT2US(expectedSparkUpTimestampNt);
 
-	const efitimeus_t sparkDownOverdwellDurationUs = MS2US(1.5f * engine->ignitionState.sparkDwell);
+	const efitimeus_t sparkDownOverdwellDurationUs = static_cast<efitimeus_t>(MS2US(1.5f * engine->ignitionState.sparkDwell));
 	EXPECT_EQ(4500, sparkDownOverdwellDurationUs) << "Unexpected sparkDown overdwell duration";
 
 	ASSERT_TRUE(overFireSparkAndPrepareNextTimestamp.has_value())

@@ -364,7 +364,7 @@ int Pca9685::setPadPWM(size_t pin, float /* frequency */, float duty) {
 		return -1;
 	}
 
-	uint16_t dutyInt = clampI(PCA9685_DUTY_OFF, duty * PCA9685_DUTY_MAX, PCA9685_DUTY_ON);
+	uint16_t dutyInt = static_cast<uint16_t>(clampI(PCA9685_DUTY_OFF, static_cast<int>(duty * PCA9685_DUTY_MAX), PCA9685_DUTY_ON));
 
 	chibios_rt::CriticalSectionLocker csl;
 	if (duties[pin] != dutyInt) {

@@ -28,7 +28,7 @@ namespace {
         const char* const context
     ) {
         if (timeoutInMs > IMMEDIATELY) {
-            advanceTimeUs(MS2US(timeoutInMs));
+            advanceTimeUs(static_cast<int>(MS2US(timeoutInMs)));
         }
         periodicFastCallback();
         EXPECT_EQ(

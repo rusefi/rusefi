@@ -60,7 +60,7 @@ namespace {
         const bool expectedFlatShiftCondition,
         const char* const context
     ) {
-        advanceTimeUs(MS2US(timeoutInMs));
+        advanceTimeUs(static_cast<int>(MS2US(timeoutInMs)));
         periodicFastCallback();
         EXPECT_EQ(engine->shiftTorqueReductionController.isFlatShiftConditionSatisfied, expectedFlatShiftCondition)
             << context;

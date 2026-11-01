@@ -303,22 +303,22 @@ void EngineTestHelper::writeEvents2(const char *fileName) {
  * DEPRECATED many usages should be migrated to
  */
 void EngineTestHelper::fireRise(float delayMs) {
-	moveTimeForwardUs(MS2US(delayMs));
+	moveTimeForwardUs(static_cast<int>(MS2US(delayMs)));
 	firePrimaryTriggerRise();
 }
 
 void EngineTestHelper::smartFireRise(float delayMs) {
-	moveTimeForwardAndInvokeEventsUs(MS2US(delayMs));
+	moveTimeForwardAndInvokeEventsUs(static_cast<int>(MS2US(delayMs)));
 	firePrimaryTriggerRise();
 }
 
 void EngineTestHelper::fireFall(float delayMs) {
-	moveTimeForwardUs(MS2US(delayMs));
+	moveTimeForwardUs(static_cast<int>(MS2US(delayMs)));
 	firePrimaryTriggerFall();
 }
 
 void EngineTestHelper::smartFireFall(float delayMs) {
-	moveTimeForwardAndInvokeEventsUs(MS2US(delayMs));
+	moveTimeForwardAndInvokeEventsUs(static_cast<int>(MS2US(delayMs)));
 	firePrimaryTriggerFall();
 }
 
@@ -385,11 +385,11 @@ int EngineTestHelper::executeActions() {
 }
 
 void EngineTestHelper::moveTimeForwardMs(float deltaTimeMs) {
-	moveTimeForwardUs(MS2US(deltaTimeMs));
+	moveTimeForwardUs(static_cast<int>(MS2US(deltaTimeMs)));
 }
 
 void EngineTestHelper::moveTimeForwardSec(float deltaTimeSec) {
-	moveTimeForwardUs(MS2US(1000 * deltaTimeSec));
+	moveTimeForwardUs(static_cast<int>(MS2US(1000 * deltaTimeSec)));
 }
 
 void EngineTestHelper::moveTimeForwardUs(int deltaTimeUs) {

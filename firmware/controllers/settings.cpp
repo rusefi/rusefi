@@ -476,7 +476,7 @@ static void getValue(const char *paramStr) {
 
 	{
 		float value = getConfigValueByName(paramStr);
-		if (value != EFI_ERROR_CODE) {
+		if (value != static_cast<float>(EFI_ERROR_CODE)) {
 			efiPrintf("%s value: %.2f", paramStr, value);
 			return;
 		}

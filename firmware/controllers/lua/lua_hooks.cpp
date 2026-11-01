@@ -1133,7 +1133,7 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 		return 1;
 	});
 	hooks.add( "getTimeSinceTriggerEventMs", [](lua_State* l) {
-		int result = engine->triggerCentral.m_lastEventTimer.getElapsedUs() / 1000;
+		int result = static_cast<int>(engine->triggerCentral.m_lastEventTimer.getElapsedUs() / 1000);
 		lua_pushinteger(l, result);
 		return 1;
 	});
