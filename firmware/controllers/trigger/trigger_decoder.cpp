@@ -518,7 +518,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 	ScopePerf perf(PE::DecodeTriggerEvent);
 
 #if EFI_PROD_CODE
-  getTriggerCentral()->triggerElapsedUs = previousEventTimer.getElapsedUs();
+  getTriggerCentral()->triggerElapsedUs = static_cast<uint32_t>(previousEventTimer.getElapsedUs());
 #endif
 
 	if (previousEventTimer.getElapsedSecondsAndReset(nowNt) > 1) {

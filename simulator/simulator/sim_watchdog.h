@@ -13,7 +13,7 @@
 #include "engine_controller.h"
 
 // 100 ms is our empiric choice based on 2 * SLOW_CALLBACK_PERIOD_MS
-#define WATCHDOG_RESET_MS (2 * SLOW_CALLBACK_PERIOD_MS)
+#define WATCHDOG_RESET_MS static_cast<int>(2 * SLOW_CALLBACK_PERIOD_MS)
 // 300 ms is our default timeout
 #define WATCHDOG_TIMEOUT_MS (3 * WATCHDOG_RESET_MS)
 // 5 secs should be enough to wait until

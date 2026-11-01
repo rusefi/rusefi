@@ -97,7 +97,7 @@ void populateFrame(Speeds& msg) {
 	msg.injDuty = getInjectorDutyCycle(rpm);
 	msg.coilDuty = getCoilDutyCycle(rpm);
 #endif // EFI_ENGINE_CONTROL
-	msg.vssKph = Sensor::getOrZero(SensorType::VehicleSpeed);
+	msg.vssKph = static_cast<uint8_t>(Sensor::getOrZero(SensorType::VehicleSpeed));
 
 	msg.EthanolPercent = static_cast<uint8_t>(Sensor::getOrZero(SensorType::FuelEthanolPercent));
 }
@@ -130,11 +130,11 @@ struct Sensors1 {
 void populateFrame(Sensors1& msg) {
 	msg.map = Sensor::getOrZero(SensorType::Map);
 
-	msg.clt = Sensor::getOrZero(SensorType::Clt) + PACK_ADD_TEMPERATURE;
-	msg.iat = Sensor::getOrZero(SensorType::Iat) + PACK_ADD_TEMPERATURE;
+	msg.clt = static_cast<uint8_t>(Sensor::getOrZero(SensorType::Clt) + PACK_ADD_TEMPERATURE);
+	msg.iat = static_cast<uint8_t>(Sensor::getOrZero(SensorType::Iat) + PACK_ADD_TEMPERATURE);
 
-	msg.aux1 = Sensor::getOrZero(SensorType::AuxTemp1) + PACK_ADD_TEMPERATURE;
-	msg.aux2 = Sensor::getOrZero(SensorType::AuxTemp2) + PACK_ADD_TEMPERATURE;
+	msg.aux1 = static_cast<uint8_t>(Sensor::getOrZero(SensorType::AuxTemp1) + PACK_ADD_TEMPERATURE);
+	msg.aux2 = static_cast<uint8_t>(Sensor::getOrZero(SensorType::AuxTemp2) + PACK_ADD_TEMPERATURE);
 
 #if	HAL_USE_ADC
 	msg.mcuTemp = getMCUInternalTemperature() + PACK_ADD_TEMPERATURE;

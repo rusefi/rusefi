@@ -283,8 +283,8 @@ void setGdiWallWetting() {
 void setDefaultWallWetting() {
 #if !EFI_UNIT_TEST
 	// todo: this is a reasonable default for what kinds of engines exactly?
-	engineConfiguration->wwaeTau = 0.3;
-	engineConfiguration->wwaeBeta = 0.3;
+	engineConfiguration->wwaeTau = 0.3f;
+	engineConfiguration->wwaeBeta = 0.3f;
 #endif // EFI_UNIT_TEST
 
 	// linear reasonable bins

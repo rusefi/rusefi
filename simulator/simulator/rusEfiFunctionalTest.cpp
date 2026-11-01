@@ -72,15 +72,15 @@ static void runChprintfTest() {
 
 	{
 		LoggingWithStorage testLogging("test");
-		testLogging.appendFloat(1.23, 5);
-		testLogging.appendFloat(1.234, 2);
+		testLogging.appendFloat(1.23f, 5);
+		testLogging.appendFloat(1.234f, 2);
 		assertString(testLogging.buffer, "1.230001.23");
 
 	}
 
 	{
 		LoggingWithStorage testLogging("test");
-		testLogging.appendFloat(-1.23, 5);
+		testLogging.appendFloat(-1.23f, 5);
 		assertString(testLogging.buffer, "-1.23000");
 	}
 	{
@@ -151,7 +151,7 @@ static void	runNotSquareTest() {
     assertNear(getscriptTable(3)->getValue(0, 20), 140);
     assertNear(getscriptTable(3)->getValue(0, 30), 240);
 
-    assertNear(getscriptTable(3)->getValue(3000, 20), 144.384);
+    assertNear(getscriptTable(3)->getValue(3000, 20), 144.384f);
 }
 
 static void writeEngineTypeDefaultConfig(engine_type_e type) {

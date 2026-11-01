@@ -23,12 +23,12 @@ static void setDefaultIatTimingCorrection() {
 	// top rows are the same
 	for (size_t i = 0; i < efi::size(config->ignitionIatCorrTable) - 1; i++) {
 		//																						40  50  60 deg C
-		copyArrayInterpolated(config->ignitionIatCorrTable[i], {0.0, 0.0, 0.0, 0.0, 0.0, -1.0, -2.0, -3.0});
+		copyArrayInterpolated(config->ignitionIatCorrTable[i], {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, -2.0f, -3.0f});
 	}
 
 	// last row tapers out
 	//																											40  50  60 deg C
-	copyArrayInterpolated(config->ignitionIatCorrTable[efi::size(config->ignitionIatCorrTable) - 1], {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0, -2.0});
+	copyArrayInterpolated(config->ignitionIatCorrTable[efi::size(config->ignitionIatCorrTable) - 1], {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, -2.0f});
 }
 
 static void setDefaultCltTimingCorrection() {
@@ -38,7 +38,7 @@ static void setDefaultCltTimingCorrection() {
 #if CLT_TIMING_TEMP_AXIS_SIZE == 5
 	for (size_t i = 0; i < CLT_TIMING_TEMP_AXIS_SIZE; i++) {
 	  // huh? use setArrayValues? and we probably get all zeros by default anyway?
-		copyArray(config->ignitionCltCorrTable[i], {0.0, 0.0, 0.0, 0.0, 0.0});
+		copyArray(config->ignitionCltCorrTable[i], {0.0f, 0.0f, 0.0f, 0.0f, 0.0f});
 	}
 #endif
 }

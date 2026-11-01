@@ -93,8 +93,8 @@ public:
      * sets milliseconds period
      */
     void setPeriod(int periodMs) {
-    	float frequencyHz = 1000.0 / periodMs;
-    	this->m_period = CH_CFG_ST_FREQUENCY / frequencyHz;
+    	float frequencyHz = 1000.0f / periodMs;
+    	this->m_period = static_cast<systime_t>(CH_CFG_ST_FREQUENCY / frequencyHz);
     }
 };
 

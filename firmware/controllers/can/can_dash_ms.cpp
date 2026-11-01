@@ -34,7 +34,7 @@ struct ms1512 {
 void populateFrame(ms1512& msg)
 {
 	msg.Map = Sensor::getOrZero(SensorType::Map);
-	msg.Rpm = Sensor::getOrZero(SensorType::Rpm);
+	msg.Rpm = static_cast<uint16_t>(Sensor::getOrZero(SensorType::Rpm));
 	/* Celsius to Fahrenheit */
 	msg.Clt = Sensor::getOrZero(SensorType::Clt) * 9 / 5 + 32;
 	msg.Tps = Sensor::getOrZero(SensorType::Tps1);

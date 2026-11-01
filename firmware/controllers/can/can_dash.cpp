@@ -412,9 +412,9 @@ static void canDashboardBmwE90(CanCycle cycle) {
 #if !EFI_UNIT_TEST
 		{ //E90_SPEED
 			auto vehicleSpeed = Sensor::getOrZero(SensorType::VehicleSpeed);
-			float mph = vehicleSpeed * 0.6213712;
+			float mph = vehicleSpeed * 0.6213712f;
 			mph_ctr = ((TIME_I2MS(chVTGetSystemTime()) - mph_timer) / 50);
-			mph_a = (mph_ctr * mph / 2);
+			mph_a = static_cast<uint8_t>(mph_ctr * mph / 2);
 			mph_2a = mph_a + mph_last;
 			mph_last = mph_2a;
 			mph_counter += mph_ctr * 100;
@@ -467,7 +467,7 @@ struct Aim5f0 {
 };
 
 void populateFrame(Aim5f0& msg) {
-	msg.Rpm = Sensor::getOrZero(SensorType::Rpm);
+	msg.Rpm = static_cast<uint16_t>(Sensor::getOrZero(SensorType::Rpm));
 	msg.Tps = Sensor::getOrZero(SensorType::Tps1);
 	msg.Pps = Sensor::getOrZero(SensorType::AcceleratorPedal);
 	msg.Vss = Sensor::getOrZero(SensorType::VehicleSpeed);
@@ -543,7 +543,7 @@ void populateFrame(Aim5f4& msg) {
 	msg.Boost = boostBar;
 	msg.Vbat = Sensor::getOrZero(SensorType::BatteryVoltage);
 	msg.FuelConsumptionLH = 10 * literPerHour;
-	msg.Gear = Sensor::getOrZero(SensorType::DetectedGear);
+	msg.Gear = static_cast<int16_t>(Sensor::getOrZero(SensorType::DetectedGear));
 }
 
 struct Aim5f5 {

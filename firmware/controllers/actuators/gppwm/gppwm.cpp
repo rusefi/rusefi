@@ -69,7 +69,7 @@ void updateGppwm() {
 		auto result = channels[i].update(i);
 
 		engine->outputChannels.gppwmOutput[i] = result.Result;
-		engine->outputChannels.gppwmXAxis[i] = result.X;
+		engine->outputChannels.gppwmXAxis[i] = static_cast<int16_t>(result.X);
 		engine->outputChannels.gppwmYAxis[i] = result.Y;
 	}
 }

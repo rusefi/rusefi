@@ -164,8 +164,8 @@ void registerCanSensor(CanSensorBase& sensor) {
 #define VAG_YAW_ACCEL_G_LONG 0x131
 
 /* Bosch Acceleration Sensor MM5.10 quantizations */
-#define MM5_10_RATE_QUANT			0.005
-#define MM5_10_ACC_QUANT			0.0001274
+#define MM5_10_RATE_QUANT			0.005f
+#define MM5_10_ACC_QUANT			0.0001274f
 
 /* Bosch Acceleration Sensor MM5.10 CAN IDs */
 #define MM5_10_YAW_Y				0x174

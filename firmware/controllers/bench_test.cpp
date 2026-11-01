@@ -118,8 +118,8 @@ static void benchOff(OutputPin* output) {
 }
 
 static void runBench(OutputPin *output, float onTimeMs, float offTimeMs, int count, bool swapOnOff) {
-	int onTimeUs = MS2US(std::max(0.1f, onTimeMs));
-	int offTimeUs = MS2US(std::max(0.1f, offTimeMs));
+	int onTimeUs = static_cast<int>(MS2US(std::max(0.1f, onTimeMs)));
+	int offTimeUs = static_cast<int>(MS2US(std::max(0.1f, offTimeMs)));
 
 	if (onTimeUs > TOO_FAR_INTO_FUTURE_US) {
 		firmwareError(ObdCode::CUSTOM_ERR_BENCH_PARAM, "onTime above limit %dus", TOO_FAR_INTO_FUTURE_US);

@@ -491,7 +491,7 @@ float IdleController::getIdlePosition(float rpm) {
 
 
 		extern StepperMotor iacMotor;
-		engine->outputChannels.idleStepperTargetPosition = iacMotor.getTargetPosition();
+		engine->outputChannels.idleStepperTargetPosition = static_cast<uint8_t>(iacMotor.getTargetPosition());
 #endif /* EFI_TUNER_STUDIO */
 		if (useModeledFlow && phase != Phase::Cranking) {
 			float totalAirmass = 0.01f * iacPosition * engineConfiguration->idleMaximumAirmass;

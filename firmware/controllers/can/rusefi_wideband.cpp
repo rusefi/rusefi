@@ -207,7 +207,7 @@ void sendWidebandInfo() {
 
 	float vbatt = Sensor::getOrZero(SensorType::BatteryVoltage) * 10;
 
-	m[0] = vbatt;
+	m[0] = static_cast<uint8_t>(vbatt);
 
 	// Offset 1 bit 0 = heater enable
 	if (widebandRestart) {

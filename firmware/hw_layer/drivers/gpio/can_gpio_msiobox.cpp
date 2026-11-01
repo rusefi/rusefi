@@ -349,10 +349,10 @@ void MsIoBox::CalcOnOffPeriod(int channel, pwm_settings &pwm)
 	}
 
 	/* total period in device clock ticks, rounded to nearest */
-	int period = (pwmBaseFreq + (OutPwm[channel].frequency / 2)) / OutPwm[channel].frequency;
+	int period = static_cast<int>((pwmBaseFreq + (OutPwm[channel].frequency / 2)) / OutPwm[channel].frequency);
 
 	/* split the period into high (on) and low (off) parts by duty cycle */
-	pwm.on = period * OutPwm[channel].duty;
+	pwm.on = static_cast<uint16_t>(period * OutPwm[channel].duty);
 	pwm.off = period - pwm.on;
 }
 
