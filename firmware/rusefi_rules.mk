@@ -3,6 +3,8 @@
 
 # Warnings-as-errors...
 RUSEFI_OPT = -Werror
+# implicit float-to-integer stores silently truncate; spell them out
+RUSEFI_OPT += -Werror=float-conversion
 # some compilers seem to have this off by default? (GCC-specific, not supported by Clang)
 ifneq ($(USE_CLANG),yes)
   RUSEFI_OPT += -Werror=stringop-truncation
