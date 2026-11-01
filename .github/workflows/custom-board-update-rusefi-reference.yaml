@@ -6,6 +6,12 @@ name: Update rusEFI Reference
 
 on:
   workflow_call:
+    inputs:
+      rusefi_branch:
+        description: 'rusEFI branch ext/rusefi follows; default pairs the caller branch with the same-named rusEFI branch (main -> master)'
+        required: false
+        type: string
+        default: ''
     secrets:
       MY_REPO_PAT:
         description: 'Token for ext/rusefi submodule (callers normally use secrets: inherit); empty is fine for public submodules'
@@ -43,6 +49,7 @@ jobs:
       - name: Git Update Submodules
         env:
           CALLER_REF: ${{ github.ref }}
+          RUSEFI_BRANCH: ${{ inputs.rusefi_branch }}
           SUBMODULES_TOKEN: ${{ secrets.MY_REPO_PAT }}
         run: |
           set -euo pipefail
@@ -56,7 +63,9 @@ jobs:
             refs/heads/*) caller_branch="${CALLER_REF#refs/heads/}" ;;
             *) echo "Expected a branch ref, got '$CALLER_REF'" >&2; exit 1 ;;
           esac
-          if [ "$caller_branch" = "main" ]; then
+          if [ -n "$RUSEFI_BRANCH" ]; then
+            expected_branch=$RUSEFI_BRANCH
+          elif [ "$caller_branch" = "main" ]; then
             expected_branch=master
           else
             expected_branch=$caller_branch
@@ -67,7 +76,7 @@ jobs:
             exit 1
           fi
           tracked_branch=$(git config -f .gitmodules --get "$section.branch" || true)
-          if [ -z "$tracked_branch" ] && [ "$caller_branch" != "master" ] && [ "$caller_branch" != "main" ]; then
+          if [ -z "$tracked_branch" ] && [ -z "$RUSEFI_BRANCH" ] && [ "$caller_branch" != "master" ] && [ "$caller_branch" != "main" ]; then
             echo "ext/rusefi must configure its tracking branch as '$expected_branch' for '$caller_branch'" >&2
             exit 1
           fi
