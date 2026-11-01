@@ -309,7 +309,7 @@ TEST(HPFP, Schedule) {
 
 	// Make the previous event happen, schedule the next.
 	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(
-		1000, tick_per_deg * 0, 180, 360);
+		1000, static_cast<efitick_t>(tick_per_deg * 0), 180, 360);
 	// Mock executor doesn't run events, so we run it manually
 	HpfpController::pinTurnOff(&hpfp);
 
