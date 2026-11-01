@@ -149,7 +149,7 @@ void setDodgeNeonNGCEngineConfiguration() {
 	setAlgorithm(engine_load_mode_e::LM_SPEED_DENSITY);
 
 //temp	engineConfiguration->alternatorControlPin = Gpio::D5;
-	setTable(config->alternatorVoltageTargetTable, 14.0);
+	setTable(config->alternatorVoltageTargetTable, 14.0f);
 	engineConfiguration->alternatorControl.offset = 20;
 	engineConfiguration->alternatorControl.pFactor = 20;
 	engineConfiguration->alternatorControl.iFactor = 0.2f;

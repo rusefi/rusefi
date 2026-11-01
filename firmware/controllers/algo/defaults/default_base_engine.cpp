@@ -62,7 +62,7 @@ static void setGdiDefaults() {
 
 	setLinearCurve(config->hpfpFuelMassCompensationFuelMass, 0.0, 500, 10);
 	setLinearCurve(config->hpfpFuelMassCompensationFuelPressure, 0, 300, 25);
-	setTable(config->hpfpFuelMassCompensation, 1.0);
+	setTable(config->hpfpFuelMassCompensation, 1.0f);
 
 	setLinearCurve(config->injectorFlowLinearizationFuelMassBins, 0.0, 500, 10);
 	setLinearCurve(config->injectorFlowLinearizationPressureBins, 0, 300, 25);
@@ -85,7 +85,7 @@ void setGDIFueling() {
 	// Reference rail pressure is 10 000 kPa = 100 bar
 	engineConfiguration->fuelReferencePressure = 10000;
 	//setting "flat" 0.2 ms injector's lag time
-	setTable(engineConfiguration->injector.battLagCorrTable, 0.2);
+	setTable(engineConfiguration->injector.battLagCorrTable, 0.2f);
 
 	setTable(config->injectionPhase, -200.0f);
 	engineConfiguration->injectionTimingMode = InjectionTimingMode::Center;

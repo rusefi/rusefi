@@ -40,7 +40,7 @@ void setMazdaMiata96() {
 	engineConfiguration->useIdleTimingPidControl = true;
 
 	engineConfiguration->wwaeTau = 0.1f;
-	setTable(config->alternatorVoltageTargetTable, 14.2);
+	setTable(config->alternatorVoltageTargetTable, 14.2f);
 	setArrayValues(config->cltCrankingCorr, 36);
 	setArrayValues(config->afterCrankingIACtaperDuration, 189);
 

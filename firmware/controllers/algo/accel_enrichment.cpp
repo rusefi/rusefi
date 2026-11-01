@@ -296,7 +296,7 @@ void TpsAccelEnrichment::onConfigurationChange(engine_configuration_s const* /*p
 		}
 		length = static_cast<int>(maxF(2, ceilf(maxBlendDuration / slowCallbackPeriodSecond)));
 	} else {
-		length = engineConfiguration->tpsAccelLookback / slowCallbackPeriodSecond;
+		length = static_cast<int>(engineConfiguration->tpsAccelLookback / slowCallbackPeriodSecond);
 
 		if (length < 1) {
 			efiPrintf("setTpsAccelLen: Length should be positive [%d]", length);
