@@ -663,7 +663,7 @@ TEST(limp, gdiFuelCut) {
 	engine->rpmCalculator.setRpmValue(1000);
 
 	// below limits:
-	engine->engineState.injectionDuration = 1.8;
+	engine->engineState.injectionDuration = 1.8f;
 
 	LimpManager dut;
 

@@ -40,9 +40,9 @@ TEST(util, crc8) {
 }
 
 TEST(util, crc) {
-	ASSERT_EQ(4, efiRound(4.4, 1));
-	ASSERT_FLOAT_EQ(1.2, efiRound(1.2345, 0.1));
-	ASSERT_FLOAT_EQ(0.2, efiRound(0.2345, 0.1));
+	ASSERT_EQ(4, efiRound(4.4f, 1));
+	ASSERT_FLOAT_EQ(1.2f, efiRound(1.2345f, 0.1f));
+	ASSERT_FLOAT_EQ(0.2f, efiRound(0.2345f, 0.1f));
 
 	const char * A = "A";
 

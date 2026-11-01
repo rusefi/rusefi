@@ -10,7 +10,7 @@
 // in C++ struct is pretty much a class just fields are public by default
 struct TestParent {
 	int field0 = 540;
-	float field1 = 333.33;
+	float field1 = 333.33f;
 };
 
 class TestPlainChild: public TestParent {

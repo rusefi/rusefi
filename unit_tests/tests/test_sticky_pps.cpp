@@ -35,9 +35,9 @@ TEST(Sticky, PPS) {
 	float threshold = 0.5;
 
 	EXPECT_EQ(1, pps.get(1, threshold));
-	EXPECT_EQ(1, pps.get(1.2, threshold));
-	EXPECT_EQ(1, pps.get(0.8, threshold));
-	EXPECT_NEAR(2.2, pps.get(2.2, threshold), EPS4D);
+	EXPECT_EQ(1, pps.get(1.2f, threshold));
+	EXPECT_EQ(1, pps.get(0.8f, threshold));
+	EXPECT_NEAR(2.2f, pps.get(2.2f, threshold), EPS4D);
 
 	float expectedNaN = pps.get(NAN, threshold);
 	EXPECT_TRUE(std::isnan(expectedNaN));

@@ -41,13 +41,13 @@ TEST(misc, testEngineMath) {
 	Sensor::setMockValue(SensorType::Clt, 300);
 	Sensor::setMockValue(SensorType::Iat, 350);
 	ASSERT_FLOAT_EQ(312.5, fuelComputer->getTCharge(1000, 0));
-	ASSERT_FLOAT_EQ(313.5833, fuelComputer->getTCharge(1000, 50));
-	ASSERT_FLOAT_EQ(314.6667, fuelComputer->getTCharge(1000, 100));
+	ASSERT_FLOAT_EQ(313.5833f, fuelComputer->getTCharge(1000, 50));
+	ASSERT_FLOAT_EQ(314.6667f, fuelComputer->getTCharge(1000, 100));
 
 
 	ASSERT_FLOAT_EQ(312.5, fuelComputer->getTCharge(4000, 0));
-	ASSERT_FLOAT_EQ(320.0833, fuelComputer->getTCharge(4000, 50));
-	ASSERT_FLOAT_EQ(327.6667, fuelComputer->getTCharge(4000, 100));
+	ASSERT_FLOAT_EQ(320.0833f, fuelComputer->getTCharge(4000, 50));
+	ASSERT_FLOAT_EQ(327.6667f, fuelComputer->getTCharge(4000, 100));
 
 	// test Air Interpolation mode
 	engineConfiguration->tChargeMode = TCHARGE_MODE_AIR_INTERP;

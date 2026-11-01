@@ -168,16 +168,16 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);
 	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -30, 1.5);
-	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -20, 1.42);
-	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -10, 1.36);
-	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 0, 1.28);
-	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 10, 1.19);
-	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 20, 1.12);
-	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 30, 1.10);
-	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 40, 1.06);
-	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 50, 1.06);
-	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 60, 1.03);
-	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 70, 1.01);
+	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -20, 1.42f);
+	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -10, 1.36f);
+	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 0, 1.28f);
+	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 10, 1.19f);
+	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 20, 1.12f);
+	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 30, 1.10f);
+	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 40, 1.06f);
+	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 50, 1.06f);
+	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 60, 1.03f);
+	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 70, 1.01f);
 
 	initDataStructures();
 
@@ -535,7 +535,7 @@ bool EngineTestHelper::assertEventExistsAtEnginePhase(const char *msg, action_s 
 
 		if(action_scheduled.getCallback() == action_expected.getCallback()) {
 			efitimeus_t start = getTimeNowUs();
-			efitimeus_t expectedTimestamp = angleToTimeUs(expectedEventEnginePhase);
+			efitimeus_t expectedTimestamp = static_cast<efitimeus_t>(angleToTimeUs(expectedEventEnginePhase));
 			// after #7245 we can increase the resolution of this test for expect 0.5 or less
 			EXPECT_NEAR( expectedTimestamp, event->getMomentUs() - start, angleToTimeUs( 1 ) )
                             << "Expected angle: " << expectedEventEnginePhase << " but got " << (event->getMomentUs() - start) / engine.rpmCalculator.oneDegreeUs << " -- "
@@ -550,7 +550,7 @@ void EngineTestHelper::spin60_2UntilDeg(struct testSpinEngineUntilData& spinInfo
   	volatile float tick_per_deg = 6000 * 60 / 360 / (float)targetRpm;
 	constexpr float tooth_per_deg = 360 / 60;
 
-	size_t targetTooth = (targetDegree - spinInfo.currentDegree) / tooth_per_deg;
+	size_t targetTooth = static_cast<size_t>((targetDegree - spinInfo.currentDegree) / tooth_per_deg);
 
 	for (size_t i = 0; i < targetTooth; i++) {
 		if (spinInfo.currentTooth < 30 || spinInfo.currentTooth > 31) {

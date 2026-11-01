@@ -19,17 +19,17 @@ TEST(TripOdometer, TestSmallPulses) {
 	// Initial consumption should be zero
 	EXPECT_EQ(0u, dut.getConsumedGrams());
 
-	dut.consumeFuel(0.6, 0);
+	dut.consumeFuel(0.6f, 0);
 	EXPECT_EQ(0u, dut.getConsumedGrams());
 
-	dut.consumeFuel(0.6, 0);
+	dut.consumeFuel(0.6f, 0);
 	EXPECT_EQ(1u, dut.getConsumedGrams());
 
 	for (int i = 0; i < 6; i++) {
-		dut.consumeFuel(0.6, 0);
+		dut.consumeFuel(0.6f, 0);
 	}
 
 	EXPECT_EQ(4u, dut.getConsumedGrams());
-	dut.consumeFuel(0.6, 0);
+	dut.consumeFuel(0.6f, 0);
 	EXPECT_EQ(5u, dut.getConsumedGrams());
 }

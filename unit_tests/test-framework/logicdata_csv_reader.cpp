@@ -161,12 +161,12 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 	// Fill the gap
 	while (lastTimeStamp + TIME_DELTA < timeStamp) {
 		lastTimeStamp += TIME_DELTA;
-		eth->setTimeAndInvokeEventsUs(1'000'000 * lastTimeStamp);
+		eth->setTimeAndInvokeEventsUs(static_cast<int>(1'000'000 * lastTimeStamp));
 		writeUnitTestLogLine();
 	}
 #endif
 
-	eth->setTimeAndInvokeEventsUs(1'000'000 * timeStamp);
+	eth->setTimeAndInvokeEventsUs(static_cast<int>(1'000'000 * timeStamp));
 	for (size_t index = 0; index < m_triggerCount; index++) {
 		if (currentState[index] == newTriggerState[index]) {
 			continue;

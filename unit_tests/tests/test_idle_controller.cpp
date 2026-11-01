@@ -24,7 +24,7 @@ TEST(idle_v2, timingPid) {
 
 	engineConfiguration->useIdleTimingPidControl = true;
 
-	engineConfiguration->idleTimingPid.pFactor = 0.1;
+	engineConfiguration->idleTimingPid.pFactor = 0.1f;
 	engineConfiguration->idleTimingPid.minValue = -10;
 	engineConfiguration->idleTimingPid.maxValue = 10;
 	engineConfiguration->idleTimingSoftEntryTime = 0.0f;
@@ -653,9 +653,9 @@ TEST(idle_v2, RunningToIdleTransition) {
   IdleController dut;
   dut.init();
 
-  engineConfiguration->idleRpmPid.pFactor = 0.0040;	// 0.5 output per 1 RPM error = 50% per 100 rpm
-  engineConfiguration->idleRpmPid.iFactor = 0.0040;
-  engineConfiguration->idleRpmPid.dFactor = 0.0001;
+  engineConfiguration->idleRpmPid.pFactor = 0.0040f;	// 0.5 output per 1 RPM error = 50% per 100 rpm
+  engineConfiguration->idleRpmPid.iFactor = 0.0040f;
+  engineConfiguration->idleRpmPid.dFactor = 0.0001f;
   engineConfiguration->idleRpmPid.periodMs = 0;
   engineConfiguration->idleRpmPid.minValue = -50;
   engineConfiguration->idleRpmPid.maxValue = 50;

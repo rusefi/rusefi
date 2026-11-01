@@ -42,10 +42,10 @@ TEST(util, pid) {
 
 	Pid pid(&pidS);
 
-	ASSERT_FLOAT_EQ( 90,  pid.getOutput(14, 12, 0.1)) << "getValue#90";
+	ASSERT_FLOAT_EQ( 90,  pid.getOutput(14, 12, 0.1f)) << "getValue#90";
 
 
-	ASSERT_FLOAT_EQ( 10,  pid.getOutput(14, 16, 0.1)) << "getValue#10";
+	ASSERT_FLOAT_EQ( 10,  pid.getOutput(14, 16, 0.1f)) << "getValue#10";
 	ASSERT_FLOAT_EQ(10, pid.getOutput(14, 16, 1));
 
 	pid.updateFactors(29, 0, 0);
@@ -150,7 +150,7 @@ TEST(util, pidConditionalIntegrationTracksPdOffsetAndPartialStep) {
 		params.pFactor = 1;
 		params.iFactor = 2;
 		params.dFactor = 0.5f;
-		params.offset = sign;
+		params.offset = static_cast<int16_t>(sign);
 		params.minValue = -10;
 		params.maxValue = 10;
 		Pid pid(&params);
@@ -268,7 +268,7 @@ TEST(util, pidIndustrial) {
 	pid.reset();
 
 	// now test the "derivative filter loss" param (some small value)
-	pid.derivativeFilterLoss = 0.01;
+	pid.derivativeFilterLoss = 0.01f;
 
 	// now the first value is less (and not clipped!) due to the derivative filtering
 	ASSERT_FLOAT_EQ(67.671669f, pid.getOutput(1, 0));
@@ -280,7 +280,7 @@ TEST(util, pidIndustrial) {
 	pid.reset();
 
 	// now test much stronger "derivative filter loss"
-	pid.derivativeFilterLoss = 0.1;
+	pid.derivativeFilterLoss = 0.1f;
 
 	// now the first value is much less due to the derivative filtering
 	ASSERT_NEAR(10.5288095f, pid.getOutput(1, 0), EPS4D);
@@ -293,7 +293,7 @@ TEST(util, pidIndustrial) {
 	pid.derivativeFilterLoss = 0;
 
 	// now test "anti-windup" param
-	pid.antiwindupFreq = 0.1;
+	pid.antiwindupFreq = 0.1f;
 
 	// the first value is clipped, and that's when the anti-windup comes into effect
 	ASSERT_FLOAT_EQ(100.0f, pid.getOutput(1, 0));

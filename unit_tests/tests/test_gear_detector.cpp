@@ -21,14 +21,14 @@ float GetGearRatioFor(float revPerKm, float axle, float kph, float rpm) {
 
 TEST(GearDetector, ComputeGearRatio) {
 	// real gears from Volvo racecar
-	EXPECT_NEAR_M3(3.35f, GetGearRatioFor(507, 4.1, 29.45f / 0.6214f, 5500));
-	EXPECT_NEAR_M3(1.99f, GetGearRatioFor(507, 4.1, 49.57f / 0.6214f, 5500));
-	EXPECT_NEAR_M3(1.33f, GetGearRatioFor(507, 4.1, 74.18f / 0.6214f, 5500));
-	EXPECT_NEAR_M3(1.00f, GetGearRatioFor(507, 4.1, 98.65f / 0.6214f, 5500));
-	EXPECT_NEAR_M3(0.72f, GetGearRatioFor(507, 4.1, 137.02f / 0.6214f, 5500));
+	EXPECT_NEAR_M3(3.35f, GetGearRatioFor(507, 4.1f, 29.45f / 0.6214f, 5500));
+	EXPECT_NEAR_M3(1.99f, GetGearRatioFor(507, 4.1f, 49.57f / 0.6214f, 5500));
+	EXPECT_NEAR_M3(1.33f, GetGearRatioFor(507, 4.1f, 74.18f / 0.6214f, 5500));
+	EXPECT_NEAR_M3(1.00f, GetGearRatioFor(507, 4.1f, 98.65f / 0.6214f, 5500));
+	EXPECT_NEAR_M3(0.72f, GetGearRatioFor(507, 4.1f, 137.02f / 0.6214f, 5500));
 
 	// Idling, car stopped, check no div/0
-	EXPECT_EQ(0, GetGearRatioFor(507, 4.1, 0, 800));
+	EXPECT_EQ(0, GetGearRatioFor(507, 4.1f, 0, 800));
 }
 
 
@@ -88,8 +88,8 @@ TEST(GearDetector, DetermineGearSingleSpeed) {
 	EXPECT_EQ(1u, dut.determineGearFromRatio(2));
 
 	// Check near the gear
-	EXPECT_EQ(1u, dut.determineGearFromRatio(2.1));
-	EXPECT_EQ(1u, dut.determineGearFromRatio(1.9));
+	EXPECT_EQ(1u, dut.determineGearFromRatio(2.1f));
+	EXPECT_EQ(1u, dut.determineGearFromRatio(1.9f));
 
 	// Extremely low ratio suggests stopped engine at speed?
 	EXPECT_EQ(0u, dut.determineGearFromRatio(1.0));
@@ -100,11 +100,11 @@ TEST(GearDetector, DetermineGear5Speed) {
 	auto& dut = engine->module<GearDetector>().unmock();
 
 	engineConfiguration->totalGearsCount = 5;
-	engineConfiguration->gearRatio[0] = 3.35;
-	engineConfiguration->gearRatio[1] = 1.99;
-	engineConfiguration->gearRatio[2] = 1.33;
+	engineConfiguration->gearRatio[0] = 3.35f;
+	engineConfiguration->gearRatio[1] = 1.99f;
+	engineConfiguration->gearRatio[2] = 1.33f;
 	engineConfiguration->gearRatio[3] = 1.00;
-	engineConfiguration->gearRatio[4] = 0.72;
+	engineConfiguration->gearRatio[4] = 0.72f;
 
 	dut.onConfigurationChange(nullptr);
 
@@ -113,30 +113,30 @@ TEST(GearDetector, DetermineGear5Speed) {
 	EXPECT_EQ(0u, dut.determineGearFromRatio(6));
 
 	// Check exactly on gears
-	EXPECT_EQ(1u, dut.determineGearFromRatio(3.35));
-	EXPECT_EQ(2u, dut.determineGearFromRatio(1.99));
-	EXPECT_EQ(3u, dut.determineGearFromRatio(1.33));
+	EXPECT_EQ(1u, dut.determineGearFromRatio(3.35f));
+	EXPECT_EQ(2u, dut.determineGearFromRatio(1.99f));
+	EXPECT_EQ(3u, dut.determineGearFromRatio(1.33f));
 	EXPECT_EQ(4u, dut.determineGearFromRatio(1.00));
-	EXPECT_EQ(5u, dut.determineGearFromRatio(0.72));
+	EXPECT_EQ(5u, dut.determineGearFromRatio(0.72f));
 
 	// Check near each gear
-	EXPECT_EQ(1u, dut.determineGearFromRatio(3.45));
+	EXPECT_EQ(1u, dut.determineGearFromRatio(3.45f));
 	EXPECT_EQ(1u, dut.determineGearFromRatio(3.25));
 
-	EXPECT_EQ(2u, dut.determineGearFromRatio(2.2));
-	EXPECT_EQ(2u, dut.determineGearFromRatio(1.8));
+	EXPECT_EQ(2u, dut.determineGearFromRatio(2.2f));
+	EXPECT_EQ(2u, dut.determineGearFromRatio(1.8f));
 
-	EXPECT_EQ(3u, dut.determineGearFromRatio(1.45));
+	EXPECT_EQ(3u, dut.determineGearFromRatio(1.45f));
 	EXPECT_EQ(3u, dut.determineGearFromRatio(1.25));
 
-	EXPECT_EQ(4u, dut.determineGearFromRatio(1.1));
-	EXPECT_EQ(4u, dut.determineGearFromRatio(0.9));
+	EXPECT_EQ(4u, dut.determineGearFromRatio(1.1f));
+	EXPECT_EQ(4u, dut.determineGearFromRatio(0.9f));
 
-	EXPECT_EQ(5u, dut.determineGearFromRatio(0.8));
-	EXPECT_EQ(5u, dut.determineGearFromRatio(0.6));
+	EXPECT_EQ(5u, dut.determineGearFromRatio(0.8f));
+	EXPECT_EQ(5u, dut.determineGearFromRatio(0.6f));
 
 	// Extremely low ratio suggests stopped engine at speed?
-	EXPECT_EQ(0u, dut.determineGearFromRatio(0.1));
+	EXPECT_EQ(0u, dut.determineGearFromRatio(0.1f));
 }
 
 TEST(GearDetector, MiataNb6Speed) {
@@ -144,27 +144,27 @@ TEST(GearDetector, MiataNb6Speed) {
 	auto& dut = engine->module<GearDetector>().unmock();
 
 	engineConfiguration->totalGearsCount = 6;
-	engineConfiguration->gearRatio[0] = 3.76;
-	engineConfiguration->gearRatio[1] = 2.27;
-	engineConfiguration->gearRatio[2] = 1.65;
-	engineConfiguration->gearRatio[3] = 1.26;
+	engineConfiguration->gearRatio[0] = 3.76f;
+	engineConfiguration->gearRatio[1] = 2.27f;
+	engineConfiguration->gearRatio[2] = 1.65f;
+	engineConfiguration->gearRatio[3] = 1.26f;
 	engineConfiguration->gearRatio[4] = 1.00;
-	engineConfiguration->gearRatio[5] = 0.84;
-	engineConfiguration->gearRatio[6] = 0.84;
-	engineConfiguration->gearRatio[7] = 0.84;
+	engineConfiguration->gearRatio[5] = 0.84f;
+	engineConfiguration->gearRatio[6] = 0.84f;
+	engineConfiguration->gearRatio[7] = 0.84f;
 
 	dut.onConfigurationChange(nullptr);
 
-	EXPECT_EQ(0u, dut.determineGearFromRatio(5.85));
-	EXPECT_EQ(1u, dut.determineGearFromRatio(5.51));
+	EXPECT_EQ(0u, dut.determineGearFromRatio(5.85f));
+	EXPECT_EQ(1u, dut.determineGearFromRatio(5.51f));
 
 	// Check exactly on gears
-	EXPECT_EQ(1u, dut.determineGearFromRatio(3.76));
-	EXPECT_EQ(2u, dut.determineGearFromRatio(2.27));
-	EXPECT_EQ(3u, dut.determineGearFromRatio(1.65));
-	EXPECT_EQ(4u, dut.determineGearFromRatio(1.26));
+	EXPECT_EQ(1u, dut.determineGearFromRatio(3.76f));
+	EXPECT_EQ(2u, dut.determineGearFromRatio(2.27f));
+	EXPECT_EQ(3u, dut.determineGearFromRatio(1.65f));
+	EXPECT_EQ(4u, dut.determineGearFromRatio(1.26f));
 	EXPECT_EQ(5u, dut.determineGearFromRatio(1.00));
-	EXPECT_EQ(6u, dut.determineGearFromRatio(0.84));
+	EXPECT_EQ(6u, dut.determineGearFromRatio(0.84f));
 }
 
 TEST(GearDetector, DetermineGear8Speed) {
@@ -173,14 +173,14 @@ TEST(GearDetector, DetermineGear8Speed) {
 
 	// ZF 8HP 70
 	engineConfiguration->totalGearsCount = 8;
-	engineConfiguration->gearRatio[0] = 4.69;
-	engineConfiguration->gearRatio[1] = 3.13;
-	engineConfiguration->gearRatio[2] = 2.10;
-	engineConfiguration->gearRatio[3] = 1.67;
-	engineConfiguration->gearRatio[4] = 1.28;
+	engineConfiguration->gearRatio[0] = 4.69f;
+	engineConfiguration->gearRatio[1] = 3.13f;
+	engineConfiguration->gearRatio[2] = 2.10f;
+	engineConfiguration->gearRatio[3] = 1.67f;
+	engineConfiguration->gearRatio[4] = 1.28f;
 	engineConfiguration->gearRatio[5] = 1;
-	engineConfiguration->gearRatio[6] = 0.84;
-	engineConfiguration->gearRatio[7] = 0.67;
+	engineConfiguration->gearRatio[6] = 0.84f;
+	engineConfiguration->gearRatio[7] = 0.67f;
 
 	dut.onConfigurationChange(nullptr);
 
@@ -189,21 +189,21 @@ TEST(GearDetector, DetermineGear8Speed) {
 	EXPECT_EQ(0u, dut.determineGearFromRatio(8));
 
 	// Check exactly on gears - only test the ends, the middle works
-	EXPECT_EQ(1u, dut.determineGearFromRatio(4.69));
-	EXPECT_EQ(2u, dut.determineGearFromRatio(3.13));
+	EXPECT_EQ(1u, dut.determineGearFromRatio(4.69f));
+	EXPECT_EQ(2u, dut.determineGearFromRatio(3.13f));
 
-	EXPECT_EQ(7u, dut.determineGearFromRatio(0.84));
-	EXPECT_EQ(8u, dut.determineGearFromRatio(0.67));
+	EXPECT_EQ(7u, dut.determineGearFromRatio(0.84f));
+	EXPECT_EQ(8u, dut.determineGearFromRatio(0.67f));
 
 	// Check near each gear - only test the ends, the middle works
 	EXPECT_EQ(1u, dut.determineGearFromRatio(4.75));
-	EXPECT_EQ(1u, dut.determineGearFromRatio(4.3));
+	EXPECT_EQ(1u, dut.determineGearFromRatio(4.3f));
 
-	EXPECT_EQ(8u, dut.determineGearFromRatio(0.71));
-	EXPECT_EQ(8u, dut.determineGearFromRatio(0.6));
+	EXPECT_EQ(8u, dut.determineGearFromRatio(0.71f));
+	EXPECT_EQ(8u, dut.determineGearFromRatio(0.6f));
 
 	// Extremely low ratio suggests stopped engine at speed?
-	EXPECT_EQ(0u, dut.determineGearFromRatio(0.1));
+	EXPECT_EQ(0u, dut.determineGearFromRatio(0.1f));
 }
 
 TEST(GearDetector, ParameterValidation) {

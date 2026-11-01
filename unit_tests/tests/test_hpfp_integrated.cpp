@@ -24,7 +24,7 @@ TEST(HPFP, IntegratedSchedule) {
 
 	engineConfiguration->cylindersCount = 4;
 	engineConfiguration->hpfpCamLobes = 3;
-	engineConfiguration->hpfpPumpVolume = 0.2; // cc/lobe
+	engineConfiguration->hpfpPumpVolume = 0.2f; // cc/lobe
 
 	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
 		.WillRepeatedly(Return(AirmassResult{/*airmass*/1, /*load*/50.0f}));

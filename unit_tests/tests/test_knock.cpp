@@ -188,14 +188,14 @@ TEST(Knock, FuelTrim) {
 	dut.onKnockSenseCompleted(0, 30, 0);
 
 	// 30% * 10% = 3% = 0.03
-	EXPECT_FLOAT_EQ(dut.getFuelTrimMultiplier(), 1.03);
+	EXPECT_FLOAT_EQ(dut.getFuelTrimMultiplier(), 1.03f);
 
 	// Send tons of strong knocks, make sure we don't go over the configured limit
 	for (size_t i = 0; i < 100; i++) {
 		dut.onKnockSenseCompleted(0, 30, 0);
 	}
 
-	EXPECT_FLOAT_EQ(dut.getFuelTrimMultiplier(), 1.3);
+	EXPECT_FLOAT_EQ(dut.getFuelTrimMultiplier(), 1.3f);
 }
 
 TEST(Knock, FuelTrimReapply) {
@@ -223,7 +223,7 @@ TEST(Knock, FuelTrimReapply) {
 	dut.onKnockSenseCompleted(0, 30, 0);
 
   // 100% trim
-  float trim = 1.03;
+  float trim = 1.03f;
 
 	// Should retard 100% of the distance between current timing and "maximum"
 	EXPECT_FLOAT_EQ(dut.getFuelTrimMultiplier(), trim);

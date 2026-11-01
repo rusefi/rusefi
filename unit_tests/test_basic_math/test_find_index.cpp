@@ -23,7 +23,7 @@ TEST(misc, testSetTableValue) {
 	setCurveValue(localConfig.cltFuelCorrBins, localConfig.cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);
 	ASSERT_FLOAT_EQ(1.5, localConfig.cltFuelCorr[0]);
 
-	setCurveValue(localConfig.cltFuelCorrBins, localConfig.cltFuelCorr, CLT_CURVE_SIZE, -50, 1.4);
-	ASSERT_FLOAT_EQ(1.4, localConfig.cltFuelCorr[0]);
+	setCurveValue(localConfig.cltFuelCorrBins, localConfig.cltFuelCorr, CLT_CURVE_SIZE, -50, 1.4f);
+	ASSERT_FLOAT_EQ(1.4f, localConfig.cltFuelCorr[0]);
 
 }

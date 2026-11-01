@@ -38,13 +38,13 @@ TEST(LambdaMonitor, Response) {
 	EXPECT_FALSE(mlm.isCut());
 
 	// 0.9 second later, still not cut
-	setTimeNowUs(startTime + 0.9e6);
+	setTimeNowUs(static_cast<int>(startTime + 0.9e6));
 	mlm.update(2000, 50);
 	EXPECT_FALSE(mlm.lambdaCurrentlyGood);
 	EXPECT_FALSE(mlm.isCut());
 
 	// 1.1 second later, cut!
-	setTimeNowUs(startTime + 1.1e6);
+	setTimeNowUs(static_cast<int>(startTime + 1.1e6));
 	mlm.update(2000, 50);
 	EXPECT_FALSE(mlm.lambdaCurrentlyGood);
 	EXPECT_TRUE(mlm.isCut());

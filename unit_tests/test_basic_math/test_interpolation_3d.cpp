@@ -102,29 +102,29 @@ static void newTestToComfirmInterpolation() {
 	EXPECT_NEAR_M4(102, getValue(/*rpm*/250, 3));
 
 	// slowly go from middle side towards center
-	EXPECT_NEAR_M4(16.05, getValue(/*rpm*/250, 2.1)) << "middle @ 2.1";
-	EXPECT_NEAR_M4(25.6, getValue(/*rpm*/250, 2.2)) << "middle @ 2.2";
-	EXPECT_NEAR_M4(35.15, getValue(/*rpm*/250, 2.3)) << "middle @ 2.3";
+	EXPECT_NEAR_M4(16.05f, getValue(/*rpm*/250, 2.1f)) << "middle @ 2.1f";
+	EXPECT_NEAR_M4(25.6f, getValue(/*rpm*/250, 2.2f)) << "middle @ 2.2f";
+	EXPECT_NEAR_M4(35.15f, getValue(/*rpm*/250, 2.3f)) << "middle @ 2.3f";
 
 	EXPECT_NEAR_M4(54.25, getValue(/*rpm*/250, 2.5)) << "middle cell";
 
 	// issue #604: interpolation outside of the table
 	// X above the range
-	EXPECT_NEAR_M4(230, getValue(/*rpm*/800, 2.1)) << "800 @ 2.1";
-	EXPECT_NEAR_M4(290, getValue(/*rpm*/800, 2.3)) << "800 @ 2.3";
-	EXPECT_NEAR_M4(530, getValue(/*rpm*/800, 3.3)) << "800 @ 3.3";
+	EXPECT_NEAR_M4(230, getValue(/*rpm*/800, 2.1f)) << "800 @ 2.1f";
+	EXPECT_NEAR_M4(290, getValue(/*rpm*/800, 2.3f)) << "800 @ 2.3f";
+	EXPECT_NEAR_M4(530, getValue(/*rpm*/800, 3.3f)) << "800 @ 3.3f";
 
 	// X below the range
-	EXPECT_NEAR_M4(2.1, getValue(/*rpm*/-810, 2.1)) << "-810 @ 2.1";
-	EXPECT_NEAR_M4(2.3, getValue(/*rpm*/-820, 2.3)) << "-820 @ 2.3";
+	EXPECT_NEAR_M4(2.1f, getValue(/*rpm*/-810, 2.1f)) << "-810 @ 2.1f";
+	EXPECT_NEAR_M4(2.3f, getValue(/*rpm*/-820, 2.3f)) << "-820 @ 2.3f";
 
 	// Y above the range
-	EXPECT_NEAR_M4(330, getValue(/*rpm*/310, 12.1)) << "310 @ 12.1";
-	EXPECT_NEAR_M4(360, getValue(/*rpm*/320, 12.3)) << "320 @ 12.3";
+	EXPECT_NEAR_M4(330, getValue(/*rpm*/310, 12.1f)) << "310 @ 12.1f";
+	EXPECT_NEAR_M4(360, getValue(/*rpm*/320, 12.3f)) << "320 @ 12.3f";
 
 	// Y below the range
-	EXPECT_NEAR_M4(3.1, getValue(/*rpm*/310, -12.1)) << "310 @ -12.1";
-	EXPECT_NEAR_M4(3.2, getValue(/*rpm*/320, -12.3)) << "320 @ -12.3";
+	EXPECT_NEAR_M4(3.1f, getValue(/*rpm*/310, -12.1f)) << "310 @ -12.1f";
+	EXPECT_NEAR_M4(3.2f, getValue(/*rpm*/320, -12.3f)) << "320 @ -12.3f";
 }
 
 TEST(misc, testInterpolate3d) {
@@ -141,17 +141,17 @@ TEST(misc, testInterpolate3d) {
 	EXPECT_NEAR_M4(102, getValue(250, 3));
 
 	printf("*** both rpm and maf interpolated value expected\r\n");
-	EXPECT_NEAR_M4(361, getValue(335.3, 3.551));
+	EXPECT_NEAR_M4(361, getValue(335.3f, 3.551f));
 
 	printf("*** both rpm and maf interpolated value expected 2\r\n");
-	EXPECT_NEAR_M4(203.6, getValue(410.01, 2.012));
+	EXPECT_NEAR_M4(203.6f, getValue(410.01f, 2.012f));
 
 	printf("*** both rpm and maf interpolated value expected 3\r\n");
 	EXPECT_NEAR_M4(600, getValue(1000000, 1000));
 
 	printf("*** both rpm and maf interpolated value expected 4\r\n");
 
-	EXPECT_NEAR_M4(4, getValue(410.01, -1));
+	EXPECT_NEAR_M4(4, getValue(410.01f, -1));
 
 
 	EXPECT_NEAR_M4(1, getValue(-1, -1));

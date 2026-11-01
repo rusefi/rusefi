@@ -72,7 +72,7 @@ TEST(FftPrecision, TransformAgainstDoubleDft) {
 						sample = static_cast<double>(noise >> 8) / 8388608.0 - 1;
 						break;
 					}
-					input[i] = amplitude * sample;
+					input[i] = static_cast<float>(amplitude * sample);
 					// Compare the same rounded input to isolate transform precision.
 					reference[i] = input[i];
 				}

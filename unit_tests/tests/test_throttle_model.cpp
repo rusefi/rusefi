@@ -3,7 +3,7 @@
 
 // From CFD modeled 70mm throttle
 static const float throttle70mmFlowBins[] =   {        2,     5,      10,    20,    30,    40,    60,   80,   85,    90,    91 };
-static const float throttle70mmFlowValues[] = { 0.000095, 0.002,  0.0107, 0.045, 0.103, 0.185, 0.438, 0.74, 0.77, 0.775, 0.775 };
+static const float throttle70mmFlowValues[] = { 0.000095f, 0.002f,  0.0107f, 0.045f, 0.103f, 0.185f, 0.438f, 0.74f, 0.77f, 0.775f, 0.775f };
 
 class MockThrottleModel : public ThrottleModelBase {
 public:
@@ -37,44 +37,44 @@ TEST(ThrottleModel, PartThrottle) {
 TEST(ThrottleModel, InverseFlowLowPressureRatio) {
 	MockThrottleModel model;
 
-	EXPECT_NEAR( 2.329, model.throttlePositionForFlow(  0.3, 0.3, 100, 0), 1e-2);
-	EXPECT_NEAR( 3.446, model.throttlePositionForFlow(  1, 0.3, 100, 0), 1e-2);
-	EXPECT_NEAR( 9.674, model.throttlePositionForFlow( 10, 0.3, 100, 0), 1e-2);
-	EXPECT_NEAR(29.711, model.throttlePositionForFlow(100, 0.3, 100, 0), 1e-2);
-	EXPECT_NEAR(41.395, model.throttlePositionForFlow(200, 0.3, 100, 0), 1e-2);
-	EXPECT_NEAR(57.415, model.throttlePositionForFlow(400, 0.3, 100, 0), 1e-2);
-	EXPECT_NEAR(71.255, model.throttlePositionForFlow(600, 0.3, 100, 0), 1e-2);
-	EXPECT_NEAR(77.965, model.throttlePositionForFlow(700, 0.3, 100, 0), 1e-2);
-	EXPECT_NEAR(83.323, model.throttlePositionForFlow(750, 0.3, 100, 0), 1e-2);
-	EXPECT_NEAR(85.070, model.throttlePositionForFlow(760, 0.3, 100, 0), 1e-2);
+	EXPECT_NEAR( 2.329f, model.throttlePositionForFlow(  0.3f, 0.3f, 100, 0), 1e-2);
+	EXPECT_NEAR( 3.446f, model.throttlePositionForFlow(  1, 0.3f, 100, 0), 1e-2);
+	EXPECT_NEAR( 9.674f, model.throttlePositionForFlow( 10, 0.3f, 100, 0), 1e-2);
+	EXPECT_NEAR(29.711f, model.throttlePositionForFlow(100, 0.3f, 100, 0), 1e-2);
+	EXPECT_NEAR(41.395f, model.throttlePositionForFlow(200, 0.3f, 100, 0), 1e-2);
+	EXPECT_NEAR(57.415f, model.throttlePositionForFlow(400, 0.3f, 100, 0), 1e-2);
+	EXPECT_NEAR(71.255f, model.throttlePositionForFlow(600, 0.3f, 100, 0), 1e-2);
+	EXPECT_NEAR(77.965f, model.throttlePositionForFlow(700, 0.3f, 100, 0), 1e-2);
+	EXPECT_NEAR(83.323f, model.throttlePositionForFlow(750, 0.3f, 100, 0), 1e-2);
+	EXPECT_NEAR(85.070f, model.throttlePositionForFlow(760, 0.3f, 100, 0), 1e-2);
 
 	// Throttle is maxed out here!
 
-	EXPECT_NEAR(100.00, model.throttlePositionForFlow(770, 0.3, 100, 0), 1e-2);
-	EXPECT_NEAR(100.00, model.throttlePositionForFlow(800, 0.3, 100, 0), 1e-2);
-	EXPECT_NEAR(100.00, model.throttlePositionForFlow(900, 0.3, 100, 0), 1e-2);
+	EXPECT_NEAR(100.00f, model.throttlePositionForFlow(770, 0.3f, 100, 0), 1e-2);
+	EXPECT_NEAR(100.00f, model.throttlePositionForFlow(800, 0.3f, 100, 0), 1e-2);
+	EXPECT_NEAR(100.00f, model.throttlePositionForFlow(900, 0.3f, 100, 0), 1e-2);
 }
 
 TEST(ThrottleModel, InverseFlowHighPressureRatio) {
 	MockThrottleModel model;
 
-	EXPECT_NEAR( 2.626, model.throttlePositionForFlow(  0.3, 0.9, 100, 0), 1e-2);
-	EXPECT_NEAR( 4.437, model.throttlePositionForFlow(  1, 0.9, 100, 0), 1e-2);
-	EXPECT_NEAR( 5.738, model.throttlePositionForFlow(  2, 0.9, 100, 0), 1e-2);
-	EXPECT_NEAR( 8.571, model.throttlePositionForFlow(  5, 0.9, 100, 0), 1e-2);
-	EXPECT_NEAR(11.670, model.throttlePositionForFlow( 10, 0.9, 100, 0), 1e-2);
-	EXPECT_NEAR(37.473, model.throttlePositionForFlow(100, 0.9, 100, 0), 1e-2);
-	EXPECT_NEAR(51.348, model.throttlePositionForFlow(200, 0.9, 100, 0), 1e-2);
-	EXPECT_NEAR(74.510, model.throttlePositionForFlow(400, 0.9, 100, 0), 1e-2);
-	EXPECT_NEAR(87.093, model.throttlePositionForFlow(470, 0.9, 100, 0), 1e-2);
-	EXPECT_NEAR(88.737, model.throttlePositionForFlow(471, 0.9, 100, 0), 1e-2);
+	EXPECT_NEAR( 2.626f, model.throttlePositionForFlow(  0.3f, 0.9f, 100, 0), 1e-2);
+	EXPECT_NEAR( 4.437f, model.throttlePositionForFlow(  1, 0.9f, 100, 0), 1e-2);
+	EXPECT_NEAR( 5.738f, model.throttlePositionForFlow(  2, 0.9f, 100, 0), 1e-2);
+	EXPECT_NEAR( 8.571f, model.throttlePositionForFlow(  5, 0.9f, 100, 0), 1e-2);
+	EXPECT_NEAR(11.670f, model.throttlePositionForFlow( 10, 0.9f, 100, 0), 1e-2);
+	EXPECT_NEAR(37.473f, model.throttlePositionForFlow(100, 0.9f, 100, 0), 1e-2);
+	EXPECT_NEAR(51.348f, model.throttlePositionForFlow(200, 0.9f, 100, 0), 1e-2);
+	EXPECT_NEAR(74.510f, model.throttlePositionForFlow(400, 0.9f, 100, 0), 1e-2);
+	EXPECT_NEAR(87.093f, model.throttlePositionForFlow(470, 0.9f, 100, 0), 1e-2);
+	EXPECT_NEAR(88.737f, model.throttlePositionForFlow(471, 0.9f, 100, 0), 1e-2);
 
 	// Throttle is maxed out here!
 
-	EXPECT_NEAR(100.00, model.throttlePositionForFlow(473, 0.9, 100, 0), 1e-2);
-	EXPECT_NEAR(100.00, model.throttlePositionForFlow(500, 0.9, 100, 0), 1e-2);
-	EXPECT_NEAR(100.00, model.throttlePositionForFlow(600, 0.9, 100, 0), 1e-2);
-	EXPECT_NEAR(100.00, model.throttlePositionForFlow(700, 0.9, 100, 0), 1e-2);
+	EXPECT_NEAR(100.00f, model.throttlePositionForFlow(473, 0.9f, 100, 0), 1e-2);
+	EXPECT_NEAR(100.00f, model.throttlePositionForFlow(500, 0.9f, 100, 0), 1e-2);
+	EXPECT_NEAR(100.00f, model.throttlePositionForFlow(600, 0.9f, 100, 0), 1e-2);
+	EXPECT_NEAR(100.00f, model.throttlePositionForFlow(700, 0.9f, 100, 0), 1e-2);
 }
 
 TEST(ThrottleModel, SmallEngineBigThrottle) {

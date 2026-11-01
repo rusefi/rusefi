@@ -21,20 +21,20 @@ TEST(Deadband, InsideDeadband) {
 	EXPECT_TRUE(d.gt(0, 2));
 	EXPECT_TRUE(d.gt(0, 3));
 	EXPECT_TRUE(d.gt(0, 4));
-	EXPECT_TRUE(d.gt(0, 4.99));
+	EXPECT_TRUE(d.gt(0, 4.99f));
 
 	// Flip the state - it should now stick false
-	EXPECT_FALSE(d.gt(0, 5.01));
+	EXPECT_FALSE(d.gt(0, 5.01f));
 
 	// Make sure it stays there while inside the deadband
-	EXPECT_FALSE(d.gt(0, 4.99));
+	EXPECT_FALSE(d.gt(0, 4.99f));
 	EXPECT_FALSE(d.gt(0, 1));
 	EXPECT_FALSE(d.gt(0, -1));
 	EXPECT_FALSE(d.gt(0, -1));
-	EXPECT_FALSE(d.gt(0, -4.99));
+	EXPECT_FALSE(d.gt(0, -4.99f));
 
 	// Now it should flip back
-	EXPECT_TRUE(d.gt(0, -5.01));
+	EXPECT_TRUE(d.gt(0, -5.01f));
 }
 
 TEST(Hysteresis, basic) {

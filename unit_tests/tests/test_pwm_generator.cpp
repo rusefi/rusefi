@@ -69,7 +69,7 @@ static void testSwitchToNanPeriod() {
 			&executor,
 			&pin,
 			1000 /* frequency */,
-			0.60 /* duty cycle */);
+			0.60f /* duty cycle */);
 
 	expectedTimeOfNextEvent += 600;
 	ASSERT_EQ(expectedTimeOfNextEvent, executor.getForUnitTest(0)->getMomentUs()) << "1@1000/70";
@@ -124,7 +124,7 @@ TEST(PWM, testPwmGenerator) {
 			&executor,
 			&pin,
 			1000 /* frequency */,
-			0.80 /* duty cycle */);
+			0.80f /* duty cycle */);
 
 	expectedTimeOfNextEvent += 800;
 	ASSERT_EQ(expectedTimeOfNextEvent, executor.getForUnitTest(0)->getMomentUs()) << "1@1000/80";
