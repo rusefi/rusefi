@@ -16,11 +16,11 @@ void initDodgeRam(TriggerWaveform *s) {
 
 	s->isSynchronizationNeeded = false;
 
-	addSkippedToothTriggerEvents(TriggerWheel::T_SECONDARY, s, 8, 0, 0.06, -25, 360, 0, 720);
+	addSkippedToothTriggerEvents(TriggerWheel::T_SECONDARY, s, 8, 0, 0.06f, -25, 360, 0, 720);
 
 	s->addEvent720(360, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 
-	addSkippedToothTriggerEvents(TriggerWheel::T_SECONDARY, s, 8, 0, 0.06, 360 - 25, 360, 0, 720);
+	addSkippedToothTriggerEvents(TriggerWheel::T_SECONDARY, s, 8, 0, 0.06f, 360 - 25, 360, 0, 720);
 
 	s->addEvent720(720, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 }
@@ -133,9 +133,9 @@ gap=1.43/0.71
 
 	// these values only work well for 'useFronOnly' mode!!!
 	s->setTriggerSynchronizationGap2(0.75, 1.5);
-	s->setTriggerSynchronizationGap3(1, 0.65, 1.25);
+	s->setTriggerSynchronizationGap3(1, 0.65f, 1.25f);
 
-	float EPS_ANGLE = 0.3;
+	float EPS_ANGLE = 0.3f;
 
 
 	if (useOnlyPrimary) {
@@ -341,11 +341,11 @@ void configureDodgeStratusTriggerWaveform(TriggerWaveform *s) {
 	float w = 7;
 	float g = 20;
 	s->setTriggerSynchronizationGap2(CHRYSLER_NGC6_GAP - 0.25,
-			CHRYSLER_NGC6_GAP + 0.4);
+			CHRYSLER_NGC6_GAP + 0.4f);
 
 	float base = 0;
 	// 2 teeth
-	float angle = base + 120.0 - w;
+	float angle = base + 120.0f - w;
 	s->addEvent720(angle, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 	s->addEvent720(angle + w, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 	angle += g;
@@ -354,7 +354,7 @@ void configureDodgeStratusTriggerWaveform(TriggerWaveform *s) {
 
 	base += 120;
 	// 3 teeth
-	angle = base + 120.0 - w;
+	angle = base + 120.0f - w;
 	s->addEvent720(angle, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 	s->addEvent720(angle + w, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 	angle += g;
@@ -366,7 +366,7 @@ void configureDodgeStratusTriggerWaveform(TriggerWaveform *s) {
 
 	base += 120;
 	// 2 teeth
-	angle = base + 120.0 - w;
+	angle = base + 120.0f - w;
 	s->addEvent720(angle, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 	s->addEvent720(angle + w, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 	angle += g;
@@ -375,13 +375,13 @@ void configureDodgeStratusTriggerWaveform(TriggerWaveform *s) {
 
 	base += 120;
 	// just one
-	angle = base + 120.0 - w;
+	angle = base + 120.0f - w;
 	s->addEvent720(angle, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 	s->addEvent720(angle + w, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
 	base += 120;
 	// 3 teeth
-	angle = base + 120.0 - w;
+	angle = base + 120.0f - w;
 	s->addEvent720(angle, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 	s->addEvent720(angle + w, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 	angle += g;
@@ -393,7 +393,7 @@ void configureDodgeStratusTriggerWaveform(TriggerWaveform *s) {
 
 	base += 120;
 	// just one again
-	angle = base + 120.0 - w;
+	angle = base + 120.0f - w;
 	s->addEvent720(angle, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 	s->addEvent720(angle + w, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 }
@@ -402,14 +402,14 @@ void configureNeon1995TriggerWaveformOnlyCrank(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::Rise);
 
 	// Nominal gap 3.25
-	s->setTriggerSynchronizationGap3(0, 1.6, 4.5);
+	s->setTriggerSynchronizationGap3(0, 1.6f, 4.5f);
 
 	// Nominal gap 1.0
 	s->setTriggerSynchronizationGap3(1, 0.5, 1.5);
 	s->setTriggerSynchronizationGap3(2, 0.5, 1.5);
 
 	// Nominal gap 0.168
-	s->setTriggerSynchronizationGap3(3, 0.1, 0.3);
+	s->setTriggerSynchronizationGap3(3, 0.1f, 0.3f);
 
 	s->tdcPosition = 279;
 
@@ -523,7 +523,7 @@ void initJeep_XJ_4cyl_2500(TriggerWaveform *s) {
 	s->isSynchronizationNeeded = false;
 	s->tdcPosition = 720 - 236;
 
-	float offset = 124;
+	int offset = 124;
 
 	add4cylblock(offset - 180, s);
 	add4cylblock(offset, s);
@@ -547,7 +547,7 @@ void configureChryslerNGC_36_2_2(TriggerWaveform *s) {
 	for (int i = 1; i < 15; i++) {
 		s->setTriggerSynchronizationGap4(/*gapIndex*/i, 1);
 	}
-	s->setTriggerSynchronizationGap4(/*gapIndex*/15, 0.4);
+	s->setTriggerSynchronizationGap4(/*gapIndex*/15, 0.4f);
 
 	float base = 0;
 
@@ -580,13 +580,13 @@ void configureJeepEVD_36_2_2(TriggerWaveform *s) {
 	float narrow = 5 * 2;
 
 	/* Last falling edge before big gap */
-	s->tdcPosition = 13.5 * narrow;
+	s->tdcPosition = 13.5f * narrow;
 
-	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 0.2, 0.6);
-	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 2.2, 3.8);
+	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 0.2f, 0.6f);
+	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 2.2f, 3.8f);
 
 	for (int i = 2; i < 17; i++) {
-		s->setTriggerSynchronizationGap3(/*gapIndex*/i, 0.7, 1.6);
+		s->setTriggerSynchronizationGap3(/*gapIndex*/i, 0.7f, 1.6f);
 	}
 
 	/* Starting with big gap */
@@ -617,7 +617,7 @@ void configureChryslerVtt15(TriggerWaveform *s) {
   // best-effort angles from engine logs
   // Definitely not exact, but close enough for testing purposes
   angle_t angles[] = {
-    35.0, 45.6, 80.2, 124.4, 135.0, 145.4, 169.2, 213.8, 257.8, 268.0, 302.2, 313.4, 324.6, 349.4, 360.0
+    35.0f, 45.6f, 80.2f, 124.4f, 135.0f, 145.4f, 169.2f, 213.8f, 257.8f, 268.0f, 302.2f, 313.4f, 324.6f, 349.4f, 360.0f
   };
 
   for (int i = 0; i < sizeof(angles) / sizeof(angles[0]); i++) {
@@ -625,5 +625,5 @@ void configureChryslerVtt15(TriggerWaveform *s) {
   }
 
   s->setTriggerSynchronizationGap3(0, 2.5, 3.5);
-  s->setTriggerSynchronizationGap3(1, 0.25, 0.4);
+  s->setTriggerSynchronizationGap3(1, 0.25f, 0.4f);
 }

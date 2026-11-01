@@ -189,14 +189,14 @@ static const float mafTransferKgH[MAF_TRANSFER_SIZE] = {
 // this transfer function somehow works with 1K pull-down
 static const float mafTransferVolts[MAF_TRANSFER_SIZE] = {
 		0.50,
-		0.87,
-		1.07,
-		1.53,
-		1.85,
-		2.11,
-		2.46,
+		0.87f,
+		1.07f,
+		1.53f,
+		1.85f,
+		2.11f,
+		2.46f,
 		3.00,
-		3.51,
+		3.51f,
 		4.50
 };
 
@@ -218,7 +218,7 @@ static void setMAFTransferFunction() {
 	memcpy(config->mafDecoding, mafTransferKgH, sizeof(mafTransferKgH));
 	memcpy(config->mafDecodingBins, mafTransferVolts, sizeof(mafTransferVolts));
 	for (int i = MAF_TRANSFER_SIZE;i<MAF_DECODING_COUNT;i++) {
-		config->mafDecodingBins[i] = config->mafDecodingBins[MAF_TRANSFER_SIZE - 1] + i * 0.01;
+		config->mafDecodingBins[i] = config->mafDecodingBins[MAF_TRANSFER_SIZE - 1] + i * 0.01f;
 		config->mafDecoding[i] = config->mafDecoding[MAF_TRANSFER_SIZE - 1];
 	}
 }
@@ -236,8 +236,8 @@ static const float injectorLagPressureBins[VBAT_INJECTOR_CURVE_PRESSURE_SIZE] = 
 #endif // VBAT_INJECTOR_CURVE_PRESSURE_SIZE
 #if (VBAT_INJECTOR_CURVE_PRESSURE_SIZE == 2) && (VBAT_INJECTOR_CURVE_SIZE == 8)
 static const float injectorLagCorrection[VBAT_INJECTOR_CURVE_PRESSURE_SIZE][VBAT_INJECTOR_CURVE_SIZE] = {
-	{ 4.0, 3.0, 2.0, 1.7, 1.5, 1.35, 1.25, 1.20 },
-	{ 4.0, 3.0, 2.0, 1.7, 1.5, 1.35, 1.25, 1.20 },
+	{ 4.0f, 3.0f, 2.0f, 1.7f, 1.5f, 1.35f, 1.25f, 1.20f },
+	{ 4.0f, 3.0f, 2.0f, 1.7f, 1.5f, 1.35f, 1.25f, 1.20f },
 };
 	copyTable(engineConfiguration->injector.battLagCorrTable, injectorLagCorrection);
 #endif
@@ -248,7 +248,7 @@ static const float injectorLagCorrection[VBAT_INJECTOR_CURVE_PRESSURE_SIZE][VBAT
  */
 static void setCommonMazdaNB() {
 	// Base engine
-	engineConfiguration->displacement = 1.839;
+	engineConfiguration->displacement = 1.839f;
 	engineConfiguration->cylindersCount = 4;
 	engineConfiguration->firingOrder = FO_1_3_4_2;
 
@@ -282,9 +282,9 @@ static void setCommonMazdaNB() {
 	engineConfiguration->idlePidRpmUpperLimit = 350;
 	engineConfiguration->idlePidRpmDeadZone = 100;
 
-	engineConfiguration->idleRpmPid.pFactor = 0.0065;
-	engineConfiguration->idleRpmPid.iFactor = 0.3;
-	engineConfiguration->idleRpmPid.dFactor = 0.002;
+	engineConfiguration->idleRpmPid.pFactor = 0.0065f;
+	engineConfiguration->idleRpmPid.iFactor = 0.3f;
+	engineConfiguration->idleRpmPid.dFactor = 0.002f;
 	engineConfiguration->idleRpmPid.minValue = -8;
 	engineConfiguration->idleRpmPid.maxValue = 10;
 	engineConfiguration->idlerpmpid_iTermMin = -15;
@@ -299,7 +299,7 @@ static void setCommonMazdaNB() {
 	engineConfiguration->alternatorControl.offset = 20;
 	engineConfiguration->alternatorControl.pFactor = 16;
 	engineConfiguration->alternatorControl.iFactor = 8;
-	engineConfiguration->alternatorControl.dFactor = 0.1;
+	engineConfiguration->alternatorControl.dFactor = 0.1f;
 	engineConfiguration->alternatorControl.periodMs = 10;
 
 	// Tach
@@ -335,7 +335,7 @@ static void setCommonMazdaNB() {
 	// MAF (todo: do we use this?)
 	setMAFTransferFunction();
 
-	engineConfiguration->wwaeTau = 0.1;
+	engineConfiguration->wwaeTau = 0.1f;
 
 	miataNA_setCltIdleCorrBins();
 	miataNA_setCltIdleRpmBins();
@@ -349,7 +349,7 @@ static void setCommonMazdaNB() {
 	// - 23 teeth on speedometer sensor
 	// - 3.909 rear axle ratio
 	// 3.909 * 6 / 21 ~= 1.12
-	engineConfiguration->vssGearRatio = 3.909 * 6 / 21;
+	engineConfiguration->vssGearRatio = 3.909f * 6 / 21;
 	engineConfiguration->vssToothCount = 4;
 }
 
@@ -374,8 +374,8 @@ static void setMazdaMiataEngineNB2Defaults() {
 
 	// VVT closed loop
 	engineConfiguration->auxPid[0].pFactor = 2;
-	engineConfiguration->auxPid[0].iFactor = 0.005;
-	engineConfiguration->auxPid[0].dFactor = 0.002;
+	engineConfiguration->auxPid[0].iFactor = 0.005f;
+	engineConfiguration->auxPid[0].dFactor = 0.002f;
 	engineConfiguration->auxPid[0].offset = 33;
 	engineConfiguration->auxPid[0].minValue = 20;
 	engineConfiguration->auxPid[0].maxValue = 90;

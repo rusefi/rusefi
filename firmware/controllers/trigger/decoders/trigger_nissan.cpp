@@ -32,7 +32,7 @@ void initializeNissanK11(TriggerWaveform *s) {
     s->addEvent720(720, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
     s->tdcPosition = 10;
-    s->setTriggerSynchronizationGap3(/*gapIndex*/0, 0.40, 0.50);
+    s->setTriggerSynchronizationGap3(/*gapIndex*/0, 0.40f, 0.50f);
 }
 
 /**
@@ -43,7 +43,7 @@ void initializeNissanSR20VE_4(TriggerWaveform *s) {
 
 	s->tdcPosition = 630;
 
-	s->setTriggerSynchronizationGap2(9.67 * 0.75, 16);
+	s->setTriggerSynchronizationGap2(9.67f * 0.75f, 16);
 
 	float width = 4;
 
@@ -96,9 +96,9 @@ void initializeNissanVQ35crank(TriggerWaveform *s) {
 
 	// 6 cylinder = 36 tooth wheel, missing 2 teeth in 3 spots
 	makeNissanPattern(s, 3, 36, 2);
-	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 0.2, 0.5);
+	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 0.2f, 0.5f);
 	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 2, 4);
-	s->setTriggerSynchronizationGap3(/*gapIndex*/2, 0.6, 1.4);
+	s->setTriggerSynchronizationGap3(/*gapIndex*/2, 0.6f, 1.4f);
 }
 
 void initializeNissanMR18crank(TriggerWaveform *s) {
@@ -108,7 +108,7 @@ void initializeNissanMR18crank(TriggerWaveform *s) {
 
 	// 4 cylinder = 36 tooth wheel, missing 2 teeth in 2 spots
 	makeNissanPattern(s, 2, 36, 2);
-	s->setTriggerSynchronizationGap(0.33);
+	s->setTriggerSynchronizationGap(0.33f);
 }
 
 void initializeNissanVK56DEcrank(TriggerWaveform *s) {
@@ -150,7 +150,7 @@ void initializeNissanVK56DEcam(TriggerWaveform *s) {
 
 void initializeNissanQR25crank(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, SyncEdge::RiseOnly);
-	s->setTriggerSynchronizationGap(0.33);
+	s->setTriggerSynchronizationGap(0.33f);
 	s->setSecondTriggerSynchronizationGap(3);
 
 	s->tdcPosition = 585;
@@ -204,9 +204,9 @@ void initializeNissanVQ30cam(TriggerWaveform *s) {
 	addvq30tooth(s, x - (52 + 9 * 1));
 	addvq30tooth(s, x - (52 + 9 * 0));
 
-	s->setTriggerSynchronizationGap4(/*gapIndex*/0, 5.78);
-	s->setTriggerSynchronizationGap4(/*gapIndex*/1, 0.38);
-	s->setTriggerSynchronizationGap4(/*gapIndex*/2, 2.67);
+	s->setTriggerSynchronizationGap4(/*gapIndex*/0, 5.78f);
+	s->setTriggerSynchronizationGap4(/*gapIndex*/1, 0.38f);
+	s->setTriggerSynchronizationGap4(/*gapIndex*/2, 2.67f);
 }
 
 void initializeNissanMRvvt(TriggerWaveform *s) {
@@ -240,10 +240,10 @@ void initializeNissanMRvvt(TriggerWaveform *s) {
 	addvq30tooth(s, x + 270 + 1 * toothSpacing);
 
 	// nominal gap 4.31
-	s->setTriggerSynchronizationGap2(3.8, 5);
+	s->setTriggerSynchronizationGap2(3.8f, 5);
 
 	// nominal gap 0.44
-	s->setSecondTriggerSynchronizationGap2(0.3, 0.55);
+	s->setSecondTriggerSynchronizationGap2(0.3f, 0.55f);
 }
 
 void initialize_one_of_36_2_2(TriggerWaveform *s, int firstCount, int secondCount) {
@@ -277,11 +277,11 @@ void initializeNissanHRcrank(TriggerWaveform *s) {
 
     s->tdcPosition = 155 + 360;
 
- s->setTriggerSynchronizationGap3(/*gapIndex*/0, 1.7, 5);
+ s->setTriggerSynchronizationGap3(/*gapIndex*/0, 1.7f, 5);
   for (size_t i = 1 ; i < count ; i++) {
-    s->setTriggerSynchronizationGap3(/*gapIndex*/i, 0.6, 1.5);
+    s->setTriggerSynchronizationGap3(/*gapIndex*/i, 0.6f, 1.5f);
   }
-  s->setTriggerSynchronizationGap3(/*gapIndex*/count, 0.1, 0.5);
+  s->setTriggerSynchronizationGap3(/*gapIndex*/count, 0.1f, 0.5f);
   }
 
 
@@ -289,5 +289,5 @@ void initializeNissanHRvvtIn(TriggerWaveform *s) {
 	static const angle_t angles[] = { 120, 120 + 22, 240, 360 };
 	initializeRiseOnlyTrigger(s, 10, angles, efi::size(angles));
 
-	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 0.1, 0.3);
+	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 0.1f, 0.3f);
 }

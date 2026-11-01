@@ -26,7 +26,7 @@ void setSubaruEJ18_MRE() {
 
 //	engineConfiguration->isDoubleSolenoidIdle = true;
 
-	engineConfiguration->displacement = 1.8;
+	engineConfiguration->displacement = 1.8f;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_SUBARU);
 	strcpy(engineConfiguration->engineCode, "EJ18");
 
@@ -66,7 +66,7 @@ void setSubaruEG33Defaults() {
 
 	engineConfiguration->fuelAlgorithm = engine_load_mode_e::LM_REAL_MAF;
 
-	engineConfiguration->displacement = 3.30;
+	engineConfiguration->displacement = 3.30f;
 	engineConfiguration->injector.flow = 250;
 
 	setTable(config->crankingCycleBaseFuel, 5);		// ???
@@ -81,8 +81,8 @@ void setSubaruEG33Defaults() {
 	engineConfiguration->canWriteEnabled = false;
 
 	/* Fully closed - 0.9V, fully opened - 4.7 (?) */
-	engineConfiguration->tpsMin = convertVoltageTo10bitADC(0.9);
-	engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.7);
+	engineConfiguration->tpsMin = convertVoltageTo10bitADC(0.9f);
+	engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.7f);
 	engineConfiguration->tpsErrorDetectionTooLow = -10; // -10% open
 	engineConfiguration->tpsErrorDetectionTooHigh = 110; // 110% open
 
@@ -99,7 +99,7 @@ void setSubaruEG33Defaults() {
 
 void setSubaru2011() {
   engineConfiguration->allowIdenticalPps = true;
-  setPPSCalibration(0.69, 3.38, 0.69, 3.38);
+  setPPSCalibration(0.69f, 3.38f, 0.69f, 3.38f);
 
 	engineConfiguration->displacement = 2.5;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_SUBARU);
@@ -122,9 +122,9 @@ void setSubaru2011() {
 	engineConfiguration->startStopButtonPin = PROTEUS_IN_AV_6_DIGITAL;
 #endif // HW_PROTEUS
 
-	engineConfiguration->tpsMin = convertVoltageTo10bitADC(0.68);
-	engineConfiguration->tpsMax = convertVoltageTo10bitADC(3.96);
-  engineConfiguration->tps1SecondaryMin = convertVoltageTo10bitADC(1.55);
-  engineConfiguration->tps1SecondaryMax = convertVoltageTo10bitADC(4.17);
+	engineConfiguration->tpsMin = convertVoltageTo10bitADC(0.68f);
+	engineConfiguration->tpsMax = convertVoltageTo10bitADC(3.96f);
+  engineConfiguration->tps1SecondaryMin = convertVoltageTo10bitADC(1.55f);
+  engineConfiguration->tps1SecondaryMax = convertVoltageTo10bitADC(4.17f);
 
 }

@@ -20,7 +20,7 @@ https://rusefi.com/docs/pinouts/hellen/hellen154hyundai/
 
 static void set201xHyundai() {
 #if HW_PROTEUS
-	setPPSCalibration(0.73, 4.0, 0.34, 1.86);
+	setPPSCalibration(0.73f, 4.0f, 0.34f, 1.86f);
 #else
 	setPPSCalibration(0.73, 4.0, 0.74, 2.28);
 #endif
@@ -28,7 +28,7 @@ static void set201xHyundai() {
     // note how these numbers are very flipped m111 defaults?
     // extract method?
     setTPS1Calibration(98, 926, 891, 69);
-    setEtbPID(8.8944, 70.2307, 0.1855);
+    setEtbPID(8.8944f, 70.2307f, 0.1855f);
    	// Some sensible defaults for other options
    	setAlgorithm(engine_load_mode_e::LM_SPEED_DENSITY);
 
@@ -41,7 +41,7 @@ void setHyundaiPb() {
 	// override injection phase
 	cannedPbTables();
     setInline4();
-	engineConfiguration->displacement = 1.6;
+	engineConfiguration->displacement = 1.6f;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_Hyundai);
 	strcpy(engineConfiguration->engineCode, "Gamma");
 
@@ -56,8 +56,8 @@ void setHyundaiPb() {
     engineConfiguration->totalGearsCount = 5;
     engineConfiguration->gearRatio[0] = 12;
     engineConfiguration->gearRatio[1] = 6;
-    engineConfiguration->gearRatio[2] = 4.4;
-    engineConfiguration->gearRatio[3] = 2.4;
+    engineConfiguration->gearRatio[2] = 4.4f;
+    engineConfiguration->gearRatio[3] = 2.4f;
     engineConfiguration->gearRatio[4] = 1;
 
     // ETB buzzing is annoying :(
@@ -70,7 +70,7 @@ void setHyundaiPb() {
 	// Injectors flow 1214 cc/min at 100 bar pressure
 	engineConfiguration->injector.flow = 1214;
 
-	setCustomMap(/*lowValue*/ 20, /*mapLowValueVoltage*/ 0.79, /*highValue*/ 101.3, /*mapHighValueVoltage*/ 4);
+	setCustomMap(/*lowValue*/ 20, /*mapLowValueVoltage*/ 0.79f, /*highValue*/ 101.3f, /*mapHighValueVoltage*/ 4);
 
     engineConfiguration->mc33_hpfp_i_peak = 10;
     engineConfiguration->mc33_hpfp_i_hold = 4;
@@ -277,7 +277,7 @@ static void commonGenesisCoupe() {
     // default "Single Coil"
     engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
     // default 2.0
-    engineConfiguration->displacement = 1.998;
+    engineConfiguration->displacement = 1.998f;
     // default "false"
     engineConfiguration->isForcedInduction = true;
     engineConfiguration->globalTriggerAngleOffset = 360 + 115;
@@ -304,7 +304,7 @@ static void commonGenesisCoupe() {
     // default 200.0
     setArrayValues(config->afterCrankingIACtaperDuration, 100);
     // default 0.0
-    engineConfiguration->tpsAccelLookback = 0.3;
+    engineConfiguration->tpsAccelLookback = 0.3f;
     // default 40.0
     engineConfiguration->tpsAccelEnrichmentThreshold = 12;
     // default 0.0
@@ -326,17 +326,17 @@ static void commonGenesisCoupe() {
     // default 33.0
     engineConfiguration->auxPid[0].offset = 38;
     // default 0.005
-    engineConfiguration->auxPid[0].iFactor = 25.4;
+    engineConfiguration->auxPid[0].iFactor = 25.4f;
     // default 0.0
-    engineConfiguration->auxPid[0].dFactor = 0.1;
+    engineConfiguration->auxPid[0].dFactor = 0.1f;
     // default 0.0
     engineConfiguration->auxPid[1].offset = 38;
     // default 0.0
     engineConfiguration->auxPid[1].pFactor = 2;
     // default 0.0
-    engineConfiguration->auxPid[1].iFactor = 25.4;
+    engineConfiguration->auxPid[1].iFactor = 25.4f;
     // default 0.0
-    engineConfiguration->auxPid[1].dFactor = 0.2;
+    engineConfiguration->auxPid[1].dFactor = 0.2f;
 // end of canned tune
 
 	setLuaScript(R"(
@@ -432,7 +432,7 @@ void setGenesisCoupeBK1() {
 	commonGenesisCoupe();
 	// 2010-2012 315cc at 43.5psi
 	// fuel system is fixed pressure 55psi
-	engineConfiguration->injector.flow = 354.19; // https://www.google.com/search?q=315*sqrt%2855%2F43.5%29
+	engineConfiguration->injector.flow = 354.19f; // https://www.google.com/search?q=315*sqrt%2855%2F43.5%29
 	engineConfiguration->fuelReferencePressure = PSI2KPA(55);
 
 }
@@ -442,7 +442,7 @@ void setGenesisCoupeBK2() {
 	// 2013+ 450cc at 43.5
 	// fuel system is fixed pressure 85psi
 	// flow rate P2 = flow rate P1 * sqrt(P2/P1)
-	engineConfiguration->injector.flow = 629.03; // https://www.google.com/search?q=450*sqrt%2885%2F43.5%29
+	engineConfiguration->injector.flow = 629.03f; // https://www.google.com/search?q=450*sqrt%2885%2F43.5%29
 	engineConfiguration->fuelReferencePressure = PSI2KPA(85);
     // default "Throttle 2"
     engineConfiguration->etbFunctions[1] = DC_Wastegate;

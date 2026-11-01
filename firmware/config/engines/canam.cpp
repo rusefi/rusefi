@@ -17,7 +17,7 @@ void setMaverickX3() {
 
     engineConfiguration->cylindersCount = 3;
     engineConfiguration->firingOrder = FO_1_2_3;
-    engineConfiguration->displacement = 0.9;
+    engineConfiguration->displacement = 0.9f;
     engineConfiguration->injectionMode = IM_SEQUENTIAL;
 // ?	  engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	  engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
@@ -36,14 +36,14 @@ void setMaverickX3() {
     engineConfiguration->useIdleTimingPidControl = true;
     engineConfiguration->idleTimingSoftEntryTime = 1;
 
-    engineConfiguration->tpsAccelLookback = 0.3;
+    engineConfiguration->tpsAccelLookback = 0.3f;
     engineConfiguration->tpsAccelEnrichmentThreshold = 12;
     engineConfiguration->tpsDecelEnleanmentThreshold = 7;
     engineConfiguration->tpsAccelFractionPeriod = 3;
 
     engineConfiguration->isBoostControlEnabled = true;
 
-    engineConfiguration->idleTimingPid.dFactor = 0.0005;
+    engineConfiguration->idleTimingPid.dFactor = 0.0005f;
     engineConfiguration->idleTimingPid.minValue = -5;
     engineConfiguration->idleTimingPid.maxValue = 5;
     engineConfiguration->fanOnTemperature = 87;
@@ -58,9 +58,9 @@ void setMaverickX3() {
     engineConfiguration->startButtonSuppressOnStartUpMs = 1000;
     engineConfiguration->vssToothCount = 10;
 
-    engineConfiguration->etb.pFactor = 12.0794;
-    engineConfiguration->etb.iFactor = 213.349;
-    engineConfiguration->etb.dFactor = 0.113607;
+    engineConfiguration->etb.pFactor = 12.0794f;
+    engineConfiguration->etb.iFactor = 213.349f;
+    engineConfiguration->etb.dFactor = 0.113607f;
     engineConfiguration->disableEtbWhenEngineStopped = true;
 
 	  cannedsparkDwellValues();
@@ -80,7 +80,7 @@ void setMaverickX3() {
 
 
 
-	  setPPSCalibration(0.25, 1.49, 0.49, 2.98);
+	  setPPSCalibration(0.25f, 1.49f, 0.49f, 2.98f);
 	  // todo: matches Hyundai TODO extract method?
 	  setTPS1Calibration(98, 926, 891, 69);
 

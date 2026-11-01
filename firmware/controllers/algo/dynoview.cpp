@@ -114,28 +114,28 @@ bool DynoView::onRpm(int rpm, float time, float tps)
     dynoViewPoint.time = time;
     dynoViewPoint.tps = tps;
 
-    dynoViewPoint.engineRps = dynoViewPoint.rpm / 60.0;
+    dynoViewPoint.engineRps = dynoViewPoint.rpm / 60.0f;
     dynoViewPoint.axleRps = dynoViewPoint.engineRps / (config->dynoCarGearPrimaryReduction * config->dynoCarGearRatio * config->dynoCarGearFinalDrive);
-    dynoViewPoint.vMs = dynoViewPoint.axleRps * (wheelOverallDiameterMm / 1000.f) * 3.1416;
-    dynoViewPoint.mph = dynoViewPoint.vMs * 2.2369363;
+    dynoViewPoint.vMs = dynoViewPoint.axleRps * (wheelOverallDiameterMm / 1000.f) * 3.1416f;
+    dynoViewPoint.mph = dynoViewPoint.vMs * 2.2369363f;
 
     if (dynoViewPointPrev.rpm > 0 && dynoViewPointPrev.time > 0)
     {
-        dynoViewPoint.distanceM = ((dynoViewPoint.vMs + dynoViewPointPrev.vMs) / 2.0) * (dynoViewPoint.time - dynoViewPointPrev.time);
+        dynoViewPoint.distanceM = ((dynoViewPoint.vMs + dynoViewPointPrev.vMs) / 2.0f) * (dynoViewPoint.time - dynoViewPointPrev.time);
         dynoViewPoint.aMs2 = (dynoViewPoint.vMs - dynoViewPointPrev.vMs) / (dynoViewPoint.time - dynoViewPointPrev.time);
         if(dynoViewPoint.aMs2 < 0) {
             dynoViewPoint.aMs2 = 0;
         }
         dynoViewPoint.forceN = (config->dynoCarCargoMassKg + config->dynoCarCarMassKg) * dynoViewPoint.aMs2;
-        dynoViewPoint.forceDragN = 0.5 * airDensityKgM3 * (dynoViewPoint.vMs * dynoViewPoint.vMs) * config->dynoCarFrontalAreaM2 * config->dynoCarCoeffOfDrag;
+        dynoViewPoint.forceDragN = 0.5f * airDensityKgM3 * (dynoViewPoint.vMs * dynoViewPoint.vMs) * config->dynoCarFrontalAreaM2 * config->dynoCarCoeffOfDrag;
 
         dynoViewPoint.forceDragN = dynoViewPoint.forceDragN * saeCorrectionFactor;
 
         dynoViewPoint.forceTotalN = dynoViewPoint.forceN + dynoViewPoint.forceDragN;
-        dynoViewPoint.torqueWheelNm = dynoViewPoint.forceTotalN * ((wheelOverallDiameterMm / 2.0) / 1000.0);
+        dynoViewPoint.torqueWheelNm = dynoViewPoint.forceTotalN * ((wheelOverallDiameterMm / 2.0f) / 1000.0f);
         dynoViewPoint.torqueNm = dynoViewPoint.torqueWheelNm / (config->dynoCarGearPrimaryReduction * config->dynoCarGearRatio * config->dynoCarGearFinalDrive);
-        dynoViewPoint.torqueLbFt = dynoViewPoint.torqueNm * 0.737562;
-        dynoViewPoint.hp = dynoViewPoint.torqueLbFt * dynoViewPoint.rpm / 5252.0;
+        dynoViewPoint.torqueLbFt = dynoViewPoint.torqueNm * 0.737562f;
+        dynoViewPoint.hp = dynoViewPoint.torqueLbFt * dynoViewPoint.rpm / 5252.0f;
 
         DynoView::move(dyno_view_window_size, tail_hp);
         DynoView::move(dyno_view_window_size, tail_torque);

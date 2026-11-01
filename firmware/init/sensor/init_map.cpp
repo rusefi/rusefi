@@ -45,38 +45,38 @@ struct MapCfg {
 static MapCfg getMapCfg(air_pressure_sensor_type_e sensorType) {
 	switch (sensorType) {
 		case MT_DENSO183:
-			return {0, -6.64, 5, 182.78};
+			return {0, -6.64f, 5, 182.78f};
 		case MT_MPX4100:
-			return {0.306, 20, 4.897, 105};
+			return {0.306f, 20, 4.897f, 105};
 		case MT_MPX4250:
 		case MT_MPX4250A:
-			return {0.204, 20, 4.896, 250};
+			return {0.204f, 20, 4.896f, 250};
 		case MT_HONDA3BAR:
-			return {0.5, 91.422, 3.0, 0};
+			return {0.5f, 91.422f, 3.0f, 0};
 		case MT_DODGE_NEON_2003:
-			return {0.4, 15.34, 4.5, 100};
+			return {0.4f, 15.34f, 4.5f, 100};
 		case MT_SUBY_DENSO:
 			return {0, 0, 5, 200};
 		case MT_GM_3_BAR:
-			return {0.631, 40, 4.914, 304};
+			return {0.631f, 40, 4.914f, 304};
 		case MT_GM_2_BAR:
-			return {0, 8.8, 5, 208};
+			return {0, 8.8f, 5, 208};
 		case MT_GM_1_BAR:
 			return {0 /*v*/, 10 /*kpa*/, 5 /*v*/, 105 /*kpa*/};
 		case MT_TOYOTA_89420_02010:
-			return {3.7 - 2, 33.32, 3.7, 100};
+			return {3.7f - 2, 33.32f, 3.7f, 100};
 		case MT_MAZDA_1_BAR:
 			return {0, 2.5, 5, 117};
 		case MT_BOSCH_2_5:
 			// kpa=54.11764705882353v−1.6470588235294201
-			return {0.4, 20, 4.65, 250};
+			return {0.4f, 20, 4.65f, 250};
 		case MT_MPXH6400:
-			return {0.2, 20, 4.8, 400};
+			return {0.2f, 20, 4.8f, 400};
 		case MT_MPXH6300:
 			return {1.0, 60, 4.5, 270};
 		case MT_BOSCH_3_BAR:
 			// 0261230566 / 0281002976: 11 kPa at 0.39V, 310 kPa at 4.65V
-			return {0.39, 11, 4.65, 310};
+			return {0.39f, 11, 4.65f, 310};
 		default:
 			firmwareError(ObdCode::CUSTOM_ERR_MAP_TYPE, "Unknown MAP type: decoder %d", sensorType);
 			// falls through to custom

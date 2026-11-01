@@ -125,14 +125,14 @@ void configureKawaKX450F(TriggerWaveform *s) {
 	float engineCycle = FOUR_STROKE_ENGINE_CYCLE;
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::Rise);
 
-	s->setTriggerSynchronizationGap(2.28);
+	s->setTriggerSynchronizationGap(2.28f);
 
-	float toothWidth = 3 / 20.0;
+	float toothWidth = 3 / 20.0f;
 
 	addSkippedToothTriggerEvents(TriggerWheel::T_PRIMARY, s, 18, 0, toothWidth, 0, engineCycle,
 			NO_LEFT_FILTER, 720 - 39);
 
-	s->addToothRiseFall(360, /* width*/10.80);
+	s->addToothRiseFall(360, /* width*/10.80f);
 }
 
 // TT_VVT_BOSCH_QUICK_START
@@ -141,7 +141,7 @@ void configureQuickStartSenderWheel(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Fall);
 
 	// our preference is to sync not too close to crank sync point
-	s->setTriggerSynchronizationGap(0.645);
+	s->setTriggerSynchronizationGap(0.645f);
 	s->setSecondTriggerSynchronizationGap(1.556);
 
 	s->addToothRiseFall(90, /* width*/ 70);
@@ -187,5 +187,5 @@ void configure3ToothCrank(TriggerWaveform* s) {
 
 void configure6ToothCrank(TriggerWaveform* s) {
 	s->initialize(FOUR_STROKE_SIX_TIMES_CRANK_SENSOR, SyncEdge::RiseOnly);
-  commonSymmetrical(s, 6, 0.7, 1.4);
+  commonSymmetrical(s, 6, 0.7f, 1.4f);
 }

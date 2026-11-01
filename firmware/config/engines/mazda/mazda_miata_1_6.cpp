@@ -19,11 +19,11 @@
 #include "mazda_miata_base_maps.h"
 #include "mre_meta.h"
 
-static const float hardCodedmafDecodingBins[] = {0.1, 0.2, 0.3, 0.4, 0.5, 0.5999985, 0.70000076, 0.79999924, 0.9000015, 1.0, 1.0999985, 1.199997, 1.300003, 1.4000015, 1.5, 1.5999985, 1.699997, 1.800003, 1.9000015, 2.0, 2.100006, 2.2000122, 2.2999878, 2.399994, 2.5, 2.600006, 2.7000122, 2.7999878, 2.899994, 3.0, 3.100006, 3.2000122
+static const float hardCodedmafDecodingBins[] = {0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.5999985f, 0.70000076f, 0.79999924f, 0.9000015f, 1.0f, 1.0999985f, 1.199997f, 1.300003f, 1.4000015f, 1.5f, 1.5999985f, 1.699997f, 1.800003f, 1.9000015f, 2.0f, 2.100006f, 2.2000122f, 2.2999878f, 2.399994f, 2.5f, 2.600006f, 2.7000122f, 2.7999878f, 2.899994f, 3.0f, 3.100006f, 3.2000122f
 // if anyone cares we shall rescale: , 3.2999878, 3.399994, 3.5, 3.600006, 3.7000122, 3.7999878, 3.899994, 4.0, 4.0999756, 4.2
 };
 
-static const float hardCodedmafDecoding[] = {570.0, 437.0, 351.5, 293.55078, 237.0, 186.0, 145.0, 116.0, 96.0, 78.84961, 65.549805, 56.049805, 48.0, 40.0, 33.25, 29.449951, 25.649902, 22.800049, 20.899902, 19.0, 17.100098, 16.149902, 13.775024, 12.824951, 11.400024, 10.449951, 9.5, 8.550049, 8.454956, 8.359985, 8.300049, 8.199951
+static const float hardCodedmafDecoding[] = {570.0f, 437.0f, 351.5f, 293.55078f, 237.0f, 186.0f, 145.0f, 116.0f, 96.0f, 78.84961f, 65.549805f, 56.049805f, 48.0f, 40.0f, 33.25f, 29.449951f, 25.649902f, 22.800049f, 20.899902f, 19.0f, 17.100098f, 16.149902f, 13.775024f, 12.824951f, 11.400024f, 10.449951f, 9.5f, 8.550049f, 8.454956f, 8.359985f, 8.300049f, 8.199951f
 // if anyone cares we shall rescale:, 7.5999756, 7.125, 7.125, 7.125, 6.6500244, 6.6500244, 6.6500244, 6.6500244, 6.6500244, 6.6500244
 };
 
@@ -35,7 +35,7 @@ static void setMafDecodingBins() {
 	}
 
 	for (size_t i = efi::size(hardCodedmafDecodingBins); i < MAF_DECODING_COUNT; i++) {
-		config->mafDecodingBins[i] = 4.2 + 0.01 * i;
+		config->mafDecodingBins[i] = 4.2f + 0.01f * i;
 		config->mafDecoding[i] = 0;
 	}
 }
@@ -99,7 +99,7 @@ void miataNAcommonEngineSettings() {
 	engineConfiguration->trigger.type = trigger_type_e::TT_MAZDA_MIATA_NA;
 	engineConfiguration->cylindersCount = 4;
 	engineConfiguration->firingOrder = FO_1_3_4_2;
-	engineConfiguration->compressionRatio = 9.1;
+	engineConfiguration->compressionRatio = 9.1f;
 	engineConfiguration->cranking.rpm = 400;
 	engineConfiguration->cylinderBore = 78;
 	config->dynoCarCarMassKg = 950;
@@ -144,9 +144,9 @@ void miataNAcommonEngineSettings() {
 	engineConfiguration->idleMode = idle_mode_e::IM_AUTO;
 	// below 20% this valve seems to be opening for fail-safe idle air
 	engineConfiguration->idleRpmPid.minValue = 20;
-	engineConfiguration->idleRpmPid.pFactor = 0.01;
-	engineConfiguration->idleRpmPid.iFactor = 0.00001;
-	engineConfiguration->idleRpmPid.dFactor = 0.0001;
+	engineConfiguration->idleRpmPid.pFactor = 0.01f;
+	engineConfiguration->idleRpmPid.iFactor = 0.00001f;
+	engineConfiguration->idleRpmPid.dFactor = 0.0001f;
 	engineConfiguration->idleRpmPid.periodMs = 100;
 
 	/**
@@ -164,7 +164,7 @@ void miataNAcommonEngineSettings() {
 	engineConfiguration->engineChartSize = 200;
 	setTable(config->crankingCycleBaseFuel, 27.5);
 
-	engineConfiguration->displacement = 1.6;
+	engineConfiguration->displacement = 1.6f;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);
 	strcpy(engineConfiguration->engineCode, "NA6");
 
@@ -182,15 +182,15 @@ void miataNAcommonEngineSettings() {
 
 	// Vehicle speed/gears
 	engineConfiguration->totalGearsCount = 5;
-	engineConfiguration->gearRatio[0] = 3.136;
-	engineConfiguration->gearRatio[1] = 1.888;
-	engineConfiguration->gearRatio[2] = 1.330;
+	engineConfiguration->gearRatio[0] = 3.136f;
+	engineConfiguration->gearRatio[1] = 1.888f;
+	engineConfiguration->gearRatio[2] = 1.330f;
 	engineConfiguration->gearRatio[3] = 1.000;
-	engineConfiguration->gearRatio[4] = 0.814;
+	engineConfiguration->gearRatio[4] = 0.814f;
 
 	// These may need to change based on your real car
 	engineConfiguration->driveWheelRevPerKm = 551;
-	engineConfiguration->finalGearRatio = 4.3;
+	engineConfiguration->finalGearRatio = 4.3f;
 
 	// This should be correct for factory matched speedo gears and diffs,
 	// but will need to be adjusted for mismatched combinations.
@@ -199,7 +199,7 @@ void miataNAcommonEngineSettings() {
 	// - 23 teeth on speedometer sensor
 	// - 4.3 rear axle ratio
 	// 4.3 * 6 / 23 ~= 1.12
-	engineConfiguration->vssGearRatio = 4.3 * 6 / 23;
+	engineConfiguration->vssGearRatio = 4.3f * 6 / 23;
 	engineConfiguration->vssToothCount = 4;
 }
 
@@ -275,7 +275,7 @@ void setMazdaMiataNA94() {
 	 */
 	engineConfiguration->injector.flow = 254;
 
-	engineConfiguration->displacement = 1.8;
+	engineConfiguration->displacement = 1.8f;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->map.sensor.type = MT_MPX4250;
 

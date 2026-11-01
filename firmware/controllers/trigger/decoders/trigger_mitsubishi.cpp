@@ -15,8 +15,8 @@ void configureFordAspireTriggerWaveform(TriggerWaveform * s) {
 	s->isSynchronizationNeeded = false;
 	s->isSecondWheelCam = true;
 
-	float x = 121.90;
-	float y = 110.86;
+	float x = 121.90f;
+	float y = 110.86f;
 
 	s->addEvent720(x + y - 180, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
 	s->addEvent720(x, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
@@ -54,10 +54,10 @@ void initializeVvt6G72(TriggerWaveform *s) {
 
     // real working ranges for all of the engine states
     s->setTriggerSynchronizationGap3(0, 1.3, 3.2);
-    s->setTriggerSynchronizationGap3(1, 0.3, 0.66);
-    s->setTriggerSynchronizationGap3(2, 1.3, 3.2);
-    s->setTriggerSynchronizationGap3(3, 0.3, 0.66);
-    s->setTriggerSynchronizationGap3(4, 1.3, 3.2);
+    s->setTriggerSynchronizationGap3(1, 0.3f, 0.66f);
+    s->setTriggerSynchronizationGap3(2, 1.3f, 3.2f);
+    s->setTriggerSynchronizationGap3(3, 0.3f, 0.66f);
+    s->setTriggerSynchronizationGap3(4, 1.3f, 3.2f);
 
     s->addEvent360(52.5, TriggerValue::FALL);
     s->addEvent360(82.5, TriggerValue::RISE);
@@ -73,7 +73,7 @@ void initializeMitsubishi4g63Cam(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Both);
 
 	// nominal gap 0.5
-	s->setSecondTriggerSynchronizationGap2(0.2, 0.95);
+	s->setSecondTriggerSynchronizationGap2(0.2f, 0.95f);
 
 	// nominal gap 3.0
 	s->setTriggerSynchronizationGap2(2.0f, 5.0f);
@@ -147,9 +147,9 @@ void initialize36_2_1_1(TriggerWaveform *s) {
   // narrow gap normal 1.0 - 1.65- 0.8
   // narrow gap crank  0.8 - 1.0 - 0.7
 
-  s->setTriggerSynchronizationGap3(0, 0.3, 0.6);
-  s->setTriggerSynchronizationGap3(1, 1.7, 3.6);
-  s->setTriggerSynchronizationGap3(2, 0.8, 1.2);
+  s->setTriggerSynchronizationGap3(0, 0.3f, 0.6f);
+  s->setTriggerSynchronizationGap3(1, 1.7f, 3.6f);
+  s->setTriggerSynchronizationGap3(2, 0.8f, 1.2f);
 }
 
 // Mitsubishi 4B11
@@ -184,7 +184,7 @@ void initializeVvt3A92(TriggerWaveform *s) {
 	initializeRiseOnlyTrigger(s, 5, angles, efi::size(angles), FOUR_STROKE_CRANK_SENSOR);
 
 	s->setTriggerSynchronizationGap(9);
-	s->setSecondTriggerSynchronizationGap(0.11); // redundancy
+	s->setSecondTriggerSynchronizationGap(0.11f); // redundancy
 }
 
 void initializeMitsubishi4G69Cam(TriggerWaveform *s) {
@@ -209,5 +209,5 @@ void initializeMitsubishi6G75Cam(TriggerWaveform *s) {
 
 	initializeRiseOnlyTrigger(s, 5, angles, efi::size(angles));
 
-	s->setTriggerSynchronizationGap(2.66);
+	s->setTriggerSynchronizationGap(2.66f);
 }
