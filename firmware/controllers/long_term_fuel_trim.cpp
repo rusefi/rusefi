@@ -151,7 +151,7 @@ void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fue
 
 	bool adjusted = false;
 
-	// calculate weight depenting on distance from cell center
+	// calculate weight depending on distance from cell center
 	// Is this too heavy?
 	float weight = 1.0 - hypotf(x.Frac, y.Frac) / hypotf(0.5, 0.5);
 	float k = getIntegratorGain(cfg, clResult.region) * integrator_dt * weight;
