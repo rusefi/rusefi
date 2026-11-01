@@ -716,8 +716,8 @@ event 0 0 1 0.000000 0.000000
 event 1 1 1 14.876701 nan
 event 2 1 0 14.876701 nan
 event 3 0 0 0.000000 nan
-event 4 1 1 192.378296 nan
-event 5 1 0 192.378296 nan
+event 4 1 1 192.378326 nan
+event 5 1 0 192.378326 nan
 event 6 1 1 373.060608 nan
 event 7 1 0 373.060608 nan
 event 8 1 1 555.349792 nan
