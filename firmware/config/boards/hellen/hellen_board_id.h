@@ -31,12 +31,12 @@ class HellenBoardIdSolver : public NewtonsMethodSolver
 {
 public:
 	float fx(float x) override {
-		return exp(k1 / x) - exp(k2 / x) + exp(k3 / x) - 1.0f;
+		return expf(k1 / x) - expf(k2 / x) + expf(k3 / x) - 1.0f;
 	}
 
 	// first-order derivative
 	float dfx(float x) override {
-		return (-1.0f / (x * x)) * (k1 * exp(k1 / x) - k2 * exp(k2 / x) + k3 * exp(k3 / x));
+		return (-1.0f / (x * x)) * (k1 * expf(k1 / x) - k2 * expf(k2 / x) + k3 * expf(k3 / x));
 	}
 
 	// Newton numerical method (x is R and y is C, or vice-versa)

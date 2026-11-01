@@ -21,7 +21,7 @@
 #if EFI_HISTOGRAMS || EFI_UNIT_TEST
 
 #define H_ACCURACY 0.05
-#define H_CONFIDENCE 0.8
+#define H_CONFIDENCE 0.8f
 #define LONG_MAX_INT 0x7fffffffffffffffL
 #define SBI_SIZE 1000
 

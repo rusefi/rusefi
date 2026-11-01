@@ -55,7 +55,7 @@ struct MafFilter final : public SensorConverter {
 		}
 
 		float invTimeConstant = rpm / param;
-		float alpha = (1e-3 * FAST_CALLBACK_PERIOD_MS) * invTimeConstant;
+		float alpha = (1e-3f * FAST_CALLBACK_PERIOD_MS) * invTimeConstant;
 
 		if (alpha < 0.001f) {
 			// Limit to 0.001 to avoid numerical issues

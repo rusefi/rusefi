@@ -142,7 +142,7 @@ void EngineState::periodicFastCallback() {
 #if EFI_LTFT_CONTROL
 			ltftResult.banks[bankIndex] *
 #endif
-			1.0;
+			1.0f;
 		auto cylinderTrim = getCylinderFuelTrim(cylinderIndex, rpm, fuelLoad);
 		auto knockTrim = engine->module<KnockController>()->getFuelTrimMultiplier();
 

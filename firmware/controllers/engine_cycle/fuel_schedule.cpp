@@ -136,7 +136,7 @@ expected<float> InjectionEvent::computeInjectionAngle() const {
 	assertAngleRange(openingAngle, "openingAngle_r", ObdCode::CUSTOM_ERR_6554);
 	wrapAngle(openingAngle, "addFuel#1", ObdCode::CUSTOM_ERR_6555);
 	// TODO: should we log per-cylinder injection timing? #76
-	getTunerStudioOutputChannels()->injectionOffset = openingAngle;
+	getTunerStudioOutputChannels()->injectionOffset = static_cast<int16_t>(openingAngle);
 
 	// Convert from cylinder-relative to cylinder-1-relative
 	openingAngle += getPerCylinderFiringOrderOffset(ownIndex, cylinderNumber);

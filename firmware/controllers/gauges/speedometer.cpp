@@ -45,7 +45,7 @@ void speedoUpdate() {
 	}
 
 	float kph = Sensor::getOrZero(SensorType::VehicleSpeed);
-	float kps = kph * (1. / 3600);
+	float kps = kph * (1.f / 3600);
 	float freq = kps * engineConfiguration->speedometerPulsePerKm;
 
 	if (freq < 1) {

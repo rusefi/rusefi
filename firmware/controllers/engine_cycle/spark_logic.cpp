@@ -193,7 +193,7 @@ static void overFireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 		event->getOutputForLoggins()->getName(), event->sparkCounter,
 		__func__);
 #endif /* SPARK_EXTREME_LOGGING */
-	float actualDwellMs = event->actualDwellTimer.getElapsedSeconds() * 1e3;
+	float actualDwellMs = event->actualDwellTimer.getElapsedSeconds() * 1e3f;
 
 	// Coastdown can miss the scheduled firing tooth. Keep the protective
 	// discharge below active, but do not report it as a fault after a stop request.
@@ -244,7 +244,7 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 		/**
 		 * ratio of desired dwell duration to actual dwell duration gives us some idea of how good is input trigger jitter
 		 */
-		float actualDwellMs = event->actualDwellTimer.getElapsedSeconds(nowNt) * 1e3;
+		float actualDwellMs = event->actualDwellTimer.getElapsedSeconds(nowNt) * 1e3f;
 		float ratio = actualDwellMs / event->sparkDwell;
 
 		if (ratio > 1.2) {

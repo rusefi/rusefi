@@ -320,7 +320,7 @@ size_t getMultiSparkCount(float rpm) {
 		engine->engineState.multispark.delay = (uint32_t)USF2NT(multiDelay);
 		engine->engineState.multispark.dwell = (uint32_t)USF2NT(multiDwell);
 
-		constexpr float usPerDegreeAt1Rpm = 60e6 / 360;
+		constexpr float usPerDegreeAt1Rpm = 60e6f / 360;
 		floatus_t usPerDegree = usPerDegreeAt1Rpm / rpm;
 
 		// How long is there for sparks? The user configured an angle, convert to time.

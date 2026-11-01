@@ -43,11 +43,11 @@ static float gps_deg_dec(float deg_point) {
 	int deg = (int) (ddeg / 100);
 	int min = (int) (deg_point - (deg * 100));
 
-	float absdlat = round(deg * 1000000.);
-	float absmlat = round(min * 1000000.);
-	float absslat = round(sec * 1000000.);
+	float absdlat = roundf(deg * 1000000.f);
+	float absmlat = roundf(min * 1000000.f);
+	float absslat = roundf(sec * 1000000.f);
 
-	return round(absdlat + (absmlat / 60) + (absslat / 3600)) / 1000000;
+	return roundf(absdlat + (absmlat / 60) + (absslat / 3600)) / 1000000;
 }
 
 // Convert lat e lon to decimals (from deg)

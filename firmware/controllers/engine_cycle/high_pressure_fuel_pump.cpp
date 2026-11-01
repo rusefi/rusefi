@@ -104,7 +104,7 @@ float HpfpQuantity::calcPI(float rpm, float calc_fuel_percent, HpfpController *m
 	float load = getLoad();
 
 	float possibleValue = model->m_pressureTarget_kPa - (engineConfiguration->hpfpTargetDecay *
-			(FAST_CALLBACK_PERIOD_MS / 1000.));
+			(FAST_CALLBACK_PERIOD_MS / 1000.f));
 
 	model->m_pressureTarget_kPa = std::max<float>(possibleValue,
 		interpolate3d(config->hpfpTarget,

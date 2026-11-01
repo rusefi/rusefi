@@ -283,7 +283,7 @@ angle_t PrimaryTriggerDecoder::syncEnginePhase(int divider, int remainder, angle
 	m_hasSynchronizedPhase = true;
 
 	if (totalShift > 0) {
-		m_phaseAdjustment = totalShift;
+		m_phaseAdjustment = static_cast<uint16_t>(totalShift);
 		// Resync angle changed - count how many times this happens
 		phaseResyncCounter++;
 		onTransitionEvent(TransitionEvent::EngineResync);

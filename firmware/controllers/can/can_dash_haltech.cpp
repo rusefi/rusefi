@@ -47,7 +47,7 @@ void canDashboardHaltech(CanCycle cycle) {
 			CanTxMessage msg(CanCategory::NBC, 0x362, 6, DEFAULT_BUS_INDEX);
 			/* Injection Stage 1 Duty Cycle - y = x/10 */
 			uint16_t rpm = static_cast<uint16_t>(Sensor::getOrZero(SensorType::Rpm));
-			msg.setShortValueMsb(getInjectorDutyCycle(rpm) * 10, 0);
+			msg.setShortValueMsb(static_cast<uint16_t>(getInjectorDutyCycle(rpm) * 10), 0);
 			/* Injection Stage 2 Duty Cycle */
 			msg[2] = 0x00;
 			msg[3] = 0x00;

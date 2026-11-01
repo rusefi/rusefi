@@ -29,7 +29,7 @@
 // gasoline E0
 // todo: some usages should be migrated to getStoichiometricRatio()
 #define STOICH_RATIO 14.7f
-#define CONST_PI 3.14159265358979323846
+#define CONST_PI 3.14159265358979323846f
 
 /**
  * integer time in milliseconds (1/1_000 of a second)
