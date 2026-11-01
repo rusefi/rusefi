@@ -35,6 +35,7 @@ public enum ComposedTuneMigrator implements TuneMigrator {
         ScalarToArrayMigrator.INSTANCE,
         MapSamplingValuesMigrator.INSTANCE,
         ImperialUnitsMigrator.INSTANCE,
+        KansasLimaTuningDetectorMigrator.INSTANCE,
 
         // leave the default as the final migrator!
         DefaultTuneMigrator.INSTANCE
