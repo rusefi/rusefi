@@ -141,7 +141,7 @@ public:
 			return false;
 		}
 
-		constexpr float oneRevolutionLimitInSeconds = 60.0 / RPM_LOW_THRESHOLD;
+		constexpr float oneRevolutionLimitInSeconds = 60.0f / RPM_LOW_THRESHOLD;
 		auto maxAverageToothTime = oneRevolutionLimitInSeconds / triggerShape.getSize();
 
 		// Some triggers may have long gaps (with many teeth), don't count that as stopped!

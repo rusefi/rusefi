@@ -63,7 +63,7 @@ private:
         return sum  / (float)size;
     }
 
-    float airDensityKgM3 = 1.225; // 15C
+    float airDensityKgM3 = 1.225f; // 15C
     uint16_t wheelOverallDiameterMm = 0;
 
     // SAE corrections

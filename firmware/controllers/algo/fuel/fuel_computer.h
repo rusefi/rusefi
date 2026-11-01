@@ -36,4 +36,4 @@ public:
 };
 
 float getLoadOverride(float defaultLoad, load_override_e overrideMode);
-constexpr float fuelDensity = 0.72; // g/cc
+constexpr float fuelDensity = 0.72f; // g/cc

@@ -20,7 +20,7 @@ public:
     }
 
     void init(int length) {
-        setSmoothingFactor(2 / (length + 1.0));
+        setSmoothingFactor(2.0f / (length + 1));
     }
 
     void setSmoothingFactor(float p_smoothingFactor) {
