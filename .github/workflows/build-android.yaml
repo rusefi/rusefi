@@ -12,8 +12,11 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Checkout Submodules Without ChibiOS
-        run: |
-          misc/git_scripts/common_submodule_init_without_chibios.sh
+        # [tag:submodule_auth] see .github/actions/submodule-init/action.yml
+        uses: ./.github/actions/submodule-init
+        with:
+          token: ${{ secrets.MY_REPO_PAT }}
+          chibios: 'false'
 
       - uses: ./.github/actions/setup-java
 
