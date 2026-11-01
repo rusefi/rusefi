@@ -20,7 +20,8 @@ public enum KansasLimaTuningDetectorMigrator implements TuneMigrator {
         if (context.isAdditionalIniFieldToIgnore(FIELD) || context.isFieldAlreadyMigrated(FIELD)) {
             return;
         }
-        if (!isRelease(context.getPrevTune().versionInfo.getSignature(), "lts-25kansas")
+        if (context.getPrevTune().versionInfo == null || context.getUpdatedTune().versionInfo == null
+            || !isRelease(context.getPrevTune().versionInfo.getSignature(), "lts-25kansas")
             || !isRelease(context.getUpdatedTune().versionInfo.getSignature(), "lts-26lima")) {
             return;
         }
