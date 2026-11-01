@@ -103,7 +103,7 @@ TEST(HPFP, InjectionReplacementFuel) {
 	}
 	for (int i = 0; i < HPFP_COMPENSATION_SIZE; i++) {
 		// one bin every 0.05 cc/lobe
-		config->hpfpCompensationLoadBins[i] = std::min(i * 0.05f, 60.);
+		config->hpfpCompensationLoadBins[i] = std::min(i * 0.05f, 60.f);
 	}
 
 	config->hpfpCompensation[2][1] = -10;
@@ -215,8 +215,8 @@ TEST(HPFP, Angle) {
 		}
 	}
 	for (int i = 0; i < HPFP_LOBE_PROFILE_SIZE; i++) {
-		config->hpfpLobeProfileQuantityBins[i] = 100.f * i / (HPFP_LOBE_PROFILE_SIZE - 1);
-		config->hpfpLobeProfileAngle[i] = 150.f * i / (HPFP_LOBE_PROFILE_SIZE - 1);
+		config->hpfpLobeProfileQuantityBins[i] = static_cast<float>(100. * i / (HPFP_LOBE_PROFILE_SIZE - 1));
+		config->hpfpLobeProfileAngle[i] = static_cast<float>(150. * i / (HPFP_LOBE_PROFILE_SIZE - 1));
 	}
 
 	HpfpController model;
@@ -258,8 +258,8 @@ TEST(HPFP, Schedule) {
 		}
 	}
 	for (int i = 0; i < HPFP_LOBE_PROFILE_SIZE; i++) {
-		config->hpfpLobeProfileQuantityBins[i] = 100.f * i / (HPFP_LOBE_PROFILE_SIZE - 1);
-		config->hpfpLobeProfileAngle[i] = 150.f * i / (HPFP_LOBE_PROFILE_SIZE - 1);
+		config->hpfpLobeProfileQuantityBins[i] = static_cast<float>(100. * i / (HPFP_LOBE_PROFILE_SIZE - 1));
+		config->hpfpLobeProfileAngle[i] = static_cast<float>(150. * i / (HPFP_LOBE_PROFILE_SIZE - 1));
 	}
 
 	auto & hpfp = *engine->module<HpfpController>();
@@ -269,12 +269,12 @@ TEST(HPFP, Schedule) {
 	engineConfiguration->hpfpActivationAngle = 30;
 
 	constexpr angle_t angle0 = 90;
-	constexpr angle_t angle1 = 270 - 37.6923065f;
+	constexpr angle_t angle1 = static_cast<angle_t>(270 - 37.6923065);
 	constexpr angle_t angle2 = angle1 + 30;
 
-	constexpr float tick_per_deg = USF2NT(1000000.f)*60/360/1000;
+	constexpr float tick_per_deg = static_cast<float>(USF2NT(1000000.)*60/360/1000);
 
-	constexpr efitick_t nt0 = tick_per_deg * angle0;
+	constexpr efitick_t nt0 = static_cast<efitick_t>(tick_per_deg * angle0);
 	constexpr efitick_t nt1 = static_cast<efitick_t>(tick_per_deg * angle1);
 	constexpr efitick_t nt2 = static_cast<efitick_t>(tick_per_deg * angle2);
 
@@ -319,7 +319,7 @@ TEST(HPFP, Schedule) {
 
 	// Make it happen
 	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(
-		1000, tick_per_deg * 180, 360, 540);
+		1000, static_cast<efitick_t>(tick_per_deg * 180), 360, 540);
 
 	// Since we have a mock scheduler, lets insert the correct timestamp in the scheduling
 	// struct.

@@ -96,7 +96,7 @@ TEST(nissan, vq_vvt) {
 				/* timeScale */ vvtTimeScale,
 				cyclesCount / 6, true,
 				/* vvtBankIndex */ 0,
-				/* vvtOffset */ testVvtOffset,
+				/* vvtOffset */ static_cast<int>(testVvtOffset),
 				ptrs);
 	}
 
@@ -108,7 +108,7 @@ TEST(nissan, vq_vvt) {
 				/* timeScale */ vvtTimeScale,
 				cyclesCount / 6, true,
 				/* vvtBankIndex */1,
-				/* vvtOffset, making it positive */ 720 + testVvtOffset + NISSAN_VQ_CAM_OFFSET,
+				/* vvtOffset, making it positive */ static_cast<int>(720 + testVvtOffset + NISSAN_VQ_CAM_OFFSET),
 				ptrs);
 	}
 

@@ -963,7 +963,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	// injector goes high...
 	ASSERT_FALSE(enginePins.injectors[0].currentLogicValue) << "injector@1";
 
-	eth.executeAllPreservingTimeUs(getTimeNowUs() + MS2US(17.5f) + 1);
+	eth.executeAllPreservingTimeUs(static_cast<efitimeus_t>(getTimeNowUs() + MS2US(17.5f) + 1));
 	// injector does not go low too soon, that's a feature :)
 	ASSERT_TRUE(enginePins.injectors[0].currentLogicValue) << "injector@2";
 

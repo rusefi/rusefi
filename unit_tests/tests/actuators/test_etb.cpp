@@ -544,11 +544,11 @@ TEST(etb, setpointLuaAdder) {
 	EXPECT_EQ(60, etb.getSetpoint().value_or(-1));
 
 	// Adjustment works 0.19 second after setting
-	setTimeNowUs(startTime + 0.19f * 1e6);
+	setTimeNowUs(static_cast<int>(startTime + 0.19f * 1e6f));
 	EXPECT_EQ(60, etb.getSetpoint().value_or(-1));
 
 	// Adjustment resets to 0 after 0.21 second
-	setTimeNowUs(startTime + 0.21f * 1e6);
+	setTimeNowUs(static_cast<int>(startTime + 0.21f * 1e6f));
 	EXPECT_EQ(50, etb.getSetpoint().value_or(-1));
 }
 
