@@ -14,6 +14,9 @@ env:
 
 jobs:
   hardware-ci:
+    # the self-hosted bench runners are registered to rusefi/rusefi only; in any other repository
+    # these jobs would sit in 'queued' until GitHub fails them after 24h
+    if: github.repository == 'rusefi/rusefi'
     strategy:
       # Let all builds finish even if one fails early
       fail-fast: false
