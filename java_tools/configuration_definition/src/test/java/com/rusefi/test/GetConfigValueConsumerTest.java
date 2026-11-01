@@ -298,10 +298,10 @@ public class GetConfigValueConsumerTest {
       "const ConfigParameter allParameters[] = {\n" +
       "\t{ 0x7C949A74, // bit0\n" +
       "\t\t[]() -> float { return config->bit0; },\n" +
-      "\t\t[](float value) { config->bit0 = value; } },\n" +
+      "\t\t[](float value) { config->bit0 = value != 0; } },\n" +
       "\t{ 0x7C949A75, // bit1\n" +
       "\t\t[]() -> float { return config->bit1; },\n" +
-      "\t\t[](float value) { config->bit1 = value; } },\n" +
+      "\t\t[](float value) { config->bit1 = value != 0; } },\n" +
       "};\n" +
       "\n" +
       "const size_t allParametersCount = efi::size(allParameters);\n", table);
@@ -323,9 +323,9 @@ public class GetConfigValueConsumerTest {
     state.readBufferedReader(test, getConfigValueConsumer);
 
     String table = getConfigValueConsumer.getTableContent();
-    // float and bit storage take the float as is
+    // float storage takes the float as is; bits compare against zero (clang flags float-to-bool)
     assertTrue(table, table.contains("[](float value) { config->plainFloat = value; }"));
-    assertTrue(table, table.contains("[](float value) { config->flag = value; }"));
+    assertTrue(table, table.contains("[](float value) { config->flag = value != 0; }"));
     // non-unity scaled_channel storage goes through its float constructor
     assertTrue(table, table.contains("[](float value) { config->scaledShort = value; }"));
     // integer storage, including scaled_channel<T, 1, 1>, needs an explicit cast

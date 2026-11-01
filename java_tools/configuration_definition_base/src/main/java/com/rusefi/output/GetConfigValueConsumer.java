@@ -199,12 +199,17 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     /**
      * Right-hand side of a generated table setter. Integer storage gets an explicit cast: an
      * implicit float-to-integer store is exactly what -Wfloat-conversion flags, and the cast keeps
-     * the truncating semantics the implicit conversion had. Float fields, bits and float-scaled
-     * scaled_channel storage (whose float constructor rounds and scales) take the float as is.
+     * the truncating semantics the implicit conversion had. Bits compare against zero, which is
+     * what the implicit float-to-bool conversion did (clang flags that one too, GCC does not).
+     * Float fields and float-scaled scaled_channel storage (whose float constructor rounds and
+     * scales) take the float as is.
      */
     static String getSetterValue(VariableRecord var) {
-        if (var.isFloatScaled || TypesHelper.isFloat(var.type) || TypesHelper.isBoolean(var.type)) {
+        if (var.isFloatScaled || TypesHelper.isFloat(var.type)) {
             return "value";
+        }
+        if (TypesHelper.isBoolean(var.type)) {
+            return "value != 0";
         }
         return "static_cast<" + var.type + ">(value)";
     }
