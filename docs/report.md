@@ -471,3 +471,38 @@ Validation:
 - The pre-existing .idea/vcs.xml edit was preserved and excluded from commits.
 
 Open follow-ups: none for this backport. No hardware validation was performed.
+
+## 2026-11-02 - Kansas-to-Lima migration backport to Lima dev
+
+What: Applied the Java changes from PR #10580 to lts-26lima-dev, starting at
+777a2e80524. Source commits: 0926efcfa2c and d55e8c0aa76.
+
+| Area | Change |
+|------|--------|
+| Tune migration | Enable the tuning detector for Kansas-to-Lima migration, including both releases' -dev branches |
+| Migration tests | Preserve firmware-update/MSQ-import coverage, exclusions, unrelated transitions and configuration bytes |
+| Menu tree test | Run Swing operations on the EDT and wait for deferred selection restoration |
+| Console version | Resolve the date conflict using 20261102 |
+
+Key decisions and why:
+- Kept the migration and test changes identical to their source commits;
+  the console version uses the current date required by repository policy.
+- The existing release matcher already accepts lts-26lima-dev, with a
+  regression case covering that destination.
+- Preserved unrelated local files and submodule state. Untracked Java tests
+  referenced APIs absent from this branch and blocked normal test compilation;
+  validation uses an external Gradle init script excluding pre-existing
+  untracked Java sources, without moving or modifying those files.
+
+Validation:
+- The two focused migration classes passed: 6 tests, no failures or skips.
+- Menu-tree, migration and partial-merge regression suites passed: 129 tests
+  across 30 classes, no failures or skips.
+- Used the root Gradle wrapper with --no-configuration-cache --max-workers=12
+  and /tmp/opencode/rusefi-10580-tracked-sources.init.gradle. Full local logs:
+  /tmp/opencode/run-checked.nyv3cT.log (focused migration tests) and
+  /tmp/opencode/run-checked.jsb4ei.log (UI regression suites).
+- Independent compatibility review found no issues. git diff --check passed.
+
+Open follow-ups: Publication remains pending. No hardware validation was
+performed.
