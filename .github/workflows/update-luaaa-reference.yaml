@@ -6,5 +6,6 @@ on:
 jobs:
   update-git:
     uses: ./.github/workflows/update-submodule-reference.yaml
+    secrets: inherit
     with:
       submodule: firmware/controllers/lua/luaaa

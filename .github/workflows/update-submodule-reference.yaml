@@ -15,6 +15,10 @@ on:
         description: 'Submodule path as listed in .gitmodules, e.g. firmware/ChibiOS'
         required: true
         type: string
+    secrets:
+      MY_REPO_PAT:
+        description: 'Token for private submodules (callers use secrets: inherit); empty is fine for public submodules'
+        required: false
 
 jobs:
   update-git:
@@ -24,7 +28,16 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Git Checkout Submodule
+        env:
+          SUBMODULES_TOKEN: ${{ secrets.MY_REPO_PAT }}
         run: |
+          # [tag:submodule_auth] see .github/actions/submodule-init/action.yml; checkout's token covers
+          # the superproject only, so steps that fetch the submodule carry the credentials themselves
+          if [ -n "$SUBMODULES_TOKEN" ]; then
+            export GIT_CONFIG_COUNT=1
+            export GIT_CONFIG_KEY_0="url.https://x-access-token:${SUBMODULES_TOKEN}@github.com/.insteadOf"
+            export GIT_CONFIG_VALUE_0="https://github.com/"
+          fi
           git submodule update --init --depth=1 "${{ inputs.submodule }}"
 
       - name: Dump GitHub context
@@ -33,7 +46,15 @@ jobs:
         run: echo "$GITHUB_CONTEXT"
 
       - name: Git Update Submodule
+        env:
+          SUBMODULES_TOKEN: ${{ secrets.MY_REPO_PAT }}
         run: |
+          # [tag:submodule_auth] as above
+          if [ -n "$SUBMODULES_TOKEN" ]; then
+            export GIT_CONFIG_COUNT=1
+            export GIT_CONFIG_KEY_0="url.https://x-access-token:${SUBMODULES_TOKEN}@github.com/.insteadOf"
+            export GIT_CONFIG_VALUE_0="https://github.com/"
+          fi
           # A --depth=1 init only fetches the pinned commit plus the remote default
           # branch. When .gitmodules pins a different branch, fetch it explicitly so
           # that '--remote' can find refs/remotes/origin/<branch>.
