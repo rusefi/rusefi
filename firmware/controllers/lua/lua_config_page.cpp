@@ -4,6 +4,8 @@
 #include "lua_config_page.h"
 #include "extra_flash_pages.h"
 
+#if EFI_LUA
+
 static constexpr uint32_t PAGE5_DATA_VERSION = 1;
 
 using page5_container_s = ExtraPageContainer<page5_s, PAGE5_DATA_VERSION>;
@@ -79,3 +81,5 @@ uint8_t* luaConfigPageGetStoragePtr() {
 size_t luaConfigPageGetStorageSize() {
 	return sizeof(luaConfigPageContainer);
 }
+
+#endif // EFI_LUA
