@@ -1927,24 +1927,6 @@ Delay before cutting fuel due to low oil pressure. Use this to ignore short pres
 ### engineShutDownPeriod
 
 
-### boardUseTempPullUp
-
-
-### boardSelTachPullUp
-
-
-### boardEnHall1PullUp
-
-
-### boardEnHall2PullUp
-
-
-### boardEnHall3PullUp
-
-
-### boardEnHall4PullUp
-
-
 ### knockSuppressMinTps
 Below TPS value all knock suppression will be disabled.
 
