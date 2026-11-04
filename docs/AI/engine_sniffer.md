@@ -106,8 +106,16 @@ alone does not override this host policy.
 
 On SD, `sdTriggerLog` selects `.teeth` instead of normal `.mlg` operating-data
 logs; `sdTriggerLogCsv` chooses CSV versus binary at file creation. The CSV
-writer includes event-time VBatt, coolant temperature (`ET`), InstantMAP, and
-TPS snapshots and optional board-specific columns. Inspect the contents/header
+writer puts the event-time engine `Phase` right after the timestamp
+(`Time[s], Phase, Primary, ...`) and adds event-time VBatt, coolant temperature
+(`ET`, 1 deg C steps, -40..215), InstantMAP, TPS (0.5% steps, -17.5..110) and
+optional board-specific columns. `Phase` is degrees after cylinder #1 TDC
+(`getCurrentEnginePhase()` minus `tdcPosition()`), wrapped into the engine
+cycle, and `-1` while RPM is unknown. The snapshot is limited to 8 bytes per
+event because any growth leaves fewer than two `CompositeBuffer`s in the
+default 8 KB BigBuffer. Older captures lack the `Phase` column; unit-test
+readers detect it with `teethCsvHeaderHasPhase()` (`unit_tests/logicdata.h`).
+Inspect the contents/header
 instead of assuming every `.teeth` file is binary. See
 [SD Card Logging](sd_card_logging.md) for ownership, file lifecycle, and writes.
 

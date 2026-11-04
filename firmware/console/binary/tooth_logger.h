@@ -72,20 +72,56 @@ typedef union __attribute__((packed)) {
 
 static constexpr size_t toothLoggerEntriesPerBuffer = 250;
 
-// Per-event snapshot of the analog values rendered as the VBatt/ET/InstantMAP/
+// uint8_t storage of value = offset + raw * step (both in tenths), rounding to
+// the nearest step and saturating at both ends of the range (NaN stores the
+// minimum). Used where the composite_sensor_snapshot_s byte budget does not
+// allow a 16-bit field.
+template <int offsetX10, int stepX10>
+class offset_scaled_u8 {
+public:
+	static constexpr float minValue = offsetX10 / 10.0f;
+	static constexpr float maxValue = (offsetX10 + 255 * stepX10) / 10.0f;
+
+	constexpr offset_scaled_u8() = default;
+	constexpr offset_scaled_u8(float value) : m_raw(encode(value)) { }
+
+	constexpr operator float() const {
+		return (offsetX10 + m_raw * stepX10) / 10.0f;
+	}
+
+private:
+	static constexpr uint8_t encode(float value) {
+		float steps = (value * 10 - offsetX10) / stepX10 + 0.5f;
+		if (!(steps > 0)) {
+			return 0;
+		}
+		if (steps >= 255) {
+			return 255;
+		}
+		return static_cast<uint8_t>(steps);
+	}
+
+	uint8_t m_raw = 0;
+};
+
+// Per-event snapshot of the values rendered as the Phase/VBatt/ET/InstantMAP/
 // TPS .teeth CSV columns. Sampled at append time (interrupt context) alongside
 // the composite_logger_s entry so those columns reflect the event moment - a
-// buffer can sit up to 5 seconds before it is flushed, so flush-time sampling
-// skews them. The composite_logger_s entry itself is a TunerStudio wire-format
-// contract and cannot grow, so the snapshot lives in a parallel array inside
-// CompositeBuffer, present only in builds that can write CSV. Stored as scaled
-// integers, not floats: the array widens CompositeBuffer, and at float width
-// fewer than two buffers would fit in the BigBuffer region.
+// buffer can sit up to 5 seconds before it is flushed, so flush-time
+// sampling skews them. The composite_logger_s entry itself is a TunerStudio
+// wire-format contract and cannot grow, so the snapshot lives in a parallel
+// array inside CompositeBuffer, present only in builds that can write CSV.
+// Stored as scaled integers within 8 bytes per event: the array widens
+// CompositeBuffer, and any growth leaves fewer than two buffers in the default
+// 8 KB BigBuffer region (bufferCount >= 2 static_assert).
 struct composite_sensor_snapshot_s {
 	scaled_channel<int16_t, 100> vbatt;			// Volts
-	scaled_channel<int16_t, 100> et;			// engine (coolant) temperature, deg C
 	scaled_channel<uint16_t, 100> instantMap;	// kPa
-	scaled_channel<int16_t, 100> tps;			// percent
+	// engine phase in degrees after cylinder #1 TDC, wrapped to the engine
+	// cycle; -1 when unknown (no RPM yet)
+	scaled_channel<int16_t, 40> phase;
+	offset_scaled_u8<-400, 10> et;				// engine (coolant) temperature, -40..215 deg C, 1 deg C
+	offset_scaled_u8<-175, 5> tps;				// percent, -17.5..110, 0.5%
 };
 static_assert(sizeof(composite_sensor_snapshot_s) == 8);
 

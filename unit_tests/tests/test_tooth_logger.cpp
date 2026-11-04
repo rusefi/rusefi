@@ -38,7 +38,19 @@ TEST(ToothLogger, WriteCsvHeader) {
 	ToothLoggerWriteCsvHeader(w);
 
 	EXPECT_EQ(w.data,
-		"Time[s], Primary, Cam 1, Cam 2, Cam 3, Cam 4, Sync, TDC, Coils, Injectors, ACR, VBatt, ET, InstantMAP, TPS\r\n");
+		"Time[s], Phase, Primary, Cam 1, Cam 2, Cam 3, Cam 4, Sync, TDC, Coils, Injectors, ACR, VBatt, ET, InstantMAP, TPS\r\n");
+}
+
+// Unit-test .teeth readers (CsvReader, csv2logicdata, teethToLogicData) shift
+// their column indexes when the header carries the phase column - keep the
+// firmware header and teethCsvHeaderHasPhase() in agreement.
+TEST(ToothLogger, CsvHeaderRecognizedAsHavingPhase) {
+	StringWriter w;
+	ToothLoggerWriteCsvHeader(w);
+
+	EXPECT_TRUE(teethCsvHeaderHasPhase(w.data.c_str()));
+	EXPECT_FALSE(teethCsvHeaderHasPhase("Time[s], Primary, Cam 1, Cam 2, Cam 3, Cam 4, Sync, TDC, Coils, Injectors"));
+	EXPECT_FALSE(teethCsvHeaderHasPhase(""));
 }
 
 TEST(ToothLogger, WriteCsvRows) {
@@ -54,15 +66,18 @@ TEST(ToothLogger, WriteCsvRows) {
 	buf.nextIdx = 2;
 	buf.startTime.reset(0);
 
+	// ET is stored at 1 deg C and TPS at 0.5% resolution
 	buf.sensorSnapshot[0].vbatt = 12.34f;
 	buf.sensorSnapshot[0].et = 56.78f;
 	buf.sensorSnapshot[0].instantMap = 101.25f;
 	buf.sensorSnapshot[0].tps = 43.21f;
+	buf.sensorSnapshot[0].phase = 123.45f;
 
 	buf.sensorSnapshot[1].vbatt = 13.5f;
 	buf.sensorSnapshot[1].et = 57.25f;
 	buf.sensorSnapshot[1].instantMap = 45.75f;
 	buf.sensorSnapshot[1].tps = 100.0f;
+	buf.sensorSnapshot[1].phase = -1;
 
 	// Row 0: timestamp 1.000002s, all flags zero
 	{
@@ -104,11 +119,12 @@ TEST(ToothLogger, WriteCsvRows) {
 	// values (formatted with %.2f), not the flush-time sensor readings.
 	size_t row1 = w.data.find("\r\n");
 	ASSERT_NE(row1, std::string::npos);
-	EXPECT_NE(w.data.find("1.000002,"), std::string::npos);
-	EXPECT_NE(w.data.find("2.000500,", row1), std::string::npos);
+	// engine phase is the second column, right after the timestamp
+	EXPECT_EQ(w.data.compare(0, 19, "1.000002, 123.45, 1"), 0) << w.data.substr(0, 30);
+	EXPECT_EQ(w.data.compare(row1 + 2, 18, "2.000500, -1.00, 0"), 0) << w.data.substr(row1 + 2, 30);
 
-	EXPECT_LT(w.data.find("12.34, 56.78, 101.25, 43.21"), row1);
-	EXPECT_NE(w.data.find("13.50, 57.25, 45.75, 100.00", row1), std::string::npos);
+	EXPECT_LT(w.data.find("12.34, 57.00, 101.25, 43.00\r\n"), row1);
+	EXPECT_NE(w.data.find("13.50, 57.00, 45.75, 100.00\r\n", row1), std::string::npos);
 
 	// flush-time (live) sensor values must not leak into any row
 	EXPECT_EQ(w.data.find("99.99"), std::string::npos);
@@ -220,9 +236,9 @@ TEST(ToothLogger, WriteCsvBoardOverrideColumns) {
 	};
 
 	StringWriter header;
-	EXPECT_EQ(ToothLoggerWriteCsvHeader(header), 130);
+	EXPECT_EQ(ToothLoggerWriteCsvHeader(header), 137);
 	EXPECT_EQ(header.data,
-		"Time[s], Primary, Cam 1, Cam 2, Cam 3, Cam 4, Sync, TDC, Coils, Injectors, ACR, VBatt, ET, InstantMAP, TPS"
+		"Time[s], Phase, Primary, Cam 1, Cam 2, Cam 3, Cam 4, Sync, TDC, Coils, Injectors, ACR, VBatt, ET, InstantMAP, TPS"
 		", BoardColA, BoardColB\r\n");
 
 	CompositeBuffer buf{};

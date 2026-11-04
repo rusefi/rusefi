@@ -94,6 +94,27 @@ CompositeBuffer* ToothLoggerBufferPool::findBufferI(efitick_t timestamp) {
 	return m_currentBuffer;
 }
 
+#if EFI_FILE_LOGGING || EFI_UNIT_TEST
+// Engine phase at the event timestamp in degrees after cylinder #1 TDC, wrapped
+// into [0, engine cycle); -1 if unknown. getCurrentEnginePhase() is measured
+// from the trigger sync point and extrapolates from the last tooth, so it can
+// run past the cycle length - hence the TDC shift and the wrap. fmodf instead
+// of wrapAngle(): this runs in interrupt context and must not raise errors.
+static float getToothLogEnginePhase(efitick_t timestamp) {
+	auto phase = getTriggerCentral()->getCurrentEnginePhase(timestamp);
+	if (!phase) {
+		return -1;
+	}
+
+	float cycle = engine->engineState.engineCycle;
+	float wrapped = fmodf(phase.Value - tdcPosition(), cycle);
+	if (wrapped < 0) {
+		wrapped += cycle;
+	}
+	return wrapped;
+}
+#endif
+
 void ToothLoggerBufferPool::appendI(const composite_logger_s& state, efitick_t timestamp) {
 	if (!m_circularMode) {
 		// check for timeout only in normal mode
@@ -133,13 +154,14 @@ void ToothLoggerBufferPool::appendI(const composite_logger_s& state, efitick_t t
 		entry->x = SWAP_UINT64(entry->x);
 
 #if EFI_FILE_LOGGING || EFI_UNIT_TEST
-		// Values behind the VBatt/ET/InstantMAP/TPS .teeth CSV columns, sampled
+		// Values behind the VBatt/ET/InstantMAP/TPS/Phase .teeth CSV columns, sampled
 		// NOW (event time) so they are not skewed by buffer residency.
 		composite_sensor_snapshot_s& snapshot = buffer->sensorSnapshot[idx];
 		snapshot.vbatt = Sensor::get(SensorType::BatteryVoltage).value_or(0);
 		snapshot.et = Sensor::get(SensorType::Clt).value_or(0);
 		snapshot.instantMap = (float)engine->outputChannels.instantMAPValue;
 		snapshot.tps = Sensor::get(SensorType::Tps1).value_or(0);
+		snapshot.phase = getToothLogEnginePhase(timestamp);
 #endif
 
 #if TOOTH_LOG_BOARD_PAYLOAD_SIZE > 0

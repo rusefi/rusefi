@@ -39,10 +39,12 @@ void runCsv2LogicData(const char* csvFileName) {
     std::vector<CompositeEvent> events;
     std::string line;
     bool isHeader = true;
+    bool hasPhase = false;
 
     while (std::getline(file, line)) {
         if (isHeader) {
             isHeader = false;
+            hasPhase = teethCsvHeaderHasPhase(line.c_str());
             continue;
         }
 
@@ -59,6 +61,10 @@ void runCsv2LogicData(const char* csvFileName) {
         double timestamp = std::atof(trim(token));
         event.timestamp = (uint32_t)(timestamp * 1000000);
 
+        if (hasPhase) {
+            strtok(nullptr, ","); // Phase
+        }
+
         auto readNextBool = [&]() -> bool {
             token = strtok(nullptr, ",");
             if (!token) return false;
@@ -68,7 +74,7 @@ void runCsv2LogicData(const char* csvFileName) {
 
         event.primaryTrigger = readNextBool();
         event.secondaryTrigger = readNextBool();
-        // The CSV columns are: Time[s], Primary, Cam 1, Cam 2, Cam 3, Cam 4, Sync, TDC, Coils, Injectors, ACR, VBatt, ET
+        // The CSV columns are: Time[s], [Phase,] Primary, Cam 1, Cam 2, Cam 3, Cam 4, Sync, TDC, Coils, Injectors, ACR, VBatt, ET
         // logicdata.h CompositeEvent has:
         // uint32_t timestamp;
         // bool primaryTrigger;

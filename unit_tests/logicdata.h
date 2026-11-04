@@ -8,6 +8,7 @@
 #pragma once
 
 #include <vector>
+#include <cstddef>
 #include <cstdint>
 
 struct CompositeEvent {
@@ -21,5 +22,19 @@ struct CompositeEvent {
 };
 
 int getChannelState(int ch, const CompositeEvent* event);
+
+// .teeth CSV files from firmware with the engine phase column carry it right
+// after the timestamp ("Time[s], Phase, Primary, ..."); older captures go
+// straight to "Primary". Readers that index columns by position shift by one
+// when this returns true for the header line - see ToothLoggerWriteCsvHeader().
+inline bool teethCsvHeaderHasPhase(const char* headerLine) {
+	const char prefix[] = "Time[s], Phase,";
+	for (size_t i = 0; i < sizeof(prefix) - 1; i++) {
+		if (headerLine[i] != prefix[i]) {
+			return false;
+		}
+	}
+	return true;
+}
 
 void writeLogicDataFile(const char * fileName, const std::vector<CompositeEvent>& events);
