@@ -120,7 +120,7 @@ class PeriodicFastController : public PeriodicTimerController {
 	}
 
 	int getPeriodMs() override {
-		return FAST_CALLBACK_PERIOD_MS;
+		return static_cast<int>(FAST_CALLBACK_PERIOD_MS);
 	}
 };
 
@@ -131,7 +131,7 @@ class PeriodicSlowController : public PeriodicTimerController {
 
 	int getPeriodMs() override {
 		// no reason to have this configurable, looks like everyone is happy with 20Hz
-		return SLOW_CALLBACK_PERIOD_MS;
+		return static_cast<int>(SLOW_CALLBACK_PERIOD_MS);
 	}
 };
 

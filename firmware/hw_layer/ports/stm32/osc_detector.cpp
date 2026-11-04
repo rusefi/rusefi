@@ -177,7 +177,8 @@ void OscDetector() {
 	disableTimer();
 
 	float hseFrequencyHz = 10 * rtcpreDivider * STM32_TIMCLK2 / hseCounts;
-  hseFrequencyMhz = hseFrequencyHz / 1e6;
+	// 1e6f: the bootloader build has no -fsingle-precision-constant, a double literal would widen this expression
+	hseFrequencyMhz = hseFrequencyHz / 1e6f;
 	autoDetectedRoundedMhz = static_cast<uint8_t>(((int)hseFrequencyHz + 500000) / 1000000);
 
 	reprogramPll(autoDetectedRoundedMhz);
