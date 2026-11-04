@@ -247,9 +247,9 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 		float actualDwellMs = event->actualDwellTimer.getElapsedSeconds(nowNt) * 1e3f;
 		float ratio = actualDwellMs / event->sparkDwell;
 
-		if (ratio > 1.2) {
+		if (ratio > 1.2f) {
 			engine->engineState.dwellOverChargeCounter++;
-		} else if (ratio < 0.8) {
+		} else if (ratio < 0.8f) {
 			engine->engineState.dwellUnderChargeCounter++;
 		}
 		engine->engineState.dwellActualRatio = ratio;
