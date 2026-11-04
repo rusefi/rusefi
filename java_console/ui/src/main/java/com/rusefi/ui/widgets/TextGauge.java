@@ -128,7 +128,10 @@ public class TextGauge {
                 });
             }
         };
-        ConnectionStatusLogic.INSTANCE.addAndFireListener(connectionStatusListener);
+        // Not addAndFireListener: the card already starts as NO_CONNECTION with an empty trace, and
+        // the initial disconnect callback would queue a trace reset on the Swing thread that can
+        // wipe a reading fed right after construction (TextGaugeTraceTest).
+        ConnectionStatusLogic.INSTANCE.addListener(connectionStatusListener);
     }
 
     private void setChannel(UIContext uiContext, String gaugeName) {
