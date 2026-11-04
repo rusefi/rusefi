@@ -130,6 +130,10 @@ public:
 	bool isTriggerDecoderError();
 
 	expected<float> getCurrentEnginePhase(efitick_t nowNt) const;
+	// Same as getCurrentEnginePhase() for callers already holding the system
+	// lock (e.g. the tooth logger's appendI): ChibiOS state checking halts on a
+	// nested chSysLockFromISR (SV#6).
+	expected<float> getCurrentEnginePhaseI(efitick_t nowNt) const;
 
 	float getSecondsSinceTriggerEvent(efitick_t nowNt) const {
 		return m_lastEventTimer.getElapsedSeconds(nowNt);
