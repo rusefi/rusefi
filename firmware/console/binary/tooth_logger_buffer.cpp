@@ -100,8 +100,9 @@ CompositeBuffer* ToothLoggerBufferPool::findBufferI(efitick_t timestamp) {
 // from the trigger sync point and extrapolates from the last tooth, so it can
 // run past the cycle length - hence the TDC shift and the wrap. fmodf instead
 // of wrapAngle(): this runs in interrupt context and must not raise errors.
+// Called from appendI with the system lock held, hence the I-class variant.
 static float getToothLogEnginePhase(efitick_t timestamp) {
-	auto phase = getTriggerCentral()->getCurrentEnginePhase(timestamp);
+	auto phase = getTriggerCentral()->getCurrentEnginePhaseI(timestamp);
 	if (!phase) {
 		return -1;
 	}
