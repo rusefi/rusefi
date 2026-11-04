@@ -28,7 +28,9 @@
  * <p>
  * Note the simulator and unit_tests keep their own efifeatures.h copies that bypass all of this.
 */
+#ifndef EFI_LTFT_CONTROL
 #define EFI_LTFT_CONTROL LTFT_PAGE_ENABLED
+#endif
 #define EFI_AUX_VALVES FALSE
 
 #define EFI_TS_TUNNEL_CAN TRUE
