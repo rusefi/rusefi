@@ -32,6 +32,9 @@ PROJECT_DIR = ..
 ifeq ($(USE_OPT),)
   USE_OPT = $(EXTRA_PARAMS) $(EXTRA_2_PARAMS) $(EXTRA_3_PARAMS) $(DEBUG_LEVEL_BLT_OPT) $(RFLAGS)
   USE_OPT += $(RUSEFI_OPT)
+  # same constant semantics as the application build: shared sources (board files, osc_detector)
+  # are written for float literals and otherwise trip -Werror=float-conversion here
+  USE_OPT += -fsingle-precision-constant
   # huh why do we have custom settings not uniform with rusefi_rules.mk?
   USE_OPT += -Wno-error=implicit-fallthrough \
     -Wno-error=bool-operation \
