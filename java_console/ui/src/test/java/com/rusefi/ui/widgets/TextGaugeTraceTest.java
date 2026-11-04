@@ -18,6 +18,7 @@ import java.io.ByteArrayInputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.CountDownLatch;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -95,6 +96,35 @@ class TextGaugeTraceTest {
             assertEquals(0.5, restored.getTraceForTests().fraction(), 1e-9);
         } finally {
             restored.destroy();
+        }
+    }
+
+    /**
+     * Creating a card while disconnected must not queue a trace reset behind the caller's back:
+     * tests feed readings from the test thread right after construction, and a reset that lands on
+     * the Swing thread in between forgets the reading (seen as a 0.5-versus-NaN failure on CI).
+     */
+    @Test
+    void constructionDoesNotForgetAReadingAddedBeforeTheSwingThreadCatchesUp() throws Exception {
+        UIContext uiContext = withAfrGauge();
+        CountDownLatch holdSwingThread = new CountDownLatch(1);
+        SwingUtilities.invokeLater(() -> {
+            try {
+                holdSwingThread.await();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+        TextGauge gauge = new TextGauge(uiContext, "afr1Gauge", new Node(), name -> { });
+        try {
+            gauge.getTraceForTests().add(14.7);
+            holdSwingThread.countDown();
+            SwingUtilities.invokeAndWait(() -> { });
+            // 14.7 halfway through the 10..19.4 ini range
+            assertEquals(0.5, gauge.getTraceForTests().fraction(), 1e-9);
+        } finally {
+            holdSwingThread.countDown();
+            gauge.destroy();
         }
     }
 
