@@ -127,15 +127,15 @@ void kLineThread(void*) {
                     if (engineConfiguration->verboseKLine) {
                         efiPrintf("kline doSend");
                     }
-                    int positiveCltWithHighishValueInCaseOfSensorIssue = maxI(1,
+                    float cltGaugeValue =
 #ifdef HW_HELLEN_HONDA
                         /* temporary while we are playing with calibration */
                         config->hondaKcltGaugeAdder
 #else
-  50
+                        50
 #endif
-                         + Sensor::get(SensorType::Clt).value_or(140)
-                    );
+                         + Sensor::get(SensorType::Clt).value_or(140);
+                    int positiveCltWithHighishValueInCaseOfSensorIssue = maxI(1, static_cast<int>(cltGaugeValue));
     // 125 about horizontal
     // 162 points at red mark, looks like gauge has hysteresis?
     // value 200 way above red mark
