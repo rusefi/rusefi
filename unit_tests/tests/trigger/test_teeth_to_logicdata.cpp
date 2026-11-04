@@ -46,7 +46,9 @@ void convertTeethToLogicData(const std::string& inPath, const std::string& outPa
 	ASSERT_TRUE(static_cast<bool>(std::getline(in, headerLine)))
 		<< "Empty teeth file: " << inPath;
 	auto header = splitCsv(headerLine);
-	ASSERT_GE(header.size(), 10u)
+	// optional engine phase column between timestamp and Primary
+	const size_t base = teethCsvHeaderHasPhase(headerLine.c_str()) ? 1 : 0;
+	ASSERT_GE(header.size(), 10u + base)
 		<< "Unexpected teeth header column count: [" << headerLine << "]";
 
 	std::vector<CompositeEvent> events;
@@ -58,7 +60,7 @@ void convertTeethToLogicData(const std::string& inPath, const std::string& outPa
 			continue;
 		}
 		auto cols = splitCsv(line);
-		if (cols.size() < 10) {
+		if (cols.size() < 10 + base) {
 			// Tolerate a truncated trailing row (the .teeth file is a raw
 			// capture and may end mid-line).
 			continue;
@@ -70,12 +72,12 @@ void convertTeethToLogicData(const std::string& inPath, const std::string& outPa
 		CompositeEvent ev{};
 		// Convert seconds to microseconds for logicdata timestamps.
 		ev.timestamp = static_cast<uint32_t>(t * 1'000'000.0);
-		ev.primaryTrigger   = bit(1);
-		ev.secondaryTrigger = bit(2) || bit(3) || bit(4) || bit(5);
-		ev.sync             = bit(6);
-		ev.isTDC            = bit(7);
-		ev.coil             = bit(8);
-		ev.injector         = bit(9);
+		ev.primaryTrigger   = bit(base + 1);
+		ev.secondaryTrigger = bit(base + 2) || bit(base + 3) || bit(base + 4) || bit(base + 5);
+		ev.sync             = bit(base + 6);
+		ev.isTDC            = bit(base + 7);
+		ev.coil             = bit(base + 8);
+		ev.injector         = bit(base + 9);
 		events.push_back(ev);
 	}
 
@@ -96,7 +98,7 @@ void convertTeethToLogicData(const std::string& inPath, const std::string& outPa
 } // namespace
 
 // Teeth CSV format (header):
-//   Time[s], Primary, Cam 1, Cam 2, Cam 3, Cam 4, Sync, TDC, Coils, Injectors
+//   Time[s], [Phase,] Primary, Cam 1, Cam 2, Cam 3, Cam 4, Sync, TDC, Coils, Injectors
 // We collapse Cam1..Cam4 into the single secondaryTrigger channel via OR
 // (typical .teeth captures only use Cam 1), and feed the remaining columns
 // straight into CompositeEvent.

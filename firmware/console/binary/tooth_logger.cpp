@@ -505,7 +505,7 @@ int ToothLoggerWriteCsvHeader(Writer &writer) {
 	size_t total = 0;
 	// keep in sync with composite_logger_s
 	// drop trigger - purpose not clear
-	const char header[] = "Time[s], Primary, Cam 1, Cam 2, Cam 3, Cam 4, Sync, TDC, Coils, Injectors, ACR, VBatt, ET, InstantMAP, TPS";
+	const char header[] = "Time[s], Phase, Primary, Cam 1, Cam 2, Cam 3, Cam 4, Sync, TDC, Coils, Injectors, ACR, VBatt, ET, InstantMAP, TPS";
 
 	// no tailing '\0'
 	writer.write(header, sizeof(header) - 1);
@@ -538,14 +538,15 @@ static int ToothLoggerWriteCsvLine(Writer &writer, efitick_t timestamp, composit
 	float et = snapshot.et;
 	float instantMap = snapshot.instantMap;
 	float tps = snapshot.tps;
+	float phase = snapshot.phase;
 
 	// it is cheaper to write all data, even we have 1 cylinder engine with single crank sensor
-	int ret = chsnprintf(tmp, sizeof(tmp), "%d.%06d, "
+	int ret = chsnprintf(tmp, sizeof(tmp), "%d.%06d, %.2f, "
 				"%d, %d, %d, %d, %d, "
 				"%d, %d, "
 				"%d, %d, %d, "	// TODO: convert to bitwise?
 				"%.2f, %.2f, %.2f, %.2f",
-			sec, usec,
+			sec, usec, phase,
 			c.priLevel, c.cam1, c.cam2, c.cam3, c.cam4,
 			c.sync, c.tdc,
 			c.coil, c.injector, c.acr,

@@ -333,16 +333,17 @@ TEST(ToothLoggerBuffer, AppendSamplesSensorSnapshotPerEvent) {
 	composite_logger_s state{};
 	efitick_t base = getTimeNowNt();
 
-	// values chosen exactly representable at the x100 snapshot scaling
+	// values chosen exactly representable at the snapshot scaling
+	// (x100, ET 1 deg C, TPS 0.5%)
 	Sensor::setMockValue(SensorType::BatteryVoltage, 12.5f);
-	Sensor::setMockValue(SensorType::Clt, 80.25f);
+	Sensor::setMockValue(SensorType::Clt, 80.0f);
 	Sensor::setMockValue(SensorType::Tps1, 10.5f);
 	engine->outputChannels.instantMAPValue = 55.5f;
 	pool.appendI(state, base);
 
 	Sensor::setMockValue(SensorType::BatteryVoltage, 13.75f);
-	Sensor::setMockValue(SensorType::Clt, 95.5f);
-	Sensor::setMockValue(SensorType::Tps1, 25.25f);
+	Sensor::setMockValue(SensorType::Clt, 95.0f);
+	Sensor::setMockValue(SensorType::Tps1, 25.0f);
 	engine->outputChannels.instantMAPValue = 60.0f;
 	pool.appendI(state, base + US2NT(100));
 
@@ -351,14 +352,87 @@ TEST(ToothLoggerBuffer, AppendSamplesSensorSnapshotPerEvent) {
 	ASSERT_EQ(buf->nextIdx, 2u);
 
 	EXPECT_FLOAT_EQ(buf->sensorSnapshot[0].vbatt, 12.5f);
-	EXPECT_FLOAT_EQ(buf->sensorSnapshot[0].et, 80.25f);
+	EXPECT_FLOAT_EQ(buf->sensorSnapshot[0].et, 80.0f);
 	EXPECT_FLOAT_EQ(buf->sensorSnapshot[0].instantMap, 55.5f);
 	EXPECT_FLOAT_EQ(buf->sensorSnapshot[0].tps, 10.5f);
 
 	EXPECT_FLOAT_EQ(buf->sensorSnapshot[1].vbatt, 13.75f);
-	EXPECT_FLOAT_EQ(buf->sensorSnapshot[1].et, 95.5f);
+	EXPECT_FLOAT_EQ(buf->sensorSnapshot[1].et, 95.0f);
 	EXPECT_FLOAT_EQ(buf->sensorSnapshot[1].instantMap, 60.0f);
-	EXPECT_FLOAT_EQ(buf->sensorSnapshot[1].tps, 25.25f);
+	EXPECT_FLOAT_EQ(buf->sensorSnapshot[1].tps, 25.0f);
+
+	// engine not running: phase unknown
+	EXPECT_FLOAT_EQ(buf->sensorSnapshot[0].phase, -1);
+	EXPECT_FLOAT_EQ(buf->sensorSnapshot[1].phase, -1);
+
+	pool.returnBufferI(buf);
+	pool.stopI();
+}
+
+// ET and TPS are packed into one byte each: values round to the nearest step
+// and saturate at the ends of the range instead of wrapping.
+TEST(ToothLoggerBuffer, SnapshotByteFieldsRoundAndSaturate) {
+	composite_sensor_snapshot_s s{};
+
+	s.et = -40.0f;
+	EXPECT_FLOAT_EQ(s.et, -40.0f);
+	s.et = 215.0f;
+	EXPECT_FLOAT_EQ(s.et, 215.0f);
+	s.et = 89.6f;
+	EXPECT_FLOAT_EQ(s.et, 90.0f);
+	s.et = -100.0f;
+	EXPECT_FLOAT_EQ(s.et, -40.0f);
+	s.et = 300.0f;
+	EXPECT_FLOAT_EQ(s.et, 215.0f);
+	s.et = NAN;
+	EXPECT_FLOAT_EQ(s.et, -40.0f);
+
+	s.tps = -17.5f;
+	EXPECT_FLOAT_EQ(s.tps, -17.5f);
+	s.tps = 110.0f;
+	EXPECT_FLOAT_EQ(s.tps, 110.0f);
+	s.tps = 33.3f;
+	EXPECT_FLOAT_EQ(s.tps, 33.5f);
+	s.tps = -50.0f;
+	EXPECT_FLOAT_EQ(s.tps, -17.5f);
+	s.tps = 150.0f;
+	EXPECT_FLOAT_EQ(s.tps, 110.0f);
+}
+
+// With the engine spinning, appendI records the engine phase at the event
+// timestamp relative to cylinder #1 TDC, wrapped into the engine cycle.
+TEST(ToothLoggerBuffer, AppendSamplesEnginePhase) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	eth.fireTriggerEvents2(/*count*/ 4, /*delayMs*/ 40);
+	ASSERT_GT(Sensor::getOrZero(SensorType::Rpm), 0);
+	// non-zero TDC position so sync-point-relative and TDC-relative differ
+	engineConfiguration->globalTriggerAngleOffset = 100;
+	ASSERT_NE(tdcPosition(), 0);
+
+	ToothLoggerBufferPool pool;
+	ASSERT_TRUE(pool.startI());
+
+	composite_logger_s state{};
+	efitick_t now = getTimeNowNt();
+	pool.appendI(state, now);
+	// past the last tooth: extrapolated phase
+	pool.appendI(state, now + MS2NT(10));
+
+	CompositeBuffer* buf = pool.flushCurrentI();
+	ASSERT_NE(buf, nullptr);
+	ASSERT_EQ(buf->nextIdx, 2u);
+
+	float cycle = engine->engineState.engineCycle;
+	for (size_t i = 0; i < 2; i++) {
+		efitick_t t = (i == 0) ? now : now + MS2NT(10);
+		auto expected = engine->triggerCentral.getCurrentEnginePhase(t);
+		ASSERT_TRUE(expected.Valid);
+		float wrapped = fmodf(expected.Value - tdcPosition() + cycle, cycle);
+		float phase = buf->sensorSnapshot[i].phase;
+		EXPECT_GE(phase, 0);
+		EXPECT_LT(phase, cycle);
+		EXPECT_NEAR(phase, wrapped, 0.025f) << "entry " << i;
+	}
 
 	pool.returnBufferI(buf);
 	pool.stopI();
