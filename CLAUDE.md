@@ -205,6 +205,17 @@ callbacks. A linear callback that chains another conversion must not guard on
 start API directly from the callback (see `slowAdcEndCB()` in
 `firmware/hw_layer/ports/stm32/stm32_adc_v2.cpp`).
 
+### Nested system locks: caught only by the simulator
+
+Code running under `chibios_rt::CriticalSectionLocker`/`chSysLock*` (for
+example `ToothLoggerBufferPool::appendI()`) must call only I-class functions.
+Calling a helper that takes its own locker, such as
+`TriggerCentral::getCurrentEnginePhase()`, makes ChibiOS state checking halt
+the simulator with `chSysHalt: SV#4` (thread) or `SV#6` (ISR). Unit tests have
+no lock state checker and pass; the simulator functional test (CI
+`build-simulator.yaml`) is the first place this shows up. Use or add an `...I`
+variant (`getCurrentEnginePhaseI()`).
+
 ### Simulator build feature flags
 
 The simulator Makefile does not track changes to board-derived
