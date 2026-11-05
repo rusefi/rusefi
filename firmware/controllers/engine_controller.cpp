@@ -202,7 +202,7 @@ static void doPeriodicSlowCallback() {
 
 #if EFI_PROD_CODE
 	// single-shot reset all counter after 5 second of happines
-	static unsigned int slow_counter = 5 * 1000 / SLOW_CALLBACK_PERIOD_MS;
+	static unsigned int slow_counter = static_cast<unsigned int>(5 * 1000 / SLOW_CALLBACK_PERIOD_MS);
 	if ((slow_counter) && (--slow_counter == 0)) {
 		errorHandlerResetCounters();
 	}
