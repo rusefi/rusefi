@@ -12,14 +12,14 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 |---|---|---:|---:|---|---:|---:|---|
 | firmware | accelerometer | 400 | 184 | normal SPI sensor read | 24 | 24 | PROXY +0, PROXY BELOW REVIEWED; partial proxy: 1 indirect |
 | firmware | bench test | 1600 | 148 | idle production worker | 1932 | 1940 | REVIEW PROXY +8; partial proxy: 35 unknown, 6 indirect, recursion |
-| firmware | CAN RX | 768 | 440 | CAN serial receive | 1244 | 1380 | REVIEW PROXY +136; partial proxy: 59 unknown, 28 indirect, recursion |
+| firmware | CAN RX | 768 | 440 | CAN serial receive | 1244 | 1380 | REVIEW PROXY +136; partial proxy: 60 unknown, 28 indirect, recursion |
 | firmware | CAN TX | 1536 | - | - | - | 1372 | NOT REVIEWED: 39 unknown, 9 indirect, recursion |
 | firmware | electronic throttle | 512 | 304 | normal ETB update | 556 | 660 | REVIEW PROXY +104; partial proxy: 21 unknown, 3 indirect, recursion |
 | firmware | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | firmware | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
 | firmware | Lua | 4096 | - | - | - | 2880 | NOT REVIEWED: 44 unknown, 15 indirect, recursion |
 | firmware | main loop | 1024 | - | - | - | 780 | NOT REVIEWED: 23 unknown, 4 indirect, recursion |
-| firmware | main/process | 1536 | - | - | - | 1300 | NOT REVIEWED: 70 unknown, 29 indirect, recursion |
+| firmware | main/process | 1536 | - | - | - | 1300 | NOT REVIEWED: 71 unknown, 29 indirect, recursion |
 | firmware | MAX3185x | 400 | 192 | normal sensor read | 756 | 860 | REVIEW PROXY +104; partial proxy: 28 unknown, 2 indirect, recursion |
 | firmware | PCA9685 | 784 | - | - | - | 764 | NOT REVIEWED: 23 unknown, 4 indirect, recursion |
 | firmware | SD/MMC | 1600 | 1432 | exFAT log creation | 2052 | 1924 | PROXY -128; partial proxy: 55 unknown, 20 indirect, recursion |
@@ -27,7 +27,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | stepper | 400 | 280 | dual H-bridge stepping | 676 | 780 | REVIEW PROXY +104; partial proxy: 26 unknown, 6 indirect, recursion |
 | firmware | storage manager | 1200 | 1032 | SD extra-page burn | 660 | 764 | REVIEW PROXY +104, PROXY BELOW REVIEWED; partial proxy: 30 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | 104 | normal watchdog sleep | 552 | 656 | REVIEW PROXY +104; partial proxy: 21 unknown, 2 indirect, recursion |
-| firmware | TunerStudio | 1200 | 824 | normal communication | 1324 | 1436 | REVIEW PROXY +112; partial proxy: 64 unknown, 37 indirect, recursion |
+| firmware | TunerStudio | 1200 | 824 | normal communication | 1324 | 1436 | REVIEW PROXY +112; partial proxy: 65 unknown, 37 indirect, recursion |
 | firmware | USB mass storage | 256 | 240 | SD block read | 756 | 860 | REVIEW PROXY +104; partial proxy: 28 unknown, 5 indirect, recursion |
 | bootloader | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | bootloader | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
@@ -44,7 +44,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | 416 | errorHandlerIsReportExist(char const*) | controllers/core/error_handling.cpp:433:12 |
 | firmware | 408 | f_mkdir | ext/FatFS/ff.c:5176:9 |
 | firmware | 400 | canDashboardHondaK(CanCycle) | controllers/can/can_dash_honda.cpp:46:6 |
-| firmware | 368 | ToothLoggerWriteCsvLine(Writer&, long long, composite_logger_s, composite_sensor_snapshot_s const&, void const*) | console/binary/tooth_logger.cpp:530:12 |
+| firmware | 384 | ToothLoggerWriteCsvLine(Writer&, long long, composite_logger_s, composite_sensor_snapshot_s const&, void const*) | console/binary/tooth_logger.cpp:530:12 |
 | firmware | 352 | f_open | ext/FatFS/ff.c:3799:9 |
 | firmware | 344 | f_sync | ext/FatFS/ff.c:4218:9 |
 | firmware | 272 | f_findnext | ext/FatFS/ff.c:4850:9 |
@@ -127,14 +127,14 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 |---|---|---:|---:|---|---:|---:|---|
 | firmware | accelerometer | 400 | - | - | - | 24 | NOT REVIEWED: 1 indirect |
 | firmware | bench test | 1600 | - | - | - | 1948 | NOT REVIEWED: 35 unknown, 6 indirect, recursion |
-| firmware | CAN RX | 768 | - | - | - | 1372 | NOT REVIEWED: 63 unknown, 31 indirect, recursion |
+| firmware | CAN RX | 768 | - | - | - | 1372 | NOT REVIEWED: 64 unknown, 31 indirect, recursion |
 | firmware | CAN TX | 1536 | - | - | - | 1380 | NOT REVIEWED: 40 unknown, 10 indirect, recursion |
 | firmware | electronic throttle | 512 | - | - | - | 668 | NOT REVIEWED: 21 unknown, 3 indirect, recursion |
 | firmware | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | firmware | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
 | firmware | Lua | 4096 | - | - | - | 2880 | NOT REVIEWED: 44 unknown, 15 indirect, recursion |
 | firmware | main loop | 1024 | - | - | - | 788 | NOT REVIEWED: 23 unknown, 5 indirect, recursion |
-| firmware | main/process | 1536 | - | - | - | 1284 | NOT REVIEWED: 71 unknown, 32 indirect, recursion |
+| firmware | main/process | 1536 | - | - | - | 1284 | NOT REVIEWED: 72 unknown, 32 indirect, recursion |
 | firmware | MAX3185x | 400 | - | - | - | 868 | NOT REVIEWED: 28 unknown, 2 indirect, recursion |
 | firmware | PCA9685 | 784 | - | - | - | 772 | NOT REVIEWED: 23 unknown, 4 indirect, recursion |
 | firmware | SD/MMC | 1600 | - | - | - | 1932 | NOT REVIEWED: 56 unknown, 22 indirect, recursion |
@@ -142,7 +142,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | stepper | 400 | - | - | - | 788 | NOT REVIEWED: 26 unknown, 6 indirect, recursion |
 | firmware | storage manager | 1200 | - | - | - | 772 | NOT REVIEWED: 30 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | - | - | - | 664 | NOT REVIEWED: 21 unknown, 2 indirect, recursion |
-| firmware | TunerStudio | 1200 | - | - | - | 1420 | NOT REVIEWED: 65 unknown, 38 indirect, recursion |
+| firmware | TunerStudio | 1200 | - | - | - | 1420 | NOT REVIEWED: 66 unknown, 38 indirect, recursion |
 | firmware | USB mass storage | 256 | - | - | - | 868 | NOT REVIEWED: 28 unknown, 5 indirect, recursion |
 | bootloader | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | bootloader | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
@@ -159,7 +159,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | 416 | errorHandlerIsReportExist(char const*) | controllers/core/error_handling.cpp:433:12 |
 | firmware | 408 | f_mkdir | ext/FatFS/ff.c:5176:9 |
 | firmware | 400 | canDashboardHondaK(CanCycle) | controllers/can/can_dash_honda.cpp:46:6 |
-| firmware | 368 | ToothLoggerWriteCsvLine(Writer&, long long, composite_logger_s, composite_sensor_snapshot_s const&, void const*) | console/binary/tooth_logger.cpp:530:12 |
+| firmware | 384 | ToothLoggerWriteCsvLine(Writer&, long long, composite_logger_s, composite_sensor_snapshot_s const&, void const*) | console/binary/tooth_logger.cpp:530:12 |
 | firmware | 352 | f_open | ext/FatFS/ff.c:3799:9 |
 | firmware | 344 | f_sync | ext/FatFS/ff.c:4218:9 |
 | firmware | 272 | f_findnext | ext/FatFS/ff.c:4850:9 |
@@ -186,14 +186,14 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 |---|---|---:|---:|---|---:|---:|---|
 | firmware | accelerometer | 400 | - | - | - | 24 | NOT REVIEWED: 1 indirect |
 | firmware | bench test | 1600 | - | - | - | 1908 | NOT REVIEWED: 27 unknown, 6 indirect, recursion |
-| firmware | CAN RX | 768 | - | - | - | 1396 | NOT REVIEWED: 53 unknown, 32 indirect, recursion |
+| firmware | CAN RX | 768 | - | - | - | 1396 | NOT REVIEWED: 54 unknown, 32 indirect, recursion |
 | firmware | CAN TX | 1536 | - | - | - | 1372 | NOT REVIEWED: 31 unknown, 11 indirect, recursion |
 | firmware | electronic throttle | 512 | - | - | - | 652 | NOT REVIEWED: 13 unknown, 3 indirect, recursion |
 | firmware | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | firmware | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
 | firmware | Lua | 4096 | - | - | - | 2864 | NOT REVIEWED: 35 unknown, 15 indirect, recursion |
 | firmware | main loop | 1024 | - | - | - | 788 | NOT REVIEWED: 15 unknown, 5 indirect, recursion |
-| firmware | main/process | 1536 | - | - | - | 1316 | NOT REVIEWED: 62 unknown, 32 indirect, recursion |
+| firmware | main/process | 1536 | - | - | - | 1316 | NOT REVIEWED: 63 unknown, 32 indirect, recursion |
 | firmware | MAX3185x | 400 | - | - | - | 852 | NOT REVIEWED: 20 unknown, 2 indirect, recursion |
 | firmware | PCA9685 | 816 | - | - | - | 756 | NOT REVIEWED: 15 unknown, 4 indirect, recursion |
 | firmware | SD/MMC | 1600 | - | - | - | 1916 | NOT REVIEWED: 47 unknown, 22 indirect, recursion |
@@ -201,7 +201,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | stepper | 400 | - | - | - | 772 | NOT REVIEWED: 17 unknown, 6 indirect, recursion |
 | firmware | storage manager | 1200 | - | - | - | 748 | NOT REVIEWED: 21 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | - | - | - | 648 | NOT REVIEWED: 13 unknown, 2 indirect, recursion |
-| firmware | TunerStudio | 1200 | - | - | - | 1436 | NOT REVIEWED: 55 unknown, 38 indirect, recursion |
+| firmware | TunerStudio | 1200 | - | - | - | 1436 | NOT REVIEWED: 56 unknown, 38 indirect, recursion |
 | firmware | USB mass storage | 2048 | - | - | - | 852 | NOT REVIEWED: 20 unknown, 5 indirect, recursion |
 | bootloader | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | bootloader | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
@@ -218,8 +218,8 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | 416 | errorHandlerIsReportExist(char const*) | controllers/core/error_handling.cpp:433:12 |
 | firmware | 408 | f_mkdir | ext/FatFS/ff.c:5176:9 |
 | firmware | 400 | canDashboardHondaK(CanCycle) | controllers/can/can_dash_honda.cpp:46:6 |
+| firmware | 368 | ToothLoggerWriteCsvLine(Writer&, long long, composite_logger_s, composite_sensor_snapshot_s const&, void const*) | console/binary/tooth_logger.cpp:530:12 |
 | firmware | 368 | tinf_decode_trees | ext/uzlib/src/tinflate.c:307:12 |
-| firmware | 352 | ToothLoggerWriteCsvLine(Writer&, long long, composite_logger_s, composite_sensor_snapshot_s const&, void const*) | console/binary/tooth_logger.cpp:530:12 |
 | firmware | 352 | f_open | ext/FatFS/ff.c:3799:9 |
 | firmware | 344 | f_sync | ext/FatFS/ff.c:4218:9 |
 | bootloader | 256 | XcpPacketReceivedHook | ../hw_layer/openblt/hooks.c:366:32 |
