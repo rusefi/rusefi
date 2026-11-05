@@ -132,7 +132,9 @@ endif
 # gen_live_documentation.sh writes shared generated files (console/binary/generated,
 # java enums, unit_tests/test-framework/trigger_meta_generated.h), so serialize against
 # other concurrent makes (firmware/simulator/unit_tests) on the shared $(FLOCK) lock.
-.docsenums-sentinel: $(DOCS_ENUMS_INPUTS) $(CONFIG_DEFINITION_BASE_JAR) $(ENUM_TO_STRING_JAR)
+# [tag:live_data_board_prepend] TGT_SENTINEL (firmware builds only) changes when the board changes,
+# so live data is regenerated with the new board's prepend even if no input file was edited.
+.docsenums-sentinel: $(DOCS_ENUMS_INPUTS) $(CONFIG_DEFINITION_BASE_JAR) $(ENUM_TO_STRING_JAR) $(TGT_SENTINEL)
 	bash $(PROJECT_DIR)/bin/detect_github.sh
 	$(FLOCK) bash $(PROJECT_DIR)/gen_live_documentation.sh
 	@touch $@

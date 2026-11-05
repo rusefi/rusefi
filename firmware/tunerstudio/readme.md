@@ -44,8 +44,10 @@ declared `true` or `false` values, ignoring case. Give optional flags explicit
 defaults in `integration/rusefi_config.txt`; board prepends can override them.
 Unknown names, invalid boolean values, malformed markers and unbalanced blocks
 fail generation with the template or included filename and line number.
-Blocks cannot be nested. Variables inside disabled blocks are not expanded,
-but condition names and marker syntax are still checked.
+Blocks cannot be nested, and a line carries at most one inline condition. To
+require two flags, put the inline condition on a line inside a block (see the
+knock gain rows in `top_level_menu.ini`). Variables inside disabled blocks are
+not expanded, but condition names and marker syntax are still checked.
 
 `0@@if_ts_show_odd_fire` is valid: the condition controls whether the line is
 emitted, and `0` remains a menu placeholder. A substitution can immediately

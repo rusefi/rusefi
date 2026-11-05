@@ -2,7 +2,13 @@
 
 cd $(dirname "$0")
 
-rm gen_live_documentation.log
+rm -f gen_live_documentation.log
+
+# [tag:live_data_board_prepend] BOARD_DIR (exported by common_script_read_meta_env.inc) makes
+# LiveDataProcessor read the board prepend ahead of rusefi_config_shared.txt, so board overrides
+# such as MAX_CYLINDER_COUNT size output channels the same way they size the configuration;
+# without BOARD_DIR the shared default is produced. Make tracks the board via TGT_SENTINEL in
+# docs_enums.mk; gen_config.sh runs this per board and once more without a board at the end.
 
 java -DSystemOut.name=logs/gen_live_documentation \
  -cp ../java_tools/configuration_definition_base/build/libs/config_definition_base-all.jar \

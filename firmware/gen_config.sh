@@ -17,6 +17,10 @@ genConfig ()
 	if [ -n "$CUSTOM_GEN_CONFIG" ]; then
 		bash $CUSTOM_GEN_CONFIG
 	else
+		# [tag:live_data_board_prepend] live data outputs feed this board's .ini, so they are
+		# regenerated with this board's prepend (BOARD_DIR is exported by the meta env reader)
+		bash gen_live_documentation.sh
+		[ $? -eq 0 ] || { echo "ERROR generating live data for $1"; exit 1; }
 		bash gen_signature.sh ${SHORT_BOARD_NAME}
 		[ $? -eq 0 ] || { echo "ERROR generating signature for $1"; exit 1; }
 		bash gen_config_board.sh $BOARD_DIR $SHORT_BOARD_NAME
@@ -29,3 +33,8 @@ genConfig ()
 find config/boards -name "meta-info*.env" -print0 | while IFS= read -r -d '' f; do
 	echo -n "$(genConfig $f)"
 done
+
+# [tag:live_data_board_prepend] the shared live data outputs (headers, java, .ini fragments)
+# must not keep the last board's overrides: regenerate them without any board prepend
+env -u BOARD_DIR bash gen_live_documentation.sh
+[ $? -eq 0 ] || { echo "ERROR generating default live data"; exit 1; }
