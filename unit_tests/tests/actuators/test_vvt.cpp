@@ -270,7 +270,7 @@ static void setupAdvancedIntakePid(int camIndex) {
 // axis (9 points, zero at the center, bin index 5 at +10 deg) driving P factor, and a 0..500 kPa
 // oil pressure axis (6 points, bin index 3 at 300 kPa) driving base duty. Individual tests
 // override specific bins as needed.
-static void setupAdvancedIntakeCurvesFlat(engine_configuration_s* d) {
+static void setupAdvancedIntakeCurvesFlat(persistent_config_s* d) {
 	for (size_t i = 0; i < efi::size(d->vvtAdvDistanceBinsIntake); i++) {
 		d->vvtAdvDistanceBinsIntake[i] = -40.0f + i * 10.0f;
 		d->vvtAdvPFactorIntake[i] = 0;
@@ -310,9 +310,9 @@ TEST(Vvt, AdvancedModeFeedforwardTracksOilPressureNotHoldDuty) {
 
 	auto* d = engineConfiguration;
 	d->vvtAdvancedModeEnabled = true;
-	setupAdvancedIntakeCurvesFlat(d);
-	d->vvtAdvDutyIntake[0] = 7.0f;  // 0 kPa
-	d->vvtAdvDutyIntake[3] = 42.0f; // 300 kPa
+	setupAdvancedIntakeCurvesFlat(config);
+	config->vvtAdvDutyIntake[0] = 7.0f;  // 0 kPa
+	config->vvtAdvDutyIntake[3] = 42.0f; // 300 kPa
 
 	// Oil pressure = 0 kPa (no sensor mocked yet) -> feedforward is the curve's leftmost value.
 	Sensor::resetMockValue(SensorType::OilPressure);
@@ -335,8 +335,8 @@ TEST(Vvt, AdvancedModeUsesCurvePFactor) {
 
 	auto* d = engineConfiguration;
 	d->vvtAdvancedModeEnabled = true;
-	setupAdvancedIntakeCurvesFlat(d); // zero P-factor and zero duty curves everywhere
-	d->vvtAdvPFactorIntake[5] = 1.0f; // bin index 5 = +10 deg -> P factor 1.0 there
+	setupAdvancedIntakeCurvesFlat(config); // zero P-factor and zero duty curves everywhere
+	config->vvtAdvPFactorIntake[5] = 1.0f; // bin index 5 = +10 deg -> P factor 1.0 there
 
 	// distance = 10 deg -> PID runs using the curve's P factor (1.0) at that distance, not the
 	// fixed (sentinel) pFactor; feedforward is still the (zero) duty curve.
@@ -361,7 +361,7 @@ TEST(Vvt, DistanceLiveDataOnlyTrackedInAdvancedMode) {
 
 	// Advanced mode: distance tracker reflects target - observation.
 	d->vvtAdvancedModeEnabled = true;
-	setupAdvancedIntakeCurvesFlat(d);
+	setupAdvancedIntakeCurvesFlat(config);
 	dut.getClosedLoop(30, 20);
 	EXPECT_NEAR(dut.vvtDistance, 10.0f, 0.5f); // vvtDistance is a scaled int16 (0.1 deg resolution)
 }
@@ -406,21 +406,21 @@ TEST(VVT, DisabledBelowMinRpmEvenInAdvancedMode) {
 TEST(Vvt, AdvancedModeDefaultsAndOldTuneMigration) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	EXPECT_FALSE(engineConfiguration->vvtAdvancedModeEnabled);
-	EXPECT_FLOAT_EQ(engineConfiguration->vvtAdvDistanceBinsIntake[0], -40);
-	EXPECT_FLOAT_EQ(engineConfiguration->vvtAdvDistanceBinsExhaust[4], 0);
-	EXPECT_FLOAT_EQ(engineConfiguration->vvtAdvDistanceBinsIntake[8], 40);
-	EXPECT_FLOAT_EQ(engineConfiguration->vvtAdvOilPressureBinsExhaust[5], 1000);
-	EXPECT_FLOAT_EQ(engineConfiguration->vvtAdvDutyIntake[3], 0);
-	EXPECT_FLOAT_EQ(engineConfiguration->vvtAdvPFactorExhaust[5], 0);
+	EXPECT_FLOAT_EQ(config->vvtAdvDistanceBinsIntake[0], -40);
+	EXPECT_FLOAT_EQ(config->vvtAdvDistanceBinsExhaust[4], 0);
+	EXPECT_FLOAT_EQ(config->vvtAdvDistanceBinsIntake[8], 40);
+	EXPECT_FLOAT_EQ(config->vvtAdvOilPressureBinsExhaust[5], 1000);
+	EXPECT_FLOAT_EQ(config->vvtAdvDutyIntake[3], 0);
+	EXPECT_FLOAT_EQ(config->vvtAdvPFactorExhaust[5], 0);
 
-	setArrayValues(engineConfiguration->vvtAdvDistanceBinsIntake, 0);
-	setArrayValues(engineConfiguration->vvtAdvOilPressureBinsExhaust, 0);
+	setArrayValues(config->vvtAdvDistanceBinsIntake, 0);
+	setArrayValues(config->vvtAdvOilPressureBinsExhaust, 0);
 	engineConfiguration->vvtIntake_iTermMin = 0;
 	engineConfiguration->vvtIntake_iTermMax = 0;
 	EXPECT_TRUE(applyDefaultsOrFixAfterBurn(nullptr));
-	EXPECT_FLOAT_EQ(engineConfiguration->vvtAdvDistanceBinsIntake[4], 0);
-	EXPECT_FLOAT_EQ(engineConfiguration->vvtAdvDistanceBinsIntake[8], 40);
-	EXPECT_FLOAT_EQ(engineConfiguration->vvtAdvOilPressureBinsExhaust[5], 1000);
+	EXPECT_FLOAT_EQ(config->vvtAdvDistanceBinsIntake[4], 0);
+	EXPECT_FLOAT_EQ(config->vvtAdvDistanceBinsIntake[8], 40);
+	EXPECT_FLOAT_EQ(config->vvtAdvOilPressureBinsExhaust[5], 1000);
 	EXPECT_EQ(engineConfiguration->vvtIntake_iTermMin, -1000);
 	EXPECT_EQ(engineConfiguration->vvtIntake_iTermMax, 1000);
 
@@ -443,12 +443,12 @@ TEST(Vvt, AdvancedModeCamDirectionCurvesAndTelemetry) {
 	engineConfiguration->invertVvtControlExhaust = true;
 	setupAdvancedIntakePid(0);
 	setupAdvancedIntakePid(1);
-	setArrayValues(engineConfiguration->vvtAdvDutyIntake, 20);
-	setArrayValues(engineConfiguration->vvtAdvDutyExhaust, 50);
-	setArrayValues(engineConfiguration->vvtAdvPFactorIntake, 2);
-	setArrayValues(engineConfiguration->vvtAdvPFactorExhaust, 0);
-	engineConfiguration->vvtAdvPFactorExhaust[3] = 1; // -10 degrees
-	engineConfiguration->vvtAdvPFactorExhaust[5] = 3; // +10 degrees
+	setArrayValues(config->vvtAdvDutyIntake, 20);
+	setArrayValues(config->vvtAdvDutyExhaust, 50);
+	setArrayValues(config->vvtAdvPFactorIntake, 2);
+	setArrayValues(config->vvtAdvPFactorExhaust, 0);
+	config->vvtAdvPFactorExhaust[3] = 1; // -10 degrees
+	config->vvtAdvPFactorExhaust[5] = 3; // +10 degrees
 	for (int index = 0; index < CAM_INPUTS_COUNT; index++) {
 		VvtController dut(index);
 		dut.init(nullptr, nullptr);
@@ -468,9 +468,9 @@ TEST(Vvt, AdvancedModeInterpolatesPressureAndHandlesInvalidSensor) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->vvtAdvancedModeEnabled = true;
 	setupAdvancedIntakePid(0);
-	setLinearCurve(engineConfiguration->vvtAdvOilPressureBinsIntake, 0, 500, 1);
+	setLinearCurve(config->vvtAdvOilPressureBinsIntake, 0, 500, 1);
 	for (size_t i = 0; i < VVT_ADV_OILP_SIZE; i++) {
-		engineConfiguration->vvtAdvDutyIntake[i] = 10 + i * 10;
+		config->vvtAdvDutyIntake[i] = 10 + i * 10;
 	}
 	VvtController dut(0);
 	dut.init(nullptr, nullptr);
@@ -513,8 +513,8 @@ TEST(Vvt, AdvancedModeClampsFinalCommandAndDrivesPwm) {
 	setupAdvancedIntakePid(0);
 	engineConfiguration->auxPid[0].minValue = 10;
 	engineConfiguration->auxPid[0].maxValue = 90;
-	setArrayValues(engineConfiguration->vvtAdvDutyIntake, 50);
-	setArrayValues(engineConfiguration->vvtAdvPFactorIntake, 10);
+	setArrayValues(config->vvtAdvDutyIntake, 50);
+	setArrayValues(config->vvtAdvPFactorIntake, 10);
 	StrictMock<MockPwm> pwm;
 	VvtController dut(0);
 	dut.init(nullptr, &pwm);

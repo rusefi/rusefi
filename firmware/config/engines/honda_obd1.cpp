@@ -46,7 +46,7 @@ void setHondaObd1() {
 #endif
 #endif // HW_HELLEN_UAEFI
 
-	strcpy(engineConfiguration->gpPwmNote[0], "VTC");
+	strcpy(config->gpPwmNote[0], "VTC");
 	gppwm_channel *vtcControl = &engineConfiguration->gppwm[0];
 	vtcControl->loadAxis = GPPWM_Map;
 	vtcControl->pwmFrequency = 0;

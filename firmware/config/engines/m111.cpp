@@ -57,13 +57,13 @@ void setMercedesM111EngineConfiguration() {
 	engineConfiguration->etb.dFactor = 0.088f;
 	engineConfiguration->etb.offset = 0;
 
-    strcpy(engineConfiguration->gpPwmNote[0], "SC Bypass");
+    strcpy(config->gpPwmNote[0], "SC Bypass");
 #if HW_MICRO_RUSEFI && EFI_PROD_CODE
 	gppwm_channel *scBypass = &engineConfiguration->gppwm[0];
     scBypass->pin = MRE_GPOUT_3;
 #endif // HW_MICRO_RUSEFI
 
-    strcpy(engineConfiguration->gpPwmNote[1], "SC Clutch");
+    strcpy(config->gpPwmNote[1], "SC Clutch");
 #if HW_MICRO_RUSEFI && EFI_PROD_CODE
 	gppwm_channel *scClutch = &engineConfiguration->gppwm[1];
     scClutch->pin = MRE_LS_2;

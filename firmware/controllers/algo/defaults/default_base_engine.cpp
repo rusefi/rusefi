@@ -289,20 +289,20 @@ bool applyDefaultsOrFixAfterBurn(const engine_configuration_s* previousConfigura
 		engineConfiguration->vvtExhaust_iTermMax = 1000;
 		changed = true;
 	}
-	if (engineConfiguration->vvtAdvDistanceBinsIntake[VVT_ADV_DISTANCE_SIZE - 1] == 0) {
-		setLinearCurve(engineConfiguration->vvtAdvDistanceBinsIntake, -40, 40, 1);
+	if (config->vvtAdvDistanceBinsIntake[VVT_ADV_DISTANCE_SIZE - 1] == 0) {
+		setLinearCurve(config->vvtAdvDistanceBinsIntake, -40, 40, 1);
 		changed = true;
 	}
-	if (engineConfiguration->vvtAdvDistanceBinsExhaust[VVT_ADV_DISTANCE_SIZE - 1] == 0) {
-		setLinearCurve(engineConfiguration->vvtAdvDistanceBinsExhaust, -40, 40, 1);
+	if (config->vvtAdvDistanceBinsExhaust[VVT_ADV_DISTANCE_SIZE - 1] == 0) {
+		setLinearCurve(config->vvtAdvDistanceBinsExhaust, -40, 40, 1);
 		changed = true;
 	}
-	if (engineConfiguration->vvtAdvOilPressureBinsIntake[VVT_ADV_OILP_SIZE - 1] == 0) {
-		setLinearCurve(engineConfiguration->vvtAdvOilPressureBinsIntake, 0, 1000, 1);
+	if (config->vvtAdvOilPressureBinsIntake[VVT_ADV_OILP_SIZE - 1] == 0) {
+		setLinearCurve(config->vvtAdvOilPressureBinsIntake, 0, 1000, 1);
 		changed = true;
 	}
-	if (engineConfiguration->vvtAdvOilPressureBinsExhaust[VVT_ADV_OILP_SIZE - 1] == 0) {
-		setLinearCurve(engineConfiguration->vvtAdvOilPressureBinsExhaust, 0, 1000, 1);
+	if (config->vvtAdvOilPressureBinsExhaust[VVT_ADV_OILP_SIZE - 1] == 0) {
+		setLinearCurve(config->vvtAdvOilPressureBinsExhaust, 0, 1000, 1);
 		changed = true;
 	}
 

@@ -91,7 +91,7 @@ void setGmSbc() {
     // this is used to tell HEI that we are always in charge of timing advance
     gppwm_channel *ignOverride = &engineConfiguration->gppwm[0];
    	ignOverride->pwmFrequency = 0;
-   	strcpy(engineConfiguration->gpPwmNote[0], "ign ovrrd B");
+   	strcpy(config->gpPwmNote[0], "ign ovrrd B");
    	setTable(ignOverride->table, 100);
 
 #ifdef HW_HELLEN_UAEFI121

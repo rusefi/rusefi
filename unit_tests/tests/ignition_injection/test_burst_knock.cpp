@@ -13,9 +13,9 @@ static TpsAccelEnrichment& getAe() {
 static void setupBurst(float retard = 10, float decay = 2) {
 	engineConfiguration->burstKnockEnabled = true;
 	engineConfiguration->burstKnockDecayTime = decay;
-	setLinearCurve(engineConfiguration->burstKnockRpmBins, 0, 7000);
-	setLinearCurve(engineConfiguration->burstKnockTpsRateBins, 0, 1400);
-	setTable(engineConfiguration->burstKnockRetardTable, retard);
+	setLinearCurve(config->burstKnockRpmBins, 0, 7000);
+	setLinearCurve(config->burstKnockTpsRateBins, 0, 1400);
+	setTable(config->burstKnockRetardTable, retard);
 	engineConfiguration->tpsAccelLookback = 1;
 	Sensor::setMockValue(SensorType::Rpm, 3000);
 }
@@ -31,10 +31,10 @@ TEST(BurstKnock, DefaultsAreDisabledWithZeroTable) {
 	EXPECT_FALSE(engineConfiguration->burstKnockEnabled);
 	EXPECT_FLOAT_EQ(engineConfiguration->burstKnockDecayTime, 1);
 	for (size_t y = 0; y < BURST_KNOCK_TPS_RATE_SIZE; y++) {
-		EXPECT_FLOAT_EQ(engineConfiguration->burstKnockTpsRateBins[y], y * 150);
+		EXPECT_FLOAT_EQ(config->burstKnockTpsRateBins[y], y * 150);
 		for (size_t x = 0; x < BURST_KNOCK_RPM_SIZE; x++) {
-			EXPECT_FLOAT_EQ(engineConfiguration->burstKnockRpmBins[x], 800 + x * 800);
-			EXPECT_FLOAT_EQ(engineConfiguration->burstKnockRetardTable[y][x], 0);
+			EXPECT_FLOAT_EQ(config->burstKnockRpmBins[x], 800 + x * 800);
+			EXPECT_FLOAT_EQ(config->burstKnockRetardTable[y][x], 0);
 		}
 	}
 	feedTransient(300, true);
@@ -71,7 +71,7 @@ TEST(BurstKnock, TransientRefreshesTableValueAndDecayTimer) {
 	EXPECT_FLOAT_EQ(getBurst().getTimingRetard(), 10);
 
 	// Track the current table value, even when it drops during a sustained transient.
-	setTable(engineConfiguration->burstKnockRetardTable, 6);
+	setTable(config->burstKnockRetardTable, 6);
 	feedTransient(300, true);
 	EXPECT_FLOAT_EQ(getBurst().getTimingRetard(), 6);
 	eth.moveTimeForwardSec(1);
@@ -107,7 +107,7 @@ TEST(BurstKnock, ZeroOrNegativeCellsNeverAdvanceTiming) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setupBurst();
 	for (float retard : {0.0f, -5.0f}) {
-		setTable(engineConfiguration->burstKnockRetardTable, retard);
+		setTable(config->burstKnockRetardTable, retard);
 		feedTransient(300, true);
 		EXPECT_FALSE(getBurst().isBurstKnockActive);
 		EXPECT_FLOAT_EQ(getBurst().burstKnockRetard, 0);
@@ -130,7 +130,7 @@ TEST(BurstKnock, InterpolatesRpmAndTpsRateWithLookbackFloor) {
 	setupBurst();
 	for (size_t y = 0; y < BURST_KNOCK_TPS_RATE_SIZE; y++) {
 		for (size_t x = 0; x < BURST_KNOCK_RPM_SIZE; x++) {
-			engineConfiguration->burstKnockRetardTable[y][x] = x + 2 * y;
+			config->burstKnockRetardTable[y][x] = x + 2 * y;
 		}
 	}
 	Sensor::setMockValue(SensorType::Rpm, 2500);

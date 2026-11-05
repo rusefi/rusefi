@@ -65,9 +65,9 @@ void setHondaK() {
 	vtsControl->pwmFrequency = 0;
 #if EFI_SIMULATOR
     // simulator canned config XML toolset cares to see perfect empty memory region
-	memset(engineConfiguration->gpPwmNote[0], 0, sizeof(gppwm_note_t));
+	memset(config->gpPwmNote[0], 0, sizeof(gppwm_note_t));
 #endif
-	strcpy(engineConfiguration->gpPwmNote[0], "VTS");
+	strcpy(config->gpPwmNote[0], "VTS");
 
 /**
  * K24A4 engine

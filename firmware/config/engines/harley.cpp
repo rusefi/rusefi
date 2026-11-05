@@ -23,9 +23,9 @@ void setHarley() {
         engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
     }
 
-	strcpy(engineConfiguration->scriptSettingName[0], "compReleaseRpm");
+	strcpy(config->scriptSettingName[0], "compReleaseRpm");
 	engineConfiguration->scriptSetting[0] = 300;
-	strcpy(engineConfiguration->scriptSettingName[1], "compReleaseDur");
+	strcpy(config->scriptSettingName[1], "compReleaseDur");
 	engineConfiguration->scriptSetting[1] = 5000;
 	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
 	engineConfiguration->enableAemXSeries = true;
