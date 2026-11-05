@@ -495,13 +495,13 @@ int Mc33810::chip_init()
 		uint16_t nomi_current = 0x0a;	// default = 5.5 A
 		float nomi = engineConfiguration->mc33810Nomi;
 		if ((nomi >= 3.0) && (nomi <= 10.75)) {
-			nomi_current = (nomi - 3.0) / 0.25;
+			nomi_current = static_cast<uint16_t>((nomi - 3.0) / 0.25);
 		}
 
 		uint16_t maxi_current = 0x08;	// default = 14.0 A
 		float maxi = engineConfiguration->mc33810Maxi;
 		if ((maxi >= 6.0) && (maxi <= 21.0)) {
-			maxi_current = maxi - 6.0;
+			maxi_current = static_cast<uint16_t>(maxi - 6.0);
 		}
 		uint16_t dac_cmd =
 			// Table 12. Nominal Current DAC Select
