@@ -136,9 +136,6 @@ float getOutputValueByHash(const int hash) {
 // tpsADC
 		case 513859492:
 			return engine->outputChannels.tpsADC;
-// rawMaf
-		case 417956611:
-			return engine->outputChannels.rawMaf;
 // mafMeasured
 		case -2032003569:
 			return engine->outputChannels.mafMeasured;
@@ -166,6 +163,9 @@ float getOutputValueByHash(const int hash) {
 // actualLastInjection
 		case 681043126:
 			return engine->outputChannels.actualLastInjection;
+// injectionOffset
+		case -243031057:
+			return engine->outputChannels.injectionOffset;
 // actualLastInjectionRatio
 		case -1476961259:
 			return engine->outputChannels.actualLastInjectionRatio;
@@ -178,9 +178,9 @@ float getOutputValueByHash(const int hash) {
 // internalMcuTemperature
 		case -871891659:
 			return engine->outputChannels.internalMcuTemperature;
-// injectionOffset
-		case -243031057:
-			return engine->outputChannels.injectionOffset;
+// sd_error
+		case -1811686395:
+			return engine->outputChannels.sd_error;
 // engineMakeCodeNameCrc16
 		case 1726931380:
 			return engine->outputChannels.engineMakeCodeNameCrc16;
@@ -229,6 +229,9 @@ float getOutputValueByHash(const int hash) {
 // tuneCrc16
 		case -1158359776:
 			return engine->outputChannels.tuneCrc16;
+// fastAdcPeriod
+		case -1798837954:
+			return engine->outputChannels.fastAdcPeriod;
 // seconds
 		case -1962923820:
 			return engine->outputChannels.seconds;
@@ -238,12 +241,6 @@ float getOutputValueByHash(const int hash) {
 // firmwareVersion
 		case 799075048:
 			return engine->outputChannels.firmwareVersion;
-// rawIdlePositionSensor
-		case -677561380:
-			return engine->outputChannels.rawIdlePositionSensor;
-// rawWastegatePosition
-		case 2039421097:
-			return engine->outputChannels.rawWastegatePosition;
 // accelerationLat
 		case -2133047664:
 			return engine->outputChannels.accelerationLat;
@@ -256,12 +253,6 @@ float getOutputValueByHash(const int hash) {
 // maxTriggerReentrant
 		case -1595441102:
 			return engine->outputChannels.maxTriggerReentrant;
-// rawLowFuelPressure
-		case -148455898:
-			return engine->outputChannels.rawLowFuelPressure;
-// rawHighFuelPressure
-		case 990714516:
-			return engine->outputChannels.rawHighFuelPressure;
 // lowFuelPressure
 		case -628741220:
 			return engine->outputChannels.lowFuelPressure;
@@ -325,36 +316,6 @@ float getOutputValueByHash(const int hash) {
 // debugIntField5
 		case -183564272:
 			return engine->outputChannels.debugIntField5;
-// rawTps1Primary
-		case -1051397637:
-			return engine->outputChannels.rawTps1Primary;
-// rawClt
-		case 417946098:
-			return engine->outputChannels.rawClt;
-// rawIat
-		case 417952269:
-			return engine->outputChannels.rawIat;
-// rawOilPressure
-		case 2070002124:
-			return engine->outputChannels.rawOilPressure;
-// rawAcPressure
-		case 2079600300:
-			return engine->outputChannels.rawAcPressure;
-// rawFuelLevel
-		case 1413130003:
-			return engine->outputChannels.rawFuelLevel;
-// rawPpsPrimary
-		case -347083354:
-			return engine->outputChannels.rawPpsPrimary;
-// rawPpsSecondary
-		case -1798336054:
-			return engine->outputChannels.rawPpsSecondary;
-// rawRawPpsPrimary
-		case 347493808:
-			return engine->outputChannels.rawRawPpsPrimary;
-// rawRawPpsSecondary
-		case -1318050732:
-			return engine->outputChannels.rawRawPpsSecondary;
 // idlePositionSensor
 		case 782384530:
 			return engine->outputChannels.idlePositionSensor;
@@ -382,15 +343,6 @@ float getOutputValueByHash(const int hash) {
 // vvtPositionB2E
 		case 1384666035:
 			return engine->outputChannels.vvtPositionB2E;
-// rawTps1Secondary
-		case 2555743:
-			return engine->outputChannels.rawTps1Secondary;
-// rawTps2Primary
-		case -1382627620:
-			return engine->outputChannels.rawTps2Primary;
-// rawTps2Secondary
-		case 70357120:
-			return engine->outputChannels.rawTps2Secondary;
 // accelerationVert
 		case -1670732400:
 			return engine->outputChannels.accelerationVert;
@@ -427,15 +379,6 @@ float getOutputValueByHash(const int hash) {
 // instantRpm
 		case -658597643:
 			return engine->outputChannels.instantRpm;
-// rawMap
-		case 417956621:
-			return engine->outputChannels.rawMap;
-// rawMapFast
-		case -1458054117:
-			return engine->outputChannels.rawMapFast;
-// rawAfr
-		case 417943720:
-			return engine->outputChannels.rawAfr;
 // sparkCutReasonBlinker
 		case 927388609:
 			return engine->outputChannels.sparkCutReasonBlinker;
@@ -619,9 +562,6 @@ float getOutputValueByHash(const int hash) {
 // ISSValue
 		case 200047729:
 			return engine->outputChannels.ISSValue;
-// rawBattery
-		case 1520918538:
-			return engine->outputChannels.rawBattery;
 // secondVeBlendParameter
 		case 778639874:
 			return engine->outputChannels.secondVeBlendParameter;
@@ -637,6 +577,9 @@ float getOutputValueByHash(const int hash) {
 // actualLastInjectionStage2
 		case -1434098660:
 			return engine->outputChannels.actualLastInjectionStage2;
+// testBenchIter
+		case 1092959609:
+			return engine->outputChannels.testBenchIter;
 // coilState1
 		case -1124698530:
 			return engine->outputChannels.coilState1;
@@ -739,9 +682,6 @@ float getOutputValueByHash(const int hash) {
 // mapFast
 		case -1263258735:
 			return engine->outputChannels.mapFast;
-// rawMaf2
-		case 907666325:
-			return engine->outputChannels.rawMaf2;
 // mafMeasured2
 		case 1663359009:
 			return engine->outputChannels.mafMeasured2;
@@ -754,9 +694,6 @@ float getOutputValueByHash(const int hash) {
 // Gego
 		case 2090288615:
 			return engine->outputChannels.Gego;
-// testBenchIter
-		case 1092959609:
-			return engine->outputChannels.testBenchIter;
 // oilTemp
 		case 1628523935:
 			return engine->outputChannels.oilTemp;
@@ -805,51 +742,27 @@ float getOutputValueByHash(const int hash) {
 // injectorDutyCycleStage2
 		case -1337459841:
 			return engine->outputChannels.injectorDutyCycleStage2;
-// rawFlexFreq
-		case -1935221780:
-			return engine->outputChannels.rawFlexFreq;
 // canReWidebandCmdStatus
 		case -823915964:
 			return engine->outputChannels.canReWidebandCmdStatus;
 // deviceUid
 		case 540029591:
 			return engine->outputChannels.deviceUid;
-// mc33810spiErrorCounter
-		case -1225980502:
-			return engine->outputChannels.mc33810spiErrorCounter;
 // injectionPrimingCounter
 		case 1526237246:
 			return engine->outputChannels.injectionPrimingCounter;
-// acPressure
-		case 1644550754:
-			return engine->outputChannels.acPressure;
-// rawAuxAnalog1
-		case 98140608:
-			return engine->outputChannels.rawAuxAnalog1;
-// rawAuxAnalog2
-		case 98140609:
-			return engine->outputChannels.rawAuxAnalog2;
-// rawAuxAnalog3
-		case 98140610:
-			return engine->outputChannels.rawAuxAnalog3;
-// rawAuxAnalog4
-		case 98140611:
-			return engine->outputChannels.rawAuxAnalog4;
+// mc33810spiErrorCounter
+		case -1225980502:
+			return engine->outputChannels.mc33810spiErrorCounter;
 // fastAdcErrorCount
 		case -1344436946:
 			return engine->outputChannels.fastAdcErrorCount;
 // slowAdcErrorCount
 		case -807823931:
 			return engine->outputChannels.slowAdcErrorCount;
-// rawAuxTemp1
-		case -801974332:
-			return engine->outputChannels.rawAuxTemp1;
-// rawAuxTemp2
-		case -801974331:
-			return engine->outputChannels.rawAuxTemp2;
-// rawAmbientTemp
-		case 1781305509:
-			return engine->outputChannels.rawAmbientTemp;
+// acPressure
+		case 1644550754:
+			return engine->outputChannels.acPressure;
 // rtcUnixEpochTime
 		case -1684644880:
 			return engine->outputChannels.rtcUnixEpochTime;
@@ -868,9 +781,6 @@ float getOutputValueByHash(const int hash) {
 // mcuSerial
 		case 714144074:
 			return engine->outputChannels.mcuSerial;
-// sd_error
-		case -1811686395:
-			return engine->outputChannels.sd_error;
 // sdLoggingState
 		case -1766098652:
 			return engine->outputChannels.sdLoggingState;
@@ -883,9 +793,6 @@ float getOutputValueByHash(const int hash) {
 // fastAdcLastError
 		case -1773414247:
 			return engine->outputChannels.fastAdcLastError;
-// fastAdcPeriod
-		case -1798837954:
-			return engine->outputChannels.fastAdcPeriod;
 // fastAdcConversionCount
 		case 1749059722:
 			return engine->outputChannels.fastAdcConversionCount;
@@ -955,6 +862,99 @@ float getOutputValueByHash(const int hash) {
 // transmissionSlipPercent
 		case 1834866008:
 			return engine->outputChannels.transmissionSlipPercent;
+// rawPpsPrimary
+		case -347083354:
+			return engine->outputChannels.rawPpsPrimary;
+// rawPpsSecondary
+		case -1798336054:
+			return engine->outputChannels.rawPpsSecondary;
+// rawRawPpsPrimary
+		case 347493808:
+			return engine->outputChannels.rawRawPpsPrimary;
+// rawRawPpsSecondary
+		case -1318050732:
+			return engine->outputChannels.rawRawPpsSecondary;
+// rawBattery
+		case 1520918538:
+			return engine->outputChannels.rawBattery;
+// rawMaf
+		case 417956611:
+			return engine->outputChannels.rawMaf;
+// rawMaf2
+		case 907666325:
+			return engine->outputChannels.rawMaf2;
+// rawMap
+		case 417956621:
+			return engine->outputChannels.rawMap;
+// rawMapFast
+		case -1458054117:
+			return engine->outputChannels.rawMapFast;
+// rawTps1Primary
+		case -1051397637:
+			return engine->outputChannels.rawTps1Primary;
+// rawTps1Secondary
+		case 2555743:
+			return engine->outputChannels.rawTps1Secondary;
+// rawTps2Primary
+		case -1382627620:
+			return engine->outputChannels.rawTps2Primary;
+// rawTps2Secondary
+		case 70357120:
+			return engine->outputChannels.rawTps2Secondary;
+// rawIdlePositionSensor
+		case -677561380:
+			return engine->outputChannels.rawIdlePositionSensor;
+// rawWastegatePosition
+		case 2039421097:
+			return engine->outputChannels.rawWastegatePosition;
+// rawClt
+		case 417946098:
+			return engine->outputChannels.rawClt;
+// rawIat
+		case 417952269:
+			return engine->outputChannels.rawIat;
+// rawAmbientTemp
+		case 1781305509:
+			return engine->outputChannels.rawAmbientTemp;
+// rawLowFuelPressure
+		case -148455898:
+			return engine->outputChannels.rawLowFuelPressure;
+// rawHighFuelPressure
+		case 990714516:
+			return engine->outputChannels.rawHighFuelPressure;
+// rawOilPressure
+		case 2070002124:
+			return engine->outputChannels.rawOilPressure;
+// rawAcPressure
+		case 2079600300:
+			return engine->outputChannels.rawAcPressure;
+// rawFuelLevel
+		case 1413130003:
+			return engine->outputChannels.rawFuelLevel;
+// rawAfr
+		case 417943720:
+			return engine->outputChannels.rawAfr;
+// rawAuxAnalog1
+		case 98140608:
+			return engine->outputChannels.rawAuxAnalog1;
+// rawAuxAnalog2
+		case 98140609:
+			return engine->outputChannels.rawAuxAnalog2;
+// rawAuxAnalog3
+		case 98140610:
+			return engine->outputChannels.rawAuxAnalog3;
+// rawAuxAnalog4
+		case 98140611:
+			return engine->outputChannels.rawAuxAnalog4;
+// rawAuxTemp1
+		case -801974332:
+			return engine->outputChannels.rawAuxTemp1;
+// rawAuxTemp2
+		case -801974331:
+			return engine->outputChannels.rawAuxTemp2;
+// rawFlexFreq
+		case -1935221780:
+			return engine->outputChannels.rawFlexFreq;
 // baseDwell
 		case -1777838088:
 			return engine->ignitionState.baseDwell;

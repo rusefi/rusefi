@@ -1933,24 +1933,6 @@ float getConfigValueByHash(const int hash) {
 // engineShutDownPeriod
 		case -1846425734:
 			return engineConfiguration->engineShutDownPeriod;
-// boardUseTempPullUp
-		case -1457484942:
-			return engineConfiguration->boardUseTempPullUp;
-// boardSelTachPullUp
-		case -1907992813:
-			return engineConfiguration->boardSelTachPullUp;
-// boardEnHall1PullUp
-		case 1397541236:
-			return engineConfiguration->boardEnHall1PullUp;
-// boardEnHall2PullUp
-		case -1605958091:
-			return engineConfiguration->boardEnHall2PullUp;
-// boardEnHall3PullUp
-		case -314490122:
-			return engineConfiguration->boardEnHall3PullUp;
-// boardEnHall4PullUp
-		case 976977847:
-			return engineConfiguration->boardEnHall4PullUp;
 // knockSuppressMinTps
 		case 893776859:
 			return engineConfiguration->knockSuppressMinTps;
@@ -5675,36 +5657,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1846425734:
 	{
 		engineConfiguration->engineShutDownPeriod = value;
-		return 1;
-	}
-		case -1457484942:
-	{
-		engineConfiguration->boardUseTempPullUp = (int)value;
-		return 1;
-	}
-		case -1907992813:
-	{
-		engineConfiguration->boardSelTachPullUp = (int)value;
-		return 1;
-	}
-		case 1397541236:
-	{
-		engineConfiguration->boardEnHall1PullUp = (int)value;
-		return 1;
-	}
-		case -1605958091:
-	{
-		engineConfiguration->boardEnHall2PullUp = (int)value;
-		return 1;
-	}
-		case -314490122:
-	{
-		engineConfiguration->boardEnHall3PullUp = (int)value;
-		return 1;
-	}
-		case 976977847:
-	{
-		engineConfiguration->boardEnHall4PullUp = (int)value;
 		return 1;
 	}
 		case 893776859:
