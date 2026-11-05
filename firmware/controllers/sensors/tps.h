@@ -14,7 +14,9 @@
 
 // todo: '_TS_' part here no longer makes sense now that we use volts!
 // Scaled to 1000 counts = 5.0 volts
-#define TPS_TS_CONVERSION (1 / PACK_MULT_RAW_VOLTAGE)
+// PACK_MULT_RAW_VOLTAGE is a generated unsuffixed literal; keep this in float so that
+// voltage * TPS_TS_CONVERSION does not promote to (soft) double on single-precision cores.
+#define TPS_TS_CONVERSION (1.0f / (float)PACK_MULT_RAW_VOLTAGE)
 
 // we have this '100'  magic constant too often for two many other reasons todo: refactor further?
 #define POSITION_FULLY_OPEN 100

@@ -89,7 +89,7 @@ float TpsAccelEnrichment::getTpsEnrichment() {
 
 	float mult = interpolate2d(rpm, config->tpsTspCorrValuesBins,
 						config->tpsTspCorrValues);
-	if (mult != 0 && (mult < 0.01 || mult > 100)) {
+	if (mult != 0 && (mult < 0.01f || mult > 100.f)) {
 		mult = 1;
 	}
 

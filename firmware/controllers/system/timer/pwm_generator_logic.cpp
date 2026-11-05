@@ -19,9 +19,9 @@
 // Duty cycles below/above these thresholds switch the state machine into PM_ZERO/PM_FULL mode:
 // instead of generating sub-1% pulses, the output is held at a constant level (see setSimplePwmDutyCycle).
 // 1% duty cycle
-#define ZERO_PWM_THRESHOLD 0.01
+#define ZERO_PWM_THRESHOLD 0.01f
 // 99% duty cycle
-#define FULL_PWM_THRESHOLD 0.99
+#define FULL_PWM_THRESHOLD 0.99f
 
 SimplePwm::SimplePwm()
 {
