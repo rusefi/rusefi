@@ -11,11 +11,11 @@
 #include "value_lookup.h"
 
 float getOutputValueByName(const char * /*name*/) {
-	return EFI_ERROR_CODE;
+	return static_cast<float>(EFI_ERROR_CODE);
 }
 
 float getConfigValueByName(const char * /*name*/) {
-	return EFI_ERROR_CODE;
+	return static_cast<float>(EFI_ERROR_CODE);
 }
 
 bool setConfigValueByName(const char * /*name*/, float /*value*/) {
