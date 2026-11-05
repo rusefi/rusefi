@@ -44,8 +44,8 @@ TEST(Actuators, IdleDoubleSolenoid) {
 	EXPECT_NEAR(0.0198f, getIdleSolenoidOpenDutyForUnitTest(), EPS4D);
 	EXPECT_NEAR(0.9802f, getIdleSolenoidCloseDutyForUnitTest(), EPS4D);
 
-	// at EXACTLY 0%/100% float rounding pushes the nominal 0.01/0.99 endpoints just past
-	// ZERO_PWM_THRESHOLD/FULL_PWM_THRESHOLD, so the coils degrade to plain digital on/off
+	// at EXACTLY 0%/100% the nominal 0.01/0.99 endpoints land on
+	// ZERO_PWM_THRESHOLD/FULL_PWM_THRESHOLD, which are inclusive, so the coils degrade to plain digital on/off
 	applyIACposition(0);
 	EXPECT_EQ(0, getIdleSolenoidOpenDutyForUnitTest());
 	EXPECT_EQ(1, getIdleSolenoidCloseDutyForUnitTest());

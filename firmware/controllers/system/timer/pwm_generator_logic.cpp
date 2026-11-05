@@ -16,8 +16,10 @@
 #include "gpio_ext.h"
 #endif // EFI_PROD_CODE
 
-// Duty cycles below/above these thresholds switch the state machine into PM_ZERO/PM_FULL mode:
+// Duty cycles at or beyond these thresholds switch the state machine into PM_ZERO/PM_FULL mode:
 // instead of generating sub-1% pulses, the output is held at a constant level (see setSimplePwmDutyCycle).
+// The comparisons against these are inclusive: the double-solenoid idle endpoints land exactly on them
+// and must be held constant, see Actuators.IdleDoubleSolenoid.
 // 1% duty cycle
 #define ZERO_PWM_THRESHOLD 0.01f
 // 99% duty cycle
@@ -82,14 +84,14 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 	// in PM_ZERO/PM_FULL mode togglePwmState() ignores the switch-time table and re-asserts the constant pin state
 	// once per period, so we also fire the matching edge manually here for an immediate reaction instead of waiting
 	// up to one full period for the next timer callback.
-	if (dutyCycle < ZERO_PWM_THRESHOLD) {
+	if (dutyCycle <= ZERO_PWM_THRESHOLD) {
 		mode = PM_ZERO;
 
 		if (m_stateChangeCallback) {
 			// Manually fire falling edge
 			m_stateChangeCallback(0, this);
 		}
-	} else if (dutyCycle > FULL_PWM_THRESHOLD) {
+	} else if (dutyCycle >= FULL_PWM_THRESHOLD) {
 		mode = PM_FULL;
 
 		if (m_stateChangeCallback) {
