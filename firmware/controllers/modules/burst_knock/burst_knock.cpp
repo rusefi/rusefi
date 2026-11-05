@@ -5,9 +5,9 @@
 void BurstKnock::setDefaultConfiguration() {
 	engineConfiguration->burstKnockEnabled = false;
 	engineConfiguration->burstKnockDecayTime = 1.0f;
-	setLinearCurve(engineConfiguration->burstKnockRpmBins, 800, 6400);
-	setLinearCurve(engineConfiguration->burstKnockTpsRateBins, 0, 1050);
-	setTable(engineConfiguration->burstKnockRetardTable, 0);
+	setLinearCurve(config->burstKnockRpmBins, 800, 6400);
+	setLinearCurve(config->burstKnockTpsRateBins, 0, 1050);
+	setTable(config->burstKnockRetardTable, 0);
 }
 
 void BurstKnock::onSlowCallback() {
@@ -29,9 +29,9 @@ void BurstKnock::onSlowCallback() {
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
 
 	if (ae.isAboveAccelThreshold) {
-		float retard = interpolate3d(cfg->burstKnockRetardTable,
-			cfg->burstKnockTpsRateBins, burstKnockTpsRate,
-			cfg->burstKnockRpmBins, rpm);
+		float retard = interpolate3d(config->burstKnockRetardTable,
+			config->burstKnockTpsRateBins, burstKnockTpsRate,
+			config->burstKnockRpmBins, rpm);
 		// Retard only: negative cells must never advance timing.
 		m_latchedRetard = retard < 0 ? 0 : retard;
 		burstKnockRetard = m_latchedRetard;

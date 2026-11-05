@@ -499,9 +499,9 @@ void proteusLuaDemo() {
 	engineConfiguration->tps1SecondaryMin = 105;
 	engineConfiguration->tps1SecondaryMax = 933;
 
-	strcpy(engineConfiguration->scriptCurveName[2 - 1], "rateofchange");
+	strcpy(config->scriptCurveName[2 - 1], "rateofchange");
 
-	strcpy(engineConfiguration->scriptCurveName[3 - 1], "bias");
+	strcpy(config->scriptCurveName[3 - 1], "bias");
 
 	/**
 	 * for this demo I use ETB just a sample object to control with PID. No reasonable person should consider actually using

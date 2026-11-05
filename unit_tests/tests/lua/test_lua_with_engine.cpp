@@ -21,7 +21,7 @@ end
 TEST(LuaHooks, TestCurve) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
-	strcpy(engineConfiguration->scriptCurveName[3], "hello");
+	strcpy(config->scriptCurveName[3], "hello");
 	setLinearCurve(config->scriptCurve4, 500, 600, 1);
 
 	auto index = getCurveIndexByName("helLO");

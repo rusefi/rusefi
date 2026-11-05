@@ -64,14 +64,14 @@ static inline void commonPassatB6() {
 	engineConfiguration->lowPressureFuel.value2 = PSI2KPA(200);
 
 	gppwm_channel *lowPressureFuelPumpControl = &engineConfiguration->gppwm[1];
-	strcpy(engineConfiguration->gpPwmNote[1], "LPFP");
+	strcpy(config->gpPwmNote[1], "LPFP");
 	lowPressureFuelPumpControl->pwmFrequency = 20;
 	lowPressureFuelPumpControl->loadAxis = GPPWM_FuelLoad;
 	lowPressureFuelPumpControl->dutyIfError = 50;
 	setTable(lowPressureFuelPumpControl->table, (uint8_t)50);
 
 	gppwm_channel *coolantControl = &engineConfiguration->gppwm[0];
-	strcpy(engineConfiguration->gpPwmNote[0], "Rad Fan");
+	strcpy(config->gpPwmNote[0], "Rad Fan");
 	coolantControl->loadAxis = GPPWM_Clt;
 
 	coolantControl->pwmFrequency = 25;
@@ -147,7 +147,7 @@ void setProteusVwPassatB6() {
 			config->scriptCurve1[mi] = 4000;
 		}
 	}
-	strcpy(engineConfiguration->scriptCurveName[0], "MAFcurve");
+	strcpy(config->scriptCurveName[0], "MAFcurve");
 #endif
 
 	commonPassatB6();

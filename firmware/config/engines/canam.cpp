@@ -105,7 +105,7 @@ void setMaverickX3() {
     engineConfiguration->gppwm[0].dutyIfError = 100;
     engineConfiguration->gppwm[0].rpmAxis = GPPWM_Iat;
     engineConfiguration->gppwm[0].loadAxis = GPPWM_Map;
-	strcpy(engineConfiguration->gpPwmNote[1], "Acc Relay");
+	strcpy(config->gpPwmNote[1], "Acc Relay");
 
 
 #if HW_PROTEUS

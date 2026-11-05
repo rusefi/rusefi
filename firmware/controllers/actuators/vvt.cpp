@@ -149,11 +149,11 @@ expected<percent_t> VvtController::getClosedLoop(angle_t target, angle_t observa
 		vvtDistance = distance;
 		float oilPressure = Sensor::getOrZero(SensorType::OilPressure);
 		float feedforward = m_cam == 0
-			? interpolate2d(oilPressure, engineConfiguration->vvtAdvOilPressureBinsIntake, engineConfiguration->vvtAdvDutyIntake)
-			: interpolate2d(oilPressure, engineConfiguration->vvtAdvOilPressureBinsExhaust, engineConfiguration->vvtAdvDutyExhaust);
+			? interpolate2d(oilPressure, config->vvtAdvOilPressureBinsIntake, config->vvtAdvDutyIntake)
+			: interpolate2d(oilPressure, config->vvtAdvOilPressureBinsExhaust, config->vvtAdvDutyExhaust);
 		float pFactor = m_cam == 0
-			? interpolate2d(distance, engineConfiguration->vvtAdvDistanceBinsIntake, engineConfiguration->vvtAdvPFactorIntake)
-			: interpolate2d(distance, engineConfiguration->vvtAdvDistanceBinsExhaust, engineConfiguration->vvtAdvPFactorExhaust);
+			? interpolate2d(distance, config->vvtAdvDistanceBinsIntake, config->vvtAdvPFactorIntake)
+			: interpolate2d(distance, config->vvtAdvDistanceBinsExhaust, config->vvtAdvPFactorExhaust);
 		float dTime = MS2SEC(GET_PERIOD_LIMITED(&engineConfiguration->auxPid[m_cam]));
 		float trim = m_pid.getUnclampedOutputWithPFactor(target, observation, dTime, pFactor) - m_pid.getOffset();
 		float output = clampF(engineConfiguration->auxPid[m_cam].minValue, feedforward + trim,
