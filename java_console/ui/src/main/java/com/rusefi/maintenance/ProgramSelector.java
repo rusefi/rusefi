@@ -721,8 +721,12 @@ public class ProgramSelector {
             }
         }
 
-        if (hasSerialPorts) {
+        // A live CAN ECU (PCAN/SocketCAN) can be commanded into OpenBLT just like a serial one;
+        // the flash itself then goes through the CAN flasher (OPENBLT_CAN), not the serial manual job.
+        if (hasSerialPorts || isCanEcu(selectedPort)) {
             addMenuItem(popupMenu, OPENBLT_SWITCH);
+        }
+        if (hasSerialPorts) {
             addMenuItem(popupMenu, OPENBLT_MANUAL);
             PortResult selected = resolveFlashPort();
             if (isEmergencyWipeAvailable(selected)) {
@@ -841,6 +845,12 @@ public class ProgramSelector {
             case OPENBLT_CAN:
                 return capabilityProvider.get().windows && hardware.isPCANConnected();
             case OPENBLT_SWITCH:
+                // Over CAN the reboot command can only travel on the existing live connection —
+                // there is no way to open a second session on the single-client CAN channel.
+                return selected != null && hardware.isPortAvailable(selected)
+                    && (hasRealSerialPort(java.util.Collections.singletonList(selected))
+                        || (isCanEcu(selected) && hasMatchingLiveConnection(selected, isLiveConnection(),
+                            linkManager == null ? null : linkManager.getLastTriedPort())));
             case OPENBLT_MANUAL:
                 return selected != null && hardware.isPortAvailable(selected)
                     && hasRealSerialPort(java.util.Collections.singletonList(selected));
