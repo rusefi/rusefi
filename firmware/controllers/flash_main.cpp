@@ -58,6 +58,8 @@ void suspendLinearTimeWatcher() {
 
 /* TODO: extract to persistentState method */
 bool writeToFlashNowImpl() {
+	// Include primary settings, extra-page storage/GC, and the backup write.
+	const efitick_t burnStartNt = getTimeNowNt();
 	suspendLinearTimeWatcher();
 
 	// Set up the container
@@ -80,8 +82,15 @@ bool writeToFlashNowImpl() {
 	resetMaxValues();
 
 	// Some MCU have no enough flash to store two copies. First one is mandatory.
-	return ((result1 == StorageStatus::Ok) &&
-			((result2 == StorageStatus::Ok) || (result2 == StorageStatus::NotSupported)));
+	const bool success = (result1 == StorageStatus::Ok) &&
+			((result2 == StorageStatus::Ok) || (result2 == StorageStatus::NotSupported));
+
+	const int burnDurationMs = US2MS(NT2US(getTimeNowNt() - burnStartNt));
+	if (burnDurationMs > 5000) {
+		efiPrintf("BURN TOOK %dms", burnDurationMs);
+	}
+
+	return success;
 }
 
 static StorageStatus validatePersistentState() {
