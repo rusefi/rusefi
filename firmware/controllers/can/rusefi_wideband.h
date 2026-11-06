@@ -35,6 +35,9 @@ void setWidebandOffset(uint8_t hwIndex, uint8_t index);
 // Supported by late 2025 WBO FW
 void setWidebandSensorType(uint8_t hwIndex, uint8_t type);
 
+// Store 0=500k / 1=1M for the next module power cycle; does not switch the ECU bus.
+void setWidebandBitrate(uint8_t hwIndex, uint8_t bitrate);
+
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
 // Update the firmware on any (hwIndex = 0xff) or hwIndex defined connected wideband controller
 // Support of hwIndex require WBO bootloader 09.2025+

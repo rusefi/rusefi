@@ -22,6 +22,7 @@
 
 #include "ch.h"
 #include "can_msg_tx.h"
+#include "wideband_firmware/for_rusefi/wideband_bitrate.h"
 #include "rusefi_wideband.h"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-function"
@@ -36,10 +37,29 @@ size_t getWidebandBus() {
 
 static thread_t* waitingBootloaderThread = nullptr;
 static char widebandRestart = 0;
+// Only an addressed bitrate reply may complete this operation, never a legacy ACK.
+static volatile uint16_t pendingBitrateReply = 0xffff;
 
 void handleWidebandCan(const size_t busIndex, const CANRxFrame& frame) {
 	// wrong bus
 	if (busIndex != getWidebandBus()) {
+		return;
+	}
+
+	if (!CAN_ISX(frame) || CAN_ISRTR(frame)) {
+		return;
+	}
+
+	const uint16_t pending = pendingBitrateReply;
+	if (pending != 0xffff) {
+		if (frame.DLC != 2 || !wbo::IsBitrateAck(CAN_EID(frame), frame.DLC,
+			frame.data8[0], frame.data8[1], pending >> 8, pending & 0xff)) {
+			return;
+		}
+		auto t = waitingBootloaderThread;
+		if (t) {
+			chEvtSignal(t, EVT_BOOTLOADER_ACK);
+		}
 		return;
 	}
 
@@ -156,6 +176,33 @@ void setWidebandSensorType(uint8_t hwIndex, uint8_t type) {
 	}
 
 	waitingBootloaderThread = nullptr;
+}
+
+void setWidebandBitrate(uint8_t hwIndex, uint8_t bitrate) {
+	if (!wbo::IsBitrateRequestValid(hwIndex, bitrate)) {
+		setStatus(WBO_RE_FAILED);
+		return;
+	}
+
+	setStatus(WBO_RE_BUSY);
+	chEvtGetAndClearEvents(EVT_BOOTLOADER_ACK);
+	pendingBitrateReply = (uint16_t(hwIndex) << 8) | bitrate;
+	waitingBootloaderThread = chThdGetSelfX();
+	{
+		CanTxMessage m(CanCategory::WBO_SERVICE, wbo::SetBitrateId, 2, getWidebandBus(), true);
+		m[0] = hwIndex;
+		m[1] = bitrate;
+	}
+
+	const bool saved = waitAck();
+	waitingBootloaderThread = nullptr;
+	pendingBitrateReply = 0xffff;
+	setStatus(saved ? WBO_RE_DONE : WBO_RE_FAILED);
+	if (saved) {
+		efiPrintf("Wideband bitrate saved: match ECU CAN bitrate and power cycle ECU + WBO");
+	} else {
+		efiPrintf("Wideband bitrate write not confirmed: check firmware, HW ID and current CAN bitrate");
+	}
 }
 
 void pingWideband(uint8_t hwIndex) {
