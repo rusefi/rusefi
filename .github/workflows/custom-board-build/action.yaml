@@ -515,7 +515,7 @@ runs:
       if: ${{ contains(inputs.artifacts, 'elf') }}
       working-directory: ${{inputs.rusefi_dir}}/firmware/build
       run: |
-        arm-none-eabi-objdump -d rusefi.elf > rusefi.txt
+        ${CROSS_COMPILE:-arm-none-eabi-}objdump -d rusefi.elf > rusefi.txt
 
     - name: Upload github action text artifact
       if: ${{ contains(inputs.artifacts, 'elf') }}
