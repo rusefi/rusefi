@@ -318,7 +318,10 @@ $(DFU) $(DBIN): .h2d-sentinel ;
 ifneq ($(BOARD_IMAGE_SCRIPT),)
 	$(error This board requires addressed HEX/SREC images; raw binary and generic DFU flashing are disabled)
 else
-ifeq ($(USE_OPENBLT),yes)
+ifneq ($(CPU_ARCH),ARMCMx)
+	# no Cortex-M vector table, so no image CRC slot and no DFU: the plain binary is the deliverable
+	cp $(BUILDDIR)/$(PROJECT).bin $(DBIN)
+else ifeq ($(USE_OPENBLT),yes)
 	$(H2D) -i $(BOOTLOADER_HEX) -i $(BUILDDIR)/$(PROJECT).hex -c $(CHECKSUM_ADDRESS) -o $(DFU) -b $(DBIN)
 	# TODO: handle .dfu file which is only used by Linux consumers!
 	bin/set_bl_bin_version.sh $(DBIN)
