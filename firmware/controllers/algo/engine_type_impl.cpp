@@ -60,6 +60,15 @@ void boardAfterTuneDefaults(engine_type_e /*engineType*/) {
   // placeholder
 }
 
+#if EFI_PROD_CODE && (MAX_CYLINDER_COUNT < 12)
+// [tag:max_cylinder_count_engine_guard] presets needing more cylinders than this build holds are
+// compiled out (see bmw_m73.cpp). Selecting one must not be a firmwareError: it would be fatal on
+// the ECU and the simulator walks every engine type to export canned tunes.
+static void rejectEngineTypeCylinderCount(engine_type_e engineType, int cylinders) {
+	configError("Engine type %d needs %d cylinders, this firmware supports %d", (int)engineType, cylinders, MAX_CYLINDER_COUNT);
+}
+#endif // MAX_CYLINDER_COUNT < 12
+
 void applyEngineType(engine_type_e engineType) {
 	/**
 	 * And override them with engine-specific defaults
@@ -245,7 +254,13 @@ void applyEngineType(engine_type_e engineType) {
 		proteusLuaDemo();
 		break;
 	case engine_type_e::PROTEUS_BMW_M73:
+#if MAX_CYLINDER_COUNT >= 12
 		setEngineBMW_M73_Proteus();
+#else
+  #if EFI_PROD_CODE
+		rejectEngineTypeCylinderCount(engineType, 12);
+	#endif
+#endif
 		break;
 	case engine_type_e::MIATA_PROTEUS_TCU:
 		setMiataNB2_Proteus_TCU();
@@ -327,7 +342,13 @@ void applyEngineType(engine_type_e engineType) {
 		setVwAba();
 		break;
 	case engine_type_e::FRANKENSO_BMW_M73_F:
+#if MAX_CYLINDER_COUNT >= 12
 		setBMW_M73_TwoCoilUnitTest();
+#else
+  #if EFI_PROD_CODE
+		rejectEngineTypeCylinderCount(engineType, 12);
+	#endif
+#endif
 		break;
 #endif // HW_FRANKENSO || HW_PROTEUS
 

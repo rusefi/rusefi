@@ -65,7 +65,8 @@
 #include "bmw_m73.h"
 
 void setEngineBMW_M73_microRusEfi() {
-	 m73engine();
+	// each of the two ECUs runs 6 of the 12 cylinders, so this preset fits any MAX_CYLINDER_COUNT >= 6
+	m73engineCommon();
 	// 13641435991 injector
 	engineConfiguration->injector.flow = 180; // cc/min, who knows if this number is real - no good source of info
 

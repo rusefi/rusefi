@@ -85,15 +85,12 @@
 #include "proteus_meta.h"
 #endif // HW_PROTEUS
 
-void m73engine() {
+void m73engineCommon() {
 	// 13641435991 injector
 	engineConfiguration->injector.flow = 180; // cc/min, who knows if this number is real - no good source of info
 
-	engineConfiguration->cylindersCount = 12;
-	engineConfiguration->displacement = 5.4f;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_BMW);
 	strcpy(engineConfiguration->engineCode, "M73");
-	engineConfiguration->firingOrder = FO_1_7_5_11_3_9_6_12_2_8_4_10;
 	engineConfiguration->fuelAlgorithm = engine_load_mode_e::LM_ALPHA_N;
 	engineConfiguration->canNbcType = CAN_BUS_NBC_NONE;
 
@@ -106,8 +103,6 @@ void m73engine() {
 	// this large engine seems to crank at around only 150 RPM? And happily idle at 400RPM?
 	engineConfiguration->cranking.rpm = 350;
 
-	engineConfiguration->ignitionMode = IM_TWO_COILS;
-
 	// set cranking_fuel x
 	setTable(config->crankingCycleBaseFuel, 27);
 
@@ -115,6 +110,21 @@ void m73engine() {
 	setTable(config->veTable, 45);
 
 	engineConfiguration->cylinderBore = 85.0;
+}
+
+// [tag:max_cylinder_count_engine_guard] a board can reduce MAX_CYLINDER_COUNT in its prepend.txt
+// (test-build-guards uses 8); these presets put all 12 cylinders on one ECU, so they only exist
+// when the configuration can hold them. The dispatch in engine_type_impl.cpp reports a config
+// error instead on smaller builds.
+#if MAX_CYLINDER_COUNT >= 12
+void m73engine() {
+	m73engineCommon();
+
+	engineConfiguration->cylindersCount = 12;
+	engineConfiguration->displacement = 5.4f;
+	engineConfiguration->firingOrder = FO_1_7_5_11_3_9_6_12_2_8_4_10;
+
+	engineConfiguration->ignitionMode = IM_TWO_COILS;
 }
 
 
@@ -198,3 +208,4 @@ void setEngineBMW_M73_Proteus() {
  	setPPSCalibration(0.73f, 4.0f, 0.34f, 1.86f);
 }
 #endif // HW_PROTEUS
+#endif // MAX_CYLINDER_COUNT >= 12
