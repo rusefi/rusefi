@@ -69,7 +69,11 @@ endif
 
 # Board-specific generated header overrides are now in rusefi_rules.mk (shared by all configurations).
 
+# META_GENERATED_INC (see rusefi_rules.mk) must come BEFORE $(CONTROLLERS_INC): headers such as
+# page_4_generated.h are sized by board-specific defines, and the shared copy in
+# controllers/generated is whatever board regenerated it last.
 ALLINC += \
+	$(META_GENERATED_INC) \
 	$(FW_CONFIG_DIR) \
 	$(CONSOLE_INC) \
  	$(DEVELOPMENT_DIR) \

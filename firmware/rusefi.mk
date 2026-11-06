@@ -9,10 +9,6 @@ endif
 
 BOARDS_DIR = $(PROJECT_DIR)/config/boards
 
-ifneq ($(META_OUTPUT_ROOT_FOLDER),)
-  ALLINC += $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated
-endif
-
 # allow passing a custom board dir, otherwise generate it based on the board name
 ifeq ($(BOARD_DIR),)
 	BOARD_DIR = $(BOARDS_DIR)/$(PROJECT_BOARD)

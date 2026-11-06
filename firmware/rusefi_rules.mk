@@ -54,3 +54,10 @@ SREC = true
 DDEFS += -DMETA_GENERATED_H_OVERRIDE=\"rusefi_generated_$(SHORT_BOARD_NAME).h\"
 DDEFS += -DMETA_ENGINE_GENERATED_H_OVERRIDE=\"engine_configuration_generated_structures_$(SHORT_BOARD_NAME).h\"
 DDEFS += -DSIGNATURE_H_OVERRIDE=\"signature_$(SHORT_BOARD_NAME).h\"
+
+# Custom/private board layouts generate into META_OUTPUT_ROOT_FOLDER (relative to PROJECT_DIR).
+# Every configuration puts this folder on the include path ahead of controllers/generated so
+# the board's own generated headers shadow the shared copies. Empty for in-tree boards.
+ifneq ($(META_OUTPUT_ROOT_FOLDER),)
+  META_GENERATED_INC = $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated
+endif

@@ -257,7 +257,8 @@ ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM) \
 	$(RUSEFIASM) \
 	$(PROJECT_DIR)/hw_layer/main_hardfault_asm.S
 
-INCDIR += $(ALLINC) \
+INCDIR += $(META_GENERATED_INC) \
+	$(ALLINC) \
 	$(PCH_DIR) \
 	.. \
 	$(MODULES_INC) \
