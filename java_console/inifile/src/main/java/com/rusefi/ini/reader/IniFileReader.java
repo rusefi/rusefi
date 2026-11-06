@@ -526,6 +526,8 @@ public class IniFileReader {
     }
 
     private void handleField(LinkedList<String> list, boolean runtimeValue) {
+		// field = “User Label”, someConstant, { enabledExpression }, {visibleExpression }
+
         list.removeFirst(); // "field" or "runtimeValue"
 
         String uiFieldName = list.isEmpty() ? "" : list.removeFirst();
@@ -536,24 +538,12 @@ public class IniFileReader {
             return;
         }
 
-        if (!runtimeValue && (key == null || uiFieldName.startsWith("!"))) {
+        if (!runtimeValue && key == null) {
             key = uiFieldName;
         }
 
-        // Scan remaining tokens for {…} expressions
-        String enableExpression = null;
-        String visibleExpression = null;
-        for (String token : list) {
-            if (PanelModel.isExpression(token)) {
-                if (enableExpression == null) {
-                    enableExpression = token;
-                } else {
-                    visibleExpression = token;
-                    break;
-                }
-            }
-        }
-
+        String enableExpression = list.isEmpty() ? null : list.removeFirst();
+        String visibleExpression = list.isEmpty() ? null : list.removeFirst();
         if (runtimeValue) {
             // Runtime channels are read-only and must not enter the editable constants list.
             orderedEntriesOfCurrentDialog.add(new DialogModel.DialogEntry(

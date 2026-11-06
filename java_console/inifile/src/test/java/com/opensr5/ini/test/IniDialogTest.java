@@ -5,6 +5,7 @@ import com.rusefi.ini.reader.IniFileReaderUtil;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
+import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -365,8 +366,8 @@ public class IniDialogTest {
     }
 
     @Test
-    public void testFieldWithNumericTokensAndExpressions() {
-        // Test that numeric tokens like "1" are not treated as expressions
+    public void testFieldWithNumericEnablePlaceholderAndVisibleExpression() {
+        // Attributes are positional: the "1" is the (always true) enable expression
         String string = "[Constants]\n" +
             "page = 1\n" +
             "myField = scalar, F32, 0, \"unit\", 1, 0, 0, 100, 1\n" +
@@ -385,11 +386,59 @@ public class IniDialogTest {
         assertNotNull(dialog);
         assertEquals(1, dialog.getFields().size());
 
-        // Numeric "1" should be skipped; only {otherField > 0} is an expression
         DialogModel.Field field = dialog.getFields().get(0);
         assertEquals("myField", field.getKey());
-        assertEquals("{otherField > 0}", field.getEnableExpression());
-        assertNull(field.getVisibleExpression());
+        assertEquals("1", field.getEnableExpression());
+        assertEquals("{otherField > 0}", field.getVisibleExpression());
+    }
+
+    @Test
+    public void testFieldWithUnbracedExpressions() {
+        String string = "[Constants]\n" +
+            "page = 1\n" +
+            "myField = scalar, F32, 0, \"unit\", 1, 0, 0, 100, 1\n" +
+            "otherField = scalar, F32, 4, \"unit\", 1, 0, 0, 100, 1\n" +
+            "[SettingContextHelp]\n" +
+            "; SettingContextHelpEnd\n" +
+            "\n" +
+            "\tdialog = testDialog, \"Test Dialog\"\n" +
+            "\t\tfield = \"My Field\", myField, !otherField, otherField\n" +
+            "";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        DialogModel.Field field = model.getDialogs().get("testDialog").getFields().get(0);
+        assertEquals("!otherField", field.getEnableExpression());
+        assertEquals("otherField", field.getVisibleExpression());
+    }
+
+    @Test
+    public void testStyledLabelKeepsItsConstant() {
+        // '!' and '#' only style the label; the field still refers to its constant
+        String string = "[Constants]\n" +
+            "page = 1\n" +
+            "myField = scalar, F32, 0, \"unit\", 1, 0, 0, 100, 1\n" +
+            "otherField = scalar, F32, 4, \"unit\", 1, 0, 0, 100, 1\n" +
+            "[SettingContextHelp]\n" +
+            "; SettingContextHelpEnd\n" +
+            "\n" +
+            "\tdialog = testDialog, \"Test Dialog\"\n" +
+            "\t\tfield = \"!Red label\", myField, {otherField > 0}\n" +
+            "\t\tfield = \"#Blue label\", otherField\n" +
+            "\t\tfield = \"!Label only\"\n" +
+            "";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        List<DialogModel.Field> fields = model.getDialogs().get("testDialog").getFields();
+        assertEquals(3, fields.size());
+        assertEquals("myField", fields.get(0).getKey());
+        assertEquals("!Red label", fields.get(0).getUiName());
+        assertEquals("{otherField > 0}", fields.get(0).getEnableExpression());
+        assertEquals("otherField", fields.get(1).getKey());
+        assertEquals("!Label only", fields.get(2).getKey());
     }
 
     // -------------------------------------------------------------------------
