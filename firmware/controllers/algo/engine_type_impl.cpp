@@ -64,7 +64,7 @@ void boardAfterTuneDefaults(engine_type_e /*engineType*/) {
 // [tag:max_cylinder_count_engine_guard] presets needing more cylinders than this build holds are
 // compiled out (see bmw_m73.cpp). Selecting one must not be a firmwareError: it would be fatal on
 // the ECU and the simulator walks every engine type to export canned tunes.
-static void rejectEngineTypeCylinderCount(engine_type_e engineType, int cylinders) {
+[[maybe_unused]] static void rejectEngineTypeCylinderCount(engine_type_e engineType, int cylinders) {
 	configError("Engine type %d needs %d cylinders, this firmware supports %d", (int)engineType, cylinders, MAX_CYLINDER_COUNT);
 }
 #endif // MAX_CYLINDER_COUNT < 12
