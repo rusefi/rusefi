@@ -7,7 +7,10 @@ rm -f gen_config.log
 rm -f gen_config_board.log
 
 cd ..
-./gradlew :config_definition:shadowJar
+# gen_live_documentation.sh (run per board below) needs config_definition_base-all.jar and
+# enum_to_string-all.jar in addition to the main config_definition-all.jar
+./gradlew :config_definition:shadowJar :config_definition_base:shadowJar :enum_to_string:shadowJar
+[ $? -eq 0 ] || { echo "ERROR building code generation jars"; exit 1; }
 cd firmware
 
 genConfig ()
