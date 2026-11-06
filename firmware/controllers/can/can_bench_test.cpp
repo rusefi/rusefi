@@ -293,6 +293,10 @@ static void sendSavedBenchStatePackets() {
 }
 
 static void resetPinStats(bench_mode_e benchModePinIdx) {
+#if EFI_SIMULATOR
+	resetSavedBenchTestPinStates();
+#endif // EFI_SIMULATOR
+
     OutputPin *pin = enginePins.getOutputPinForBenchMode(benchModePinIdx);
 
     if (pin == nullptr)

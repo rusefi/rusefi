@@ -571,6 +571,16 @@ int getSavedBenchTestPinStates(uint32_t durationsInStateMs[2]) {
 #endif // EFI_SIMULATOR
 }
 
+#if EFI_SIMULATOR
+// [tag:bench_saved_pin_stats] runBench() only saves its stats when it finishes, so without this
+// reset a reader which is early gets the previous pin's stats, which look like a valid result.
+// Zero stats mean "not finished yet": SimulatorFunctionalTest.testOutputPin polls for them.
+void resetSavedBenchTestPinStates() {
+	savedPinToggleCounter = 0;
+	savedDurationsInStateMs[0] = savedDurationsInStateMs[1] = 0;
+}
+#endif // EFI_SIMULATOR
+
 static void handleCommandX14(uint16_t index) {
 	switch (index) {
 	case TS_SET_STEPPER_IDLE:

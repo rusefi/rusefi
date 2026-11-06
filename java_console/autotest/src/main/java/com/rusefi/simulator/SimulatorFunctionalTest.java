@@ -28,6 +28,7 @@ import static org.junit.Assert.assertTrue;
 
 public class SimulatorFunctionalTest {
     private final static Logging log = Logging.getLogging(SimulatorFunctionalTest.class);
+    private final static int BENCH_COMPLETION_TIMEOUT_MS = 10 * Timeouts.SECOND;
 
     private final LinkManager linkManager;
     private boolean gotCanPacketAnalog1 = false;
@@ -269,28 +270,34 @@ public class SimulatorFunctionalTest {
         executeIoControlCommand(bench_test_io_control_e.CAN_BENCH_QUERY_PIN_STATE,
                 new bench_test_packet_ids_e[] { bench_test_packet_ids_e.PIN_STATE },
                 (byte)pinId.ordinal());
+        long firstReplyMs = System.currentTimeMillis();
         int defaultPinToggleCounter = pinToggleCounter;
         // sleep 1 second assuming PWM freq is high enough
         int numSleepMs = 1000;
         Thread.sleep(numSleepMs);
+        long secondQueryMs = System.currentTimeMillis();
         // request changed pin state for the PWM pin
         executeIoControlCommand(bench_test_io_control_e.CAN_BENCH_QUERY_PIN_STATE,
                 new bench_test_packet_ids_e[] { bench_test_packet_ids_e.PIN_STATE },
                 (byte)pinId.ordinal());
 
         long endMs = System.currentTimeMillis();
-        // we need more accurate time than just 'numSeconds'
-        // we take an average to eliminate CAN transfer delays
-        double timeElapsedSec = 0.5 * ((endMs - startMs) + numSleepMs) / 1000.0;
+        // Each counter is sampled somewhere inside its own query, and a query can wait hundreds of
+        // milliseconds in the link executor behind output channel polling. All we know is therefore
+        // a range for the time between the samples, so accept any pulse count which fits that range.
+        double minElapsedSec = (secondQueryMs - firstReplyMs) / 1000.0;
+        double maxElapsedSec = (endMs - startMs) / 1000.0;
 
         double pulses = pinToggleCounter - defaultPinToggleCounter;
-        double expectedPulses = 2.0 * timeElapsedSec * freq;    // each period has 2 pulses
-        double tolerance = expectedPulses * 0.20; // 20%
+        double tolerance = 0.20; // 20%
+        // each period has 2 pulses
+        double minPulses = 2.0 * minElapsedSec * freq * (1 - tolerance);
+        double maxPulses = 2.0 * maxElapsedSec * freq * (1 + tolerance);
 
-        if (!nearEq(pulses, expectedPulses, tolerance)) {
+        if (pulses < minPulses || pulses > maxPulses) {
             throw new IllegalStateException(pinId + ": Unexpected PWM pin coutner: was="
                     + defaultPinToggleCounter + " now=" + pinToggleCounter
-                    + " freq=" + freq);
+                    + " freq=" + freq + " expected " + minPulses + " to " + maxPulses);
         }
 
         // last two pin toggle durations should make a period!
@@ -324,9 +331,18 @@ public class SimulatorFunctionalTest {
         // sleep 2 cycles of BENCH_FUEL_PUMP_DURATION + extra half second
         Thread.sleep(stateToggleTimeMs * 2 + 500);
 
-        // request the pin state saved right after the test
-        executeIoControlCommand(bench_test_io_control_e.CAN_BENCH_END_PIN_TEST,
-                new bench_test_packet_ids_e[] { bench_test_packet_ids_e.PIN_STATE }, (byte)pinId.ordinal());
+        // [tag:bench_saved_pin_stats] request the pin state saved right after the test. The bench runs
+        // on simulator time, which falls behind wall clock on a busy host, so it can still be running:
+        // its stats stay zero until it finishes, keep asking until they arrive
+        long deadlineMs = System.currentTimeMillis() + BENCH_COMPLETION_TIMEOUT_MS;
+        while (true) {
+            executeIoControlCommand(bench_test_io_control_e.CAN_BENCH_END_PIN_TEST,
+                    new bench_test_packet_ids_e[] { bench_test_packet_ids_e.PIN_STATE }, (byte)pinId.ordinal());
+            if (pinToggleCounter >= defaultPinToggleCounter + 3 || System.currentTimeMillis() >= deadlineMs) {
+                break;
+            }
+            Thread.sleep(100);
+        }
 
         // this check assumes that simulator makes 2 iterations for each pin
         // (this magic is needed because we don't know the previous pin state before starting the test)

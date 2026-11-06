@@ -41,6 +41,9 @@ void handleBenchCategory(uint16_t index);
 extern int luaCommandCounters[LUA_BUTTON_COUNT];
 void doRunBenchTestLuaOutput(size_t humanIndex, float onTimeMs, float offTimeMs, int count);
 int getSavedBenchTestPinStates(uint32_t durationsInStateMs[2]);
+#if EFI_SIMULATOR
+void resetSavedBenchTestPinStates();
+#endif // EFI_SIMULATOR
 #if EFI_CAN_SUPPORT
 void processCanEcuControl(const CANRxFrame& frame);
 #endif // EFI_CAN_SUPPORT
