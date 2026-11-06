@@ -78,10 +78,9 @@ TEST(realSuzukiK6A, waveform) {
 	EXPECT_EQ(FOUR_STROKE_CAM_SENSOR, shape.getWheelOperationMode());
 	EXPECT_EQ(SyncEdge::RiseOnly, shape.syncEdge);
 
-	// Rising edges in crank degrees after the sync tooth.
-	// The captures show three-tooth groups at 0/30/86 and a four-tooth group at 0/30/87/115,
-	// with groups 240 apart. This waveform does not match: 240 is at 250, 567 at 556 and 595 at 586.
-	static const float rises[] = { 0, 30, 86, 250, 270, 326, 480, 510, 556, 586 };
+	// Rising edges in crank degrees after the sync tooth, measured from the captures:
+	// three-tooth groups at 0/30/86, four-tooth group at 0/30/87/115, groups 240 apart.
+	static const float rises[] = { 0, 30, 86, 240, 270, 326, 480, 510, 567, 595 };
 	std::vector<float> actual;
 	for (size_t i = 0; i < shape.getLength(); i++) {
 		int index = (shape.getTriggerWaveformSynchPointIndex() + i) % shape.getSize();
@@ -94,30 +93,30 @@ TEST(realSuzukiK6A, waveform) {
 		EXPECT_NEAR(rises[i], actual[i], 0.01f) << i;
 	}
 
-	// The measured second gap is 0.49 without spark plugs, at the lower edge of this window.
-	EXPECT_NEAR(3.3525f, shape.synchronizationRatioFrom[0], 0.001f);
-	EXPECT_NEAR(5.5875f, shape.synchronizationRatioTo[0], 0.001f);
-	EXPECT_NEAR(0.4875f, shape.synchronizationRatioFrom[1], 0.001f);
-	EXPECT_NEAR(0.8125f, shape.synchronizationRatioTo[1], 0.001f);
+	EXPECT_NEAR(3.3f, shape.synchronizationRatioFrom[0], 0.001f);
+	EXPECT_NEAR(6.0f, shape.synchronizationRatioTo[0], 0.001f);
+	EXPECT_NEAR(0.3f, shape.synchronizationRatioFrom[1], 0.001f);
+	EXPECT_NEAR(0.8f, shape.synchronizationRatioTo[1], 0.001f);
 }
 
 TEST(realSuzukiK6A, crankingWithoutSparkPlugs) {
 	auto result = runK6aCranking("tests/trigger/resources/suzuki-k6a-ea21r-cranking-no-spark-plugs.csv");
 
-	// Current waveform: sync is lost at every second sync point, no cycle completes.
-	EXPECT_EQ(8u, result.errors);
-	EXPECT_EQ(62, result.firstSyncLine);
-	EXPECT_EQ(0, result.fullCycles);
-	EXPECT_EQ(0, result.longestRun);
+	EXPECT_EQ(2u, result.errors);
+	EXPECT_EQ(22, result.firstSyncLine);
+	EXPECT_EQ(19, result.fullCycles);
+	EXPECT_EQ(11, result.longestRun);
+	EXPECT_GT(result.minRpm, 400);
+	EXPECT_LT(result.maxRpm, 500);
 }
 
 TEST(realSuzukiK6A, crankingWithSparkPlugs) {
 	auto result = runK6aCranking("tests/trigger/resources/suzuki-k6a-ea21r-cranking-with-spark-plugs.csv");
 
-	EXPECT_EQ(5u, result.errors);
+	EXPECT_EQ(3u, result.errors);
 	EXPECT_EQ(21, result.firstSyncLine);
-	EXPECT_EQ(8, result.fullCycles);
-	EXPECT_EQ(4, result.longestRun);
+	EXPECT_EQ(12, result.fullCycles);
+	EXPECT_EQ(8, result.longestRun);
 	EXPECT_GT(result.minRpm, 400);
 	EXPECT_LT(result.maxRpm, 500);
 }

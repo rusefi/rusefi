@@ -78,6 +78,7 @@ Release template (copy/paste this for new release):
  - overdwell protection causes Null-pointer deref and crash #9435
  - huge print in Lua walks into memory #10159
  - H723 bootloader fixes
+ - Suzuki K6A distributor trigger (EA21R Cappuccino) loses sync while cranking #7080
 
 ## August 2026 "Day 1631"
 

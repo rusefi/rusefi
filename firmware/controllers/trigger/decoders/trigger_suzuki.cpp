@@ -75,30 +75,20 @@ void initializeSuzukiG16B(TriggerWaveform *s) {
 	s->setTriggerSynchronizationGap(1.57f);
 }
 
+// K6A non-VVT distributor, also used on EA21R Cappuccino: a single VR pickup with
+// 10 teeth per cam revolution in a 4-3-3 arrangement. Groups start 120 cam degrees apart.
+// Only the rising edges carry the pattern. Rising edge positions within a group,
+// measured from EA21R cranking captures (see #7080 and test_real_suzuki_k6a.cpp):
+//   three-tooth groups: 0, 15, 43
+//   four-tooth group: 0, 15, 43.5, 57.5
 void initializeSuzukiK6A(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
-	float w = 5;
+	// Falling edge angles. Each rising edge is 5 degrees earlier.
+	static const angle_t angles[] = { 15, 43, 120, 135, 163.5f, 177.5f, 240, 255, 283, 360 };
+	initializeRiseOnlyTrigger(s, 5, angles, efi::size(angles));
 
-	int secondTooth = 15;
-
-	// a bit lame: we start with falling front of first tooth
-	s->addEvent360(5, TriggerValue::FALL);
-
-	s->addToothRiseFall(secondTooth, w);
-	s->addToothRiseFall(43, w);
-
-	s->addToothRiseFall(120, w);
-	s->addToothRiseFall(120 + secondTooth, w);
-	s->addToothRiseFall(158, w);
-	s->addToothRiseFall(158 + secondTooth, w);
-
-	s->addToothRiseFall(240, w);
-	s->addToothRiseFall(240 + secondTooth, w);
-	s->addToothRiseFall(283, w);
-
-	// a bit lame: we end with rising front of first tooth
-	s->addEvent360(360, TriggerValue::RISE);
-
-	s->setTriggerSynchronizationGap(4.47f);
-	s->setSecondTriggerSynchronizationGap(0.65f);
+	// Sync on the first tooth after the four-tooth group: a 62.5 degree gap after a 14 degree gap.
+	// Nominal ratio 4.46. Measured 3.95 to 4.57 while cranking. The largest other ratio is 77/28 = 2.75.
+	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 3.3f, 6.0f);
+	// Previous gap: 14 degrees after 28.5. Nominal ratio 0.49. Measured 0.48 to 0.55.
+	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 0.3f, 0.8f);
 }
