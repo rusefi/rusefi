@@ -1,10 +1,14 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.DialogModel;
+import com.opensr5.ini.field.EnumIniField;
+import com.rusefi.config.FieldType;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -42,6 +46,20 @@ public class CalibrationFieldFactoryTest {
         assertNotNull(label);
         assertEquals("Batch injection", label.getText());
         assertEquals(Color.BLUE, label.getBackground());
+    }
+
+    @Test
+    public void styledLabelOfFieldWithConstantDoesNotDisplayMarker() {
+        DialogModel.Field field = new DialogModel.Field("myField", "!Red setting", null, null);
+        EnumIniField enumField = new EnumIniField("myField", 0, FieldType.INT8,
+            new EnumIniField.EnumKeyValueMap(Collections.singletonMap(0, "off")), 0, 0);
+        JPanel row = CalibrationFieldFactory.createFieldRow(field, enumField, new ConfigurationImage(4),
+            new ConfigurationImage(4));
+
+        JLabel label = findLabel(row);
+        assertNotNull(label);
+        assertEquals("Red setting", label.getText());
+        assertEquals(Color.RED, label.getBackground());
     }
 
     @Test

@@ -124,14 +124,15 @@ public class CalibrationDialogWidget {
     }
 
     /**
-     * Tracks a field row that has visibility or enabled expressions to re-evaluate on config changes.
+     * Tracks a field row or panel that has visibility or enabled expressions to re-evaluate on config changes.
      */
     private static class ExpressionRow {
-        final JPanel row;
+        final JComponent row;
         final String enableExpression;
         final String visibleExpression;
+        boolean enabled = true;
 
-        ExpressionRow(JPanel row, String enableExpression, String visibleExpression) {
+        ExpressionRow(JComponent row, String enableExpression, String visibleExpression) {
             this.row = row;
             this.enableExpression = enableExpression;
             this.visibleExpression = visibleExpression;
@@ -662,9 +663,13 @@ public class CalibrationDialogWidget {
 
     private void registerFieldExpressions(JPanel row, DialogModel.Field field, IniFileModel iniFileModel,
                                          ConfigurationImage ci) {
-        boolean hasExpressions = field.getEnableExpression() != null || field.getVisibleExpression() != null;
-        if (hasExpressions) {
-            ExpressionRow exprRow = new ExpressionRow(row, field.getEnableExpression(), field.getVisibleExpression());
+        registerExpressions(row, field.getEnableExpression(), field.getVisibleExpression(), iniFileModel, ci);
+    }
+
+    private void registerExpressions(JComponent row, String enableExpression, String visibleExpression,
+                                     IniFileModel iniFileModel, ConfigurationImage ci) {
+        if (enableExpression != null || visibleExpression != null) {
+            ExpressionRow exprRow = new ExpressionRow(row, enableExpression, visibleExpression);
             expressionRows.add(exprRow);
             ConfigurationImage evalImage = workingImage != null ? workingImage : ci;
             if (evalImage != null) {
@@ -817,6 +822,7 @@ public class CalibrationDialogWidget {
             CalibrationFieldFactory.applyStyle(content);
             content.setAlignmentX(Component.LEFT_ALIGNMENT);
             if (constraint != null) targetContainer.add(content, constraint); else targetContainer.add(content);
+            registerExpressions(content, panel.getEnableExpression(), panel.getVisibleExpression(), iniFileModel, ci);
             return;
         }
 
@@ -839,6 +845,7 @@ public class CalibrationDialogWidget {
             CalibrationFieldFactory.applyStyle(content);
             content.setAlignmentX(Component.LEFT_ALIGNMENT);
             if (constraint != null) targetContainer.add(content, constraint); else targetContainer.add(content);
+            registerExpressions(content, panel.getEnableExpression(), panel.getVisibleExpression(), iniFileModel, ci);
             return;
         }
 
@@ -872,6 +879,7 @@ public class CalibrationDialogWidget {
             panelWidget.putClientProperty(ConstrainedBorderLayout.GROWS, Boolean.TRUE);
         }
         if (constraint != null) targetContainer.add(panelWidget, constraint); else targetContainer.add(panelWidget);
+        registerExpressions(panelWidget, panel.getEnableExpression(), panel.getVisibleExpression(), iniFileModel, ci);
     }
 
     /**
@@ -936,8 +944,20 @@ public class CalibrationDialogWidget {
      */
     private void refreshExpressions() {
         if (workingImage == null || currentIniFileModel == null) return;
+        boolean visibilityChanged = false;
         for (ExpressionRow exprRow : expressionRows) {
-            applyExpressionState(exprRow, currentIniFileModel, workingImage);
+            visibilityChanged |= applyExpressionState(exprRow, currentIniFileModel, workingImage);
+        }
+        // Enabling a panel re-enables its whole subtree, so disabled rows and panels are applied again.
+        for (ExpressionRow exprRow : expressionRows) {
+            if (!exprRow.enabled) {
+                setComponentsEnabled(exprRow.row, false);
+            }
+        }
+        if (visibilityChanged) {
+            SwingUtil.invalidateTree(contentPane);
+            contentPane.revalidate();
+            contentPane.repaint();
         }
         refreshIndicators();
         if (onConfigChange != null) {
@@ -1086,17 +1106,21 @@ public class CalibrationDialogWidget {
         return radial;
     }
 
-    private void applyExpressionState(ExpressionRow exprRow, IniFileModel iniFileModel, ConfigurationImage ci) {
-        // Visibility
+    /** Returns whether the visibility changed, so the caller can re-layout. */
+    private boolean applyExpressionState(ExpressionRow exprRow, IniFileModel iniFileModel, ConfigurationImage ci) {
+        boolean visibilityChanged = false;
         if (exprRow.visibleExpression != null) {
             Boolean visible = evaluateFieldExpression(exprRow.visibleExpression, iniFileModel, ci);
-            exprRow.row.setVisible(visible == null || visible);
+            boolean show = visible == null || visible;
+            visibilityChanged = exprRow.row.isVisible() != show;
+            exprRow.row.setVisible(show);
         }
-        // Enabled
         if (exprRow.enableExpression != null) {
             Boolean enabled = evaluateFieldExpression(exprRow.enableExpression, iniFileModel, ci);
-            setComponentsEnabled(exprRow.row, enabled == null || enabled);
+            exprRow.enabled = enabled == null || enabled;
+            setComponentsEnabled(exprRow.row, exprRow.enabled);
         }
+        return visibilityChanged;
     }
 
     //TODO: inline
