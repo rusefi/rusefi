@@ -603,7 +603,7 @@ public class VariableRegistryValues {
 	public static final int fan_ac_mode_e_Pressure = 2;
 	public static final int fan_ac_mode_e_Relay = 1;
 	public static final int FAN_PWM_CURVE_SIZE = 8;
-	public static final int FLASH_DATA_VERSION = 260908;
+	public static final int FLASH_DATA_VERSION = 261107;
 	public static final int FLEX_TRANSIENT_CLT_SIZE = 8;
 	public static final int FLEX_TRANSIENT_ETH_SIZE = 8;
 	public static final int FLOW_LINEARIZATION_MASS_SIZE = 2;
@@ -1556,6 +1556,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
+	public static final int SIGNATURE_HASH = 1108344822;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1895,7 +1896,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.11.07.f429-discovery.3250455872";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.11.07.f429-discovery.1108344822";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2248;
