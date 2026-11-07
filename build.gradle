@@ -1,8 +1,23 @@
 plugins {
+  id 'idea'
   id 'com.gradleup.shadow' version "${shadowVersion}"  apply false
 }
 
 apply from: 'dependencies.gradle'
+
+// Only the Gradle/IntelliJ module excludes these; CLion's CMake project still indexes them.
+// Keep firmware config, integration and TunerStudio inputs available to Java tooling.
+idea.module {
+    excludeDirs += files(
+        '.pixi',
+        'firmware/ChibiOS', 'firmware/ChibiOS-Contrib',
+        'firmware/bootloader', 'firmware/console', 'firmware/controllers',
+        'firmware/development', 'firmware/ext', 'firmware/ext_algo',
+        'firmware/hw_layer', 'firmware/init', 'firmware/libfirmware',
+        'firmware/live_data_generated', 'firmware/pch', 'firmware/tools', 'firmware/util',
+        'simulator', 'unit_tests'
+    )
+}
 
 allprojects {
     repositories {
