@@ -111,9 +111,14 @@ public class CalibrationFieldFactory {
         row.add(Box.createHorizontalStrut(10));
         row.add(createHelpSlot(helpText));
 
-        String labelText = field.getUiName();
+        String styledLabel = field.getUiName();
+        String labelText = stripStylePrefix(styledLabel);
         JLabel label = new JLabel(labelText);
         applyStyle(label);
+        if (styledLabel != null && !styledLabel.equals(labelText)) {
+            label.setOpaque(true);
+            applyBackgroundColor(label, styledLabel);
+        }
         if (labelWidth > 0) {
             if (labelText != null && label.getPreferredSize().width > labelWidth && !labelText.startsWith("<html>")) {
                 label.setText("<html><div style='width: " + (labelWidth - 4) + "px'>" +
