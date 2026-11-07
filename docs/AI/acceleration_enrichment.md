@@ -48,7 +48,7 @@ Both modes share `TpsAccelEnrichment::getTpsEnrichment()`:
 2. On acceleration, interpolate `tpsTpsAccelTable` at the selected **from TPS (X)** and **to TPS (Y)**. Despite their names, `tpsTpsAccelFromRpmBins` and `tpsTpsAccelToRpmBins` contain TPS percentages, not RPM.
 3. On deceleration, use `deltaTps * tpsDecelEnleanmentMultiplier`; otherwise start with zero extra fuel.
 4. Apply the optional fractional accelerator-pump model (`tpsAccelFractionPeriod`, `tpsAccelFractionDivisor`). It retains an accumulated portion and spreads it across engine cycles. With a single unit input, period 1/divisor 2 produces `0.5, 0.25, 0.125, ...`; period 3/divisor 1 produces three portions of `1/3`.
-5. Multiply by the RPM curve `tpsTspCorrValues` / `tpsTspCorrValuesBins`, then the CLT/ethanol multiplier `flexAeMult` when enabled.
+5. Multiply by the RPM curve `tpsTspCorrValues` / `tpsTspCorrValuesBins`, then the [temperature multiplier](#temperature-multiplier). It scales the whole result, including deceleration enleanment and fractional portions.
 
 `getInjectionMass()` interprets the resulting value `E` according to the mode. Let `D = getInjectionModeDurationMultiplier()` and `M = cycleFuelMass * D`:
 
@@ -60,6 +60,16 @@ Both modes share `TpsAccelEnrichment::getTpsEnrichment()`:
 There is **no division by 100** in Percent Adder. With sequential injection (`D = 1`), `E = 0.20` adds 20%; `E = 20` adds 2000%. The table has scale 1, so this is also its stored value when the other corrections are neutral. For other injection modes, the additional `D` matters: ordinary multi-cylinder batch uses `D = 0.5`, simultaneous uses `1 / cylindersCount`, and single-point or single-cylinder batch uses `1`.
 
 The MS Adder conversion uses injector flow without adding deadtime; final injector characterization happens downstream. Changing adder modes reinterprets the same table values. The TunerStudio table title and TPS AE log name say "ms or fraction"; table, output and gauge units use `ms/frac`. These mean milliseconds in MS Adder and a fraction in Percent Adder. `tpsAccelFuel` reports `E`, before injection-mode scaling; its binary packing scale is unchanged.
+
+## Temperature multiplier
+
+[tag:ae_temperature_mult] `TpsAccelEnrichment::getTemperatureMult()` gives one multiplier to MS Adder, Percent Adder and MAP Prediction; Lua ignores it.
+
+- Normally it interpolates the coolant curve `aeCltCorrValues` over `aeCltCorrBins` (8 points, scale 0.01, up to 10). An invalid CLT uses 90 C. Interpolated values at or below `0.01` are neutral, so a tune that predates the curve (all zero) keeps its enrichment; `applyDefaultsOrFixAfterBurn()` also seeds such a tune with the neutral -40..100 C default.
+- With active flex compensation (`flexFuelTransientComp` and a registered ethanol sensor), `flexAeMult` **replaces** the coolant curve. Multiplying both would apply coolant twice.
+- Adders multiply their enrichment `E` by it (step 5 above).
+- MAP Prediction multiplies only the predicted excess in the ideal-gas air mass: `airmassMap = measuredMap + (effectiveMap - measuredMap) * mult`. VE lookup, load axis and `effectiveMap` keep the unscaled prediction. The scaling applies only when the latest `getMap()` returned an active prediction, so a MAP failure mid-event uses the plain fallback.
+- `aeTemperatureMult` (log label `Fuel: AE temperature multiplier`) reports the last evaluated value; `flexAeMultiplier` is `1.0` when the coolant curve is used. Neither refreshes on bypassed paths.
 
 ## MAP Prediction
 
@@ -82,7 +92,7 @@ For example, predicted MAP 85 kPa and measured MAP 65 kPa initially use 85 kPa. 
 
 The effective MAP feeds both the physical air-mass calculation and the speed-density load/VE path (including barometric normalization when configured). It does not replace the registered MAP sensor reading used elsewhere.
 
-The TPS/TPS extra-fuel table, fractional settings, adder RPM correction and `flexAeMult` do not apply in this mode; `getTpsEnrichment()` returns zero immediately. That early return also means the adders' cranking-RPM and VE-tuning checks do not gate MAP Prediction itself.
+The TPS/TPS extra-fuel table, fractional settings and adder RPM correction do not apply in this mode; `getTpsEnrichment()` returns zero immediately. The [temperature multiplier](#temperature-multiplier) (coolant curve or `flexAeMult`) does apply, to the predicted excess only. That early return also means the adders' cranking-RPM and VE-tuning checks do not gate MAP Prediction itself.
 
 ## Lua implementation injection
 
@@ -94,7 +104,7 @@ Lua error. Requires a build with `EFI_LUA` and `EFI_ENGINE_CONTROL`.
 
 The script owns event detection, magnitude, decay, RPM and flex compensation.
 Lua mode ignores the native TPS table, thresholds, lookback, fractional pump,
-RPM multiplier and `flexAeMult`. MAP prediction is also inactive. The existing
+RPM multiplier and temperature multiplier (coolant curve and `flexAeMult`). MAP prediction is also inactive. The existing
 MS Adder, Percent Adder and MAP Prediction values (0, 1, 2) keep their meaning;
 the fourth choice fits the existing two-bit configuration field.
 
@@ -131,7 +141,7 @@ the 200 ms freshness rule. See [Lua injection inventory](lua_implementation_inje
 
 - Simple model: `wwaeTau` is the evaporation time constant in seconds; `wwaeBeta` is the fraction of injected fuel deposited on the wall.
 - Complex model: CLT curves `wwTauCltValues` / `wwBetaCltValues`, multiplied by MAP curves `wwTauMapValues` / `wwBetaMapValues` when a MAP sensor is configured.
-- Flex compensation multiplies tau and beta by `flexWwTauMult` and `flexWwBetaMult`. It remains applicable with MAP Prediction.
+- Flex compensation multiplies tau and beta by `flexWwTauMult` and `flexWwBetaMult`. It applies in every AE mode.
 - Wall wetting is bypassed while cranking, below 100 RPM, or when effective tau or beta is below `0.01`.
 
 The controller computes `alpha = exp(-120 / (rpm * tau))` using `expf_taylor`, and limits beta to alpha. For desired injection mass `M` and existing film mass `W`:
@@ -160,7 +170,8 @@ All three flex multiplier tables share `flexTransientCltBins` and `flexTransient
 | `wallFuel` | Estimated fuel film mass in mg for injection event 0, logged as `Fuel: wall amount`. |
 | `fallbackMap`, `effectiveMap`, `isMapPredictionActive` | Table prediction, MAP used by speed density, and prediction state. |
 | `predTimerResetCnt`, `mapPredEventOver` | Prediction starts and duration expirations; not every timer restart or early exit. |
-| `flexAeMultiplier`, `flexWwTauMultiplier`, `flexWwBetaMultiplier` | Last evaluated flex multipliers; bypassed paths need not refresh them. |
+| `aeTemperatureMult` | Last evaluated AE temperature multiplier (coolant curve or flex table). |
+| `flexAeMultiplier`, `flexWwTauMultiplier`, `flexWwBetaMultiplier` | Last evaluated flex multipliers; bypassed paths need not refresh them. `flexAeMultiplier` is 1.0 while the coolant curve is used. |
 
 `[tag:wall_fuel_telemetry]` The wall-model fields are the single source for TunerStudio,
 SD logging and Lua `getOutput()`, all reporting mg. The model fields and
@@ -179,7 +190,7 @@ Bypassed adjustments can leave the last correction unchanged.
 - [Mode enum](../../firmware/controllers/algo/rusefi_enums.h), [mode configuration](../../firmware/controllers/algo/accel_enrichment.engineConfiguration.txt), [table definitions](../../firmware/integration/rusefi_config.txt), [TunerStudio panels](../../firmware/tunerstudio/tunerstudio.template.ini).
 - [TPS detector and adders](../../firmware/controllers/algo/accel_enrichment.cpp), [mass conversion](../../firmware/controllers/algo/fuel_math.cpp), [predictive MAP](../../firmware/controllers/algo/airmass/speed_density_airmass.cpp).
 - [Wall model](../../firmware/controllers/algo/wall_fuel.cpp), [injection integration](../../firmware/controllers/engine_cycle/main_trigger_callback.cpp), [flex multiplier helper](../../firmware/controllers/algo/flex_transient.h), [closed-loop gating](../../firmware/controllers/math/closed_loop_fuel.cpp).
-- [TPS tests](../../unit_tests/tests/test_accel_enrichment.cpp): history, sampling versus engine-cycle updates, fractional portions, predictive-mode adder bypass and flex multiplier.
+- [TPS tests](../../unit_tests/tests/test_accel_enrichment.cpp): history, sampling versus engine-cycle updates, fractional portions, predictive-mode adder bypass and flex multiplier. `AeTemperatureMult` covers the coolant curve, neutral/old-tune handling, flex replacement and Percent Adder injection mass.
 - The same file's `LuaAccelEnrichment` tests exercise the Lua binding, mass scaling, native-mode isolation, expiry, reset, DFCO/cranking and VE-tuning suppression. [TunerStudio tests](../../unit_tests/tests/test_tunerstudio.cpp) cover the Lua acceleration state bit.
-- [Fuel math tests](../../unit_tests/tests/ignition_injection/test_fuel_math.cpp): `AirmassModes.PredictiveMap*` cover blending, catch-up, sensor fallback, the session duration cap across retriggers, rearming, and TPS peak reset between events.
+- [Fuel math tests](../../unit_tests/tests/ignition_injection/test_fuel_math.cpp): `AirmassModes.PredictiveMap*` cover blending, catch-up, sensor fallback, the session duration cap across retriggers, rearming, TPS peak reset between events, and the coolant multiplier on the air-mass excess.
 - [Wall-wetting tests](../../unit_tests/tests/ignition_injection/test_fuel_wall_wetting.cpp): film math, injection-event scheduling and flex compensation.

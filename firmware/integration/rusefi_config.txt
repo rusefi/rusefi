@@ -1243,7 +1243,7 @@ bit useFixedBaroCorrFromMap,"yes","no";Read MAP sensor on ECU start-up to use as
 bit useSeparateAdvanceForCranking,"Table","Fixed (auto taper)";In Constant mode, timing is automatically tapered to running as RPM increases.\nIn Table mode, the "Cranking ignition advance" table is used directly.
 bit useAdvanceCorrectionsForCranking,"yes","no";This enables the various ignition corrections during cranking (IAT, CLT and PID idle).\nYou probably don't need this.
 bit flexCranking,"enabled","disabled";Enable flex-fuel compensation for engine start. When on (and a flex fuel sensor is present) the cranking coolant multiplier and the priming pulse mass each come from a 2D table over coolant and ethanol % (crankingFuelFlexTable / primeFlexTable, 4-row ethanol axis) instead of their 1D coolant curves. When off, the 1D curves (crankingFuelCoef / primeValues) are used.
-bit flexFuelTransientComp,"enabled","disabled";Shared CLT/ethanol compensation for additive TPS AE and wall-film tau/beta. AE multiplier applies only to MS/Percent Adder. tau/beta apply in every AE strategy and Basic/Advanced. Requires a registered ethanol sensor. Does not control base stoichiometry, cranking or priming.
+bit flexFuelTransientComp,"enabled","disabled";Shared CLT/ethanol compensation for native AE and wall-film tau/beta. The AE table replaces the AE coolant curve and applies to MS/Percent Adder and MAP Prediction. tau/beta apply in every AE strategy and Basic/Advanced. Requires a registered ethanol sensor. Does not control base stoichiometry, cranking or priming.
 bit useIacPidMultTable,"yes","no";This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
 bit isBoostControlEnabled,"enabled","disabled"
 bit launchSmoothRetard,"enabled","disabled";Gradually interpolates the ignition timing from the base timing table value down to the target "Absolute Timing at Launch" value, starting from the beginning of the launch window.
@@ -2447,13 +2447,18 @@ uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValues;Multiplier appl
 uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale predictiveMapBlendDurationBins;;"RPM", 50, 0, 0, 12500, 0
 uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale predictiveMapBlendDurationValues;Transition duration and total event time limit from estimated MAP toward current measured MAP, interpolated at current RPM. Rising estimated MAP restarts blending without extending the event time limit. Prediction may exit earlier. The largest duration in this curve also sizes TPS history. Used only by MAP Prediction.;"second", 0.02, 0, 0, 5, 2
 
+! [tag:ae_temperature_mult] Coolant multiplier for native AE; see TpsAccelEnrichment::getTemperatureMult().
+#define AE_CLT_CORR_SIZE 8
+int16_t[AE_CLT_CORR_SIZE] aeCltCorrBins;Coolant temperature axis for the acceleration enrichment coolant multiplier.;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -40 : -40}, {useMetricOnInterface ? @@CLT_UPPER_LIMIT@@ : @@CLT_UPPER_LIMIT@@ * 1.8 + 32}, 0
+uint16_t[AE_CLT_CORR_SIZE] autoscale aeCltCorrValues;Multiplier of the native acceleration enrichment versus coolant temperature. 1.00 is neutral and 3.00 triples it. MS/Percent Adder: scales the TPS enrichment. MAP Prediction: scales only the predicted MAP excess used for air mass, not the load axis. Ignored by Lua. Replaced by the flex AE table when flex transient compensation is active. Values at or below 0.01 are neutral.;"mult", 0.01, 0, 0, 10, 2
+
 ! Flex-fuel transient fueling compensation: CLT (X) x Ethanol% (Y) multiplier tables
 #define FLEX_TRANSIENT_CLT_SIZE 8
 #define FLEX_TRANSIENT_ETH_SIZE 8
 
 int16_t[FLEX_TRANSIENT_CLT_SIZE] flexTransientCltBins;Coolant temperature axis for the flex-fuel transient compensation tables;"C", 1, 0, -40, 200, 0
 uint8_t[FLEX_TRANSIENT_ETH_SIZE] flexTransientEthanolBins;Ethanol percentage axis for the flex-fuel transient compensation tables;"%", 1, 0, 0, 100, 0
-uint8_t[FLEX_TRANSIENT_ETH_SIZE x FLEX_TRANSIENT_CLT_SIZE] autoscale flexAeMult;Additive TPS AE multiplier over CLT (X) and ethanol (Y), enabled by Flex fuel transient compensation. 1.00 is neutral. Ignored by MAP Prediction and Lua. CLT/ethanol bins are shared with both wall-film flex tables.;"mult", 0.02, 0, 0, 5, 2
+uint8_t[FLEX_TRANSIENT_ETH_SIZE x FLEX_TRANSIENT_CLT_SIZE] autoscale flexAeMult;Native AE multiplier over CLT (X) and ethanol (Y), enabled by Flex fuel transient compensation. Replaces the AE coolant multiplier curve while active. 1.00 is neutral. Applies to MS/Percent Adder and MAP Prediction, not to Lua. CLT/ethanol bins are shared with both wall-film flex tables.;"mult", 0.02, 0, 0, 5, 2
 uint8_t[FLEX_TRANSIENT_ETH_SIZE x FLEX_TRANSIENT_CLT_SIZE] autoscale flexWwTauMult;Multiplier of wall-film evaporation time constant over CLT (X) and ethanol (Y). Above 1 makes evaporation slower. Applies with every AE strategy and Basic/Advanced. CLT/ethanol bins are shared with the other flex transient tables.;"mult", 0.02, 0, 0, 5, 2
 uint8_t[FLEX_TRANSIENT_ETH_SIZE x FLEX_TRANSIENT_CLT_SIZE] autoscale flexWwBetaMult;Multiplier of wall-film deposition fraction over CLT (X) and ethanol (Y). Above 1 increases modeled deposition. Applies with every AE strategy and Basic/Advanced. CLT/ethanol bins are shared with the other flex transient tables.;"mult", 0.02, 0, 0, 5, 2
 

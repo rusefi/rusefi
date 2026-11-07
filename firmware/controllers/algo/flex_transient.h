@@ -17,9 +17,13 @@
  * Returns 1.0 (neutral) when there is no flex fuel sensor, or when the table is left
  * un-initialized (all zero), so existing tunes and gasoline operation are unchanged.
  */
+inline bool isFlexTransientCompActive() {
+	return engineConfiguration->flexFuelTransientComp && Sensor::hasSensor(SensorType::FuelEthanolPercent);
+}
+
 template <typename TTable>
 float getFlexTransientMult(const TTable& table) {
-	if (!engineConfiguration->flexFuelTransientComp || !Sensor::hasSensor(SensorType::FuelEthanolPercent)) {
+	if (!isFlexTransientCompActive()) {
 		return 1.0f;
 	}
 

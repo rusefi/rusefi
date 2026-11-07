@@ -314,6 +314,13 @@ void setDefaultWallWetting() {
 	copyArray(config->wwBetaMapValues, betaMap);
 }
 
+// [tag:ae_temperature_mult] Neutral curve: AE is unchanged until the user tunes it.
+// Also seeds tunes that predate the curve, see applyDefaultsOrFixAfterBurn().
+void setDefaultAeCltCorrection() {
+	setLinearCurve(config->aeCltCorrBins, -40, 100, 1);
+	setArrayValues(config->aeCltCorrValues, 1.0f);
+}
+
 static void setDefaultFlexTransientComp() {
 	setLinearCurve(config->flexTransientCltBins, -40, 100, 1);
 	setLinearCurve(config->flexTransientEthanolBins, 0, 100, 1);
@@ -434,6 +441,9 @@ void setDefaultFuel() {
 	engineConfiguration->tpsAccelEnrichmentThreshold = 40; // TPS % change, per engine cycle
 
 	setDefaultWallWetting();
+
+	// AE coolant multiplier - neutral by default
+	setDefaultAeCltCorrection();
 
 	// Flex fuel transient compensation (CLT x ethanol) - neutral by default
 	setDefaultFlexTransientComp();
