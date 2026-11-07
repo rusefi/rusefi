@@ -15,6 +15,7 @@ public class GradientTitleBorder extends AbstractBorder {
     private static final int ARC = 10;
     private static final int TITLE_HEIGHT = 24;
     private static final int PADDING = 8;
+    private static final int VERTICAL_MARGIN = 3;
     private final String title;
     private boolean mouseOver = false;
 
@@ -62,13 +63,13 @@ public class GradientTitleBorder extends AbstractBorder {
             g2.setColor(mouseOver
                 ? color("Console.Tuning.section.hoverBorderColor", new Color(0x92b1f5))
                 : color("Console.Tuning.section.borderColor", new Color(0xdfe3e9)));
-            g2.drawRoundRect(x, y, width - 1, height - 1, ARC, ARC);
+            g2.drawRoundRect(x, y + VERTICAL_MARGIN, width - 1, height - 2 * VERTICAL_MARGIN - 1, ARC, ARC);
 
             Font base = c.getFont() != null ? c.getFont() : g2.getFont();
             g2.setFont(base.deriveFont(Font.BOLD));
             FontMetrics fm = g2.getFontMetrics();
             g2.setColor(color("Console.Tuning.section.title", color("Label.foreground", Color.DARK_GRAY)));
-            g2.drawString(title, x + PADDING + 2, y + (TITLE_HEIGHT - fm.getHeight()) / 2 + fm.getAscent() + 1);
+            g2.drawString(title, x + PADDING + 2, y + VERTICAL_MARGIN + (TITLE_HEIGHT - fm.getHeight()) / 2 + fm.getAscent() + 1);
         } finally {
             g2.dispose();
         }
@@ -81,7 +82,7 @@ public class GradientTitleBorder extends AbstractBorder {
 
     @Override
     public Insets getBorderInsets(Component c, Insets insets) {
-        insets.set(TITLE_HEIGHT, PADDING, PADDING - 2, PADDING);
+        insets.set(TITLE_HEIGHT + VERTICAL_MARGIN, PADDING, PADDING - 2 + VERTICAL_MARGIN, PADDING);
         return insets;
     }
 }
