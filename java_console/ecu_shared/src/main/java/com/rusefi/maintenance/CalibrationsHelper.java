@@ -338,6 +338,13 @@ public class CalibrationsHelper {
                     newEcuPort.port
                 ));
 
+                if (policy == FirmwareUpdatePolicy.FORWARD_MIGRATION
+                    && !prepareCalibrationsForMigration(newEcuPort.port,
+                        prevCalibrations.map(CalibrationsInfo::getIniFile).orElse(null),
+                        callbacks, connectivityContext)) {
+                    return false;
+                }
+
                 if (skipCalibrationRestore) {
                     callbacks.warning();
                     if (policy == FirmwareUpdatePolicy.ROLLBACK_RESTORE_OR_RESET) {
@@ -543,9 +550,69 @@ public class CalibrationsHelper {
         }
     }
 
+    static boolean prepareCalibrationsForMigration(
+        final BinaryProtocol binaryProtocol,
+        @Nullable final IniFileModel previousIni,
+        final UpdateOperationCallbacks callbacks
+    ) {
+        try {
+            final String signature = BinaryProtocol.getSignature(binaryProtocol.getStream());
+            if (signature == null) {
+                callbacks.logLine("Cannot verify calibration layout after firmware update.");
+                return false;
+            }
+            final IniFileModel updatedIni = BinaryProtocol.iniFileProvider.provide(signature);
+            if (previousIni != null && calibrationLayoutsMatch(previousIni.getSignature(), updatedIni.getSignature())) {
+                return true;
+            }
+            // [tag:post_flash_layout_reset] #10590: equal sizes/versions can hide changed offsets;
+            // reset via a metadata-only connection before reading the destination for migration.
+            callbacks.logLine("Calibration layout changed or no tune was saved; resetting to firmware defaults before migration.");
+            if (!rewriteConfiguration(binaryProtocol)) {
+                callbacks.logLine("Failed to reset calibration; tune migration stopped.");
+                return false;
+            }
+            return true;
+        } catch (IOException | IniNotFoundException e) {
+            callbacks.logLine("Failed to prepare calibration for migration: " + e.getMessage());
+            return false;
+        }
+    }
+
+    private static boolean prepareCalibrationsForMigration(
+        final String port,
+        @Nullable final IniFileModel previousIni,
+        final UpdateOperationCallbacks callbacks,
+        final ConnectivityContext connectivityContext
+    ) {
+        return prepareCalibrationsForMigration(
+            () -> BinaryProtocolExecutor.executeWithSuspendedPortScanner(
+                port, callbacks,
+                bp -> prepareCalibrationsForMigration(bp, previousIni, callbacks),
+                false, connectivityContext, "prepareCalibrationsForMigration", false),
+            () -> {
+                callbacks.logLine("Retrying calibration preparation after firmware update...");
+                BinaryProtocol.sleep(5_000);
+            });
+    }
+
+    static boolean prepareCalibrationsForMigration(final Supplier<Boolean> prepare, final Runnable beforeRetry) {
+        for (int attempt = 1; attempt <= 3; attempt++) {
+            if (attempt > 1) {
+                beforeRetry.run();
+            }
+            if (prepare.get()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     static boolean rollbackLayoutsMatch(final CalibrationsInfo before, final CalibrationsInfo after) {
-        final String beforeSignature = before.getIniFile().getSignature();
-        final String afterSignature = after.getIniFile().getSignature();
+        return calibrationLayoutsMatch(before.getIniFile().getSignature(), after.getIniFile().getSignature());
+    }
+
+    private static boolean calibrationLayoutsMatch(final String beforeSignature, final String afterSignature) {
         final RusEfiSignature beforeParsed = SignatureHelper.parse(beforeSignature);
         final RusEfiSignature afterParsed = SignatureHelper.parse(afterSignature);
         if (beforeParsed == null || afterParsed == null
@@ -593,18 +660,11 @@ public class CalibrationsHelper {
         final boolean reset = BinaryProtocolExecutor.executeWithSuspendedPortScanner(
             ecuPort.port,
             callbacks,
-            binaryProtocol -> {
-                final byte[] response = binaryProtocol.executeCommand(
-                    Integration.TS_EXECUTE,
-                    BinaryProtocol.getTextCommandBytesOnlyText("rewriteconfig"),
-                    "rewriteconfig");
-                return response != null
-                    && response.length == 1
-                    && response[0] == (byte) Integration.TS_RESPONSE_OK;
-            },
+            CalibrationsHelper::rewriteConfiguration,
             false,
             connectivityContext,
-            "rewriteconfig");
+            "rewriteconfig",
+            false);
         if (!reset) {
             callbacks.logLine("Failed to reset calibration after firmware rollback.");
             return false;
@@ -615,6 +675,15 @@ public class CalibrationsHelper {
             callbacks,
             getFileNameWithoutExtension(timestampFileNameComponent, "rollback_defaults_from_ecu"),
             connectivityContext).isPresent();
+    }
+
+    private static boolean rewriteConfiguration(final BinaryProtocol binaryProtocol) {
+        final byte[] response = binaryProtocol.executeCommand(
+            Integration.TS_EXECUTE,
+            BinaryProtocol.getTextCommandBytesOnlyText("rewriteconfig"),
+            "rewriteconfig");
+        return response != null && response.length == 1
+            && response[0] == (byte) Integration.TS_RESPONSE_OK;
     }
 
     /**
@@ -666,6 +735,10 @@ public class CalibrationsHelper {
             return RestoreResult.FAILED;
         }
         final String newEcuPort = ecuPorts.get(0).port;
+
+        if (!prepareCalibrationsForMigration(newEcuPort, prev.get().getIniFile(), callbacks, connectivityContext)) {
+            return RestoreResult.FAILED;
+        }
 
         final String timestamp = DATE_FORMAT.format(new Date());
         Optional<CalibrationsInfo> freshCalibrations = Optional.empty();
