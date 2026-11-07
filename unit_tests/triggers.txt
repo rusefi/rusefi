@@ -3262,31 +3262,31 @@ syncEdge=RiseOnly
 isSynchronizationNeeded=true
 useOnlyPrimaryForSync=false
 shapeWithoutTdc=false
-gapFrom.0=3.352500
-gapTo.0=5.587500
-gapFrom.1=0.487500
-gapTo.1=0.812500
+gapFrom.0=3.300000
+gapTo.0=6.000000
+gapFrom.1=0.300000
+gapTo.1=0.800000
 # end of meta section
-event 0 0 1 0.000000 4.466667
+event 0 0 1 0.000000 4.464286
 event 1 0 0 0.000000 nan
-event 2 0 1 29.999969 0.223881
+event 2 0 1 29.999969 0.240000
 event 3 0 0 29.999969 nan
 event 4 0 1 86.000000 1.866633
 event 5 0 0 86.000000 nan
-event 6 0 1 250.000000 2.928642
-event 7 0 0 250.000000 nan
-event 8 0 1 270.000000 0.121950
+event 6 0 1 240.000000 2.750067
+event 7 0 0 240.000000 nan
+event 8 0 1 270.000000 0.194804
 event 9 0 0 270.000000 nan
-event 10 0 1 326.000000 2.800000
+event 10 0 1 326.000000 1.866667
 event 11 0 0 326.000000 nan
 event 12 0 1 480.000000 2.750000
 event 13 0 0 480.000000 nan
 event 14 0 1 510.000000 0.194805
 event 15 0 0 510.000000 nan
-event 16 0 1 556.000000 1.533333
-event 17 0 0 556.000000 nan
-event 18 0 1 586.000000 0.652174
-event 19 0 0 586.000000 nan
+event 16 0 1 567.000000 1.900000
+event 17 0 0 567.000000 nan
+event 18 0 1 595.000000 0.491228
+event 19 0 0 595.000000 nan
 TRIGGERTYPE 51 14 TT_VVT_SUBARU_7_WITHOUT_6 340.00
 knownOperationMode=true
 operationMode=FOUR_STROKE_CAM_SENSOR
