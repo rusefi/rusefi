@@ -407,6 +407,22 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 	sendOkResponse(tsChannel);
 }
 
+// [tag:ts_chunk_write_payload_bound] validateOffsetCount() only bounds the destination; `count`
+// must also fit in the received content, otherwise memcpy reads past it (stale frames, or memory
+// beyond scratchBuffer) into the live calibration. See TunerstudioCommands.writeChunkCountBeyondPayload.
+void TunerStudio::handleWriteChunkFrame(TsChannelBase* tsChannel, char *data, int payloadSize) {
+	const uint16_t* data16 = reinterpret_cast<uint16_t*>(data);
+	/* command with page argument */
+	uint16_t page = data16[0];
+	uint16_t offset = data16[1];
+	uint16_t count = data16[2];
+	if (count > payloadSize - (int)sizeof(TunerStudioPageRWChunkRequest)) {
+		sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN, "ERROR: WR count exceeds content");
+		return;
+	}
+	handleWriteChunkCommand(tsChannel, page, offset, count, data + sizeof(TunerStudioPageRWChunkRequest));
+}
+
 void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint32_t page, uint32_t offset, uint32_t count) {
 	tsState.crc32CheckCommandCounter++;
 
@@ -1025,11 +1041,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		handleExecuteCommand(tsChannel, data, incomingPacketSize - 1);
 		break;
 	case TS_CHUNK_WRITE_COMMAND:
-		/* command with page argument */
-		page = data16[0];
-		offset = data16[1];
-		count = data16[2];
-		handleWriteChunkCommand(tsChannel, page, offset, count, data + sizeof(TunerStudioPageRWChunkRequest));
+		handleWriteChunkFrame(tsChannel, data, incomingPacketSize - 1);
 		break;
 	case TS_CRC_CHECK_COMMAND:
 		/* command with page argument */

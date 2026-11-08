@@ -473,3 +473,51 @@ TEST(TunerstudioCommands, tuningDetectorDisabledDoesNotSuspendAfterVeWrite) {
 
 	resetCalibrationTimerForTest();
 }
+
+// [tag:ts_chunk_write_payload_bound] TS_CHUNK_WRITE_COMMAND used to copy `count` bytes
+// from the receive buffer without comparing `count` with the received payload length.
+// A header-only frame then copied whatever followed the header in scratchBuffer (stale
+// data from earlier frames or, for larger counts, memory past the buffer) into the live
+// calibration, where a normal page read returns it. This test stays within scratchBuffer.
+TEST(TunerstudioCommands, writeChunkCountBeyondPayload) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	BufferTsChannel channel;
+
+	static constexpr uint16_t chunkOffset = 100;
+	static constexpr uint16_t chunkCount = 16;
+	static constexpr uint8_t staleByte = 0xA5;
+
+	uint8_t* configBytes = reinterpret_cast<uint8_t*>(config);
+	memset(configBytes + chunkOffset, 0, chunkCount);
+
+	// leftover bytes from an earlier, longer frame
+	memset(channel.scratchBuffer, staleByte, sizeof(channel.scratchBuffer));
+
+	// command byte + page/offset/count header, no content
+	const TunerStudioPageRWChunkRequest request{ TS_PAGE_SETTINGS, chunkOffset, chunkCount };
+	channel.scratchBuffer[0] = TS_CHUNK_WRITE_COMMAND;
+	memcpy(channel.scratchBuffer + 1, &request, sizeof(request));
+	const int incomingPacketSize = 1 + sizeof(request);
+
+	TunerStudio ts;
+	ts.handleWriteChunkFrame(&channel, channel.scratchBuffer + 1, incomingPacketSize - 1);
+
+	// rejected, and nothing the peer did not send reaches the calibration
+	EXPECT_EQ(channel.writeIdx, TS_ERROR_PACKET_SIZE);
+	EXPECT_EQ(st5TestBuffer[2], TS_RESPONSE_UNDERRUN);
+	for (size_t i = 0; i < chunkCount; i++) {
+		EXPECT_EQ(configBytes[chunkOffset + i], 0) << "index " << i;
+	}
+
+	// a frame carrying exactly `count` content bytes is still written
+	channel.reset();
+	uint8_t frame[1 + sizeof(request) + chunkCount];
+	frame[0] = TS_CHUNK_WRITE_COMMAND;
+	memcpy(frame + 1, &request, sizeof(request));
+	memset(frame + 1 + sizeof(request), 0x5A, chunkCount);
+	ts.handleWriteChunkFrame(&channel, reinterpret_cast<char*>(frame + 1), sizeof(request) + chunkCount);
+	EXPECT_EQ(st5TestBuffer[2], TS_RESPONSE_OK);
+	for (size_t i = 0; i < chunkCount; i++) {
+		EXPECT_EQ(configBytes[chunkOffset + i], 0x5A) << "index " << i;
+	}
+}
