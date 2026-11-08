@@ -18,6 +18,8 @@ jobs:
     steps:
     - uses: actions/checkout@v7
 
+    - uses: ./.github/actions/setup-java
+
     - name: Checkout Submodules Without ChibiOS
       run: |
         misc/git_scripts/common_submodule_init_without_chibios.sh
