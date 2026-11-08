@@ -39,11 +39,6 @@ HW_LAYER_CPP = \
 
 
 
-ifeq ($(USE_OPENBLT),yes)
-	HW_LAYER += \
-		$(PROJECT_DIR)/hw_layer/openblt/shared_params.c
-endif
-
 #
 # '-include' is a magic kind of 'include' which would survive if file to be included is not found
 #
@@ -53,4 +48,8 @@ endif
 CPU_ARCH ?= ARMCMx
 ifeq ($(CPU_ARCH),ARMCMx)
   HW_LAYER_CPP += $(PROJECT_DIR)/hw_layer/ports/arm_common.cpp
+  # OpenBLT's shared-RAM mailbox is Cortex-M only
+ifeq ($(USE_OPENBLT),yes)
+  HW_LAYER += $(PROJECT_DIR)/hw_layer/openblt/shared_params.c
+endif
 endif
