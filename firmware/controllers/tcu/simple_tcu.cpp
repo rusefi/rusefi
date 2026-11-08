@@ -21,11 +21,14 @@ void SimpleTransmissionController::update(gear_e gear) {
 
 #if EFI_TUNER_STUDIO
     if (engineConfiguration->debugMode == DBG_TCU) {
-        engine->outputChannels.debugIntField1 = config->tcuSolenoidTable[static_cast<int>(gear) + 1][0];
-        engine->outputChannels.debugIntField2 = config->tcuSolenoidTable[static_cast<int>(gear) + 1][1];
-        engine->outputChannels.debugIntField3 = config->tcuSolenoidTable[static_cast<int>(gear) + 1][2];
-        engine->outputChannels.debugIntField4 = config->tcuSolenoidTable[static_cast<int>(gear) + 1][3];
-        engine->outputChannels.debugIntField5 = config->tcuSolenoidTable[static_cast<int>(gear) + 1][4];
+        // The solenoid table is indexed [solenoid][gear + 1].
+        // Keep debug telemetry consistent with the physical pin commands.
+        const int gearIndex = static_cast<int>(gear) + 1;
+        engine->outputChannels.debugIntField1 = config->tcuSolenoidTable[0][gearIndex];
+        engine->outputChannels.debugIntField2 = config->tcuSolenoidTable[1][gearIndex];
+        engine->outputChannels.debugIntField3 = config->tcuSolenoidTable[2][gearIndex];
+        engine->outputChannels.debugIntField4 = config->tcuSolenoidTable[3][gearIndex];
+        engine->outputChannels.debugIntField5 = config->tcuSolenoidTable[4][gearIndex];
     }
 #endif
 
