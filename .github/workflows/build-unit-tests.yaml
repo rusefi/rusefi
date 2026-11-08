@@ -23,6 +23,8 @@ jobs:
     steps:
     - uses: actions/checkout@v7
 
+    - uses: ./.github/actions/setup-java
+
     - name: Checkout Submodules Without ChibiOS
       # [tag:submodule_auth] see .github/actions/submodule-init/action.yml
       uses: ./.github/actions/submodule-init
