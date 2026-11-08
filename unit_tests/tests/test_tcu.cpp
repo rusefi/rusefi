@@ -219,6 +219,58 @@ TEST(tcu, automaticGearControllerDownshiftsThroughTheGears) {
 	ASSERT_EQ(GEAR_1, gc.getDesiredGear());
 }
 
+// Six-speed Simple Transmission coverage: all four new shift thresholds must
+// be honored while retaining the existing four-speed behavior.
+TEST(tcu, automaticGearControllerSixSpeedUpshiftsAndDownshifts) {
+	EngineTestHelper eth(engine_type_e::TCU_4R70W);
+	setupAutomaticShiftCurves();
+	engineConfiguration->transmissionControllerMode = TransmissionControllerMode::SimpleTransmissionController;
+	engineConfiguration->totalGearsCount = 6;
+
+	setTcuCurve(config->tcu_shiftSpeed45, 80);
+	setTcuCurve(config->tcu_shiftSpeed56, 100);
+	setTcuCurve(config->tcu_shiftSpeed54, 70);
+	setTcuCurve(config->tcu_shiftSpeed65, 90);
+
+	AutomaticGearController gc;
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 25);
+
+	for (const auto speed : {5, 25, 45, 65, 85, 105}) {
+		Sensor::setMockValue(SensorType::VehicleSpeed, speed);
+		gc.update();
+	}
+	ASSERT_EQ(GEAR_6, gc.getDesiredGear());
+
+	Sensor::setMockValue(SensorType::VehicleSpeed, 85);
+	gc.update();
+	ASSERT_EQ(GEAR_5, gc.getDesiredGear());
+
+	Sensor::setMockValue(SensorType::VehicleSpeed, 65);
+	gc.update();
+	ASSERT_EQ(GEAR_4, gc.getDesiredGear());
+
+	Sensor::setMockValue(SensorType::VehicleSpeed, 45);
+	gc.update();
+	ASSERT_EQ(GEAR_3, gc.getDesiredGear());
+}
+
+TEST(tcu, automaticGearControllerUnconfiguredFifthGearCurveDisablesUpshift) {
+	EngineTestHelper eth(engine_type_e::TCU_4R70W);
+	setupAutomaticShiftCurves();
+	engineConfiguration->transmissionControllerMode = TransmissionControllerMode::SimpleTransmissionController;
+	engineConfiguration->totalGearsCount = 6;
+	setTcuCurve(config->tcu_shiftSpeed45, 0);
+
+	AutomaticGearController gc;
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 25);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 200);
+
+	for (int i = 0; i < 8; i++) {
+		gc.update();
+	}
+	ASSERT_EQ(GEAR_4, gc.getDesiredGear());
+}
+
 TEST(tcu, automaticGearControllerHoldsGearWithoutValidSensors) {
 	EngineTestHelper eth(engine_type_e::TCU_4R70W);
 	setupAutomaticShiftCurves();
