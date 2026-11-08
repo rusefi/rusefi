@@ -131,7 +131,7 @@ import static com.rusefi.core.FindFileHelper.findFirmwareFile;
  */
 public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
-    private static final int AUTOUPDATE_VERSION = 20261011; // separate from rusEFIVersion#CONSOLE_VERSION
+    private static final int AUTOUPDATE_VERSION = 20261107; // separate from rusEFIVersion#CONSOLE_VERSION
     private static final String userHomeSubDirectory = FileUtil.RUSEFI_SETTINGS_FOLDER + "updates" + File.separator;
 
     /**
@@ -894,7 +894,7 @@ public class Autoupdate {
     }
 
     /**
-     * rusefi_updater.exe/invokes rusefi_console.jar - entry point is Launcher#main
+     * rusefi_console.exe invokes rusefi_console.jar - entry point is Launcher#main
      */
     private static void startConsoleAsANewProcess(final String consoleExeFileName, final String[] args) {
         if (!Files.exists(Paths.get(consoleExeFileName))) {

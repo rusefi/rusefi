@@ -34,8 +34,22 @@ class ConsoleExeFileLocatorTest {
 
     @Test
     void windowsLauncherIsFoundAtBundleRootWhileRunningFromConsoleFolder() throws IOException {
-        final Path launcher = createFile(bundleRoot.resolve("rusefi_updater.exe"));
+        createFile(bundleRoot.resolve("rusefi_updater.exe"));
+        final Path launcher = createFile(bundleRoot.resolve("rusefi_console.exe"));
         final Path consoleFolder = Files.createDirectories(bundleRoot.resolve("console"));
+
+        assertEquals(
+            normalized(launcher),
+            ConsoleExeFileLocator.resolveDefaultLauncher(PREFIX, true, consoleFolder)
+        );
+    }
+
+    @Test
+    void windowsConsoleLauncherIsFoundBesideTheJarInsteadOfRelaunchingTheUpdater() throws IOException {
+        createFile(bundleRoot.resolve("rusefi_updater.exe"));
+        final Path consoleFolder = Files.createDirectories(bundleRoot.resolve("console"));
+        createFile(consoleFolder.resolve("rusefi_autoupdate.exe"));
+        final Path launcher = createFile(consoleFolder.resolve("rusefi_console.exe"));
 
         assertEquals(
             normalized(launcher),
@@ -74,7 +88,7 @@ class ConsoleExeFileLocatorTest {
         final Path consoleFolder = Files.createDirectories(bundleRoot.resolve("console"));
 
         assertEquals(
-            "rusefi_updater.exe",
+            "rusefi_console.exe",
             ConsoleExeFileLocator.resolveDefaultLauncher(PREFIX, true, consoleFolder)
         );
     }
