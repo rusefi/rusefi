@@ -13,6 +13,9 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F7)
 	DDEFS += -DHAL_USE_USB_CDC_2=TRUE
 endif
 
+# Enable experimental TCU on uaEFI (bench validation required).
+DDEFS += -DEFI_TCU=TRUE
+
 # 1mb is not enough for everything we have
 DDEFS += -DEFI_LOGIC_ANALYZER=FALSE
 DDEFS += -DEFI_HPFP=FALSE
