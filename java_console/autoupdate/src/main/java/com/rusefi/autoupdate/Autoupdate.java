@@ -131,7 +131,7 @@ import static com.rusefi.core.FindFileHelper.findFirmwareFile;
  */
 public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
-    private static final int AUTOUPDATE_VERSION = 20261011; // separate from rusEFIVersion#CONSOLE_VERSION
+    private static final int AUTOUPDATE_VERSION = 20261108; // separate from rusEFIVersion#CONSOLE_VERSION
     // Resolve before unzipping can replace our own JAR. Installed launchers bypass
     // ConsoleExeFileLocator's default lookup, so it may not have loaded OsUtil (#10368).
     private static final boolean IS_WINDOWS = OsUtil.isWindows();
@@ -1014,10 +1014,16 @@ public class Autoupdate {
      * Text of the modal shown when the bundle download fails before any UI frame exists.
      */
     static String downloadErrorMessage(IOException e) {
-        if (e instanceof UnknownHostException) {
-            // DNS failure: rusefi.com is blocked in some regions, a Java exception is not actionable for the user #10191
-            return AutoupdateUtil.CHECK_INTERNET_CONNECTION;
+        try {
+            return AutoupdateUtil.downloadErrorMessage(e);
+        } catch (LinkageError olderCoreUi) {
+            // a newer autoupdate can run against an older core_ui, see AutoupdateUtil.CHECK_INTERNET_CONNECTION
+            log.error("downloadErrorMessage: " + olderCoreUi);
+            if (e instanceof UnknownHostException) {
+                // DNS failure: rusefi.com is blocked in some regions #10191
+                return AutoupdateUtil.CHECK_INTERNET_CONNECTION;
+            }
+            return "The download did not complete. Please try again.";
         }
-        return "Error downloading " + e;
     }
 }

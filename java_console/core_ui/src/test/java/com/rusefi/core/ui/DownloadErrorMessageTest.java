@@ -2,16 +2,22 @@ package com.rusefi.core.ui;
 
 import org.junit.jupiter.api.Test;
 
+import javax.net.ssl.SSLHandshakeException;
 import javax.swing.*;
+import java.awt.Dimension;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.ConnectException;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * The bundle updater's progress window reported a failed download with the raw exception text,
+ * The bundle updater's progress window used to report a failed download with the raw exception text,
  * cut off at the window edge, e.g. "Error downloading: java.io.FileNotFoundException: https://rusefi.com/...".
  */
 class DownloadErrorMessageTest {
@@ -33,23 +39,67 @@ class DownloadErrorMessageTest {
     }
 
     @Test
-    void missingFileOnServerShowsTheExceptionText() {
-        assertEquals("Error downloading: " + NOT_ON_SERVER,
-            AutoupdateUtil.downloadErrorMessage(NOT_ON_SERVER));
+    void missingFileOnServerSaysTheUpdateIsNotAvailable() {
+        assertEquals(AutoupdateUtil.NOT_ON_SERVER, AutoupdateUtil.downloadErrorMessage(NOT_ON_SERVER));
     }
 
     @Test
-    void otherIoErrorsShowTheExceptionText() {
-        assertEquals("Error downloading: java.io.IOException: disk full",
+    void localFileThatCannotBeWrittenSaysSo() {
+        assertEquals(AutoupdateUtil.CANNOT_SAVE, AutoupdateUtil.downloadErrorMessage(
+            new FileNotFoundException("C:\\Users\\me\\.rusEFI\\e78_development\\rusefi_bundle_e78_autoupdate.zip (Access is denied)")));
+    }
+
+    @Test
+    void unreachableServer() {
+        assertEquals(AutoupdateUtil.CANNOT_REACH_SERVER,
+            AutoupdateUtil.downloadErrorMessage(new ConnectException("Connection refused: connect")));
+        assertEquals(AutoupdateUtil.CANNOT_REACH_SERVER,
+            AutoupdateUtil.downloadErrorMessage(new SocketTimeoutException("connect timed out")));
+    }
+
+    @Test
+    void failedSecureConnection() {
+        assertEquals(AutoupdateUtil.SECURE_CONNECTION_FAILED,
+            AutoupdateUtil.downloadErrorMessage(new SSLHandshakeException("Remote host terminated the handshake")));
+    }
+
+    @Test
+    void serverError() {
+        assertEquals(AutoupdateUtil.SERVER_PROBLEM, AutoupdateUtil.downloadErrorMessage(
+            new IOException("Server returned HTTP response code: 503 for URL: https://rusefi.com/x.zip")));
+    }
+
+    @Test
+    void otherIoErrorsSayTheDownloadDidNotComplete() {
+        assertEquals(AutoupdateUtil.DOWNLOAD_INCOMPLETE,
             AutoupdateUtil.downloadErrorMessage(new IOException("disk full")));
+        assertEquals(AutoupdateUtil.DOWNLOAD_INCOMPLETE,
+            AutoupdateUtil.downloadErrorMessage(new SocketException("Connection reset")));
+        assertEquals(AutoupdateUtil.DOWNLOAD_INCOMPLETE,
+            AutoupdateUtil.downloadErrorMessage(new IOException()));
     }
 
     @Test
-    void errorTextIsWiderThanTheWindow() throws Exception {
-        ProgressView view = new ProgressView(null, new JProgressBar(), new JPanel());
-        SwingUtilities.invokeAndWait(() -> view.showError(AutoupdateUtil.downloadErrorMessage(NOT_ON_SERVER)));
+    void messagesNeverShowExceptionText() {
+        IOException[] errors = {NOT_ON_SERVER, new IOException("disk full"), new ConnectException("refused")};
+        for (IOException e : errors) {
+            String message = AutoupdateUtil.downloadErrorMessage(e);
+            assertFalse(message.contains("Exception"), message);
+            assertFalse(message.contains("http"), message);
+        }
+    }
 
-        int width = view.getErrorLabelForUnitTest().getPreferredSize().width;
-        assertTrue(width > AVAILABLE_WIDTH, "label is " + width + " px wide");
+    @Test
+    void errorTextWrapsWithinTheWindow() throws Exception {
+        ProgressView view = new ProgressView(null, new JProgressBar(), new JPanel());
+        String message = AutoupdateUtil.downloadErrorMessage(NOT_ON_SERVER);
+        SwingUtilities.invokeAndWait(() -> view.showError(message));
+
+        JLabel label = view.getErrorLabelForUnitTest();
+        Dimension size = label.getPreferredSize();
+        assertTrue(size.width <= AVAILABLE_WIDTH, "label is " + size.width + " px wide");
+        assertTrue(label.getText().contains(message), label.getText());
+        int lineHeight = label.getFontMetrics(label.getFont()).getHeight();
+        assertTrue(size.height > lineHeight, "the message wraps to more than one line: " + size);
     }
 }
