@@ -6,11 +6,15 @@ import com.rusefi.core.net.ConnectionAndMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.net.ssl.SSLException;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
+import java.net.ConnectException;
 import java.net.MalformedURLException;
+import java.net.NoRouteToHostException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.UnknownHostException;
@@ -81,13 +85,37 @@ public class AutoupdateUtil {
         }
     }
 
+    static final String NOT_ON_SERVER = "This update is not available on the server right now. Please try again later.";
+    static final String CANNOT_REACH_SERVER = "Could not reach the update server. Check your internet connection and try again.";
+    static final String SECURE_CONNECTION_FAILED = "Could not open a secure connection to the update server. Check your proxy or antivirus settings.";
+    static final String SERVER_PROBLEM = "The update server is having a problem. Please try again later.";
+    static final String CANNOT_SAVE = "Could not save the update on this computer. Check free disk space and folder permissions.";
+    static final String DOWNLOAD_INCOMPLETE = "The download did not complete. Please try again.";
+
     /**
-     * Text shown in the progress window when a download fails.
+     * Human-readable text for a failed download. The exception itself only goes to the log: users cannot act on
+     * class names or URLs, and the long text used to be cut off at the edge of the progress window.
      */
-    static String downloadErrorMessage(IOException e) {
-        return (e instanceof UnknownHostException)
-            ? CHECK_INTERNET_CONNECTION
-            : "Error downloading: " + e;
+    public static String downloadErrorMessage(IOException e) {
+        if (e instanceof UnknownHostException) {
+            // DNS failure: rusefi.com is blocked in some regions #10191
+            return CHECK_INTERNET_CONNECTION;
+        }
+        if (e instanceof SSLException) {
+            return SECURE_CONNECTION_FAILED;
+        }
+        if (e instanceof ConnectException || e instanceof NoRouteToHostException || e instanceof SocketTimeoutException) {
+            return CANNOT_REACH_SERVER;
+        }
+        String text = e.getMessage() == null ? "" : e.getMessage();
+        if (e instanceof FileNotFoundException) {
+            // HttpURLConnection reports 404/410 with the URL as message; FileOutputStream with the local path
+            return text.startsWith("http") ? NOT_ON_SERVER : CANNOT_SAVE;
+        }
+        if (text.startsWith("Server returned HTTP response code")) {
+            return SERVER_PROBLEM;
+        }
+        return DOWNLOAD_INCOMPLETE;
     }
 
     private static ProgressView createProgressView(String title) {

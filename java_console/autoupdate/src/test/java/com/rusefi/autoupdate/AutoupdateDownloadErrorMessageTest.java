@@ -18,8 +18,8 @@ class AutoupdateDownloadErrorMessageTest {
     }
 
     @Test
-    void otherIoErrorsKeepTheExceptionText() {
-        assertEquals("Error downloading java.io.IOException: disk full",
+    void otherIoErrorsDoNotShowTheExceptionText() {
+        assertEquals("The download did not complete. Please try again.",
             Autoupdate.downloadErrorMessage(new IOException("disk full")));
     }
 }
