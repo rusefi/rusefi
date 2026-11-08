@@ -33,6 +33,8 @@ public:
 	void handleExecuteCommand(TsChannelBase* tsChannel, char *data, int incomingPacketSize);
 	void handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t page, uint16_t offset, uint16_t count,
 			void *content);
+	// decodes a TS_CHUNK_WRITE_COMMAND frame; data points past the command byte
+	void handleWriteChunkFrame(TsChannelBase* tsChannel, char *data, int payloadSize);
 	void handleCrc32Check(TsChannelBase *tsChannel,  uint32_t page, uint32_t offset, uint32_t count);
 	void handleBurnCommand(TsChannelBase* tsChannel, uint16_t page);
 	void handlePendingBurnTimeout(TsChannelBase* tsChannel);
