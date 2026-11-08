@@ -20,8 +20,11 @@ void AutomaticGearController::update() {
 		// Legacy Generic4 and 4L6X transmission controllers have four gears.
 		// Only the simple solenoid controller may select 5th/6th.
 		const int configuredGears = engineConfiguration->totalGearsCount;
-		const int maxGears = engineConfiguration->transmissionControllerMode == TransmissionControllerMode::SimpleTransmissionController
-			? (configuredGears < 6 ? configuredGears : 6) : 4;
+		// Use only valid configured forward gears, capped by the physical
+		// controller's supported gear count. In particular, Generic4 and GM4L6X
+		// must not select fifth/sixth even if a six-speed curve is configured.
+		const int modeLimit = engineConfiguration->transmissionControllerMode == TransmissionControllerMode::SimpleTransmissionController ? 6 : 4;
+		const int maxGears = configuredGears < modeLimit ? configuredGears : modeLimit;
 		switch (getDesiredGear()) {
 		case GEAR_1 :
 			if (maxGears >= 2) shift(vss.Value, tps.Value, &config->tcu_shiftSpeed12, GEAR_2);
