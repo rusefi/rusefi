@@ -16,6 +16,11 @@ jobs:
     steps:
     - uses: actions/checkout@v6
 
+    - uses: actions/setup-java@v5
+      with:
+        distribution: 'zulu'
+        java-version: '17'
+
     - name: Checkout Submodules Without ChibiOS
       run: |
         misc/git_scripts/common_submodule_init_without_chibios.sh
