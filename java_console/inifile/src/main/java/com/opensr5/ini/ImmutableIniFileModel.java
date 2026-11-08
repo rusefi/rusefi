@@ -170,6 +170,13 @@ public class ImmutableIniFileModel implements IniFileModel {
     }
 
     @Override
+    public boolean isLittleEndian() {
+        // Sourced from the [Constants] 'endianness' line captured into protocolMeta; the
+        // whole wire protocol is little-endian, so an ini that omits it means little-endian.
+        return "little".equalsIgnoreCase(protocolMeta.getOrDefault("endianness", "little"));
+    }
+
+    @Override
     public Map<String, List<String>> getDefines() {
         return defines;
     }

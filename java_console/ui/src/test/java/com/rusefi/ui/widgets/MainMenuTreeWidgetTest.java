@@ -785,6 +785,7 @@ todo: spllit into smaller tests?
         IniFileModel model = new com.opensr5.ini.IniFileModel() {
             @Override public String getSignature() { return null; }
             @Override public int getBlockingFactor() { return 0; }
+            @Override public boolean isLittleEndian() { return true; }
             @Override public Map<String, List<String>> getDefines() { return null; }
             @Override public Map<String, com.opensr5.ini.field.IniField> getAllIniFields() { return null; }
             @Override public Map<String, com.opensr5.ini.field.IniField> getSecondaryIniFields() { return null; }

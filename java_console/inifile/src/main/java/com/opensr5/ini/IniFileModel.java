@@ -4,6 +4,7 @@ import com.opensr5.ini.field.IniField;
 import com.rusefi.config.Field;
 import org.jetbrains.annotations.Nullable;
 
+import java.nio.ByteOrder;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -12,6 +13,19 @@ public interface IniFileModel {
     String getSignature();
 
     int getBlockingFactor();
+
+    /**
+     * Whether the INI {@code [Constants]} {@code endianness} declaration is {@code little}
+     * (as emitted from {@code TS_INI_ENDIANNESS} in {@code rusefi_config.txt}). rusEFI
+     * configuration/output images are always little-endian, so this is {@code true} when the
+     * ini omits the line.
+     */
+    boolean isLittleEndian();
+
+    /** {@link #isLittleEndian()} as a {@link ByteOrder}, for wrapping config/output buffers. */
+    default ByteOrder getByteOrder() {
+        return isLittleEndian() ? ByteOrder.LITTLE_ENDIAN : ByteOrder.BIG_ENDIAN;
+    }
 
     Map<String, List<String>> getDefines();
 

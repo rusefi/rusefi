@@ -465,4 +465,22 @@ public class SensorCentralTest {
         assertEquals(5.0, ISensorHolder.readFieldValue(response, "ltftCorrection1", field), 1e-4);
     }
 
+    /** A big-endian controller ('endianness = big', e.g. PowerPC) sends MSB-first output channels. */
+    @Test
+    void outputChannelBigEndianRead() throws Throwable {
+        String text = "[OutputChannels]\n"
+            + "rpmValue = scalar, U16, 0, \"rpm\", 1.0, 0.0\n";
+        IniFileModel ini = IniFileReaderUtil.readIniFile(IniFileReaderUtil.read(
+            new ByteArrayInputStream(text.getBytes(StandardCharsets.US_ASCII))),
+            "bigendian.ini", mock(IniFileMetaInfo.class));
+        IniField field = ini.getOutputChannel("rpmValue");
+
+        byte[] response = new byte[3];
+        ByteBuffer.wrap(response, 1, 2).order(ByteOrder.BIG_ENDIAN).putShort((short) 0x1234);
+
+        assertEquals(0x1234, ISensorHolder.readFieldValue(response, "rpmValue", field, ByteOrder.BIG_ENDIAN), 1e-9);
+        // same bytes misread as little-endian give the swapped value - proves the order parameter matters
+        assertEquals(0x3412, ISensorHolder.readFieldValue(response, "rpmValue", field, ByteOrder.LITTLE_ENDIAN), 1e-9);
+    }
+
 }

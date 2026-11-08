@@ -494,7 +494,7 @@ public class BinaryProtocol {
     public ConfigurationImageWithMeta readFullImageFromController(final ConfigurationImageMeta meta) {
         log.info("Reading from controller " + meta.getEcuSignature());
 
-        final ConfigurationImageWithMeta imageWithMeta = new ConfigurationImageWithMeta(meta);
+        final ConfigurationImageWithMeta imageWithMeta = new ConfigurationImageWithMeta(meta, getWireByteOrder());
         final ConfigurationImage image = imageWithMeta.getConfigurationImage();
 
         int offset = 0;
@@ -616,7 +616,7 @@ public class BinaryProtocol {
     }
 
     public byte @NotNull [] smartPacketPrefix(int page, int offset, int requestSize) {
-        return smartPacketPrefix2(page, offset, requestSize, isSinglePageController());
+        return smartPacketPrefix2(page, offset, requestSize, isSinglePageController(), getWireByteOrder());
     }
 
     static byte @NotNull [] smartPacketPrefix2(int offset, int requestSize, boolean isSinglePageController) {
@@ -624,17 +624,34 @@ public class BinaryProtocol {
     }
 
     static byte @NotNull [] smartPacketPrefix2(int page, int offset, int requestSize, boolean isSinglePageController) {
+        return smartPacketPrefix2(page, offset, requestSize, isSinglePageController, ByteOrder.LITTLE_ENDIAN);
+    }
+
+    static byte @NotNull [] smartPacketPrefix2(int page, int offset, int requestSize, boolean isSinglePageController, ByteOrder order) {
         byte[] packet;
         if (isSinglePageController) {
             // older controller, no page index in read command
             // PS: technically we can/shall actually use command syntax as specified by the .ini
             packet = new byte[4];
-            ByteRange.packOffsetAndSize(offset, requestSize, packet);
+            ByteRange.packOffsetAndSize(offset, requestSize, packet, order);
         } else {
             packet = new byte[6];
-            ByteRange.packPageOffsetAndSize(page, offset, requestSize, packet);
+            ByteRange.packPageOffsetAndSize(page, offset, requestSize, packet, order);
         }
         return packet;
+    }
+
+    /**
+     * Byte order for TS command arguments and page/output data, from the connected .ini's
+     * {@code endianness} declaration.  Little-endian (rusEFI) before the ini is loaded.
+     */
+    public @NotNull ByteOrder getWireByteOrder() {
+        if (iniFile == null || iniFile.getMetaInfo() == null) {
+            return ByteOrder.LITTLE_ENDIAN;
+        }
+        ByteOrder order = iniFile.getMetaInfo().getByteOrder();
+        // mocked meta info in tests can return null for the default method
+        return order == null ? ByteOrder.LITTLE_ENDIAN : order;
     }
 
     public boolean isSinglePageController() {
@@ -987,7 +1004,7 @@ public class BinaryProtocol {
 
                 byte[] response = executeCommand(
                     Integration.TS_OUTPUT_COMMAND,
-                    GetOutputsCommand.createRequest(reassemblyIdx, chunkSize),
+                    GetOutputsCommand.createRequest(reassemblyIdx, chunkSize, getWireByteOrder()),
                     "output channels"
                 );
 

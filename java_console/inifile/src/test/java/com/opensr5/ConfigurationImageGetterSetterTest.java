@@ -24,6 +24,21 @@ public class ConfigurationImageGetterSetterTest {
     }
 
     @Test
+    public void imageByteOrderGovernsScalarReads() {
+        // 0x12 0x34: a big-endian image ('endianness = big') reads 0x1234, a little-endian one 0x3412
+        // (readNumericValue wraps a fixed 4-byte window, so pad the image)
+        byte[] bytes = {0x12, 0x34, 0, 0};
+        ScalarIniField field = new ScalarIniField("word", 0, "", FieldType.UINT16, 1.0, "0", 0.0);
+
+        ConfigurationImage big = new ConfigurationImage(bytes.clone(), java.nio.ByteOrder.BIG_ENDIAN);
+        assertEquals(0x1234, big.readNumericValue(field), 1e-9);
+        assertEquals(java.nio.ByteOrder.BIG_ENDIAN, big.clone().getByteOrder());
+
+        ConfigurationImage little = new ConfigurationImage(bytes.clone());
+        assertEquals(0x3412, little.readNumericValue(field), 1e-9);
+    }
+
+    @Test
     public void unknownByteOrdinalCannotBeSaved() {
         EnumIniField field = sparsePinField(FieldType.UINT8, 0, 7);
         for (int ordinal : new int[]{48, 255}) {

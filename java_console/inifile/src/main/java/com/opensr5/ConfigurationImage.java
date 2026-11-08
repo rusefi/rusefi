@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Objects;
 
 import static com.rusefi.config.FieldType.*;
@@ -23,13 +24,31 @@ import static com.rusefi.config.FieldType.*;
  */
 public class ConfigurationImage {
     private final byte[] content;
+    /**
+     * Byte order of multi-byte scalars in this image, from the controller ini's
+     * {@code endianness} declaration; rusEFI images are little-endian.
+     */
+    private final ByteOrder byteOrder;
 
     public ConfigurationImage(int size) {
-        content = new byte[size];
+        this(size, ByteOrder.LITTLE_ENDIAN);
+    }
+
+    public ConfigurationImage(int size, ByteOrder byteOrder) {
+        this(new byte[size], byteOrder);
     }
 
     public ConfigurationImage(byte[] content) {
+        this(content, ByteOrder.LITTLE_ENDIAN);
+    }
+
+    public ConfigurationImage(byte[] content, ByteOrder byteOrder) {
         this.content = Objects.requireNonNull(content);
+        this.byteOrder = Objects.requireNonNull(byteOrder);
+    }
+
+    public ByteOrder getByteOrder() {
+        return byteOrder;
     }
 
     public static void setScalarValue(ByteBuffer wrapped, FieldType type, String value, int bitOffset, double multiplier, double serializationOffset) {
@@ -67,7 +86,7 @@ public class ConfigurationImage {
 
     @NotNull
     public ByteBuffer getByteBuffer(int offset, int size) {
-        return ByteBufferUtil.littleEndianWrap(content, offset, size);
+        return ByteBufferUtil.wrap(content, offset, size, byteOrder);
     }
 
     public boolean isEmpty() {
@@ -86,7 +105,7 @@ public class ConfigurationImage {
     @Override
     public ConfigurationImage clone() {
         byte[] copy = content.clone();
-        return new ConfigurationImage(copy);
+        return new ConfigurationImage(copy, byteOrder);
     }
 
     /**

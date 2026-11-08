@@ -84,7 +84,8 @@ public enum FieldType {
     }
 
     /**
-     * Read a raw numeric value from a little-endian ByteBuffer according to this type.
+     * Read a raw numeric value from a ByteBuffer according to this type.  Byte order is taken
+     * from the buffer itself (set by the wrapping code from the ini's declared endianness).
      * The buffer must contain at least {@link #getStorageSize()} bytes from the current position.
      */
     public double readRawValue(ByteBuffer bb) {
@@ -107,7 +108,7 @@ public enum FieldType {
     }
 
     /**
-     * Write a raw integer value into a little-endian ByteBuffer according to this type.
+     * Write a raw integer value into a ByteBuffer according to this type; byte order is the buffer's own.
      */
     public void writeRawValue(ByteBuffer bb, int value) {
         switch (this) {

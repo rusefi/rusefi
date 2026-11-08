@@ -4,6 +4,8 @@ import com.opensr5.ini.IniFileModel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.nio.ByteOrder;
+
 /**
  * calibration binary snapshot with signature info
  */
@@ -15,12 +17,20 @@ public class ConfigurationImageWithMeta {
     private final ConfigurationImage image;
 
     public ConfigurationImageWithMeta(final ConfigurationImageMeta meta) {
-        image = new ConfigurationImage(meta.getImageSize());
+        this(meta, ByteOrder.LITTLE_ENDIAN);
+    }
+
+    public ConfigurationImageWithMeta(final ConfigurationImageMeta meta, final ByteOrder byteOrder) {
+        image = new ConfigurationImage(meta.getImageSize(), byteOrder);
         this.meta = meta;
     }
 
     public ConfigurationImageWithMeta(final ConfigurationImageMeta meta, final byte[] content) {
-        image = new ConfigurationImage(content);
+        this(meta, content, ByteOrder.LITTLE_ENDIAN);
+    }
+
+    public ConfigurationImageWithMeta(final ConfigurationImageMeta meta, final byte[] content, final ByteOrder byteOrder) {
+        image = new ConfigurationImage(content, byteOrder);
         this.meta = meta;
     }
 
@@ -29,7 +39,7 @@ public class ConfigurationImageWithMeta {
             image.getSize(),
             ini.getSignature()
         );
-        return new ConfigurationImageWithMeta(meta, image.getContent());
+        return new ConfigurationImageWithMeta(meta, image.getContent(), ini.getByteOrder());
     }
 
     public ConfigurationImageMeta getMeta() {
