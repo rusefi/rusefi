@@ -69,10 +69,7 @@ public class AutoupdateUtil {
                     if (view.getProgressBar() == null) {
                         throw e;
                     }
-                    String message = (e instanceof UnknownHostException)
-                        ? CHECK_INTERNET_CONNECTION
-                        : "Error downloading: " + e;
-                    boolean retry = view.showErrorAndWaitForRetry(message);
+                    boolean retry = view.showErrorAndWaitForRetry(downloadErrorMessage(e));
                     if (!retry) {
                         throw new ReportedIOException(e);
                     }
@@ -82,6 +79,15 @@ public class AutoupdateUtil {
         } finally {
             view.dispose();
         }
+    }
+
+    /**
+     * Text shown in the progress window when a download fails.
+     */
+    static String downloadErrorMessage(IOException e) {
+        return (e instanceof UnknownHostException)
+            ? CHECK_INTERNET_CONNECTION
+            : "Error downloading: " + e;
     }
 
     private static ProgressView createProgressView(String title) {

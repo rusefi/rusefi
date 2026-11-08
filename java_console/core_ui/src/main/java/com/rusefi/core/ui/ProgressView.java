@@ -110,13 +110,7 @@ public class ProgressView {
         retryLatch = new CountDownLatch(1);
         retryRequested.set(false);
 
-        SwingUtilities.invokeLater(() -> {
-            errorLabel.setText(message);
-            errorLabel.setVisible(true);
-            retryButton.setVisible(true);
-            panel.revalidate();
-            panel.repaint();
-        });
+        SwingUtilities.invokeLater(() -> showError(message));
 
         try {
             retryLatch.await();
@@ -124,6 +118,21 @@ public class ProgressView {
             Thread.currentThread().interrupt();
         }
         return retryRequested.get();
+    }
+
+    /**
+     * Shows the error and the Retry button, on the AWT thread.
+     */
+    void showError(String message) {
+        errorLabel.setText(message);
+        errorLabel.setVisible(true);
+        retryButton.setVisible(true);
+        panel.revalidate();
+        panel.repaint();
+    }
+
+    JLabel getErrorLabelForUnitTest() {
+        return errorLabel;
     }
 
     /**
