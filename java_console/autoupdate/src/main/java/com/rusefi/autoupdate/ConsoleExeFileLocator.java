@@ -23,13 +23,12 @@ import static com.devexperts.logging.Logging.getLogging;
  * Finds the bundle launcher which {@link Autoupdate#startConsoleAsANewProcess} re-invokes once the
  * fresh console has been unpacked.
  * <p>
- * Two bundle layout facts drive this class (see {@code firmware/bundle.mk} and
- * {@code firmware/bin/assemble_universal_bundle.sh}):
+ * Bundle layout facts drive this class (see {@code firmware/bundle.mk}):
  * <ul>
- *   <li>The launchers ({@code rusefi_updater.exe} on Windows, {@code rusefi_updater.sh} elsewhere)
- *       live at the <b>bundle root</b>, while the console jar lives in {@code console/}.</li>
- *   <li>Both launchers chdir into {@code console/} before starting the JVM, so at runtime our
- *       working directory is {@code console/} and the launcher sits one level <b>up</b>.</li>
+ *   <li>On Windows, {@code console/rusefi_console.exe} launches the console jar. The separate
+ *       root {@code rusefi_updater.exe} launches the updater jar and must not be used for this handoff.</li>
+ *   <li>Unix layouts use {@code rusefi_updater.sh}, which may live one level above the console
+ *       working directory.</li>
  * </ul>
  * That is why the default name is resolved against the working directory first and its parent
  * second - see issue #8360, where the updater could not invoke the new process on Linux.
@@ -41,7 +40,7 @@ public class ConsoleExeFileLocator {
 
     private static final String CONSOLE_EXE_FILE_NAME_PROPERTY_NAME = "console-exe-file";
 
-    static final String WINDOWS_LAUNCHER_SUFFIX = "_updater.exe";
+    static final String WINDOWS_LAUNCHER_SUFFIX = "_console.exe";
 
     static final String UNIX_LAUNCHER_SUFFIX = "_updater.sh";
 
@@ -106,8 +105,7 @@ public class ConsoleExeFileLocator {
         final Path workingDirectory
     ) {
         final String launcherFileName = jarFileNamePrefix + (isWindows ? WINDOWS_LAUNCHER_SUFFIX : UNIX_LAUNCHER_SUFFIX);
-        // the console runs with the bundle's `console` folder as working directory while the launcher
-        // itself sits at the bundle root, hence we also look one level up
+        // Windows keeps its console launcher here; Unix layouts may keep theirs at the bundle root.
         final Path[] candidates = { workingDirectory, workingDirectory.toAbsolutePath().normalize().getParent() };
         for (final Path candidate : candidates) {
             if (candidate == null) {
