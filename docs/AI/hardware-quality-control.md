@@ -223,8 +223,9 @@ generates.
 ## 4. Test-rig hardware note
 
 The QC fixture ("stim" board) generates trigger/analog/digital stimulus into the ECU harness
-connector and observes ECU outputs; it drives the CAN protocol above. See
-https://github.com/rusefi/rusefi-hardware (digital-inputs firmware) and the wiki CAN page.
+connector and observes ECU outputs; it drives the CAN protocol above. Its firmware, test
+cycle, per-board expectation tables and the output-ordinal contract with `getBoardMeta*` are
+described in [HW QC Stim Rig](hw-qc-stim-rig.md).
 `FW_WIPE_OUT` and `HW_QC_TESTER_PRESENT` CAN IDs are reserved for the tester/OpenBLT side -
 firmware currently neither sends nor handles them.
 
