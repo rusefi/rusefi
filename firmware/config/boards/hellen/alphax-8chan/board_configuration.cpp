@@ -101,15 +101,25 @@ static void customBoardOnConfigurationChange(const engine_configuration_s * /*pr
 	tempPullUp.setValue(config->boardUseTempPullUp);
 }
 
+static void setAdditionalDcPins() {
+	// Schematic DC2 and DC3 follow ETB and DC1 (firmware slots 0 and 1).
+	// Do not use IncludingStepper here: its two coil indices are 1 - dcIndex.
+	setupTLE9201(Gpio::MM176_OUT_PWM17, Gpio::MM176_GP12, Gpio::MM176_GP13, 2);
+	setupTLE9201(Gpio::MM176_OUT_PWM14, Gpio::MM176_OUT_PWM15, Gpio::MM176_OUT_PWM16, 3);
+}
+
 static void alphax_8chan_boardConfigOverrides() {
 	hellenMegaModule();
 	setHellenCan();
 	setHellenCan2();
+	// Fixed board wiring must also be available after migrating a two-slot tune.
+	setAdditionalDcPins();
 }
 
 void set8chanDefaultETBPins() {
 	setupTLE9201IncludingStepper(/*controlPin*/Gpio::MM176_OUT_PWM9, Gpio::MM176_GP6, Gpio::MM176_GP7);
 	setupTLE9201IncludingStepper(/*controlPin*/Gpio::MM176_OUT_PWM18, Gpio::MM176_GP10, Gpio::MM176_GP11, 1);
+	setAdditionalDcPins();
 }
 
 static void alphax_8chan_defaultConfiguration() {
@@ -251,7 +261,7 @@ static int boardGetMetaDcOutputsCount() {
       // STATIC_BOARD_ID_PLATINUM_GM_GEN4
         return 1;
     }
-    return 2;
+    return ETB_COUNT;
 }
 
 static bool applyAlphaxBasicConfiguration(BasicConfigurationAction action) {
