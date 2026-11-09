@@ -140,6 +140,67 @@ static void setupAutomaticShiftCurves() {
 	setTcuCurve(config->tcu_shiftSpeed21, 10);
 }
 
+// Selector-controlled automatic/manual operation on the six-speed Simple TCU.
+// The physical D/M gate determines the mode, without switching controller modes
+// in TunerStudio at runtime. M+ / M- are edge-like positions off the M gate.
+TEST(tcu, genericSelectorSwitchesDriveManualAndBackSixSpeed) {
+	EngineTestHelper eth(engine_type_e::TCU_4R70W);
+	engineConfiguration->gearControllerMode = GearControllerMode::Generic;
+	engineConfiguration->transmissionControllerMode = TransmissionControllerMode::SimpleTransmissionController;
+	engineConfiguration->totalGearsCount = 6;
+	setupAutomaticShiftCurves();
+	setTcuCurve(config->tcu_shiftSpeed45, 80);
+	setTcuCurve(config->tcu_shiftSpeed56, 100);
+	setTcuCurve(config->tcu_shiftSpeed54, 70);
+	setTcuCurve(config->tcu_shiftSpeed65, 90);
+
+	// This test platform has one analog range-select input and two
+	// active-low (+ / -) inputs. Make M a distinct selector position.
+	config->tcu_rangeM[0] = 2300;
+	config->tcu_rangeM[1] = 0;
+	config->tcu_rangeM[2] = 0;
+	setMockState(engineConfiguration->tcu_rangeInput[1], true);
+	setMockState(engineConfiguration->tcu_rangeInput[2], true);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 25);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 65);
+	Sensor::setMockValue(SensorType::RangeInput1, 1645); // Drive
+
+	initGearController();
+	for (int i = 0; i < 4; i++) engine->gearController->update();
+	ASSERT_EQ(GEAR_4, engine->gearController->getDesiredGear());
+
+	// D -> M holds 4th even though the automatic maps would now shift.
+	Sensor::setMockValue(SensorType::RangeInput1, 2300); // Manual gate
+	Sensor::setMockValue(SensorType::VehicleSpeed, 105);
+	eth.moveTimeForwardAndInvokeEventsUs(600000);
+	engine->gearController->update();
+	ASSERT_EQ(GEAR_4, engine->gearController->getDesiredGear());
+	engine->gearController->update();
+	ASSERT_EQ(GEAR_4, engine->gearController->getDesiredGear());
+
+	// First manual plus request: 4 -> 5, then return lever to M.
+	setMockState(engineConfiguration->tcu_rangeInput[1], false);
+	engine->gearController->update();
+	ASSERT_EQ(GEAR_5, engine->gearController->getDesiredGear());
+	setMockState(engineConfiguration->tcu_rangeInput[1], true);
+	engine->gearController->update();
+
+	// Debounce and manual minus: 5 -> 4.
+	eth.moveTimeForwardAndInvokeEventsUs(600000);
+	setMockState(engineConfiguration->tcu_rangeInput[2], false);
+	engine->gearController->update();
+	ASSERT_EQ(GEAR_4, engine->gearController->getDesiredGear());
+	setMockState(engineConfiguration->tcu_rangeInput[2], true);
+	engine->gearController->update();
+
+	// M -> D re-enables the automatic maps, continuing from 4th.
+	Sensor::setMockValue(SensorType::RangeInput1, 1645);
+	engine->gearController->update();
+	ASSERT_EQ(GEAR_5, engine->gearController->getDesiredGear());
+	engine->gearController->update();
+	ASSERT_EQ(GEAR_6, engine->gearController->getDesiredGear());
+}
+
 TEST(tcu, automaticGearControllerLeavesNeutralOnFirstUpdate) {
 	EngineTestHelper eth(engine_type_e::TCU_4R70W);
 	setupAutomaticShiftCurves();
