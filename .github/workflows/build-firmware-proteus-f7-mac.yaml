@@ -17,7 +17,7 @@ jobs:
 
       - uses: carlosperate/arm-none-eabi-gcc-action@v1.14.1
         with:
-          release: '14.2.Rel1'
+          release: '15.2.Rel1'
 
       - name: Checkout Submodules
         # [tag:submodule_auth] see .github/actions/submodule-init/action.yml
