@@ -1695,6 +1695,11 @@ pwm_freq_t tcu_tcc_pwm_solenoid_freq
 output_pin_e tcu_pc_solenoid_pin
 pin_output_mode_e tcu_pc_solenoid_pin_mode
 pwm_freq_t tcu_pc_solenoid_freq
+
+! Universal Simple Transmission pressure control settings.
+uint8_t tcuPcLoadSource;Pressure curve axis (0=Airflow, 1=TPS, 2=Fixed);"mode",1,0,0,2,0
+uint16_t tcuPcFixedAxisValue;Fixed pressure curve axis;"axis",1,0,0,1200,0
+uint8_t tcuPcInvalidSensorDuty;Pressure PWM duty on missing load signal;"%",1,0,0,100,0
 output_pin_e tcu_32_solenoid_pin
 pin_output_mode_e tcu_32_solenoid_pin_mode
 pwm_freq_t tcu_32_solenoid_freq
@@ -2294,12 +2299,18 @@ uint8_t[TCU_TABLE_WIDTH] tcu_pcVals1;;"%", 1, 0, 0, 255, 0
 uint8_t[TCU_TABLE_WIDTH] tcu_pcVals2;;"%", 1, 0, 0, 255, 0
 uint8_t[TCU_TABLE_WIDTH] tcu_pcVals3;;"%", 1, 0, 0, 255, 0
 uint8_t[TCU_TABLE_WIDTH] tcu_pcVals4;;"%", 1, 0, 0, 255, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_pcVals5;;"%", 1, 0, 0, 100, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_pcVals6;;"%", 1, 0, 0, 100, 0
 uint8_t[TCU_TABLE_WIDTH] tcu_pcVals12;;"%", 1, 0, 0, 255, 0
 uint8_t[TCU_TABLE_WIDTH] tcu_pcVals23;;"%", 1, 0, 0, 255, 0
 uint8_t[TCU_TABLE_WIDTH] tcu_pcVals34;;"%", 1, 0, 0, 255, 0
 uint8_t[TCU_TABLE_WIDTH] tcu_pcVals21;;"%", 1, 0, 0, 255, 0
 uint8_t[TCU_TABLE_WIDTH] tcu_pcVals32;;"%", 1, 0, 0, 255, 0
 uint8_t[TCU_TABLE_WIDTH] tcu_pcVals43;;"%", 1, 0, 0, 255, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_pcVals45;;"%", 1, 0, 0, 100, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_pcVals56;;"%", 1, 0, 0, 100, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_pcVals54;;"%", 1, 0, 0, 100, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_pcVals65;;"%", 1, 0, 0, 100, 0
 
 uint8_t[8] tcu_tccTpsBins;;"TPS", 1, 0, 0, 255, 0
 uint8_t[8] tcu_tccLockSpeed;;{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KMH_TO_MPH@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 255 : 158}, 0
