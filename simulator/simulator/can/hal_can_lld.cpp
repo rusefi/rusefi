@@ -31,6 +31,8 @@
 #include <net/if.h>
 #include <sys/ioctl.h>
 #include <errno.h>
+#else
+#include "pcan_helper.h"
 #endif /* !EFI_SIM_IS_WINDOWS */
 
 #include <algorithm>
@@ -90,6 +92,10 @@ void can_lld_init(void) {
 	CAND1.sock = -1;
 	CAND2.sock = -1;
 	CAND3.sock = -1;
+
+#if EFI_SIM_IS_WINDOWS
+	checkPcanDevice();
+#endif
 }
 
 static std::vector<CANDriver*> instances;
