@@ -150,9 +150,15 @@ void GenericGearController::update() {
 				break;
 			}
 			break;
+		case SelectedGear::Manual:
+			// Moving D -> M latches the current desired forward gear. In M,
+			// automatic shift maps must not change the selected gear.
+			break;
 		case SelectedGear::Drive :
-			// If the gear selector is in drive, let AutomaticGearController,
-			// which this class inherits from, decide what gear the transmission should be in.
+			// M -> D resumes automatic shifts from the current selected gear.
+			// Record Drive BEFORE the early return: otherwise a stale Manual
+			// state can incorrectly authorize a subsequent M+ / M- command.
+			lastRange = SelectedGear::Drive;
 			AutomaticGearController::update();
 			return;
 		default:
