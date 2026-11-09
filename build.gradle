@@ -1,6 +1,8 @@
 plugins {
   id 'idea'
   id 'com.gradleup.shadow' version "${shadowVersion}"  apply false
+  id 'checkstyle'
+  id 'com.diffplug.spotless' version '6.25.0'
 }
 
 apply from: 'dependencies.gradle'
@@ -22,6 +24,18 @@ idea.module {
 allprojects {
     repositories {
         mavenCentral()
+    }
+
+    apply plugin: 'checkstyle'
+    checkstyle {
+        toolVersion = '10.12.4'
+    }
+
+    apply plugin: 'com.diffplug.spotless'
+    spotless {
+        java {
+            googleJavaFormat()
+        }
     }
 
     plugins.withType(JavaPlugin) {
