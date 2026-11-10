@@ -2,6 +2,39 @@
 #include "pch.h"
 #include "board_overrides.h"
 
+struct TriggerDebounceScope {
+	decltype(custom_board_triggerDebounceUs) previous = custom_board_triggerDebounceUs;
+
+	TriggerDebounceScope() {
+		custom_board_triggerDebounceUs = []() { return 1000.75f; };
+	}
+
+	~TriggerDebounceScope() {
+		custom_board_triggerDebounceUs = previous;
+	}
+};
+
+TEST(trigger, debounceIntegerMicrosecondBoundary) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	TriggerDebounceScope debounce;
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+	auto& central = engine->triggerCentral;
+	const efitick_t start = US2NT(1'000'000'000LL);
+
+	central.handleShaftSignal(SHAFT_PRIMARY_RISING, start);
+	ASSERT_EQ(0u, central.triggerDebounceDropCount);
+	// Opposite polarity has its own window.
+	central.handleShaftSignal(SHAFT_PRIMARY_FALLING, start + US2NT(500));
+	ASSERT_EQ(0u, central.triggerDebounceDropCount);
+	central.handleShaftSignal(SHAFT_PRIMARY_RISING, start + US2NT(1000) - 1);
+	ASSERT_EQ(1u, central.triggerDebounceDropCount);
+	// Preserve truncation to whole microseconds; a dropped edge does not extend the window.
+	central.handleShaftSignal(SHAFT_PRIMARY_RISING, start + US2NT(1000));
+	ASSERT_EQ(1u, central.triggerDebounceDropCount);
+	central.handleShaftSignal(SHAFT_PRIMARY_FALLING, start + US2NT(1500));
+	ASSERT_EQ(1u, central.triggerDebounceDropCount);
+}
+
 struct SyncAcceptToothLossScope {
 	SyncAcceptToothLossScope() {
 		custom_board_syncAcceptToothLoss = []() { return true; };
