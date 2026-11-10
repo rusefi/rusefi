@@ -2062,15 +2062,6 @@ dfco_fuel_cut_mode_e dfcoFuelCutMode;Overrun uses the TPS, RPM and vehicle-speed
 bit coastingFuelCutRequiresGear,"enabled","disabled";Require a valid DetectedGear greater than zero for the Overrun path. Neutral, unknown or invalid gear prevents overrun fuel cut. Configure gear detection before enabling. Does not restrict the Decel path.
 include_file controllers/modules/fuel_pump/fuel_pump_engineConfiguration.txt
 
-! Append-only TCU pressure configuration: keep every 6-speed selector,
-! solenoid, and gear-count field at its exact previous configuration offset.
-! The 1 byte activation value MUST equal 1; uninitialized legacy 0xff
-! cannot accidentally enable hydraulic pressure PWM.
-uint8_t tcuPcControlEnabled;Enable Simple TCU line-pressure PWM only after bench calibration;"off/on",1,0,0,1,0
-! Universal Simple Transmission pressure control settings.
-uint8_t tcuPcLoadSource;Pressure curve axis (0=Airflow, 1=TPS, 2=Fixed);"mode",1,0,0,2,0
-uint16_t tcuPcFixedAxisValue;Fixed pressure curve axis;"axis",1,0,0,1200,0
-uint8_t tcuPcInvalidSensorDuty;Pressure PWM duty on missing load signal;"%",1,0,0,100,0
 end_struct
 
 ! note that this magic field name is used by LiveDataParserPanel
@@ -2626,6 +2617,17 @@ include_file controllers/actuators/vvt_advanced_tables.txt
 ! Additional curves are appended at the END of page 1, never inserted
 ! between existing 6-speed selector and shift-solenoid tables.
 ! Prevents historical TCU calibration offsets moving.
+! New pressure settings also live here, not in engine_configuration_s,
+! because adding to that nested struct would shift ALL following old tables.
+! Append-only TCU pressure configuration: keep every 6-speed selector,
+! solenoid, and gear-count field at its exact previous configuration offset.
+! The 1 byte activation value MUST equal 1; uninitialized legacy 0xff
+! cannot accidentally enable hydraulic pressure PWM.
+uint8_t tcuPcControlEnabled;Enable Simple TCU line-pressure PWM only after bench calibration;"off/on",1,0,0,1,0
+! Universal Simple Transmission pressure control settings.
+uint8_t tcuPcLoadSource;Pressure curve axis (0=Airflow, 1=TPS, 2=Fixed);"mode",1,0,0,2,0
+uint16_t tcuPcFixedAxisValue;Fixed pressure curve axis;"axis",1,0,0,1200,0
+uint8_t tcuPcInvalidSensorDuty;Pressure PWM duty on missing load signal;"%",1,0,0,100,0
 uint8_t[TCU_TABLE_WIDTH] tcu_pcVals5;;"%", 1, 0, 0, 100, 0
 uint8_t[TCU_TABLE_WIDTH] tcu_pcVals6;;"%", 1, 0, 0, 100, 0
 uint8_t[TCU_TABLE_WIDTH] tcu_pcVals45;;"%", 1, 0, 0, 100, 0
