@@ -87,7 +87,7 @@ public class OfflineTuneLoader {
             // already dialog; this makes the INI path consistent). #9730
             log.info("INI resolution failed for " + signature + ": " + e.getMessage());
             errorHandler.accept("No INI file available for this tune (signature: " + signature + ").\n"
-                    + "The tune was not opened.");
+                    + e.getMessage() + "\nThe tune was not opened.");
             return null;
         }
     }
