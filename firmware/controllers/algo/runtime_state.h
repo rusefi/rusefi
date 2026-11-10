@@ -8,3 +8,4 @@
 #pragma once
 
 void resetMaxValues();
+void printRuntimeStats();
