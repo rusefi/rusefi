@@ -1696,10 +1696,6 @@ output_pin_e tcu_pc_solenoid_pin
 pin_output_mode_e tcu_pc_solenoid_pin_mode
 pwm_freq_t tcu_pc_solenoid_freq
 
-! Universal Simple Transmission pressure control settings.
-uint8_t tcuPcLoadSource;Pressure curve axis (0=Airflow, 1=TPS, 2=Fixed);"mode",1,0,0,2,0
-uint16_t tcuPcFixedAxisValue;Fixed pressure curve axis;"axis",1,0,0,1200,0
-uint8_t tcuPcInvalidSensorDuty;Pressure PWM duty on missing load signal;"%",1,0,0,100,0
 output_pin_e tcu_32_solenoid_pin
 pin_output_mode_e tcu_32_solenoid_pin_mode
 pwm_freq_t tcu_32_solenoid_freq
@@ -2065,6 +2061,16 @@ custom dfco_fuel_cut_mode_e 1 bits, U08, @OFFSET@, [0:1], @@dfco_fuel_cut_mode_e
 dfco_fuel_cut_mode_e dfcoFuelCutMode;Overrun uses the TPS, RPM and vehicle-speed thresholds below. Decel requires Enable Engine State Machine and its Decelerating state, or RPM falling faster than the Decel RPM rate threshold when no vehicle-speed sensor is configured. Decel does not use the overrun TPS/RPM/speed/gear gates. Both accepts either path. Coolant, MAP, tuning and Lua guards apply in all modes. Active state-machine shifts suppress fuel cut.
 bit coastingFuelCutRequiresGear,"enabled","disabled";Require a valid DetectedGear greater than zero for the Overrun path. Neutral, unknown or invalid gear prevents overrun fuel cut. Configure gear detection before enabling. Does not restrict the Decel path.
 include_file controllers/modules/fuel_pump/fuel_pump_engineConfiguration.txt
+
+! Append-only TCU pressure configuration: keep every 6-speed selector,
+! solenoid, and gear-count field at its exact previous configuration offset.
+! The 1 byte activation value MUST equal 1; uninitialized legacy 0xff
+! cannot accidentally enable hydraulic pressure PWM.
+uint8_t tcuPcControlEnabled;Enable Simple TCU line-pressure PWM only after bench calibration;"off/on",1,0,0,1,0
+! Universal Simple Transmission pressure control settings.
+uint8_t tcuPcLoadSource;Pressure curve axis (0=Airflow, 1=TPS, 2=Fixed);"mode",1,0,0,2,0
+uint16_t tcuPcFixedAxisValue;Fixed pressure curve axis;"axis",1,0,0,1200,0
+uint8_t tcuPcInvalidSensorDuty;Pressure PWM duty on missing load signal;"%",1,0,0,100,0
 end_struct
 
 ! note that this magic field name is used by LiveDataParserPanel
@@ -2299,18 +2305,12 @@ uint8_t[TCU_TABLE_WIDTH] tcu_pcVals1;;"%", 1, 0, 0, 255, 0
 uint8_t[TCU_TABLE_WIDTH] tcu_pcVals2;;"%", 1, 0, 0, 255, 0
 uint8_t[TCU_TABLE_WIDTH] tcu_pcVals3;;"%", 1, 0, 0, 255, 0
 uint8_t[TCU_TABLE_WIDTH] tcu_pcVals4;;"%", 1, 0, 0, 255, 0
-uint8_t[TCU_TABLE_WIDTH] tcu_pcVals5;;"%", 1, 0, 0, 100, 0
-uint8_t[TCU_TABLE_WIDTH] tcu_pcVals6;;"%", 1, 0, 0, 100, 0
 uint8_t[TCU_TABLE_WIDTH] tcu_pcVals12;;"%", 1, 0, 0, 255, 0
 uint8_t[TCU_TABLE_WIDTH] tcu_pcVals23;;"%", 1, 0, 0, 255, 0
 uint8_t[TCU_TABLE_WIDTH] tcu_pcVals34;;"%", 1, 0, 0, 255, 0
 uint8_t[TCU_TABLE_WIDTH] tcu_pcVals21;;"%", 1, 0, 0, 255, 0
 uint8_t[TCU_TABLE_WIDTH] tcu_pcVals32;;"%", 1, 0, 0, 255, 0
 uint8_t[TCU_TABLE_WIDTH] tcu_pcVals43;;"%", 1, 0, 0, 255, 0
-uint8_t[TCU_TABLE_WIDTH] tcu_pcVals45;;"%", 1, 0, 0, 100, 0
-uint8_t[TCU_TABLE_WIDTH] tcu_pcVals56;;"%", 1, 0, 0, 100, 0
-uint8_t[TCU_TABLE_WIDTH] tcu_pcVals54;;"%", 1, 0, 0, 100, 0
-uint8_t[TCU_TABLE_WIDTH] tcu_pcVals65;;"%", 1, 0, 0, 100, 0
 
 uint8_t[8] tcu_tccTpsBins;;"TPS", 1, 0, 0, 255, 0
 uint8_t[8] tcu_tccLockSpeed;;{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KMH_TO_MPH@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 255 : 158}, 0
@@ -2622,6 +2622,16 @@ include_file controllers/modules/fuel_pump/fuel_pump_tables.txt
 	gppwm_note_t[SCRIPT_SETTING_COUNT iterate] scriptSettingName;
 include_file controllers/modules/burst_knock/burst_knock_tables.txt
 include_file controllers/actuators/vvt_advanced_tables.txt
+
+! Additional curves are appended at the END of page 1, never inserted
+! between existing 6-speed selector and shift-solenoid tables.
+! Prevents historical TCU calibration offsets moving.
+uint8_t[TCU_TABLE_WIDTH] tcu_pcVals5;;"%", 1, 0, 0, 100, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_pcVals6;;"%", 1, 0, 0, 100, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_pcVals45;;"%", 1, 0, 0, 100, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_pcVals56;;"%", 1, 0, 0, 100, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_pcVals54;;"%", 1, 0, 0, 100, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_pcVals65;;"%", 1, 0, 0, 100, 0
 end_struct
 
 #define PPS_OK_INDICATOR "Pedal OK"
