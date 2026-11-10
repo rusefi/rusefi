@@ -4,7 +4,6 @@ import com.devexperts.logging.FileLogger;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.preferences.storage.Node;
-import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionStatusValue;
 import com.rusefi.ui.startup.StatusDotIcon;
@@ -37,18 +36,25 @@ public class WarningPanel {
         }
     };
 
-    private final JLabel label = new JLabel("", new WarningIcon(), SwingConstants.LEADING);
+    private boolean warningPainted = true;
+    private final JLabel label = new JLabel("", new WarningIcon(), SwingConstants.CENTER) {
+        @Override
+        protected void paintComponent(Graphics g) {
+            if (warningPainted) {
+                super.paintComponent(g);
+            }
+        }
+    };
     private final JButton reset = new JButton("Clear warning");
     private boolean haveFatalError = false;
     private final Timer criticalErrorBlinking = new Timer(1000, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            label.setVisible(!label.isVisible());
-            AutoupdateUtil.trueLayoutAndRepaint(label);
+            blinkWarning();
         }
     });
 
-    /** Warnings and log controls on the left; the strip's own controls (e.g. Record) on the right. */
+    /** Log controls on the left; warnings occupy the space before the trailing Record button. */
     private final JPanel left = new JPanel(new FlowLayout(FlowLayout.LEFT, 14, 0));
 
     public WarningPanel(Node config) {
@@ -63,7 +69,8 @@ public class WarningPanel {
     private WarningPanel(Node config, JComponent trailing) {
         panel.setBorder(BorderFactory.createEmptyBorder(8, 2, 8, 2));
         left.setOpaque(false);
-        panel.add(left, BorderLayout.CENTER);
+        panel.add(left, BorderLayout.WEST);
+        panel.add(label, BorderLayout.CENTER);
         if (trailing != null) {
             // its own column on the right: a wider button grows into free space and moves nothing else
             JPanel right = new JPanel(new GridBagLayout());
@@ -73,7 +80,7 @@ public class WarningPanel {
             panel.add(right, BorderLayout.EAST);
         }
         label.setIconTextGap(10);
-        left.add(label);
+        label.setBorder(BorderFactory.createEmptyBorder(0, 14, 0, 14));
 
         clear();
 
@@ -135,6 +142,7 @@ public class WarningPanel {
 
     private void showWarning(String message) {
         label.setText(message);
+        label.setToolTipText(message);
         label.setForeground(themed("Console.Status.disconnected.foreground", new Color(0xb91c1c)));
         label.setFont(label.getFont().deriveFont(Font.BOLD));
         reset.setEnabled(true);
@@ -144,7 +152,9 @@ public class WarningPanel {
         label.setText(NO_WARNINGS);
         label.setForeground(themed("Console.TitleBar.mutedForeground", Color.GRAY));
         label.setFont(UIManager.getFont("Label.font"));
-        label.setVisible(true);
+        label.setToolTipText(null);
+        warningPainted = true;
+        label.repaint();
         reset.setEnabled(false);
         haveFatalError = false;
         criticalErrorBlinking.stop();
@@ -165,6 +175,12 @@ public class WarningPanel {
     private static Color themed(String key, Color fallback) {
         Color c = UIManager.getColor(key);
         return c != null ? c : fallback;
+    }
+
+    // Repaint only: hiding the component changes the layout and moves status controls.
+    void blinkWarning() {
+        warningPainted = !warningPainted;
+        label.repaint();
     }
 
     // package-private so tests can read the warning text
