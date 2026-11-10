@@ -25,6 +25,13 @@
 #include "auto_generated_sync_edge.h"
 #include "board_overrides.h"
 
+#if IS_WINDOWS_COMPILER
+// COFF weak externals need the fallback in the calling translation unit.
+// A separate weak body leaves the call unresolved (or zero with a weak
+// declaration). ELF/ARM keeps defaults separate so LTO honors board overrides.
+#include "trigger_central_hooks.inc"
+#endif
+
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
 #endif /* EFI_TUNER_STUDIO */

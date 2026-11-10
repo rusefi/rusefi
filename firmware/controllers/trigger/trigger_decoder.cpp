@@ -29,6 +29,13 @@
 #include "transition_events.h"
 #include "board_overrides.h"
 
+#if IS_WINDOWS_COMPILER
+// COFF weak externals need the fallback in the calling translation unit.
+// A separate weak body leaves the call unresolved (or zero with a weak
+// declaration). ELF/ARM keeps defaults separate so LTO honors board overrides.
+#include "trigger_decoder_hooks.inc"
+#endif
+
 std::optional<setup_custom_board_overrides_type> custom_board_TriggerResetState;
 
 /**
