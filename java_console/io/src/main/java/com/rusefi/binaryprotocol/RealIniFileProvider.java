@@ -139,6 +139,16 @@ public class RealIniFileProvider implements IniFileProvider {
         } catch (FileNotFoundException e) {
             throw new IniNotFoundException(e.toString());
         }
+        if (!signature.equals(iniFileModel.getSignature())) {
+            // A manually selected file can be cached under another firmware's hash.
+            // Its offsets, enum ordinals and table dimensions cannot decode this tune.
+            if (picker != null && promptedSignatures.add(signature)) {
+                picker.pick(signature);
+            }
+            throw new IniNotFoundException("INI signature mismatch in " + localIniFile
+                + "\nExpected: " + signature + "\nFound: " + iniFileModel.getSignature()
+                + "\nSelect the original INI for this firmware; changing its signature does not convert its layout.");
+        }
         PrimeTunerStudioCache.prime(iniFileModel, localIniFile);
         return iniFileModel;
     }

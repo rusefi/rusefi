@@ -2,6 +2,10 @@ package com.rusefi.binaryprotocol;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.FutureTask;
@@ -23,6 +27,37 @@ import static org.junit.jupiter.api.Assertions.*;
 public class RealIniFileProviderManualPickerTest {
     private static final String UNPARSEABLE_SIGNATURE = "not a real signature";
     private static final String MISSING_SIGNATURE = "rusEFI master.2026.08.30.test-board.1234567890";
+
+    @Test
+    public void rejectsMismatchedCacheAndAllowsReplacement(@TempDir Path directory) throws Throwable {
+        String actualSignature = "rusEFI master.2026.08.30.other-board.987654321";
+        Path cached = directory.resolve("1234567890.ini");
+        Files.writeString(cached, "[MegaTune]\nsignature = \"" + actualSignature
+            + "\"\n[Constants]\nnPages = 1\npageSize = 8\npageReadCommand = \"R\"\n"
+            + "page = 1\nvalue = scalar, U08, 0, \"\", 1, 0, 0, 255, 0\n"
+            + "[OutputChannels]\nochBlockSize = 8\n");
+        RealIniFileProvider provider = new RealIniFileProvider((location, download) -> cached.toString());
+
+        RecordingPicker picker = new RecordingPicker();
+        AtomicInteger prompts = new AtomicInteger();
+        RealIniFileProvider.manualPicker = signature -> {
+            prompts.incrementAndGet();
+            picker.pick(signature);
+        };
+        for (int i = 0; i < 2; i++) {
+            IniNotFoundException error = assertThrows(IniNotFoundException.class,
+                () -> provider.provide(MISSING_SIGNATURE));
+            assertTrue(error.getMessage().contains("INI signature mismatch"));
+            assertTrue(error.getMessage().contains(actualSignature));
+            assertTrue(error.getMessage().contains(MISSING_SIGNATURE));
+        }
+        assertEquals(1, prompts.get());
+        assertEquals(MISSING_SIGNATURE, picker.askedSignature);
+        assertTrue(Files.exists(cached), "Keep the original file for inspection or replacement");
+
+        Files.writeString(cached, Files.readString(cached).replace(actualSignature, MISSING_SIGNATURE));
+        assertEquals(MISSING_SIGNATURE, provider.provide(MISSING_SIGNATURE).getSignature());
+    }
 
     @AfterEach
     public void resetPicker() {
