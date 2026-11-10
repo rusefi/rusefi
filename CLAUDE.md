@@ -737,3 +737,15 @@ improved but did not eliminate failures. Do not replay whole tune-write or
 burn requests to compensate: controller arbitration retries address the
 unsent CAN frame. WeAct can acknowledge setup commands even though CANable
 2 omits them; both support the existing V-response setup barrier.
+
+
+- MinGW/COFF weak fallback definitions must be visible in the calling
+  translation unit. A separate weak definition does not resolve an ordinary
+  external reference; weakening only the caller can produce a successful
+  link with a call to address zero. Keep the board-hook fallback bodies in
+  shared include fragments: Windows callers include them locally, while
+  ELF/ARM keeps them in separate translation units for LTO-safe overrides.
+  Keep public declarations strong so board implementations stay strong.
+  Validate both default and override targets with
+  `python3 simulator/tests/test_board_hook_linkage.py`; linking alone is
+  insufficient evidence for the Windows fallback path.

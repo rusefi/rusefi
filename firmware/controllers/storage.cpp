@@ -12,6 +12,13 @@
 #include "extra_flash_pages.h"
 #include "board_overrides.h"
 
+#if IS_WINDOWS_COMPILER
+// COFF weak externals need the fallback in the calling translation unit.
+// A separate weak body leaves the call unresolved (or zero with a weak
+// declaration). ELF/ARM keeps defaults separate so LTO honors board overrides.
+#include "storage_board_hooks.inc"
+#endif
+
 #if EFI_CONFIGURATION_STORAGE
 #include "mpu_util.h"
 #endif
