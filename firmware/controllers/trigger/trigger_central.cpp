@@ -909,7 +909,9 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	float debounceUs = get_board_override_result(custom_board_triggerDebounceUs, 0.0f);
 	if (debounceUs > 0) {
 		int polarity = isTriggerUpEvent(signal) ? 0 : 1;
-		if (lastDebouncedTriggerEdgeNt[polarity] != 0 && timestamp - lastDebouncedTriggerEdgeNt[polarity] < US2NT(debounceUs)) {
+		// Short debounce intervals fit in 32 bits; truncate microseconds before widening to ticks.
+		const auto debounceNt = US2NT(static_cast<int32_t>(debounceUs));
+		if (lastDebouncedTriggerEdgeNt[polarity] != 0 && timestamp - lastDebouncedTriggerEdgeNt[polarity] < debounceNt) {
 			triggerDebounceDropCount++;
 			return;
 		}
