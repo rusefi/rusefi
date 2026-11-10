@@ -225,6 +225,76 @@ extern std::optional<setup_custom_bool_type> custom_board_updateConfigError;
 
 extern std::optional<setup_custom_bool_type> custom_board_isBoardWithPowerManagement;
 extern std::optional<setup_custom_bool_type> custom_board_boardAllowTriggerActions;
+// When set and returning true, ignition/injection stay off for the first crank
+// revolution after a fresh trigger synchronization: the first sync point has no
+// tooth count to validate against, so a false gap (stretched tooth pair) can
+// sync the decoder at the wrong position. See m74_9 false-sync C9003 case.
+extern std::optional<setup_custom_bool_type> custom_board_requireValidatedSync;
+
+// When set and returning true, a ratio-validated sync candidate that arrived
+// 1-2 events BEFORE the expected count (count deficit - events were LOST
+// between the gaps: the analog VR conditioner swallows 1-2 teeth during the
+// first-combustion catch; noise only INSERTS events, so a deficit cannot be
+// noise) is accepted as a valid sync while rpm < 2 * crankingRpm instead of
+// firing C9003 and desyncing. Desyncing there cuts fuel/spark exactly when
+// the engine first catches - the observed m74_9 failure mode (C9003 'got
+// 56/0', engine dies right after the catch). The 6-12 degree phase offset of
+// the lost events only affects the already-elapsed part of the revolution
+// (the sync re-anchors at the gap). Count excess keeps the classic C9003
+// path. m74_9 sets true; default false preserves the strict behavior.
+extern std::optional<setup_custom_bool_type> custom_board_syncEarlyGapWhileCranking;
+extern std::optional<setup_custom_bool_type> custom_board_syncByPositionWhileCranking;
+extern std::optional<setup_custom_bool_type> custom_board_syncGapHardening;
+
+// When set and returning true, the decoder corrects the sync anchor by the
+// gap geometry: the missing-teeth gap is physically (skipped + 1) slots, so a
+// measured sync gap ratio below syncRatioAvg means the sync event fired EARLY
+// relative to the true first-tooth crossing. On the m74_9 the L9779's output
+// gap is systematically compressed to ~2.36-2.5 (a spurious edge from the
+// missing region fires ~0.63 pitch early, the auto-hysteresis having
+// re-quantized down during the gap; the squared-signal latch then suppresses
+// the real first-tooth edge). The decoder would otherwise anchor the phase
+// ~3.8 degrees advanced. The correction (in degrees, EMA-smoothed, clamped to
+// [0, 1.5] pitch) is applied to the scheduling phase pair. The board's lambda
+// picks the rpm band (m74_9: cranking..7000; below cranking the gap can
+// compress from acceleration and the correction would misfire). Default
+// false: other boards' VR signals do not have the spurious-edge signature.
+extern std::optional<setup_custom_bool_type> custom_board_syncGapAnchorCorrection;
+
+// When set and returning a non-negative value, this is the gap-anchor
+// correction's CURRENT expected shift (pitch units) - the correction state
+// itself, not a fallback. m74_9 returns its VR amplitude-model per-level
+// table value (Vp = k*rpm -> hysteresis level -> learned shift, see
+// m74_9_vr_model.cpp); the decoder applies it directly and TRAINS the model
+// from in-band measurements via triggerObserveGapShift. Negative = no model
+// = the correction stays 0.
+extern std::optional<setup_custom_get_float_type> custom_board_vrGapShiftPitch;
+
+// When set and returning true, a ratio-validated sync candidate with a 1-2
+// event count DEFICIT is accepted as a valid sync regardless of the cranking
+// band (the custom_board_syncEarlyGapWhileCranking acceptance above is
+// rpm-limited to 4 * crankingRpm). This is for analog VR conditioners that
+// intermittently swallow a single tooth mid-revolution at RUNNING rpm: the
+// m74_9 L9779's auto-adaptive hysteresis/filter eats the output edge when the
+// squared signal's high level falls below Tfilter (datasheet 6.14: 'if
+// int_vrs high level lasts less than Tfilter out_vrs is not set to high') -
+// the 2026-08-24 20:43 drive showed 837/837 C9003 events with the gap ratio
+// windows passing ('Y') and the count short by exactly one (57/58), the
+// signature of a single lost decode edge. The deficit direction proves LOST
+// (not noise-inserted) events, the ratio windows and the position/elapsed-time
+// gates already passed, and the phase shifts only 6-12 degrees for the rest
+// of the revolution before the gap re-anchors. The board decides the rpm band
+// in its lambda (m74_9: cranking..7000). Default false: other boards keep the
+// strict C9003 desync at running rpm.
+extern std::optional<setup_custom_bool_type> custom_board_syncAcceptToothLoss;
+
+// When set and returning a positive interval (microseconds), trigger edges
+// arriving sooner than that after the previous accepted edge are dropped as
+// noise before decoding - VR comparator ringing / starter interference that
+// would inflate the event count and false-sync the decoder mid-revolution
+// (m74_9: 100 us; noise bursts measure <50 us, and 100 us stays below the
+// 125 us tooth period of a 60-2 wheel at 8000 rpm on RiseOnly).
+extern std::optional<setup_custom_get_float_type> custom_board_triggerDebounceUs;
 
 extern std::optional<setup_custom_bool_type> custom_board_getAcrState;
 // Return true to replace the complete ACR strategy, including the movement

@@ -92,6 +92,7 @@ void TriggerDecoderBase::resetState() {
 
 	prevSignal = SHAFT_PRIMARY_FALLING;
 	startOfCycleNt = {};
+	lastFullRevolutionDurationNt = 0;
 
 	resetCurrentCycleState();
 
@@ -426,6 +427,10 @@ void TriggerDecoderBase::onShaftSynchronization(
 		bool wasSynchronized,
 		const efitick_t nowNt,
 		const TriggerWaveform& triggerShape) {
+	if (wasSynchronized) {
+		lastFullRevolutionDurationNt = nowNt - startOfCycleNt;
+	}
+
 	startOfCycleNt = nowNt;
 	resetCurrentCycleState();
 
@@ -517,6 +522,10 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 		const efitick_t nowNt) {
 	ScopePerf perf(PE::DecodeTriggerEvent);
 
+	// Non-sync events clear the flag: it is only ever true for the exact sync
+	// event that validated a real crank revolution (see the sync point branch).
+	lastSyncWasClean = false;
+
 #if EFI_PROD_CODE
   getTriggerCentral()->triggerElapsedUs = static_cast<uint32_t>(previousEventTimer.getElapsedUs());
 #endif
@@ -597,7 +606,124 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			    setTriggerErrorState(100);
 			}
 
-			isSynchronizationPoint = isSyncPoint(triggerShape, triggerConfiguration.TriggerType.type);
+			// Once synchronized, only the expected gap position may re-sync.
+			// Otherwise a stretched-tooth pair mid-revolution passes the ratio
+			// windows and kicks a running engine out of sync with C9003 - see the
+			// m74_9 logs: the false pair is 1.7-2.0 at ~300 rpm but grows to
+			// 2.476 at 402 rpm (firing), overlapping the real-gap window, so no
+			// ratio window can separate them. The gate is wheel-aware and
+			// asymmetric: a real gap can only arrive LATE (noise inserts spurious
+			// teeth, shifting the count up), never early - so a candidate before
+			// expectedEventCount - 2 is necessarily a false pair and is ignored
+			// (the decoder keeps counting, the real gap re-syncs cleanly). A
+			// candidate at or after the expected position is accepted, and the
+			// existing too-many/few-teeth counter machinery reports any count
+			// mismatch exactly like the ratio-only decoder did. Note: eventCount
+			// was already incremented for the current event (same condition as
+			// the noise filter's isGapExpected, which runs pre-increment). NOT
+			// keyed on useOnlyPrimaryForSync: the 60-2 wheel leaves that flag
+			// false when a cam/VVT input is configured (secondary events must
+			// reach the decoder), and the bypass disabled the gate exactly where
+			// it was needed.
+			uint32_t expectedCount = triggerShape.getExpectedEventCount(triggerWheel);
+			uint32_t eventsSinceSync = currentCycle.eventCount[(int)triggerWheel];
+			// Keep upstream decoding for other boards and VVT sequence discovery.
+			// These gates support the board-specific relaxed tooth-count checks.
+			bool guardSyncPosition = get_board_override_result(custom_board_syncAcceptToothLoss, false)
+				|| get_board_override_result(custom_board_syncEarlyGapWhileCranking, false)
+				|| get_board_override_result(custom_board_syncGapHardening, false)
+				|| get_board_override_result(custom_board_requireValidatedSync, false);
+			bool atExpectedGapPosition = !guardSyncPosition || !wasSynchronized ||
+				(expectedCount == 0 || eventsSinceSync + 2 >= expectedCount);
+
+			// Minimum-elapsed-time gate: a REAL gap can only arrive roughly one
+			// full revolution after the previous sync point. A noise storm
+			// injects many edges in a few ms, so the event count can reach
+			// expectedCount at a storm edge mid-revolution; that edge then
+			// passes the ratio windows (chaotic spacings occasionally land
+			// inside), the position gate and the count check and false-syncs
+			// the decoder "cleanly" - no error, no desync, just a silent +1 to
+			// the sync counter and a shifted phase basis. The m74_9 car logs
+			// show the result: ~9 syncs/s at 270 rpm (the crank makes 4.5
+			// rev/s), and the engine-cycle counter racing ~2-3x. Require at
+			// least a quarter of the previous revolution's duration - storm
+			// syncs arrive within a few percent of a revolution, and no real
+			// engine accelerates 4x within one revolution (the first-combustion
+			// catch, the fastest real transition, compresses the next revolution
+			// to ~0.3-0.5x). The first sync and re-syncs after a desync have no
+			// previous revolution to compare against and stay exempt.
+			bool tooEarlyForSync = guardSyncPosition && wasSynchronized
+				&& lastFullRevolutionDurationNt > 0
+				&& (nowNt - startOfCycleNt) < lastFullRevolutionDurationNt / 4;
+
+			// Real-tooth-before-the-gap gate: the missing-teeth gap always
+			// follows a REAL tooth whose period is close to the revolution's
+			// mean (compression ripple moves it maybe 0.6-1.4x, never below a
+			// quarter). A storm-inflated candidate follows a storm edge - a
+			// few hundred us vs ~4 ms at cranking - no matter WHERE in the
+			// revolution the storm lands, so this gate rejects storm syncs the
+			// elapsed-time gate cannot reach (storms late in the revolution).
+			// Board opt-in (m74_9): wheels with irregular tooth patterns or
+			// real cranking logs with extreme per-tooth variation would trip
+			// this on legitimate gaps.
+			bool gapHardening = get_board_override_result(custom_board_syncGapHardening, false);
+			efitick_t minRealToothNt = (lastFullRevolutionDurationNt > 0 && expectedCount > 0)
+				? lastFullRevolutionDurationNt / expectedCount / 4
+				: 0;
+			bool previousToothNotReal = gapHardening && wasSynchronized
+				&& minRealToothNt > 0
+				&& toothDurations[1] < minRealToothNt;
+
+			isSynchronizationPoint = !tooEarlyForSync && !previousToothNotReal && atExpectedGapPosition && isSyncPoint(triggerShape, triggerConfiguration.TriggerType.type);
+
+			// First-combustion protection (board opt-in via
+			// custom_board_syncByPositionWhileCranking, m74_9): at the catch the
+			// crank accelerates so hard that the REAL missing-teeth gap can
+			// compress below the ratio window (documented below 2.25 for 36-2,
+			// same physics for 60-2) - the decoder would reject the sync at the
+			// exact gap position, count another full revolution and fire C9002
+			// right when the engine just caught. At the exact expected position
+			// the tooth count already proves this IS the gap, so accept it
+			// unconditionally while the engine is still in the cranking band.
+			// The ceiling is 4x crankingRpm, not 2x: at the catch the per-tooth
+			// INSTANT rpm spikes to 2-3x cranking speed on the same revolution
+			// the gap arrives (m74_9 cranking_rpm=500 -> gap rejected at
+			// ~1050-1250 instant rpm, C9002 "expected 58 got 58" at every start
+			// attempt). 4x only extends the opt-in acceptance window; the
+			// position/count/elapsed-time/real-tooth gates all still apply.
+			// The only way this mis-syncs is a single noise-inserted/missed
+			// tooth shifting the count by one: the resulting 6-degree phase
+			// error is silent (the counter check passes), but it self-corrects
+			// within one revolution - the next real gap arrives at count
+			// expected-1, syncs with a count mismatch (C9003) and the decoder
+			// re-synchronizes cleanly. Harmless in the cranking band, so the
+			// skip is off once the engine is running.
+			// Conditions are evaluated lazily: mock tests run the decoder with
+			// engineConfiguration = nullptr.
+			if (!isSynchronizationPoint && !tooEarlyForSync && !previousToothNotReal && wasSynchronized && atExpectedGapPosition &&
+					get_board_override_result(custom_board_syncByPositionWhileCranking, false) &&
+					currentCycle.eventCount[(int)triggerWheel] == triggerShape.getExpectedEventCount(triggerWheel) &&
+					// the missing-teeth gap is physically 3 tooth slots; even the
+					// hardest first-combustion acceleration cannot compress it
+					// below ~1.0 tooth times (the crank speed would have to more
+					// than triple across a single 6-degree tooth), and the m74_9
+					// catch compressed it below 1.2 - which rejected the REAL gap
+					// and produced the 00:05 C9002 "expected 58 got 58". A much
+					// shorter "gap" is a noise edge right after a real tooth
+					// (e.g. 250 us after tooth 57: ratio 0.07), which the count
+					// check alone cannot distinguish from the real gap. The 0.8
+					// floor sits below any physical gap and 11x above the noise
+					// case. Board opt-in (m74_9): some wheels legitimately
+					// override gaps at ratios below 0.8 (see subaru.overrideGap).
+					(!gapHardening || triggerSyncGapRatio >= 0.8f) &&
+#if EFI_UNIT_TEST
+					// mock tests run the decoder with engineConfiguration = nullptr
+					engineConfiguration != nullptr &&
+#endif
+					Sensor::getOrZero(SensorType::Rpm) < 4 * engineConfiguration->cranking.rpm) {
+				isSynchronizationPoint = true;
+			}
+
 			if (isSynchronizationPoint) {
 				enginePins.debugTriggerSync.toggle();
 			}
@@ -665,6 +791,13 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 		  triggerCountersError = getEventCountersError(triggerShape);
 			bool isDecodingError = isTriggerCounterError(triggerCountersError);
 
+			// Only a sync with the exact expected tooth count is a validated crank
+			// revolution - the only kind the engine-cycle counter must count.
+			// Wheels without gap sync (isSynchronizationNeeded == false) sync on
+			// every cycle boundary and have no false-gap mechanism, so their
+			// syncs always count (legacy behavior for single-tooth wheels).
+			lastSyncWasClean = !triggerShape.isSynchronizationNeeded || !isDecodingError;
+
 			if (triggerStateListener) {
 				triggerStateListener->OnTriggerSynchronization(wasSynchronized, isDecodingError);
 			}
@@ -675,19 +808,123 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			//  - Due to some mistake in timing, we found what looks like a sync point but actually isn't
 			// In either case, we should wait for another sync point before doing anything to try and run an engine,
 			// so we clear the synchronized flag.
+			bool syncValidated = false;
 			if (wasSynchronized && isDecodingError) {
-				setTriggerErrorState();
-				onNotEnoughTeeth(currentCycle.current_index, triggerShape.getSize());
+				// Cranking-band early-gap acceptance (board opt-in via
+				// custom_board_syncEarlyGapWhileCranking, m74_9): a ratio-validated
+				// candidate that arrived 1-2 events before the expected count means
+				// events were LOST between the gaps (the analog VR conditioner
+				// swallows 1-2 teeth during the first-combustion catch; noise only
+				// INSERTS events, so a deficit cannot be noise). At the catch,
+				// desyncing here cuts fuel/spark exactly when the engine first fires
+				// - the observed m74_9 C9003 'got 56/0' kill right after the catch.
+				// A 1-2 event deficit shifts the phase basis by 6-12 degrees only
+				// for the already-elapsed part of the revolution (the sync
+				// re-anchors at the gap), which is harmless in the cranking band.
+				// Count excess keeps the classic C9003 path since that IS the
+				// noise signature. The sync is treated as validated: the candidate
+				// passed the ratio windows, the position gate and the elapsed-time
+				// gate, and the count deficit direction proves it is the real gap.
+				bool earlyGapAccepted =
+					get_board_override_result(custom_board_syncEarlyGapWhileCranking, false)
+					&& triggerCountersError <= 0 && triggerCountersError >= -2
+#if EFI_UNIT_TEST
+					// mock tests run the decoder with engineConfiguration = nullptr
+					&& engineConfiguration != nullptr
+#endif
+					// 4x crankingRpm (was 2x): the per-tooth instant rpm spikes past
+					// 2x cranking speed at the first-combustion catch, exactly when
+					// the conditioner swallows the 1-2 teeth this acceptance exists for.
+					&& Sensor::getOrZero(SensorType::Rpm) < 4 * engineConfiguration->cranking.rpm;
 
-				// Something wrong, no longer synchronized
-				setShaftSynchronized(false);
+				// Running-band tooth-loss tolerance (board opt-in via
+				// custom_board_syncAcceptToothLoss, m74_9): the same deficit
+				// signature accepted above the cranking band. The L9779 VR
+				// conditioner intermittently eats ONE decode edge mid-revolution
+				// at running rpm (datasheet 6.14: the adaptive filter/hysteresis
+				// suppresses the output edge when the squared signal high level
+				// falls below Tfilter) - the 2026-08-24 20:43 drive: 19 C9003
+				// clusters at 1763-4005 rpm, 837/837 'newerr' lines with the gap
+				// ratio windows PASSING ('Y') and the count short by exactly one
+				// (57/58). Desyncing there cuts fuel/spark for a revolution, flaps
+				// the rpm sensor, and opens the storage gate right into an MFS
+				// write storm - far worse than the 6-12 degree phase offset of
+				// accepting the real gap and re-anchoring. Same guards as the
+				// cranking acceptance: deficit-only bound (noise inserts, never
+				// deletes), ratio/position/elapsed-time gates already passed. The
+				// board's lambda picks the rpm band (m74_9: cranking..7000); the
+				// decoder applies no rpm ceiling itself.
+				bool runningToothLossAccepted =
+					get_board_override_result(custom_board_syncAcceptToothLoss, false)
+					&& triggerCountersError <= 0 && triggerCountersError >= -2
+#if EFI_UNIT_TEST
+					&& engineConfiguration != nullptr
+#endif
+					&& Sensor::getOrZero(SensorType::Rpm) >= engineConfiguration->cranking.rpm;
 
-				// This is a decoding error
-				onTriggerError();
-				printGaps("newerr", triggerConfiguration, triggerShape);
+				if (earlyGapAccepted || runningToothLossAccepted) {
+					// keep the synchronization, count the revolution as validated
+					lastSyncWasClean = true;
+					syncValidated = true;
+					setShaftSynchronized(true);
+					printGaps(runningToothLossAccepted ? "toothloss" : "earlygap", triggerConfiguration, triggerShape);
+					boardTriggerSyncEvent(runningToothLossAccepted ? 'T' : 'A', triggerCountersError, triggerSyncGapRatio,
+						triggerShape.gapTrackingLength >= 2 ? 1.0f * toothDurations[1] / toothDurations[2] : 0.0f);
+				} else {
+					setTriggerErrorState();
+					onNotEnoughTeeth(currentCycle.current_index, triggerShape.getSize());
+
+					// Something wrong, no longer synchronized
+					setShaftSynchronized(false);
+
+					// This is a decoding error
+					onTriggerError();
+					printGaps("newerr", triggerConfiguration, triggerShape);
+					boardTriggerSyncEvent('E', triggerCountersError, triggerSyncGapRatio,
+						triggerShape.gapTrackingLength >= 2 ? 1.0f * toothDurations[1] / toothDurations[2] : 0.0f);
+				}
 			} else {
 				// If this was the first sync point OR no decode error, we're synchronized!
+				syncValidated = true;
 				setShaftSynchronized(true);
+				boardTriggerSyncEvent(wasSynchronized ? 'S' : 'R', 0, triggerSyncGapRatio,
+					triggerShape.gapTrackingLength >= 2 ? 1.0f * toothDurations[1] / toothDurations[2] : 0.0f);
+			}
+
+			// Sync-anchor correction (board opt-in via
+			// custom_board_syncGapAnchorCorrection, m74_9): the missing-teeth gap
+			// is PHYSICALLY syncRatioAvg slots (3.0 for a 60-2), but the L9779
+			// conditioner emits the sync edge ~0.6 pitch EARLY - a spurious edge
+			// from the missing region whose auto-hysteresis re-quantized down
+			// during the gap, with the squared-signal latch then suppressing the
+			// real first-tooth edge (measured on the car: gap0 2.36-2.5, shift
+			// constant in angle across rpm because the auto-H tracks amplitude).
+			// The decoder would anchor the phase at that early edge, advancing
+			// ALL scheduling by ~3.8 degrees.
+			// The per-level VR amplitude MODEL is the correction state (the
+			// default, m74_9_vr_model.cpp): rpm -> hysteresis level -> learned
+			// shift per level. The in-band measurement TRAINS the model (weak
+			// hook triggerObserveGapShift); a stretched/corrupted measurement
+			// (out of [0, 1.5] pitch) never trains it and the model value keeps
+			// applying. Only validated syncs participate.
+			if (syncValidated && get_board_override_result(custom_board_syncGapAnchorCorrection, false)) {
+				if (toothDurations[1] > 0) {
+					float measuredGapRatio = 1.0f * toothDurations[0] / toothDurations[1];
+					float measuredPitch = triggerShape.syncRatioAvg - measuredGapRatio;
+
+					if (measuredPitch >= 0 && measuredPitch <= 1.5f) {
+						triggerObserveGapShift(measuredPitch);
+					}
+
+					// apply the model's current value (negative = board has no model)
+					float expectedPitch = get_board_override_result(custom_board_vrGapShiftPitch, -1.0f);
+					if (expectedPitch >= 0 && expectedPitch <= 1.5f) {
+						// one slot = 360 / totalTeeth degrees; totalTeeth = expectedEvents + skipped
+						// (58 + 2 = 60 for the 60-2 -> 6 deg per pitch)
+						float pitchDeg = 360.0f / (triggerShape.getExpectedEventCount(TriggerWheel::T_PRIMARY) + triggerShape.syncRatioAvg - 1);
+						getTriggerCentral()->gapAnchorCorrectionDeg = expectedPitch * pitchDeg;
+					}
+				}
 			}
 
 			// this call would update duty cycle values
@@ -776,6 +1013,34 @@ bool TriggerDecoderBase::isSyncPoint(const TriggerWaveform& triggerShape, trigge
 		return triggerSyncGapRatio < secondGap;
 	}
 
+	// Normalize tooth durations by the learned per-tooth profile when a board
+	// provides one (m74_9): the systematic compression ripple is divided out,
+	// so the missing-teeth gap ratio stays ~3.0 even under combustion instead
+	// of wandering outside the window. The weak default factor is 1.0 - no
+	// behavior change for boards without a learned profile.
+	// The profile is applied ONLY at running rpm (>= 2 * crankingRpm): during
+	// cranking the raw ratios are stable (observed 2.0-3.2 on m74_9) and the
+	// cranking-band position-based acceptances (count-58 bypass, count-56/57
+	// early gap) cover the first-combustion compression. Below the threshold
+	// the profile is actively harmful: when the phase basis is shifted by one
+	// tooth (the bypass accepting the tooth AFTER a compressed+lost-event
+	// gap), the sliding slot window applies the wrong teeth's factors and can
+	// keep the REAL gap out of the windows forever - the observed 19:53:34
+	// whole-crank latch at 6 degrees off. With raw factors there the real gap
+	// always reads ~2-3 and the decoder re-anchors within one revolution.
+	// Combustion ripple at idle (~840 rpm on this engine) is below the
+	// threshold too - the count-58 bypass covers a compressed idle gap there.
+	bool useProfile =
+#if EFI_UNIT_TEST
+		// mock tests run the decoder with engineConfiguration = nullptr
+		engineConfiguration != nullptr &&
+#endif
+		Sensor::getOrZero(SensorType::Rpm) >= 2 * engineConfiguration->cranking.rpm;
+
+	int step = triggerShape.useOnlyRisingEdges ? 2 : 1;
+	int teethPerRev = (int)triggerShape.getSize() / step;
+	int currentTooth = currentCycle.current_index / step;
+
 	for (int i = 0; i < triggerShape.gapTrackingLength; i++) {
 		auto from = triggerShape.synchronizationRatioFrom[i];
 		auto to = triggerShape.synchronizationRatioTo[i];
@@ -785,13 +1050,26 @@ bool TriggerDecoderBase::isSyncPoint(const TriggerWaveform& triggerShape, trigge
 			continue;
 		}
 
-		// This is transformed to avoid a division and use a cheaper multiply instead
-		// toothDurations[i] / toothDurations[i+1] > from
+		// duration i belongs to the tooth (currentTooth - 1 - i), wrapping
+		// around one crank revolution.
+		int toothI = (currentTooth - 1 - i + teethPerRev * 2) % teethPerRev;
+		int toothI1 = (currentTooth - 2 - i + teethPerRev * 2) % teethPerRev;
+
+		float factorI = useProfile ? triggerGetToothProfileFactor(toothI) : 1.0f;
+		float factorI1 = useProfile ? triggerGetToothProfileFactor(toothI1) : 1.0f;
+		if (factorI <= 0.01f || factorI1 <= 0.01f) {
+			// Not learned yet - fall back to the raw durations.
+			factorI = 1.0f;
+			factorI1 = 1.0f;
+		}
+
+		// Normalized comparison in the multiply form (no division in the ISR):
+		//   (d[i]/fI) > (d[i+1]/fI1) * from  <=>  d[i] * fI1 > d[i+1] * fI * from
 		// is an equivalent comparison to
 		// toothDurations[i] > toothDurations[i+1] * from
 		bool isGapCondition =
-			  (toothDurations[i] > toothDurations[i + 1] * from
-			&& toothDurations[i] < toothDurations[i + 1] * to);
+			  (toothDurations[i] * factorI1 > toothDurations[i + 1] * factorI * from
+			&& toothDurations[i] * factorI1 < toothDurations[i + 1] * factorI * to);
 
 		if (!isGapCondition) {
 			return false;

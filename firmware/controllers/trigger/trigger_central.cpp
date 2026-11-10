@@ -33,6 +33,10 @@
 WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
+#ifndef EFI_TRIGGER_DEBOUNCE
+#define EFI_TRIGGER_DEBOUNCE TRUE
+#endif
+
 #define TRIGGER_WAVEFORM(x) getTriggerCentral()->triggerShape.x
 
 #if EFI_SHAFT_POSITION_INPUT
@@ -125,8 +129,6 @@ PUBLIC_API_WEAK bool boardIsSpecialVvtDecoder(vvt_mode_e vvtMode) {
 
 	return false;
 }
-
-PUBLIC_API_WEAK void boardTriggerCallback(efitick_t timestamp, float currentPhase) { UNUSED(timestamp); UNUSED(currentPhase); }
 
 static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 	return vvtMode != VVT_INACTIVE
@@ -493,7 +495,11 @@ uint32_t triggerMaxDuration = 0;
  *  - Hardware triggers
  *  - Trigger replay from CSV (unit tests)
  */
-void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
+__attribute__((noinline)) void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
+  // Raw board-level edge capture BEFORE any filtering: boards diagnose the
+  // input noise with this (m74_9 'rawtrg' console command).
+  boardRawTriggerEdge(signalIndex, isRising, timestamp);
+
   if (tooSoonToHandleSignal()) {
     return;
   }
@@ -882,6 +888,28 @@ angle_t TriggerCentral::findNextTriggerToothAngle(int p_currentToothIndex) {
  * This method is NOT invoked for VR falls.
  */
 void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
+	// Board opt-in input debounce (m74_9): VR comparator ringing and starter
+	// noise arrive as edge bursts far below the real tooth period. Dropping
+	// them here keeps the event count honest, so the position gate and the
+	// tooth-count sync validation see real teeth only. The window is applied
+	// PER POLARITY: a burst is a same-polarity double edge, while the
+	// OPPOSITE edge of a real tooth arrives sooner than the window at high
+	// rpm (the L9779 output duty compresses - at 295 rpm the short half-tooth
+	// is ~1.16 ms against the ~1.17 ms threshold), so any-edge debounce eats
+	// real useful edges there and shifts the decoder's phase basis. A real
+	// same-polarity edge is a full tooth away, far above toothUs/3.
+#if EFI_TRIGGER_DEBOUNCE
+	float debounceUs = get_board_override_result(custom_board_triggerDebounceUs, 0.0f);
+	if (debounceUs > 0) {
+		int polarity = isTriggerUpEvent(signal) ? 0 : 1;
+		if (lastDebouncedTriggerEdgeNt[polarity] != 0 && timestamp - lastDebouncedTriggerEdgeNt[polarity] < US2NT(debounceUs)) {
+			triggerDebounceDropCount++;
+			return;
+		}
+		lastDebouncedTriggerEdgeNt[polarity] = timestamp;
+	}
+#endif // EFI_TRIGGER_DEBOUNCE
+
 	if (triggerShape.shapeDefinitionError) {
 		// trigger is broken, we cannot do anything here
 		warning(ObdCode::CUSTOM_ERR_UNEXPECTED_SHAFT_EVENT, "Shaft event while trigger is mis-configured");
@@ -891,6 +919,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	// This code gathers some statistics on signals and compares accumulated periods to filter interference
 	if (engineConfiguration->useNoiselessTriggerDecoder) {
 		if (!noiseFilter.noiseFilter(timestamp, &triggerState, signal)) {
+			triggerNoiseFilterDropCount++;
 			return;
 		}
 		if (!isUsefulSignal(signal, triggerShape)) {
@@ -991,8 +1020,29 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		}
 
 #if EFI_ENGINE_CONTROL
-		// Handle ignition and injection
-		mainTriggerCallback(triggerIndexForListeners, timestamp, currentEngineDecodedPhase, nextPhase);
+			// Ignition and injection stay off for the first crank revolution after a
+			// fresh synchronization on boards that opt in via
+			// custom_board_requireValidatedSync (m74_9): the first sync point has no
+			// tooth count to validate against, so a false gap (a stretched tooth pair,
+			// gap0 ~1.7-2.0 on a firing engine vs the real 3.9 gap) can sync the
+			// decoder at the wrong position. Firing from it hits the wrong phase and
+			// backfires through the intake. The position is only proven when the next
+			// gap arrives at the expected tooth count - exactly one revolution later
+			// (synchronizationCounter reaches 1).
+			bool requireValidatedSync = get_board_override_result(custom_board_requireValidatedSync, false);
+			if (!requireValidatedSync || triggerState.getSynchronizationCounter() >= 1) {
+				// Sync-anchor correction (board opt-in via
+				// custom_board_syncGapAnchorCorrection, m74_9): the sync edge fires
+				// EARLY (spurious missing-region edge, see the decoder-side update of
+				// gapAnchorCorrectionDeg), so the scheduling phase basis is advanced
+				// by the learned correction; retard the phase pair by it. The pair is
+				// shifted uniformly so the scheduler's between-teeth interpolation
+				// stays consistent. 0 when the hook is off.
+				float anchorCorrection = gapAnchorCorrectionDeg;
+				angle_t correctedPhase = wrapAngleMethod(currentEngineDecodedPhase - anchorCorrection, "anchorCorrPhase", ObdCode::CUSTOM_ERR_6555);
+				angle_t correctedNextPhase = wrapAngleMethod(nextPhase - anchorCorrection, "anchorCorrNext", ObdCode::CUSTOM_ERR_6555);
+				mainTriggerCallback(triggerIndexForListeners, timestamp, correctedPhase, correctedNextPhase);
+			}
 #endif // EFI_ENGINE_CONTROL
 
     temp_mapVvt_index = triggerIndexForListeners / 2;

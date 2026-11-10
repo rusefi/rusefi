@@ -15,6 +15,47 @@
 const char *getTrigger_event_e(trigger_event_e value);
 const char *getTrigger_value_e(TriggerValue value);
 
+/**
+ * Learned per-tooth time profile factor, used to normalize tooth durations in
+ * the sync gap check (see isSyncPoint). A board that learns the wheel
+ * non-uniformity (m74_9) overrides this with a strong definition; the weak
+ * default is 1.0 = no normalization, the behavior every other board has.
+ * The factor is the tooth's regular (no-missing-teeth) time share of the
+ * revolution relative to the average tooth; the gap tooth keeps factor 1.0
+ * so the missing-teeth gap still shows its ~3x ratio.
+ * The weak default lives in trigger_board_hooks.cpp (not in
+ * trigger_decoder.cpp): a same-TU weak definition is bound by GCC LTO at
+ * the call site before a board's strong override can win at link time.
+ */
+__attribute__((noinline)) float triggerGetToothProfileFactor(int toothIndex);
+
+/**
+ * Board diagnostics hook, called at every trigger sync point with the event
+ * kind and the count/gap state at the sync:
+ *   kind: 'S' = validated (clean-count) sync, 'R' = first sync / re-sync,
+ *         'E' = count-error desync (the C9003 path),
+ *         'A' = early-gap acceptance (count deficit of 1-2, cranking band,
+ *              board opt-in via custom_board_syncEarlyGapWhileCranking),
+ *         'T' = tooth-loss acceptance (count deficit of 1-2, running band,
+ *              board opt-in via custom_board_syncAcceptToothLoss).
+ * countersError = eventCount - expectedEventCount at the sync (0 for S/R).
+ * gap0/gap1 are the decoder's ratio windows values (0 if not tracked).
+ * The weak default lives in trigger_board_hooks.cpp (not in
+ * trigger_decoder.cpp): a same-TU weak definition is bound by GCC LTO at
+ * the call site before a board's strong override can win at link time.
+ */
+__attribute__((noinline)) void boardTriggerSyncEvent(char kind, int countersError, float gap0, float gap1);
+
+/**
+ * Board hook called by the decoder at every validated sync with the measured
+ * missing-teeth gap shift in pitch units (syncRatioAvg - measuredGap), when
+ * the measurement is in band [0, 1.5]. Boards with a VR amplitude model
+ * (m74_9) train their per-level shift table from it - the model is the
+ * correction state, the measurement is the teacher. The weak default lives
+ * in trigger_board_hooks.cpp (same LTO reason as boardTriggerSyncEvent).
+ */
+__attribute__((noinline)) void triggerObserveGapShift(float measuredPitch);
+
 struct TriggerStateListener {
 #if EFI_SHAFT_POSITION_INPUT
 	virtual void OnTriggerStateProperState(efitick_t nowNt, size_t triggerStateIndex) = 0;
@@ -100,6 +141,16 @@ public:
 	 */
 	void incrementShaftSynchronizationCounter();
 
+	/**
+	 * Set by decodeTriggerEvent on every sync point: true only when the tooth
+	 * count matched the expectation exactly - the only kind of sync that
+	 * proves a real crank revolution. False gap pairs mid-revolution always
+	 * have a count mismatch and leave it false, so the engine-cycle counter
+	 * can ignore them (see rpmShaftPositionCallback: the m74_9 false-sync
+	 * storms raced the revolution counter ahead of real time).
+	 */
+	bool lastSyncWasClean = false;
+
 #if EFI_UNIT_TEST
 	/**
 	 * used only for trigger export
@@ -167,6 +218,8 @@ public:
 	 * for virtual double trigger see timeAtVirtualZeroNt
 	 */
 	efitick_t startOfCycleNt;
+	// Previous complete revolution, used to reject implausibly early sync gaps.
+	efitick_t lastFullRevolutionDurationNt = 0;
 
 	uint32_t findTriggerZeroEventIndex(
 			TriggerWaveform& shape,
