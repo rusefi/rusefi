@@ -12,8 +12,10 @@ void SimpleTransmissionController::init() {
         enginePins.tcuSolenoids[i].initPin("Transmission Solenoid", engineConfiguration->tcu_solenoid[i], engineConfiguration->tcu_solenoid_mode[i]);
     }
 
-	// Generic4 and GM4L6X already own their pressure PWM output.
-	if (getMode() == TransmissionControllerMode::SimpleTransmissionController) {
+	// This PWM is opt-in: the proven six-solenoid behavior is unchanged
+	// until the pressure output and duty curves have been bench-calibrated.
+	// Generic4 and GM4L6X continue to own their existing pressure PWM.
+	if (getMode() == TransmissionControllerMode::SimpleTransmissionController && engineConfiguration->tcuPcControlEnabled == 1) {
 		enginePins.tcuPcSolenoid.initPin("Simple TCU Pressure Solenoid", engineConfiguration->tcu_pc_solenoid_pin, engineConfiguration->tcu_pc_solenoid_pin_mode);
 		startSimplePwm(&simplePcPwm, "Simple TCU Line Pressure", &engine->scheduler,
 			&enginePins.tcuPcSolenoid, engineConfiguration->tcu_pc_solenoid_freq, 0);
@@ -21,7 +23,7 @@ void SimpleTransmissionController::init() {
 }
 
 void SimpleTransmissionController::update(gear_e gear) {
-	if (getMode() == TransmissionControllerMode::SimpleTransmissionController) {
+	if (getMode() == TransmissionControllerMode::SimpleTransmissionController && engineConfiguration->tcuPcControlEnabled == 1) {
 		updateLinePressure(gear);
 	}
 
