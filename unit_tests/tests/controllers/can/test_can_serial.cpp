@@ -168,6 +168,21 @@ TEST_F(IsoTpFlowControl, WaitPreservesIncomingCommandAndCompletesResponse) {
 	EXPECT_EQ(0, state.rxFifoBuf.getCount());
 }
 
+TEST_F(IsoTpFlowControl, BroadcastPauseExpiresAndResponseRenewsIt) {
+	auto request = frame({0x01, 0x55});
+	state.receiveFrame(request, nullptr, 0, 0);
+	EXPECT_EQ(getTimeNowNt() + MS2NT(CAN_SERIAL_PAUSE_MS), engine->pauseCANdueToSerialUntil);
+
+	eth.moveTimeForwardMs(CAN_SERIAL_PAUSE_MS + 1);
+	EXPECT_LT(engine->pauseCANdueToSerialUntil, getTimeNowNt());
+
+	transport.duringFirstTransmit = [&] {
+		transport.crfList.push_back(frame({0x30, 0, 0}));
+	};
+	EXPECT_EQ(10, send());
+	EXPECT_EQ(getTimeNowNt() + MS2NT(CAN_SERIAL_PAUSE_MS), engine->pauseCANdueToSerialUntil);
+}
+
 TEST_F(IsoTpFlowControl, WaitPreservesPartiallyReceivedCommandAndCompletesResponse) {
 	auto first = frame({0x10, 10, 1, 2, 3, 4, 5, 6});
 	state.receiveFrame(first, nullptr, 0, 0);
