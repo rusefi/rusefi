@@ -329,7 +329,8 @@
 #define STM32_SERIAL_USE_USART1             FALSE
 #endif
 #define STM32_SERIAL_USE_USART2             FALSE
-#define STM32_SERIAL_USE_USART3             FALSE
+// USART3 supports the board LIN master; the board selects its TX/RX pins.
+#define STM32_SERIAL_USE_USART3             TRUE
 #define STM32_SERIAL_USE_UART4              FALSE
 #define STM32_SERIAL_USE_UART5              FALSE
 #define STM32_SERIAL_USE_USART6             TRUE
@@ -338,7 +339,9 @@
  * SPI driver system settings.
  */
 #define STM32_SPI_USE_SPI1                  TRUE
+#ifndef STM32_SPI_USE_SPI2
 #define STM32_SPI_USE_SPI2                  FALSE
+#endif
 #define STM32_SPI_USE_SPI3                  FALSE
 #define STM32_SPI_USE_SPI4                  FALSE
 #define STM32_SPI_USE_SPI5                  FALSE
@@ -421,7 +424,8 @@
 
 /*
  * WDG driver system settings.
+ * Assign the independent watchdog when a board enables HAL_USE_WDG.
  */
-#define STM32_WDG_USE_IWDG                  FALSE
+#define STM32_WDG_USE_IWDG                  TRUE
 
 #endif /* MCUCONF_H */

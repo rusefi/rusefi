@@ -231,6 +231,49 @@ static /* constexpr */ ADCConversionGroup convGroupSlow = {
 	.sqr3	=   ADC_SQR3_SQ1_N(0) |   ADC_SQR3_SQ2_N(1) |   ADC_SQR3_SQ3_N(2) |  ADC_SQR3_SQ4_N(3) |   ADC_SQR3_SQ5_N(4) |   ADC_SQR3_SQ6_N(5), // Conversion group sequence 1...6
 };
 
+
+#if EFI_ADC3_SLOW
+// Diagnostic scan in EFI_ADC_32..39 order, separate from the configured
+// temperature scan. Never stop a conversion owned by slow ADC or knock.
+static const ADCConversionGroup convGroupSlowAdc3 = {
+	.circular			= FALSE,
+	.num_channels		= 8,
+	.end_cb				= nullptr,
+	.error_cb			= slowAdcErrorCB,
+	/* HW dependent part.*/
+	.cr1				= 0,
+	.cr2				= ADC_CR2_SWSTART,
+	.smpr1 =
+		ADC_SMPR1_SMP_AN14(ADC_SAMPLING_SLOW) |
+		ADC_SMPR1_SMP_AN15(ADC_SAMPLING_SLOW),
+	.smpr2 =
+		ADC_SMPR2_SMP_AN4(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN5(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN6(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN7(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN8(ADC_SAMPLING_SLOW) |
+		ADC_SMPR2_SMP_AN9(ADC_SAMPLING_SLOW),
+	.htr	= 0,
+	.ltr	= 0,
+	/* EFI_ADC_32..39 in sequence order: IN4, IN5, IN6, IN7, IN8, IN9, IN14, IN15 */
+	.sqr1	= 0,
+	.sqr2	= ADC_SQR2_SQ7_N(14) | ADC_SQR2_SQ8_N(15),
+	.sqr3	= ADC_SQR3_SQ1_N(4) | ADC_SQR3_SQ2_N(5) | ADC_SQR3_SQ3_N(6) | ADC_SQR3_SQ4_N(7) | ADC_SQR3_SQ5_N(8) | ADC_SQR3_SQ6_N(9),
+};
+
+bool readSlowAdc3All(adcsample_t samples[8]) {
+	osalSysLock();
+	if (ADCD3.thread != nullptr || (ADCD3.state != ADC_READY && ADCD3.state != ADC_ERROR)) {
+		osalSysUnlock();
+		return false;
+	}
+	adcStartConversionI(&ADCD3, &convGroupSlowAdc3, samples, 1);
+	msg_t result = osalThreadSuspendS(&ADCD3.thread);
+	osalSysUnlock();
+	return result == MSG_OK;
+}
+#endif
+
 #if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == TRUE)
 
 typedef enum {
@@ -489,6 +532,33 @@ const ADCConversionGroup* getKnockConversionGroup(uint8_t channelIdx) {
 #endif // KNOCK_HAS_CH2
 
 	return &adcConvGroupCh1;
+}
+
+
+// Diagnostic burst on the board's configured knock ADC. It can preempt an
+// owned ADC3 slow batch, but must not steal a knock or another diagnostic
+// conversion. No completion callback feeds these samples into knock DSP.
+bool knockBurstSample(uint32_t adcInChannel, adcsample_t* buf, size_t count) {
+	if (!buf || adcInChannel > 15 || count == 0 || (count != 1 && count % 2 != 0)) {
+		return false;
+	}
+	ADCConversionGroup group = adcConvGroupCh1;
+	group.sqr3 = ADC_SQR3_SQ1_N(adcInChannel);
+	group.end_cb = nullptr;
+	group.error_cb = nullptr;
+
+	osalSysLock();
+#if EFI_ADC3_SLOW
+	adc3SlowPreemptI(&KNOCK_ADC);
+#endif
+	if (KNOCK_ADC.thread != nullptr || (KNOCK_ADC.state != ADC_READY && KNOCK_ADC.state != ADC_ERROR)) {
+		osalSysUnlock();
+		return false;
+	}
+	adcStartConversionI(&KNOCK_ADC, &group, buf, count);
+	msg_t result = osalThreadSuspendS(&KNOCK_ADC.thread);
+	osalSysUnlock();
+	return result == MSG_OK;
 }
 
 #endif // EFI_SOFTWARE_KNOCK
