@@ -32,6 +32,9 @@ DDEFS += -DDIAG_5VP_PIN=Gpio::MM100_SPI3_MOSI
 DDEFS += -DSTM32_ICU_USE_TIM1=TRUE -DSTM32_PWM_USE_TIM1=FALSE
 DDEFS += -DEFI_SENT_SUPPORT=TRUE
 
+# [tag:skip_can2_init] single CAN bus: ignore CAN2 pins in tunes from two-CAN boards
+DDEFS += -DSKIP_CAN2_INIT=TRUE
+
 ONBOARD_MEMS_TYPE=LIS2DH12
 
 # this one is questionable TODO dron

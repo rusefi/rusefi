@@ -120,7 +120,12 @@ static CANDriver* getCanDevice(size_t index)
 	case 0:
 		return detectCanDevice(engineConfiguration->canRxPin, engineConfiguration->canTxPin);
 	case 1:
+#if SKIP_CAN2_INIT
+		// [tag:skip_can2_init] single-CAN board: ignore CAN2 pins of a tune loaded from a two-CAN board
+		return nullptr;
+#else
 		return detectCanDevice(engineConfiguration->can2RxPin, engineConfiguration->can2TxPin);
+#endif // SKIP_CAN2_INIT
 #if (EFI_CAN_BUS_COUNT >= 3)
 	case 2:
 		return detectCanDevice(engineConfiguration->can3RxPin, engineConfiguration->can3TxPin);
@@ -187,9 +192,13 @@ static void canInfo() {
 	efiPrintf("CAN1 RX %s", hwPortname(engineConfiguration->canRxPin));
 	canHwInfo(getCanDevice(0));
 
+#if SKIP_CAN2_INIT
+	efiPrintf("CAN2 is not initialized on this board");
+#else
 	efiPrintf("CAN2 TX %s %s err=%d qdrop=%d listenOnly=%s", hwPortname(engineConfiguration->can2TxPin), getCan_baudrate_e(engineConfiguration->can2BaudRate), txErrorCount[1], CanTxMessage::getQueueDropCount(1), boolToString(getCanListenOnly(1)));
 	efiPrintf("CAN2 RX %s", hwPortname(engineConfiguration->can2RxPin));
 	canHwInfo(getCanDevice(1));
+#endif // SKIP_CAN2_INIT
 
 #if (EFI_CAN_BUS_COUNT >= 3)
 	efiPrintf("CAN3 TX %s %s err=%d qdrop=%d listenOnly=%s", hwPortname(engineConfiguration->can3TxPin), getCan_baudrate_e(engineConfiguration->can3BaudRate), txErrorCount[2], CanTxMessage::getQueueDropCount(2), boolToString(getCanListenOnly(2)));
@@ -215,8 +224,10 @@ void setCanType(int type) {
 void stopCanPins() {
 	efiSetPadUnusedIfConfigurationChanged(canTxPin);
 	efiSetPadUnusedIfConfigurationChanged(canRxPin);
+#if !SKIP_CAN2_INIT
 	efiSetPadUnusedIfConfigurationChanged(can2TxPin);
 	efiSetPadUnusedIfConfigurationChanged(can2RxPin);
+#endif // SKIP_CAN2_INIT
 #if (EFI_CAN_BUS_COUNT >= 3)
 	efiSetPadUnusedIfConfigurationChanged(can3TxPin);
 	efiSetPadUnusedIfConfigurationChanged(can3RxPin);
@@ -253,8 +264,10 @@ void startCanPins() {
 	efiSetPadModeIfConfigurationChanged("CAN TX", canTxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
 	efiSetPadModeIfConfigurationChanged("CAN RX", canRxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
 
+#if !SKIP_CAN2_INIT
 	efiSetPadModeIfConfigurationChanged("CAN2 TX", can2TxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
 	efiSetPadModeIfConfigurationChanged("CAN2 RX", can2RxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
+#endif // SKIP_CAN2_INIT
 
 #if (EFI_CAN_BUS_COUNT >= 3)
 	efiSetPadModeIfConfigurationChanged("CAN3 TX", can3TxPin, PAL_MODE_ALTERNATE(EFI_CAN3_TX_AF));

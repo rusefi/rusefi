@@ -18,6 +18,9 @@ DDEFS += -DEFI_LOGIC_ANALYZER=FALSE
 DDEFS += -DEFI_MISFIRE_DETECTION=FALSE
 DDEFS += -DEFI_HPFP=FALSE
 
+# [tag:skip_can2_init] single CAN bus: ignore CAN2 pins in tunes from two-CAN boards
+DDEFS += -DSKIP_CAN2_INIT=TRUE
+
 DDEFS += -DBOARD_SERIAL="\"000200000000000000000000\""
 
 include $(BOARD_DIR)/mega-uaefi.mk

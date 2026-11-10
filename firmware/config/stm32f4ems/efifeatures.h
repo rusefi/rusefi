@@ -343,6 +343,15 @@
 #define EFI_CAN_SUPPORT TRUE
 #endif
 
+/**
+ * [tag:skip_can2_init] TRUE on boards with a single CAN bus: the second CAN peripheral and its
+ * pins are left alone, so a tune saved on a two-CAN board loads without claiming unrelated pins.
+ * See getCanDevice() in can_hw.cpp
+ */
+#ifndef SKIP_CAN2_INIT
+#define SKIP_CAN2_INIT FALSE
+#endif
+
 #ifndef EFI_I2C_SUPPORT
 #define EFI_I2C_SUPPORT TRUE
 #endif

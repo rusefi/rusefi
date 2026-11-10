@@ -150,6 +150,11 @@
 
 #define EFI_CAN_SUPPORT TRUE
 
+// [tag:skip_can2_init]
+#ifndef SKIP_CAN2_INIT
+#define SKIP_CAN2_INIT FALSE
+#endif
+
 #ifndef EFI_UDS
 #define EFI_UDS FALSE
 #endif
