@@ -139,7 +139,7 @@
 #define STM32_IRQ_TIM3_PRIORITY             7
 #define STM32_IRQ_TIM4_PRIORITY             7
 #define STM32_IRQ_TIM5_PRIORITY             7
-#define STM32_IRQ_TIM6_PRIORITY             7
+#define STM32_IRQ_TIM6_PRIORITY             EFI_IRQ_ADC_PRIORITY
 #define STM32_IRQ_TIM7_PRIORITY             7
 #define STM32_IRQ_TIM8_BRK_TIM12_PRIORITY   7
 #define STM32_IRQ_TIM8_UP_TIM13_PRIORITY    7
@@ -224,6 +224,9 @@
 #define STM32_GPT_USE_TIM12                 FALSE
 #define STM32_GPT_USE_TIM13                 FALSE
 #define STM32_GPT_USE_TIM14                 FALSE
+
+// TIM6 starts fast ADC conversions; match the ADC completion/error handlers.
+#define STM32_GPT_TIM6_IRQ_PRIORITY         EFI_IRQ_ADC_PRIORITY
 
 /*
  * I2C driver system settings.
