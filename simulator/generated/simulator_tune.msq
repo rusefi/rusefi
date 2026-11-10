@@ -591,8 +591,8 @@
          900
          1050
 </constant>
-        <constant digits="0" name="byFirmwareVersion" units="index">20261109</constant>
-        <constant digits="0" name="calibrationBirthday" units="">20261109</constant>
+        <constant digits="0" name="byFirmwareVersion" units="index">20261110</constant>
+        <constant digits="0" name="calibrationBirthday" units="">20261110</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -5481,7 +5481,7 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20261109" nPages="1" signature="rusEFI master.2026.11.09.f407-discovery.3394162452" version="5.0"/>
+    <versionInfo firmwareInfo="20261109" nPages="1" signature="rusEFI master.2026.11.10.f407-discovery.3394162452" version="5.0"/>
     <bibliography author="rusEFI 20261109" writeDate="date"/>
     <settings/>
     <userComments/>
