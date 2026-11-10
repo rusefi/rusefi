@@ -288,6 +288,10 @@ extern std::optional<setup_custom_get_float_type> custom_board_vrGapShiftPitch;
 // strict C9003 desync at running rpm.
 extern std::optional<setup_custom_bool_type> custom_board_syncAcceptToothLoss;
 
+// Compatibility hook for board sources. The current MAP averaging module
+// uses its existing angle windows and does not consume this override.
+extern std::optional<setup_custom_bool_type> custom_board_mapInstantAtArm;
+
 // When set and returning a positive interval (microseconds), trigger edges
 // arriving sooner than that after the previous accepted edge are dropped as
 // noise before decoding - VR comparator ringing / starter interference that

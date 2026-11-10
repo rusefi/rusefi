@@ -88,6 +88,7 @@ std::optional<setup_custom_bool_type> custom_board_syncByPositionWhileCranking;
 std::optional<setup_custom_bool_type> custom_board_syncGapHardening;
 std::optional<setup_custom_bool_type> custom_board_syncAcceptToothLoss;
 std::optional<setup_custom_bool_type> custom_board_syncGapAnchorCorrection;
+std::optional<setup_custom_bool_type> custom_board_mapInstantAtArm;
 std::optional<setup_custom_get_float_type> custom_board_vrGapShiftPitch;
 std::optional<setup_custom_get_float_type> custom_board_triggerDebounceUs;
 
