@@ -2,6 +2,8 @@ package com.rusefi.ui.llm;
 
 import com.rusefi.core.net.ConnectionAndMeta.DownloadProgressListener;
 import com.rusefi.io.LinkManager;
+import com.rusefi.io.ConnectionStatusLogic;
+import com.rusefi.io.ConnectionStatusValue;
 import com.rusefi.ui.widgets.JoinedButtons;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -100,7 +102,28 @@ class LLMTabSourcePreparationTest {
         assertEquals(0, sources.downloads.get());
     }
 
+    @Test void conversationStyleCheckIgnoresPreviousConnection() throws Exception {
+        ConnectionStatusValue previous = ConnectionStatusLogic.INSTANCE.getValue();
+        try {
+            edt(() -> { ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED); return null; });
+            assertDoesNotThrow(this::conversationPageUsesConsoleControlStyle);
+            assertEquals(ConnectionStatusValue.CONNECTED, ConnectionStatusLogic.INSTANCE.getValue());
+        } finally {
+            edt(() -> { ConnectionStatusLogic.INSTANCE.setValue(previous); return null; });
+        }
+    }
+
     @Test void conversationPageUsesConsoleControlStyle() throws Exception {
+        ConnectionStatusValue previous = edt(() -> ConnectionStatusLogic.INSTANCE.getValue());
+        try {
+            edt(() -> { ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED); return null; });
+            checkConversationPageUsesConsoleControlStyle();
+        } finally {
+            edt(() -> { ConnectionStatusLogic.INSTANCE.setValue(previous); return null; });
+        }
+    }
+
+    private void checkConversationPageUsesConsoleControlStyle() throws Exception {
         sources.cached = true;
         seedExpiredAndReadyAccounts("ready-id");
         UiTransport transport = new UiTransport();

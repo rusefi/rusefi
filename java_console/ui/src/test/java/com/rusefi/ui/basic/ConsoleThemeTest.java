@@ -10,6 +10,7 @@ import java.awt.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 /**
  * [tag:console_theme] The console look is defined in com/rusefi/ui/theme/*.properties;
@@ -17,12 +18,27 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class ConsoleThemeTest {
     @Test
+    public void lightPaletteCheckIgnoresDarkPreference() throws Exception {
+        String previous = System.getProperty(UiHelper.THEME_PROPERTY);
+        try {
+            System.setProperty(UiHelper.THEME_PROPERTY, "dark");
+            assertDoesNotThrow(this::sharedAndLightThemeFilesAreApplied);
+        } finally {
+            if (previous == null) {
+                System.clearProperty(UiHelper.THEME_PROPERTY);
+            } else {
+                System.setProperty(UiHelper.THEME_PROPERTY, previous);
+            }
+        }
+    }
+
+    @Test
     public void sharedAndLightThemeFilesAreApplied() throws Exception {
         LookAndFeel previous = UIManager.getLookAndFeel();
         boolean previousFrameDecorated = JFrame.isDefaultLookAndFeelDecorated();
         boolean previousDialogDecorated = JDialog.isDefaultLookAndFeelDecorated();
         try {
-            SwingUtilities.invokeAndWait(UiHelper::configureLaf);
+            SwingUtilities.invokeAndWait(() -> UiHelper.configureLaf(false));
 
             // shared FlatLaf.properties
             assertEquals(10, UIManager.getInt("Button.arc"));
