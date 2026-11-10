@@ -3,7 +3,7 @@
   <dontWrapJar>true</dontWrapJar>
   <headerType>gui</headerType>
   <jar>console/rusefi_console.jar</jar>
-  <outfile>c:\stuff\rusefi\misc\console_launcher\rusefi_updater.exe</outfile>
+  <outfile>rusefi_updater.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>console</chdir>
@@ -13,11 +13,11 @@
   <stayAlive>false</stayAlive>
   <restartOnCrash>false</restartOnCrash>
   <manifest></manifest>
-  <icon>c:\stuff\rusefi\misc\console_launcher\favicon.ico</icon>
+  <icon>favicon.ico</icon>
   <jre>
-    <path>%JAVA_HOME%;%PATH%</path>
+    <path>jre;%JAVA_HOME%;%PATH%</path>
     <requiresJdk>false</requiresJdk>
-    <requires64Bit>false</requires64Bit>
+    <requires64Bit>true</requires64Bit>
     <minVersion>11.0</minVersion>
     <maxVersion></maxVersion>
   </jre>
