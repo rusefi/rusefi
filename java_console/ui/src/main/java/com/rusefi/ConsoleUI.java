@@ -504,6 +504,7 @@ console live data tab is broken #8402
                     return;
                 }
                 TuningPane tp = new TuningPane(uiContext, offlineImage, getConfig().getRoot().getChild("tuning"));
+                tp.setDialogOwner(mainFrame.getFrame().getFrame());
                 tuningHolder[0] = tp;
                 tuningPane = tp;
                 tp.setErrorHandler(mainFrame::showMessageOverlay);
