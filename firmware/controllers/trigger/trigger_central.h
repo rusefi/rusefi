@@ -80,6 +80,26 @@ public:
 	// GND input pins instead of leaving them floating
 	bool hwTriggerInputEnabled = true;
 
+	// Diagnostic counters: primary-trigger edges dropped between the pin and
+	// the decoder (m74_9 trigger diagnostics, exposed via the board 'synctrace'
+	// console command). The rawtrg board capture sees the pin BEFORE these
+	// drops, so rawtrg-vs-decoder discrepancies localize the culprit stage.
+	uint32_t triggerDebounceDropCount = 0;
+	uint32_t triggerNoiseFilterDropCount = 0;
+
+	// Sync-anchor correction (degrees, board opt-in via
+	// custom_board_syncGapAnchorCorrection): the measured missing-teeth gap is
+	// systematically compressed (~2.36 vs the physical 3.0 slots) on boards
+	// whose VR conditioner emits a spurious edge ~0.6 pitch early after the
+	// gap (m74_9 L9779: the auto-hysteresis re-quantizes down during the
+	// missing teeth, the squared-signal latch then suppresses the real
+	// first-tooth edge). The decoder anchors the phase at that early edge,
+	// advancing all scheduling by ~3.8 deg. This value (EMA-smoothed, clamped
+	// to [0, 1.5] pitch) is subtracted from the scheduling phase pair in
+	// TriggerCentral::handleShaftSignal. Updated by the decoder at every
+	// validated sync; 0 when the hook is off.
+	float gapAnchorCorrectionDeg = 0;
+
 	cyclic_buffer<int> triggerErrorDetection;
 
 	/**
@@ -226,9 +246,35 @@ private:
 	// At what engine phase do we expect the next tooth to arrive?
 	// Used for checking whether your trigger pattern is correct.
 	expected<float> expectedNextPhase = unexpected;
+
+	// Input debounce (see custom_board_triggerDebounceUs): per-polarity
+	// timestamps of the last accepted trigger edge. Edges arriving sooner than
+	// the board's minimum interval after the previous edge OF THE SAME
+	// POLARITY are dropped as noise. Same-polarity comparison only: a noise
+	// burst is a same-polarity double edge, while the OPPOSITE edge of a real
+	// tooth arrives sooner than the window at high rpm (the L9779 output duty
+	// compresses - at 295 rpm the short half-tooth is ~1.16 ms against the
+	// ~1.17 ms threshold), so any-edge debounce eats real useful edges there.
+	efitick_t lastDebouncedTriggerEdgeNt[2] = {0, 0};
 };
 
 void triggerInfo(void);
+
+// Board hook, called once per synchronized primary trigger tooth.
+// Declared WITHOUT 'weak': a weak declaration at the call site lets GCC LTO
+// bind the call to a local weak body (dead-call elimination / const folding,
+// which noinline does not prevent) BEFORE the linker can select a board's
+// strong override. The weak default lives in trigger_board_hooks.cpp (a
+// different translation unit).
+void boardTriggerCallback(efitick_t timestamp, float currentPhase);
+// Board hook, called for EVERY hardware shaft edge (primary or cam) before
+// any filtering - the debounce, the noise filter and the decoder all run
+// after it. Boards use it to capture the raw edge stream (a digital
+// oscilloscope of the comparator output). Weak default is a no-op in
+// trigger_board_hooks.cpp (keep the default out of this TU - LTO binds
+// same-TU weak calls to the local body).
+void boardRawTriggerEdge(int signalIndex, bool isRising, efitick_t timestamp);
+
 void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp);
 void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp);
 void hwHandleVvtCamSignal(TriggerValue front, efitick_t timestamp, int index);

@@ -284,3 +284,5 @@ TESTS_SRC_CPP = \
 	tests/controllers/can/dash/test_can_bmw_e46.cpp \
 	tests/controllers/algo/rotational_idle/test_rotational_idle.cpp \
 	tests/bean/test_bean_logic.cpp
+
+TESTS_SRC_CPP += $(UNIT_TESTS_DIR)/tests/trigger/test_m749_board_hooks.cpp
