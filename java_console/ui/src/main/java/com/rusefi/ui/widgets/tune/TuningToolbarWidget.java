@@ -44,6 +44,7 @@ public class TuningToolbarWidget {
     private static final int UPLOAD_DELAY_MS = 100;
 
     private final JPanel panel;
+    private Window dialogOwner;
     private final JButton burnButton;
     private final JButton discardButton;
 
@@ -295,7 +296,7 @@ public class TuningToolbarWidget {
                     return;
                 }
                 TuneFileFolder.openIn(chooser);
-                if (chooser.showOpenDialog(panel) != JFileChooser.APPROVE_OPTION) {
+                if (chooser.showOpenDialog(getDialogParent()) != JFileChooser.APPROVE_OPTION) {
                     return;
                 }
                 TuneFileFolder.remember(chooser.getSelectedFile());
@@ -460,7 +461,7 @@ public class TuningToolbarWidget {
             saveTuneChooser.setSelectedFile(null);
             TuneFileFolder.openIn(saveTuneChooser);
         }
-        if (saveTuneChooser.showSaveDialog(panel) != JFileChooser.APPROVE_OPTION) {
+        if (saveTuneChooser.showSaveDialog(getDialogParent()) != JFileChooser.APPROVE_OPTION) {
             return;
         }
         File selected = saveTuneChooser.getSelectedFile();
@@ -471,7 +472,7 @@ public class TuningToolbarWidget {
         }
         // JFileChooser does not ask before replacing a file; the current file is replaced by plain Save anyway
         if (new File(path).exists() && !new File(path).equals(current == null ? null : new File(current))
-                && JOptionPane.showConfirmDialog(panel, new File(path).getName() + " already exists. Replace it?",
+                && JOptionPane.showConfirmDialog(getDialogParent(), new File(path).getName() + " already exists. Replace it?",
                 LoadTuneHelper.SAVE_TUNE_AS_TEXT, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)
                 != JOptionPane.YES_OPTION) {
             return;
@@ -577,6 +578,15 @@ public class TuningToolbarWidget {
 
     public JPanel getPanel() {
         return panel;
+    }
+
+    /** File menu actions can run before the lazy Tuning tab is attached to the console. */
+    public void setDialogOwner(Window owner) {
+        dialogOwner = owner;
+    }
+
+    private Component getDialogParent() {
+        return dialogOwner != null ? dialogOwner : panel;
     }
 
     /**

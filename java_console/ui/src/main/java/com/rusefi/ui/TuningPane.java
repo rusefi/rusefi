@@ -493,6 +493,10 @@ public class TuningPane {
         toolbar.setErrorHandler(errorHandler);
     }
 
+    public void setDialogOwner(Window owner) {
+        toolbar.setDialogOwner(owner);
+    }
+
     enum ExitPrompt {
         NONE,
         BURN,
