@@ -15,7 +15,7 @@ void SimpleTransmissionController::init() {
 	// This PWM is opt-in: the proven six-solenoid behavior is unchanged
 	// until the pressure output and duty curves have been bench-calibrated.
 	// Generic4 and GM4L6X continue to own their existing pressure PWM.
-	if (getMode() == TransmissionControllerMode::SimpleTransmissionController && engineConfiguration->tcuPcControlEnabled == 1) {
+	if (getMode() == TransmissionControllerMode::SimpleTransmissionController && config->tcuPcControlEnabled == 1) {
 		enginePins.tcuPcSolenoid.initPin("Simple TCU Pressure Solenoid", engineConfiguration->tcu_pc_solenoid_pin, engineConfiguration->tcu_pc_solenoid_pin_mode);
 		startSimplePwm(&simplePcPwm, "Simple TCU Line Pressure", &engine->scheduler,
 			&enginePins.tcuPcSolenoid, engineConfiguration->tcu_pc_solenoid_freq, 0);
@@ -23,7 +23,7 @@ void SimpleTransmissionController::init() {
 }
 
 void SimpleTransmissionController::update(gear_e gear) {
-	if (getMode() == TransmissionControllerMode::SimpleTransmissionController && engineConfiguration->tcuPcControlEnabled == 1) {
+	if (getMode() == TransmissionControllerMode::SimpleTransmissionController && config->tcuPcControlEnabled == 1) {
 		updateLinePressure(gear);
 	}
 
@@ -86,8 +86,8 @@ void SimpleTransmissionController::updateLinePressure(gear_e gear) {
 		break;
 	default:
 		// Invalid gear: use the configured failsafe PWM duty.
-		pressureControlDuty = static_cast<int8_t>(engineConfiguration->tcuPcInvalidSensorDuty);
-		simplePcPwm.setSimplePwmDutyCycle(engineConfiguration->tcuPcInvalidSensorDuty * 0.01f);
+		pressureControlDuty = static_cast<int8_t>(config->tcuPcInvalidSensorDuty);
+		simplePcPwm.setSimplePwmDutyCycle(config->tcuPcInvalidSensorDuty * 0.01f);
 		return;
 	}
 
@@ -96,7 +96,7 @@ void SimpleTransmissionController::updateLinePressure(gear_e gear) {
 	// axis value, or the existing airflow estimate if available.
 	float axisValue = 0;
 	bool validLoad = true;
-	switch (engineConfiguration->tcuPcLoadSource) {
+	switch (config->tcuPcLoadSource) {
 	case 0:
 		axisValue = engine->engineState.airflowEstimate;
 		validLoad = std::isfinite(axisValue);
@@ -108,7 +108,7 @@ void SimpleTransmissionController::updateLinePressure(gear_e gear) {
 		break;
 	}
 	case 2:
-		axisValue = engineConfiguration->tcuPcFixedAxisValue;
+		axisValue = config->tcuPcFixedAxisValue;
 		break;
 	default:
 		validLoad = false;
@@ -117,8 +117,8 @@ void SimpleTransmissionController::updateLinePressure(gear_e gear) {
 
 	float duty = validLoad
 		? interpolate2d(axisValue, config->tcu_pcAirmassBins, *pcts)
-		: engineConfiguration->tcuPcInvalidSensorDuty;
-	if (!std::isfinite(duty)) duty = engineConfiguration->tcuPcInvalidSensorDuty;
+		: config->tcuPcInvalidSensorDuty;
+	if (!std::isfinite(duty)) duty = config->tcuPcInvalidSensorDuty;
 	if (duty < 0) duty = 0;
 	if (duty > 100) duty = 100;
 	pressureControlDuty = static_cast<int8_t>(duty);
