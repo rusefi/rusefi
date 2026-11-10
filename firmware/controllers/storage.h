@@ -53,12 +53,30 @@ enum StorageItemId {
 	EFI_LTFT_RECORD_ID = 3,
 	EFI_SECOND_TABLES_RECORD_ID = 4,
 	EFI_LUA_PAGE_RECORD_ID = 5,
+	EFI_TOOTH_PROFILE_RECORD_ID = 6,
+	EFI_VR_MODEL_RECORD_ID = 7,
 
 	EFI_STORAGE_TOTAL_ITEMS
 };
 
 // exported for unit tests only
 bool storageAllowWriteID(StorageItemId id);
+
+// Board-provided handlers for the tooth profile record (m74_9 stores the
+// learned per-tooth period profile there). Weak defaults live in
+// storage_weaks.cpp. Declared WITHOUT 'weak': a weak declaration at the
+// storage manager dispatch call site lets GCC LTO bind the call to a local
+// weak body (const folding, which noinline does not prevent) BEFORE the
+// linker can select a board's strong override - the dispatch silently
+// becomes a no-op and the board handlers get dead-code-eliminated.
+bool toothProfileStorageWrite();
+bool toothProfileStorageRead();
+
+// Board-provided handlers for the VR amplitude model record (m74_9 stores
+// the learned per-level gap shift table + the calibration scalar there).
+// Same weak-default/LTO reasoning as the tooth profile handlers above.
+bool vrModelStorageWrite();
+bool vrModelStorageRead();
 
 // read and write storate item. executed in caller context
 StorageStatus storageWrite(StorageItemId id, const uint8_t *ptr, size_t size);
