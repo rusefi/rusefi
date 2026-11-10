@@ -22,6 +22,9 @@
 #include "can_mocks.h"
 #endif /* EFI_UNIT_TEST */
 
+// Quiet periodic CAN traffic during a serial session; expire after inactivity.
+#define CAN_SERIAL_PAUSE_MS 10000
+
 #define CAN_FLOW_STATUS_OK 0
 #define CAN_FLOW_STATUS_WAIT_MORE 1
 #define CAN_FLOW_STATUS_ABORT 2
