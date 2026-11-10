@@ -1,0 +1,7 @@
+{
+  "version": "17.0.21+9",
+  "url": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.21%2B9/OpenJDK17U-jre_x64_windows_hotspot_17.0.21_9.zip",
+  "sha256": "fe4656bd78fb09812dc38c49da777f79cc33e7ee435a254be82f9e7f40d9d117",
+  "archive": "OpenJDK17U-jre_x64_windows_hotspot_17.0.21_9.zip",
+  "runtime_dir": "jdk-17.0.21+9-jre"
+}

@@ -215,11 +215,25 @@ FULL_BUNDLE_CONTENT = \
   $(ST_DRIVERS) \
   $(BIN_FOLDER) \
   $(ROOT_FOLDER_TARGETS) \
-  $(CONSOLE_FOLDER_TARGETS)
+  $(CONSOLE_FOLDER_TARGETS) \
+  $(BUNDLE_JRE)
 
 ifneq ($(BOARD_IMAGE_SCRIPT),)
-FULL_BUNDLE_CONTENT = $(ROOT_FOLDER_TARGETS) $(CONSOLE_FOLDER_TARGETS)
+FULL_BUNDLE_CONTENT = $(ROOT_FOLDER_TARGETS) $(CONSOLE_FOLDER_TARGETS) $(BUNDLE_JRE)
 endif
+
+# [tag:bundled_windows_jre] Full board bundles carry Java beside the launcher;
+# autoupdate archives intentionally omit it so updates cannot replace a running JVM.
+BUNDLE_JRE = $(FOLDER)/jre
+WINDOWS_JRE_CACHE ?= $(if $(XDG_CACHE_HOME),$(XDG_CACHE_HOME)/rusefi/jre,$(HOME)/.cache/rusefi/jre)
+WINDOWS_JRE_ARCHIVE ?=
+WINDOWS_JRE_MANIFEST ?=
+PYTHON ?= python3
+$(BUNDLE_JRE): .FORCE | $(FOLDER)
+	rm -rf $@
+	$(PYTHON) bin/prepare_windows_jre.py $@ --cache-dir "$(WINDOWS_JRE_CACHE)" \
+	  $(if $(WINDOWS_JRE_ARCHIVE),--archive "$(WINDOWS_JRE_ARCHIVE)") \
+	  $(if $(WINDOWS_JRE_MANIFEST),--manifest "$(WINDOWS_JRE_MANIFEST)")
 
 BUNDLE_FILES = \
   $(UPDATE_BUNDLE_FILES) \
@@ -396,7 +410,7 @@ $(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME)_autoupdate.zip: $(UPDATE_BUNDLE_FILES) v
 	rm -f $@
 	cd $(FOLDER) &&	zip -r ../$@ $(subst $(FOLDER)/,,$(UPDATE_BUNDLE_FILES))
 
-$(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME)_obfuscated_public_autoupdate.zip:  $(OBFUSCATED_OUT) $(BUNDLE_FILES) validate-bundle-ini | $(ARTIFACTS)
+$(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME)_obfuscated_public_autoupdate.zip:  $(OBFUSCATED_OUT) $(UPDATE_BUNDLE_FILES) validate-bundle-ini | $(ARTIFACTS)
 	cd $(FOLDER) &&	zip -r ../$@ $(subst $(FOLDER)/,,$(MOST_COMMON_BUNDLE_FILES)) $(subst $(FOLDER)/,,$(OBFUSCATED_SREC))
 
 .PHONY: bundle build_both_bundles autoupdate obfuscated bin hex dfu map elf list srec bootloader
