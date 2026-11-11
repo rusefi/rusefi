@@ -19,6 +19,41 @@ An installer wraps an already-built public bundle. It must not rebuild firmware 
 - request administrator privileges where driver installation or ECU updates require them;
 - emit install4j update metadata and checksums.
 
+## bundled Java runtime
+
+Full Windows board and universal ZIPs contain a private `jre/` directory. Their
+launcher prefers that runtime, so no separate Java installation is needed.
+Autoupdate ZIPs omit it; Linux/macOS launcher behavior is unchanged.
+
+`firmware/bin/windows_jre.json` pins the Temurin 17 archive and SHA-256.
+`firmware/bin/prepare_windows_jre.py` verifies and stages it with the runtime's
+legal notices. `WINDOWS_JRE_CACHE` selects the download cache;
+`WINDOWS_JRE_ARCHIVE` permits an already-downloaded archive, still checked
+against the pin; `WINDOWS_JRE_MANIFEST` selects an alternate pin manifest.
+Board bundles use the same settings through `make` as the universal assembler.
+
+The universal installer retains its existing install4j-managed Zulu 17.0.14
+runtime, configured by `application/jreBundles`. It excludes the imported ZIP's
+`jre/` from its file set so only the install4j-managed runtime is installed.
+No manually prepared JRE tarball is required. The portable ZIP's Temurin runtime
+and the installer's runtime are selected independently.
+
+Console autoupdates deliberately exclude the JRE and launcher. Release
+maintainers update the portable runtime pin and the install4j runtime selection
+for Java security releases, verify native-library compatibility, and publish fresh full
+bundles/installers. Installed users rerun the installer; portable users extract
+a fresh full bundle into a new directory rather than overlaying an old JRE.
+Console releases must continue supporting the shipped Java major version.
+
+For the universal installer, stage the public bundle in the work-area layout
+below and build with install4j 11. Its bundle input is project-relative and works
+in the GUI as well as on the command line:
+
+```bash
+install4jc --fail-on-warning -d /path/to/output \
+  misc/installer/universal/universal-updater.install4j
+```
+
 ## Proposed layout
 
 Keep each product independent so identities, versions, artwork, and bundle paths cannot leak between installers:
@@ -39,13 +74,26 @@ Generated EXEs, `md5sums`, `sha256sums`, and generated `updates.xml` should be i
 
 ## Bundle input
 
-Use a downloaded and extracted public bundle as the install4j input. Keep it outside the source tree, for example:
+Cache downloaded public bundles outside the checkout, then copy the universal
+ZIP and extract it into this staging layout, as specified by
+[#10530](https://github.com/rusefi/rusefi/issues/10530) and
+[#10531](https://github.com/rusefi/rusefi/pull/10531):
 
 ```text
-../bundles/rusefi_bundle_<product>/rusefi.snapshot.<product>/
+misc/installer/work-area/
+  rusefi_bundle_universal.zip
+  rusefi_bundle_universal/
+    rusefi.snapshot.universal/
+      rusefi_updater.exe
+      console/rusefi_console.jar
+      jre/
 ```
 
-Set `allPathsRelative="true"` and use only project-relative paths in the install4j file. Do not commit developer-specific paths such as `C:/stuff/...`.
+`work-area/` is ignored staging input, not source or release output. Set
+`allPathsRelative="true"` and use project-relative paths in the install4j file.
+The Launch4j output/icon paths are relative to `misc/console_launcher/`; they
+do not change the installer work-area or the installed bundle layout. Do not
+commit developer-specific paths such as `C:/stuff/...`.
 
 Package the extracted bundle root with one `dirEntry` instead of listing individual files. Firmware names contain changing dates and hashes, so references to a specific SREC become stale on every bundle refresh. Packaging the directory also prevents accidentally omitting drivers, INI files, or updater support files.
 
