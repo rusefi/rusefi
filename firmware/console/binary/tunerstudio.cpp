@@ -207,8 +207,10 @@ static uint8_t* getWorkingPageAddr(TsChannelBase* tsChannel, size_t page, size_t
 	case TS_PAGE_FS_IMAGE_SIZE:
 		{
 			uint32_t* data32 = reinterpret_cast<uint32_t*>(tsChannel->scratchBuffer + TS_PACKET_HEADER_SIZE);
-			// TODO: endian convert?
-			data32[0] = getStorageImageSize();
+			// READ32 filesystem metadata uses little-endian on every MCU.
+			uint32_t length = getStorageImageSize();
+			uint8_t* bytes = reinterpret_cast<uint8_t*>(data32);
+			for (unsigned i = 0; i < 4; i++) bytes[i] = length >> (8 * i);
 			return (uint8_t *)tsChannel->scratchBuffer + TS_PACKET_HEADER_SIZE;
 		}
 	case TS_PAGE_FS_IMAGE_DATA:
@@ -986,7 +988,12 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 	const uint16_t* data16 = reinterpret_cast<uint16_t*>(data);
 	uint32_t data32[3];
 	if (incomingPacketSize >= 13) {
-		memcpy(&data32[0], data, sizeof(data32));
+		// READ32 and CRC32 wire arguments are little-endian, including on PPC.
+		for (unsigned i = 0; i < 3; i++) {
+			const uint8_t* bytes = reinterpret_cast<const uint8_t*>(data) + 4 * i;
+			data32[i] = uint32_t(bytes[0]) | (uint32_t(bytes[1]) << 8)
+				| (uint32_t(bytes[2]) << 16) | (uint32_t(bytes[3]) << 24);
+		}
 	}
 
 	// only few commands have page argument, default page is 0
