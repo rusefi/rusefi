@@ -2451,6 +2451,20 @@ uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale predictiveMapBlendDurationValues
 custom tps_event_confirmation_e 1 bits, U08, @OFFSET@, [0:1], "INVALID", "1 sample (fastest)", "2 samples (+5 ms)", "3 samples (+10 ms)"
 tps_event_confirmation_e tpsEventConfirmation;Number of 5 ms TPS samples a change must last before the TPS event detector sees it (median filter). 1 is fastest. 2 ignores a single-sample spike and 3 a spike of up to two samples. Each extra sample adds 5 ms.
 
+! [tag:fuel_top_up] Top-up pulse after the main injection, see InjectionEvent::evaluateTopUp().
+#define FUEL_TOP_UP_CURVE_SIZE 4
+custom fuel_top_up_mode_e 1 bits, U08, @OFFSET@, [0:1], "Off", "Log only", "Inject"
+fuel_top_up_mode_e fuelTopUpMode;Off disables the top-up pulse. Log only evaluates the top-up and reports what it would inject without injecting. Inject adds fuel missing from the main pulse before the intake valve closes. Sequential injection only.
+uint8_t fuelTopUpMaxPercent;Largest top-up as a percentage of the fuel mass of the main pulse it complements.;"%", 1, 0, 0, 200, 0
+uint16_t autoscale fuelTopUpMinMass;Missing fuel below this mass is not injected.;"mg", 0.01, 0, 0, 100, 2
+uint16_t autoscale fuelTopUpMinPulse;Smallest top-up flow time, excluding injector dead time. Keep it inside the injector linear range, especially without small pulse correction.;"ms", 0.001, 0, 0, 10, 3
+uint16_t autoscale fuelTopUpMinOffTime;Minimum time the injector stays closed between the main pulse and a top-up pulse.;"ms", 0.001, 0, 0, 10, 3
+uint16_t fuelTopUpMaxRpm;No top-up above this RPM.;"RPM", 1, 0, 0, 20000, 0
+uint8_t[FUEL_TOP_UP_CURVE_SIZE] autoscale fuelTopUpRpmBins;;"RPM", 50, 0, 0, 12500, 0
+int16_t[FUEL_TOP_UP_CURVE_SIZE] fuelTopUpLimitAngle;End of the top-up window, normally near intake valve closing, in degrees after compression TDC like the injection timing table (negative is before TDC). The window opens with the main pulse and ends at the first limit angle after it. A top-up pulse must end before this angle. From the cam card: -180 plus the intake closing angle in degrees after BDC, taken at about 1 mm lift.;"deg", 1, 0, -720, 720, 0
+bit fuelTopUpExtendOpen,"yes","no";When fuel is missing while the main pulse is still open, extend it instead of waiting to inject a separate top-up pulse.
+bit fuelTopUpFollowRequest,"yes","no";While a top-up pulse is scheduled or open, keep it open longer as the requested fuel keeps rising, up to the limit, without another dead time. Once the injector has closed it is not reopened.
+
 ! Flex-fuel transient fueling compensation: CLT (X) x Ethanol% (Y) multiplier tables
 #define FLEX_TRANSIENT_CLT_SIZE 8
 #define FLEX_TRANSIENT_ETH_SIZE 8

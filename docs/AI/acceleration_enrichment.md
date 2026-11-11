@@ -9,6 +9,8 @@
 | `2` / `AE_MODE_PREDICTIVE_MAP` | MAP Prediction | Temporarily raises the MAP used by the speed-density air-mass calculation, then blends back to measured MAP. |
 | `3` / `AE_MODE_LUA` | Lua | Script supplies extra fuel mass per cylinder per engine cycle using `setAccelEnrichment(grams)`. |
 
+The [fuel top-up pulse](fuel_top_up.md) is also independent: it adds, per cylinder, fuel that a main pulse missed because the request rose after it was scheduled.
+
 **Wall wetting is independent of this selector** and can operate with any of these modes. Its simple/complex model selector (`complexWallModel`) is a separate choice. MAP Prediction is triggered by TPS movement, not a MAP derivative.
 
 ## Where the corrections enter the pipeline

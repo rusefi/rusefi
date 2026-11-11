@@ -865,6 +865,13 @@ typedef enum __attribute__ ((__packed__)) {
 	AE_MODE_LUA = 3,
 } accel_enrichment_mode_e;
 
+// IMPORTANT: This enum must be kept in sync with fuel_top_up_mode_e in rusefi_config.txt
+typedef enum __attribute__ ((__packed__)) {
+	FUEL_TOP_UP_OFF = 0,
+	FUEL_TOP_UP_LOG_ONLY = 1,
+	FUEL_TOP_UP_INJECT = 2,
+} fuel_top_up_mode_e;
+
 // IMPORTANT: This enum must be kept in sync with tps_event_confirmation_e in rusefi_config.txt
 // [tag:tps_rate_detector] The value is the number of 5 ms TPS samples; zero is repaired to 2.
 typedef enum __attribute__ ((__packed__)) {

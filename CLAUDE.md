@@ -273,6 +273,7 @@ For detailed technical documentation intended for AI assistants, see:
 - [Fueling System](docs/AI/fueling_system.md) - Mass-based fueling pipeline (17 stages).
 - [Cold-start Logic](docs/AI/cold_start.md) - Priming, cranking-state hysteresis, mass tables, ASE/WUE overlap, cycle counters and sensor fallbacks.
 - [Acceleration Enrichment](docs/AI/acceleration_enrichment.md) - Four selectable AE modes including Lua mass injection, independent wall wetting, the 200 Hz TPS rate detector, correction units, flex compensation and diagnostics.
+- [Fuel Top-Up Pulse](docs/AI/fuel_top_up.md) - Per-cylinder top-up bound to its main pulse: window up to the first limit angle, late decision on the next-tooth phase, extension or separate pulse, injecting what fits, a close that follows a rising request, gates, wall-film bookkeeping and the scheduler safety invariants.
 - [Ignition System](docs/AI/ignition_system.md) - Timing calculation and spark scheduling.
 - [Launch Control](docs/AI/launch_control.md) - Activation modes, RPM arming latch, pre-launch timing/skip ramps, full cuts, shared-clutch flat shift, fuel-trim learning and diagnostic limitations.
 - [Rev Limiters](docs/AI/rev_limiters.md) - Constant/CLT hard limits, strict hysteresis, timing/fuel ramps, independent ETB taper, fault ceilings, cut priority and diagnostics.
@@ -389,6 +390,12 @@ For resizable TunerStudio table dialogs using `border` layout, place the main
 table in `Center` and the settings/status panel in `East`. `West` keeps the
 table's preferred width, leaving an empty center instead of expanding the table
 when the window is widened (see the VE blend dialogs).
+
+A `border` dialog shows one component per region. A second `panel`, `liveGraph`
+or `gauge` in the same region replaces the first, even while the later one is
+hidden by its visibility condition, so the first panel's fields disappear. Stack
+conditional panels inside a child dialog placed in that region (see
+`fuelTopUpHeader`); `IniReferenceValidator` rejects a repeated region.
 
 For Lambda/AFR views of a target adder, use one table editor and one display
 alias per native table, switching its units and scale like the main target

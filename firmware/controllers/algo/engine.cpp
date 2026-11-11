@@ -629,6 +629,10 @@ void Engine::periodicFastCallback() {
 }
 
 void Engine::onEngineStopped() {
+#if EFI_ENGINE_CONTROL
+	// [tag:fuel_top_up] Registered main pulses belong to the previous run.
+	injectionEvents.resetTopUp();
+#endif // EFI_ENGINE_CONTROL
 	engineModules.apply_all([](auto& m) { m.onEngineStop(); });
 
   // todo: proper way is to use modules!

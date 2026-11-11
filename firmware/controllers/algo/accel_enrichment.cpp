@@ -142,6 +142,8 @@ void TpsAccelEnrichment::resetLua() {
 
 void TpsAccelEnrichment::onEngineStop() {
 	resetAE();
+	// [tag:fuel_top_up] A top-up fault disables top-up until the engine stops.
+	fuelTopUpFault = false;
 }
 
 void TpsAccelEnrichment::onEngineCycleTps() {

@@ -37,4 +37,17 @@ set_prefix ""
 	! [tag:lua_accel_enrichment] Applied cycle mass, before injection-mode scaling; separate from the legacy ms/fraction channel.
 	float luaAccelFuel;Fuel: Lua AE: cycle mass;"g", 1, 0, 0, 10, 6
 
+	! [tag:fuel_top_up] Top-up pulse totals, and the requested/registered mass of injection event 0.
+	! Skip reasons are FuelTopUpSkip in fuel_schedule.h.
+	uint16_t fuelTopUpCount;Fuel: top-up count;"", 1, 0, 0, 65535, 0
+	uint16_t fuelTopUpExtensionCount;Fuel: top-up extensions;"", 1, 0, 0, 65535, 0
+	uint16_t fuelTopUpMoveCount;Fuel: top-up close moves;"", 1, 0, 0, 65535, 0
+	float fuelTopUpLastMass;Fuel: top-up last mass;"mg", 1, 0, 0, 100, 3
+	float fuelTopUpLastPulse;Fuel: top-up last pulse;"ms", 1, 0, 0, 50, 3
+	float fuelTopUpRequested;Fuel: top-up requested evt 1;"mg", 1, 0, 0, 500, 3
+	float fuelTopUpRegistered;Fuel: top-up registered evt 1;"mg", 1, 0, 0, 500, 3
+	uint8_t fuelTopUpSkipReason;Fuel: top-up skip reason;"", 1, 0, 0, 20, 0
+	bit fuelTopUpWouldInject;Fuel: top-up would inject
+	bit fuelTopUpFault;Fuel: top-up fault latched
+
 end_struct

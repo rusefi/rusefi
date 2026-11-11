@@ -17,6 +17,7 @@ final class IniReferenceValidator {
     private static final Set<String> VALUE_TYPES = set("scalar", "array", "bits", "string", "continuousChannelValue", "channelValueOnConnect");
     private static final Set<String> UI_SECTIONS = set("userdefined", "uidialogs");
     private static final Set<String> COMPONENTS = set("dialog", "indicatorpanel", "readoutpanel", "livegraph", "help");
+    private static final Set<String> BORDER_REGIONS = set("North", "South", "East", "West", "Center");
     // Application-owned values: timeNow is TS's clock; true/false are literals.
     private static final Set<String> BUILTIN_VALUES = set("timeNow", "true", "false");
     private static final Set<String> STANDARD_PANELS = set("std_injection", "std_realtime", "std_accel", "std_ms3Rtc",
@@ -30,6 +31,9 @@ final class IniReferenceValidator {
     private final Set<String> macros = set();
     private final Map<String, Row> components = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<Integer, Set<String>> loggerFields = new HashMap<>();
+    // Components already placed in the current border dialog, by region.
+    private final Map<String, Row> borderRegions = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private boolean inBorderDialog;
     private final Set<String> errors = new LinkedHashSet<>();
 
     IniReferenceValidator(Path file, List<String> lines) {
@@ -51,6 +55,7 @@ final class IniReferenceValidator {
             if (line.startsWith("[") && line.endsWith("]")) {
                 section = line.substring(1, line.length() - 1).toLowerCase(Locale.ROOT);
                 parentLine = 0;
+                inBorderDialog = false;
                 continue;
             }
             int equals = line.indexOf('=');
@@ -73,6 +78,34 @@ final class IniReferenceValidator {
             Row row = new Row(section, key, args, i + 1, parentLine, logger);
             rows.add(row);
             collect(row);
+            borderRegion(row);
+        }
+    }
+
+    /** A border layout shows one component per region: TunerStudio displays only the last one
+     * placed there, even when that one is hidden by its visibility condition. A liveGraph is
+     * placed inside its dialog; any other component starts a new one. */
+    private void borderRegion(Row row) {
+        if (!UI_SECTIONS.contains(row.section)) {
+            return;
+        }
+        if (COMPONENTS.contains(row.keyword) && !row.keyword.equals("livegraph")) {
+            inBorderDialog = row.keyword.equals("dialog") && row.arg(2).equalsIgnoreCase("border");
+            borderRegions.clear();
+            return;
+        }
+        if (!inBorderDialog || !set("panel", "livegraph", "gauge").contains(row.keyword)) {
+            return;
+        }
+        for (int i = 1; i < row.args.size(); i++) {
+            if (BORDER_REGIONS.contains(row.arg(i))) {
+                Row previous = borderRegions.putIfAbsent(row.arg(i), row);
+                if (previous != null) {
+                    error(row, "Border region [" + row.arg(i) + "] already holds the component at line "
+                            + previous.line + ": only one component per region is shown");
+                }
+                return;
+            }
         }
     }
 

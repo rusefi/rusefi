@@ -174,6 +174,7 @@ TESTS_SRC_CPP = \
 	tests/test_fuel_map.cpp \
 	tests/test_gear_detector.cpp \
 	tests/ignition_injection/test_fuel_wall_wetting.cpp \
+	tests/ignition_injection/test_fuel_top_up.cpp \
 	tests/test_one_cylinder_logic.cpp \
 	tests/test_tunerstudio.cpp \
 	tests/test_bluetooth.cpp \
