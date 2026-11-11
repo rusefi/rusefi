@@ -19,6 +19,19 @@ An installer wraps an already-built public bundle. It must not rebuild firmware 
 - request administrator privileges where driver installation or ECU updates require them;
 - emit install4j update metadata and checksums.
 
+## Bundled Java runtime
+
+Full Windows board and universal ZIPs contain a pinned Temurin 17 x64 JRE at
+`jre/`; their Launch4j executable prefers it. Autoupdate ZIPs omit the runtime.
+The installer keeps its existing install4j-managed Zulu 17 runtime and excludes
+the imported ZIP's `jre/`, so the installer does not package a second runtime.
+Sign each generated executable explicitly; do not sign files inside `jre/`.
+
+`firmware/bin/prepare_windows_jre.py` verifies and stages the archive and legal
+notices from `firmware/bin/windows_jre.json`. `WINDOWS_JRE_CACHE`,
+`WINDOWS_JRE_ARCHIVE`, and `WINDOWS_JRE_MANIFEST` configure the board and
+universal bundle staging paths.
+
 ## Proposed layout
 
 Keep each product independent so identities, versions, artwork, and bundle paths cannot leak between installers:
@@ -39,11 +52,15 @@ Generated EXEs, `md5sums`, `sha256sums`, and generated `updates.xml` should be i
 
 ## Bundle input
 
-Use a downloaded and extracted public bundle as the install4j input. Keep it outside the source tree, for example:
+Use a downloaded and extracted public bundle as the install4j input. Stage it under the product's ignored `work-area`, for example:
 
 ```text
-../bundles/rusefi_bundle_<product>/rusefi.snapshot.<product>/
+misc/installer/work-area/rusefi_bundle_<product>/rusefi.snapshot.<product>/
 ```
+
+For the universal project, both `directoryPresets` and the root `dirEntry` in
+`universal/universal-updater.install4j` point to
+`../work-area/rusefi_bundle_universal/rusefi.snapshot.universal`.
 
 Set `allPathsRelative="true"` and use only project-relative paths in the install4j file. Do not commit developer-specific paths such as `C:/stuff/...`.
 
