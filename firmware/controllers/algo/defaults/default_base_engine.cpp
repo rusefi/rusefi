@@ -203,6 +203,12 @@ bool applyDefaultsOrFixAfterBurn(const engine_configuration_s* previousConfigura
     }
   }
 
+  // [tag:tps_rate_detector] Tunes that predate the setting store zero.
+  if (config->tpsEventConfirmation < TPS_EVENT_CONFIRM_1 || config->tpsEventConfirmation > TPS_EVENT_CONFIRM_3) {
+    config->tpsEventConfirmation = TPS_EVENT_CONFIRM_2;
+    changed = true;
+  }
+
 #if HW_PROTEUS && defined(STM32F4XX)
   // should have been proteus per-board validation
   if (engineConfiguration->is_enabled_spi_5) {
