@@ -614,6 +614,9 @@ void Engine::periodicFastCallback() {
 
 	call_board_override(custom_board_periodicFastCallback);
 
+	// [tag:transient_timing] Reads the AE TPS detector flags; runs before the timing math below.
+	module<TransientTiming>()->update(getTimeNowNt());
+
 	engineState.periodicFastCallback();
 
 	speedoUpdate();
