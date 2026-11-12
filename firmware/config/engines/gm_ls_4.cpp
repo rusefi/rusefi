@@ -129,9 +129,9 @@ void setGmLs4() {
 	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
 	engineConfiguration->injector.flow = 400;
 
-  engineConfiguration->tpsAccelLookback = 0.3f;
-  engineConfiguration->tpsAccelEnrichmentThreshold = 5;
-  engineConfiguration->tpsDecelEnleanmentThreshold = 7;
+  engineConfiguration->tpsAccelHoldTime = 0.3f;
+  engineConfiguration->tpsAccelRateThreshold = 100;
+  engineConfiguration->tpsDecelRateThreshold = 140;
   engineConfiguration->tpsAccelFractionPeriod = 3;
   engineConfiguration->tpsAccelFractionDivisor = 1.5;
   engineConfiguration->wwaeTau = 0;
