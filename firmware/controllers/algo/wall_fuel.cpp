@@ -12,6 +12,24 @@ void WallFuel::resetWF() {
 	wallFuel = 0;
 }
 
+float WallFuel::getTopUpCommandedMass(float desiredMassGrams) const {
+	if (!(desiredMassGrams > 0) || !engine->module<WallFuelController>()->getEnable()) {
+		return desiredMassGrams;
+	}
+
+	// beta is clamped below alpha < 1 by WallFuelController
+	float beta = engine->module<WallFuelController>()->getBeta();
+	return desiredMassGrams / (1 - beta);
+}
+
+void WallFuel::commitTopUp(float commandedMassGrams) {
+	if (!(commandedMassGrams > 0) || !engine->module<WallFuelController>()->getEnable()) {
+		return;
+	}
+
+	wallFuel += engine->module<WallFuelController>()->getBeta() * commandedMassGrams;
+}
+
 float WallFuel::adjust(float desiredMassGrams) {
 	invocationCounter++;
 	if (std::isnan(desiredMassGrams)) {

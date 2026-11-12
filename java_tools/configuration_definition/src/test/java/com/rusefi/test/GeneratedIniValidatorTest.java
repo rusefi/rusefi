@@ -165,6 +165,25 @@ public class GeneratedIniValidatorTest {
     }
 
     @Test
+    public void borderRegionsHoldOneComponent(@TempDir Path directory) throws IOException {
+        String panels = DEFINITIONS + "[UserDefined]\ndialog = top\nfield = \"Setting\", setting\n"
+                + "dialog = info\nfield = \"Text\"\n";
+        for (String parent : new String[]{
+                "dialog = parent, \"Parent\", border\npanel = top, North\npanel = info, North, {1}, {setting > 0}\n",
+                "dialog = parent, \"Parent\", border\nliveGraph = one, \"One\", South\ngraphLine = rpm\n"
+                        + "liveGraph = two, \"Two\", South\ngraphLine = rpm\n"}) {
+            IllegalStateException e = assertThrows(IllegalStateException.class,
+                    () -> validate(directory, panels + parent));
+            assertTrue(e.getMessage().contains("Border region ["), e.getMessage());
+            assertTrue(e.getMessage().contains("already holds the component at line 14"), e.getMessage());
+        }
+        validate(directory, panels + "dialog = parent, \"Parent\", border\npanel = top, North\npanel = info, Center\n"
+                + "liveGraph = graph, \"Graph\", South\ngraphLine = rpm\n"
+                + "dialog = other, \"Other\", border\npanel = top, North\n"
+                + "dialog = stacked, \"Stacked\"\npanel = top, North\npanel = info, North\n");
+    }
+
+    @Test
     public void undefinedGaugesMenusAndMacrosAreRejected(@TempDir Path directory) {
         for (String usage : new String[]{
                 "[UserDefined]\ndialog = test\ngauge = missing\n",

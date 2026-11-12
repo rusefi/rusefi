@@ -314,6 +314,22 @@ void setDefaultWallWetting() {
 	copyArray(config->wwBetaMapValues, betaMap);
 }
 
+// [tag:fuel_top_up] Off by default. The limit is a flat -140 deg (intake valve closing
+// 40 deg after BDC) over the RPM range the top-up works in (fuelTopUpMaxRpm). Also
+// seeds older tunes, see applyDefaultsOrFixAfterBurn().
+void setDefaultFuelTopUp() {
+	config->fuelTopUpMode = FUEL_TOP_UP_OFF;
+	config->fuelTopUpMaxPercent = 50;
+	config->fuelTopUpMinMass = 0.5f;
+	config->fuelTopUpMinPulse = 0.5f;
+	config->fuelTopUpMinOffTime = 0.8f;
+	config->fuelTopUpMaxRpm = 4000;
+	config->fuelTopUpExtendOpen = true;
+	config->fuelTopUpFollowRequest = true;
+	setLinearCurve(config->fuelTopUpRpmBins, 1000, 4000, 50);
+	setArrayValues(config->fuelTopUpLimitAngle, -140);
+}
+
 static void setDefaultFlexTransientComp() {
 	setLinearCurve(config->flexTransientCltBins, -40, 100, 1);
 	setLinearCurve(config->flexTransientEthanolBins, 0, 100, 1);
@@ -431,9 +447,16 @@ void setDefaultFuel() {
 	// Decel fuel cut
 	setDefaultFuelCutParameters();
 
-	engineConfiguration->tpsAccelEnrichmentThreshold = 40; // TPS % change, per engine cycle
+	// [tag:tps_rate_detector] TPS rate thresholds in %/s. Hold time stays 0, so the
+	// additive AE modes remain disabled until configured.
+	engineConfiguration->tpsAccelRateThreshold = 100;
+	engineConfiguration->tpsDecelRateThreshold = 100;
+	// A TPS change must last two samples: single-sample spikes are ignored.
+	config->tpsEventConfirmation = TPS_EVENT_CONFIRM_2;
 
 	setDefaultWallWetting();
+
+	setDefaultFuelTopUp();
 
 	// Flex fuel transient compensation (CLT x ethanol) - neutral by default
 	setDefaultFlexTransientComp();

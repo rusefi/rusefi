@@ -203,6 +203,28 @@ bool applyDefaultsOrFixAfterBurn(const engine_configuration_s* previousConfigura
     }
   }
 
+  // [tag:tps_rate_detector] Tunes that predate the setting store zero.
+  if (config->tpsEventConfirmation < TPS_EVENT_CONFIRM_1 || config->tpsEventConfirmation > TPS_EVENT_CONFIRM_3) {
+    config->tpsEventConfirmation = TPS_EVENT_CONFIRM_2;
+    changed = true;
+  }
+
+  // [tag:fuel_top_up] Tunes that predate the top-up pulse have an all-zero RPM axis and
+  // mode Off. Seed the example window so the curves are editable; it stays off.
+  {
+    bool topUpAxisEmpty = true;
+    for (size_t i = 0; i < efi::size(config->fuelTopUpRpmBins); i++) {
+      if (config->fuelTopUpRpmBins[i] != 0) {
+        topUpAxisEmpty = false;
+        break;
+      }
+    }
+    if (topUpAxisEmpty) {
+      setDefaultFuelTopUp();
+      changed = true;
+    }
+  }
+
 #if HW_PROTEUS && defined(STM32F4XX)
   // should have been proteus per-board validation
   if (engineConfiguration->is_enabled_spi_5) {

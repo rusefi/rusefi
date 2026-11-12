@@ -114,9 +114,11 @@ low-frequency remainder to the idle valve (slow actuator).
 
 ## Rate of change consumed as a control input
 
-- **TPS/TPS acceleration enrichment** (`algo/accel_enrichment.cpp`): deltaTps measured
-  over a `tpsAccelLookback` cycle buffer, thresholded by
-  `tpsAccelEnrichmentThreshold`; deceleration uses `tpsDecelEnleanmentMultiplier`.
+- **TPS/TPS acceleration enrichment** (`algo/accel_enrichment.cpp`): the TPS rate in
+  %/s over about 10 ms, sampled at 200 Hz after the median of `tpsEventConfirmation`
+  (see the spike rejection section), is compared with `tpsAccelRateThreshold` and
+  `tpsDecelRateThreshold`; events last while the throttle moves plus
+  `tpsAccelHoldTime`; deceleration uses `tpsDecelEnleanmentMultiplier`.
   The *output* is itself rate-shaped by the fractional pump imitation
   (`tpsAccelFractionPeriod` / `tpsAccelFractionDivisor` spread the extra fuel over
   several cycles).
@@ -128,12 +130,16 @@ low-frequency remainder to the idle valve (slow actuator).
 
 ## Time-domain spike rejection (signal, not value)
 
+- **TPS event confirmation** (`TpsAccelEnrichment::onNewValue()`, `tpsEventConfirmation`
+  1 to 3 samples, default 2): the AE TPS detector works on the median of the last 2N-1
+  TPS samples at 200 Hz, so a spike shorter than N samples never creates an opening or
+  closing event, while a held step passes N-1 samples (5 ms each) late. It applies only
+  to the detector; every other TPS consumer sees the unfiltered value.
 - **Trigger noise filter** (`TriggerNoiseFilter::noiseFilter`, `trigger_central.cpp`,
   opt-in via `useNoiselessTriggerDecoder`): rejects edges whose accumulated
   high/low period is implausibly short vs the previous period (empirical 2/3 margin,
-  widened at expected sync gaps). This is the closest thing to a rate-of-change
-  *plausibility* check in the codebase, and it operates on the trigger signal, not on
-  a sensor value.
+  widened at expected sync gaps). Together with the TPS event confirmation above, it is
+  the closest thing to a rate-of-change *plausibility* check in the codebase.
 
 ## Observations / possible follow-ups
 

@@ -19,6 +19,15 @@ public:
 	 * @return total adjusted fuel squirt mass in grams once wall wetting is taken into effect
 	 */
 	float adjust(float desiredMassGrams);
+	/**
+	 * [tag:fuel_top_up] Extra fuel injected after the main pulse in the same cycle.
+	 * Only the deposition applies: evaporation was accounted for by adjust() for this
+	 * cycle, so running adjust() again would advance the film twice.
+	 * @return commanded mass so that desiredMassGrams reaches the cylinder
+	 */
+	float getTopUpCommandedMass(float desiredMassGrams) const;
+	// Adds the deposited part of a top-up that was actually scheduled.
+	void commitTopUp(float commandedMassGrams);
 	// Fuel-film mass in grams.
 	float getWallFuel() const;
 	void resetWF();

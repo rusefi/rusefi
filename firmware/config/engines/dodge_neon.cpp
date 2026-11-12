@@ -156,7 +156,7 @@ void setDodgeNeonNGCEngineConfiguration() {
 	engineConfiguration->alternatorControl.dFactor = 0.1f;
 	engineConfiguration->alternatorControl.periodMs = 10;
 
-	engineConfiguration->tpsAccelEnrichmentThreshold = 10;
+	engineConfiguration->tpsAccelRateThreshold = 200;
 
 	engineConfiguration->wwaeTau = 1.0f;
 	engineConfiguration->wwaeBeta = 0.40f;

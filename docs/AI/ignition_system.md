@@ -45,9 +45,10 @@ flat-shift behavior and diagnostic boundaries.
 
 `BurstKnock` in `controllers/modules/burst_knock` uses the shared TPS AE detector
 to request feed-forward retard without an acoustic knock event. The module runs
-after `TpsAccelEnrichment::onNewValue()` in `Engine::periodicSlowCallback()`.
-Its rate proxy is AE's largest adjacent TPS jump divided by
-`max(tpsAccelLookback, 0.001)`, rather than an instantaneous derivative.
+at 20 Hz in `Engine::periodicSlowCallback()`, while the detector samples TPS at
+200 Hz in `Engine::periodicFastCallback()`. During an opening event it uses the
+event's peak rate (`peakTpsRate`, %/s), otherwise the current `tpsRate`, so a short
+stab is not missed between slow-callback samples.
 The selected AE fuel mode does not gate this timing correction.
 
 While `isAboveAccelThreshold` is true, the module interpolates the 8×8 RPM/rate

@@ -647,6 +647,8 @@ static bool validateConfig(const engine_configuration_s* previousConfiguration) 
 		ensureArrayIsAscending("TPS/TPS AE to", config->tpsTpsAccelToRpmBins);
 
 		ensureArrayIsAscendingOrDefault("TPS TPS RPM correction", config->tpsTspCorrValuesBins);
+		// [tag:user_facing_ini_labels] Fuel top-up pulse dialog, RPM axis of its curves
+		ensureArrayIsAscendingOrDefault("Fuel top-up pulse, RPM axis", config->fuelTopUpRpmBins);
 
 		ensureArrayIsAscendingOrDefault("Staging Load", config->injectorStagingLoadBins);
 		ensureArrayIsAscendingOrDefault("Staging RPM", config->injectorStagingRpmBins);

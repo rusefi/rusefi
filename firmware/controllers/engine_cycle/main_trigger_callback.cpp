@@ -47,6 +47,9 @@
 #include "backup_ram.h"
 
 void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float nextPhase) {
+	// [tag:fuel_top_up] Every tooth, before a new main pulse can replace the registration.
+	evaluateTopUp(nowNt, currentPhase, nextPhase);
+
 	auto eventAngle = injectionStartAngle;
 
 	// Determine whether our angle is going to happen before (or near) the next tooth
@@ -56,12 +59,18 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 
 #if ROTATIONAL_IDLE_CONTROLLER
 	if (engine->rotationalIdleController.shouldSkipFuelRotationalIdle()) {
+		// An intentionally skipped injection gets no top-up either.
+		m_topUpPending = false;
 		return;
 	}
 #endif // ROTATIONAL_IDLE_CONTROLLER
 
 	// Select fuel mass from the correct cylinder
 	auto injectionMassGrams = getEngineState()->injectionMass[this->cylinderNumber];
+	// [tag:fuel_top_up] Requested (pre-film) mass this main pulse delivers. A pulse that
+	// is skipped below still registers, so a top-up cannot add more than its percentage.
+	const float requestedMassGrams = injectionMassGrams;
+	registerMainPulse(requestedMassGrams, eventAngle, nowNt, nowNt);
 
 	// Perform wall wetting adjustment on fuel mass, not duration, so that
 	// it's correct during fuel pressure (injector flow) or battery voltage (deadtime) transients
@@ -119,10 +128,12 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 
 	if (std::isnan(injectionDurationStage1) || std::isnan(injectionDurationStage2)) {
 		warning(ObdCode::CUSTOM_OBD_NAN_INJECTION, "NaN injection pulse");
+		m_topUpPending = false;
 		return;
 	}
 	if (injectionDurationStage1 < 0) {
 		warning(ObdCode::CUSTOM_OBD_NEG_INJECTION, "Negative injection pulse %.2f", injectionDurationStage1);
+		m_topUpPending = false;
 		return;
 	}
 
@@ -169,6 +180,7 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 	// Schedule closing stage 1
 	efitick_t turnOffTimeStage1 = startTime + US2NT((int)durationUsStage1);
 	getScheduler()->schedule("inj", nullptr, turnOffTimeStage1, action_s::make<endInjection>(ctx.raw));
+	registerMainPulse(requestedMassGrams, eventAngle, startTime, turnOffTimeStage1);
 
 	// Schedule closing stage 2 (if applicable)
 	if (hasStage2Injection) {

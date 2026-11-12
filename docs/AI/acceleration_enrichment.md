@@ -9,6 +9,8 @@
 | `2` / `AE_MODE_PREDICTIVE_MAP` | MAP Prediction | Temporarily raises the MAP used by the speed-density air-mass calculation, then blends back to measured MAP. |
 | `3` / `AE_MODE_LUA` | Lua | Script supplies extra fuel mass per cylinder per engine cycle using `setAccelEnrichment(grams)`. |
 
+The [fuel top-up pulse](fuel_top_up.md) is also independent: it adds, per cylinder, fuel that a main pulse missed because the request rose after it was scheduled.
+
 **Wall wetting is independent of this selector** and can operate with any of these modes. Its simple/complex model selector (`complexWallModel`) is a separate choice. MAP Prediction is triggered by TPS movement, not a MAP derivative.
 
 ## Where the corrections enter the pipeline
@@ -30,13 +32,16 @@ MAP Prediction acts in `SpeedDensityAirmass::getMap()` with a valid MAP sensor. 
 
 ## Shared TPS event detection
 
-`Engine::periodicSlowCallback()` supplies `Sensor::getOrZero(Tps1)` to `TpsAccelEnrichment::onNewValue()` at 20 Hz (50 ms). The detector selects the **largest signed adjacent-sample difference** in its history and publishes that pair as `tpsFrom`, `tpsTo`, and `deltaTps`.
+[tag:tps_rate_detector] `Engine::periodicFastCallback()` feeds `Tps1` to `TpsAccelEnrichment::onNewValue()` at 200 Hz, **before** the fuel math, so the adders and MAP Prediction act on the same sample. An invalid TPS calls `onInvalidTps()`, which clears the history and ends any event.
 
-- `deltaTps > tpsAccelEnrichmentThreshold` activates acceleration detection and latches an event for MAP Prediction to consume.
-- `deltaTps < -tpsDecelEnleanmentThreshold` activates the adder deceleration path. Because the detector selects the largest signed difference, a zero or positive step elsewhere in the history can mask a throttle-closing step.
-- Threshold units are TPS percentage points **per sample**, not percent/second or percent/engine-cycle. For example, 10% -> 20% is a delta of 10.
-- In the adder modes, `tpsAccelLookback` is a duration in seconds, converted to a sample count. A zero value disables the adder. More history keeps an earlier opening step eligible longer; this is not a derivative over the entire lookback interval.
-- In MAP Prediction, the sample count comes from the largest `predictiveMapBlendDurationValues` entry: `max(2, ceil(maxDuration / 0.05))`. The adder lookback setting is ignored.
+- **Event confirmation** (`config->tpsEventConfirmation`, 1 to 3 samples, default 2): each sample the detector uses is the median of the last 2N-1 raw samples, so a TPS change must last N samples to be seen. A shorter spike disappears in both directions; a stricter "N consecutive samples above the rate" rule would turn the return of a spike into a false closing, and would never confirm a held step with N = 3 because a step stays above the rate for only two samples (a TPS received over CAN at a low rate moves in such steps). Each extra sample delays every event by 5 ms. Zero (a tune that predates the setting) is repaired to 2 by `applyDefaultsOrFixAfterBurn()`. Tests: `TpsEventConfirmation.*`.
+- The TPS rate `tpsRate` (%/s) is measured on these samples against the oldest of the two previous ones, about 10 ms back. The first samples after a reset, until the median window is full and one more sample is available, or after a gap longer than 100 ms, have no rate. A sample closer than 2 ms to the previous one is ignored, so extra fast-callback invocations (first RPM, trigger reconfiguration) do not shorten the window.
+- An **opening event** starts when `tpsRate > tpsAccelRateThreshold`. `tpsFrom` is the (filtered) TPS at the start of that rate window, `tpsTo` follows the highest TPS reached, `deltaTps = tpsTo - tpsFrom` and `peakTpsRate` is the highest rate. The start latches one `isAccelEventTriggered()` for MAP Prediction. The event (`isAboveAccelThreshold`) lasts while the rate stays above the threshold plus `tpsAccelHoldTime`.
+- A **closing event** mirrors this with `tpsRate < -tpsDecelRateThreshold`: `tpsTo` follows the lowest TPS, `deltaTps` is negative and `peakTpsRate` is the most negative rate. It sets `isBelowDecelThreshold`, drives the adder deceleration path and ends an active MAP Prediction.
+- Opening and closing events are exclusive: a new one ends the other. A zero threshold disables that direction; `tpsRate` is still reported.
+- `tpsAccelHoldTime` (seconds) also enables the adders: zero disables MS/Percent Adder. MAP Prediction and Lua do not use it.
+- Noise: the 10 ms window turns TPS noise into rate. With independent noise of standard deviation s, the rate noise is about 141 * s %/s: at 100 %/s and one-sample confirmation, s = 0.2 % gives an event every few tens of seconds and s = 0.3 % a few per second; two-sample confirmation cuts that by roughly 100 times. The existing TPS smoothing (`tpsExpAverageAlpha`) is not a substitute: it advances on every `Sensor::get()` of the TPS, so its time constant depends on how often other code reads the TPS, and its fast-change reset compares consecutive reads, which during a real stomp rarely differ by its 10 % threshold.
+- The thresholds replaced per-50 ms-sample settings. Tunes from earlier firmware do not carry them over: the renamed settings start from their defaults (100 %/s, 100 %/s, 0 s) and the TPS/TPS table axes now mean event start TPS and highest TPS reached, so existing tables need recalibration.
 
 The fractional accumulator advances in `onEngineCycleTps()` from the trigger callback at engine-cycle boundaries, independently of TPS sampling. On engine stop, `resetAE()` clears TPS history, threshold and event state, and fractional fuel. The first TPS sample after a reset establishes a baseline; it does not create an acceleration step from zero.
 
@@ -44,9 +49,9 @@ The fractional accumulator advances in `onEngineCycleTps()` from the trigger cal
 
 Both modes share `TpsAccelEnrichment::getTpsEnrichment()`:
 
-1. Return zero if lookback is zero, RPM is below `cranking.rpm`, or the TunerStudio VE-tuning detector is active (when compiled in).
-2. On acceleration, interpolate `tpsTpsAccelTable` at the selected **from TPS (X)** and **to TPS (Y)**. Despite their names, `tpsTpsAccelFromRpmBins` and `tpsTpsAccelToRpmBins` contain TPS percentages, not RPM.
-3. On deceleration, use `deltaTps * tpsDecelEnleanmentMultiplier`; otherwise start with zero extra fuel.
+1. Return zero if `tpsAccelHoldTime` is zero, RPM is below `cranking.rpm`, or the TunerStudio VE-tuning detector is active (when compiled in).
+2. On acceleration, interpolate `tpsTpsAccelTable` at the event start TPS (X, `tpsFrom`) and the highest TPS reached (Y, `tpsTo`). Despite their names, `tpsTpsAccelFromRpmBins` and `tpsTpsAccelToRpmBins` contain TPS percentages, not RPM.
+3. On deceleration, use `deltaTps * tpsDecelEnleanmentMultiplier`, where `deltaTps` is the total closing of the event; otherwise start with zero extra fuel.
 4. Apply the optional fractional accelerator-pump model (`tpsAccelFractionPeriod`, `tpsAccelFractionDivisor`). It retains an accumulated portion and spreads it across engine cycles. With a single unit input, period 1/divisor 2 produces `0.5, 0.25, 0.125, ...`; period 3/divisor 1 produces three portions of `1/3`.
 5. Multiply by the RPM curve `tpsTspCorrValues` / `tpsTspCorrValuesBins`, then the CLT/ethanol multiplier `flexAeMult` when enabled.
 
@@ -76,7 +81,7 @@ The implementation:
    ```
 
 3. If table MAP rises above the saved prediction as the throttle keeps opening, adopts the higher prediction and restarts the blend timer. The separate session timer continues running, so blend restarts cannot extend the total event time limit. The limit is interpolated at current RPM on each call. [tag:predictive_map_lifetime]
-4. Ends prediction when the session duration expires, measured MAP catches up to the prediction/effective MAP, or TPS falls more than the acceleration threshold below this event's tracked peak. A smaller event starts with its own peak. It drains acceleration events while active. The retrigger lock clears when the shared `isAboveAccelThreshold` flag becomes false; a physical return to closed throttle is not required.
+4. Ends prediction when the session duration expires, measured MAP catches up to the prediction/effective MAP, or the TPS detector reports a closing event (`isBelowDecelThreshold`). A lower TPS without a detected closing only lowers the estimate. It drains acceleration events while active. The retrigger lock clears when the shared `isAboveAccelThreshold` flag becomes false; a physical return to closed throttle is not required.
 
 For example, predicted MAP 85 kPa and measured MAP 65 kPa initially use 85 kPa. Halfway through the blend, if measured MAP has risen to 75 kPa, effective MAP is 80 kPa.
 
@@ -93,7 +98,7 @@ turns it off. Negative, NaN and infinite arguments clear the request and raise a
 Lua error. Requires a build with `EFI_LUA` and `EFI_ENGINE_CONTROL`.
 
 The script owns event detection, magnitude, decay, RPM and flex compensation.
-Lua mode ignores the native TPS table, thresholds, lookback, fractional pump,
+Lua mode ignores the native TPS table, thresholds, hold time, fractional pump,
 RPM multiplier and `flexAeMult`. MAP prediction is also inactive. The existing
 MS Adder, Percent Adder and MAP Prediction values (0, 1, 2) keep their meaning;
 the fourth choice fits the existing two-bit configuration field.
@@ -152,7 +157,7 @@ All three flex multiplier tables share `flexTransientCltBins` and `flexTransient
 | Inspect | Meaning / limitation |
 |---|---|
 | `engine` (log label `Engine`) | TunerStudio/MLV state byte: bits 0/1 running/cranking, 2/3 after-start/warmup, 4 acceleration (including active MAP Prediction or applied Lua AE), 5 TPS deceleration or DFCO; bits 6/7 unused. Native adder threshold flags and the signed applied adder cover detection and decay. Wall wetting is not represented. |
-| `tpsFrom`, `tpsTo`, `deltaTps`, `isAboveAccelThreshold` | Selected historical TPS step and event threshold, not necessarily the latest step. |
+| `tpsFrom`, `tpsTo`, `deltaTps`, `tpsRate`, `peakTpsRate`, `isAboveAccelThreshold`, `isBelowDecelThreshold` | Current event: start TPS, extreme TPS, total change, current and peak rate, and the event flags. |
 | `valueFromTable`, `extraFuel`, `accumulatedValue`, `cycleCnt` | Adder internals. Early-return paths can leave these diagnostic fields unchanged. |
 | `tpsAccelFuel` | Native adder result; zero in MAP Prediction or Lua does not mean transient correction is inactive. |
 | `luaAccelFuel` | Applied Lua extra mass in grams per cylinder per cycle, before injection-mode scaling; zero when inactive, expired or suppressed. |

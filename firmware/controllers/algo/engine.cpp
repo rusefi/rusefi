@@ -176,8 +176,6 @@ void Engine::periodicSlowCallback() {
 	updateFixedBaroFromMap();
 	checkShutdown();
 
-	module<TpsAccelEnrichment>()->onNewValue(Sensor::getOrZero(SensorType::Tps1));
-
 	updateVrThresholdPwm();
 
 	updateGppwm();
@@ -614,6 +612,15 @@ void Engine::periodicFastCallback() {
 
 	call_board_override(custom_board_periodicFastCallback);
 
+	// [tag:tps_rate_detector] Sample TPS before the fuel math so the AE adders and
+	// MAP Prediction act on this sample rather than on the previous one.
+	auto tps = Sensor::get(SensorType::Tps1);
+	if (tps) {
+		module<TpsAccelEnrichment>()->onNewValue(tps.Value, getTimeNowNt());
+	} else {
+		module<TpsAccelEnrichment>()->onInvalidTps();
+	}
+
 	engineState.periodicFastCallback();
 
 	speedoUpdate();
@@ -622,6 +629,10 @@ void Engine::periodicFastCallback() {
 }
 
 void Engine::onEngineStopped() {
+#if EFI_ENGINE_CONTROL
+	// [tag:fuel_top_up] Registered main pulses belong to the previous run.
+	injectionEvents.resetTopUp();
+#endif // EFI_ENGINE_CONTROL
 	engineModules.apply_all([](auto& m) { m.onEngineStop(); });
 
   // todo: proper way is to use modules!
