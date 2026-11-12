@@ -374,6 +374,7 @@ typedef enum {
 	TS_WIDEBAND_SET_SENS_BY_ID = 37,
 	TS_WIDEBAND_FLASH_BY_ID_FILE = 38,
 	TS_WIDEBAND_RESTART = 39,
+	TS_WIDEBAND_SET_BITRATE_BY_ID = 40,
 } ts_command_e;
 
 typedef enum {
