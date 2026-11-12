@@ -47,6 +47,11 @@ public:
 	 * @return Extra fuel squirt duration for TPS acceleration
 	 */
 	floatms_t getTpsEnrichment();
+	/**
+	 * @return Coolant (or flex CLT x ethanol) multiplier of native AE, 1.0 is neutral.
+	 * [tag:ae_temperature_mult]
+	 */
+	float getTemperatureMult();
 	void onEngineCycleTps();
 	void resetFractionValues();
 	void resetAE();

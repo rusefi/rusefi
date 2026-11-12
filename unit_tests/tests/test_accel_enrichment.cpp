@@ -11,6 +11,7 @@
 #include "pch.h"
 
 #include "accel_enrichment.h"
+#include "defaults.h"
 #include "fuel_math.h"
 #include "rusefi_lua.h"
 #include "tunerstudio.h"
@@ -203,6 +204,153 @@ TEST(fuel, tpsAccelFlexFuelCompensation) {
 	// Disable flag -> back to neutral even with a flex sensor present
 	engineConfiguration->flexFuelTransientComp = false;
 	EXPECT_NEAR(1.0f, triggerAccel(), EPS4D);
+}
+
+// [tag:ae_temperature_mult] Coolant multiplier for the MS/Percent adders; MAP Prediction
+// coverage is AirmassModes.PredictiveMapCoolantMultiplierScalesOnlyAirmassExcess.
+class AeTemperatureMult : public ::testing::Test {
+protected:
+	EngineTestHelper eth{engine_type_e::TEST_ENGINE};
+
+	void SetUp() override {
+		engineConfiguration->tpsAccelEnrichmentThreshold = 5;
+		engineConfiguration->tpsAccelLookback = 2;
+		// Non-fractional, constant table and flat RPM correction: base enrichment is 1.0
+		engineConfiguration->tpsAccelFractionPeriod = 1;
+		engineConfiguration->tpsAccelFractionDivisor = 1;
+		setTable(config->tpsTpsAccelTable, 1.0f);
+		setRpmTableBin(config->tpsTspCorrValuesBins);
+		setLinearCurve(config->tpsTspCorrValues, 1, 1);
+
+		static const int16_t bins[] = {-40, -20, 0, 20, 40, 60, 80, 100};
+		static const float values[] = {3.5f, 3.0f, 2.5f, 2.0f, 1.5f, 1.25f, 1.0f, 0.8f};
+		for (size_t i = 0; i < efi::size(bins); i++) {
+			config->aeCltCorrBins[i] = bins[i];
+			config->aeCltCorrValues[i] = values[i];
+		}
+
+		initAccelEnrichment();
+		engine->rpmCalculator.setRpmValue(600);
+		ae().setLength(2);
+	}
+
+	TpsAccelEnrichment& ae() {
+		return engine->module<TpsAccelEnrichment>().unmock();
+	}
+
+	float triggerAccel() {
+		ae().resetAE();
+		ae().onNewValue(0);
+		ae().onNewValue(10); // delta 10 > threshold 5 -> table value 1.0
+		return ae().getTpsEnrichment();
+	}
+};
+
+TEST(AeTemperatureMultDefaults, DefaultCurveIsNeutral) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	EXPECT_EQ(-40, config->aeCltCorrBins[0]);
+	EXPECT_EQ(100, config->aeCltCorrBins[efi::size(config->aeCltCorrBins) - 1]);
+	for (auto value : config->aeCltCorrValues) {
+		EXPECT_NEAR(1.0f, value, EPS4D);
+	}
+}
+
+TEST_F(AeTemperatureMult, ScalesAdderByCoolant) {
+	Sensor::setMockValue(SensorType::Clt, -20);
+	EXPECT_NEAR(3.0f, triggerAccel(), EPS4D);
+	EXPECT_NEAR(3.0f, ae().aeTemperatureMult, EPS4D);
+
+	Sensor::setMockValue(SensorType::Clt, 10);
+	EXPECT_NEAR(2.25f, triggerAccel(), EPS4D);
+
+	Sensor::setMockValue(SensorType::Clt, 80);
+	EXPECT_NEAR(1.0f, triggerAccel(), EPS4D);
+
+	// Failed CLT uses normal operating temperature, like the flex tables
+	Sensor::setInvalidMockValue(SensorType::Clt);
+	EXPECT_NEAR(0.9f, triggerAccel(), EPS4D);
+}
+
+TEST_F(AeTemperatureMult, ScalesDecelerationLikeTheFlexMultiplier) {
+	engineConfiguration->tpsDecelEnleanmentThreshold = 5;
+	engineConfiguration->tpsDecelEnleanmentMultiplier = 0.01f;
+	Sensor::setMockValue(SensorType::Clt, -20);
+	ae().resetAE();
+	ae().onNewValue(10);
+	ae().onNewValue(0); // delta -10 -> -0.1
+	EXPECT_NEAR(-0.3f, ae().getTpsEnrichment(), EPS4D);
+}
+
+TEST_F(AeTemperatureMult, AllZeroCurveIsNeutral) {
+	// Tunes that predate the curve read it as all zero
+	setArrayValues(config->aeCltCorrBins, 0);
+	setArrayValues(config->aeCltCorrValues, 0);
+	Sensor::setMockValue(SensorType::Clt, -20);
+	EXPECT_NEAR(1.0f, triggerAccel(), EPS4D);
+	EXPECT_NEAR(1.0f, ae().aeTemperatureMult, EPS4D);
+}
+
+TEST_F(AeTemperatureMult, OldTuneIsSeededWithNeutralCurve) {
+	setArrayValues(config->aeCltCorrBins, 0);
+	setArrayValues(config->aeCltCorrValues, 0);
+	EXPECT_TRUE(applyDefaultsOrFixAfterBurn(nullptr));
+	EXPECT_EQ(-40, config->aeCltCorrBins[0]);
+	EXPECT_EQ(100, config->aeCltCorrBins[efi::size(config->aeCltCorrBins) - 1]);
+	EXPECT_NEAR(1.0f, config->aeCltCorrValues[3], EPS4D);
+
+	// A tuned curve is left alone
+	config->aeCltCorrValues[0] = 3;
+	applyDefaultsOrFixAfterBurn(nullptr);
+	EXPECT_NEAR(3.0f, config->aeCltCorrValues[0], EPS4D);
+}
+
+TEST_F(AeTemperatureMult, FlexTableReplacesCoolantCurve) {
+	setLinearCurve(config->flexTransientCltBins, -40, 100, 1);
+	setLinearCurve(config->flexTransientEthanolBins, 0, 100, 1);
+	setTable(config->flexAeMult, 2.0f);
+	Sensor::setMockValue(SensorType::Clt, -20);
+	Sensor::setMockValue(SensorType::FuelEthanolPercent, 100);
+
+	// Flex compensation disabled: the coolant curve applies
+	engineConfiguration->flexFuelTransientComp = false;
+	EXPECT_NEAR(3.0f, triggerAccel(), EPS4D);
+	EXPECT_NEAR(1.0f, engine->outputChannels.flexAeMultiplier, EPS4D);
+
+	// Active flex compensation replaces, rather than multiplies, the coolant curve
+	engineConfiguration->flexFuelTransientComp = true;
+	EXPECT_NEAR(2.0f, triggerAccel(), EPS4D);
+	EXPECT_NEAR(2.0f, ae().aeTemperatureMult, EPS4D);
+	EXPECT_NEAR(2.0f, engine->outputChannels.flexAeMultiplier, EPS3D);
+
+	// Without a registered ethanol sensor the coolant curve applies again
+	Sensor::resetMockValue(SensorType::FuelEthanolPercent);
+	EXPECT_NEAR(3.0f, triggerAccel(), EPS4D);
+}
+
+TEST_F(AeTemperatureMult, PercentAdderInjectionMass) {
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
+	setTable(config->lambdaTable, 1.0f);
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(testing::_, testing::_))
+		.WillRepeatedly(testing::Return(AirmassResult{1.3440001f, 50.0f}));
+	engine->rpmCalculator.setRpmValue(1200);
+	engineConfiguration->accelEnrichmentMode = AE_MODE_PERCENT_ADDER;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+	engineConfiguration->isTuningDetectorEnabled = false;
+	engineConfiguration->coastingFuelCutEnabled = false;
+	// 10% enrichment before the coolant multiplier
+	setTable(config->tpsTpsAccelTable, 0.1f);
+	Sensor::setMockValue(SensorType::Clt, -20);
+
+	ae().isAboveAccelThreshold = false;
+	float base = getInjectionMass(1200);
+	ASSERT_TRUE(std::isfinite(base));
+	ASSERT_GT(base, 0);
+
+	ae().isAboveAccelThreshold = true;
+	ae().tpsFrom = 0;
+	ae().tpsTo = 10;
+	// 3x at -20 C: +30%
+	EXPECT_NEAR(base * 1.3f, getInjectionMass(1200), base * 1e-4f);
 }
 
 // [tag:lua_accel_enrichment] Exercise the Lua binding through the fuel pipeline,

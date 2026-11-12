@@ -647,6 +647,8 @@ static bool validateConfig(const engine_configuration_s* previousConfiguration) 
 		ensureArrayIsAscending("TPS/TPS AE to", config->tpsTpsAccelToRpmBins);
 
 		ensureArrayIsAscendingOrDefault("TPS TPS RPM correction", config->tpsTspCorrValuesBins);
+		// [tag:user_facing_ini_labels] Curve title and axis label in tunerstudio.template.ini
+		ensureArrayIsAscendingOrDefault("AE coolant multiplier, Coolant axis", config->aeCltCorrBins);
 
 		ensureArrayIsAscendingOrDefault("Staging Load", config->injectorStagingLoadBins);
 		ensureArrayIsAscendingOrDefault("Staging RPM", config->injectorStagingRpmBins);

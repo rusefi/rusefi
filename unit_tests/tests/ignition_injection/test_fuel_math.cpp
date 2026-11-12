@@ -863,6 +863,56 @@ TEST(AirmassModes, PredictiveMapRetriggersRespectSessionDuration) {
 	EXPECT_EQ(engine->outputChannels.predTimerResetCnt, 2);
 }
 
+// [tag:ae_temperature_mult] The coolant multiplier scales only the predicted MAP
+// excess in the physical air mass; the VE/load axis keeps the plain prediction.
+TEST(AirmassModes, PredictiveMapCoolantMultiplierScalesOnlyAirmassExcess) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->accelEnrichmentMode = AE_MODE_PREDICTIVE_MAP;
+	for (auto& duration : config->predictiveMapBlendDurationValues) {
+		duration = 0.5f;
+	}
+	setLinearCurve(config->aeCltCorrBins, -40, 100, 1);
+	setArrayValues(config->aeCltCorrValues, 2.0f);
+	Sensor::setMockValue(SensorType::Clt, 20);
+
+	StrictMock<MockVp3d> veTable;
+	StrictMock<MockVp3d> mapFallback;
+	EXPECT_CALL(mapFallback, getValue(1500, 30.0f)).WillRepeatedly(Return(85.0f));
+	EXPECT_CALL(veTable, getValue(_, _)).WillRepeatedly(Return(50.0f));
+	SpeedDensityAirmass dut(veTable, mapFallback);
+
+	float tChargeK = 273.15f + 20.0f;
+	engine->engineState.sd.tChargeK = tChargeK;
+	Sensor::setMockValue(SensorType::Tps1, 30.0f);
+	Sensor::setMockValue(SensorType::Map, 65.0f);
+
+	// No prediction: measured MAP, multiplier not applied
+	auto result = dut.getAirmass(1500, false);
+	EXPECT_NEAR(result.CylinderAirmass, SpeedDensityBase::getAirmassImpl(0.5f, 65, tChargeK), EPS4D);
+	EXPECT_NEAR(result.EngineLoadPercent, 65, EPS4D);
+
+	engine->module<TpsAccelEnrichment>()->m_accelEventJustOccurred = true;
+
+	// Predicted 85 kPa over measured 65 kPa: the 20 kPa excess doubles for air mass
+	result = dut.getAirmass(1500, true);
+	EXPECT_NEAR(result.CylinderAirmass, SpeedDensityBase::getAirmassImpl(0.5f, 105, tChargeK), EPS4D);
+	EXPECT_NEAR(result.EngineLoadPercent, 85, EPS4D);
+	EXPECT_NEAR(engine->outputChannels.effectiveMap, 85, EPS2D);
+	EXPECT_NEAR(engine->module<TpsAccelEnrichment>()->aeTemperatureMult, 2, EPS4D);
+
+	// Halfway through the blend: effective 75 kPa, excess 10 kPa -> 85 kPa for air mass
+	eth.moveTimeForwardMs(250);
+	result = dut.getAirmass(1500, false);
+	EXPECT_NEAR(result.CylinderAirmass, SpeedDensityBase::getAirmassImpl(0.5f, 85, tChargeK), EPS4D);
+	EXPECT_NEAR(result.EngineLoadPercent, 75, EPS4D);
+
+	// A failed MAP sensor mid-prediction uses the plain fallback, without stale scaling
+	Sensor::setInvalidMockValue(SensorType::Map);
+	result = dut.getAirmass(1500, false);
+	EXPECT_NEAR(result.CylinderAirmass, SpeedDensityBase::getAirmassImpl(0.5f, 85, tChargeK), EPS4D);
+	EXPECT_NEAR(result.EngineLoadPercent, 85, EPS4D);
+}
+
 TEST(AirmassModes, PredictiveMapSmallerEventHasItsOwnTpsPeak) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->accelEnrichmentMode = AE_MODE_PREDICTIVE_MAP;
