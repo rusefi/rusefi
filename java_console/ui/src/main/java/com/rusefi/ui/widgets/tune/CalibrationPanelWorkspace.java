@@ -320,7 +320,7 @@ public final class CalibrationPanelWorkspace {
         panel.bounds = fitBounds(panel.bounds, fresh ? Collections.singletonList(screen) : screens.get());
         panel.window.setBounds(panel.bounds);
         panel.widget.setActive(true);
-        panel.window.show();
+        panel.window.show(fresh);
     }
 
     private String title(CalibrationPanelKey key) {
@@ -526,7 +526,7 @@ public final class CalibrationPanelWorkspace {
     }
 
     interface PanelWindow {
-        void show();
+        void show(boolean packToContent);
         void toFront();
         Rectangle getBounds();
         void setBounds(Rectangle bounds);
@@ -577,7 +577,19 @@ public final class CalibrationPanelWorkspace {
         }
 
         @Override
-        public void show() {
+        public void show(boolean packToContent) {
+            if (packToContent) {
+                dialog.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowOpened(WindowEvent event) {
+                        // Native decoration insets can change when the window manager maps the dialog.
+                        // Repack only fresh windows; restored windows keep the user's saved bounds.
+                        dialog.pack();
+                        dialog.setBounds(fitBounds(dialog.getBounds(), usableScreens()));
+                        dialog.removeWindowListener(this);
+                    }
+                });
+            }
             dialog.setVisible(true);
         }
 

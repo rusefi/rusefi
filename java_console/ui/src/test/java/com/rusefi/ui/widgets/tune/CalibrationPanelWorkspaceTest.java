@@ -206,6 +206,7 @@ class CalibrationPanelWorkspaceTest {
                 FakeWindow window = fixture.windows.get(0);
                 assertEquals(window.content.getPreferredSize(), window.bounds.getSize());
                 assertTrue(window.bounds.width < 1000);
+                assertTrue(window.packToContent, "Repack fresh windows after native decorations are known");
                 assertTrue(window.bounds.height < 400, "A compact form must not inherit the tile height");
             }
         });
@@ -664,6 +665,7 @@ class CalibrationPanelWorkspaceTest {
             try (Fixture second = new Fixture(ini, roundTrip(config))) {
                 second.workspace.openPanel("first");
                 assertEquals(new Rectangle(210, 130, 640, 410), second.windows.get(0).bounds);
+                assertFalse(second.windows.get(0).packToContent, "Restored windows keep their saved size");
 
                 second.primary.reset();
                 assertTrue(second.windows.get(0).disposed);
@@ -780,6 +782,7 @@ class CalibrationPanelWorkspaceTest {
         Rectangle bounds;
         boolean disposed;
         boolean canSplit;
+        boolean packToContent;
         int raised;
 
         FakeWindow(String title, JScrollPane content, Runnable close, Runnable split, boolean canSplit,
@@ -798,7 +801,7 @@ class CalibrationPanelWorkspaceTest {
             moved.accept(bounds);
         }
 
-        public void show() { }
+        public void show(boolean packToContent) { this.packToContent = packToContent; }
         public void toFront() { raised++; }
         public Rectangle getBounds() { return new Rectangle(bounds); }
         public void setBounds(Rectangle bounds) { this.bounds = new Rectangle(bounds); }
