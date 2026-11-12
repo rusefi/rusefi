@@ -1772,8 +1772,8 @@ pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 
 uint8_t[CAM_INPUTS_COUNT iterate] simulatorCamPosition;
 
-adc_channel_e ignKeyAdcChannel
-float ignKeyAdcDivider
+	adc_channel_e ignKeyAdcChannel
+	float ignKeyAdcDivider;This is the ratio of the resistors for the Ingition key input, measure the voltage at the terminal and then adjust this number until the gauge matches the reading.;"coef", 1, 0, 0.01, 99, 2
 
 	pin_mode_e spi6MisoMode;
 
