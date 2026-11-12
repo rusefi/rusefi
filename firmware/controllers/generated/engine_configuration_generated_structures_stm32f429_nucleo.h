@@ -5910,6 +5910,8 @@ struct engine_configuration_s {
 	 */
 	uint8_t alignmentFill_at_3261[3] = {};
 	/**
+	 * This is the ratio of the resistors for the Ingition key input, measure the voltage at the terminal and then adjust this number until the gauge matches the reading.
+	 * units: coef
 	 * offset 3264
 	 */
 	float ignKeyAdcDivider;

@@ -1847,7 +1847,7 @@ Number of speedometer pulses per kilometer travelled.
 Frequency used by the "Test Speedo" bench test button, pulsed for a fixed duration.
 
 ### ignKeyAdcDivider
-null
+This is the ratio of the resistors for the Ingition key input, measure the voltage at the terminal and then adjust this number until the gauge matches the reading.
 
 ### maxInjectorDutyInstant
 This sets an immediate limit on injector duty cycle. If this threshold is reached, the system will immediately cut the injectors.
