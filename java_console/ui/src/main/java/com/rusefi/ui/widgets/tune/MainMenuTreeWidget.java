@@ -58,6 +58,8 @@ public class MainMenuTreeWidget {
      * Keyed by submenu rather than tree node because search results are built from copied nodes.
      */
     private final Set<String> disabledKeys = new HashSet<>();
+    /** For each disabled submenu key, its conditions that are currently false: the unlock hint lists their settings. */
+    private final Map<String, List<String>> failedConditions = new HashMap<>();
 
     /** Renders a "std_separator" menu entry as a horizontal line. */
     private static class SeparatorRenderer extends JComponent {
@@ -97,6 +99,16 @@ public class MainMenuTreeWidget {
             private boolean sawMousePress;
 
             @Override
+            public String getToolTipText(MouseEvent event) {
+                TreePath path = getPathForLocation(event.getX(), event.getY());
+                if (path == null) {
+                    return null;
+                }
+                Object userObject = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
+                return userObject instanceof SubMenuModel ? getUnlockHint((SubMenuModel) userObject) : null;
+            }
+
+            @Override
             protected void processMouseEvent(MouseEvent event) {
                 if (event.getID() == MouseEvent.MOUSE_PRESSED) {
                     selectionBeforeMousePress = getSelectionPath();
@@ -116,6 +128,8 @@ public class MainMenuTreeWidget {
                 }
             }
         };
+        // enables getToolTipText above: unlock hints of greyed-out pages
+        ToolTipManager.sharedInstance().registerComponent(tree);
         tree.setSelectionModel(new DefaultTreeSelectionModel() {
             {
                 setSelectionMode(SINGLE_TREE_SELECTION);
@@ -605,10 +619,20 @@ public class MainMenuTreeWidget {
 
     private void refreshExpressions(IniFileModel iniFileModel, ConfigurationImage ci) {
         disabledKeys.clear();
+        failedConditions.clear();
 
         for (ExpressionEntry entry : expressionEntries) {
             if (isDisabledByExpressions(entry.subMenu, iniFileModel, ci)) {
                 disabledKeys.add(entry.subMenu.getKey());
+                List<String> failed = new ArrayList<>();
+                for (String expression : Arrays.asList(entry.subMenu.getEnableExpression(),
+                    entry.subMenu.getVisibleExpression())) {
+                    if (expression != null && Boolean.FALSE.equals(
+                        ExpressionEvaluator.evaluateBooleanExpression(expression, iniFileModel, ci))) {
+                        failed.add(expression);
+                    }
+                }
+                failedConditions.put(entry.subMenu.getKey(), failed);
             }
         }
 
@@ -632,6 +656,88 @@ public class MainMenuTreeWidget {
         return false;
     }
 
+
+    /**
+     * Explains a greyed-out page (#10625): the settings its currently false enable/visible
+     * conditions depend on, by the label the user sees, with the menu page where each one is found.
+     *
+     * @return tooltip text, or null for a page that is not disabled
+     */
+    public String getUnlockHint(SubMenuModel subMenu) {
+        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+        if (ini == null || !disabledKeys.contains(subMenu.getKey())) {
+            return null;
+        }
+        List<String> settings = new ArrayList<>();
+        Set<String> visited = new HashSet<>();
+        for (String expression : failedConditions.getOrDefault(subMenu.getKey(), Collections.emptyList())) {
+            collectConditionSettings(expression, ini, settings, visited);
+        }
+        if (settings.isEmpty()) {
+            return null;
+        }
+        StringBuilder hint = new StringBuilder("<html>Not available with the current settings. Depends on:");
+        for (String key : settings) {
+            DialogModel.Field uiField = ini.getFieldsInUiOrder().get(key);
+            String label = uiField == null || uiField.getUiName() == null || uiField.getUiName().trim().isEmpty()
+                ? key : uiField.getUiName().trim();
+            hint.append("<br>&bull; ").append(escapeHtml(label));
+            String page = findPageName(ini, key, subMenu.getKey());
+            if (page != null) {
+                hint.append(" (in ").append(escapeHtml(page)).append(")");
+            }
+        }
+        return hint.append("</html>").toString();
+    }
+
+    /** Settings in order of appearance; calculated channels are replaced by the settings they use. */
+    private static void collectConditionSettings(String expression, IniFileModel ini, List<String> settings,
+                                                 Set<String> visited) {
+        if (expression == null) {
+            return;
+        }
+        List<String> variables = new ArrayList<>(ExpressionEvaluator.extractVariables(expression));
+        variables.sort(Comparator.comparingInt(expression::indexOf));
+        for (String variable : variables) {
+            if (!visited.add(variable)) {
+                continue;
+            }
+            String calculated = ini.getExpressionOutputChannel(variable);
+            if (calculated != null && !ini.findIniField(variable).isPresent()) {
+                collectConditionSettings(calculated, ini, settings, visited);
+            } else if (!settings.contains(variable)) {
+                settings.add(variable);
+            }
+        }
+    }
+
+    /** Name of the first menu page showing the setting, preferring a page the user can open now. */
+    private String findPageName(IniFileModel ini, String fieldKey, String excludedPageKey) {
+        String disabledPage = null;
+        Enumeration<?> nodes = root.preorderEnumeration();
+        while (nodes.hasMoreElements()) {
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) nodes.nextElement();
+            if (!(node.getUserObject() instanceof SubMenuModel)) {
+                continue;
+            }
+            SubMenuModel subMenu = (SubMenuModel) node.getUserObject();
+            if (subMenu.getKey().equals(excludedPageKey)
+                || !containsField(ini.getDialogs().get(subMenu.getKey()), ini, fieldKey, new HashSet<>())) {
+                continue;
+            }
+            if (!disabledKeys.contains(subMenu.getKey())) {
+                return subMenu.getName();
+            }
+            if (disabledPage == null) {
+                disabledPage = subMenu.getName();
+            }
+        }
+        return disabledPage;
+    }
+
+    private static String escapeHtml(String text) {
+        return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+    }
 
     public void setOnSelect(Consumer<SubMenuModel> onSelect) {
         this.onSelect = onSelect;

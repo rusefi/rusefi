@@ -33,6 +33,14 @@ dependencies {
     implementation global_libs.jaxb_runtime
 }
 
+tasks.register('runTopLevelMenuSandbox', JavaExec) {
+    dependsOn testClasses
+    group = 'Execution'
+    description = 'Open the tuning menu sandbox with the bundled INI and tune (no ECU port opened)'
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.rusefi.ui.TopLevelMenuSandbox'
+}
+
 // Auth/UI development without opening an ECU port. Use Console for live tools.
 tasks.register('runLLMTabSandbox', JavaExec) {
     dependsOn testClasses

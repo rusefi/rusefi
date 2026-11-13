@@ -324,6 +324,41 @@ todo: spllit into smaller tests?
     }
 
     @Test
+    public void testDisabledNodeHintListsTheSettingsOfItsFalseConditions() throws FileNotFoundException {
+        // #10625: hovering a greyed-out page names the settings to change, by their UI labels
+        UIContext uiContext = new UIContext();
+        String iniPath = "../../java_console/io/src/test/java/com/rusefi/io/pin_output_mode_with_and_without_dollar/test_data/rusefi_uaefi.ini";
+        IniFileModel model = IniFileReaderUtil.readIniFile(iniPath);
+        uiContext.iniFileState.setIniFileModelForTest(model);
+
+        MainMenuTreeWidget widget = new MainMenuTreeWidget(uiContext);
+        JTree tree = (JTree) ((JScrollPane) widget.getContentPane().getComponent(1)).getViewport().getView();
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) tree.getModel().getRoot();
+        DefaultMutableTreeNode advanced = findNode(root, "Advanced");
+        SubMenuModel pid = (SubMenuModel) findNode(advanced, "Boost control PID").getUserObject();
+        SubMenuModel cltMultiplier = (SubMenuModel) findNode(advanced, "CLT boost duty multiplier").getUserObject();
+        SubMenuModel boost = (SubMenuModel) findNode(advanced, "Boost control").getUserObject();
+
+        assertNull(widget.getUnlockHint(pid), "nothing is disabled before a tune is evaluated");
+        ConfigurationImage image = new ConfigurationImage(new byte[model.getMetaInfo().getPageSize(0)]);
+        widget.refreshExpressions(image);
+        // { isBoostControlEnabled && boostType == 1 }
+        assertEquals("<html>Not available with the current settings. Depends on:"
+            + "<br>&bull; Enable (in Boost control)<br>&bull; Control Mode (in Boost control)</html>",
+            widget.getUnlockHint(pid));
+        // { isBoostControlEnabled }, { uiMode == 0 || uiMode == 1 }: the second condition holds
+        assertEquals("<html>Not available with the current settings. Depends on:"
+            + "<br>&bull; Enable (in Boost control)</html>", widget.getUnlockHint(cltMultiplier));
+        assertNull(widget.getUnlockHint(boost), "available pages have no hint");
+
+        // isBoostControlEnabled is bit 17 of a little-endian U32
+        image.getContent()[model.findIniField("isBoostControlEnabled").get().getOffset() + 2] |= 0x02;
+        widget.refreshExpressions(image);
+        assertNull(widget.getUnlockHint(cltMultiplier));
+        assertTrue(widget.getUnlockHint(pid).contains("Control Mode (in Boost control)"));
+    }
+
+    @Test
     public void testDisabledNodesStayDisabledInSearchResults() throws FileNotFoundException {
         UIContext uiContext = new UIContext();
         String iniPath = "../../java_console/io/src/test/java/com/rusefi/io/pin_output_mode_with_and_without_dollar/test_data/rusefi_uaefi.ini";
