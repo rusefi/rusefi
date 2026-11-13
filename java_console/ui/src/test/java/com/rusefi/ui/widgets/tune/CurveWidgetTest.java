@@ -96,11 +96,10 @@ public class CurveWidgetTest {
     }
 
     @Test
-    public void pcVariableAxisBinsCrashTheCurve() throws Throwable {
+    public void pcVariableAxisBinsAreShownAndFixed() throws Throwable {
         // Issue #10626: "Boost control open loop gear adder" takes its X bins from gearCountArray,
-        // a [PcVariables] array with a defaultValue. The INI reader registers only 'bits' PC variables,
-        // so the bins are unknown and opening the curve throws.
-        // Reproduction of the current behavior: update these expectations together with the fix.
+        // a [PcVariables] array with a defaultValue. Such bins have no tune storage: the curve
+        // shows the INI values and only the Y values can be edited.
         String text = "[Constants]\npage = 1\n"
             + "gearBasedOpenLoopBoostAdder = array, S08, 0, [10], \"%\", 0.5, 0, -63, 63, 1\n"
             + "[PcVariables]\n"
@@ -119,11 +118,40 @@ public class CurveWidgetTest {
         IniFileModel ini = IniFileReaderUtil.readIniFile(IniFileReaderUtil.read(
             new ByteArrayInputStream(text.getBytes(StandardCharsets.US_ASCII))), "test", meta);
         ConfigurationImage image = new ConfigurationImage(16);
+        ArrayIniField yField = (ArrayIniField) ini.findIniField("gearBasedOpenLoopBoostAdder").get();
+        ConfigurationImageGetterSetter.setArrayValues(yField, image,
+            new Double[]{0.0, 0.0, 5.0, 10.0, 15.0, 20.0, 20.0, 20.0, 20.0, 20.0});
+        byte[] original = image.getContent().clone();
 
-        assertTrue(ini.findIniField("gearBasedOpenLoopBoostAdder").isPresent());
-        assertFalse(ini.findIniField("gearCountArray").isPresent(), "PC variable arrays are not registered");
-        SwingUtilities.invokeAndWait(() -> assertThrows(java.util.NoSuchElementException.class,
-            () -> new CurveWidget(ini.getCurves().get("boostOpenLoopGearAdderCurve"), ini, image)));
+        SwingUtilities.invokeAndWait(() -> {
+            CurveWidget widget = new CurveWidget(ini.getCurves().get("boostOpenLoopGearAdderCurve"), ini, image);
+            JTable table = findTable(widget.getContentPane());
+            CurveWidget.CurveCanvas canvas = (CurveWidget.CurveCanvas) widget.getContentPane().getComponent(0);
+            canvas.setSize(470, 360);
+            assertEquals(10, table.getRowCount());
+            for (int row = 0; row < 10; row++) {
+                assertEquals(String.valueOf(row - 1), table.getValueAt(row, 0));
+                assertFalse(table.isCellEditable(row, 0), "gear numbers are fixed");
+                assertTrue(table.isCellEditable(row, 1));
+            }
+            assertEquals("5.0", table.getValueAt(2, 1));
+            assertFalse(hasCurveOutsidePlot(render(canvas)), "curve must stay inside the plot");
+            assertArrayEquals(original, image.getContent(), "opening and painting must not modify the tune");
+
+            // The gear bins share offset 0 with nothing: writing them must not touch the tune.
+            edit(table, 3, 0, "7");
+            assertEquals("2", table.getValueAt(3, 0));
+            assertArrayEquals(original, image.getContent());
+
+            Point start = canvas.worldToCanvas(2, 10);
+            Point end = canvas.worldToCanvas(5, 30);
+            canvas.dispatchEvent(new MouseEvent(canvas, MouseEvent.MOUSE_PRESSED, 0, 0, start.x, start.y, 1, false));
+            canvas.dispatchEvent(new MouseEvent(canvas, MouseEvent.MOUSE_DRAGGED, 0, 0, end.x, end.y, 0, false));
+            canvas.dispatchEvent(new MouseEvent(canvas, MouseEvent.MOUSE_RELEASED, 0, 0, end.x, end.y, 1, false));
+            assertEquals("2", table.getValueAt(3, 0), "dragging a point keeps its gear");
+            assertEquals(30.0, ConfigurationImageGetterSetter.getArrayValues(yField, image)[3][0]);
+            assertEquals(5.0, ConfigurationImageGetterSetter.getArrayValues(yField, image)[2][0]);
+        });
     }
 
     @Test

@@ -73,6 +73,10 @@ public class ConfigurationImageGetterSetter {
     }
 
     public static Double[][] getArrayValues(ArrayIniField field, ConfigurationImage image) {
+        if (field instanceof PcVariableArrayIniField) {
+            // no ECU storage: the values are part of the INI, see #10626
+            return ((PcVariableArrayIniField) field).getValues();
+        }
         Double[][] values = new Double[field.getRows()][field.getCols()];
         for (int rowIndex = 0; rowIndex < field.getRows(); rowIndex++) {
             for (int colIndex = 0; colIndex < field.getCols(); colIndex++) {
@@ -84,6 +88,9 @@ public class ConfigurationImageGetterSetter {
     }
 
     public static void setArrayValues(ArrayIniField field, ConfigurationImage image, Double[][] data) {
+        if (field instanceof PcVariableArrayIniField) {
+            return;
+        }
         for (int rowIndex = 0; rowIndex < data.length; rowIndex++) {
             for (int colIndex = 0; colIndex < data[rowIndex].length; colIndex++) {
                 java.nio.ByteBuffer wrapped = image.getByteBuffer(
@@ -96,6 +103,9 @@ public class ConfigurationImageGetterSetter {
     }
 
     public static void setArrayValues(ArrayIniField field, ConfigurationImage image, Double[] data) {
+        if (field instanceof PcVariableArrayIniField) {
+            return;
+        }
         int index = 0;
         for (int rowIndex = 0; rowIndex < field.getRows(); rowIndex++) {
             for (int colIndex = 0; colIndex < field.getCols(); colIndex++) {

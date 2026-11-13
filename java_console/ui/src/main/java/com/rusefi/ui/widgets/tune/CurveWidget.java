@@ -9,6 +9,7 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.TsStringFunction;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
+import com.opensr5.ini.field.PcVariableArrayIniField;
 import com.rusefi.config.StringFormatter;
 
 import javax.swing.*;
@@ -66,6 +67,7 @@ public class CurveWidget {
     private int yDigits;
     private ConfigurationImage imageTarget;
     private ArrayIniField xBinsField;
+    private boolean xBinsFixed;
     private ArrayIniField yBinsField;
     private Runnable onEdit;
 
@@ -142,6 +144,8 @@ public class CurveWidget {
         this.xUnits = resolveUnits(xField.getUnits(), iniFile, configImage);
         this.xDigits = parseDigits(xField.getDigits());
         this.xBinsField = xField instanceof ArrayIniField ? (ArrayIniField) xField : null;
+        // PC variable bins (gear numbers, #10626) are fixed by the INI and have no tune storage
+        this.xBinsFixed = xField instanceof PcVariableArrayIniField;
 
         IniField yField = iniFile.findIniField(curveModel.getyBins()).get();
         this.yUnits = resolveUnits(yField.getUnits(), iniFile, configImage);
@@ -227,6 +231,9 @@ public class CurveWidget {
     }
 
     private void setXValue(int index, double value) {
+        if (xBinsFixed) {
+            return;
+        }
         double min = index == 0 ? xMin : Math.max(xMin, xValues[index - 1]);
         double max = index == xValues.length - 1 ? xMax : Math.min(xMax, xValues[index + 1]);
         if (min <= max) {
@@ -556,7 +563,7 @@ public class CurveWidget {
 
         @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return !readOnly;
+            return !readOnly && !(columnIndex == 0 && xBinsFixed);
         }
 
         @Override

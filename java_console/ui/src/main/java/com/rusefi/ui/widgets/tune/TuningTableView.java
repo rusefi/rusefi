@@ -6,6 +6,7 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.TableModel;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
+import com.opensr5.ini.field.PcVariableArrayIniField;
 import com.rusefi.config.StringFormatter;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.maintenance.CalibrationsInfo;
@@ -968,7 +969,9 @@ public class TuningTableView {
 
     private ArrayIniField editableAxisField(IniFileModel ini, String name) {
         Optional<IniField> field = ini.findIniField(name);
-        if (field.isPresent() && field.get() instanceof ArrayIniField) {
+        // PC variable bins are fixed by the INI and have no tune storage
+        if (field.isPresent() && field.get() instanceof ArrayIniField
+            && !(field.get() instanceof PcVariableArrayIniField)) {
             ArrayIniField array = (ArrayIniField) field.get();
             if (array.getRows() == 1 || array.getCols() == 1) {
                 return array;

@@ -313,6 +313,9 @@ public class IniFileReader {
 
 
             switch (first) {
+                case "defaultValue":
+                    handleDefaultValue(list);
+                    break;
                 case "field":
                     handleField(list, false);
                     break;
@@ -438,11 +441,15 @@ public class IniFileReader {
 
     /**
      * Parse [PcVariables] section fields. These are TunerStudio-local variables (no ECU offset).
-     * We only handle 'bits' type for now
+     * We only handle 'bits' and 'array' types for now
      */
     private void handlePcVariableDefinition(LinkedList<String> list, RawIniFile.Line line) {
         if (list.size() < 4)
             return;
+        if (FIELD_TYPE_ARRAY.equals(list.get(1))) {
+            handlePcVariableArray(list);
+            return;
+        }
         if (!FIELD_TYPE_BITS.equals(list.get(1)))
             return;
 
@@ -465,6 +472,51 @@ public class IniFileReader {
 
         // Store in secondary fields so they're findable via findIniField() but don't conflict with real config fields
         secondaryIniFields.put(field.getName(), field);
+    }
+
+    /**
+     * PcVariables array format: name = array, S08, [10], "unit", scale, translate, min, max, digits
+     * Curves and tables use such arrays as axis bins (#10626).
+     */
+    private void handlePcVariableArray(LinkedList<String> list) {
+        // same layout as a [Constants] array, without the offset
+        LinkedList<String> withOffset = new LinkedList<>(list);
+        withOffset.add(3, "0");
+        PcVariableArrayIniField field;
+        try {
+            field = new PcVariableArrayIniField((ArrayIniField) ArrayIniField.parse(withOffset));
+        } catch (RuntimeException e) {
+            log.warn("Skipping PC variable array " + list + ": " + e);
+            return;
+        }
+        // same place as 'bits' PC variables: findable via findIniField() without mixing with config fields
+        secondaryIniFields.put(field.getName(), field);
+    }
+
+    /**
+     * [ConstantsExtensions] format: defaultValue = name, value value value
+     * Only the values of PC variable arrays are used.
+     */
+    private void handleDefaultValue(LinkedList<String> list) {
+        if (list.size() < 3) {
+            return;
+        }
+        IniField field = secondaryIniFields.get(list.get(1));
+        if (!(field instanceof PcVariableArrayIniField)) {
+            return;
+        }
+        double[] values = new double[list.size() - 2];
+        try {
+            for (int i = 0; i < values.length; i++) {
+                values[i] = Double.parseDouble(list.get(i + 2));
+            }
+        } catch (NumberFormatException e) {
+            log.warn("Skipping defaultValue " + list + ": " + e);
+            return;
+        }
+        if (!((PcVariableArrayIniField) field).setDefaultValues(values)) {
+            log.warn("Skipping defaultValue with unexpected length " + list);
+        }
     }
 
     private void handleConstantFieldDefinition(LinkedList<String> list, RawIniFile.Line line) {
