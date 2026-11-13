@@ -8,6 +8,7 @@ import com.rusefi.maintenance.jobs.AsyncJob;
 import com.rusefi.maintenance.jobs.OpenBltAutoJob;
 import com.rusefi.maintenance.jobs.DfuAutoJob;
 import com.rusefi.ui.basic.SingleAsyncJobExecutor;
+import com.rusefi.ui.basic.FirmwareBranchSwitchController;
 import com.rusefi.ui.basic.StatusPanelWithProgressBar;
 import com.rusefi.ui.basic.UpdateFirmwareResult;
 import org.junit.jupiter.api.Test;
@@ -112,6 +113,22 @@ class StartupFirmwareHandoffTest {
         Runnable releaseSplash = mock(Runnable.class);
         StartupFrame.prepareSplashForJob(new DfuAutoJob(new PortResult("TEST_PORT", SerialPortType.Ecu),
             null, new ConnectivityContext(new FakePortScanner()), mock(LinkManager.class)), releaseSplash);
+        verifyNoInteractions(releaseSplash);
+    }
+
+    @Test
+    void branchSwitchWrapperIsClassifiedAsLiveFirmwareJob() {
+        class BranchSwitchWrapper extends AsyncJob implements FirmwareBranchSwitchController.BranchSwitchJobMarker {
+            BranchSwitchWrapper() { super("branch switch wrapper"); }
+            @Override public void doJob(UpdateOperationCallbacks callbacks, Runnable finished) {
+                throw new AssertionError("Not executed by splash classification");
+            }
+        }
+        AsyncJob wrapper = new BranchSwitchWrapper();
+        Runnable releaseSplash = mock(Runnable.class);
+
+        assertTrue(StartupFrame.isFirmwareJob(wrapper));
+        StartupFrame.prepareSplashForJob(wrapper, releaseSplash);
         verifyNoInteractions(releaseSplash);
     }
 

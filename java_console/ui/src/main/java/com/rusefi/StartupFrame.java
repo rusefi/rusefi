@@ -36,6 +36,7 @@ import com.rusefi.maintenance.jobs.ImportTuneJob;
 import com.rusefi.maintenance.jobs.OpenBltAutoJob;
 import com.rusefi.maintenance.jobs.OpenBltSwitchJob;
 import com.rusefi.ui.basic.StartupUpdateActions;
+import com.rusefi.ui.basic.FirmwareBranchSwitchController;
 import com.rusefi.ui.basic.StartupFirmwareOperationLifecycle;
 import com.rusefi.ui.basic.SingleAsyncJobExecutor;
 import com.rusefi.ui.basic.StatusPanelWithProgressBar;
@@ -1236,7 +1237,7 @@ public class StartupFrame {
      * Detaches the splash connection listener and decides
      * what to do with the live {@link LinkManager}:
      * <ul>
-     *   <li>Firmware jobs ({@link DfuAutoJob}, {@link OpenBltAutoJob}): keep the LM alive —
+     *   <li>Firmware jobs ({@link DfuAutoJob}, {@link OpenBltAutoJob}, branch switches): keep the LM alive —
      *       the job owns the disconnect/reconnect lifecycle.</li>
      *   <li>Tune import ({@link ImportTuneJob}): keep the LM alive — the job submits reads and
      *       writes through the executor queue while the pull thread runs.</li>
@@ -1245,10 +1246,15 @@ public class StartupFrame {
      */
     static void prepareSplashForJob(AsyncJob job, Runnable releaseConnection) {
         // Automatic firmware jobs must pass eligibility before replacing the live splash listeners.
-        if (job instanceof DfuAutoJob || job instanceof OpenBltAutoJob) {
+        if (isFirmwareJob(job)) {
             return;
         }
         releaseConnection.run();
+    }
+
+    static boolean isFirmwareJob(AsyncJob job) {
+        return job instanceof DfuAutoJob || job instanceof OpenBltAutoJob
+            || FirmwareBranchSwitchController.isBranchSwitchJob(job);
     }
 
     private void releaseSplashConnection() {
@@ -1256,7 +1262,7 @@ public class StartupFrame {
         log.info("Releasing splash auto-connection before async job");
 
         Optional<AsyncJob> job = asyncJobExecutor.getJobInProgress();
-        boolean isFirmwareJob = job.map(j -> j instanceof DfuAutoJob || j instanceof OpenBltAutoJob).orElse(false);
+        boolean isFirmwareJob = job.map(StartupFrame::isFirmwareJob).orElse(false);
         boolean isLiveConnectionJob = job.map(j -> j instanceof ImportTuneJob || j instanceof ExportTuneJob || j instanceof OpenBltSwitchJob).orElse(false);
 
         // Detach the original splash listener in all cases — the disconnect() inside

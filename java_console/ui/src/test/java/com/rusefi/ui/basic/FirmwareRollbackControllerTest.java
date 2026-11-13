@@ -4,16 +4,86 @@ import com.rusefi.core.io.BundleInfo;
 import com.rusefi.PortResult;
 import com.rusefi.SerialPortType;
 import com.rusefi.io.LinkManager;
+import com.rusefi.ConnectivityContext;
+import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.io.UpdateOperationCallbacks;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Collections;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import javax.swing.SwingUtilities;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.*;
 
 class FirmwareRollbackControllerTest {
+    @Test
+    void reconnectingTheSameLimaEcuRediscoversItsHistory() throws Exception {
+        System.setProperty("RE_FIRMWARE_ROLLBACK_ENABLED", "true");
+        try {
+            PortResult port = new PortResult("TEST_PORT", SerialPortType.Ecu);
+            LinkManager lm = mock(LinkManager.class);
+            BinaryProtocol bp = mock(BinaryProtocol.class);
+            bp.signature = "rusEFI lts-26lima.2026.11.11.test_board.123";
+            when(lm.getBinaryProtocol()).thenReturn(bp);
+            when(lm.getLastTriedPort()).thenReturn(port.port);
+            AtomicReference<FirmwareRollbackController> controller = new AtomicReference<>();
+            Semaphore completed = new Semaphore(0);
+            AtomicInteger discoveries = new AtomicInteger();
+            SwingUtilities.invokeAndWait(() -> {
+                FirmwareRollbackController value = new FirmwareRollbackController(
+                    mock(ConnectivityContext.class), UpdateOperationCallbacks.DUMMY,
+                    new SingleAsyncJobExecutor(UpdateOperationCallbacks.DUMMY),
+                    () -> Optional.of(port), () -> true,
+                    () -> {
+                        if (controller.get() != null && !controller.get().isBusy()) {
+                            completed.release();
+                        }
+                    }, ignored -> {}, () -> {});
+                controller.set(value);
+                value.setCatalogLoaderForTests((board, branch) -> {
+                    discoveries.incrementAndGet();
+                    return Collections.emptyList();
+                });
+                value.setLinkManager(lm);
+                value.refresh(port);
+            });
+            assertTrue(completed.tryAcquire(5, TimeUnit.SECONDS));
+            assertEquals(1, discoveries.get());
+            SwingUtilities.invokeAndWait(() -> {
+                controller.get().setLinkManager(null);
+                controller.get().refresh(port);
+                controller.get().setLinkManager(lm);
+                controller.get().refresh(port);
+            });
+            assertTrue(completed.tryAcquire(5, TimeUnit.SECONDS));
+            assertEquals(2, discoveries.get());
+        } finally {
+            System.clearProperty("RE_FIRMWARE_ROLLBACK_ENABLED");
+        }
+    }
+
+    @Test
+    void historyUsesLiveEcuBranchAndDoesNotGuessWhenDisconnected() {
+        BundleInfo lima = FirmwareRollbackController.connectedFirmware(
+            "rusEFI lts-26lima.2026.11.11.test_board.123");
+        assertEquals("lts-26lima", lima.getBranchName());
+        assertEquals("test_board", lima.getTarget());
+        assertTrue(FirmwareRollbackController.isRollbackButtonVisible(true, lima));
+        assertFalse(FirmwareRollbackController.isRollbackButtonVisible(true,
+            FirmwareRollbackController.connectedFirmware("rusEFI master.2026.11.11.test_board.456")));
+        assertNull(FirmwareRollbackController.connectedFirmware(null));
+        assertNull(FirmwareRollbackController.connectedFirmware("invalid"));
+    }
+
     @Test
     void serialFirmwareUpdateRejectsSocketCanEcu() {
         assertFalse(FirmwareRollbackController.isSerialFirmwareUpdateSupported(

@@ -53,6 +53,12 @@ public final class FirmwareOperations {
         DfuFlasher.rebootToDfu(parent, port, callbacks, Integration.CMD_REBOOT_OPENBLT);
     }
 
+    private static void rebootToOpenbltSelected(JComponent parent, String selectedPort,
+                                                UpdateOperationCallbacks callbacks, FirmwareSelection selection) {
+        String port = selectedPort == null ? PortDetector.AUTO : selectedPort;
+        DfuFlasher.rebootToDfu(parent, port, callbacks, Integration.CMD_REBOOT_OPENBLT, selection);
+    }
+
     public static void flashOpenBltCan(
         JComponent parent,
         UpdateOperationCallbacks callbacks,
@@ -185,13 +191,48 @@ public final class FirmwareOperations {
         @Nullable String firmwareSrecFile,
         CalibrationsHelper.FirmwareUpdatePolicy policy
     ) {
+        return flashOpenbltSerialAutomatic(parent, ecuPort, bp, lm, callbacks, connectivityContext,
+            firmwareSrecFile, policy, null);
+    }
+
+    public static boolean flashOpenbltSerialAutomatic(
+        JComponent parent, PortResult ecuPort, BinaryProtocol bp, LinkManager lm,
+        UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext,
+        @Nullable String firmwareSrecFile, CalibrationsHelper.FirmwareUpdatePolicy policy,
+        @Nullable FirmwareSelection suppliedSelection
+    ) {
+        FirmwareSelection selection = suppliedSelection;
+        if (selection == null) {
+            selection = firmwareSrecFile == null
+                ? FirmwareSelection.latest(bp == null ? null : bp.signature, null, false, callbacks)
+                : FirmwareSelection.fromSrec(bp == null ? null : bp.signature, firmwareSrecFile, callbacks);
+            if (selection == null) {
+                return false;
+            }
+        }
         // Also protect callers that invoke this API without an OpenBltAutoJob.
-        if (!FirmwareFlashEligibility.isAllowed(bp == null ? null : bp.signature, firmwareSrecFile, callbacks)) {
+        if (!selection.revalidateForSrec(bp == null ? null : bp.signature, callbacks)) {
             return false;
         }
+        if (!selection.matchesSrecPath(firmwareSrecFile)) {
+            callbacks.firmwareUpdateBlocked("The firmware file does not match the selected update. Please restart the update.");
+            return false;
+        }
+        final String selectedSrec = selection.getSrecPath();
+        if (selectedSrec == null) {
+            callbacks.firmwareUpdateBlocked("This download is missing the SREC file needed for this update.");
+            return false;
+        }
+        try {
+            OpenBltFlasher.prepareFirmware(selectedSrec, makeOpenbltCallbacks(callbacks));
+        } catch (IOException e) {
+            callbacks.firmwareUpdateBlocked("Couldn't check the firmware file: " + e.getMessage());
+            return false;
+        }
+        final FirmwareSelection chosen = selection;
         return updateFirmwareAndRestorePreviousCalibrations(
             parent, ecuPort, bp, lm, callbacks,
-            () -> bltUpdateFirmware(parent, ecuPort, callbacks, connectivityContext, firmwareSrecFile),
+            () -> bltUpdateFirmware(parent, ecuPort, callbacks, connectivityContext, selectedSrec, bp, chosen),
             connectivityContext, policy);
     }
 
@@ -205,6 +246,15 @@ public final class FirmwareOperations {
         @Nullable String firmwareSrecFile,
         CalibrationsHelper.FirmwareUpdatePolicy policy
     ) {
+        return flashOpenbltCanAutomatic(parent, ecuPort, bp, lm, callbacks, connectivityContext, firmwareSrecFile, policy, null);
+    }
+
+    public static boolean flashOpenbltCanAutomatic(
+        JComponent parent, PortResult ecuPort, BinaryProtocol bp, LinkManager lm,
+        UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext,
+        @Nullable String firmwareSrecFile, CalibrationsHelper.FirmwareUpdatePolicy policy,
+        @Nullable FirmwareSelection suppliedSelection
+    ) {
         if (!isAutomaticCanPort(ecuPort.port)
             || lm == null
             || bp == null
@@ -213,18 +263,24 @@ public final class FirmwareOperations {
             return false;
         }
 
-        if (!FirmwareFlashEligibility.isAllowed(bp.signature, firmwareSrecFile, callbacks)) {
+        FirmwareSelection selection = suppliedSelection;
+        if (selection == null) {
+            selection = firmwareSrecFile == null
+                ? FirmwareSelection.latest(bp.signature, null, false, callbacks)
+                : FirmwareSelection.fromSrec(bp.signature, firmwareSrecFile, callbacks);
+            if (selection == null) {
+                return false;
+            }
+        }
+        if (!selection.revalidateForSrec(bp.signature, callbacks)) {
+            return false;
+        }
+        if (!selection.matchesSrecPath(firmwareSrecFile)) {
+            callbacks.firmwareUpdateBlocked("The firmware file does not match the selected update. Please restart the update.");
             return false;
         }
 
-        if (!MaintenanceUtil.ensureFirmwareForConnectedTarget(
-            callbacks, connectivityContext.getConnectedEcuTarget())) {
-            return false;
-        }
-
-        final String fileName = firmwareSrecFile != null
-            ? firmwareSrecFile
-            : FindFileHelper.findSrecFileForConnectedBoard(connectivityContext.getConnectedEcuTarget());
+        final String fileName = selection.getSrecPath();
         if (fileName == null) {
             callbacks.logLine(".srec image file not found");
             return false;
@@ -234,6 +290,7 @@ public final class FirmwareOperations {
             callbacks.logLine("Firmware update aborted - firmware/board mismatch.");
             return false;
         }
+        final FirmwareSelection chosen = selection;
 
         final OpenBltFlasher.PreparedFirmware preparedFirmware;
         try {
@@ -246,9 +303,10 @@ public final class FirmwareOperations {
         return updateFirmwareAndRestorePreviousCalibrations(
             parent, ecuPort, bp, lm, callbacks,
             () -> prepareCanHandoff(ecuPort.port, lm, callbacks,
-                () -> OpenbltRebooter.rebootToOpenblt(parent, bp, callbacks)),
-            () -> canUpdateFirmware(
-                callbacks, connectivityContext, ecuPort.port, fileName, preparedFirmware),
+                () -> chosen.revalidateForSrec(bp.signature, callbacks)
+                    && OpenbltRebooter.rebootToOpenblt(parent, bp, callbacks, chosen)),
+            () -> chosen.revalidateForSrec(bp.signature, callbacks)
+                && canUpdateFirmware(callbacks, connectivityContext, ecuPort.port, fileName, preparedFirmware),
             connectivityContext, policy);
     }
 
@@ -331,7 +389,11 @@ public final class FirmwareOperations {
     }
 
     private static boolean bltUpdateFirmware(JComponent parent, PortResult ecuPort, UpdateOperationCallbacks callbacks,
-                                             ConnectivityContext connectivityContext, @Nullable String firmwareSrecFile) {
+                                             ConnectivityContext connectivityContext, @Nullable String firmwareSrecFile,
+                                             @Nullable BinaryProtocol bp, @Nullable FirmwareSelection selection) {
+        if (selection != null && (bp == null || !selection.revalidateForSrec(bp.signature, callbacks))) {
+            return false;
+        }
         // Suspend the scanner for the entire reboot → detect → flash sequence so it
         // never races with our direct port probes for exclusive COM port access on Windows.
         try {
@@ -340,7 +402,8 @@ public final class FirmwareOperations {
             Thread.currentThread().interrupt();
         }
         try {
-            return bltUpdateFirmwareWithSuspendedScanner(parent, ecuPort, callbacks, connectivityContext, firmwareSrecFile);
+            return bltUpdateFirmwareWithSuspendedScanner(parent, ecuPort, callbacks, connectivityContext,
+                firmwareSrecFile, bp, selection);
         } finally {
             // Invalidate the cache so the scanner re-inspects the port (now running new
             // firmware) on its first post-resume scan cycle.
@@ -350,14 +413,23 @@ public final class FirmwareOperations {
     }
 
     private static boolean bltUpdateFirmwareWithSuspendedScanner(JComponent parent, PortResult ecuPort,
-                                                                 UpdateOperationCallbacks callbacks,
-                                                                 ConnectivityContext connectivityContext,
-                                                                 @Nullable String firmwareSrecFile) {
+                                                                  UpdateOperationCallbacks callbacks,
+                                                                  ConnectivityContext connectivityContext,
+                                                                  @Nullable String firmwareSrecFile,
+                                                                  @Nullable BinaryProtocol bp,
+                                                                  @Nullable FirmwareSelection selection) {
         // Snapshot pre-existing OpenBLT ports so we can ignore them when searching
         // for the newly-appeared bootloader port after the reboot.
         final List<PortResult> openBltPortsBefore = connectivityContext.getCurrentHardware().getKnownPorts(OpenBlt);
 
-        rebootToOpenblt(parent, ecuPort.port, callbacks);
+        if (selection != null && (bp == null || !selection.revalidateForSrec(bp.signature, callbacks))) {
+            return false;
+        }
+        if (selection == null) {
+            rebootToOpenblt(parent, ecuPort.port, callbacks);
+        } else {
+            rebootToOpenbltSelected(parent, ecuPort.port, callbacks, selection);
+        }
 
         // invoking blocking method
         final boolean isEcuPortDisappeared = waitForEcuPortDisappeared(ecuPort, callbacks);
@@ -387,6 +459,10 @@ public final class FirmwareOperations {
         final String openbltPort = newItems.get(0).port;
 
         callbacks.logLine("Serial port " + openbltPort + " appeared, programming firmware...");
+
+        if (selection != null && (bp == null || !selection.revalidateForSrec(bp.signature, callbacks))) {
+            return false;
+        }
 
         return flashOpenbltSerial(
             parent, openbltPort, callbacks, connectivityContext.getConnectedEcuTarget(), firmwareSrecFile);

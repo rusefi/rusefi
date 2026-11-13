@@ -18,8 +18,11 @@ import java.util.List;
  */
 class TitleBarPanel extends JPanel {
     static final int GAP = 8;
+    private static final int CORNER_ICON_GAP = 6;
     private final JLabel name = caption(new JLabel(UiProperties.getDisplayName()));
     private final JLabel version = caption(new JLabel());
+    private final JLabel leftBranchIcon = branchIcon();
+    private final JLabel rightBranchIcon = branchIcon();
 
     TitleBarPanel() {
         super(new DroppingRowLayout());
@@ -28,17 +31,35 @@ class TitleBarPanel extends JPanel {
         name.setFont(name.getFont().deriveFont(Font.BOLD));
         add(name);
         add(version);
+        add(leftBranchIcon);
+        add(rightBranchIcon);
+    }
+
+    private static JLabel branchIcon() {
+        JLabel label = caption(new JLabel(new ClownIcon()));
+        label.setVisible(false);
+        label.setToolTipText("Development firmware branch");
+        return label;
+    }
+
+    /** Shows corner markers only for selected connected firmware branches. */
+    void setConnectedBranch(String branch) {
+        boolean show = "master".equals(branch) || "development".equals(branch) || "lts-26lima-dev".equals(branch);
+        leftBranchIcon.setVisible(show);
+        rightBranchIcon.setVisible(show);
+        revalidate();
+        repaint();
     }
 
     void update(String consoleVersion, List<String> chipTexts, String tooltip) {
         version.setText(consoleVersion);
         version.setForeground(mutedForeground());
-        while (getComponentCount() > 2) {
-            remove(getComponentCount() - 1);
+        while (getComponentCount() > 4) {
+            remove(2);
         }
         for (String text : chipTexts) {
             if (text != null && !text.isEmpty()) {
-                add(caption(new ChipLabel(text)));
+                add(caption(new ChipLabel(text)), getComponentCount() - 2);
             }
         }
         setToolTipText(tooltip);
@@ -117,30 +138,52 @@ class TitleBarPanel extends JPanel {
             Insets insets = parent.getInsets();
             int available = parent.getWidth() - insets.left - insets.right;
             int height = parent.getHeight() - insets.top - insets.bottom;
+            Component leftIcon = parent.getComponentCount() > 2 ? parent.getComponent(parent.getComponentCount() - 2) : null;
+            Component rightIcon = parent.getComponentCount() > 2 ? parent.getComponent(parent.getComponentCount() - 1) : null;
+            int leftWidth = leftIcon != null && leftIcon.isVisible() ? leftIcon.getPreferredSize().width + CORNER_ICON_GAP : 0;
+            int rightWidth = rightIcon != null && rightIcon.isVisible() ? rightIcon.getPreferredSize().width + CORNER_ICON_GAP : 0;
+            int contentLeft = insets.left + leftWidth;
+            int contentWidth = Math.max(0, available - leftWidth - rightWidth);
             int shown = 0;
             int width = 0;
-            for (Component c : parent.getComponents()) {
+            for (int i = 0; i < parent.getComponentCount() - (leftIcon == null ? 0 : 2); i++) {
+                Component c = parent.getComponent(i);
                 int next = width + (shown == 0 ? 0 : GAP) + c.getPreferredSize().width;
                 // the product name always stays, clipped if even it does not fit
-                if (shown > 0 && next > available) {
+                if (shown > 0 && next > contentWidth) {
                     break;
                 }
                 width = next;
                 shown++;
             }
-            int x = insets.left + Math.max(0, (available - width) / 2);
-            for (int i = 0; i < parent.getComponentCount(); i++) {
+            int x = contentLeft + Math.max(0, (contentWidth - width) / 2);
+            int contentCount = parent.getComponentCount() - (leftIcon == null ? 0 : 2);
+            for (int i = 0; i < contentCount; i++) {
                 Component c = parent.getComponent(i);
                 if (i >= shown) {
                     c.setBounds(0, 0, 0, 0);
                     continue;
                 }
                 Dimension size = c.getPreferredSize();
-                int w = Math.min(size.width, insets.left + available - x);
+                int w = Math.min(size.width, contentLeft + contentWidth - x);
                 int h = Math.min(size.height, height);
                 c.setBounds(x, insets.top + (height - h) / 2, w, h);
                 x += w + GAP;
             }
+            if (leftIcon != null) {
+                placeCornerIcon(leftIcon, insets.left, insets.top, height);
+                placeCornerIcon(rightIcon, insets.left + available - rightIcon.getPreferredSize().width, insets.top, height);
+            }
+        }
+
+        private static void placeCornerIcon(Component icon, int x, int top, int height) {
+            if (!icon.isVisible()) {
+                icon.setBounds(0, 0, 0, 0);
+                return;
+            }
+            Dimension size = icon.getPreferredSize();
+            int h = Math.min(size.height, height);
+            icon.setBounds(x, top + (height - h) / 2, size.width, h);
         }
 
         @Override
@@ -149,6 +192,9 @@ class TitleBarPanel extends JPanel {
             int width = 0;
             int height = 0;
             for (Component c : parent.getComponents()) {
+                if (!c.isVisible()) {
+                    continue;
+                }
                 Dimension size = c.getPreferredSize();
                 width += (width == 0 ? 0 : GAP) + size.width;
                 height = Math.max(height, size.height);
@@ -201,6 +247,39 @@ class TitleBarPanel extends JPanel {
                 g2.dispose();
             }
             super.paintComponent(g);
+        }
+    }
+
+    // yes, a custom IconClass, cheaper on rendering time than a png or a complete icon set
+    private static class ClownIcon implements Icon {
+        private static final int SIZE = 20;
+        private static final Color MAKEUP_RED = new Color(220, 55, 65);
+
+        @Override
+        public int getIconWidth() { return SIZE; }
+
+        @Override
+        public int getIconHeight() { return SIZE; }
+
+        @Override
+        public void paintIcon(Component component, Graphics graphics, int x, int y) {
+            Graphics2D g = (Graphics2D) graphics.create();
+            try {
+                g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g.setColor(MAKEUP_RED);
+                g.fillOval(x + 1, y + 2, 8, 8);
+                g.fillOval(x + 11, y + 2, 8, 8);
+                g.setColor(Color.WHITE);
+                g.fillOval(x + 3, y + 4, 14, 14);
+                g.setColor(Color.BLACK);
+                g.fillOval(x + 6, y + 8, 2, 2);
+                g.fillOval(x + 12, y + 8, 2, 2);
+                g.setColor(MAKEUP_RED);
+                g.fillOval(x + 8, y + 10, 4, 4);
+                g.drawArc(x + 7, y + 10, 7, 5, 200, 140);
+            } finally {
+                g.dispose();
+            }
         }
     }
 }

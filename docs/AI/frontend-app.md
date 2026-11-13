@@ -335,6 +335,28 @@ updates the **Console application** itself. It checks in the background
 when enabled; a downloaded replacement JAR is finalized on the next
 launch. That path is separate from flashing ECU firmware through Device.
 
+### Console channel and ECU firmware branch
+
+The Console software channel is independent of the connected ECU's firmware
+branch. A development Console stays on its software channel when managing a
+Lima or Lima-Dev ECU. Ordinary ECU updates resolve firmware for the live ECU's
+board and branch, not the firmware shipped with the Console. Downloads are
+isolated from the installed Console and checked against their release metadata
+before use. Unknown identities and mismatched artifacts block automatic updates.
+
+A connected Lima ECU offers separate **Switch to Lima-dev** and
+**Switch to dev** actions. A Lima-Dev ECU offers only **Switch to dev**.
+All branch switches require a warning confirmation; cancelling does not start
+a firmware job. Switching back to Lima or from Dev to Lima-Dev is not offered.
+After a successful switch, ordinary updates
+follow the newly installed ECU branch. Existing tune backup and migration rules
+still apply; review the update report and settings before using the ECU.
+
+The main title bar distinguishes the Console channel from the ECU firmware
+label. Two clown-face markers identify a connected Dev or Lima-Dev ECU, not a
+development Console installation. Stable Lima and Kansas, disconnected or
+offline sessions, and bootloader states do not show those markers.
+
 ## Main-window composition and availability
 
 [`ConsoleUI`](../../java_console/ui/src/main/java/com/rusefi/ConsoleUI.java)

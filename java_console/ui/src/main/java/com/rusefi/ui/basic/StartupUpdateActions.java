@@ -4,6 +4,8 @@ import com.devexperts.logging.Logging;
 import com.rusefi.*;
 import com.rusefi.autoupdate.Autoupdate;
 import com.rusefi.io.LinkManager;
+import com.rusefi.io.ConnectionStatusLogic;
+import com.rusefi.io.ConnectionStatusValue;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.CalibrationsInfo;
 import com.rusefi.maintenance.ProgramSelector;
@@ -39,6 +41,8 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
     private boolean softwareUpdateInProgress;
     private final AtomicReference<Optional<PortResult>> ecuPortToUse;
     private final FirmwareRollbackController rollbackController;
+    private final FirmwareBranchSwitchController branchSwitchController;
+    private volatile @Nullable LinkManager linkManager;
 
     private String latestReportedHash;
 
@@ -57,6 +61,11 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
         rollbackController = new FirmwareRollbackController(
             connectivityContext, updateOperationCallbacks, singleAsyncJobExecutor, ecuPortToUse::get,
             () -> !softwareUpdateInProgress, this::refreshButtons,
+            showRollbackPicker, closeRollbackPicker);
+        branchSwitchController = new FirmwareBranchSwitchController(
+            connectivityContext, updateOperationCallbacks, singleAsyncJobExecutor, ecuPortToUse::get,
+            () -> !softwareUpdateInProgress && linkManager != null && linkManager.getBinaryProtocol() != null
+                && ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.CONNECTED,
             showRollbackPicker, closeRollbackPicker);
         singleAsyncJobExecutor.addOnJobAboutToStartListener(() -> SwingUtilities.invokeLater(this::refreshButtons));
         singleAsyncJobExecutor.addOnJobReleasedListener(() -> SwingUtilities.invokeLater(this::refreshButtons));
@@ -96,7 +105,9 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
 
     /** Registers the live splash connection for tune import and rollback actions. */
     public void setSplashLinkManager(@Nullable LinkManager lm) {
+        linkManager = lm;
         rollbackController.setLinkManager(lm);
+        branchSwitchController.setLinkManager(lm);
         importTuneButton.setLinkManager(lm);
     }
 
@@ -110,9 +121,14 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
 
     public void configureFirmwareSelector(ProgramSelector selector) {
         selector.addFirmwareControl(updateSoftwareButton);
+        selector.addFirmwareControl(branchSwitchController.getButton());
         selector.setTargetedFirmwareUpdateInterceptor(rollbackController::startLatestUpdate);
         selector.setExternalBusySupplier(() -> rollbackController.isBusy() || softwareUpdateInProgress);
         rollbackController.addStateChangedListener(() -> selector.apply(connectivityContext.getCurrentHardware()));
+        singleAsyncJobExecutor.addOnJobReleasedListener(() -> SwingUtilities.invokeLater(() -> {
+            branchSwitchController.refreshButton();
+            selector.apply(connectivityContext.getCurrentHardware());
+        }));
     }
 
     public JButton getUpdateSoftwareButton() {
@@ -204,6 +220,7 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
     private void setEcuPortToUse(final PortResult port) {
         ecuPortToUse.set(Optional.of(port));
         rollbackController.refresh(port);
+        branchSwitchController.refreshButton();
 
         SwingUtilities.invokeLater(() -> {
             refreshButtons();
@@ -227,6 +244,7 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
     private void resetEcuPortToUse() {
         ecuPortToUse.set(Optional.empty());
         rollbackController.reset();
+        branchSwitchController.refreshButton();
         SwingUtilities.invokeLater(() -> {
             importTuneButton.setEnabled(false);
         });
@@ -247,11 +265,13 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
         updateSoftwareButton.setEnabled(
             updateSoftwareButton.isVisible() && softwareUpdateAvailable && noUpdateInProgress);
         rollbackController.refreshButton();
+        branchSwitchController.refreshButton();
     }
 
     @Override
     public void disableButtons() {
         rollbackController.getRollbackButton().setEnabled(false);
+        branchSwitchController.getButton().setEnabled(false);
         updateSoftwareButton.setEnabled(false);
         importTuneButton.setEnabled(false);
     }

@@ -5,6 +5,7 @@ import com.rusefi.maintenance.DfuFlasher;
 import com.rusefi.maintenance.ProgramSelector;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.basic.FirmwareRollbackController;
+import com.rusefi.ui.basic.FirmwareBranchSwitchController;
 import com.rusefi.ui.basic.MigrateSettingsCheckboxState;
 import com.rusefi.ui.basic.SingleAsyncJobExecutor;
 import com.rusefi.ui.basic.StatusPanelWithProgressBar;
@@ -95,6 +96,7 @@ public class DevicePane {
     private final ProgramSelector selector;
     private final SingleAsyncJobExecutor jobExecutor;
     private final FirmwareRollbackController rollbackController;
+    private final FirmwareBranchSwitchController branchSwitchController;
     private final StatusPanelWithProgressBar statusPanel;
     private final JCheckBox autoUpdateBundle = new JCheckBox("Auto-update Software", AutoupdateProperty.get());
     private final JCheckBox migrateSettings = new JCheckBox("Try to keep my current tune", true);
@@ -131,9 +133,16 @@ public class DevicePane {
             showFullScreenPanel,
             closeFullScreenPanel);
         rollbackController.setLinkManager(uiContext.getLinkManager());
+        branchSwitchController = new FirmwareBranchSwitchController(
+            connectivityContext, statusPanel, jobExecutor,
+            () -> Optional.ofNullable((PortResult) comboPorts.getSelectedItem()),
+            () -> sessionManager.getState() == SessionState.CONNECTED,
+            showFullScreenPanel, closeFullScreenPanel);
+        branchSwitchController.setLinkManager(uiContext.getLinkManager());
         selector.setTargetedFirmwareUpdateInterceptor(rollbackController::startLatestUpdate);
         selector.setExternalBusySupplier(rollbackController::isBusy);
         selector.addFirmwareControl(rollbackController.getRollbackButton());
+        selector.addFirmwareControl(branchSwitchController.getButton());
 
         // Compact controls pinned to the top; the status log + progress bar fill the rest and the bar
         // sits at the bottom of the pane (as elsewhere in the console). No connect/disconnect here — the
@@ -204,6 +213,7 @@ public class DevicePane {
 
         // ProgramSelector builds the DFU / OpenBLT menu straight from the detected hardware.
         rollbackController.refresh((PortResult) comboPorts.getSelectedItem());
+        branchSwitchController.refreshButton();
         selector.apply(effectiveHardware);
         final boolean flashing = state == SessionState.FLASHING;
         autoUpdateBundle.setEnabled(!flashing);
@@ -223,6 +233,7 @@ public class DevicePane {
     private void refreshFirmwareControls() {
         selector.apply(connectivityContext.getCurrentHardware());
         rollbackController.refreshButton();
+        branchSwitchController.refreshButton();
         content.revalidate();
         content.repaint();
     }
