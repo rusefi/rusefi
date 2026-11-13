@@ -96,6 +96,37 @@ public class CurveWidgetTest {
     }
 
     @Test
+    public void pcVariableAxisBinsCrashTheCurve() throws Throwable {
+        // Issue #10626: "Boost control open loop gear adder" takes its X bins from gearCountArray,
+        // a [PcVariables] array with a defaultValue. The INI reader registers only 'bits' PC variables,
+        // so the bins are unknown and opening the curve throws.
+        // Reproduction of the current behavior: update these expectations together with the fix.
+        String text = "[Constants]\npage = 1\n"
+            + "gearBasedOpenLoopBoostAdder = array, S08, 0, [10], \"%\", 0.5, 0, -63, 63, 1\n"
+            + "[PcVariables]\n"
+            + "gearCountArray = array, S08, [10], \"Gear\", 1, 0, -1, { 10 - 2 }, 0, noMsqSave\n"
+            + "[ConstantsExtensions]\n"
+            + "defaultValue = gearCountArray, -1 0 1 2 3 4 5 6 7 8\n"
+            + "readOnly = gearCountArray\n"
+            + "[CurveEditor]\ncurve = boostOpenLoopGearAdderCurve, \"Boost Open Loop gear-based modifier\"\n"
+            + "columnLabel = \"Gear\", \"duty cycle\"\n"
+            + "xAxis = 0, 100, 11\nyAxis = 0, 100, 5\n"
+            + "xBins = gearCountArray, tcuCurrentGear\nyBins = gearBasedOpenLoopBoostAdder\n";
+        IniFileMetaInfo meta = mock(IniFileMetaInfo.class);
+        when(meta.getnPages()).thenReturn(1);
+        when(meta.getPageSize(0)).thenReturn(16);
+        when(meta.getSignature()).thenReturn("test");
+        IniFileModel ini = IniFileReaderUtil.readIniFile(IniFileReaderUtil.read(
+            new ByteArrayInputStream(text.getBytes(StandardCharsets.US_ASCII))), "test", meta);
+        ConfigurationImage image = new ConfigurationImage(16);
+
+        assertTrue(ini.findIniField("gearBasedOpenLoopBoostAdder").isPresent());
+        assertFalse(ini.findIniField("gearCountArray").isPresent(), "PC variable arrays are not registered");
+        SwingUtilities.invokeAndWait(() -> assertThrows(java.util.NoSuchElementException.class,
+            () -> new CurveWidget(ini.getCurves().get("boostOpenLoopGearAdderCurve"), ini, image)));
+    }
+
+    @Test
     public void fieldLimitsResolveExpressionsWithoutUsingPlotBounds() throws Throwable {
         String text = "[Constants]\npage = 1\n"
             + "xBins = array, S16, 0, [2], \"C\", 1, 0, -100, { fieldHigh }, 0\n"
