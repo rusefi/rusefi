@@ -16,6 +16,8 @@ import com.rusefi.core.SensorSubscription;
 import com.rusefi.core.OsUtil;
 import com.rusefi.core.io.BoardCompatibility;
 import com.rusefi.core.io.ConnectedEcuTarget;
+import com.rusefi.core.io.BundleUtil;
+import com.rusefi.core.io.FirmwareBranch;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.net.PropertiesHolder;
 import com.rusefi.core.ui.AutoupdateUtil;
@@ -570,8 +572,13 @@ public class MainFrame {
         if (ecuSig == null || srecName == null) {
             return FirmwareUpdateCheckResult.UNABLE_TO_CHECK;
         }
-        RusEfiSignature srecSig = SignatureHelper.parseSrec(srecName);
-        if (srecSig == null) {
+        String identityName = srecName.endsWith(".bin")
+            ? srecName.substring(0, srecName.length() - ".bin".length()) + ".srec" : srecName;
+        RusEfiSignature srecSig = SignatureHelper.parseSrec(identityName);
+        if (srecSig == null
+            || !FirmwareBranch.isSameBranch(ecuSig.getBranch(), srecSig.getBranch())
+            || (!srecSig.getIsLegacyFormat()
+                && !ecuSig.getBundleTarget().equalsIgnoreCase(srecSig.getBundleTarget()))) {
             return FirmwareUpdateCheckResult.UNABLE_TO_CHECK;
         }
         boolean needsUpdate;
@@ -600,10 +607,12 @@ public class MainFrame {
             log.info("checkFirmwareUpdate: could not parse ECU signature");
             return FirmwareUpdateCheckResult.UNABLE_TO_CHECK;
         }
-        String srecPath = FindFileHelper.findSrecFileForConnectedBoard(
-            consoleUI.uiContext.getLinkManager().getConnectedEcuTarget());
+        // ECU firmware follows the live ECU channel, not this console's software channel.
+        Autoupdate.FirmwareArtifacts artifacts = Autoupdate.downloadFirmwareForBranch(
+            ecuSig.asBundleInfo(), percent -> {}, log::info);
+        String srecPath = artifacts.getSrecPath().orElse(artifacts.getBinPath().orElse(null));
         if (srecPath == null) {
-            log.info("checkFirmwareUpdate: no srec file found");
+            log.info("checkFirmwareUpdate: no identifiable firmware artifact found");
             return FirmwareUpdateCheckResult.UNABLE_TO_CHECK;
         }
         String srecName = new File(srecPath).getName();
@@ -1146,10 +1155,13 @@ public class MainFrame {
     }
 
     private void setTitle() {
-        String consoleVersion = UiProperties.getDisplayName() + " " + Launcher.CONSOLE_VERSION;
+        String softwareVersion = Launcher.CONSOLE_VERSION + " · console "
+            + BundleUtil.readBundleFullNameNotNull().getBranchName();
+        String consoleVersion = UiProperties.getDisplayName() + " " + softwareVersion;
         String frameTitle;
         // the title bar shows the same state as short labels; the full text stays in its tooltip
         java.util.List<String> chips;
+        String connectedBranch = null;
         Object bootloaderMode = tabbedPane.tabbedPane.getClientProperty("bootloaderMode");
         if (Boolean.TRUE.equals(tabbedPane.tabbedPane.getClientProperty("isUpdating"))) {
             frameTitle = "UPDATING " + consoleVersion;
@@ -1161,6 +1173,10 @@ public class MainFrame {
         } else if (ConnectionStatusLogic.INSTANCE.isConnected()) {
             BinaryProtocol bp = consoleUI.uiContext.getBinaryProtocol();
             String signature = bp == null ? "not loaded" : bp.signature;
+            RusEfiSignature ecuSignature = SignatureHelper.parse(signature);
+            connectedBranch = ecuSignature == null || bp.isClosed()
+                || !isFirmwareUpdateConnectionReady(ConnectionStatusLogic.INSTANCE.getValue())
+                ? null : ecuSignature.getBranch();
             frameTitle = consoleVersion + "; firmware=" + Launcher.firmwareVersion.get() + "@" + consoleUI.getPort() + " " + signature;
             chips = java.util.Arrays.asList(TitleBarPanel.firmwareLabel(signature),
                 TitleBarPanel.connectionLabel(Launcher.firmwareVersion.get(), consoleUI.getPort()));
@@ -1184,7 +1200,8 @@ public class MainFrame {
         }
         frame.getFrame().setTitle(frameTitle);
         if (titleBarPanel != null) {
-            titleBarPanel.update(String.valueOf(Launcher.CONSOLE_VERSION), chips, frameTitle);
+            titleBarPanel.setConnectedBranch(connectedBranch);
+            titleBarPanel.update(softwareVersion, chips, frameTitle);
         }
     }
 

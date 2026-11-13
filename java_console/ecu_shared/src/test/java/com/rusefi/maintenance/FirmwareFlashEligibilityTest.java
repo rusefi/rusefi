@@ -55,11 +55,56 @@ public class FirmwareFlashEligibilityTest {
     }
 
     @Test
-    public void noProviderPreservesExistingBehavior() throws IOException {
+    public void noProviderRejectsUnknownIdentity() throws IOException {
         withProviders("", () -> {
             UpdateOperationCallbacks callbacks = mock(UpdateOperationCallbacks.class);
-            assertTrue(FirmwareFlashEligibility.isAllowed(null, null, callbacks));
-            verifyNoInteractions(callbacks);
+            assertFalse(FirmwareFlashEligibility.isAllowed(null, null, callbacks));
+            verify(callbacks).firmwareUpdateBlocked(startsWith("Couldn't identify the ECU or firmware file"));
+        });
+    }
+
+    @Test
+    public void noProviderRejectsCrossBranchFlash() throws IOException {
+        withProviders("", () -> {
+            UpdateOperationCallbacks callbacks = mock(UpdateOperationCallbacks.class);
+            assertFalse(FirmwareFlashEligibility.isAllowed("running development signature",
+                "rusefi_lts-26lima_2026-09-09_test_board_123_hash_update.srec", callbacks));
+            verify(callbacks).firmwareUpdateBlocked(startsWith("Couldn't identify the ECU or firmware file"));
+        });
+    }
+
+    @Test
+    public void genericPolicyAllowsSameBranchAndOnlyConfirmedForwardSwitches() throws IOException {
+        withProviders("", () -> {
+            String dev = "rusEFI development.2026.09.09.test_board.hash";
+            String lima = "rusEFI lts-26lima.2026.09.09.test_board.hash";
+            UpdateOperationCallbacks callbacks = mock(UpdateOperationCallbacks.class);
+            assertTrue(FirmwareFlashEligibility.isAllowed(lima,
+                new BundleInfo("lts-26lima", null, "test_board"), false, callbacks));
+            assertFalse(FirmwareFlashEligibility.isAllowed(lima,
+                new BundleInfo("development", null, "test_board"), false, callbacks));
+            assertTrue(FirmwareFlashEligibility.isAllowed(lima,
+                new BundleInfo("development", null, "test_board"), true, callbacks));
+            assertFalse(FirmwareFlashEligibility.isAllowed(dev,
+                new BundleInfo("lts-26lima", null, "test_board"), true, callbacks));
+            assertTrue(FirmwareFlashEligibility.isAllowed(
+                "rusEFI lts-26lima-dev.2026.09.09.test_board.hash",
+                new BundleInfo("development", null, "test_board"), true, callbacks));
+            assertFalse(FirmwareFlashEligibility.isAllowed(
+                "rusEFI lts-26lima-dev.2026.09.09.test_board.hash",
+                new BundleInfo("development", null, "test_board"), false, callbacks));
+            assertFalse(FirmwareFlashEligibility.isAllowed(
+                "rusEFI lts-26lima-dev.2026.09.09.test_board.hash",
+                new BundleInfo("lts-26lima", null, "test_board"), true, callbacks));
+            assertFalse(FirmwareFlashEligibility.isAllowed(dev,
+                new BundleInfo("lts-26lima-dev", null, "test_board"), true, callbacks));
+            assertFalse(FirmwareFlashEligibility.isAllowed(
+                "rusEFI lts-26lima-dev.2026.09.09.test_board.hash",
+                new BundleInfo("development", null, "other_board"), true, callbacks));
+            assertFalse(FirmwareFlashEligibility.isAllowed(lima,
+                new BundleInfo("lts-26lima", null, "other_board"), false, callbacks));
+            assertFalse(FirmwareFlashEligibility.isAllowed(lima,
+                new BundleInfo("lts-unknown", null, "test_board"), true, callbacks));
         });
     }
 
@@ -117,11 +162,26 @@ public class FirmwareFlashEligibilityTest {
         });
     }
 
+    @Test
+    public void automaticDfuRejectsUnidentifiedBinBeforeHardwareAccess() throws IOException {
+        withProviders("", () -> {
+            BinaryProtocol bp = mock(BinaryProtocol.class);
+            bp.signature = "rusEFI development.2026.09.09.test_board.hash";
+            LinkManager lm = mock(LinkManager.class);
+            ConnectivityContext connectivity = mock(ConnectivityContext.class);
+            UpdateOperationCallbacks callbacks = mock(UpdateOperationCallbacks.class);
+            assertFalse(DfuFlasher.doAutoDfu(null, new PortResult("TEST_PORT", SerialPortType.Ecu),
+                bp, lm, callbacks, connectivity, "custom.bin"));
+            verifyNoInteractions(lm, connectivity);
+            verify(callbacks).firmwareUpdateBlocked(startsWith("Couldn't identify the ECU or firmware file"));
+        });
+    }
+
     private void assertProviderFailure(String providers) throws IOException {
         withProviders(providers, () -> {
             UpdateOperationCallbacks callbacks = mock(UpdateOperationCallbacks.class);
             assertFalse(FirmwareFlashEligibility.isAllowed(null, null, callbacks));
-            verify(callbacks).firmwareUpdateBlocked(startsWith("Unable to verify firmware flashing eligibility:"));
+            verify(callbacks).firmwareUpdateBlocked(startsWith("Couldn't check whether this firmware can be installed:"));
         });
     }
 

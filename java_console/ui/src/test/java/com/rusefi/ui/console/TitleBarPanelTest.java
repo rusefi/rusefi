@@ -35,7 +35,8 @@ public class TitleBarPanelTest {
 
             panel.setSize(preferred);
             panel.doLayout();
-            for (Component c : panel.getComponents()) {
+            for (int i = 0; i < panel.getComponentCount() - 2; i++) {
+                Component c = panel.getComponent(i);
                 assertTrue(c.getWidth() > 0, "Everything fits at the preferred width");
                 assertEquals(0, c.getY() + c.getHeight() / 2 - preferred.height / 2, 1, "One centred row");
             }
@@ -54,6 +55,31 @@ public class TitleBarPanelTest {
             }
             assertEquals(panel.getComponent(0).getPreferredSize().width, panel.getMinimumSize().width,
                 "The menu bar can shrink the panel down to the product name");
+        });
+    }
+
+    @Test
+    public void branchIconsFollowConnectedFirmwareBranchAndStayInBothCorners() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            TitleBarPanel panel = new TitleBarPanel();
+            Component left = panel.getComponent(2);
+            Component right = panel.getComponent(3);
+            for (String branch : Arrays.asList("master", "development", "lts-26lima-dev")) {
+                panel.setConnectedBranch(branch);
+                assertTrue(left.isVisible(), branch);
+                assertTrue(right.isVisible(), branch);
+                panel.setSize(500, 32);
+                panel.doLayout();
+                assertTrue(left.getX() < panel.getComponent(0).getX(), "Left icon precedes centered title");
+                assertTrue(right.getX() > panel.getComponent(0).getX(), "Right icon follows centered title");
+                assertTrue(left.getX() < 20, "Left icon remains in the left corner");
+                assertTrue(right.getX() + right.getWidth() > 480, "Right icon remains in the right corner");
+            }
+            for (String branch : Arrays.asList("lts-26lima", "lts-25kansas", "unknown", "", null)) {
+                panel.setConnectedBranch(branch);
+                assertTrue(!left.isVisible(), String.valueOf(branch));
+                assertTrue(!right.isVisible(), String.valueOf(branch));
+            }
         });
     }
 

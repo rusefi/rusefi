@@ -90,9 +90,42 @@ public class DfuFlasher {
         final @Nullable String firmwareBinFile,
         final CalibrationsHelper.FirmwareUpdatePolicy policy
     ) {
+        return doAutoDfu(parent, port, bp, lm, callbacks, connectivityContext, firmwareBinFile, policy, null);
+    }
+
+    public static boolean doAutoDfu(
+        final JComponent parent, final PortResult port, final BinaryProtocol bp, final LinkManager lm,
+        final UpdateOperationCallbacks callbacks, final ConnectivityContext connectivityContext,
+        final @Nullable String firmwareBinFile, final CalibrationsHelper.FirmwareUpdatePolicy policy,
+        final @Nullable FirmwareSelection suppliedSelection
+    ) {
+        FirmwareSelection selection = suppliedSelection;
+        if (selection == null && firmwareBinFile == null) {
+            selection = FirmwareSelection.latest(bp == null ? null : bp.signature, null, false, callbacks);
+            if (selection == null) {
+                return false;
+            }
+        }
+        if (selection != null) {
+            if (!selection.matchesBinPath(firmwareBinFile)) {
+                callbacks.firmwareUpdateBlocked("The firmware file does not match the selected update. Please restart the update.");
+                return false;
+            }
+            if (!selection.revalidateForBin(bp == null ? null : bp.signature, callbacks)) {
+                return false;
+            }
+        } else {
+            if (!FirmwareFlashEligibility.isAllowed(bp == null ? null : bp.signature, firmwareBinFile, callbacks)) {
+                return false;
+            }
+            callbacks.firmwareUpdateBlocked("Couldn't verify which ECU board and branch this firmware is for. Please restart the update.");
+            return false;
+        }
+        final FirmwareSelection chosen = selection;
         return CalibrationsHelper.updateFirmwareAndRestorePreviousCalibrations(
             parent, port, bp, lm, callbacks,
-            () -> dfuUpdateFirmware(parent, port.port, callbacks, connectivityContext.getConnectedEcuTarget(), firmwareBinFile),
+            () -> dfuUpdateFirmware(parent, port.port, callbacks, connectivityContext.getConnectedEcuTarget(),
+                chosen.getBinPath(), bp, chosen),
             connectivityContext, policy);
     }
 
@@ -101,7 +134,9 @@ public class DfuFlasher {
         final String port,
         final UpdateOperationCallbacks callbacks,
         final ConnectedEcuTarget connectedEcuTarget,
-        final @Nullable String firmwareBinFile
+        final @Nullable String firmwareBinFile,
+        final @Nullable BinaryProtocol bp,
+        final @Nullable FirmwareSelection selection
     ) {
         if (port == null) {
             JOptionPane.showMessageDialog(parent, "Failed to locate serial ports");
@@ -118,15 +153,26 @@ public class DfuFlasher {
             return false;
         }
 
-        AtomicBoolean isSignatureValidated = rebootToDfu(parent, port, callbacks, Integration.CMD_REBOOT_DFU);
+        if (selection != null && (bp == null || !selection.revalidateForBin(bp.signature, callbacks))) {
+            return false;
+        }
+        AtomicBoolean isSignatureValidated = rebootToDfu(parent, port, callbacks, Integration.CMD_REBOOT_DFU, selection);
         if (isSignatureValidated == null)
             return false;
         if (isSignatureValidated.get()) {
             timeForDfuSwitch(callbacks);
-            final String fileName = firmwareBinFile != null
-                ? firmwareBinFile
-                : FindFileHelper.findFirmwareFileForConnectedBoard(connectedEcuTarget);
-            if (executeDFU(callbacks, fileName, connectedEcuTarget)) {
+            final String fileName;
+            if (selection != null) {
+                if (!selection.revalidateForBin(bp.signature, callbacks)) {
+                    return false;
+                }
+                fileName = selection.getBinPath();
+            } else if (firmwareBinFile != null) {
+                fileName = firmwareBinFile;
+            } else {
+                fileName = FindFileHelper.findFirmwareFileForConnectedBoard(connectedEcuTarget);
+            }
+            if ((selection == null || selection.revalidateForBin(bp.signature, callbacks)) && executeDFU(callbacks, fileName, connectedEcuTarget)) {
                 // We need to wait to allow connection to ECU port (see #7403)
                 timeForDfuSwitch(callbacks);
                 return true;
@@ -143,8 +189,12 @@ public class DfuFlasher {
         ExecHelper.submitAction(r, DfuFlasher.class + " thread");
     }
 
-    @Nullable
-    public static AtomicBoolean rebootToDfu(JComponent parent, String port, UpdateOperationCallbacks callbacks, String command) {
+    public static void rebootToDfu(JComponent parent, String port, UpdateOperationCallbacks callbacks, String command) {
+        rebootToDfu(parent, port, callbacks, command, null);
+    }
+
+    public static AtomicBoolean rebootToDfu(JComponent parent, String port, UpdateOperationCallbacks callbacks,
+                                             String command, @Nullable FirmwareSelection selection) {
         AtomicBoolean isSignatureValidated = new AtomicBoolean(true);
         if (!PortDetector.isAutoPort(port)) {
             callbacks.logLine("Using selected " + port + "\n");
@@ -167,7 +217,9 @@ public class DfuFlasher {
                     callbacks.error();
                     return null;
                 }
-                boolean isSignatureValidatedLocal = BootloaderHelper.sendBootloaderRebootCommand(parent, signature.get(), stream, callbacks, command);
+                boolean isSignatureValidatedLocal = selection == null
+                    ? BootloaderHelper.sendBootloaderRebootCommand(parent, signature.get(), stream, callbacks, command)
+                    : BootloaderHelper.sendBootloaderRebootCommand(parent, signature.get(), stream, callbacks, command, selection);
                 isSignatureValidated.set(isSignatureValidatedLocal);
             }
         } else {
@@ -176,7 +228,9 @@ public class DfuFlasher {
             // it's more reliable this way
             // ISSUE: that's blocking stuff on UI thread at the moment, TODO smarter threading!
             port = PortDetector.autoDetectSerial(callbackContext -> {
-                boolean isSignatureValidatedLocal = BootloaderHelper.sendBootloaderRebootCommand(parent, callbackContext.getSignature(), callbackContext.getStream(), callbacks, command);
+                boolean isSignatureValidatedLocal = selection == null
+                    ? BootloaderHelper.sendBootloaderRebootCommand(parent, callbackContext.getSignature(), callbackContext.getStream(), callbacks, command)
+                    : BootloaderHelper.sendBootloaderRebootCommand(parent, callbackContext.getSignature(), callbackContext.getStream(), callbacks, command, selection);
                 isSignatureValidated.set(isSignatureValidatedLocal);
                 return null;
             }).getSerialPort();

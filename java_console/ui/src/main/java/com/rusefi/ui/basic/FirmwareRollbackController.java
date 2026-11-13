@@ -6,14 +6,17 @@ import com.rusefi.PortResult;
 import com.rusefi.SerialPortType;
 import com.rusefi.autoupdate.Autoupdate;
 import com.rusefi.autoupdate.FirmwareRollbackResolver;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.io.BundleInfo;
-import com.rusefi.core.io.BundleUtil;
+import com.rusefi.core.SignatureHelper;
+import com.rusefi.core.RusEfiSignature;
 import com.rusefi.core.net.PropertiesHolder;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.CalibrationsHelper;
+import com.rusefi.maintenance.FirmwareSelection;
 import com.rusefi.maintenance.jobs.AsyncJob;
 import com.rusefi.maintenance.jobs.DfuAutoJob;
 import com.rusefi.maintenance.jobs.OpenBltAutoJob;
@@ -21,6 +24,7 @@ import com.rusefi.ui.wizard.FirmwareRollbackPanel;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,6 +54,11 @@ public final class FirmwareRollbackController {
     private final List<Runnable> stateChangedListeners = new ArrayList<>();
     private final FirmwareRollbackResolver resolver = new FirmwareRollbackResolver(
         PropertiesHolder.getFirmwareRollbackRootUrl());
+    @FunctionalInterface
+    interface CatalogLoader {
+        List<FirmwareRollbackResolver.Build> discover(String board, String branch) throws IOException;
+    }
+    private CatalogLoader catalogLoader = resolver::discover;
     private final boolean enabled = isFirmwareRollbackEnabled(PropertiesHolder.INSTANCE.getProperties());
     private final JButton rollbackButton = new JButton(
         "Rollback Firmware", AutoupdateUtil.loadIcon("download48.jpg"));
@@ -85,7 +94,7 @@ public final class FirmwareRollbackController {
         this.showPicker = showPicker;
         this.closePicker = closePicker;
 
-        rollbackButton.setVisible(isRollbackButtonVisible(enabled, BundleUtil.readBundleFullNameNotNull()));
+        rollbackButton.setVisible(false);
         rollbackButton.addActionListener(event -> showRollbackPicker());
         jobExecutor.addOnJobInProgressFinishedListener(() -> {
             if (jobExecutor.getLastResult() == UpdateFirmwareResult.SUCCESS && pendingInstalledBuild != null) {
@@ -122,7 +131,7 @@ public final class FirmwareRollbackController {
 
     /** A confirmed UI selection must not be replaced by the startup controller's independent provider. */
     public boolean startLatestUpdate(JComponent source, PortResult expectedPort) {
-        if (!enabled || !isLtsBundle() || !isSerialFirmwareUpdateSupported(expectedPort)) {
+        if (!enabled || !isLtsBundle(connectedFirmware()) || !isSerialFirmwareUpdateSupported(expectedPort)) {
             return false;
         }
         final Optional<PortResult> port = portProvider.get();
@@ -156,10 +165,9 @@ public final class FirmwareRollbackController {
 
     public void reset() {
         synchronized (this) {
-            if (discoveryInProgress) {
-                builds = Collections.emptyList();
-                catalogKey = null;
-            }
+            builds = Collections.emptyList();
+            catalogKey = null;
+            sessionInstalledSha = null;
             discoveryKey = null;
             discoveryGeneration++;
             discoveryInProgress = false;
@@ -175,7 +183,7 @@ public final class FirmwareRollbackController {
 
     public void refreshButton() {
         final Optional<PortResult> port = portProvider.get();
-        final boolean visible = isRollbackButtonVisible(enabled, BundleUtil.readBundleFullNameNotNull())
+        final boolean visible = isRollbackButtonVisible(enabled, connectedFirmware())
             && (!port.isPresent() || !LinkManager.SOCKET_CAN.equals(port.get().port));
         final boolean available = visible
             && port.isPresent()
@@ -215,16 +223,16 @@ public final class FirmwareRollbackController {
     }
 
     private void discover(final PortResult port) {
-        final BundleInfo bundle = BundleUtil.readBundleFullNameNotNull();
+        final BundleInfo bundle = connectedFirmware();
         if (!enabled || !isLtsBundle(bundle)) {
-            builds = Collections.emptyList();
+            reset();
             return;
         }
         if (!isSerialFirmwareUpdateSupported(port)) {
             return;
         }
 
-        final String board = connectivityContext.getConnectedEcuTarget().effectiveTarget();
+        final String board = bundle.getTarget();
         final String branch = bundle.getBranchName();
         final String key = board + "/" + branch;
         final long generation;
@@ -234,6 +242,7 @@ public final class FirmwareRollbackController {
                 return;
             }
             builds = Collections.emptyList();
+            sessionInstalledSha = null;
             catalogKey = key;
             discoveryKey = key;
             generation = ++discoveryGeneration;
@@ -245,7 +254,7 @@ public final class FirmwareRollbackController {
             List<FirmwareRollbackResolver.Build> discovered = Collections.emptyList();
             boolean success = false;
             try {
-                discovered = resolver.discover(board, branch);
+                discovered = catalogLoader.discover(board, branch);
                 success = true;
                 callbacks.logLine("Found " + discovered.size() + " LTS firmware builds for " + board);
             } catch (Exception e) {
@@ -304,6 +313,7 @@ public final class FirmwareRollbackController {
         }
         final String requestedCatalogKey = catalogKey;
         final long requestedGeneration = discoveryGeneration;
+        final String requestedSignature = connectedSignature();
         notifyStateChanged();
         final Thread download = new Thread(() -> {
             AsyncJob selectedJob = null;
@@ -311,7 +321,7 @@ public final class FirmwareRollbackController {
             for (FirmwareRollbackResolver.Build candidate : candidates) {
                 final Autoupdate.FirmwareArtifacts artifacts = Autoupdate.downloadFirmware(
                     candidate, callbacks::updateProgress, callbacks::logLine);
-                selectedJob = createFirmwareJob(port.get(), artifacts, policy, source);
+                selectedJob = createFirmwareJob(port.get(), requestedSignature, artifacts, policy, source);
                 if (selectedJob != null || !tryNextBuild) {
                     selectedBuild = selectedJob == null ? null : candidate;
                     break;
@@ -321,7 +331,7 @@ public final class FirmwareRollbackController {
             final AsyncJob job = selectedJob;
             final FirmwareRollbackResolver.Build build = selectedBuild;
             SwingUtilities.invokeLater(() -> acceptDownloadedJob(
-                port.get(), requestedCatalogKey, requestedGeneration, job, build, source));
+                port.get(), requestedSignature, requestedCatalogKey, requestedGeneration, job, build, source));
         }, "lts-firmware-download");
         download.setDaemon(true);
         download.start();
@@ -329,6 +339,7 @@ public final class FirmwareRollbackController {
 
     private void acceptDownloadedJob(
         PortResult requestedPort,
+        String requestedSignature,
         String requestedCatalogKey,
         long requestedGeneration,
         @Nullable AsyncJob job,
@@ -344,6 +355,7 @@ public final class FirmwareRollbackController {
             || !externallyIdle.getAsBoolean()
             || !hasLiveConnection()
             || linkManager == null || !currentPort.get().port.equals(linkManager.getLastTriedPort())
+            || !Objects.equals(requestedSignature, connectedSignature())
             || requestedGeneration != discoveryGeneration
             || !Objects.equals(requestedCatalogKey, catalogKey)) {
             callbacks.logLine("ECU changed while firmware was downloading; update cancelled.");
@@ -377,6 +389,7 @@ public final class FirmwareRollbackController {
 
     private @Nullable AsyncJob createFirmwareJob(
         PortResult port,
+        @Nullable String requestedSignature,
         Autoupdate.FirmwareArtifacts artifacts,
         CalibrationsHelper.FirmwareUpdatePolicy policy,
         JComponent source
@@ -384,16 +397,21 @@ public final class FirmwareRollbackController {
         if (!isSerialFirmwareUpdateSupported(port)) {
             return null;
         }
+        FirmwareSelection selection = FirmwareSelection.fromArtifacts(
+            requestedSignature, artifacts.getBundleInfo(), artifacts, false);
+        if (selection == null) {
+            return null;
+        }
         if (port.type == SerialPortType.Ecu) {
             return artifacts.getBinPath()
                 .map(path -> (AsyncJob) new DfuAutoJob(
-                    port, source, connectivityContext, linkManager, path, policy))
+                    port, source, connectivityContext, linkManager, path, policy, selection))
                 .orElse(null);
         }
         if (port.type == SerialPortType.EcuWithOpenblt) {
             return artifacts.getSrecPath()
                 .map(path -> (AsyncJob) new OpenBltAutoJob(
-                    port, source, connectivityContext, linkManager, path, policy))
+                    port, source, connectivityContext, linkManager, path, policy, selection))
                 .orElse(null);
         }
         return null;
@@ -411,8 +429,11 @@ public final class FirmwareRollbackController {
     }
 
     private String currentFirmwareSha(final PortResult port) {
-        final BundleInfo bundle = BundleUtil.readBundleFullNameNotNull();
-        final String board = connectivityContext.getConnectedEcuTarget().effectiveTarget();
+        final BundleInfo bundle = connectedFirmware();
+        if (bundle == null) {
+            return null;
+        }
+        final String board = bundle.getTarget();
         return selectCurrentFirmwareSha(
             sessionInstalledSha,
             port.getFirmwareHash(),
@@ -435,8 +456,7 @@ public final class FirmwareRollbackController {
     }
 
     private boolean hasLiveConnection() {
-        final LinkManager lm = linkManager;
-        return lm != null && lm.getBinaryProtocol() != null;
+        return connectedSignature() != null;
     }
 
     private static boolean containsSha(List<FirmwareRollbackResolver.Build> builds, @Nullable String sha) {
@@ -447,12 +467,27 @@ public final class FirmwareRollbackController {
         return "lts_last_flashed_sha." + board + "." + branch;
     }
 
-    private boolean isLtsBundle() {
-        return isLtsBundle(BundleUtil.readBundleFullNameNotNull());
+    private @Nullable BundleInfo connectedFirmware() {
+        return connectedFirmware(connectedSignature());
+    }
+
+    private @Nullable String connectedSignature() {
+        LinkManager lm = linkManager;
+        BinaryProtocol bp = lm == null ? null : lm.getBinaryProtocol();
+        return bp == null || bp.isClosed() ? null : bp.signature;
+    }
+
+    static @Nullable BundleInfo connectedFirmware(@Nullable String signature) {
+        RusEfiSignature parsed = SignatureHelper.parse(signature);
+        return parsed == null ? null : parsed.asBundleInfo();
+    }
+
+    void setCatalogLoaderForTests(CatalogLoader loader) {
+        catalogLoader = loader;
     }
 
     static boolean isLtsBundle(BundleInfo bundle) {
-        return !BundleInfo.isUndefined(bundle)
+        return bundle != null && !BundleInfo.isUndefined(bundle)
             && !bundle.isMaster()
             && bundle.getBranchName() != null
             && bundle.getBranchName().startsWith("lts");
