@@ -55,6 +55,30 @@ class FirmwareBranchSwitchPanelTest {
     }
 
     @Test
+    void warningFitsWhenWideFontWrapsBeyondFourLines() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            UIDefaults defaults = UIManager.getLookAndFeelDefaults();
+            Object previousFont = defaults.get("Label.font");
+            try {
+                defaults.put("Label.font", new Font(Font.MONOSPACED, Font.PLAIN, 18));
+                FirmwareBranchSwitchPanel panel = new FirmwareBranchSwitchPanel("Lima", ignored -> {}, () -> {});
+                panel.setSize(480, 600);
+                layoutRecursively(panel);
+                JTextArea warning = warning(panel);
+                try {
+                    java.awt.geom.Rectangle2D end = warning.modelToView2D(warning.getDocument().getLength());
+                    assertNotNull(end);
+                    assertTrue(end.getMaxY() <= warning.getHeight(), "The entire warning must remain readable with wider fonts");
+                } catch (javax.swing.text.BadLocationException error) {
+                    throw new AssertionError(error);
+                }
+            } finally {
+                defaults.put("Label.font", previousFont);
+            }
+        });
+    }
+
+    @Test
     void narrowWindowsKeepWarningsAndActionsReadableInBothThemes() throws Exception {
         checkNarrowWindowsInBothThemes("Lima");
         checkNarrowWindowsInBothThemes("Lima-Dev");
@@ -98,7 +122,10 @@ class FirmwareBranchSwitchPanelTest {
                             try {
                                 java.awt.geom.Rectangle2D end = warning.modelToView2D(warning.getDocument().getLength());
                                 assertNotNull(end);
-                                assertTrue(end.getMaxY() <= warning.getHeight(), "The entire warning must remain readable");
+                                assertTrue(end.getMaxY() <= warning.getHeight(),
+                                    "The entire warning must remain readable (source=" + sourceBranch + ", dark=" + dark
+                                        + ", scale=" + scale + ", width=" + width + ", font=" + warning.getFont()
+                                        + ", neededHeight=" + end.getMaxY() + ", height=" + warning.getHeight() + ")");
                             } catch (javax.swing.text.BadLocationException error) {
                                 throw new AssertionError(error);
                             }
