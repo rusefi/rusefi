@@ -253,6 +253,7 @@ class TitleBarPanel extends JPanel {
     // yes, a custom IconClass, cheaper on rendering time than a png or a complete icon set
     private static class ClownIcon implements Icon {
         private static final int SIZE = 20;
+        // [tag:fixed_color] Red makeup is part of the clown artwork in both themes.
         private static final Color MAKEUP_RED = new Color(220, 55, 65);
 
         @Override
@@ -269,9 +270,9 @@ class TitleBarPanel extends JPanel {
                 g.setColor(MAKEUP_RED);
                 g.fillOval(x + 1, y + 2, 8, 8);
                 g.fillOval(x + 11, y + 2, 8, 8);
-                g.setColor(Color.WHITE);
+                g.setColor(Color.WHITE); // [tag:fixed_color] White face paint is part of the clown artwork.
                 g.fillOval(x + 3, y + 4, 14, 14);
-                g.setColor(Color.BLACK);
+                g.setColor(Color.BLACK); // [tag:fixed_color] Black eyes contrast with the white face paint.
                 g.fillOval(x + 6, y + 8, 2, 2);
                 g.fillOval(x + 12, y + 8, 2, 2);
                 g.setColor(MAKEUP_RED);

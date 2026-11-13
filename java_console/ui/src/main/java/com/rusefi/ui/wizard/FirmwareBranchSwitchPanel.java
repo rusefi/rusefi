@@ -15,6 +15,9 @@ public final class FirmwareBranchSwitchPanel extends JPanel {
     public FirmwareBranchSwitchPanel(String sourceBranch, Consumer<String> confirm, Runnable cancel) {
         super(new BorderLayout());
 
+        JTextArea warning = new JTextArea("Development firmware is unstable.\nSettings may need migration.\n"
+            + ("Lima-Dev".equals(sourceBranch) ? "This updater cannot return to Lima-Dev."
+                : "This updater cannot return to stable firmware."));
         JPanel choices = new JPanel(new WrapLayout(FlowLayout.LEFT, WizardStyle.GAP, 0));
         JPanel card = new JPanel() {
             @Override
@@ -25,6 +28,12 @@ public final class FirmwareBranchSwitchPanel extends JPanel {
                 int width = Math.min(700, Math.max(0, pageWidth - 48));
                 Insets padding = getInsets();
                 choices.setSize(Math.max(0, width - padding.left - padding.right), choices.getHeight());
+                if (warning.getParent() != null) {
+                    Insets warningPadding = warning.getParent().getInsets();
+                    // Measure wrapped text at the available width, not a fixed number of rows.
+                    warning.setSize(Math.max(1, width - padding.left - padding.right
+                        - warningPadding.left - warningPadding.right), Math.max(1, warning.getHeight()));
+                }
                 ((BoxLayout) getLayout()).invalidateLayout(this);
                 Dimension preferred = super.getPreferredSize();
                 return new Dimension(width, preferred.height);
@@ -44,15 +53,11 @@ public final class FirmwareBranchSwitchPanel extends JPanel {
             card.add(Box.createVerticalStrut(WizardStyle.GAP));
         }
 
-        JTextArea warning = new JTextArea("Development firmware is unstable.\nSettings may need migration.\n"
-            + ("Lima-Dev".equals(sourceBranch) ? "This updater cannot return to Lima-Dev."
-                : "This updater cannot return to stable firmware."));
         warning.setEditable(false);
         warning.setFocusable(false);
         warning.setLineWrap(true);
         warning.setWrapStyleWord(true);
         warning.setOpaque(false);
-        warning.setRows(4);
         warning.setFont(UIManager.getFont("Label.font").deriveFont(Font.BOLD));
         warning.setForeground(WizardStyle.text());
         warning.setColumns(48);
