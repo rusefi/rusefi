@@ -28,15 +28,20 @@ public final class FirmwareBranchSwitchPanel extends JPanel {
                 int width = Math.min(700, Math.max(0, pageWidth - 48));
                 Insets padding = getInsets();
                 choices.setSize(Math.max(0, width - padding.left - padding.right), choices.getHeight());
-                if (warning.getParent() != null) {
-                    Insets warningPadding = warning.getParent().getInsets();
-                    // Measure wrapped text at the available width, not a fixed number of rows.
-                    warning.setSize(Math.max(1, width - padding.left - padding.right
-                        - warningPadding.left - warningPadding.right), Math.max(1, warning.getHeight()));
+                Dimension warningSize = warning.getSize();
+                try {
+                    if (warning.getParent() != null) {
+                        Insets warningPadding = warning.getParent().getInsets();
+                        // Let Swing lay out all wrapped lines before measuring their preferred height.
+                        warning.setSize(Math.max(1, width - padding.left - padding.right
+                            - warningPadding.left - warningPadding.right), Short.MAX_VALUE);
+                    }
+                    ((BoxLayout) getLayout()).invalidateLayout(this);
+                    Dimension preferred = super.getPreferredSize();
+                    return new Dimension(width, preferred.height);
+                } finally {
+                    warning.setSize(warningSize);
                 }
-                ((BoxLayout) getLayout()).invalidateLayout(this);
-                Dimension preferred = super.getPreferredSize();
-                return new Dimension(width, preferred.height);
             }
 
             @Override
