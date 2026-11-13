@@ -28,6 +28,10 @@ struct_no_prefix ignition_state_s
 set_prefix ""
 	int16_t autoscale timingPidCorrection;Idle: Timing adjustment;"deg",{1/@@PACK_MULT_PERCENT@@},0, -20,20, 2,@@GAUGE_CATEGORY_TIMING@@
 	int16_t autoscale dfcoTimingRetard;DFCO: Timing retard;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 50, 2
+	! [tag:transient_timing] TransientTiming: applied correction, target (also in Log only) and state.
+	int16_t autoscale transientTimingCorrection;Transient: timing correction;"deg",{1/@@PACK_MULT_PERCENT@@},0, -30,30, 2,@@GAUGE_CATEGORY_TIMING@@
+	int16_t autoscale transientTimingTarget;Transient: timing target;"deg",{1/@@PACK_MULT_PERCENT@@},0, -30,30, 2,@@GAUGE_CATEGORY_TIMING@@
+	uint8_t transientTimingState;Transient: timing state;"", 1, 0, 0, 4, 0
 	int16_t autoscale tractionAdvanceDrop;Traction: timing correction;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 1
 
 end_struct

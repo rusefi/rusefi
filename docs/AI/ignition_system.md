@@ -62,6 +62,37 @@ timing bypass and cranking-correction switch. Telemetry is `isBurstKnockActive`,
 `unit_tests/tests/ignition_injection/test_burst_knock.cpp` exercise the detector,
 table, decay and ignition integration.
 
+## Transient timing
+
+[tag:transient_timing] `TransientTiming` in `controllers/modules/transient_timing` adds a
+signed correction (positive advances) during throttle transients reported by the AE TPS
+detector (`isAboveAccelThreshold`, `isBelowDecelThreshold`, `deltaTps`).
+`Engine::periodicFastCallback()` calls `update()` before the timing math; `getAdvanceCorrections()` adds
+`getTimingCorrection()`, so fixed timing and the cranking-correction switch apply as for the
+other corrections.
+
+- While an opening event is active, the value follows `transientTimingOpeningTable` at the
+  detector's TPS change (`deltaTps`) and RPM; while a closing
+  event is active, `transientTimingClosingValues` at RPM. After the event it holds for
+  `transientTimingHoldMs`, then ramps linearly to zero over `transientTimingDecayMs`. A new
+  event replaces the old one.
+- Clamped to `transientTimingMaxAdvance`/`transientTimingMaxRetard`; no advance while knock
+  control retards (`KnockController::getKnockRetard() > 0`); zero while cranking or stopped.
+- `transientTimingMode`: Off, Log only (target computed and shown, nothing applied), Apply.
+  Settings live in `persistent_config_s`; tunes with an all-zero RPM axis are seeded with
+  the defaults (Off, 1000..4000 RPM, 100 ms hold, 300 ms decay, 5 deg advance, 15 deg retard).
+- Telemetry in `ignition_state`: `transientTimingCorrection` (applied), `transientTimingTarget`,
+  `transientTimingState` (0 idle, 1 opening, 2 closing, 3 hold, 4 decay).
+- BurstKnock stays a separate, retard-only knock-protection correction; both apply.
+
+Latency: `prepareCylinderIgnitionSchedule()` latches a cylinder's next spark angle when its
+previous spark fires (`fireSparkAndPrepareNextSchedule()`), from `timingAdvance[]` computed in
+the fast callback. A new correction therefore reaches each cylinder only at its next prepared
+spark, up to one engine cycle later; `TransientTimingIntegration.ReachesEachCylinderAtItsNextSpark`
+shows none right after the step, half of a sequential inline-4 after half a cycle and all after
+one cycle. Applying it at dwell start would need the spark angle refreshed when the dwell is
+scheduled, which also changes the dwell by the timing delta.
+
 ## Implementation Notes
 - **BTDC vs ATDC**: Advance is typically measured in degrees Before Top Dead Center (BTDC). Internal math may use 0-720° cycle coordinates.
 - **Dwell Overlap**: rusEFI supports overlapping dwell events (where one coil starts charging before another finishes firing).
