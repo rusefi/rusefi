@@ -177,6 +177,42 @@ class PinoutAssignTest {
     }
 
     @Test
+    void rebootOnlySettingsAreFlaggedWhereverTheyChange() throws Throwable {
+        IniFileModel ini = readIni();
+        // fuel pump on B6, fan on B7; the fan output needs a restart
+        ConfigurationImage image = image(1, 2, 0);
+        List<PinAssignments.Candidate> forB6 = PinAssignments.candidates(ini, image, B6);
+        PinAssignments.Candidate fan = forB6.stream().filter(c -> c.fieldKey.equals("fanPin")).findFirst().get();
+        PinAssignments.Candidate fuelPump = forB6.stream().filter(c -> c.fieldKey.equals("fuelPumpPin")).findFirst().get();
+        assertTrue(fan.needsRestart);
+        assertFalse(fuelPump.needsRestart);
+        assertEquals("Fan output  (restart)", PinoutFunctionsPage.settingText(fan));
+
+        PinoutPin b6 = new PinoutPin("B6", "Low side", "outputs", "outputs", B6, "");
+        PinAssignPanel toB6 = new PinAssignPanel(b6, "Connector B", forB6, ts -> ts.substring(0, 2));
+        assertTrue(toB6.select("fanPin"));
+        assertTrue(toB6.effect.getText().endsWith("Takes effect after you burn and restart the ECU: Fan output."),
+            toB6.effect.getText());
+
+        // giving B7 to the fuel pump clears the fan, which needs a restart as much as setting it
+        PinoutPin b7 = new PinoutPin("B7", "Low side", "outputs", "outputs", B7, "");
+        PinAssignPanel toB7 = new PinAssignPanel(b7, "Connector B", PinAssignments.candidates(ini, image, B7),
+            ts -> ts.substring(0, 2));
+        assertTrue(toB7.select("fuelPumpPin"));
+        assertTrue(toB7.effect.getText().contains("restart the ECU: Fan output."), toB7.effect.getText());
+        assertTrue(toB7.unassignButton.getToolTipText().contains("restart the ECU: Fan output."));
+
+        // a swap involving the fan says so; one without it does not
+        assertEquals(Collections.singletonList("Fan output"), PinAssignments.swapRestartLabels(ini, image, B6, B7));
+        assertEquals(Collections.emptyList(), PinAssignments.swapRestartLabels(ini, image, B6, B8));
+        PinSwapPanel swap = new PinSwapPanel(b6, "Connector B", Collections.singletonList("Fuel Pump output"),
+            Collections.singletonList(new PinSwapPanel.Target(b7, "Connector B",
+                Collections.singletonList("Fan output"), null, Collections.singletonList("Fan output"))));
+        assertTrue(swap.select("B7"));
+        assertTrue(swap.effect.getText().endsWith("restart the ECU: Fan output."), swap.effect.getText());
+    }
+
+    @Test
     void swapPickerOnlyChoosesPinsThatCanSwap() {
         PinoutPin b6 = new PinoutPin("B6", "Low side", "outputs", "outputs", B6, "");
         PinoutPin b7 = new PinoutPin("B7", "Low side", "outputs", "outputs", B7, "");
@@ -401,7 +437,9 @@ class PinoutAssignTest {
             + "field = \"Hidden output\", hiddenPin, { hiddenEnabled }\n"
             + "dialog = fuelPumpDialog, \"Fuel Pump\"\nfield = \"Fuel Pump output\", fuelPumpPin\n"
             + "field = \"Flex input\", flexPin\n"
-            + "dialog = outputsDialog, \"Outputs\"\npanel = fuelPumpDialog\n";
+            + "dialog = outputsDialog, \"Outputs\"\npanel = fuelPumpDialog\n"
+            // the fan output applies only after a restart, like gppwm1_pin or vvtPins1
+            + "[ConstantsExtensions]\nrequiresPowerCycle = fanPin\n";
         RawIniFile raw = IniFileReaderUtil.read(new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8)));
         return IniFileReaderUtil.readIniFile(raw, "pinout-assign-test.ini", new IniFileMetaInfoImpl(raw));
     }

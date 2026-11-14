@@ -42,14 +42,22 @@ final class PinAssignments {
         final String current;
         /** Whether Tuning hides or disables the setting now, e.g. until its feature is turned on. */
         final boolean hidden;
+        /** Whether a change takes effect only after the ECU restarts ({@code requiresPowerCycle} in the INI). */
+        final boolean needsRestart;
 
         Candidate(String fieldKey, String label, String section, String dialogKey, String current, boolean hidden) {
+            this(fieldKey, label, section, dialogKey, current, hidden, false);
+        }
+
+        Candidate(String fieldKey, String label, String section, String dialogKey, String current, boolean hidden,
+                  boolean needsRestart) {
             this.fieldKey = fieldKey;
             this.label = label;
             this.section = section;
             this.dialogKey = dialogKey;
             this.current = current;
             this.hidden = hidden;
+            this.needsRestart = needsRestart;
         }
 
         boolean uses(String tsName) {
@@ -108,7 +116,8 @@ final class PinAssignments {
             String section = dialog.getUiName() == null || dialog.getUiName().isEmpty() ? dialog.getKey()
                 : dialog.getUiName();
             result.add(new Candidate(key, label, section, dialog.getKey(), currentPin(field, image),
-                isOff(meta.getVisibleExpression(), ini, image) || isOff(meta.getEnableExpression(), ini, image)));
+                isOff(meta.getVisibleExpression(), ini, image) || isOff(meta.getEnableExpression(), ini, image),
+                ini.getRequiresPowerCycle().contains(key)));
         }
         return result;
     }
@@ -178,6 +187,33 @@ final class PinAssignments {
         }
         String problem = firstUnable(ini, onA, b);
         return problem != null ? problem : firstUnable(ini, onB, a);
+    }
+
+    /**
+     * The labels of the settings a swap of {@code a} and {@code b} changes that take effect only after the ECU
+     * restarts ({@link IniFileModel#getRequiresPowerCycle}); empty when the swap applies on Burn.
+     */
+    static List<String> swapRestartLabels(IniFileModel ini, ConfigurationImage image, String a, String b) {
+        List<String> labels = new ArrayList<>();
+        Map<String, EnumIniField> changed = new LinkedHashMap<>(settingsOn(ini, image, a));
+        changed.putAll(settingsOn(ini, image, b));
+        for (String key : changed.keySet()) {
+            if (ini.getRequiresPowerCycle().contains(key)) {
+                labels.add(label(ini, key));
+            }
+        }
+        return labels;
+    }
+
+    /** The labels of the candidates that take effect only after the ECU restarts. */
+    static List<String> restartLabels(List<Candidate> candidates) {
+        List<String> labels = new ArrayList<>();
+        for (Candidate candidate : candidates) {
+            if (candidate.needsRestart) {
+                labels.add(candidate.label);
+            }
+        }
+        return labels;
     }
 
     /** The UI labels of the pin settings using {@code tsName} now, in Tuning order where shown. */

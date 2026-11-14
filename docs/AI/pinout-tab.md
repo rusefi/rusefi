@@ -180,6 +180,18 @@ other users, as with Assign, and Not set clears only that setting. Edits use the
 Without a tune editor the column is read-only. A double-click on a setting opens it in Tuning.
 The chosen view persists across boards; Tuning's jump to a pin switches back to Pins.
 
+## Settings applied only after a restart
+
+The INI's `requiresPowerCycle = <field>` lines in `[ConstantsExtensions]` (e.g. `gppwm1_pin`,
+`vvtPins1`, `startStopButtonPin`, `auxAnalogInputs1`) reach the console as
+`IniFileModel.getRequiresPowerCycle()`, compared case-insensitively. Each
+`PinAssignments.Candidate` carries `needsRestart`. When an assignment or swap changes such a
+setting, the Assign and Swap pickers end their effect text with "Takes effect after you burn and
+restart the ECU: …". Clearing a reboot-only setting counts as changing it, including its
+Unassign tooltip. The Functions view and the Assign list mark these settings "(restart)".
+See [Hardware Re-init & requiresPowerCycle](../hardware-reinit-and-power-cycle.md) for why each
+entry is reboot-only.
+
 ## When changing the helper
 
 - Edit connector data in the board's `connectors/*.yaml` and keep image names,
