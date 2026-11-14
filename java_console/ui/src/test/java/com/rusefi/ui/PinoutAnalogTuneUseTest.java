@@ -35,8 +35,8 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Analog input selectors ({@code map_sensor_hwChannel}, {@code clt_adcChannel}, {@code tps1_1AdcChannel}...)
  * choose connector pins from {@code $adc_channel_e_list}, whose labels are the pins' expanded {@code ts_name}
- * ("D9 MAP" on uaEFI), but their names do not follow the {@code .*pins?\d*} convention the Pinout tab and
- * Tuning's Pinout button key on. Reproduction: such a pin shows as free and its selector has no Pinout button.
+ * ("D9 MAP" on uaEFI), but their names do not follow the {@code .*pins?\d*} convention. The pin list must count
+ * ({@link PinoutLookup#isPinSetting}): such a pin shows its Tune use and its selector has a Pinout button.
  */
 class PinoutAnalogTuneUseTest {
     private static final String D9_MAP = "D9 MAP";
@@ -46,7 +46,7 @@ class PinoutAnalogTuneUseTest {
     Path tempDir;
 
     @Test
-    void analogInputPinShowsAsFreeAndItsSelectorHasNoPinoutButton() throws Throwable {
+    void analogInputPinShowsItsTuneUseAndItsSelectorHasAPinoutButton() throws Throwable {
         IniFileModel ini = readIni();
         // fuel pump on B6, MAP sensor on D9
         ConfigurationImage image = new ConfigurationImage(new byte[]{1, 1});
@@ -70,13 +70,13 @@ class PinoutAnalogTuneUseTest {
                 JTable table = components(pinout.getContent(), JTable.class).get(0);
                 int tuneUse = table.getColumn("Tune use").getModelIndex();
                 assertEquals("Fuel Pump output", table.getModel().getValueAt(0, tuneUse), "control: an output");
-                // BUG: D9 carries the MAP sensor, yet Pinout shows it as free
-                assertEquals("", table.getModel().getValueAt(1, tuneUse));
+                assertEquals("MAP ADC input", table.getModel().getValueAt(1, tuneUse),
+                    "D9 carries the MAP sensor");
 
                 PinoutLink link = pin -> { };
                 assertTrue(hasPinoutButton(row(ini, image, "fuelPumpPin", link)), "control: an output");
-                // BUG: no Pinout button beside the MAP input selector
-                assertFalse(hasPinoutButton(row(ini, image, "map_sensor_hwChannel", link)));
+                assertTrue(hasPinoutButton(row(ini, image, "map_sensor_hwChannel", link)),
+                    "the MAP input selector has a Pinout button");
             });
         } finally {
             SwingUtilities.invokeAndWait(() -> context.getLinkManager().close());

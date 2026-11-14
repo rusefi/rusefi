@@ -88,8 +88,14 @@ firmware pin mappings or regenerate an INI.
 
 [`ConsoleUI`](../../java_console/ui/src/main/java/com/rusefi/ConsoleUI.java)
 creates the tab and connects it to Tuning. `PinoutPane` searches the active
-INI for enum fields whose keys match the convention `.*pins?\d*` (case
-insensitive), such as `fuelPumpPin` and `injectionPins1`. It reads each field's
+INI for pin selectors (`PinoutLookup.isPinSetting`). These are enum fields that
+choose from one of the pin lists the INI reader recognises (`EnumIniField.isPinEnum()`:
+`$output_pin_e_list`, `$switch_input_pin_e_list`, `$adc_channel_e_list` and
+others), or whose keys match the convention `.*pins?\d*` (case insensitive), such
+as `fuelPumpPin` and `injectionPins1`. The pin lists catch analog inputs such as
+`map_sensor_hwChannel` and `tps1_1AdcChannel`, whose names do not follow the
+convention; their choices are also expanded `ts_name`s ("D9 MAP"). The same
+check places Tuning's Pinout button beside a selector. It reads each field's
 value from the latest configuration image, matches that value to an expanded
 `ts_name`, and shows the field's UI label in **Tune use**. Multiple fields
 assigned to one pin appear together. `NONE` and `INVALID` assignments are

@@ -1,14 +1,18 @@
 package com.rusefi.ui;
 
+import com.opensr5.ini.field.EnumIniField;
+import com.opensr5.ini.field.IniField;
+
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
 /**
- * Links Tuning's pin selectors to the Pinout connectors. A pin selector is an enum setting whose
- * key follows the rusEFI convention {@code .*pins?\d*} ({@code fuelPumpPin}, {@code injectionPins1});
- * its value, the pin choice, equals a connector pin's expanded {@code ts_name}.
+ * Links Tuning's pin selectors to the Pinout connectors. A pin selector is an enum setting choosing from one of
+ * the board's pin lists ({@link EnumIniField#isPinEnum}: outputs, inputs, analog inputs...), or whose key follows
+ * the rusEFI convention {@code .*pins?\d*} ({@code fuelPumpPin}, {@code injectionPins1}); its value, the pin
+ * choice, equals a connector pin's expanded {@code ts_name}.
  */
 public final class PinoutLookup {
     private static final Pattern PIN_FIELD = Pattern.compile(".*pins?\\d*");
@@ -16,9 +20,19 @@ public final class PinoutLookup {
     private PinoutLookup() {
     }
 
-    /** Whether the setting {@code fieldKey} chooses a pin. */
+    /** Whether the setting {@code fieldKey} is named as choosing a pin. Prefer {@link #isPinSetting}. */
     public static boolean isPinField(String fieldKey) {
         return fieldKey != null && PIN_FIELD.matcher(fieldKey.toLowerCase(Locale.ROOT)).matches();
+    }
+
+    /**
+     * Whether the setting {@code fieldKey} chooses a pin. The pin list catches selectors whose names do not
+     * follow the convention, such as the analog inputs {@code map_sensor_hwChannel} or {@code tps1_1AdcChannel}
+     * ({@code $adc_channel_e_list}); without it a pin carrying the MAP sensor showed as free
+     * (PinoutAnalogTuneUseTest).
+     */
+    public static boolean isPinSetting(String fieldKey, IniField field) {
+        return field instanceof EnumIniField && (((EnumIniField) field).isPinEnum() || isPinField(fieldKey));
     }
 
     /**
