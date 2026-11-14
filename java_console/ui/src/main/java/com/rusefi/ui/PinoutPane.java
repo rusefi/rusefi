@@ -583,7 +583,7 @@ public class PinoutPane {
             IniField field = entry.getValue();
             if (!(field instanceof EnumIniField)) continue;
             String key = entry.getKey();
-            if (!PinoutLookup.isPinField(key)) continue;
+            if (!PinoutLookup.isPinSetting(key, field)) continue;
 
             String value;
             try {
@@ -610,9 +610,7 @@ public class PinoutPane {
 
     /**
      * Builds a map from TunerStudio pin name (ts_name) to the human-readable label(s) of
-     * any tune field currently assigned to that pin.
-     * Fields are identified by name ending in "pin" or "pins" (case-insensitive), matching
-     * the convention used throughout rusEFI for pin-selector enum fields.
+     * any tune field currently assigned to that pin ({@link PinoutLookup#isPinSetting}).
      */
     private Map<String, String> buildTuneUseMap() {
         IniFileModel ini = uiContext.iniFileState.getIniFileModel();
@@ -631,8 +629,8 @@ public class PinoutPane {
 
     /**
      * Builds a reverse map: expanded ts_name → human-readable label(s) of the tune field(s)
-     * currently assigned to that pin. Fields are matched by name pattern .*pins?\d*
-     * (rusEFI convention: mainRelayPin, injectionPins1, ignitionPins12, fuelPumpPin, etc.).
+     * currently assigned to that pin: pin selectors as {@link PinoutLookup#isPinSetting} defines them, from
+     * mainRelayPin and injectionPins1 to analog inputs such as map_sensor_hwChannel.
      */
     private static Map<String, String> buildTuneUseMap(IniFileModel ini, ConfigurationImage ci) {
         Map<String, DialogModel.Field> fieldsInOrder = ini.getFieldsInUiOrder();
@@ -642,7 +640,7 @@ public class PinoutPane {
             IniField field = entry.getValue();
             if (!(field instanceof EnumIniField)) continue;
             String key = entry.getKey();
-            if (!PinoutLookup.isPinField(key)) continue;
+            if (!PinoutLookup.isPinSetting(key, field)) continue;
 
             String value;
             try {

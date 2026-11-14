@@ -146,7 +146,7 @@ public class CalibrationFieldFactory {
                     enumField, iniField, currentValue, workingImage, onChange, fieldEditorWidth, !hasHelp);
                 row.add(comboBox);
                 value = () -> String.valueOf(comboBox.getSelectedItem());
-                JButton pinoutButton = createPinoutButton(comboBox, field.getKey(), onShowInPinout);
+                JButton pinoutButton = createPinoutButton(comboBox, field.getKey(), enumField, onShowInPinout);
                 if (pinoutButton != null) {
                     row.add(Box.createHorizontalStrut(4));
                     row.add(pinoutButton);
@@ -445,14 +445,15 @@ public class CalibrationFieldFactory {
     }
 
     /**
-     * For pin-enum fields (name matches .*pins?\d*), adds a connector button that fires the
-     * current combo value up to the caller for cross-tab navigation.
+     * For pin selectors ({@link PinoutLookup#isPinSetting}, analog inputs included), adds a connector button
+     * that fires the current combo value up to the caller for cross-tab navigation.
      */
-    private static JButton createPinoutButton(JComboBox<String> comboBox, String fieldKey, PinoutLink onShowInPinout) {
+    private static JButton createPinoutButton(JComboBox<String> comboBox, String fieldKey, EnumIniField field,
+                                              PinoutLink onShowInPinout) {
         if (onShowInPinout == null || fieldKey == null) {
             return null;
         }
-        if (!PinoutLookup.isPinField(fieldKey)) {
+        if (!PinoutLookup.isPinSetting(fieldKey, field)) {
             return null;
         }
 
