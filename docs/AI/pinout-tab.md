@@ -125,8 +125,35 @@ connector, the connector drawing with the pin ringed and the other pins faded,
 and the pin's type, pigtail and tune use. Without a drawing, or when the YAML
 does not place the pin, the card has the text only; when the board's pinout
 lacks the pin the button keeps its plain tooltip. The card stays until the
-mouse leaves, unlike a tooltip. Both directions depend on an exact `ts_name` match. Pinout is
-a viewer and navigator; assigning a pin happens in Tuning.
+mouse leaves, unlike a tooltip. Both directions depend on an exact `ts_name` match.
+
+## Assigning a pin from Pinout
+
+Pinout can also assign a pin, the reverse of choosing one in a Tuning pin selector. The pin
+card's **Assign…** (free pin) or **Change…** (used pin) button, or a click on a table row's
+**Free · Assign…**, opens a picker
+([`PinAssignPanel`](../../java_console/ui/src/main/java/com/rusefi/ui/PinAssignPanel.java)).
+Fixed pins have no button. Its list comes from
+[`PinAssignments`](../../java_console/ui/src/main/java/com/rusefi/ui/PinAssignments.java):
+every pin selector shown in a Tuning dialog whose enum choices include the pin's expanded
+`ts_name`, grouped by that dialog's title in Tuning order. The INI's choice lists therefore
+decide which outputs, analog inputs or switch inputs suit a pin, and a selector no dialog shows
+is left out. Each row shows where that setting is now. A setting whose field-level enable or
+visible expression is currently false is marked "(off)", because assigning a pin does not turn
+its feature on.
+
+A pin has one function: **Assign** sets the chosen setting to the pin and every other pin
+selector on that pin to `NONE`. **Unassign** clears them all. A selector without a `NONE`
+choice is left unchanged.
+
+The edit goes through `TuningPane.applyEdit()`, wired in `ConsoleUI` (which builds Tuning
+first if needed, and refuses while firmware is flashing). It is therefore an ordinary Tuning
+edit: one undo step, uploaded without burning, counted as an unsaved change, and kept by Burn or
+Save. `applyEdit` also redraws the open Tuning page and detached panels from the edited tune.
+Those views hold their own copy of the tune, which would otherwise overwrite the Pinout edit on
+the next navigation. Tune use refreshes from the resulting config-image notification. Pins that
+only a Lua script drives still show as Free; the picker cannot see them. Coverage:
+[`PinoutAssignTest`](../../java_console/ui/src/test/java/com/rusefi/ui/PinoutAssignTest.java).
 
 ## When changing the helper
 
@@ -139,4 +166,4 @@ a viewer and navigator; assigning a pin happens in Tuning.
   for generated pin choices, [`PinoutCacheTest`](../../java_console/ui/src/test/java/com/rusefi/ui/PinoutCacheTest.java)
   for download and archive behavior, and
   [`PinoutTuneUseNavigationTest`](../../java_console/ui/src/test/java/com/rusefi/ui/PinoutTuneUseNavigationTest.java)
-  for Tune use and cross-tab navigation.
+  for Tune use and cross-tab navigation, and `PinoutAssignTest` for pin assignment.

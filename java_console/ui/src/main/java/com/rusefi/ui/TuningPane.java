@@ -472,6 +472,37 @@ public class TuningPane {
         SwingUtilities.invokeLater(() -> right.highlightField(fieldKey));
     }
 
+    /**
+     * Applies a tune edit made outside Tuning, such as a pin assigned on the Pinout tab, exactly like an
+     * edit here: one undo step, sent to the ECU without burning, kept for Burn or Save. The page shown (and
+     * any detached panel) is redrawn from the edited tune, since it holds its own copy that would otherwise
+     * replace the edit on the next navigation.
+     *
+     * @return false when there is no tune to edit (not connected and no tune loaded)
+     */
+    public boolean applyEdit(Consumer<ConfigurationImage> edit) {
+        ConfigurationImage current = sessionImage.get();
+        if (current == null) {
+            BinaryProtocol bp = uiContext.getBinaryProtocol();
+            current = bp != null ? bp.getControllerConfiguration() : null;
+            if (current == null) {
+                return false;
+            }
+        }
+        ConfigurationImage edited = current.clone();
+        edit.accept(edited);
+        // an edit still being typed becomes its own undo step, then this one
+        toolbar.flushBeforeNavigate();
+        sessionImage.set(edited);
+        toolbar.onEdit(current);
+        toolbar.flushBeforeNavigate();
+        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+        right.update(currentKey.get(), ini, edited);
+        left.refreshExpressions(edited);
+        uiContext.fireConfigImageChanged(edited);
+        return true;
+    }
+
     // Package-private so tests check the dialog navigation shows.
     CalibrationDialogWidget getDialogForTests() {
         return right;
