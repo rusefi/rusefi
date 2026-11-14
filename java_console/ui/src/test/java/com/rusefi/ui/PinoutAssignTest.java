@@ -81,6 +81,59 @@ class PinoutAssignTest {
     }
 
     @Test
+    void swapExchangesEverySettingOfTheTwoPins() throws Throwable {
+        IniFileModel ini = readIni();
+        // fuel pump on B6, fan on B7, the switch input on D5, and a setting no dialog shows also on B6
+        ConfigurationImage image = new ConfigurationImage(new byte[]{1, 2, 1, 0, 0, 1});
+
+        assertNull(PinAssignments.swapProblem(ini, image, B6, B7));
+        assertEquals(Arrays.asList("Fuel Pump output", "unlistedPin"), PinAssignments.userLabels(ini, image, B6));
+        PinAssignments.swap(ini, image, B6, B7);
+        assertEquals(B7, value(ini, image, "fuelPumpPin"));
+        assertEquals(B7, value(ini, image, "unlistedPin"), "every setting on the pin moves, shown or not");
+        assertEquals(B6, value(ini, image, "fanPin"));
+
+        // with a free pin, the swap is a move
+        PinAssignments.swap(ini, image, B6, B8);
+        assertEquals(B8, value(ini, image, "fanPin"));
+        assertEquals(PinAssignments.BOTH_FREE, PinAssignments.swapProblem(ini, image, B6, "B9 Low Side output"));
+
+        assertEquals("Fuel Pump output cannot use it", PinAssignments.swapProblem(ini, image, B7, "D5 Switch input"));
+        byte[] before = image.getContent().clone();
+        assertThrows(IllegalArgumentException.class, () -> PinAssignments.swap(ini, image, B7, "D5 Switch input"));
+        assertArrayEquals(before, image.getContent(), "a refused swap changes nothing");
+    }
+
+    @Test
+    void swapPickerOnlyChoosesPinsThatCanSwap() {
+        PinoutPin b6 = new PinoutPin("B6", "Low side", "outputs", "outputs", B6, "");
+        PinoutPin b7 = new PinoutPin("B7", "Low side", "outputs", "outputs", B7, "");
+        PinoutPin b8 = new PinoutPin("B8", "Low side", "outputs", "outputs", B8, "");
+        PinoutPin d5 = new PinoutPin("D5", "Flex", "switch inputs", "switch_inputs", "D5 Switch input", "");
+        PinSwapPanel panel = new PinSwapPanel(b6, "Connector B", Collections.singletonList("Fuel Pump output"),
+            Arrays.asList(
+                new PinSwapPanel.Target(b7, "Connector B", Collections.singletonList("Fan output"), null),
+                new PinSwapPanel.Target(b8, "Connector B", Collections.emptyList(), null),
+                new PinSwapPanel.Target(d5, "Connector D", Collections.emptyList(), "Fuel Pump output cannot use it")));
+        List<String> swapped = new ArrayList<>();
+        panel.setOnSwap(target -> swapped.add(target.pin.name));
+
+        assertNull(panel.selected());
+        assertFalse(panel.swapButton.isEnabled());
+        assertFalse(panel.select("D5"), "a pin that cannot take the settings is not choosable");
+
+        assertTrue(panel.select("B7"));
+        assertEquals("Fuel Pump output moves to B7; Fan output moves to B6.", panel.effect.getText());
+        assertTrue(panel.select("B8"));
+        assertEquals("Fuel Pump output moves to B8. B6 becomes free.", panel.effect.getText());
+
+        panel.search.setText("fan");
+        assertEquals("B7", panel.selected().pin.name, "the first match is selected while searching");
+        panel.swapButton.doClick();
+        assertEquals(Collections.singletonList("B7"), swapped);
+    }
+
+    @Test
     void pickerDescribesTheMoveAndOnlyAssignsAChange() {
         PinoutPin pin = new PinoutPin("B6", "Low side", "outputs", "outputs", B6, "");
         List<PinAssignments.Candidate> candidates = Arrays.asList(
@@ -125,6 +178,7 @@ class PinoutAssignTest {
         AtomicReference<TuningPane> tuningRef = new AtomicReference<>();
         AtomicReference<PinoutPane> pinoutRef = new AtomicReference<>();
         AtomicReference<PinAssignPanel> picker = new AtomicReference<>();
+        AtomicReference<PinSwapPanel> swapPicker = new AtomicReference<>();
         UIContext context = new UIContext();
 
         try {
@@ -141,6 +195,7 @@ class PinoutAssignTest {
                 // same wiring as ConsoleUI
                 pinout.setTuneEditor(tuning::applyEdit);
                 pinout.assignDialogOpener = picker::set;
+                pinout.swapDialogOpener = swapPicker::set;
             });
 
             SwingUtilities.invokeAndWait(() -> {
@@ -177,6 +232,30 @@ class PinoutAssignTest {
                 assertTrue(undo.isEnabled(), "the assignment is one undo step");
                 undo.doClick();
                 assertEquals(B7, value(ini, tuningRef.get().getDialogForTests().getWorkingImage(), "fanPin"));
+                // Undo does not notify Pinout; this restores what Pinout shows to the undone tune
+                context.fireConfigImageChanged(tuningRef.get().getDialogForTests().getWorkingImage());
+            });
+
+            // Swap with…: the fuel pump and the fan exchange B6 and B7
+            SwingUtilities.invokeAndWait(() -> { });
+            SwingUtilities.invokeAndWait(() -> {
+                PinoutPane pinout = pinoutRef.get();
+                PinoutConnectorPage page = components(pinout.getContent(), PinoutConnectorPage.class).get(0);
+                page.select(page.find("B6"));
+                assertTrue(page.card.swapButton.isVisible());
+                page.card.swapButton.doClick();
+                PinSwapPanel panel = swapPicker.get();
+                assertNotNull(panel, "Swap with… opens the picker");
+                assertTrue(panel.select("B7"));
+                panel.swapButton.doClick();
+            });
+            SwingUtilities.invokeAndWait(() -> { });
+            SwingUtilities.invokeAndWait(() -> {
+                JTable table = components(pinoutRef.get().getContent(), JTable.class).get(0);
+                assertEquals(Arrays.asList("Fan output", "Fuel Pump output", ""), tuneUse(table));
+                ConfigurationImage tune = tuningRef.get().getDialogForTests().getWorkingImage();
+                assertEquals(B7, value(ini, tune, "fuelPumpPin"));
+                assertEquals(B6, value(ini, tune, "fanPin"));
             });
         } finally {
             SwingUtilities.invokeAndWait(() -> {

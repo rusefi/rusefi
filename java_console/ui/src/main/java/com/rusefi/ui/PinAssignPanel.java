@@ -148,7 +148,7 @@ final class PinAssignPanel extends JPanel {
     }
 
     private JComponent createList() {
-        list.setSelectionModel(new SkipHeaders());
+        list.setSelectionModel(new SkipHeaders(model, item -> true));
         list.setCellRenderer(new Renderer());
         list.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
@@ -321,23 +321,32 @@ final class PinAssignPanel extends JPanel {
         return String.join(", ", labels);
     }
 
-    private static <T extends JComponent> T muted(T component) {
+    static <T extends JComponent> T muted(T component) {
         component.setForeground(UIManager.getColor("Label.disabledForeground"));
         return component;
     }
 
     /** Shows the panel in a modal dialog over {@code owner}; Escape cancels and Assign is the default. */
     static void showDialog(Component owner, PinAssignPanel panel) {
+        showModal(owner, "Assign pin", panel, panel.assignButton, panel.search, panel::setOnClose);
+    }
+
+    /**
+     * Shows a picker panel in a modal dialog over {@code owner}: {@code defaultButton} answers Enter, Escape
+     * closes, {@code focus} starts with the focus, and {@code closeHook} receives what closes the dialog.
+     */
+    static void showModal(Component owner, String title, JComponent panel, JButton defaultButton,
+                          JComponent focus, Consumer<Runnable> closeHook) {
         Window window = owner == null ? null : SwingUtilities.getWindowAncestor(owner);
-        JDialog dialog = new JDialog(window, "Assign pin", JDialog.ModalityType.APPLICATION_MODAL);
-        panel.setOnClose(dialog::dispose);
+        JDialog dialog = new JDialog(window, title, JDialog.ModalityType.APPLICATION_MODAL);
+        closeHook.accept(dialog::dispose);
         dialog.setContentPane(panel);
-        dialog.getRootPane().setDefaultButton(panel.assignButton);
+        dialog.getRootPane().setDefaultButton(defaultButton);
         dialog.getRootPane().registerKeyboardAction(e -> dialog.dispose(),
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
         dialog.pack();
         dialog.setLocationRelativeTo(window);
-        SwingUtilities.invokeLater(panel.search::requestFocusInWindow);
+        SwingUtilities.invokeLater(focus::requestFocusInWindow);
         dialog.setVisible(true);
     }
 
@@ -357,18 +366,31 @@ final class PinAssignPanel extends JPanel {
         }
     }
 
-    /** Clicks and arrows land on settings, never on section titles. */
-    private final class SkipHeaders extends DefaultListSelectionModel {
-        SkipHeaders() {
+    /**
+     * Clicks and arrows land on choosable items, never on section titles or items {@code selectable} refuses:
+     * a step onto one moves on in the same direction.
+     */
+    static final class SkipHeaders extends DefaultListSelectionModel {
+        private final DefaultListModel<Object> model;
+        private final java.util.function.Predicate<Object> selectable;
+
+        SkipHeaders(DefaultListModel<Object> model, java.util.function.Predicate<Object> selectable) {
+            this.model = model;
+            this.selectable = selectable;
             setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        }
+
+        private boolean skipped(int index) {
+            Object item = model.get(index);
+            return item instanceof Header || !selectable.test(item);
         }
 
         @Override
         public void setSelectionInterval(int index0, int index1) {
             int target = index1;
-            if (target >= 0 && target < model.size() && model.get(target) instanceof Header) {
+            if (target >= 0 && target < model.size() && skipped(target)) {
                 int step = target >= getLeadSelectionIndex() ? 1 : -1;
-                while (target >= 0 && target < model.size() && model.get(target) instanceof Header) {
+                while (target >= 0 && target < model.size() && skipped(target)) {
                     target += step;
                 }
                 if (target < 0 || target >= model.size()) {
@@ -425,7 +447,7 @@ final class PinAssignPanel extends JPanel {
     }
 
     /** An action from a lambda. */
-    private static final class SwingAction extends javax.swing.AbstractAction {
+    static final class SwingAction extends javax.swing.AbstractAction {
         private final Runnable action;
 
         SwingAction(Runnable action) {

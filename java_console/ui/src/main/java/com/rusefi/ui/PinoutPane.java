@@ -449,6 +449,7 @@ public class PinoutPane {
                 assignment -> navigateToTune.accept(assignment[1], assignment[0]));
         if (tuneEditor != null) {
             page.setAssigner(pin -> openAssign(page, pin));
+            page.setSwapper(pin -> openSwap(page, pin));
         }
         JTable table = page.table;
         // Double-click a row → jump to the tune field currently driving that pin, if any.
@@ -559,7 +560,39 @@ public class PinoutPane {
         this.tuneEditor = tuneEditor;
         for (PinoutConnectorPage page : activeConnectors) {
             page.setAssigner(tuneEditor == null ? null : pin -> openAssign(page, pin));
+            page.setSwapper(tuneEditor == null ? null : pin -> openSwap(page, pin));
         }
+    }
+
+    /** Shows the swap picker; tests replace the modal dialog. */
+    Consumer<PinSwapPanel> swapDialogOpener = panel -> PinSwapPanel.showDialog(content, panel);
+
+    /** Opens the picker of the pin to swap {@code pin} with: the board's other pins the tune can set. */
+    void openSwap(PinoutConnectorPage page, PinoutPin pin) {
+        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+        ConfigurationImage ci = currentConfigImage();
+        if (tuneEditor == null || ini == null || ci == null || pin.tsName.isEmpty()) {
+            return;
+        }
+        List<PinSwapPanel.Target> targets = new ArrayList<>();
+        for (PinoutConnectorPage other : activeConnectors) {
+            for (PinoutPin candidate : other.pins) {
+                if (candidate.tsName.isEmpty() || candidate.tsName.equals(pin.tsName)) {
+                    continue;
+                }
+                String problem = PinAssignments.swapProblem(ini, ci, pin.tsName, candidate.tsName);
+                // two free pins have nothing to swap: leave them out rather than grey a long list
+                if (PinAssignments.BOTH_FREE.equals(problem)) {
+                    continue;
+                }
+                targets.add(new PinSwapPanel.Target(candidate, other.title,
+                        PinAssignments.userLabels(ini, ci, candidate.tsName), problem));
+            }
+        }
+        PinSwapPanel panel = new PinSwapPanel(pin, page.title, PinAssignments.userLabels(ini, ci, pin.tsName), targets);
+        panel.setOnSwap(target -> applyPinEdit(
+                image -> PinAssignments.swap(ini, image, pin.tsName, target.pin.tsName)));
+        swapDialogOpener.accept(panel);
     }
 
     /** Opens the picker of the setting that uses {@code pin}. */

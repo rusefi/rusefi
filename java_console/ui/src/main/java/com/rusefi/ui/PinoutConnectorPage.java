@@ -88,6 +88,8 @@ final class PinoutConnectorPage extends JPanel {
     private final Consumer<String[]> openInTuning;
     /** Opens the picker of the setting using a pin; null while the tune cannot be edited from here. */
     private Consumer<PinoutPin> assigner;
+    /** Opens the picker of the pin to swap with; null while the tune cannot be edited from here. */
+    private Consumer<PinoutPin> swapper;
     /** The table's header hint, which names what a click on Tune use does. */
     private final JLabel tableHint = new JLabel();
 
@@ -490,6 +492,19 @@ final class PinoutConnectorPage extends JPanel {
         card.show(selected);
     }
 
+    /** Lets the pin card's Swap with… exchange what two pins do; null when the tune cannot be edited from Pinout. */
+    void setSwapper(Consumer<PinoutPin> swapper) {
+        this.swapper = swapper;
+        card.show(selected);
+    }
+
+    /** Opens the swap picker for a pin the tune may set (not power or ground). */
+    void swap(PinoutPin pin) {
+        if (swapper != null && pin != null && pin.use() != PinoutPin.Use.FIXED) {
+            swapper.accept(pin);
+        }
+    }
+
     /** Opens the picker for a pin the tune may set (not power or ground). */
     void assign(PinoutPin pin) {
         if (assigner != null && pin != null && pin.use() != PinoutPin.Use.FIXED) {
@@ -745,6 +760,8 @@ final class PinoutConnectorPage extends JPanel {
         final JButton openButton = new JButton("Open in Tuning");
         /** "Assign…" for a free pin, "Change…" for a used one: picks the setting using the pin. */
         final JButton assignButton = new JButton("Assign…");
+        /** Exchanges what this pin and another do, e.g. after wiring a connector the other way round. */
+        final JButton swapButton = new JButton("Swap with…");
         final JLabel type = new JLabel();
         final JLabel typeNote = muted(new JLabel());
         final JLabel wire = new JLabel();
@@ -781,10 +798,13 @@ final class PinoutConnectorPage extends JPanel {
                 }
             });
             assignButton.addActionListener(e -> assign(shown));
-            JPanel buttons = new JPanel(new FlowLayout(FlowLayout.LEFT, JoinedButtons.ROW_GAP, 0));
+            swapButton.addActionListener(e -> swap(shown));
+            // three buttons do not fit the card's width on one row
+            JPanel buttons = new JPanel(new WrapLayout(FlowLayout.LEFT, JoinedButtons.ROW_GAP, JoinedButtons.ROW_GAP));
             buttons.setOpaque(false);
             buttons.add(openButton);
             buttons.add(assignButton);
+            buttons.add(swapButton);
             TuningStyle.styleSection(useBox, 10, 12);
             GridBagConstraints c = new GridBagConstraints();
             c.gridx = 0;
@@ -797,7 +817,8 @@ final class PinoutConnectorPage extends JPanel {
             c.insets = new Insets(2, 0, 0, 0);
             useBox.add(useHint, c);
             c.insets = new Insets(10, 0, 0, 0);
-            c.fill = GridBagConstraints.NONE;
+            // the card's width, so the buttons wrap instead of being cut off
+            c.fill = GridBagConstraints.HORIZONTAL;
             useBox.add(buttons, c);
 
             details.setOpaque(false);
@@ -907,6 +928,8 @@ final class PinoutConnectorPage extends JPanel {
             assignButton.setVisible(assignable);
             assignButton.setText(pin.use() == PinoutPin.Use.USED ? "Change…" : "Assign…");
             assignButton.setToolTipText("Choose the setting that uses " + pin.name);
+            swapButton.setVisible(swapper != null && pin.use() != PinoutPin.Use.FIXED);
+            swapButton.setToolTipText("Exchange what " + pin.name + " and another pin do");
             // the main action is the primary button: Open for a used pin, Assign for a free one
             assignButton.putClientProperty(FlatClientProperties.STYLE_CLASS,
                     pin.use() == PinoutPin.Use.FREE ? "primary" : null);

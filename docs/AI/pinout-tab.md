@@ -151,7 +151,15 @@ first if needed, and refuses while firmware is flashing). It is therefore an ord
 edit: one undo step, uploaded without burning, counted as an unsaved change, and kept by Burn or
 Save. `applyEdit` also redraws the open Tuning page and detached panels from the edited tune.
 Those views hold their own copy of the tune, which would otherwise overwrite the Pinout edit on
-the next navigation. Tune use refreshes from the resulting config-image notification. Pins that
+the next navigation. Tune use refreshes from the resulting config-image notification.
+
+**Swap with…** on the pin card ([`PinSwapPanel`](../../java_console/ui/src/main/java/com/rusefi/ui/PinSwapPanel.java))
+exchanges what two pins do, e.g. after wiring a connector the other way round. It lists the
+board's other non-fixed pins by connector, with their current use. `PinAssignments.swapProblem`
+greys out a pin, with the reason, when any setting on one pin has no choice for the other.
+Pairs of free pins are left out because there is nothing to swap. `PinAssignments.swap` moves
+every pin selector on each pin, including selectors no dialog shows, as one `applyEdit`. A swap
+with a free pin is a move. Pins that
 only a Lua script drives still show as Free; the picker cannot see them. Coverage:
 [`PinoutAssignTest`](../../java_console/ui/src/test/java/com/rusefi/ui/PinoutAssignTest.java).
 
