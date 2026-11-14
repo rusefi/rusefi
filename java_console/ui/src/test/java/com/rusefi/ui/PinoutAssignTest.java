@@ -105,6 +105,78 @@ class PinoutAssignTest {
     }
 
     @Test
+    void setPinGivesThePinOrClearsJustThatSetting() throws Throwable {
+        IniFileModel ini = readIni();
+        ConfigurationImage image = image(1, 2, 0);
+
+        assertEquals(Arrays.asList("fanPin", "hiddenPin", "fuelPumpPin", "flexPin"),
+            PinAssignments.settings(ini, image).stream().map(c -> c.fieldKey).collect(Collectors.toList()),
+            "every pin setting a dialog shows, in Tuning order");
+
+        PinAssignments.setPin(ini, image, "fanPin", null);
+        assertEquals("NONE", value(ini, image, "fanPin"));
+        assertEquals(B6, value(ini, image, "fuelPumpPin"), "only that setting is cleared");
+
+        PinAssignments.setPin(ini, image, "fanPin", B6);
+        assertEquals(B6, value(ini, image, "fanPin"));
+        assertEquals("NONE", value(ini, image, "fuelPumpPin"), "a pin has one function");
+    }
+
+    @Test
+    void functionsViewListsSettingsWithTheBoardPinsEachCanChoose() throws Throwable {
+        IniFileModel ini = readIni();
+        PinoutFunctionsPage page = new PinoutFunctionsPage();
+        page.setBoard(Collections.singletonList(new PinoutConnectorPage("Connector B", null, Arrays.asList(
+            new PinoutPin("B6", "Low side 1", "outputs", "", B6, ""),
+            new PinoutPin("B7", "Low side 2", "outputs", "", B7, ""),
+            new PinoutPin("B8", "Low side 3", "outputs", "", B8, ""),
+            new PinoutPin("GND", "Ground", "ground", "", "", "")),
+            PinoutDrawing.ColorMode.TYPE, pin -> null, assignment -> { })));
+        // fuel pump on B6, fan on B7, the switch input on a pin this board's pinout does not list
+        page.setTune(ini, image(1, 2, 1));
+        List<String[]> setPins = new ArrayList<>();
+        page.setPinSetter((field, pin) -> setPins.add(new String[]{field, pin}));
+
+        assertEquals(Arrays.asList("fanPin", "hiddenPin", "fuelPumpPin", "flexPin"),
+            page.model.rows.stream().map(c -> c.fieldKey).collect(Collectors.toList()));
+        assertEquals("All  4", page.filterButtons.get(PinoutFunctionsPage.Filter.ALL).getText());
+        assertEquals("Assigned  3", page.filterButtons.get(PinoutFunctionsPage.Filter.ASSIGNED).getText());
+        assertEquals("Not set  1", page.filterButtons.get(PinoutFunctionsPage.Filter.NOT_SET).getText());
+
+        PinAssignments.Candidate fan = page.model.rows.get(0);
+        assertEquals("B7", page.model.getValueAt(0, PinoutFunctionsPage.PIN_COLUMN));
+        assertEquals("Low side 2", page.model.getValueAt(0, 3));
+        assertEquals(Arrays.asList("Not set", "B6", "B7", "B8"),
+            page.choicesFor(fan).stream().map(Object::toString).collect(Collectors.toList()),
+            "board pins the setting can choose; ground has no tune name");
+        PinAssignments.Candidate flex = page.model.rows.get(3);
+        assertEquals(Arrays.asList("Not set", "D5 Switch input"),
+            page.choicesFor(flex).stream().map(Object::toString).collect(Collectors.toList()),
+            "a choice not on the board stays listed while selected");
+
+        page.setFilter(PinoutFunctionsPage.Filter.NOT_SET);
+        assertEquals(1, page.table.getRowCount());
+        page.setFilter(PinoutFunctionsPage.Filter.ALL);
+        assertEquals(0, page.setQuery("low side 3"), "B8's function: no setting uses B8");
+        assertEquals(2, page.setQuery("fuel"), "the fuel pump, and the flex input by its Tuning page");
+        assertEquals(1, page.setQuery("fuel pump output"));
+        assertEquals(1, page.table.getRowCount());
+        page.setQuery("");
+
+        assertTrue(page.model.isCellEditable(0, PinoutFunctionsPage.PIN_COLUMN));
+        assertFalse(page.model.isCellEditable(0, PinoutFunctionsPage.SETTING_COLUMN));
+        page.model.setValueAt(page.choicesFor(fan).get(3), 0, PinoutFunctionsPage.PIN_COLUMN);
+        page.model.setValueAt(PinoutFunctionsPage.PinChoice.NOT_SET, 2, PinoutFunctionsPage.PIN_COLUMN);
+        page.model.setValueAt(page.choicesFor(fan).get(2), 0, PinoutFunctionsPage.PIN_COLUMN);
+        assertEquals(2, setPins.size(), "choosing the current pin changes nothing");
+        assertArrayEquals(new String[]{"fanPin", B8}, setPins.get(0));
+        assertArrayEquals(new String[]{"fuelPumpPin", null}, setPins.get(1));
+
+        page.setPinSetter(null);
+        assertFalse(page.model.isCellEditable(0, PinoutFunctionsPage.PIN_COLUMN), "read-only without a tune to edit");
+    }
+
+    @Test
     void swapPickerOnlyChoosesPinsThatCanSwap() {
         PinoutPin b6 = new PinoutPin("B6", "Low side", "outputs", "outputs", B6, "");
         PinoutPin b7 = new PinoutPin("B7", "Low side", "outputs", "outputs", B7, "");
@@ -256,6 +328,37 @@ class PinoutAssignTest {
                 ConfigurationImage tune = tuningRef.get().getDialogForTests().getWorkingImage();
                 assertEquals(B7, value(ini, tune, "fuelPumpPin"));
                 assertEquals(B6, value(ini, tune, "fanPin"));
+
+                // Functions view: the fuel pump moves to B8 from the Pin column
+                PinoutPane pinout = pinoutRef.get();
+                pinout.functionsViewButton.doClick();
+                assertTrue(pinout.isShowingFunctions());
+                PinoutFunctionsPage functions = pinout.functionsPage;
+                assertTrue(functions.isVisible(), "the Functions card is shown");
+                int row = functions.model.rows.indexOf(functions.model.rows.stream()
+                    .filter(c -> c.fieldKey.equals("fuelPumpPin")).findFirst().orElseThrow(AssertionError::new));
+                PinoutFunctionsPage.PinChoice b8 = functions.choicesFor(functions.model.rows.get(row)).stream()
+                    .filter(c -> "B8".equals(c.name())).findFirst().orElseThrow(AssertionError::new);
+                functions.model.setValueAt(b8, row, PinoutFunctionsPage.PIN_COLUMN);
+            });
+            SwingUtilities.invokeAndWait(() -> { });
+            SwingUtilities.invokeAndWait(() -> {
+                PinoutPane pinout = pinoutRef.get();
+                assertEquals(B8, value(ini, tuningRef.get().getDialogForTests().getWorkingImage(), "fuelPumpPin"));
+                PinoutFunctionsPage functions = pinout.functionsPage;
+                int row = 0;
+                while (!functions.model.rows.get(row).fieldKey.equals("fuelPumpPin")) {
+                    row++;
+                }
+                assertEquals("B8", functions.model.getValueAt(row, PinoutFunctionsPage.PIN_COLUMN),
+                    "the list follows the tune change");
+                JTable pins = components(pinout.getContent(), PinoutConnectorPage.class).get(0).table;
+                assertEquals(Arrays.asList("Fan output", "", "Fuel Pump output"), tuneUse(pins));
+
+                // a jump from Tuning to a pin shows it on its connector
+                pinout.highlightByEnumValue(B8);
+                assertFalse(pinout.isShowingFunctions());
+                assertTrue(pinout.pinsViewButton.isSelected());
             });
         } finally {
             SwingUtilities.invokeAndWait(() -> {

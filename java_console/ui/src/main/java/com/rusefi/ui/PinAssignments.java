@@ -70,6 +70,28 @@ final class PinAssignments {
         if (ini == null || image == null || tsName == null || tsName.isEmpty()) {
             return Collections.emptyList();
         }
+        return settings(ini, image, field -> ordinalOf(field, tsName) >= 0);
+    }
+
+    /**
+     * Every pin setting shown in a Tuning dialog, in Tuning order: the rows of the Pinout tab's
+     * Functions view.
+     */
+    static List<Candidate> settings(IniFileModel ini, ConfigurationImage image) {
+        if (ini == null || image == null) {
+            return Collections.emptyList();
+        }
+        return settings(ini, image, field -> true);
+    }
+
+    /** Whether the setting {@code fieldKey} has {@code tsName} among its pin choices. */
+    static boolean accepts(IniFileModel ini, String fieldKey, String tsName) {
+        IniField field = ini.getAllIniFields().get(fieldKey);
+        return field instanceof EnumIniField && ordinalOf((EnumIniField) field, tsName) >= 0;
+    }
+
+    private static List<Candidate> settings(IniFileModel ini, ConfigurationImage image,
+                                            java.util.function.Predicate<EnumIniField> include) {
         Map<String, DialogModel> dialogOf = dialogsByField(ini);
         Map<String, IniField> fields = ini.getAllIniFields();
         List<Candidate> result = new ArrayList<>();
@@ -78,7 +100,7 @@ final class PinAssignments {
             IniField field = fields.get(key);
             DialogModel dialog = dialogOf.get(key);
             if (!(field instanceof EnumIniField) || !PinoutLookup.isPinField(key) || dialog == null
-                || ordinalOf((EnumIniField) field, tsName) < 0) {
+                || !include.test((EnumIniField) field)) {
                 continue;
             }
             DialogModel.Field meta = entry.getValue();
@@ -115,6 +137,25 @@ final class PinAssignments {
         }
         clear(ini, image, tsName, fieldKey);
         image.setBitValue((EnumIniField) field, ordinal);
+    }
+
+    /**
+     * The Functions view's pin column: {@code tsName} as in {@link #assign}, or null to set just this setting
+     * to NONE.
+     *
+     * @throws IllegalArgumentException when the setting cannot choose that pin, or has no NONE choice
+     */
+    static void setPin(IniFileModel ini, ConfigurationImage image, String fieldKey, String tsName) {
+        if (tsName != null) {
+            assign(ini, image, fieldKey, tsName);
+            return;
+        }
+        IniField field = ini.getAllIniFields().get(fieldKey);
+        int none = field instanceof EnumIniField ? ordinalOf((EnumIniField) field, NONE) : -1;
+        if (none < 0) {
+            throw new IllegalArgumentException(fieldKey + " has no " + NONE + " choice");
+        }
+        image.setBitValue((EnumIniField) field, none);
     }
 
     /** Sets every pin setting using {@code tsName} to NONE. */

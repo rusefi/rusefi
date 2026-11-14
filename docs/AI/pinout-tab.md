@@ -163,6 +163,23 @@ with a free pin is a move. Pins that
 only a Lua script drives still show as Free; the picker cannot see them. Coverage:
 [`PinoutAssignTest`](../../java_console/ui/src/test/java/com/rusefi/ui/PinoutAssignTest.java).
 
+## Functions view
+
+The toolbar's **Pins | Functions** switch replaces the connector pages with
+[`PinoutFunctionsPage`](../../java_console/ui/src/main/java/com/rusefi/ui/PinoutFunctionsPage.java),
+a board-wide list modelled on an I/O resources sheet. It lists every pin selector shown in a
+Tuning dialog (`PinAssignments.settings`), in Tuning order, with its dialog, its pin and connector,
+and that pin's YAML `function`. It has an **All / Assigned / Not set** filter. The tab's search
+covers setting labels, dialogs, field names, pins, pin functions and connectors.
+
+The **Pin** column offers **Not set** plus this board's pins (those with a `ts_name`) that the
+setting's enum accepts, each marked with what uses it now. A current choice the pinout does not
+list stays in the list. Choosing a pin goes through `PinAssignments.setPin`: a pin replaces its
+other users, as with Assign, and Not set clears only that setting. Edits use the same
+`applyEdit` path. The list follows tune changes through the config-image notification.
+Without a tune editor the column is read-only. A double-click on a setting opens it in Tuning.
+The chosen view persists across boards; Tuning's jump to a pin switches back to Pins.
+
 ## When changing the helper
 
 - Edit connector data in the board's `connectors/*.yaml` and keep image names,
