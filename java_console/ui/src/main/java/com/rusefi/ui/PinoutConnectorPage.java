@@ -86,6 +86,10 @@ final class PinoutConnectorPage extends JPanel {
     /** The setting using a pin as {fieldKey, dialogKey}, or null; and what opens it in Tuning. */
     private final Function<PinoutPin, String[]> assignmentOf;
     private final Consumer<String[]> openInTuning;
+    /** Opens the picker of the setting using a pin; null while the tune cannot be edited from here. */
+    private Consumer<PinoutPin> assigner;
+    /** The table's header hint, which names what a click on Tune use does. */
+    private final JLabel tableHint = new JLabel();
 
     private PinoutDrawing.ColorMode mode;
     /** The legend chip chosen: a {@link PinColors.PinType}, a wire colour or a {@link PinoutPin.Use}; null for all. */
@@ -198,7 +202,11 @@ final class PinoutConnectorPage extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 PinoutPin pin = tuneUseLinkAt(e);
                 if (pin != null && e.getClickCount() == 1) {
-                    open(pin);
+                    if (pin.use() == PinoutPin.Use.FREE) {
+                        assign(pin);
+                    } else {
+                        open(pin);
+                    }
                 }
             }
 
@@ -235,7 +243,8 @@ final class PinoutConnectorPage extends JPanel {
         left.setOpaque(false);
         left.add(heading);
         left.add(new SegmentedControl(segments.toArray(new JToggleButton[0])));
-        JLabel hint = withSlack(muted(new JLabel("Click a Tune use to open it in Tuning")));
+        JLabel hint = withSlack(muted(tableHint));
+        updateTableHint();
         JPanel header = new JPanel(new BorderLayout());
         header.setOpaque(false);
         header.setBorder(BorderFactory.createEmptyBorder(2, 2, 6, 8));
@@ -457,6 +466,9 @@ final class PinoutConnectorPage extends JPanel {
             return null;
         }
         PinoutPin pin = pins.get(table.convertRowIndexToModel(row));
+        if (pin.use() == PinoutPin.Use.FREE) {
+            return assigner != null ? pin : null;
+        }
         return pin.use() == PinoutPin.Use.USED && assignmentOf.apply(pin) != null ? pin : null;
     }
 
@@ -465,6 +477,29 @@ final class PinoutConnectorPage extends JPanel {
         if (assignment != null) {
             openInTuning.accept(assignment);
         }
+    }
+
+    /**
+     * Lets the pin card's Assign / Change and a click on a Free Tune use pick the setting using a pin; null
+     * when the tune cannot be edited from Pinout.
+     */
+    void setAssigner(Consumer<PinoutPin> assigner) {
+        this.assigner = assigner;
+        updateTableHint();
+        table.repaint();
+        card.show(selected);
+    }
+
+    /** Opens the picker for a pin the tune may set (not power or ground). */
+    void assign(PinoutPin pin) {
+        if (assigner != null && pin != null && pin.use() != PinoutPin.Use.FIXED) {
+            assigner.accept(pin);
+        }
+    }
+
+    private void updateTableHint() {
+        tableHint.setText(assigner != null ? "Click Free to assign a pin · click a Tune use to open it in Tuning"
+            : "Click a Tune use to open it in Tuning");
     }
 
     // ---- small parts
@@ -545,6 +580,12 @@ final class PinoutConnectorPage extends JPanel {
                         setForeground(PinoutDrawing.themed("Console.Pinout.used", new Color(0x2563eb)));
                         setFont(t.getFont().deriveFont(Font.BOLD));
                         setToolTipText("Open " + pin.tuneUse + " in Tuning");
+                    } else if (pin.use() == PinoutPin.Use.FREE && assigner != null) {
+                        if (!isSelected) {
+                            setForeground(PinoutDrawing.themed("Console.Pinout.used", t.getForeground()));
+                        }
+                        setText("Free · Assign…");
+                        setToolTipText("Choose the setting that uses " + pin.name);
                     } else {
                         setForeground(UIManager.getColor("Label.disabledForeground"));
                     }
@@ -702,6 +743,8 @@ final class PinoutConnectorPage extends JPanel {
         final JLabel useValue = new JLabel();
         final JTextArea useHint = textArea();
         final JButton openButton = new JButton("Open in Tuning");
+        /** "Assign…" for a free pin, "Change…" for a used one: picks the setting using the pin. */
+        final JButton assignButton = new JButton("Assign…");
         final JLabel type = new JLabel();
         final JLabel typeNote = muted(new JLabel());
         final JLabel wire = new JLabel();
@@ -737,6 +780,11 @@ final class PinoutConnectorPage extends JPanel {
                     open(shown);
                 }
             });
+            assignButton.addActionListener(e -> assign(shown));
+            JPanel buttons = new JPanel(new FlowLayout(FlowLayout.LEFT, JoinedButtons.ROW_GAP, 0));
+            buttons.setOpaque(false);
+            buttons.add(openButton);
+            buttons.add(assignButton);
             TuningStyle.styleSection(useBox, 10, 12);
             GridBagConstraints c = new GridBagConstraints();
             c.gridx = 0;
@@ -750,7 +798,7 @@ final class PinoutConnectorPage extends JPanel {
             useBox.add(useHint, c);
             c.insets = new Insets(10, 0, 0, 0);
             c.fill = GridBagConstraints.NONE;
-            useBox.add(openButton, c);
+            useBox.add(buttons, c);
 
             details.setOpaque(false);
             tsName.setFont(ConsoleFonts.mono(Font.PLAIN, UIManager.getFont("Label.font").getSize()));
@@ -837,12 +885,16 @@ final class PinoutConnectorPage extends JPanel {
                 case USED:
                     useValue.setText(pin.tuneUse);
                     useValue.setForeground(PinoutDrawing.themed("Console.Pinout.used", new Color(0x2563eb)));
-                    useHint.setText(assignment != null ? "Set in Tuning; change it there." : "Set in the tune.");
+                    useHint.setText(assigner != null ? "Change… gives the pin to another setting; Open in Tuning "
+                            + "shows this one's details."
+                            : assignment != null ? "Set in Tuning; change it there." : "Set in the tune.");
                     break;
                 case FREE:
                     useValue.setText("Free");
                     useValue.setForeground(UIManager.getColor("Label.foreground"));
-                    useHint.setText("Nothing in the tune uses this pin. In Tuning, choose \"" + pin.tsName
+                    useHint.setText(assigner != null ? "Nothing in the tune uses this pin. Assign… picks the "
+                            + "setting that should."
+                            : "Nothing in the tune uses this pin. In Tuning, choose \"" + pin.tsName
                             + "\" in a pin setting to use it.");
                     break;
                 default:
@@ -851,6 +903,13 @@ final class PinoutConnectorPage extends JPanel {
                     useHint.setText("Power or ground: wired, not set in the tune.");
             }
             openButton.setVisible(assignment != null);
+            boolean assignable = assigner != null && pin.use() != PinoutPin.Use.FIXED;
+            assignButton.setVisible(assignable);
+            assignButton.setText(pin.use() == PinoutPin.Use.USED ? "Change…" : "Assign…");
+            assignButton.setToolTipText("Choose the setting that uses " + pin.name);
+            // the main action is the primary button: Open for a used pin, Assign for a free one
+            assignButton.putClientProperty(FlatClientProperties.STYLE_CLASS,
+                    pin.use() == PinoutPin.Use.FREE ? "primary" : null);
             PinColors.PinType pinType = pin.type.type;
             type.setText(pinType.label);
             type.setIcon(new MarkerIcon(new Color[]{pinType.color()}, pinType == PinColors.PinType.UNTYPED, 10, null));

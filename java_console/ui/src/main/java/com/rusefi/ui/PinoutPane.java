@@ -104,6 +104,10 @@ public class PinoutPane {
     private final List<JToggleButton> connectorButtons = new ArrayList<>();
     /** Callback fired on double-click of a pin row that has a tune field currently assigned to it. Args: dialogKey, fieldKey. */
     private BiConsumer<String, String> navigateToTune;
+    /** Applies a pin assignment to the tune being edited (Tuning's); null while Pinout only shows pins. */
+    private TuneEditor tuneEditor;
+    /** Shows the pin picker; tests replace the modal dialog. */
+    Consumer<PinAssignPanel> assignDialogOpener = panel -> PinAssignPanel.showDialog(content, panel);
     /** Latest config image observed via uiContext.addConfigImageListener — reflects unburned Tune edits. Prefer over BinaryProtocol.getControllerConfiguration(). */
     private ConfigurationImage liveConfigImage;
     private PinoutDrawing.ColorMode colorMode = PinoutDrawing.ColorMode.TYPE;
@@ -443,6 +447,9 @@ public class PinoutPane {
         PinoutConnectorPage page = new PinoutConnectorPage(cd.title, cd.image, cd.pins, colorMode,
                 pin -> navigateToTune == null || pin.tsName.isEmpty() ? null : findPinAssignment(pin.tsName),
                 assignment -> navigateToTune.accept(assignment[1], assignment[0]));
+        if (tuneEditor != null) {
+            page.setAssigner(pin -> openAssign(page, pin));
+        }
         JTable table = page.table;
         // Double-click a row → jump to the tune field currently driving that pin, if any.
         table.addMouseListener(new MouseAdapter() {
@@ -540,6 +547,46 @@ public class PinoutPane {
 
     public void setNavigateToTune(BiConsumer<String, String> navigateToTune) {
         this.navigateToTune = navigateToTune;
+    }
+
+    /** Applies an edit to the tune being edited, as Tuning does; false when there is no tune to edit. */
+    public interface TuneEditor {
+        boolean apply(Consumer<ConfigurationImage> edit);
+    }
+
+    /** Lets Pinout assign pins: the pin card's Assign / Change and a click on a Free Tune use. */
+    public void setTuneEditor(TuneEditor tuneEditor) {
+        this.tuneEditor = tuneEditor;
+        for (PinoutConnectorPage page : activeConnectors) {
+            page.setAssigner(tuneEditor == null ? null : pin -> openAssign(page, pin));
+        }
+    }
+
+    /** Opens the picker of the setting that uses {@code pin}. */
+    void openAssign(PinoutConnectorPage page, PinoutPin pin) {
+        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+        ConfigurationImage ci = currentConfigImage();
+        if (tuneEditor == null || ini == null || ci == null || pin.tsName.isEmpty()) {
+            return;
+        }
+        List<PinAssignments.Candidate> candidates = PinAssignments.candidates(ini, ci, pin.tsName);
+        PinAssignPanel panel = new PinAssignPanel(pin, page.title, candidates, this::describePinChoice);
+        panel.setOnAssign(candidate -> applyPinEdit(
+                image -> PinAssignments.assign(ini, image, candidate.fieldKey, pin.tsName)));
+        panel.setOnUnassign(() -> applyPinEdit(image -> PinAssignments.unassign(ini, image, pin.tsName)));
+        assignDialogOpener.accept(panel);
+    }
+
+    private void applyPinEdit(Consumer<ConfigurationImage> edit) {
+        if (tuneEditor == null || !tuneEditor.apply(edit)) {
+            log.info("Pin assignment not applied: no tune to edit");
+        }
+    }
+
+    /** A pin choice as this board names it, e.g. "C12"; the choice itself when the pinout does not have it. */
+    private String describePinChoice(String tsName) {
+        PinoutLookup.Match match = findPin(tsName);
+        return match == null ? tsName : match.pin.name;
     }
 
     /**
