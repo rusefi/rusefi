@@ -22,8 +22,8 @@ import java.util.Map;
 
 /**
  * Assigning a pin from the Pinout tab: the reverse of choosing a pin in a Tuning pin selector. The
- * settings that can use a pin are the pin selectors ({@link PinoutLookup#isPinField}) whose choices
- * include the pin's expanded {@code ts_name}, so the INI already says which outputs, analog inputs or
+ * settings that can use a pin are the pin selectors ({@link PinoutLookup#isPinSetting}, analog inputs
+ * included) whose choices include the pin's expanded {@code ts_name}, so the INI already says which outputs, analog inputs or
  * switch inputs suit it. A pin has one function: assigning it sets every other setting on that pin to
  * NONE.
  */
@@ -135,7 +135,7 @@ final class PinAssignments {
             String key = entry.getKey();
             IniField field = fields.get(key);
             DialogModel dialog = dialogOf.get(key);
-            if (!(field instanceof EnumIniField) || !PinoutLookup.isPinField(key) || dialog == null
+            if (!(field instanceof EnumIniField) || !PinoutLookup.isPinSetting(key, field) || dialog == null
                 || !include.test((EnumIniField) field)) {
                 continue;
             }
@@ -393,7 +393,7 @@ final class PinAssignments {
 
     private static void addIfOn(Map<String, EnumIniField> result, String key, IniField field,
                                 ConfigurationImage image, String tsName) {
-        if (field instanceof EnumIniField && PinoutLookup.isPinField(key) && !result.containsKey(key)
+        if (field instanceof EnumIniField && PinoutLookup.isPinSetting(key, field) && !result.containsKey(key)
             && tsName.equals(currentPin(field, image))) {
             result.put(key, (EnumIniField) field);
         }
@@ -416,7 +416,7 @@ final class PinAssignments {
     private static void clear(IniFileModel ini, ConfigurationImage image, String tsName, String except) {
         for (Map.Entry<String, IniField> entry : ini.getAllIniFields().entrySet()) {
             IniField field = entry.getValue();
-            if (!(field instanceof EnumIniField) || !PinoutLookup.isPinField(entry.getKey())
+            if (!(field instanceof EnumIniField) || !PinoutLookup.isPinSetting(entry.getKey(), field)
                 || entry.getKey().equals(except) || !tsName.equals(currentPin(field, image))) {
                 continue;
             }

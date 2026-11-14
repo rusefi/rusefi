@@ -83,26 +83,23 @@ class PinoutAnalogTuneUseTest {
         }
     }
 
-    /**
-     * Reproduction: Assign, Swap and the Functions view still recognise pin settings by name only
-     * ({@code PinAssignments}), so the MAP input on D9 is invisible to them.
-     */
+    /** Assign, Swap and the Functions view see analog inputs too ({@code PinAssignments} uses isPinSetting). */
     @Test
-    void assignSwapAndFunctionsMissTheAnalogInput() throws Throwable {
+    void assignSwapAndFunctionsSeeTheAnalogInput() throws Throwable {
         IniFileModel ini = readIni();
         // fuel pump on B6, MAP sensor on D9
         ConfigurationImage image = new ConfigurationImage(new byte[]{1, 1});
 
-        // BUG: the MAP input is not offered for D9 in the Assign picker
-        assertTrue(PinAssignments.candidates(ini, image, D9_MAP).isEmpty());
-        // BUG: the Functions view lists only the output
-        assertEquals(Collections.singletonList("fuelPumpPin"), PinAssignments.settings(ini, image).stream()
-            .map(c -> c.fieldKey).collect(java.util.stream.Collectors.toList()));
-        // BUG: a swap or unassign of D9 does not see the MAP input on it
-        assertTrue(PinAssignments.userLabels(ini, image, D9_MAP).isEmpty());
+        assertEquals(Collections.singletonList("map_sensor_hwChannel"), PinAssignments.candidates(ini, image, D9_MAP)
+            .stream().map(c -> c.fieldKey).collect(java.util.stream.Collectors.toList()),
+            "the MAP input is offered for D9 in the Assign picker");
+        assertEquals(Arrays.asList("fuelPumpPin", "map_sensor_hwChannel"), PinAssignments.settings(ini, image).stream()
+            .map(c -> c.fieldKey).collect(java.util.stream.Collectors.toList()), "the Functions view lists both");
+        assertEquals(Collections.singletonList("MAP ADC input"), PinAssignments.userLabels(ini, image, D9_MAP),
+            "a swap of D9 moves the MAP input");
         PinAssignments.unassign(ini, image, D9_MAP);
-        assertEquals(D9_MAP, PinoutLookup.pinChoice(com.opensr5.ConfigurationImageGetterSetter.getStringValue(
-            ini.getAllIniFields().get("map_sensor_hwChannel"), image)), "Unassign leaves the MAP input on D9");
+        assertNull(PinoutLookup.pinChoice(com.opensr5.ConfigurationImageGetterSetter.getStringValue(
+            ini.getAllIniFields().get("map_sensor_hwChannel"), image)), "Unassign frees D9");
         // control: the output is seen everywhere
         assertEquals(Collections.singletonList("Fuel Pump output"), PinAssignments.userLabels(ini, image, B6));
     }
