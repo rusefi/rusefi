@@ -4,7 +4,12 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.ExpressionEvaluator;
+import com.opensr5.ini.GroupMenuModel;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.MenuItem;
+import com.opensr5.ini.MenuModel;
+import com.opensr5.ini.PanelModel;
+import com.opensr5.ini.SubMenuModel;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
 
@@ -44,6 +49,16 @@ final class PinAssignments {
         final boolean hidden;
         /** Whether a change takes effect only after the ECU restarts ({@code requiresPowerCycle} in the INI). */
         final boolean needsRestart;
+        /**
+         * While {@link #hidden}: the labels of the settings its false conditions test (e.g. "Enable injection",
+         * "Cylinders count"); empty otherwise, or when the conditions name no setting.
+         */
+        final List<String> hiddenBy;
+        /**
+         * While {@link #hidden}: where to turn it on, as {fieldKey, dialogKey} of the first such setting Tuning
+         * shows; null to open this setting itself.
+         */
+        final String[] turnOnIn;
 
         Candidate(String fieldKey, String label, String section, String dialogKey, String current, boolean hidden) {
             this(fieldKey, label, section, dialogKey, current, hidden, false);
@@ -51,6 +66,11 @@ final class PinAssignments {
 
         Candidate(String fieldKey, String label, String section, String dialogKey, String current, boolean hidden,
                   boolean needsRestart) {
+            this(fieldKey, label, section, dialogKey, current, hidden, needsRestart, Collections.emptyList(), null);
+        }
+
+        Candidate(String fieldKey, String label, String section, String dialogKey, String current, boolean hidden,
+                  boolean needsRestart, List<String> hiddenBy, String[] turnOnIn) {
             this.fieldKey = fieldKey;
             this.label = label;
             this.section = section;
@@ -58,6 +78,13 @@ final class PinAssignments {
             this.current = current;
             this.hidden = hidden;
             this.needsRestart = needsRestart;
+            this.hiddenBy = hiddenBy;
+            this.turnOnIn = turnOnIn;
+        }
+
+        /** Where "Assign and open in Tuning" goes: {fieldKey, dialogKey}. */
+        String[] openTarget() {
+            return turnOnIn != null ? turnOnIn : new String[]{fieldKey, dialogKey};
         }
 
         boolean uses(String tsName) {
@@ -101,6 +128,7 @@ final class PinAssignments {
     private static List<Candidate> settings(IniFileModel ini, ConfigurationImage image,
                                             java.util.function.Predicate<EnumIniField> include) {
         Map<String, DialogModel> dialogOf = dialogsByField(ini);
+        Conditions conditions = new Conditions(ini, image, dialogOf);
         Map<String, IniField> fields = ini.getAllIniFields();
         List<Candidate> result = new ArrayList<>();
         for (Map.Entry<String, DialogModel.Field> entry : ini.getFieldsInUiOrder().entrySet()) {
@@ -115,11 +143,116 @@ final class PinAssignments {
             String label = meta.getUiName() == null || meta.getUiName().isEmpty() ? key : meta.getUiName();
             String section = dialog.getUiName() == null || dialog.getUiName().isEmpty() ? dialog.getKey()
                 : dialog.getUiName();
+            List<String> off = conditions.offFor(meta, dialog);
             result.add(new Candidate(key, label, section, dialog.getKey(), currentPin(field, image),
-                isOff(meta.getVisibleExpression(), ini, image) || isOff(meta.getEnableExpression(), ini, image),
-                ini.getRequiresPowerCycle().contains(key)));
+                !off.isEmpty(), ini.getRequiresPowerCycle().contains(key),
+                conditions.labelsOf(off, key), conditions.turnOnIn(off, key)));
         }
         return result;
+    }
+
+    /**
+     * What hides or disables a setting in Tuning: its own enable/visible conditions, those of every panel
+     * embedding its dialog, and those of the menu entry opening that page. The settings a false condition tests
+     * explain why and say where to turn the setting on.
+     */
+    private static final class Conditions {
+        private final IniFileModel ini;
+        private final ConfigurationImage image;
+        private final Map<String, DialogModel> dialogOf;
+        /** Dialog key to the panel embedding it, and that panel's dialog key. */
+        private final Map<String, Object[]> embeddedIn = new HashMap<>();
+        /** Dialog key to the menu entry opening it. */
+        private final Map<String, SubMenuModel> menuEntries = new HashMap<>();
+
+        Conditions(IniFileModel ini, ConfigurationImage image, Map<String, DialogModel> dialogOf) {
+            this.ini = ini;
+            this.image = image;
+            this.dialogOf = dialogOf;
+            for (DialogModel dialog : ini.getDialogs().values()) {
+                for (PanelModel panel : dialog.getPanels()) {
+                    embeddedIn.putIfAbsent(panel.getPanelName(), new Object[]{panel, dialog.getKey()});
+                }
+            }
+            for (MenuModel menu : ini.getMenus()) {
+                collectMenuEntries(menu.getItems());
+            }
+        }
+
+        private void collectMenuEntries(List<MenuItem> items) {
+            for (MenuItem item : items) {
+                if (item instanceof SubMenuModel) {
+                    menuEntries.putIfAbsent(((SubMenuModel) item).getKey(), (SubMenuModel) item);
+                } else if (item instanceof GroupMenuModel) {
+                    collectMenuEntries(((GroupMenuModel) item).getItems());
+                }
+            }
+        }
+
+        /** The false conditions on the way from the menu to the field. */
+        List<String> offFor(DialogModel.Field field, DialogModel dialog) {
+            List<String> off = new ArrayList<>();
+            addIfOff(off, field.getEnableExpression());
+            addIfOff(off, field.getVisibleExpression());
+            java.util.Set<String> seen = new java.util.HashSet<>();
+            String key = dialog.getKey();
+            while (key != null && seen.add(key)) {
+                SubMenuModel entry = menuEntries.get(key);
+                if (entry != null) {
+                    // the page Tuning opens: its menu entry is the last condition
+                    addIfOff(off, entry.getEnableExpression());
+                    addIfOff(off, entry.getVisibleExpression());
+                    break;
+                }
+                Object[] parent = embeddedIn.get(key);
+                if (parent == null) {
+                    break;
+                }
+                PanelModel panel = (PanelModel) parent[0];
+                addIfOff(off, panel.getEnableExpression());
+                addIfOff(off, panel.getVisibleExpression());
+                key = (String) parent[1];
+            }
+            return off;
+        }
+
+        private void addIfOff(List<String> off, String expression) {
+            if (isOff(expression, ini, image)) {
+                off.add(expression);
+            }
+        }
+
+        /** The settings the conditions test, in order, without the setting itself. */
+        private List<String> settingKeys(List<String> off, String self) {
+            java.util.Set<String> keys = new java.util.LinkedHashSet<>();
+            for (String expression : off) {
+                for (String variable : ExpressionEvaluator.extractVariables(expression)) {
+                    if (!variable.equalsIgnoreCase(self) && ini.findIniField(variable).isPresent()) {
+                        keys.add(variable);
+                    }
+                }
+            }
+            return new ArrayList<>(keys);
+        }
+
+        List<String> labelsOf(List<String> off, String self) {
+            List<String> labels = new ArrayList<>();
+            for (String key : settingKeys(off, self)) {
+                labels.add(label(ini, key));
+            }
+            return labels;
+        }
+
+        /** The first tested setting a dialog shows, as {fieldKey, dialogKey}; null when none. */
+        String[] turnOnIn(List<String> off, String self) {
+            for (String key : settingKeys(off, self)) {
+                DialogModel dialog = dialogOf.get(key);
+                if (dialog != null) {
+                    return new String[]{key, dialog.getKey()};
+                }
+            }
+            return null;
+        }
     }
 
     /** The candidates using {@code tsName} now. */
@@ -318,8 +451,13 @@ final class PinAssignments {
         if (expression == null || expression.trim().isEmpty()) {
             return false;
         }
-        Boolean on = ExpressionEvaluator.evaluateBooleanExpression(expression, ini, image);
-        return on != null && !on;
+        try {
+            Boolean on = ExpressionEvaluator.evaluateBooleanExpression(expression, ini, image);
+            return on != null && !on;
+        } catch (RuntimeException e) {
+            // a condition the console cannot evaluate does not hide the setting, as when it gives no answer
+            return false;
+        }
     }
 
     /** Each field's innermost dialog: the dialog listing it as a field. */

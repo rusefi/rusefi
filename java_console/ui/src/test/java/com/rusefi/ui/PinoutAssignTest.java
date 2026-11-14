@@ -262,7 +262,8 @@ class PinoutAssignTest {
 
         assertTrue(panel.select("hiddenPin"));
         assertTrue(panel.effect.getText().startsWith("Hidden output will use B6."));
-        assertTrue(panel.effect.getText().contains("turn its feature on"));
+        assertTrue(panel.effect.getText().contains("assigning a pin does not turn it on"));
+        assertTrue(panel.assignAndOpenButton.isVisible(), "a hidden setting offers to open Tuning");
 
         // titles are not selectable: moving down onto the Fan title lands on the setting below it
         assertTrue(panel.select("fuelPumpPin"));

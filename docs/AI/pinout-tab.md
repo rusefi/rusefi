@@ -138,9 +138,17 @@ Fixed pins have no button. Its list comes from
 every pin selector shown in a Tuning dialog whose enum choices include the pin's expanded
 `ts_name`, grouped by that dialog's title in Tuning order. The INI's choice lists therefore
 decide which outputs, analog inputs or switch inputs suit a pin, and a selector no dialog shows
-is left out. Each row shows where that setting is now. A setting whose field-level enable or
-visible expression is currently false is marked "(off)", because assigning a pin does not turn
-its feature on.
+is left out. Each row shows where that setting is now.
+
+A setting Tuning currently hides or disables is marked "(off)", because assigning a pin does not
+turn its feature on. `PinAssignments.Conditions` evaluates the expressions on the way to the
+field: the field's own enable/visible expressions, those of each `panel =` line embedding its
+dialog, and those of the `subMenu` entry that opens the page. Any that is false hides the
+setting; one the console cannot evaluate does not. `ExpressionEvaluator.extractVariables` names
+the settings the false expressions test ("because of Enable injection, Cylinders count"). The
+first of them that a dialog shows is where **Assign and open in Tuning** goes after assigning; if
+none is shown, it opens the setting itself. The button appears only for such settings. The
+Functions view gives the same reason in its tooltip.
 
 A pin has one function: **Assign** sets the chosen setting to the pin and every other pin
 selector on that pin to `NONE`. **Unassign** clears them all. A selector without a `NONE`
