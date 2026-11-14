@@ -78,6 +78,8 @@ final class PinSwapPanel extends JPanel {
     final DefaultListModel<Object> model = new DefaultListModel<>();
     final JList<Object> list = new JList<>(model);
     final JTextArea effect = new JTextArea(3, 20);
+    /** Shown when the Lua script reads pins directly ({@link LuaReadPins}); arrives after the panel opens. */
+    final JTextArea luaNote = PinAssignPanel.noteArea();
     final JButton swapButton = new JButton("Swap");
     final JButton cancelButton = new JButton("Cancel");
 
@@ -108,6 +110,11 @@ final class PinSwapPanel extends JPanel {
 
     void setOnClose(Runnable onClose) {
         this.onClose = onClose;
+    }
+
+    /** The tune's Lua script, once read; null when unknown. Warns when it reads pins directly. */
+    void setLuaScript(String script) {
+        PinAssignPanel.showLuaNote(luaNote, LuaReadPins.note(script, source.name + " or the pin you swap it with"));
     }
 
     // ---- building
@@ -200,6 +207,7 @@ final class PinSwapPanel extends JPanel {
         JPanel text = new JPanel(new BorderLayout(0, 6));
         text.setOpaque(false);
         text.add(effect, BorderLayout.NORTH);
+        text.add(luaNote, BorderLayout.CENTER);
         text.add(note, BorderLayout.SOUTH);
         JPanel footer = new JPanel(new BorderLayout(0, 10));
         footer.setOpaque(false);

@@ -7,6 +7,8 @@ import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
+import com.opensr5.ini.field.StringIniField;
+import com.rusefi.ui.lua.LuaScriptPanel;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.FileUtil;
 import com.rusefi.core.SignatureHelper;
@@ -636,6 +638,44 @@ public class PinoutPane {
     /** Shows the swap picker; tests replace the modal dialog. */
     Consumer<PinSwapPanel> swapDialogOpener = panel -> PinSwapPanel.showDialog(content, panel);
 
+    /**
+     * Hands the tune's Lua script to the callback on the EDT, for the pickers' readPin note; never when it cannot
+     * be read. Tests supply a script.
+     */
+    Consumer<Consumer<String>> luaScriptSource = this::readLuaScript;
+
+    private void readLuaScript(Consumer<String> onScript) {
+        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+        StringIniField field = ini == null ? null : ini.findIniField("luaScript")
+                .filter(StringIniField.class::isInstance).map(StringIniField.class::cast).orElse(null);
+        if (field == null) {
+            return;
+        }
+        if (field.getPageIndex() == 0) {
+            // old firmware: the script is in the tune image, also offline
+            ConfigurationImage ci = currentConfigImage();
+            if (ci != null) {
+                onScript.accept(LuaScriptPanel.scriptFrom(ci, field));
+            }
+            return;
+        }
+        // its own page: read from the ECU on the communication thread, then add the note to the open picker
+        BinaryProtocol bp = uiContext.getBinaryProtocol();
+        if (bp == null) {
+            return;
+        }
+        uiContext.getLinkManager().submit(() -> {
+            try {
+                String script = LuaScriptPanel.readScript(bp, field);
+                if (script != null) {
+                    SwingUtilities.invokeLater(() -> onScript.accept(script));
+                }
+            } catch (RuntimeException e) {
+                log.warn("Lua script not read for the pin picker: " + e);
+            }
+        });
+    }
+
     /** Opens the picker of the pin to swap {@code pin} with: the board's other pins the tune can set. */
     void openSwap(PinoutConnectorPage page, PinoutPin pin) {
         IniFileModel ini = uiContext.iniFileState.getIniFileModel();
@@ -663,6 +703,7 @@ public class PinoutPane {
         PinSwapPanel panel = new PinSwapPanel(pin, page.title, PinAssignments.userLabels(ini, ci, pin.tsName), targets);
         panel.setOnSwap(target -> applyPinEdit(
                 image -> PinAssignments.swap(ini, image, pin.tsName, target.pin.tsName)));
+        luaScriptSource.accept(panel::setLuaScript);
         swapDialogOpener.accept(panel);
     }
 
@@ -683,6 +724,7 @@ public class PinoutPane {
                 navigateToTune.accept(target[1], target[0]);
             }
         });
+        luaScriptSource.accept(panel::setLuaScript);
         assignDialogOpener.accept(panel);
     }
 

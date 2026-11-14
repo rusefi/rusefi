@@ -52,6 +52,8 @@ final class PinAssignPanel extends JPanel {
     final DefaultListModel<Object> model = new DefaultListModel<>();
     final JList<Object> list = new JList<>(model);
     final JTextArea effect = new JTextArea(3, 20);
+    /** Shown when the Lua script reads pins directly ({@link LuaReadPins}); arrives after the panel opens. */
+    final JTextArea luaNote = noteArea();
     final JButton assignButton = new JButton("Assign");
     final JButton unassignButton = new JButton("Unassign");
     /** For a setting Tuning hides: assigns, then opens Tuning where its feature is turned on. */
@@ -107,6 +109,31 @@ final class PinAssignPanel extends JPanel {
 
     void setOnClose(Runnable onClose) {
         this.onClose = onClose;
+    }
+
+    /** The tune's Lua script, once read; null when unknown. Warns when it reads pins directly. */
+    void setLuaScript(String script) {
+        showLuaNote(luaNote, LuaReadPins.note(script, pinName));
+    }
+
+    /** A muted, wrapping note, hidden while empty. */
+    static JTextArea noteArea() {
+        JTextArea area = new JTextArea();
+        area.setLineWrap(true);
+        area.setWrapStyleWord(true);
+        area.setEditable(false);
+        area.setFocusable(false);
+        area.setOpaque(false);
+        area.setBorder(BorderFactory.createEmptyBorder());
+        area.setFont(UIManager.getFont("Label.font"));
+        area.setVisible(false);
+        return muted(area);
+    }
+
+    static void showLuaNote(JTextArea area, String text) {
+        area.setText(text);
+        area.setVisible(!text.isEmpty());
+        area.revalidate();
     }
 
     // ---- building
@@ -219,6 +246,7 @@ final class PinAssignPanel extends JPanel {
         JPanel text = new JPanel(new BorderLayout(0, 6));
         text.setOpaque(false);
         text.add(effect, BorderLayout.NORTH);
+        text.add(luaNote, BorderLayout.CENTER);
         text.add(note, BorderLayout.SOUTH);
         footer.add(text, BorderLayout.NORTH);
         footer.add(buttons, BorderLayout.SOUTH);
