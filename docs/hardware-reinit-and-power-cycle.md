@@ -118,6 +118,8 @@ reboot. That set is what `requiresPowerCycle` communicates to the tuner.
 cylindersCount`). TunerStudio uses them to warn the user that the change takes effect
 only after an ECU restart. Board config extensions
 (`@@BOARD_CONSTANTS_EXTENSIONS_FROM_FILE@@`) can append board-specific entries.
+The rusEFI console reads the same lines (`IniFileModel.getRequiresPowerCycle()`). Its Pinout
+tab flags such settings when assigning or swapping pins and in its Functions list.
 
 Note this is *advisory UI metadata only* - the firmware does not enforce it. The
 firmware-side truth is whether the subsystem participates in

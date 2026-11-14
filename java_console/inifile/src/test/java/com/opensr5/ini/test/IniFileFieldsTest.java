@@ -305,4 +305,23 @@ public class IniFileFieldsTest {
         PcVariableArrayIniField noDefault = (PcVariableArrayIniField) model.findIniField("noDefault").get();
         assertEquals(0.0, ConfigurationImageGetterSetter.getArrayValues(noDefault, image)[1][0]);
     }
+
+    @Test
+    public void testRequiresPowerCycleListsRebootOnlySettings() {
+        // as generated into every rusEFI .ini, beside other [ConstantsExtensions] entries
+        String string = "page = 1\n" +
+            "[ConstantsExtensions]\n" +
+            "  requiresPowerCycle = gppwm1_pin\n" +
+            "  requiresPowerCycle = startStopButtonPin\n" +
+            "  requiresPowerCycle\n" +
+            "  readOnly = gppwm1_pin\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = IniFileReaderTest.readLines(lines);
+
+        assertEquals(2, model.getRequiresPowerCycle().size(), "a line without a name is ignored");
+        assertTrue(model.getRequiresPowerCycle().contains("gppwm1_pin"));
+        assertTrue(model.getRequiresPowerCycle().contains("StartStopButtonPin"), "names compare case-insensitively");
+        assertFalse(model.getRequiresPowerCycle().contains("fuelPumpPin"));
+    }
 }

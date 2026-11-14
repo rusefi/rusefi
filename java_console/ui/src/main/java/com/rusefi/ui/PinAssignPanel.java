@@ -180,7 +180,8 @@ final class PinAssignPanel extends JPanel {
 
         assignButton.putClientProperty(FlatClientProperties.STYLE_CLASS, "primary");
         assignButton.addActionListener(e -> assign());
-        unassignButton.setToolTipText("Set every setting using " + pinName + " to None");
+        unassignButton.setToolTipText("Set every setting using " + pinName + " to None."
+            + restartNote(PinAssignments.restartLabels(users)));
         unassignButton.setVisible(!users.isEmpty());
         unassignButton.addActionListener(e -> {
             onUnassign.run();
@@ -301,7 +302,20 @@ final class PinAssignPanel extends JPanel {
         if (candidate.hidden) {
             text.append(" Tuning hides or disables this setting at the moment: turn its feature on there.");
         }
+        // clearing a setting changes it as much as setting it
+        List<PinAssignments.Candidate> changed = new ArrayList<>(users);
+        changed.add(0, candidate);
+        text.append(restartNote(PinAssignments.restartLabels(changed)));
         return text.toString();
+    }
+
+    /**
+     * " Takes effect after you burn and restart the ECU: Fan output." for settings the firmware applies only at
+     * start-up ({@code requiresPowerCycle}); empty when none.
+     */
+    static String restartNote(List<String> labels) {
+        return labels.isEmpty() ? "" : " Takes effect after you burn and restart the ECU: " + String.join(", ", labels)
+            + ".";
     }
 
     private void assign() {
@@ -431,7 +445,7 @@ final class PinAssignPanel extends JPanel {
             row.setBackground(background);
             name.setFont(l.getFont());
             name.setForeground(foreground);
-            name.setText(candidate.label + (candidate.hidden ? "  (off)" : ""));
+            name.setText(PinoutFunctionsPage.settingText(candidate));
             row.setToolTipText(candidate.hidden ? "Tuning hides or disables this setting at the moment" : null);
             status.setFont(l.getFont());
             if (candidate.uses(tsName)) {

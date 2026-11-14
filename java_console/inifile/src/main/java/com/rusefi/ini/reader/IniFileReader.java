@@ -45,7 +45,8 @@ public class IniFileReader {
                 veAnalyzeMaps,
                 lambdaTargetTables,
                 veAnalyzeFilters,
-                eventTriggers);
+                eventTriggers,
+                requiresPowerCycle);
     }
     private static final Logging log = Logging.getLogging(IniFileReader.class);
     public static final String RUSEFI_INI_PREFIX = "rusefi";
@@ -58,6 +59,8 @@ public class IniFileReader {
     private static final String FIELD_TYPE_BITS = "bits";
 
     private final Map<String, List<String>> defines = new TreeMap<>();
+    /** [ConstantsExtensions] {@code requiresPowerCycle = name}: settings applied only after a restart. */
+    private final List<String> requiresPowerCycle = new ArrayList<>();
 
     private String dialogId;
     private String dialogUiName;
@@ -315,6 +318,11 @@ public class IniFileReader {
             switch (first) {
                 case "defaultValue":
                     handleDefaultValue(list);
+                    break;
+                case "requiresPowerCycle":
+                    if (list.size() >= 2) {
+                        requiresPowerCycle.add(list.get(1));
+                    }
                     break;
                 case "field":
                     handleField(list, false);

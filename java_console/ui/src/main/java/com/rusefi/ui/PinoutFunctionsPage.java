@@ -366,6 +366,11 @@ final class PinoutFunctionsPage extends JPanel {
         pinSetter.accept(row.fieldKey, choice.tsName);
     }
 
+    /** The Setting column: the label, "(off)" while Tuning hides it, "(restart)" when only a restart applies it. */
+    static String settingText(PinAssignments.Candidate setting) {
+        return setting.label + (setting.hidden ? "  (off)" : "") + (setting.needsRestart ? "  (restart)" : "");
+    }
+
     // ---- table parts
 
     /** The rows: pin settings in Tuning order; only the Pin column is editable, and only with a pin setter. */
@@ -492,10 +497,15 @@ final class PinoutFunctionsPage extends JPanel {
             setToolTipText(null);
             switch (t.convertColumnIndexToModel(column)) {
                 case 0:
+                    setText(settingText(setting));
+                    List<String> notes = new ArrayList<>();
                     if (setting.hidden) {
-                        setText(setting.label + "  (off)");
-                        setToolTipText("Tuning hides or disables this setting at the moment");
+                        notes.add("Tuning hides or disables this setting at the moment");
                     }
+                    if (setting.needsRestart) {
+                        notes.add("A change takes effect after you burn and restart the ECU");
+                    }
+                    setToolTipText(notes.isEmpty() ? null : String.join(". ", notes));
                     break;
                 case 1:
                     setForeground(muted);

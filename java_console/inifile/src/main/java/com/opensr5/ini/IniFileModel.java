@@ -5,9 +5,11 @@ import com.rusefi.config.Field;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteOrder;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public interface IniFileModel {
     String getSignature();
@@ -123,4 +125,12 @@ public interface IniFileModel {
     List<VeAnalyzeFilter> getVeAnalyzeFilters();
 
     List<EventTriggerModel> getEventTriggers();
+
+    /**
+     * The settings that only take effect after the ECU restarts: {@code requiresPowerCycle = name} in
+     * [ConstantsExtensions]. Names compare case-insensitively.
+     */
+    default Set<String> getRequiresPowerCycle() {
+        return Collections.emptySet();
+    }
 }

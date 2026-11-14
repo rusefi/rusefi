@@ -49,12 +49,19 @@ final class PinSwapPanel extends JPanel {
         final List<String> users;
         /** Why it cannot swap, or null when it can. */
         final String problem;
+        /** Labels of the settings this swap changes that take effect only after the ECU restarts. */
+        final List<String> needRestart;
 
         Target(PinoutPin pin, String connector, List<String> users, String problem) {
+            this(pin, connector, users, problem, java.util.Collections.emptyList());
+        }
+
+        Target(PinoutPin pin, String connector, List<String> users, String problem, List<String> needRestart) {
             this.pin = pin;
             this.connector = connector;
             this.users = users;
             this.problem = problem;
+            this.needRestart = needRestart;
         }
 
         boolean canSwap() {
@@ -304,7 +311,7 @@ final class PinSwapPanel extends JPanel {
             // the pin whose settings moved away is left with none
             text += " " + (sourceUsers.isEmpty() ? target.pin.name : source.name) + " becomes free.";
         }
-        return text;
+        return text + PinAssignPanel.restartNote(target.needRestart);
     }
 
     private void swap() {

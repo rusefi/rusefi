@@ -655,7 +655,9 @@ public class PinoutPane {
                     continue;
                 }
                 targets.add(new PinSwapPanel.Target(candidate, other.title,
-                        PinAssignments.userLabels(ini, ci, candidate.tsName), problem));
+                        PinAssignments.userLabels(ini, ci, candidate.tsName), problem,
+                        problem != null ? Collections.emptyList()
+                                : PinAssignments.swapRestartLabels(ini, ci, pin.tsName, candidate.tsName)));
             }
         }
         PinSwapPanel panel = new PinSwapPanel(pin, page.title, PinAssignments.userLabels(ini, ci, pin.tsName), targets);
