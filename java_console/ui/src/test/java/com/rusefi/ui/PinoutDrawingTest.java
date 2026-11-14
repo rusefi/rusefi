@@ -243,10 +243,13 @@ class PinoutDrawingTest {
         return components(page.legend, JToggleButton.class);
     }
 
-    /** The connector switch, then Color by. */
+    /** The connector switch, then Color by; not the Pins | Functions switch before them (PinoutAssignTest). */
     private static List<JToggleButton> toolbarToggles(PinoutPane pane) {
         BorderLayout layout = (BorderLayout) pane.getContent().getLayout();
-        return components(layout.getLayoutComponent(BorderLayout.NORTH), JToggleButton.class);
+        List<JToggleButton> toggles = components(layout.getLayoutComponent(BorderLayout.NORTH), JToggleButton.class);
+        toggles.remove(pane.pinsViewButton);
+        toggles.remove(pane.functionsViewButton);
+        return toggles;
     }
 
     private static List<String> texts(List<? extends AbstractButton> buttons) {

@@ -102,6 +102,17 @@ public class PinoutPane {
     /** The connector switch in the toolbar; rebuilt for each board. */
     private final JPanel connectorSwitchHolder = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
     private final List<JToggleButton> connectorButtons = new ArrayList<>();
+    /** The board-wide list of pin settings, beside the connector pages. */
+    final PinoutFunctionsPage functionsPage = new PinoutFunctionsPage();
+    /** Pins (the connector pages) | Functions; shown while a board is. */
+    final JToggleButton pinsViewButton = SegmentedControl.segment("Pins");
+    final JToggleButton functionsViewButton = SegmentedControl.segment("Functions");
+    private final JPanel viewSwitchHolder = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+    private final CardLayout viewCards = new CardLayout();
+    /** The connector pages and the Functions view; null while no board is shown. */
+    private JPanel views;
+    /** Kept across boards and reconnects. */
+    private boolean showingFunctions;
     /** Callback fired on double-click of a pin row that has a tune field currently assigned to it. Args: dialogKey, fieldKey. */
     private BiConsumer<String, String> navigateToTune;
     /** Applies a pin assignment to the tune being edited (Tuning's); null while Pinout only shows pins. */
@@ -175,6 +186,18 @@ public class PinoutPane {
         JPanel left = new JPanel(new WrapLayout(FlowLayout.LEFT, JoinedButtons.ROW_GAP + 4, 0));
         left.setOpaque(false);
         left.add(statusLabel);
+        ButtonGroup viewGroup = new ButtonGroup();
+        viewGroup.add(pinsViewButton);
+        viewGroup.add(functionsViewButton);
+        pinsViewButton.setSelected(true);
+        pinsViewButton.setToolTipText("The connectors and their pins");
+        functionsViewButton.setToolTipText("Every pin setting of the tune with its pin, in one list");
+        pinsViewButton.addActionListener(e -> showFunctions(false));
+        functionsViewButton.addActionListener(e -> showFunctions(true));
+        viewSwitchHolder.setOpaque(false);
+        viewSwitchHolder.add(new SegmentedControl(pinsViewButton, functionsViewButton));
+        viewSwitchHolder.setVisible(false);
+        left.add(viewSwitchHolder);
         connectorSwitchHolder.setOpaque(false);
         left.add(connectorSwitchHolder);
         search.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Find a pin, function or tune use");
@@ -248,6 +271,7 @@ public class PinoutPane {
      */
     void applySearch() {
         String query = search.getText();
+        functionsPage.setQuery(query);
         boolean searching = !query.trim().isEmpty();
         int firstWithMatches = -1;
         int[] matches = new int[activeConnectors.size()];
@@ -271,6 +295,12 @@ public class PinoutPane {
 
     /** Enter in the search: selects the first matching pin of the connector shown. */
     void selectFirstMatch() {
+        if (showingFunctions) {
+            if (functionsPage.table.getRowCount() > 0) {
+                functionsPage.table.setRowSelectionInterval(0, 0);
+            }
+            return;
+        }
         int shown = selectedConnector();
         if (shown < 0) return;
         PinoutConnectorPage page = activeConnectors.get(shown);
@@ -295,6 +325,8 @@ public class PinoutPane {
             c = note;
             connectorSwitchHolder.removeAll();
             connectorSwitchHolder.revalidate();
+            views = null;
+            viewSwitchHolder.setVisible(false);
         }
         centerPanel = c;
         content.add(c, BorderLayout.CENTER);
@@ -415,14 +447,43 @@ public class PinoutPane {
             connectorButtons.add(button);
         }
         connectorPages = pages;
-        setCenterPanel(pages);
+        functionsPage.setBoard(activeConnectors);
+        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+        functionsPage.setTune(ini, currentConfigImage());
+        JPanel viewPanel = new JPanel(viewCards);
+        viewPanel.setOpaque(false);
+        viewPanel.add(pages, "pins");
+        viewPanel.add(functionsPage, "functions");
+        setCenterPanel(viewPanel);
+        views = viewPanel;
+        viewSwitchHolder.setVisible(true);
         connectorSwitchHolder.removeAll();
         if (connectors.size() > 1) {
             connectorSwitchHolder.add(new SegmentedControl(connectorButtons.toArray(new JToggleButton[0])));
         }
         connectorSwitchHolder.revalidate();
         selectConnector(0);
+        showFunctions(showingFunctions);
         applySearch();
+    }
+
+    /** Shows the Functions view, or the connector pages with their switch. */
+    void showFunctions(boolean functions) {
+        showingFunctions = functions;
+        (functions ? functionsViewButton : pinsViewButton).setSelected(true);
+        connectorSwitchHolder.setVisible(!functions);
+        search.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT,
+                functions ? "Find a setting, pin or function" : "Find a pin, function or tune use");
+        search.setToolTipText(functions ? "Narrows the list · Enter selects the first match"
+                : "Searches every connector · Enter selects the first match");
+        if (views != null) {
+            viewCards.show(views, functions ? "functions" : "pins");
+        }
+        search.repaint();
+    }
+
+    boolean isShowingFunctions() {
+        return showingFunctions;
     }
 
     /** Shows a connector's page and marks it in the switch. */
@@ -542,12 +603,14 @@ public class PinoutPane {
         for (PinoutConnectorPage page : activeConnectors) {
             page.setTuneUse(tuneUseMap);
         }
+        functionsPage.setTune(ini, ci);
         // tune use is searchable
         applySearch();
     }
 
     public void setNavigateToTune(BiConsumer<String, String> navigateToTune) {
         this.navigateToTune = navigateToTune;
+        functionsPage.setOpenInTuning(navigateToTune);
     }
 
     /** Applies an edit to the tune being edited, as Tuning does; false when there is no tune to edit. */
@@ -562,6 +625,12 @@ public class PinoutPane {
             page.setAssigner(tuneEditor == null ? null : pin -> openAssign(page, pin));
             page.setSwapper(tuneEditor == null ? null : pin -> openSwap(page, pin));
         }
+        functionsPage.setPinSetter(tuneEditor == null ? null : (fieldKey, tsName) -> {
+            IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+            if (ini != null) {
+                applyPinEdit(image -> PinAssignments.setPin(ini, image, fieldKey, tsName));
+            }
+        });
     }
 
     /** Shows the swap picker; tests replace the modal dialog. */
@@ -631,6 +700,8 @@ public class PinoutPane {
         PinoutLookup.Match match = findPin(enumValue);
         if (match == null) return;
         PinoutConnectorPage page = activeConnectors.get(match.connector);
+        // the pin is shown on its connector, not in the Functions list
+        showFunctions(false);
         // the pin must be listed: drop a search, chip or filter that hides it
         search.setText("");
         page.showAll();
