@@ -11,6 +11,7 @@ import com.opensr5.ini.field.IniField;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +24,8 @@ import java.util.Map;
  */
 final class PinAssignments {
     private static final String NONE = "NONE";
+    /** {@link #swapProblem} for two pins nothing uses: there is nothing to swap. */
+    static final String BOTH_FREE = "both free";
 
     private PinAssignments() {
     }
@@ -117,6 +120,87 @@ final class PinAssignments {
     /** Sets every pin setting using {@code tsName} to NONE. */
     static void unassign(IniFileModel ini, ConfigurationImage image, String tsName) {
         clear(ini, image, tsName, null);
+    }
+
+    /**
+     * Why pins {@code a} and {@code b} cannot swap settings, or null when they can: every setting on one must
+     * be able to choose the other, and at least one of them must be used.
+     */
+    static String swapProblem(IniFileModel ini, ConfigurationImage image, String a, String b) {
+        if (a.equals(b)) {
+            return "same pin";
+        }
+        Map<String, EnumIniField> onA = settingsOn(ini, image, a);
+        Map<String, EnumIniField> onB = settingsOn(ini, image, b);
+        if (onA.isEmpty() && onB.isEmpty()) {
+            return BOTH_FREE;
+        }
+        String problem = firstUnable(ini, onA, b);
+        return problem != null ? problem : firstUnable(ini, onB, a);
+    }
+
+    /** The UI labels of the pin settings using {@code tsName} now, in Tuning order where shown. */
+    static List<String> userLabels(IniFileModel ini, ConfigurationImage image, String tsName) {
+        List<String> labels = new ArrayList<>();
+        for (String key : settingsOn(ini, image, tsName).keySet()) {
+            labels.add(label(ini, key));
+        }
+        return labels;
+    }
+
+    /**
+     * Moves every setting on {@code a} to {@code b} and every setting on {@code b} to {@code a}.
+     *
+     * @throws IllegalArgumentException when {@link #swapProblem} reports one; the image is then unchanged
+     */
+    static void swap(IniFileModel ini, ConfigurationImage image, String a, String b) {
+        String problem = swapProblem(ini, image, a, b);
+        if (problem != null) {
+            throw new IllegalArgumentException("Cannot swap " + a + " and " + b + ": " + problem);
+        }
+        Map<String, EnumIniField> onA = settingsOn(ini, image, a);
+        Map<String, EnumIniField> onB = settingsOn(ini, image, b);
+        for (EnumIniField field : onA.values()) {
+            image.setBitValue(field, ordinalOf(field, b));
+        }
+        for (EnumIniField field : onB.values()) {
+            image.setBitValue(field, ordinalOf(field, a));
+        }
+    }
+
+    /** Every pin setting on {@code tsName}, shown in a dialog or not, keyed by field name in Tuning order. */
+    private static Map<String, EnumIniField> settingsOn(IniFileModel ini, ConfigurationImage image, String tsName) {
+        Map<String, EnumIniField> result = new LinkedHashMap<>();
+        Map<String, IniField> fields = ini.getAllIniFields();
+        for (String key : ini.getFieldsInUiOrder().keySet()) {
+            addIfOn(result, key, fields.get(key), image, tsName);
+        }
+        for (Map.Entry<String, IniField> entry : fields.entrySet()) {
+            addIfOn(result, entry.getKey(), entry.getValue(), image, tsName);
+        }
+        return result;
+    }
+
+    private static void addIfOn(Map<String, EnumIniField> result, String key, IniField field,
+                                ConfigurationImage image, String tsName) {
+        if (field instanceof EnumIniField && PinoutLookup.isPinField(key) && !result.containsKey(key)
+            && tsName.equals(currentPin(field, image))) {
+            result.put(key, (EnumIniField) field);
+        }
+    }
+
+    private static String firstUnable(IniFileModel ini, Map<String, EnumIniField> settings, String target) {
+        for (Map.Entry<String, EnumIniField> entry : settings.entrySet()) {
+            if (ordinalOf(entry.getValue(), target) < 0) {
+                return label(ini, entry.getKey()) + " cannot use it";
+            }
+        }
+        return null;
+    }
+
+    private static String label(IniFileModel ini, String key) {
+        DialogModel.Field meta = ini.getFieldsInUiOrder().get(key);
+        return meta == null || meta.getUiName() == null || meta.getUiName().isEmpty() ? key : meta.getUiName();
     }
 
     private static void clear(IniFileModel ini, ConfigurationImage image, String tsName, String except) {
