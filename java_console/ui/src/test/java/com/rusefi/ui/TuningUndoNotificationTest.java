@@ -23,15 +23,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Undo, Redo and Discard replace Tuning's tune; views following the working tune through
- * {@link UIContext#fireConfigImageChanged} (Pinout's Tune use, {@link UIContext}'s current image) must see it.
- * Reproduction: today they are not notified and keep showing the replaced tune.
+ * {@link UIContext#fireConfigImageChanged} (Pinout's Tune use, {@link UIContext}'s current image) must see it,
+ * or they keep showing the replaced tune.
  */
 class TuningUndoNotificationTest {
     private static final String B6 = "B6 Low Side output";
     private static final String B7 = "B7 Low Side output";
 
     @Test
-    void undoRedoAndDiscardDoNotNotifyConfigImageListeners() throws Throwable {
+    void undoRedoAndDiscardNotifyConfigImageListeners() throws Throwable {
         IniFileModel ini = readIni();
         UIContext context = new UIContext();
         AtomicReference<TuningPane> tuningRef = new AtomicReference<>();
@@ -69,20 +69,20 @@ class TuningUndoNotificationTest {
                 int before = notifiedFan.size();
                 button(tuning, "Undo").doClick();
                 assertEquals(B7, fan(ini, workingTune(tuning)), "Undo restores the fan to B7");
-                // BUG: listeners are not told; they still show the undone B6
-                assertEquals(before, notifiedFan.size(), "Undo does not notify");
-                assertEquals(B6, fan(ini, context.getCurrentConfigurationImage()));
+                assertEquals(before + 1, notifiedFan.size(), "Undo notifies once");
+                assertEquals(B7, notifiedFan.get(notifiedFan.size() - 1), "with the restored tune");
+                assertEquals(B7, fan(ini, context.getCurrentConfigurationImage()));
 
                 button(tuning, "Redo").doClick();
                 assertEquals(B6, fan(ini, workingTune(tuning)));
-                // BUG: no notification either
-                assertEquals(before, notifiedFan.size(), "Redo does not notify");
+                assertEquals(before + 2, notifiedFan.size(), "Redo notifies once");
+                assertEquals(B6, notifiedFan.get(notifiedFan.size() - 1));
 
-                button(tuning, "Undo").doClick();
                 button(tuning, "Discard changes").doClick();
                 assertEquals(B7, fan(ini, workingTune(tuning)), "Discard restores the loaded tune");
-                // BUG: no notification either
-                assertEquals(before, notifiedFan.size(), "Discard does not notify");
+                assertEquals(before + 3, notifiedFan.size(), "Discard notifies once");
+                assertEquals(B7, notifiedFan.get(notifiedFan.size() - 1));
+                assertEquals(B7, fan(ini, context.getCurrentConfigurationImage()));
             });
         } finally {
             SwingUtilities.invokeAndWait(() -> {

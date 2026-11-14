@@ -155,6 +155,7 @@ public class TuningToolbarWidget {
             // [tag:detached_calibration_sync] Restored windows may be open before a primary page
             // is selected. Publish replacements even with a null key (also redo/discard/load below).
             right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
+            publishReplacement();
             updateButtons.run();
         });
 
@@ -171,6 +172,7 @@ public class TuningToolbarWidget {
             sessionImage.set(redoStack.pop());
             String key = currentKey.get();
             right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
+            publishReplacement();
             updateButtons.run();
         });
 
@@ -270,6 +272,7 @@ public class TuningToolbarWidget {
             sessionImage.set(baselineImage.clone());
             String key = currentKey.get();
             right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
+            publishReplacement();
             undoCommitTimer.stop();
             undoStack.clear();
             redoStack.clear();
@@ -279,6 +282,19 @@ public class TuningToolbarWidget {
         });
 
         return discardButton;
+    }
+
+    /**
+     * Tells views following the working tune ({@link UIContext#fireConfigImageChanged}: Pinout's Tune use,
+     * the context's current image) that Undo, Redo or Discard replaced it. An edit notifies through the
+     * dialog's change callback, but these replace the tune directly, so without this those views keep showing
+     * the replaced tune (TuningUndoNotificationTest).
+     */
+    private void publishReplacement() {
+        ConfigurationImage image = sessionImage.get();
+        if (image != null) {
+            uiContext.fireConfigImageChanged(image);
+        }
     }
 
     private void buildLoadTuneAction(UIContext uiContext,
