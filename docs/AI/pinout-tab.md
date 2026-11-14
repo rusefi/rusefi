@@ -167,9 +167,22 @@ board's other non-fixed pins by connector, with their current use. `PinAssignmen
 greys out a pin, with the reason, when any setting on one pin has no choice for the other.
 Pairs of free pins are left out because there is nothing to swap. `PinAssignments.swap` moves
 every pin selector on each pin, including selectors no dialog shows, as one `applyEdit`. A swap
-with a free pin is a move. Pins that
-only a Lua script drives still show as Free; the picker cannot see them. Coverage:
+with a free pin is a move. Coverage:
 [`PinoutAssignTest`](../../java_console/ui/src/test/java/com/rusefi/ui/PinoutAssignTest.java).
+
+Lua reaches pins through tune settings (`luaOutputPins`, `luaDigitalInputPins`), so those show as
+used like any other setting. The exception is `readPin("PE11")`, which takes the MCU pin name. The
+console cannot map that name to a connector pin: the YAMLs name pins through `meta` headers that
+are not in the pinout archive. So a pin a script reads this way can still show as Free.
+[`LuaReadPins`](../../java_console/ui/src/main/java/com/rusefi/ui/LuaReadPins.java) finds
+`readPin` calls outside comments. When the script has any, the Assign and Swap pickers add a
+note naming the pins passed as string literals and asking the user to check.
+`PinoutPane.luaScriptSource` provides the script:
+- When the script is on the main page (older firmware, or an offline tune), it is read from the
+  tune image.
+- When it is on its own page (newer firmware), it is read from the ECU on the communication
+  thread. The note then appears in the open picker.
+- An offline tune whose script is on its own page gives no note. Coverage: `LuaReadPinsTest`.
 
 ## Functions view
 

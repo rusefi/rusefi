@@ -291,31 +291,46 @@ public class LuaScriptPanel {
             return;
         }
 
-        byte[] scriptArr;
-        if (luaScript.getPageIndex() == 0) {
-            // Main settings page: comes from the already-fetched controller image.
-            ConfigurationImage image = bp.getControllerConfiguration();
-            if (image == null) {
-                log.info("readFromECU: page 0 branch but no configuration image");
-                setText("No configuration image");
-                return;
-            }
-            ByteBuffer luaScriptBuffer = image.getByteBuffer(luaScript.getOffset(), luaScript.getSize());
-            scriptArr = new byte[luaScript.getSize()];
-            luaScriptBuffer.get(scriptArr);
-        } else {
-            // Secondary page (new firmware places luaScript on its own TS page).
-            // The main image only holds page 0, so fetch directly from the ECU.
-            scriptArr = bp.readFromPage(luaScript.getPageIndex(), luaScript.getOffset(), luaScript.getSize());
-            if (scriptArr == null) {
-                log.info("readFromECU: readFromPage returned null for page=" + luaScript.getDisplayPage());
-                setText("Failed to read luaScript from page " + luaScript.getDisplayPage());
-                return;
-            }
+        if (luaScript.getPageIndex() == 0 && bp.getControllerConfiguration() == null) {
+            log.info("readFromECU: page 0 branch but no configuration image");
+            setText("No configuration image");
+            return;
         }
+        String script = readScript(bp, luaScript);
+        if (script == null) {
+            log.info("readFromECU: readFromPage returned null for page=" + luaScript.getDisplayPage());
+            setText("Failed to read luaScript from page " + luaScript.getDisplayPage());
+            return;
+        }
+        setText(script);
+    }
 
+    /**
+     * The tune's Lua script, or null when it cannot be read. On the main settings page it comes from the
+     * already-fetched controller image; on its own page (new firmware) it is read from the ECU, so callers
+     * must be on the communication thread.
+     */
+    public static String readScript(BinaryProtocol bp, StringIniField luaScript) {
+        if (luaScript.getPageIndex() == 0) {
+            ConfigurationImage image = bp.getControllerConfiguration();
+            return image == null ? null : scriptFrom(image, luaScript);
+        }
+        // The main image only holds page 0, so fetch directly from the ECU.
+        byte[] scriptArr = bp.readFromPage(luaScript.getPageIndex(), luaScript.getOffset(), luaScript.getSize());
+        return scriptArr == null ? null : toScript(scriptArr);
+    }
+
+    /** The script held in a main-page tune image (old firmware, or an offline tune); no ECU I/O. */
+    public static String scriptFrom(ConfigurationImage image, StringIniField luaScript) {
+        ByteBuffer luaScriptBuffer = image.getByteBuffer(luaScript.getOffset(), luaScript.getSize());
+        byte[] scriptArr = new byte[luaScript.getSize()];
+        luaScriptBuffer.get(scriptArr);
+        return toScript(scriptArr);
+    }
+
+    private static String toScript(byte[] scriptArr) {
         int i = findNullTerminator(scriptArr);
-        setText(new String(scriptArr, 0, i, StandardCharsets.US_ASCII));
+        return new String(scriptArr, 0, i, StandardCharsets.US_ASCII);
     }
 
     public static StringIniField getLuaScriptField(BinaryProtocol bp) {
