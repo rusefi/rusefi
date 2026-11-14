@@ -54,6 +54,8 @@ final class PinAssignPanel extends JPanel {
     final JTextArea effect = new JTextArea(3, 20);
     final JButton assignButton = new JButton("Assign");
     final JButton unassignButton = new JButton("Unassign");
+    /** For a setting Tuning hides: assigns, then opens Tuning where its feature is turned on. */
+    final JButton assignAndOpenButton = new JButton("Assign and open in Tuning");
     final JButton cancelButton = new JButton("Cancel");
 
     private final String pinName;
@@ -65,6 +67,8 @@ final class PinAssignPanel extends JPanel {
     private Consumer<PinAssignments.Candidate> onAssign = c -> { };
     private Runnable onUnassign = () -> { };
     private Runnable onClose = () -> { };
+    /** Opens a setting in Tuning: {fieldKey, dialogKey}. */
+    private Consumer<String[]> onOpenInTuning = target -> { };
 
     PinAssignPanel(PinoutPin pin, String connectorTitle, List<PinAssignments.Candidate> candidates,
                    Function<String, String> describePin) {
@@ -94,6 +98,11 @@ final class PinAssignPanel extends JPanel {
 
     void setOnUnassign(Runnable onUnassign) {
         this.onUnassign = onUnassign;
+    }
+
+    /** Where Assign and open in Tuning goes, as {fieldKey, dialogKey}. */
+    void setOnOpenInTuning(Consumer<String[]> onOpenInTuning) {
+        this.onOpenInTuning = onOpenInTuning;
     }
 
     void setOnClose(Runnable onClose) {
@@ -188,6 +197,9 @@ final class PinAssignPanel extends JPanel {
             onClose.run();
         });
         cancelButton.addActionListener(e -> onClose.run());
+        assignAndOpenButton.setToolTipText("Assign, then open Tuning where this setting can be turned on");
+        assignAndOpenButton.setVisible(false);
+        assignAndOpenButton.addActionListener(e -> assignAndOpen());
 
         JPanel left = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         left.setOpaque(false);
@@ -195,6 +207,7 @@ final class PinAssignPanel extends JPanel {
         JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT, JoinedButtons.ROW_GAP, 0));
         right.setOpaque(false);
         right.add(cancelButton);
+        right.add(assignAndOpenButton);
         right.add(assignButton);
         JPanel buttons = new JPanel(new BorderLayout());
         buttons.setOpaque(false);
@@ -281,7 +294,10 @@ final class PinAssignPanel extends JPanel {
     /** What Assign would do, and whether it can. */
     private void updateEffect() {
         PinAssignments.Candidate candidate = selected();
-        assignButton.setEnabled(candidate != null && !candidate.uses(tsName));
+        boolean canAssign = candidate != null && !candidate.uses(tsName);
+        assignButton.setEnabled(canAssign);
+        // a hidden setting needs its feature turned on: offer to go there
+        assignAndOpenButton.setVisible(canAssign && candidate.hidden);
         effect.setText(effectText(candidate));
     }
 
@@ -299,14 +315,26 @@ final class PinAssignPanel extends JPanel {
             text.append(' ').append(labels(users)).append(users.size() == 1 ? " is" : " are")
                 .append(" set to None.");
         }
-        if (candidate.hidden) {
-            text.append(" Tuning hides or disables this setting at the moment: turn its feature on there.");
-        }
+        text.append(hiddenNote(candidate));
         // clearing a setting changes it as much as setting it
         List<PinAssignments.Candidate> changed = new ArrayList<>(users);
         changed.add(0, candidate);
         text.append(restartNote(PinAssignments.restartLabels(changed)));
         return text.toString();
+    }
+
+    /**
+     * Why Tuning hides or disables a setting, e.g. " Tuning hides it because of Enable injection, Cylinders count:
+     * assigning a pin does not turn it on."; empty while it is shown.
+     */
+    static String hiddenNote(PinAssignments.Candidate candidate) {
+        return candidate.hidden ? " " + hiddenReason(candidate) + ": assigning a pin does not turn it on." : "";
+    }
+
+    /** "Tuning hides or disables it because of Enable injection, Cylinders count", for a hidden setting. */
+    static String hiddenReason(PinAssignments.Candidate candidate) {
+        return "Tuning hides or disables it"
+            + (candidate.hiddenBy.isEmpty() ? "" : " because of " + String.join(", ", candidate.hiddenBy));
     }
 
     /**
@@ -325,6 +353,17 @@ final class PinAssignPanel extends JPanel {
         }
         onAssign.accept(candidate);
         onClose.run();
+    }
+
+    /** Assigns, closes, then opens Tuning where the hidden setting's feature is turned on. */
+    private void assignAndOpen() {
+        PinAssignments.Candidate candidate = selected();
+        if (candidate == null || candidate.uses(tsName)) {
+            return;
+        }
+        onAssign.accept(candidate);
+        onClose.run();
+        onOpenInTuning.accept(candidate.openTarget());
     }
 
     private static String labels(List<PinAssignments.Candidate> candidates) {
@@ -446,7 +485,7 @@ final class PinAssignPanel extends JPanel {
             name.setFont(l.getFont());
             name.setForeground(foreground);
             name.setText(PinoutFunctionsPage.settingText(candidate));
-            row.setToolTipText(candidate.hidden ? "Tuning hides or disables this setting at the moment" : null);
+            row.setToolTipText(candidate.hidden ? hiddenNote(candidate).trim() : null);
             status.setFont(l.getFont());
             if (candidate.uses(tsName)) {
                 status.setText("uses " + pinName);

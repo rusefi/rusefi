@@ -500,7 +500,7 @@ final class PinoutFunctionsPage extends JPanel {
                     setText(settingText(setting));
                     List<String> notes = new ArrayList<>();
                     if (setting.hidden) {
-                        notes.add("Tuning hides or disables this setting at the moment");
+                        notes.add(PinAssignPanel.hiddenReason(setting));
                     }
                     if (setting.needsRestart) {
                         notes.add("A change takes effect after you burn and restart the ECU");

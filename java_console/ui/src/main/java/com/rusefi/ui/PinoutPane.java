@@ -678,6 +678,11 @@ public class PinoutPane {
         panel.setOnAssign(candidate -> applyPinEdit(
                 image -> PinAssignments.assign(ini, image, candidate.fieldKey, pin.tsName)));
         panel.setOnUnassign(() -> applyPinEdit(image -> PinAssignments.unassign(ini, image, pin.tsName)));
+        panel.setOnOpenInTuning(target -> {
+            if (navigateToTune != null) {
+                navigateToTune.accept(target[1], target[0]);
+            }
+        });
         assignDialogOpener.accept(panel);
     }
 
