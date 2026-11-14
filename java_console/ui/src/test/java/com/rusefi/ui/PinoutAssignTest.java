@@ -341,14 +341,15 @@ class PinoutAssignTest {
                 assertTrue(undo.isEnabled(), "the assignment is one undo step");
                 undo.doClick();
                 assertEquals(B7, value(ini, tuningRef.get().getDialogForTests().getWorkingImage(), "fanPin"));
-                // Undo does not notify Pinout; this restores what Pinout shows to the undone tune
-                context.fireConfigImageChanged(tuningRef.get().getDialogForTests().getWorkingImage());
             });
 
             // Swap with…: the fuel pump and the fan exchange B6 and B7
             SwingUtilities.invokeAndWait(() -> { });
             SwingUtilities.invokeAndWait(() -> {
                 PinoutPane pinout = pinoutRef.get();
+                assertEquals(Arrays.asList("Fuel Pump output", "Fan output", ""),
+                    tuneUse(components(pinout.getContent(), JTable.class).get(0)),
+                    "Tune use follows Undo in Tuning (TuningUndoNotificationTest)");
                 PinoutConnectorPage page = components(pinout.getContent(), PinoutConnectorPage.class).get(0);
                 page.select(page.find("B6"));
                 assertTrue(page.card.swapButton.isVisible());
