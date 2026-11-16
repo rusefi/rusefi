@@ -203,6 +203,23 @@ bool applyDefaultsOrFixAfterBurn(const engine_configuration_s* previousConfigura
     }
   }
 
+  // [tag:ae_temperature_mult] Tunes that predate the AE coolant curve have all-zero bins
+  // and values. The firmware already treats zero as neutral; seed the neutral default so
+  // the TunerStudio curve is editable.
+  {
+    bool aeCltCurveEmpty = true;
+    for (size_t i = 0; i < efi::size(config->aeCltCorrBins); i++) {
+      if (config->aeCltCorrBins[i] != 0 || config->aeCltCorrValues[i] != 0) {
+        aeCltCurveEmpty = false;
+        break;
+      }
+    }
+    if (aeCltCurveEmpty) {
+      setDefaultAeCltCorrection();
+      changed = true;
+    }
+  }
+
 #if HW_PROTEUS && defined(STM32F4XX)
   // should have been proteus per-board validation
   if (engineConfiguration->is_enabled_spi_5) {

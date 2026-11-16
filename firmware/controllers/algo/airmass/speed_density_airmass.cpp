@@ -17,10 +17,26 @@ AirmassResult SpeedDensityAirmass::getAirmass(float rpm, bool postState) {
 
 	auto map = getMap(rpm, postState);
 
-	return getAirmass(rpm, map, postState);
+	return getAirmass(rpm, map, getPredictionAirmassMap(map), postState);
+}
+
+float SpeedDensityAirmass::getPredictionAirmassMap(float effectiveMap) {
+	// A MAP sensor failure skips getPredictiveMap() and leaves its state stale.
+	if (!m_lastMapPredicted) {
+		return effectiveMap;
+	}
+
+	// [tag:ae_temperature_mult] Scale only the extra pressure that prediction adds over
+	// the measured MAP. The table/load MAP stays the plain prediction.
+	float mult = engine->module<TpsAccelEnrichment>()->getTemperatureMult();
+	return m_predictionMeasuredMap + (effectiveMap - m_predictionMeasuredMap) * mult;
 }
 
 AirmassResult SpeedDensityAirmass::getAirmass(float rpm, float map, bool postState) {
+	return getAirmass(rpm, map, map, postState);
+}
+
+AirmassResult SpeedDensityAirmass::getAirmass(float rpm, float map, float airmassMap, bool postState) {
 	/**
 	 * most of the values are pre-calculated for performance reasons
 	 */
@@ -36,7 +52,8 @@ AirmassResult SpeedDensityAirmass::getAirmass(float rpm, float map, bool postSta
 
 	float ve = getVe(rpm, mapRef, postState);
 
-	float airMass = getAirmassImpl(ve, map, tChargeK);
+	// airmassMap differs from map only while MAP Prediction applies an AE temperature multiplier.
+	float airMass = getAirmassImpl(ve, airmassMap, tChargeK);
 	if (std::isnan(airMass)) {
 		warning(ObdCode::CUSTOM_ERR_6685, "NaN airMass");
 		return {};
@@ -82,6 +99,7 @@ float SpeedDensityAirmass::getAirflow(float rpm, float map, bool postState) {
 }
 
 float SpeedDensityAirmass::getPredictiveMap(float rpm, bool postState, float mapSensor) {
+	m_predictionMeasuredMap = mapSensor;
 	float blendDuration = interpolate2d(rpm, config->predictiveMapBlendDurationBins,
 						config->predictiveMapBlendDurationValues);
 
@@ -185,8 +203,11 @@ float SpeedDensityAirmass::logAndGetFallback(float rpm, bool postState) const {
 
 float SpeedDensityAirmass::getMap(float rpm, bool postState) {
   auto mapSensor = Sensor::get(SensorType::Map);
+	m_lastMapPredicted = false;
 	if (mapSensor && engineConfiguration->accelEnrichmentMode == AE_MODE_PREDICTIVE_MAP) {
-		return getPredictiveMap(rpm, postState, mapSensor.Value);
+		float effectiveMap = getPredictiveMap(rpm, postState, mapSensor.Value);
+		m_lastMapPredicted = m_isMapPredictionActive;
+		return effectiveMap;
 	}
 	return mapSensor.value_or(logAndGetFallback(rpm, postState));
 }
