@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import java.time.LocalDate;
@@ -22,7 +23,6 @@ import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.mockito.Mockito.mock;
@@ -53,7 +53,9 @@ class StartupUpdateActionsTest {
             AtomicReference<Optional<PortResult>> selected = new AtomicReference<>(Optional.of(port));
             StartupUpdateActions actions = new StartupUpdateActions(connectivity, status,
                 new SingleAsyncJobExecutor(status), selected,
-                CompletableFuture.completedFuture(Autoupdate.UpdateOutcome.UP_TO_DATE), ignored -> { }, () -> { });
+                new SoftwareUpdateCoordinator(
+                    CompletableFuture.completedFuture(Autoupdate.UpdateOutcome.UP_TO_DATE)),
+                ignored -> { }, () -> { }, () -> null, () -> { });
             actions.setDevMetadataProviderForTests((board, branch) -> LocalDate.now(ZoneOffset.UTC)
                 .atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli());
             JComboBox<PortResult> ports = new JComboBox<>();
@@ -89,36 +91,97 @@ class StartupUpdateActionsTest {
         button.setEnabled(false);
         JLabel status = new JLabel();
         status.setVisible(false);
-        AtomicBoolean failureObserved = new AtomicBoolean();
+        JButton later = hiddenButton();
+        StartupUpdateActions.applySoftwareUpdateOutcome(Autoupdate.UpdateOutcome.FAILED,
+            button, status, later);
 
-        StartupUpdateActions.bindSoftwareUpdateOutcome(
-            CompletableFuture.completedFuture(Autoupdate.UpdateOutcome.FAILED),
-            button, status, () -> failureObserved.set(true));
-        SwingUtilities.invokeAndWait(() -> {});
-
-        assertTrue(failureObserved.get());
         assertTrue(button.isVisible());
         assertTrue(button.isEnabled());
         assertTrue(status.isVisible());
-        assertEquals("Automatic software update failed. You can retry.", status.getText());
+        assertFalse(later.isVisible());
+        assertEquals("Update application", button.getText());
+        assertEquals("Automatic software update check failed. You can retry.", status.getText());
     }
 
     @Test
-    void completedNoOpDoesNotOfferRetry() throws Exception {
+    void availableUpdateOffersManualInstall() {
         JButton button = new JButton();
         button.setVisible(false);
         button.setEnabled(false);
         JLabel status = new JLabel();
         status.setVisible(false);
+        JButton later = hiddenButton();
+        StartupUpdateActions.applySoftwareUpdateOutcome(Autoupdate.UpdateOutcome.AVAILABLE,
+            button, status, later);
 
-        StartupUpdateActions.bindSoftwareUpdateOutcome(
-            CompletableFuture.completedFuture(Autoupdate.UpdateOutcome.UP_TO_DATE),
-            button, status, () -> {});
-        SwingUtilities.invokeAndWait(() -> {});
+        assertTrue(button.isVisible());
+        assertTrue(button.isEnabled());
+        assertTrue(status.isVisible());
+        assertTrue(later.isVisible());
+        assertEquals("Update now", button.getText());
+        assertEquals("Application update available.", status.getText());
+    }
+
+    @Test
+    void completedNoOpDoesNotOfferRetry() {
+        JButton button = new JButton();
+        button.setVisible(false);
+        button.setEnabled(false);
+        JLabel status = new JLabel();
+        status.setVisible(false);
+        JButton later = hiddenButton();
+        StartupUpdateActions.applySoftwareUpdateOutcome(Autoupdate.UpdateOutcome.UP_TO_DATE,
+            button, status, later);
 
         assertFalse(button.isVisible());
         assertFalse(button.isEnabled());
         assertFalse(status.isVisible());
+        assertFalse(later.isVisible());
+    }
+
+    @Test
+    void installedUpdateOffersRestartWithoutClosingApplication() {
+        JButton button = hiddenButton();
+        JLabel status = new JLabel();
+        status.setVisible(false);
+        JButton later = hiddenButton();
+        StartupUpdateActions.applySoftwareRestartRequired(button, status, later);
+
+        assertTrue(button.isVisible());
+        assertEquals("Restart now", button.getText());
+        assertTrue(status.isVisible());
+        assertEquals("Update ready. Restart the application to finish updating.", status.getText());
+        assertTrue(later.isVisible());
+        assertEquals("Restart later", later.getText());
+    }
+
+    @Test
+    void pendingUpdateOnLaunchRestoresRestartOffer() {
+        JButton button = hiddenButton();
+        JLabel status = new JLabel();
+        status.setVisible(false);
+        JButton later = hiddenButton();
+        StartupUpdateActions.applySoftwareUpdateOutcome(Autoupdate.UpdateOutcome.UPDATED,
+            button, status, later);
+
+        assertTrue(button.isVisible());
+        assertEquals("Restart now", button.getText());
+        assertTrue(later.isVisible());
+        assertEquals("Restart later", later.getText());
+    }
+
+    @Test
+    void popupChoicesMapToUpdateActionsAndClosingMeansLater() {
+        assertEquals(ApplicationUpdatePrompt.Choice.LATER, ApplicationUpdatePrompt.choice(0));
+        assertEquals(ApplicationUpdatePrompt.Choice.UPDATE_NOW, ApplicationUpdatePrompt.choice(1));
+        assertEquals(ApplicationUpdatePrompt.Choice.LATER,
+            ApplicationUpdatePrompt.choice(JOptionPane.CLOSED_OPTION));
+    }
+
+    private static JButton hiddenButton() {
+        JButton button = new JButton();
+        button.setVisible(false);
+        return button;
     }
 
     private static String releaseStatus(FirmwareStatusSummaryPanel summary) {
