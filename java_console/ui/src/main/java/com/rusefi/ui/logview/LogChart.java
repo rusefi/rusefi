@@ -44,7 +44,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.Arrays;
 import java.util.List;
@@ -164,6 +166,20 @@ final class LogChart extends JComponent {
     private List<Marker> markers = new ArrayList<>();
     private Rectangle card;
     private List<String> cardLines = new ArrayList<>();
+    /** One cached display array per smoothed field; recorded values always stay in {@link #log}. */
+    private final Map<Integer, SmoothedTrace> smoothedTraces = new HashMap<>();
+    /** Log timestamps copied lazily when the first smoothed trace is requested. */
+    private double[] smoothingTimes;
+
+    private static final class SmoothedTrace {
+        final double windowSeconds;
+        final double[] values;
+
+        SmoothedTrace(double windowSeconds, double[] values) {
+            this.windowSeconds = windowSeconds;
+            this.values = values;
+        }
+    }
 
     /** One plot's area: legend header on top, traces below. */
     static final class Band {
@@ -2542,9 +2558,10 @@ final class LogChart extends JComponent {
         int last = Math.min(log.sampleCount() - 1, log.firstSampleAtOrAfter(window.end()));
         double scale = (plotRight - plotLeft) / window.span();
         double[] range = range(field);
+        double[] smoothed = smoothedValues(field);
         ColumnPath column = new ColumnPath(path);
         for (int sample = first; sample <= last; sample++) {
-            double value = log.value(sample, field);
+            double value = smoothed == null ? log.value(sample, field) : smoothed[sample];
             if (!Double.isFinite(value)) {
                 column.breakLine();
                 continue;
@@ -2554,6 +2571,41 @@ final class LogChart extends JComponent {
         }
         column.flush();
         return path;
+    }
+
+    /** Value used only for the painted trace; cursor values, statistics, scales and exports read {@link #log}. */
+    double traceValue(int sample, int field) {
+        double[] smoothed = smoothedValues(field);
+        return smoothed == null ? log.value(sample, field) : smoothed[sample];
+    }
+
+    /** The cached display values, or null when the trace is raw. */
+    private double[] smoothedValues(int field) {
+        double windowSeconds = grid.getSmoothingWindowSeconds();
+        if (windowSeconds == 0) {
+            return null;
+        }
+        SmoothedTrace cached = smoothedTraces.get(field);
+        if (cached == null || cached.windowSeconds != windowSeconds) {
+            double[] values = new double[log.sampleCount()];
+            for (int i = 0; i < values.length; i++) {
+                values[i] = log.value(i, field);
+            }
+            cached = new SmoothedTrace(windowSeconds,
+                    TimelineSmoother.centeredMovingAverage(smoothingTimes(), values, windowSeconds));
+            smoothedTraces.put(field, cached);
+        }
+        return cached.values;
+    }
+
+    private double[] smoothingTimes() {
+        if (smoothingTimes == null) {
+            smoothingTimes = new double[log.sampleCount()];
+            for (int sample = 0; sample < smoothingTimes.length; sample++) {
+                smoothingTimes[sample] = log.value(sample, 0);
+            }
+        }
+        return smoothingTimes;
     }
 
     /** Accumulates points per pixel column and emits first, min, max and last of each column. */

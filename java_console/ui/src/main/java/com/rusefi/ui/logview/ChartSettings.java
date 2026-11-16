@@ -1,6 +1,6 @@
 package com.rusefi.ui.logview;
 
-/** Display options of the log chart: grid lines (both start off), cursor snapping, cursor values and plot colours. */
+/** Display options of the log chart: grid lines, cursor, values, plot colours and display-only trace smoothing. */
 final class ChartSettings {
     enum VerticalMode {
         /** One line per time-axis tick; spacing follows {@link #getTimeSpacing()}. */
@@ -41,6 +41,19 @@ final class ChartSettings {
     private boolean darkPlot = com.rusefi.ui.basic.UiHelper.isDarkTheme();
     private CursorValues cursorValues = CursorValues.LABELS;
     private boolean pinValues;
+    /** Width of the centred display-only moving average; zero draws recorded samples. */
+    private double smoothingWindowSeconds;
+
+    double getSmoothingWindowSeconds() {
+        return smoothingWindowSeconds;
+    }
+
+    void setSmoothingWindowSeconds(double smoothingWindowSeconds) {
+        if (smoothingWindowSeconds < 0 || !Double.isFinite(smoothingWindowSeconds)) {
+            throw new IllegalArgumentException("Smoothing window must be finite and non-negative");
+        }
+        this.smoothingWindowSeconds = smoothingWindowSeconds;
+    }
 
     CursorValues getCursorValues() {
         return cursorValues;
