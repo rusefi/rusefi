@@ -225,6 +225,8 @@ angle_t getAdvanceCorrections(float engineLoad) {
 		+ engine->ignitionState.timingPidCorrection
 		- engine->ignitionState.dfcoTimingRetard
 		- engine->module<BurstKnock>().unmock().getTimingRetard()
+		// [tag:transient_timing] Signed: positive advances.
+		+ engine->module<TransientTiming>().unmock().getTimingCorrection()
 #if EFI_LAUNCH_CONTROL
 		- engine->module<RollingLaunchControl>().unmock().getTimingRetard()
 #endif

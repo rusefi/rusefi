@@ -2604,6 +2604,7 @@ include_file controllers/modules/fuel_pump/fuel_pump_tables.txt
 	gppwm_note_t[SCRIPT_TABLE_COUNT iterate] scriptTableName;
 	gppwm_note_t[SCRIPT_SETTING_COUNT iterate] scriptSettingName;
 include_file controllers/modules/burst_knock/burst_knock_tables.txt
+include_file controllers/modules/transient_timing/transient_timing_tables.txt
 include_file controllers/actuators/vvt_advanced_tables.txt
 end_struct
 
