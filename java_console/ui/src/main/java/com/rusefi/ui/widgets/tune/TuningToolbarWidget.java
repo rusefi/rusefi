@@ -329,8 +329,10 @@ public class TuningToolbarWidget {
                             JobHelper.doJob(() -> {
                                 try {
                                     cb.logLine("Loading " + fileName + "...");
-                                    OfflineTuneLoader.Result result = OfflineTuneLoader.loadTuneFromFile(
-                                        path, null, cb::logLine);
+                                    BinaryProtocol bp = uiContext.getBinaryProtocol();
+                                    OfflineTuneLoader.Result result = bp == null
+                                        ? OfflineTuneLoader.loadTuneFromFile(path, null, cb::logLine)
+                                        : OfflineTuneLoader.loadConnectedTuneFromFile(path, cb::logLine);
                                     if (result == null) {
                                         cb.error();
                                         SwingUtilities.invokeLater(() -> onLoadFinished.accept(true));
@@ -343,7 +345,6 @@ public class TuningToolbarWidget {
                                         return;
                                     }
                                     cb.logLine("Applying tune fields...");
-                                    BinaryProtocol bp = uiContext.getBinaryProtocol();
                                     IniFileModel targetIni = bp == null
                                         ? result.ini
                                         : uiContext.iniFileState.getIniFileModel();

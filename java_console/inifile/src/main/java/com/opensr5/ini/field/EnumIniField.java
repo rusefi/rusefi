@@ -9,6 +9,8 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public class EnumIniField extends IniField {
+    private static final String UNKNOWN_ORDINAL_PREFIX = "__rusefi_unknown_enum_ordinal_";
+    private static final String UNKNOWN_ORDINAL_SUFFIX = "__";
     private final FieldType type;
     private final EnumKeyValueMap enums;
     private final int bitPosition;
@@ -74,6 +76,26 @@ public class EnumIniField extends IniField {
 
     public boolean isPinEnum() {
         return pinEnum;
+    }
+
+    public static String unknownOrdinalValue(int ordinal) {
+        return UNKNOWN_ORDINAL_PREFIX + ordinal + UNKNOWN_ORDINAL_SUFFIX;
+    }
+
+    public static boolean isUnknownOrdinalValue(String value) {
+        return value.startsWith(UNKNOWN_ORDINAL_PREFIX) && value.endsWith(UNKNOWN_ORDINAL_SUFFIX);
+    }
+
+    public static int parseUnknownOrdinal(String value) {
+        if (!isUnknownOrdinalValue(value)) {
+            throw new IllegalArgumentException("Not an unknown enum ordinal: " + value);
+        }
+        try {
+            return Integer.parseInt(value.substring(UNKNOWN_ORDINAL_PREFIX.length(),
+                value.length() - UNKNOWN_ORDINAL_SUFFIX.length()));
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Malformed unknown enum ordinal: " + value, e);
+        }
     }
 
     public static boolean isQuoted(String q) {
