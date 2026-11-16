@@ -17,6 +17,7 @@ import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
+import com.rusefi.logview.LogFiles;
 import com.rusefi.maintenance.StLinkFlasher;
 import com.rusefi.maintenance.jobs.ImportTuneJob;
 import com.rusefi.ui.*;
@@ -71,6 +72,7 @@ import java.awt.event.WindowEvent;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
@@ -986,8 +988,9 @@ console live data tab is broken #8402
         JustOneInstance.onStart();
 
         try {
-            boolean isPortDefined = args.length > 0;
-            boolean isBaudRateDefined = args.length > 1;
+            File initialLog = logFileArgument(args);
+            boolean isPortDefined = initialLog == null && args.length > 0;
+            boolean isBaudRateDefined = isPortDefined && args.length > 1;
             if (isBaudRateDefined)
                 BaudRateHolder.INSTANCE.baudRate = Integer.parseInt(args[1]);
 
@@ -1011,12 +1014,17 @@ console live data tab is broken #8402
                 for (String p : LinkManager.getCommPorts())
                     MessagesCentral.getInstance().postMessage(Launcher.class, "Available port: " + p);
                 StartupFrame startupFrame = new StartupFrame(connectivityContext,
-                    new UIContext(connectivityContext.getConnectedEcuTarget()), updateOutcome);
+                    new UIContext(connectivityContext.getConnectedEcuTarget()), updateOutcome, initialLog);
                 startupFrame.showUi();
             }
 
         } catch (Throwable e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    /** A supported log passed by the launcher, or null when the first argument belongs to the port/tool path. */
+    static File logFileArgument(String[] args) {
+        return args.length > 0 && LogFiles.isSupported(args[0]) ? new File(args[0]) : null;
     }
 }

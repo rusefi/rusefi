@@ -60,6 +60,7 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -70,6 +71,7 @@ import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -177,6 +179,7 @@ public class StartupFrame {
 
     private final UIContext uiContext;
     private final CompletableFuture<Autoupdate.UpdateOutcome> softwareUpdateOutcome;
+    private final File initialLog;
     private final JPanel rootContent = new JPanel(new CardLayout());
     private UnsupportedEcuCardHost unsupportedEcuHost;
     private final JPanel rollbackPicker = new JPanel(new BorderLayout());
@@ -201,9 +204,15 @@ public class StartupFrame {
 
     public StartupFrame(ConnectivityContext connectivityContext, UIContext uiContext,
                         CompletableFuture<Autoupdate.UpdateOutcome> softwareUpdateOutcome) {
+        this(connectivityContext, uiContext, softwareUpdateOutcome, null);
+    }
+
+    StartupFrame(ConnectivityContext connectivityContext, UIContext uiContext,
+                 CompletableFuture<Autoupdate.UpdateOutcome> softwareUpdateOutcome, File initialLog) {
         this.connectivityContext = connectivityContext;
         this.uiContext = uiContext;
         this.softwareUpdateOutcome = softwareUpdateOutcome;
+        this.initialLog = initialLog;
         // Firmware-update and tune operations open the serial port themselves via a fresh
         // LinkManager. If our splash auto-connect is holding the same port, they'd deadlock on
         // "Connecting...". Release it only after preparation is accepted and before active work.
@@ -522,6 +531,7 @@ public class StartupFrame {
 
         int savedTabIndex = getConfig().getRoot().getIntProperty(STARTUP_TAB_INDEX, 0);
         outerTabs.setSelectedIndex(Math.min(savedTabIndex, outerTabs.getTabCount() - 1));
+        openInitialLog(outerTabs, logViewer, logViewer::open, initialLog);
 
         connectivityContext.getPortScanner().addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
             // [tag:better_ux_for_flashing]: stop updating splash firmware-tab widgets once the live console has taken over.
@@ -560,7 +570,11 @@ public class StartupFrame {
         log.info("setVisible");
         frame.setVisible(true);
 
-        startRevealControlsTimer();
+        if (initialLog != null) {
+            revealControls();
+        } else {
+            startRevealControlsTimer();
+        }
 
         KeyListener hwTestEasterEgg = functionalTestEasterEgg();
 
@@ -785,6 +799,15 @@ public class StartupFrame {
         });
     }
 
+    /** Selects the startup viewer and opens a log supplied by the application launcher. */
+    static void openInitialLog(JTabbedPane tabs, JComponent viewer, Consumer<File> open, File initialLog) {
+        if (initialLog == null) {
+            return;
+        }
+        tabs.setSelectedComponent(viewer);
+        open.accept(initialLog);
+    }
+
     /** Small logo, the rusEFI link (default branding only) and the console version. */
     private static JComponent createCardFooter() {
         JPanel footer = new JPanel();
@@ -989,7 +1012,7 @@ public class StartupFrame {
      * different startup tab last session.
      */
     private boolean shouldAutoConnect() {
-        return asyncJobExecutor.isNotInProgress() && !unsupportedEcuHost.isBlocking();
+        return initialLog == null && asyncJobExecutor.isNotInProgress() && !unsupportedEcuHost.isBlocking();
     }
 
     private boolean isFirmwareOperationInProgress() {

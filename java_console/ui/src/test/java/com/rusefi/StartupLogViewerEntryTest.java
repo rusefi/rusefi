@@ -6,9 +6,12 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
+import java.io.File;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 class StartupLogViewerEntryTest {
@@ -33,6 +36,32 @@ class StartupLogViewerEntryTest {
 
             assertSame(viewer, tabs.getSelectedComponent());
             assertEquals(1, chooserOpenCount.get());
+        });
+    }
+
+    @Test
+    void recognizesSupportedLogArgumentsWithoutTakingOverPortArguments() {
+        assertEquals(new File("drive.mlg"), ConsoleUI.logFileArgument(new String[]{"drive.mlg"}));
+        assertEquals(new File("DRIVE.MSL"), ConsoleUI.logFileArgument(new String[]{"DRIVE.MSL"}));
+        assertNull(ConsoleUI.logFileArgument(new String[]{"COM3"}));
+        assertNull(ConsoleUI.logFileArgument(new String[0]));
+    }
+
+    @Test
+    void initialLogSelectsTheViewerAndOpensTheFile() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            JTabbedPane tabs = new JTabbedPane();
+            JPanel connect = new JPanel();
+            JPanel viewer = new JPanel();
+            tabs.addTab("Connect", connect);
+            tabs.addTab("Log Viewer", viewer);
+            File log = new File("drive.mlg");
+            AtomicReference<File> opened = new AtomicReference<>();
+
+            StartupFrame.openInitialLog(tabs, viewer, opened::set, log);
+
+            assertSame(viewer, tabs.getSelectedComponent());
+            assertEquals(log, opened.get());
         });
     }
 }
