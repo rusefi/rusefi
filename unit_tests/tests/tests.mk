@@ -12,6 +12,7 @@ TESTS_SRC_CPP = \
 	tests/controllers/test_at32_port.cpp \
 	tests/test_slcan.cpp \
 	tests/test_hardware_pwm.cpp \
+	tests/test_harley_acr.cpp \
 	../simulator/flash_storage.cpp \
 	tests/controllers/test_simulator_flash.cpp \
 	tests/test_scoped_logs.cpp \
