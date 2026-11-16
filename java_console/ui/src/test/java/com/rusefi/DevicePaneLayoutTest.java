@@ -20,6 +20,7 @@ import javax.swing.*;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.time.LocalDate;
@@ -104,11 +105,22 @@ class DevicePaneLayoutTest {
                         originalFonts.put((JComponent) component, component.getFont());
                     }
                 }
+                boolean sawHorizontalActions = false;
+                boolean sawStackedActions = false;
                 for (int fontScale : new int[]{1, 2}) {
                   for (Map.Entry<JComponent, Font> entry : originalFonts.entrySet()) {
                       entry.getKey().setFont(entry.getValue().deriveFont(entry.getValue().getSize2D() * fontScale));
                       entry.getKey().invalidate();
                   }
+                  JSplitButton sizingSplit = (JSplitButton) UiUtils.getAllComponents(content).stream()
+                      .filter(c -> c instanceof JSplitButton).findFirst().orElseThrow(AssertionError::new);
+                  JButton sizingBranchSwitch = (JButton) UiUtils.getAllComponents(content).stream()
+                      .filter(c -> c instanceof JButton && "Switch firmware branch".equals(((JButton) c).getText()))
+                      .findFirst().orElseThrow(AssertionError::new);
+                  sizingBranchSwitch.setPreferredSize(null);
+                  Dimension naturalBranchSize = sizingBranchSwitch.getPreferredSize();
+                  sizingBranchSwitch.setPreferredSize(new Dimension(naturalBranchSize.width,
+                      sizingSplit.getPreferredSize().height + 1));
                   invalidateLayoutRecursively(content);
                   for (int width : new int[]{2000, 1200, 960, 850, 720, 640, 480, 960, 2000}) {
                     content.setSize(width, 1400);
@@ -129,8 +141,10 @@ class DevicePaneLayoutTest {
                     List<JButton> actions = List.of((JButton) split.getComponent(0), (JButton) split.getComponent(1),
                         branchSwitch, rollback);
                     assertTrue(actions.stream().allMatch(c -> c.isVisible() && c.isEnabled()));
-                    assertEquals(split.getPreferredSize().height, branchSwitch.getPreferredSize().height,
-                        "primary and branch actions share natural height at the active font");
+                    assertEquals(split.getPreferredSize().height + 1, branchSwitch.getPreferredSize().height,
+                        "fixture deterministically makes the branch action one pixel taller");
+                    assertEquals(split.getHeight(), branchSwitch.getHeight(),
+                        "horizontal and stacked actions share the normalized row height");
                     assertTrue(branchSwitch.getPreferredSize().width >= branchSwitch.getFontMetrics(branchSwitch.getFont())
                         .stringWidth(branchSwitch.getText()) + branchSwitch.getInsets().left
                         + branchSwitch.getInsets().right,
@@ -212,12 +226,15 @@ class DevicePaneLayoutTest {
                     assertTrue(Math.abs((groupedActions.x + groupedActions.width / 2) - summary.getWidth() / 2) <= 2,
                         "primary and branch actions are centered as a group at width " + width + ", font " + fontScale + "x");
                     if (branchSwitch.getY() != split.getY()) {
+                        sawStackedActions = true;
                         assertFalse(branchSwitch.getBounds().intersects(split.getBounds()),
                             "wrapped actions do not overlap at width " + width + ", font " + fontScale + "x");
                         assertEquals(split.getParent().getWidth() / 2, split.getX() + split.getWidth() / 2,
                             2, "wrapped primary remains centered");
                         assertEquals(split.getParent().getWidth() / 2,
                             branchSwitch.getX() + branchSwitch.getWidth() / 2, 2, "wrapped branch remains centered");
+                    } else {
+                        sawHorizontalActions = true;
                     }
                     assertTrue(split.getWidth() < summary.getWidth() - 2,
                         "primary firmware action uses natural width instead of stretching across the summary");
@@ -240,6 +257,8 @@ class DevicePaneLayoutTest {
                         + SwingUtilities.getAncestorOfClass(FirmwareStatusSummaryPanel.class, rollback).getBounds());
                   }
                 }
+                assertTrue(sawHorizontalActions, "preferred-height mismatch is exercised in the horizontal row");
+                assertTrue(sawStackedActions, "preferred-height mismatch is exercised in the stacked row");
             });
         } finally {
             if (previousRollbackFlag == null) {
@@ -441,6 +460,9 @@ class DevicePaneLayoutTest {
             StartupUpdateActions actions = new StartupUpdateActions(connectivity, statusPanel,
                 new SingleAsyncJobExecutor(statusPanel), selected,
                 CompletableFuture.completedFuture(Autoupdate.UpdateOutcome.UP_TO_DATE), ignored -> { }, () -> { });
+            // Exercise the visible manual-update control regardless of this machine's persisted auto-update preference.
+            actions.getUpdateSoftwareButton().setVisible(true);
+            actions.getUpdateSoftwareButton().setEnabled(true);
             actions.setDevMetadataProviderForTests((board, branch) ->
                 LocalDate.now(ZoneOffset.UTC).atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli());
             JComboBox<PortResult> ports = new JComboBox<>();
@@ -459,20 +481,31 @@ class DevicePaneLayoutTest {
         });
 
         long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(5);
+        boolean[] ready = new boolean[1];
         while (System.nanoTime() < deadline) {
-            final boolean[] ready = new boolean[1];
             SwingUtilities.invokeAndWait(() -> {
                 List<Component> components = UiUtils.getAllComponents(summary[0]);
                 ready[0] = components.stream().anyMatch(c -> c instanceof JTextArea
-                    && "Update available".equals(((JTextArea) c).getText()))
-                    && components.stream().anyMatch(c -> c instanceof JButton
-                    && "Switch firmware branch".equals(((JButton) c).getText()) && c.isVisible());
+                    && "Update available".equals(((JTextArea) c).getText()));
             });
             if (ready[0]) {
                 break;
             }
             Thread.sleep(10);
         }
+        SwingUtilities.invokeAndWait(() -> {
+            List<Component> components = UiUtils.getAllComponents(summary[0]);
+            assertTrue(ready[0], "Startup fixture reaches release-status ready state: textAreas="
+                + components.stream().filter(c -> c instanceof JTextArea)
+                    .map(c -> ((JTextArea) c).getText()).collect(java.util.stream.Collectors.toList())
+                + ", buttons=" + components.stream().filter(c -> c instanceof JButton)
+                    .map(c -> ((JButton) c).getText() + "=" + c.isVisible() + "/" + c.isEnabled())
+                    .collect(java.util.stream.Collectors.toList()));
+            JButton switchBranch = (JButton) components.stream().filter(c -> c instanceof JButton
+                && "Switch firmware branch".equals(((JButton) c).getText()))
+                .findFirst().orElseThrow(AssertionError::new);
+            assertFalse(switchBranch.isVisible(), "master firmware is not an eligible branch-switch source");
+        });
         SwingUtilities.invokeAndWait(() -> assertStartupNarrowHighFontLayout(panel[0], summary[0]));
         for (int width : new int[]{2000, 960, 480}) {
             SwingUtilities.invokeAndWait(() -> {
@@ -673,6 +706,8 @@ class DevicePaneLayoutTest {
             Rectangle bounds = SwingUtilities.convertRectangle(control.getParent(), control.getBounds(), card);
             assertTrue(control.isVisible() && bounds.y >= 0 && bounds.y + bounds.height <= card.getHeight(),
                 control.getClass().getSimpleName() + " remains reachable inside Startup card: "
+                    + (control instanceof JButton ? "text=" + ((JButton) control).getText()
+                        + ", name=" + control.getName() + ", " : "")
                     + bounds + ", card=" + card.getBounds());
             for (Component current = control; current != card; current = current.getParent()) {
                 Container parent = current.getParent();
@@ -924,7 +959,8 @@ class DevicePaneLayoutTest {
                 assertTrue(option.getHeight() >= option.getPreferredSize().height,
                     "wrapped Device checkbox is not clipped: " + option.getToolTipText());
                 if (option.getToolTipText().startsWith("Update this console")) {
-                    assertFalse(option.getText().contains("<html>"), "software option uses natural-width text");
+                    assertEquals("Auto-update console software", visibleCheckboxText(option),
+                        "software option keeps its full label when the available width requires wrapping");
                 }
                 assertTrue(option.getX() >= 0 && option.getY() >= 0
                     && option.getX() + option.getWidth() <= option.getParent().getWidth()

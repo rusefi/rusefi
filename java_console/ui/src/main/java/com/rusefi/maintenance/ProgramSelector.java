@@ -759,7 +759,6 @@ public class ProgramSelector {
         public Dimension getPreferredSize() {
             boolean stacked = getWidth() > 0 && getWidth() < horizontalWidth();
             int width = 0;
-            int height = 0;
             int count = 0;
             for (Component component : getComponents()) {
                 if (!component.isVisible()) {
@@ -767,14 +766,13 @@ public class ProgramSelector {
                 }
                 Dimension size = component.getPreferredSize();
                 width = Math.max(width, size.width);
-                height += size.height;
                 count++;
             }
             if (count == 0) {
                 return new Dimension();
             }
             return stacked
-                ? new Dimension(width, height + GAP * (count - 1))
+                ? new Dimension(width, maxVisibleHeight() * count + GAP * (count - 1))
                 : new Dimension(horizontalWidth(), maxVisibleHeight());
         }
 
@@ -788,10 +786,9 @@ public class ProgramSelector {
                 }
             }
             int count = 0;
-            int totalHeight = 0;
+            int rowHeight = maxVisibleHeight();
             for (Component component : getComponents()) {
                 if (component.isVisible()) {
-                    totalHeight += component.getPreferredSize().height;
                     count++;
                 }
             }
@@ -799,12 +796,12 @@ public class ProgramSelector {
                 return;
             }
             if (stacked) {
-                int y = (getHeight() - totalHeight - GAP * (count - 1)) / 2;
+                int y = (getHeight() - rowHeight * count - GAP * (count - 1)) / 2;
                 for (Component component : getComponents()) {
                     if (component.isVisible()) {
                         Dimension size = component.getPreferredSize();
-                        component.setBounds((getWidth() - size.width) / 2, y, size.width, size.height);
-                        y += size.height + GAP;
+                        component.setBounds((getWidth() - size.width) / 2, y, size.width, rowHeight);
+                        y += rowHeight + GAP;
                     }
                 }
             } else {
@@ -812,7 +809,7 @@ public class ProgramSelector {
                 for (Component component : getComponents()) {
                     if (component.isVisible()) {
                         Dimension size = component.getPreferredSize();
-                        component.setBounds(x, (getHeight() - size.height) / 2, size.width, size.height);
+                        component.setBounds(x, (getHeight() - rowHeight) / 2, size.width, rowHeight);
                         x += size.width + GAP;
                     }
                 }
