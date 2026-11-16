@@ -91,6 +91,41 @@ public class OfflineTuneLoader {
         return loadTuneFromFile(msqPath, null, errorHandler, signature -> pickCustomIni(null, signature), false);
     }
 
+    /**
+     * Connected imports can use the already-loaded destination schema when the MSQ was saved
+     * against that exact signature. Different signatures still need the genuine source INI for
+     * version-specific migration.
+     */
+    public static Result loadConnectedTuneFromFile(String msqPath, IniFileModel destinationIni,
+                                                   Consumer<String> errorHandler) {
+        return loadConnectedTuneFromFile(msqPath, destinationIni, errorHandler,
+            signature -> pickCustomIni(null, signature),
+            signature -> new RealIniFileProvider(false).provide(signature));
+    }
+
+    static Result loadConnectedTuneFromFile(String msqPath, IniFileModel destinationIni,
+                                            Consumer<String> errorHandler,
+                                            CustomIniPicker customIniPicker,
+                                            SourceIniProvider sourceIniProvider) {
+        Msq msq;
+        try {
+            msq = Msq.readTune(msqPath);
+        } catch (Exception e) {
+            log.error("Failed to read MSQ: " + msqPath, e);
+            errorHandler.accept("Failed to read tune file:\n" + e.getMessage());
+            return null;
+        }
+        String signature = msq.getVersionInfo() != null ? msq.getVersionInfo().getSignature() : null;
+        if (signature == null || signature.isEmpty()) {
+            errorHandler.accept("MSQ file does not contain a signature.\nCannot determine which INI file to use.");
+            return null;
+        }
+        if (destinationIni != null && signature.equals(destinationIni.getSignature())) {
+            return loadConnectedTune(msq, signature, null);
+        }
+        return loadResolvedSourceIni(msq, signature, errorHandler, customIniPicker, false, sourceIniProvider);
+    }
+
     static Result loadTuneFromFile(String msqPath, Component parent, Consumer<String> errorHandler,
                                    CustomIniPicker customIniPicker, boolean requireImage) {
         return loadTuneFromFile(msqPath, parent, errorHandler, customIniPicker, requireImage,
