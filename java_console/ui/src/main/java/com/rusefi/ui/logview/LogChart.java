@@ -51,6 +51,7 @@ import java.util.Set;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.IntConsumer;
 import java.util.Locale;
 import java.util.TooManyListenersException;
 
@@ -101,6 +102,7 @@ final class LogChart extends JComponent {
     private final PlotLayout layout;
     private final TimeWindow window;
     private final ChartSettings grid;
+    private final TimelineSmoothingWindow smoothingWindow;
     private int cursorSample = -1;
     private int cursorX = -1;
     /** Pointer y while it is over the chart, or -1; places the cursor value list boxes. */
@@ -158,6 +160,12 @@ final class LogChart extends JComponent {
     private final VisibleStats windowStats;
     /** Asks for a custom scale (signal name, current {min, max}); null when cancelled. Replaced in tests. */
     BiFunction<String, double[], double[]> customScalePrompt = this::askCustomScale;
+    interface SmoothingWindowPrompt {
+        Integer show(String signal, int initialMs, IntConsumer preview);
+    }
+
+    /** Asks for one signal's smoothing window in milliseconds; null when cancelled. Replaced in tests. */
+    SmoothingWindowPrompt smoothingWindowPrompt;
     private final List<Runnable> colorListeners = new ArrayList<>();
     /** Asks for a custom colour (signal name, current colour); null when cancelled. Replaced in tests. */
     BiFunction<String, Color, Color> customColorPrompt = (label, initial) ->
@@ -225,6 +233,9 @@ final class LogChart extends JComponent {
         this.log = log;
         this.layout = layout;
         this.grid = grid;
+        smoothingWindow = TimelineSmoothingWindow.of(log);
+        smoothingWindowPrompt = (signal, initialMs, preview) -> TimelineSmoothingDialog.show(this,
+                "Smoothing of " + signal, smoothingWindow, initialMs, false, preview);
         double fullStart = log.minimum(0);
         double fullEnd = log.maximum(0);
         double interval = log.minimumSampleInterval();
@@ -720,7 +731,7 @@ final class LogChart extends JComponent {
         ButtonGroup group = new ButtonGroup();
 
         JRadioButtonMenuItem global = new JRadioButtonMenuItem(
-                "Use global (" + TimelineSmoothingLevel.label(grid.getSmoothingWindowSeconds()) + ")", usesGlobal);
+                "Use global (" + TimelineSmoothingWindow.label(grid.getSmoothingWindowSeconds()) + ")", usesGlobal);
         global.addActionListener(e -> {
             grid.useGlobalSmoothing(signal);
             repaint();
@@ -729,19 +740,39 @@ final class LogChart extends JComponent {
         smoothing.add(global);
         smoothing.addSeparator();
 
-        for (TimelineSmoothingLevel level : TimelineSmoothingLevel.values()) {
-            JRadioButtonMenuItem item = new JRadioButtonMenuItem(level.label,
-                    !usesGlobal && current == level.seconds);
-            item.setToolTipText(level == TimelineSmoothingLevel.RAW
-                    ? "Draw this signal's recorded samples"
-                    : "Display-only centred moving average for this signal");
-            item.addActionListener(e -> {
-                grid.setSmoothingWindowSeconds(signal, level.seconds);
-                repaint();
-            });
-            group.add(item);
-            smoothing.add(item);
-        }
+        JRadioButtonMenuItem raw = new JRadioButtonMenuItem("Raw", !usesGlobal && current == 0);
+        raw.setToolTipText("Draw this signal's recorded samples");
+        raw.addActionListener(e -> {
+            grid.setSmoothingWindowSeconds(signal, 0);
+            repaint();
+        });
+        group.add(raw);
+        smoothing.add(raw);
+
+        String customText = !usesGlobal && current > 0
+                ? "Custom (" + TimelineSmoothingWindow.label(current) + ")\u2026" : "Custom\u2026";
+        JRadioButtonMenuItem custom = new JRadioButtonMenuItem(customText, !usesGlobal && current > 0);
+        custom.setToolTipText("Enter a display-only smoothing window in milliseconds");
+        custom.addActionListener(e -> {
+            double startingSeconds = current > 0 ? current : grid.getSmoothingWindowSeconds();
+            Integer picked = smoothingWindowPrompt.show(signal,
+                    smoothingWindow.initialMilliseconds(startingSeconds), milliseconds -> {
+                        grid.setSmoothingWindowSeconds(signal, milliseconds / 1000.0);
+                        repaint();
+                    });
+            if (picked == null) {
+                if (usesGlobal) {
+                    grid.useGlobalSmoothing(signal);
+                } else {
+                    grid.setSmoothingWindowSeconds(signal, current);
+                }
+            } else {
+                grid.setSmoothingWindowSeconds(signal, picked / 1000.0);
+            }
+            repaint();
+        });
+        group.add(custom);
+        smoothing.add(custom);
         return smoothing;
     }
 

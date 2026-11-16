@@ -84,15 +84,29 @@ class LogChartSmoothingTest {
         layout.add(1);
         layout.add(2);
         LogChart chart = new LogChart(log, layout, settings);
+        chart.smoothingWindowPrompt = (signal, initial, preview) -> {
+            preview.accept(10);
+            return 10;
+        };
 
         JMenu smoothing = chart.smoothingSubmenu(1);
         assertTrue(item(smoothing, "Use global (100 ms)").isSelected());
-        item(smoothing, "1 s").doClick();
-        assertEquals(50, chart.traceValue(0, 1), 1e-12, "Signal uses its 1 s override");
+        item(smoothing, "Custom\u2026").doClick();
+        assertEquals(0.01, settings.getSmoothingWindowSeconds("Signal"), 1e-12);
+        assertEquals(0, chart.traceValue(0, 1), 1e-12, "Signal uses its 10 ms override");
         assertEquals(5, chart.traceValue(0, 2), 1e-12, "Other still uses the 100 ms global level");
 
         smoothing = chart.smoothingSubmenu(1);
-        assertTrue(item(smoothing, "1 s").isSelected());
+        assertTrue(item(smoothing, "Custom (10 ms)\u2026").isSelected());
+        chart.smoothingWindowPrompt = (signal, initial, preview) -> {
+            preview.accept(50);
+            return null;
+        };
+        item(smoothing, "Custom (10 ms)\u2026").doClick();
+        assertEquals(0.01, settings.getSmoothingWindowSeconds("Signal"), 1e-12,
+                "Cancel restores the setting before the preview");
+
+        smoothing = chart.smoothingSubmenu(1);
         item(smoothing, "Raw").doClick();
         assertEquals(0, chart.traceValue(0, 1), 1e-12);
         assertEquals(5, chart.traceValue(0, 2), 1e-12);
