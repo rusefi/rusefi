@@ -366,4 +366,26 @@ class LogChartSettingsTest {
         assertEquals("Values: Off  ▾", toolbar.valuesButton.getText());
         assertFalse(toolbar.atClick.isEnabled(), "nothing to place while off");
     }
+
+    @Test
+    void smoothingButtonAppliesTheGlobalDisplayWindow() {
+        ChartSettings settings = new ChartSettings();
+        int[] repaints = {0};
+        ChartToolbar toolbar = new ChartToolbar(settings, () -> repaints[0]++);
+
+        assertEquals("Smoothing: Raw  \u25BE", toolbar.smoothingButton.getText());
+        assertEquals(6, toolbar.smoothingPopup.getComponentCount());
+        assertTrue(toolbar.smoothingItems[TimelineSmoothingLevel.RAW.ordinal()].isSelected());
+
+        toolbar.smoothingItems[TimelineSmoothingLevel.MS_250.ordinal()].doClick();
+        assertEquals(0.25, settings.getSmoothingWindowSeconds());
+        assertEquals("Smoothing: 250 ms  \u25BE", toolbar.smoothingButton.getText());
+        assertTrue(toolbar.smoothingItems[TimelineSmoothingLevel.MS_250.ordinal()].isSelected());
+        assertEquals(1, repaints[0]);
+
+        toolbar.smoothingItems[TimelineSmoothingLevel.RAW.ordinal()].doClick();
+        assertEquals(0, settings.getSmoothingWindowSeconds());
+        assertEquals("Smoothing: Raw  \u25BE", toolbar.smoothingButton.getText());
+        assertEquals(2, repaints[0]);
+    }
 }
