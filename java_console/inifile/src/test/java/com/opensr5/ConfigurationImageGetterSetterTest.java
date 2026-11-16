@@ -39,28 +39,60 @@ public class ConfigurationImageGetterSetterTest {
     }
 
     @Test
-    public void unknownByteOrdinalCannotBeSaved() {
+    public void unknownByteOrdinalIsPreservedAsExplicitUnsupportedValue() {
         EnumIniField field = sparsePinField(FieldType.UINT8, 0, 7);
         for (int ordinal : new int[]{48, 255}) {
             byte[] bytes = {(byte) 0xA5, (byte) ordinal, (byte) 0x5A};
             ConfigurationImage image = new ConfigurationImage(bytes.clone());
-            // TDB: saving a representable pin absent from this INI currently throws.
-            OrdinalOutOfRangeException error = assertThrows(OrdinalOutOfRangeException.class,
-                    () -> ConfigurationImageGetterSetter.getStringValue(field, image));
-            assertTrue(error.getMessage().contains("Ordinal out of range " + ordinal));
+            String value = ConfigurationImageGetterSetter.getStringValue(field, image);
+            assertEquals(EnumIniField.unknownOrdinalValue(ordinal), value);
             assertArrayEquals(bytes, image.getContent());
         }
     }
 
     @Test
-    public void unknownWideOrdinalCannotBeSavedFromPackedField() {
+    public void unknownWideOrdinalIsPreservedFromPackedField() {
         EnumIniField field = sparsePinField(FieldType.UINT16, 3, 8);
         // Ordinal 300 in bits 3..11, with unrelated bits and neighboring bytes set.
         byte[] bytes = {(byte) 0x5A, (byte) 0x65, (byte) 0xA9, (byte) 0x6B};
         ConfigurationImage image = new ConfigurationImage(bytes.clone());
-        OrdinalOutOfRangeException error = assertThrows(OrdinalOutOfRangeException.class,
-                () -> ConfigurationImageGetterSetter.getStringValue(field, image));
-        assertTrue(error.getMessage().contains("Ordinal out of range 300"));
+        assertEquals(EnumIniField.unknownOrdinalValue(300),
+            ConfigurationImageGetterSetter.getStringValue(field, image));
+        assertArrayEquals(bytes, image.getContent());
+    }
+
+    @Test
+    public void gppwmPinUsingRestrictedGpioEnumKeepsBridgeOutputOrdinal() {
+        TreeMap<Integer, String> gpioLabels = new TreeMap<>();
+        for (int ordinal = 0; ordinal <= 177; ordinal++) {
+            gpioLabels.put(ordinal, "GPIO " + ordinal);
+        }
+        EnumIniField field = new EnumIniField("gppwm2_pin", 0, FieldType.UINT16,
+                new EnumIniField.EnumKeyValueMap(gpioLabels), 0, 8, true);
+        // The custom definition uses $gpio_list here, but bridge outputs are ordinals 361/362
+        // in $output_pin_e_list. Keep unknown raw enum values explicit and non-destructive.
+        byte[] bytes = {(byte) 0x6A, 0x01, (byte) 0xA5, 0x5A}; // 362, then untouched bytes
+        ConfigurationImage image = new ConfigurationImage(bytes.clone());
+
+        assertEquals(EnumIniField.unknownOrdinalValue(362),
+            ConfigurationImageGetterSetter.getStringValue(field, image));
+        assertArrayEquals(bytes, image.getContent());
+    }
+
+    @Test
+    public void explicitInvalidPinPlaceholderKeepsRawOrdinal() {
+        TreeMap<Integer, String> pinLabels = new TreeMap<>();
+        for (int ordinal = 0; ordinal <= 43; ordinal++) {
+            pinLabels.put(ordinal, ordinal == 0 ? "NONE" : "INVALID");
+        }
+        EnumIniField field = new EnumIniField("gppwm2_pin", 2704, FieldType.UINT16,
+            new EnumIniField.EnumKeyValueMap(pinLabels), 0, 8, true);
+        byte[] bytes = new byte[2706];
+        bytes[2704] = 43;
+        ConfigurationImage image = new ConfigurationImage(bytes.clone());
+
+        assertEquals(EnumIniField.unknownOrdinalValue(43),
+            ConfigurationImageGetterSetter.getStringValue(field, image));
         assertArrayEquals(bytes, image.getContent());
     }
 
@@ -78,16 +110,31 @@ public class ConfigurationImageGetterSetterTest {
     }
 
     @Test
-    public void sparseGapLosesItsOrdinalAndCannotRoundTrip() {
+    public void sparseGapKeepsItsOrdinalAndCannotBeMistakenForInvalidOrRestored() {
         EnumIniField field = sparsePinField(FieldType.UINT8, 0, 7);
         ConfigurationImage source = new ConfigurationImage(new byte[]{0, 33, 0});
         String saved = ConfigurationImageGetterSetter.getStringValue(field, source);
-        // TDB: below-max unknown ordinals lose their identity rather than throwing on save.
-        assertEquals("\"INVALID\"", saved);
+        assertEquals(EnumIniField.unknownOrdinalValue(33), saved);
         ConfigurationImage target = new ConfigurationImage(new byte[]{0, 5, 0});
-        assertThrows(IllegalArgumentException.class,
+        IllegalArgumentException error = assertThrows(IllegalArgumentException.class,
                 () -> ConfigurationImageGetterSetter.setValue2(field, target, field.getName(), saved));
+        assertTrue(error.getMessage().contains("Cannot load unknown pin"));
         assertArrayEquals(new byte[]{0, 5, 0}, target.getContent());
+    }
+
+    @Test
+    public void unknownOrdinalMarkerCannotAliasAnActualEnumLabel() {
+        String marker = EnumIniField.unknownOrdinalValue(33);
+        TreeMap<Integer, String> labels = new TreeMap<>();
+        labels.put(0, "NONE");
+        labels.put(1, marker);
+        EnumIniField field = new EnumIniField("pin", 0, FieldType.UINT8,
+            new EnumIniField.EnumKeyValueMap(labels), 0, 7, true);
+        ConfigurationImage image = new ConfigurationImage(new byte[]{1, 0});
+
+        assertEquals("\"" + marker + "\"", ConfigurationImageGetterSetter.getStringValue(field, image));
+        ConfigurationImageGetterSetter.setValue2(field, image, "pin", "\"" + marker + "\"");
+        assertArrayEquals(new byte[]{1, 0}, image.getContent());
     }
 
     @Test
@@ -115,7 +162,11 @@ public class ConfigurationImageGetterSetterTest {
     @Test
     public void malformedOrOutOfRangeNumericOrdinalDoesNotModifyImage() {
         EnumIniField field = sparsePinField(FieldType.UINT8, 0, 7);
-        for (String value : new String[]{"\"-1\"", "\"256\"", "\"4294967296\"", "\"not a pin\""}) {
+        for (String value : new String[]{
+            "\"-1\"", "\"256\"", "\"4294967296\"", "\"not a pin\"",
+            EnumIniField.unknownOrdinalValue(-1), EnumIniField.unknownOrdinalValue(256),
+            "__rusefi_unknown_enum_ordinal_4294967296__"
+        }) {
             byte[] bytes = {(byte) 0xA5, 5, (byte) 0x5A};
             ConfigurationImage image = new ConfigurationImage(bytes.clone());
             assertThrows(IllegalArgumentException.class,

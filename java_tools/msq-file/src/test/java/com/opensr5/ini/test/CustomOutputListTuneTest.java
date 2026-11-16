@@ -20,7 +20,7 @@ public class CustomOutputListTuneTest {
     private static final byte[] IMAGE = {0x5A, 47, 0, 0x6B};
 
     @Test
-    public void gpioListTuneCannotBeOpenedWithRestrictedOutputList() throws IniParsingException {
+    public void gpioListTuneDoesNotConvertAgainstDifferentOutputList() throws IniParsingException {
         IniFileModel customIni = outputListIni("gpio_list",
             "0=\"NONE\",5=\"Output\",47=\"Auxiliary pin\"");
         IniFileModel standardIni = outputListIni("output_pin_e_list", "0=\"NONE\",5=\"Output\"");
@@ -30,14 +30,14 @@ public class CustomOutputListTuneTest {
         assertArrayEquals(IMAGE, tune.asImage(customIni).getContent());
         assertEquals(customIni.getSignature(), standardIni.getSignature());
 
-        // TDB #10638: resolving a stock INI by signature currently aborts the entire import.
+        // Direct conversion must remain strict: the UI can ask for this tune's matching custom INI.
         IllegalArgumentException error = assertThrows(IllegalArgumentException.class,
             () -> tune.asImage(standardIni));
         assertEquals("outputPin: Enum name not found \"Auxiliary pin\"", error.getMessage());
     }
 
     @Test
-    public void renamedOutputListLosesPinLabelCompatibility() throws IniParsingException {
+    public void customListNamesDoNotEnableSuffixCompatibility() throws IniParsingException {
         IniFileModel sourceIni = outputListIni("output_pin_e_list", "0=\"NONE\",47=\"Output\"");
         Msq tune = MsqFactory.valueOf(new ConfigurationImage(IMAGE.clone()), sourceIni);
         String documentedOptions = "0=\"NONE\",47=\"Output (documentation)\"";
@@ -50,10 +50,25 @@ public class CustomOutputListTuneTest {
         Msq customTune = MsqFactory.valueOf(new ConfigurationImage(IMAGE.clone()), customIni);
         assertArrayEquals(IMAGE, customTune.asImage(customIni).getContent());
 
-        // TDB #10638: changing only the list name disables otherwise accepted suffix matching.
+        // Without metadata identifying a pin list, cross-label suffix matching is intentionally unsupported.
         IllegalArgumentException error = assertThrows(IllegalArgumentException.class,
             () -> tune.asImage(customIni));
         assertEquals("outputPin: Enum name not found \"Output\"", error.getMessage());
+    }
+
+    @Test
+    public void unknownRawPinOrdinalIsExportedExplicitlyButNotRestoredWithoutDefinitionEvidence()
+            throws IniParsingException {
+        IniFileModel ini = outputListIni("gpio_list", "0=\"NONE\",5=\"Output\",47=\"Auxiliary pin\"");
+        byte[] image = {0x5A, (byte) 200, 0, 0x6B};
+        Msq tune = MsqFactory.valueOf(new ConfigurationImage(image.clone()), ini);
+        String value = EnumIniField.unknownOrdinalValue(200);
+
+        assertEquals(value, tune.getConstantsAsMap().get("outputPin").getValue());
+        IllegalArgumentException error = assertThrows(IllegalArgumentException.class, () -> tune.asImage(ini));
+        assertEquals("outputPin: Cannot load unknown pin. Use the original tune with the INI used to save it, "
+            + "or choose a supported pin.",
+            error.getMessage());
     }
 
     private static IniFileModel outputListIni(String listName, String options) throws IniParsingException {

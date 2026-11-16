@@ -85,6 +85,17 @@ public class RealIniFileProviderManualPickerTest {
         assertEquals(UNPARSEABLE_SIGNATURE, picker.askedSignature);
     }
 
+    @Test
+    public void providerCanSkipGlobalManualPickerForScopedLookup() {
+        AtomicInteger promptCount = new AtomicInteger();
+        RealIniFileProvider.manualPicker = ignored -> promptCount.incrementAndGet();
+        RealIniFileProvider provider = new RealIniFileProvider((location, download) -> null, false);
+
+        assertThrows(IniNotFoundException.class, () -> provider.provide(UNPARSEABLE_SIGNATURE));
+
+        assertEquals(0, promptCount.get());
+    }
+
     /** The port scanner calls provide() on a loop; a declined signature must not re-prompt (#9774 follow-up). */
     @Test
     public void promptsOnlyOncePerSignatureAcrossRepeatedProbes() {

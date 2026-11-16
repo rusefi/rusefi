@@ -26,6 +26,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -142,7 +143,7 @@ public class CalibrationFieldFactory {
                 row.add(checkBox);
                 value = () -> checkBox.isSelected() ? "enabled" : "disabled";
             } else {
-                JComboBox<String> comboBox = createComboBox(
+                JComboBox<Object> comboBox = createComboBox(
                     enumField, iniField, currentValue, workingImage, onChange, fieldEditorWidth, !hasHelp);
                 row.add(comboBox);
                 value = () -> String.valueOf(comboBox.getSelectedItem());
@@ -379,18 +380,37 @@ public class CalibrationFieldFactory {
         return checkBox;
     }
 
-    private static JComboBox<String> createComboBox(EnumIniField enumField, IniField iniField, String currentValue,
+    private static JComboBox<Object> createComboBox(EnumIniField enumField, IniField iniField, String currentValue,
                                                      ConfigurationImage workingImage, Runnable onChange,
                                                      int fieldEditorWidth, boolean valueTooltip) {
+        boolean unknownCurrentValue = !EnumIniField.isQuoted(currentValue)
+            && EnumIniField.isUnknownOrdinalValue(currentValue);
         String cleanValue = currentValue.replace("\"", "");
-        String[] comboValues = getComboValues(enumField);
-        JComboBox<String> comboBox = new JComboBox<>(comboValues);
-        applyStyle(comboBox);
-        comboBox.setSelectedItem(cleanValue);
-        if (valueTooltip) {
-            comboBox.setToolTipText(cleanValue);
+        List<Object> comboValues = new ArrayList<>(Arrays.asList(getComboValues(enumField)));
+        UnknownPinChoice unknownChoice = unknownCurrentValue
+            ? new UnknownPinChoice(EnumIniField.parseUnknownOrdinal(cleanValue))
+            : null;
+        if (unknownChoice != null) {
+            comboValues.add(unknownChoice);
         }
-        applyBackgroundColor(comboBox, cleanValue);
+        JComboBox<Object> comboBox = new JComboBox<>(comboValues.toArray());
+        applyStyle(comboBox);
+        comboBox.setSelectedItem(unknownChoice == null ? cleanValue : unknownChoice);
+        UnknownPinChoice[] currentUnknownChoice = {unknownChoice};
+        String[] lastKnownValue = {unknownChoice == null ? cleanValue : null};
+        boolean[] restoringSelection = {false};
+        comboBox.setRenderer((list, value, index, isSelected, cellHasFocus) -> {
+            JLabel label = (JLabel) new DefaultListCellRenderer()
+                .getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            if (value instanceof UnknownPinChoice) {
+                label.setText(value.toString());
+            }
+            return label;
+        });
+        if (valueTooltip) {
+            comboBox.setToolTipText(unknownChoice == null ? cleanValue : unknownChoice.toString());
+        }
+        applyBackgroundColor(comboBox, unknownChoice == null ? cleanValue : unknownChoice.toString());
         Dimension size = comboBox.getPreferredSize();
         size.width = fieldEditorWidth > 0
             ? Math.min(fieldEditorWidth, MAX_FIELD_EDITOR_WIDTH)
@@ -399,17 +419,47 @@ public class CalibrationFieldFactory {
         comboBox.setPreferredSize(size);
         comboBox.setMaximumSize(size);
         comboBox.addActionListener(e -> {
+            if (restoringSelection[0]) return;
             if (workingImage == null) return;
-            String selected = (String) comboBox.getSelectedItem();
-            if (selected != null) {
+            Object selectedItem = comboBox.getSelectedItem();
+            if (selectedItem instanceof UnknownPinChoice) {
+                if (selectedItem == currentUnknownChoice[0]) return;
+                if (lastKnownValue[0] != null) {
+                    restoringSelection[0] = true;
+                    comboBox.setSelectedItem(lastKnownValue[0]);
+                    restoringSelection[0] = false;
+                }
+                return;
+            }
+            if (selectedItem instanceof String) {
+                String selected = (String) selectedItem;
                 if (valueTooltip) {
                     comboBox.setToolTipText(selected);
                 }
-                ConfigurationImageGetterSetter.setValue2(iniField, workingImage, iniField.getName(), selected);
+                ConfigurationImageGetterSetter.setValue2(iniField, workingImage, iniField.getName(),
+                    enumField.isPinEnum() ? javax.management.ObjectName.quote(selected) : selected);
+                lastKnownValue[0] = selected;
+                if (currentUnknownChoice[0] != null) {
+                    comboBox.removeItem(currentUnknownChoice[0]);
+                    currentUnknownChoice[0] = null;
+                }
                 if (onChange != null) onChange.run();
             }
         });
         return comboBox;
+    }
+
+    private static final class UnknownPinChoice {
+        private final int ordinal;
+
+        private UnknownPinChoice(int ordinal) {
+            this.ordinal = ordinal;
+        }
+
+        @Override
+        public String toString() {
+            return "Unknown pin (ID " + ordinal + ")";
+        }
     }
 
     static int getFieldEditorPreferredWidth(IniField iniField, String currentValue) {
@@ -448,7 +498,7 @@ public class CalibrationFieldFactory {
      * For pin selectors ({@link PinoutLookup#isPinSetting}, analog inputs included), adds a connector button
      * that fires the current combo value up to the caller for cross-tab navigation.
      */
-    private static JButton createPinoutButton(JComboBox<String> comboBox, String fieldKey, EnumIniField field,
+    private static JButton createPinoutButton(JComboBox<?> comboBox, String fieldKey, EnumIniField field,
                                               PinoutLink onShowInPinout) {
         if (onShowInPinout == null || fieldKey == null) {
             return null;
@@ -496,7 +546,10 @@ public class CalibrationFieldFactory {
         return button;
     }
 
-    private static String getSelectedPin(JComboBox<String> comboBox) {
+    private static String getSelectedPin(JComboBox<?> comboBox) {
+        if (comboBox.getSelectedItem() instanceof UnknownPinChoice) {
+            return null;
+        }
         return PinoutLookup.pinChoice(comboBox.getSelectedItem());
     }
 

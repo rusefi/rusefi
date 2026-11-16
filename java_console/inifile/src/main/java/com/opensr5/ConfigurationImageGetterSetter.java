@@ -28,6 +28,9 @@ public class ConfigurationImageGetterSetter {
                 ordinal = ConfigurationImage.getBitRange(ordinal, field.getBitPosition(), field.getBitSize0() + 1);
 
                 String label = field.getEnums().get(ordinal);
+                if (field.isPinEnum() && (label == null || "INVALID".equalsIgnoreCase(label))) {
+                    return EnumIniField.unknownOrdinalValue(ordinal);
+                }
                 if (label == null) {
                     if (ordinal > field.getEnums().maxOrdinal())
                         throw new OrdinalOutOfRangeException("Ordinal out of range " + ordinal + " in " + field.getName() + " while " + field.getEnums().size() + " " + field.getType());
@@ -165,6 +168,16 @@ public class ConfigurationImageGetterSetter {
             @Override
             public Void visit(EnumIniField field) {
                 String v = value;
+                if (!EnumIniField.isQuoted(v) && EnumIniField.isUnknownOrdinalValue(v)) {
+                    int ordinal = EnumIniField.parseUnknownOrdinal(v);
+                    int bitSize = field.getBitSize0() + 1;
+                    if (!field.isPinEnum() || ordinal < 0 || bitSize < 1 || bitSize > 31
+                        || (bitSize < 31 && ordinal >= (1 << bitSize))) {
+                        throw new IllegalArgumentException(name + ": Malformed unsupported enum ordinal marker: " + v);
+                    }
+                    throw new IllegalArgumentException(name + ": Cannot load unknown pin. Use the original tune "
+                        + "with the INI used to save it, or choose a supported pin.");
+                }
                 int ordinal = findEnumOrdinal(field, v);
                 if (ordinal == -1) {
                     throw new IllegalArgumentException(name + ": Enum name not found " + v);

@@ -113,6 +113,59 @@ public class EnumCalibrationFieldRuntimeTest {
     }
 
     @Test
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    void unknownPinChoiceIsDistinctFromARealMarkerLabelAndCannotBeReselectedAfterReplacement() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            String marker = EnumIniField.unknownOrdinalValue(33);
+            Map<Integer, String> values = new TreeMap<>();
+            values.put(0, "NONE");
+            values.put(5, marker);
+            values.put(47, "Coil 1");
+            EnumIniField field = new EnumIniField("outputPin", 1, FieldType.UINT16,
+                new EnumIniField.EnumKeyValueMap(values), 0, 7, true);
+            byte[] original = {(byte) 0x5a, 33, (byte) 0xa5};
+            ConfigurationImage source = new ConfigurationImage(original.clone());
+            ConfigurationImage working = source.clone();
+            AtomicInteger changes = new AtomicInteger();
+            JComboBox<?> combo = component(createRow(field, source, working, changes), JComboBox.class);
+
+            assertEquals(4, combo.getItemCount());
+            Object staleUnknownChoice = combo.getItemAt(3);
+            assertFalse(staleUnknownChoice instanceof String);
+            assertEquals("Unknown pin (ID 33)", combo.getSelectedItem().toString());
+            JLabel rendered = (JLabel) ((ListCellRenderer) combo.getRenderer()).getListCellRendererComponent(
+                new JList(), combo.getSelectedItem(), -1, false, false);
+            assertEquals("Unknown pin (ID 33)", rendered.getText());
+            assertArrayEquals(original, working.getContent());
+            assertEquals(0, changes.get());
+
+            combo.setSelectedItem(marker);
+            assertArrayEquals(new byte[]{(byte) 0x5a, 5, (byte) 0xa5}, working.getContent());
+            assertEquals(1, changes.get());
+            assertArrayEquals(original, source.getContent());
+            assertEquals(3, combo.getItemCount(), "The stale unknown choice must be removed");
+
+            combo.setSelectedItem(staleUnknownChoice);
+            assertEquals(marker, combo.getSelectedItem());
+            assertArrayEquals(new byte[]{(byte) 0x5a, 5, (byte) 0xa5}, working.getContent());
+            assertEquals(1, changes.get(), "Attempting a removed unknown choice must not write or notify");
+
+            byte[] knownImage = {(byte) 0x5a, 5, (byte) 0xa5};
+            ConfigurationImage knownSource = new ConfigurationImage(knownImage.clone());
+            ConfigurationImage knownWorking = knownSource.clone();
+            AtomicInteger knownChanges = new AtomicInteger();
+            JComboBox<?> knownCombo = component(
+                createRow(field, knownSource, knownWorking, knownChanges), JComboBox.class);
+            assertEquals(marker, knownCombo.getSelectedItem());
+            JLabel knownRendered = (JLabel) ((ListCellRenderer) knownCombo.getRenderer())
+                .getListCellRendererComponent(new JList(), knownCombo.getSelectedItem(), -1, false, false);
+            assertEquals(marker, knownRendered.getText(), "A real label must not render as an unknown ordinal");
+            assertArrayEquals(knownImage, knownWorking.getContent());
+            assertEquals(0, knownChanges.get());
+        });
+    }
+
+    @Test
     void booleanEnumsRemainCheckboxesAndWriteTheirOriginalOrdinals() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
             for (String[] labels : new String[][]{{"No", "Yes"}, {"Yes", "No"},

@@ -38,13 +38,23 @@ public class RealIniFileProvider implements IniFileProvider {
     }
 
     private final IniDownloader iniDownloader;
+    private final boolean manualPickerEnabled;
 
     public RealIniFileProvider() {
-        this(SignatureHelper::downloadIfNotAvailable);
+        this(SignatureHelper::downloadIfNotAvailable, true);
+    }
+
+    public RealIniFileProvider(boolean manualPickerEnabled) {
+        this(SignatureHelper::downloadIfNotAvailable, manualPickerEnabled);
     }
 
     RealIniFileProvider(IniDownloader iniDownloader) {
+        this(iniDownloader, true);
+    }
+
+    RealIniFileProvider(IniDownloader iniDownloader, boolean manualPickerEnabled) {
         this.iniDownloader = iniDownloader;
+        this.manualPickerEnabled = manualPickerEnabled;
     }
 
     /**
@@ -115,7 +125,7 @@ public class RealIniFileProvider implements IniFileProvider {
             // local compile) while TunerStudio has already loaded its .ini
             localIniFile = importFromTunerStudioCache(signature);
         }
-        ManualIniPicker picker = manualPicker;
+        ManualIniPicker picker = manualPickerEnabled ? manualPicker : null;
         if (localIniFile == null) {
             if (reportedMissingSignatures.add(signature)) {
                 String message = "Failed to download " + signature + " maybe custom board?";
