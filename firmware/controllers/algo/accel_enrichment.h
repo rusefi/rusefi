@@ -10,7 +10,6 @@
 #pragma once
 
 #include "efitime.h"
-#include "cyclic_buffer.h"
 #include "table_helper.h"
 #include "wall_fuel_state_generated.h"
 #include "tps_accel_state_generated.h"
@@ -25,6 +24,27 @@ public:
 	bool m_accelEventJustOccurred = false;
 	mass_t m_luaEnrichment = 0;
 	Timer m_luaEnrichmentTimer;
+
+	// [tag:tps_rate_detector] Up to two previous TPS samples: the rate is measured
+	// against the oldest, about 10 ms back at the 200 Hz sampling rate.
+	struct TpsSample {
+		float tps;
+		efitick_t nt;
+	};
+	TpsSample m_tpsHistory[2] = {};
+	int m_tpsHistoryCount = 0;
+	Timer m_accelHoldTimer;
+	Timer m_decelHoldTimer;
+
+	// [tag:tps_rate_detector] Raw TPS samples for the median of tpsEventConfirmation:
+	// with N samples the detector uses the median of the last 2N-1, so a change must
+	// last N samples to be seen.
+	static constexpr int TPS_MEDIAN_MAX = 5;
+	float m_rawTps[TPS_MEDIAN_MAX] = {};
+	int m_rawTpsCount = 0;
+	efitick_t m_lastRawNt = 0;
+
+	void clearDetector();
 public:
 	TpsAccelEnrichment();
 
@@ -35,12 +55,15 @@ public:
 	// This function returns true ONCE per acceleration event.
 	bool isAccelEventTriggered();
 
-	int getMaxDeltaIndex();
-	float getMaxDelta();
-
-	void setLength(int length);
-	cyclic_buffer<float> cb;
-	void onNewValue(float currentValue);
+	/**
+	 * [tag:tps_rate_detector] Feeds one TPS sample (percent) taken at nowNt.
+	 * Called from Engine::periodicFastCallback() before the fuel math. Samples
+	 * closer than TPS_RATE_MIN_SAMPLE_US to the previous one are ignored, so extra
+	 * fast-callback invocations do not shorten the rate window.
+	 */
+	void onNewValue(float currentValue, efitick_t nowNt);
+	// Invalid TPS: drop history and end any event, no rate is reported.
+	void onInvalidTps();
 	int onUpdateInvocationCounter = 0;
 
 	/**

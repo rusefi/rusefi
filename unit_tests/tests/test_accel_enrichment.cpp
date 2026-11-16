@@ -11,36 +11,377 @@
 #include "pch.h"
 
 #include "accel_enrichment.h"
+#include "defaults.h"
 #include "fuel_math.h"
 #include "rusefi_lua.h"
 #include "tunerstudio.h"
 #include "tunerstudio_impl.h"
 
-TEST(fuel, testTpsAccelEnrichmentMath) {
-	printf("====================================================================================== testAccelEnrichment\r\n");
+// [tag:tps_rate_detector] A held TPS step, one sample per 5 ms (the fast-callback period):
+// enough samples at `from` to fill the median window of tpsEventConfirmation, then `to`
+// for as many samples as the confirmation needs. The event starts on the last sample.
+static void feedTpsStep(TpsAccelEnrichment& ae, float from, float to) {
+	efitick_t nowNt = getTimeNowNt();
+	int confirmation = config->tpsEventConfirmation;
+	for (int i = 0; i < 2 * confirmation - 1; i++) {
+		nowNt += US2NT(5000);
+		ae.onNewValue(from, nowNt);
+	}
+	for (int i = 0; i < confirmation; i++) {
+		nowNt += US2NT(5000);
+		ae.onNewValue(to, nowNt);
+	}
+}
 
+// [tag:tps_rate_detector] Fast callbacks 5 ms apart with a mocked TPS.
+static void fastCallbacksWithTps(EngineTestHelper& eth, float tps, int count) {
+	Sensor::setMockValue(SensorType::Tps1, tps);
+	for (int i = 0; i < count; i++) {
+		eth.moveTimeForwardMs(5);
+		engine->periodicFastCallback();
+	}
+}
+
+// [tag:tps_rate_detector] Detector coverage: rate window, event start/extreme TPS,
+// hold time, closing events, re-entrant samples, gaps and invalid TPS. These tests use
+// one-sample confirmation so each sample is seen as fed; TpsEventConfirmation covers
+// the median filter.
+class TpsRateDetector : public ::testing::Test {
+protected:
+	EngineTestHelper eth{engine_type_e::TEST_ENGINE};
+	efitick_t nowNt = 0;
+
+	void SetUp() override {
+		engineConfiguration->tpsAccelRateThreshold = 100;
+		engineConfiguration->tpsDecelRateThreshold = 100;
+		engineConfiguration->tpsAccelHoldTime = 0.1f;
+		config->tpsEventConfirmation = TPS_EVENT_CONFIRM_1;
+		ae().resetAE();
+		nowNt = getTimeNowNt();
+	}
+
+	TpsAccelEnrichment& ae() {
+		return engine->module<TpsAccelEnrichment>().unmock();
+	}
+
+	// One sample per 5 ms, the 200 Hz fast-callback rate.
+	void feed(float tps, int samples = 1) {
+		for (int i = 0; i < samples; i++) {
+			nowNt += US2NT(5000);
+			ae().onNewValue(tps, nowNt);
+		}
+	}
+};
+
+TEST_F(TpsRateDetector, MeasuresRateOverTwoSampleIntervals) {
+	feed(10);
+	EXPECT_FLOAT_EQ(0, ae().tpsRate); // no previous sample
+	feed(10);
+	EXPECT_FLOAT_EQ(0, ae().tpsRate);
+	feed(11);
+	// 1% over 10 ms
+	EXPECT_NEAR(100, ae().tpsRate, 0.01f);
+	EXPECT_FALSE(ae().isAboveAccelThreshold); // not above 100 %/s
+	feed(12);
+	EXPECT_NEAR(200, ae().tpsRate, 0.01f);
+	EXPECT_TRUE(ae().isAboveAccelThreshold);
+}
+
+TEST_F(TpsRateDetector, OpeningEventTracksStartAndHighestTps) {
+	feed(10, 3);
+	feed(20);
+	ASSERT_TRUE(ae().isAboveAccelThreshold);
+	EXPECT_TRUE(ae().isAccelEventTriggered());
+	EXPECT_FALSE(ae().isAccelEventTriggered()); // latched once per event
+	// The window start, not the previous sample, is the event's start TPS.
+	EXPECT_FLOAT_EQ(10, ae().tpsFrom);
+	EXPECT_FLOAT_EQ(20, ae().tpsTo);
+	feed(40);
+	EXPECT_FLOAT_EQ(10, ae().tpsFrom);
+	EXPECT_FLOAT_EQ(40, ae().tpsTo);
+	EXPECT_FLOAT_EQ(30, ae().deltaTps);
+	EXPECT_NEAR(3000, ae().peakTpsRate, 0.1f);
+	EXPECT_FALSE(ae().isAccelEventTriggered()); // same event
+
+	// Throttle stops: the event is held for 100 ms after the last opening sample.
+	feed(40, 2);
+	EXPECT_TRUE(ae().isAboveAccelThreshold);
+	feed(40, 18);
+	EXPECT_TRUE(ae().isAboveAccelThreshold);
+	feed(40, 2);
+	EXPECT_FALSE(ae().isAboveAccelThreshold);
+	EXPECT_FLOAT_EQ(0, ae().deltaTps);
+	EXPECT_FLOAT_EQ(0, ae().peakTpsRate);
+
+	// A new opening is a new event.
+	feed(60);
+	EXPECT_TRUE(ae().isAboveAccelThreshold);
+	EXPECT_TRUE(ae().isAccelEventTriggered());
+	EXPECT_FLOAT_EQ(40, ae().tpsFrom);
+}
+
+TEST_F(TpsRateDetector, ClosingEventEndsOpeningEvent) {
+	feed(10, 3);
+	feed(50);
+	ASSERT_TRUE(ae().isAboveAccelThreshold);
+	feed(50);
+	feed(30);
+	EXPECT_FALSE(ae().isAboveAccelThreshold);
+	EXPECT_TRUE(ae().isBelowDecelThreshold);
+	EXPECT_FLOAT_EQ(50, ae().tpsFrom);
+	EXPECT_FLOAT_EQ(30, ae().tpsTo);
+	feed(20);
+	EXPECT_FLOAT_EQ(20, ae().tpsTo); // lowest TPS reached
+	EXPECT_FLOAT_EQ(-30, ae().deltaTps);
+	EXPECT_LT(ae().peakTpsRate, -100);
+	feed(20, 23);
+	EXPECT_FALSE(ae().isBelowDecelThreshold);
+}
+
+TEST_F(TpsRateDetector, ZeroThresholdDisablesDirection) {
+	engineConfiguration->tpsAccelRateThreshold = 0;
+	engineConfiguration->tpsDecelRateThreshold = 0;
+	feed(0, 3);
+	feed(80);
+	EXPECT_FALSE(ae().isAboveAccelThreshold);
+	feed(0, 2);
+	EXPECT_FALSE(ae().isBelowDecelThreshold);
+	EXPECT_NEAR(-8000, ae().tpsRate, 0.1f); // still reported
+}
+
+TEST_F(TpsRateDetector, ZeroHoldEndsEventWhenThrottleStops) {
+	engineConfiguration->tpsAccelHoldTime = 0;
+	feed(0, 3);
+	feed(30);
+	EXPECT_TRUE(ae().isAboveAccelThreshold);
+	feed(30, 2);
+	EXPECT_FALSE(ae().isAboveAccelThreshold);
+}
+
+TEST_F(TpsRateDetector, ReentrantSamplesAndGaps) {
+	feed(10, 3);
+	// A sample closer than 2 ms to the previous one is ignored.
+	nowNt += US2NT(500);
+	ae().onNewValue(90, nowNt);
+	EXPECT_FALSE(ae().isAboveAccelThreshold);
+	EXPECT_FLOAT_EQ(0, ae().tpsRate);
+
+	// After a gap longer than 100 ms the window restarts: no rate from stale history.
+	nowNt += US2NT(150000);
+	ae().onNewValue(90, nowNt);
+	EXPECT_FALSE(ae().isAboveAccelThreshold);
+	EXPECT_FLOAT_EQ(0, ae().tpsRate);
+	feed(90);
+	EXPECT_FLOAT_EQ(0, ae().tpsRate);
+}
+
+TEST_F(TpsRateDetector, InvalidTpsClearsEvent) {
+	feed(0, 3);
+	feed(50);
+	ASSERT_TRUE(ae().isAboveAccelThreshold);
+	ae().onInvalidTps();
+	EXPECT_FALSE(ae().isAboveAccelThreshold);
+	EXPECT_FALSE(ae().isAccelEventTriggered());
+	EXPECT_FLOAT_EQ(0, ae().tpsRate);
+	// History is gone: the next valid sample cannot form a rate.
+	feed(50);
+	EXPECT_FLOAT_EQ(0, ae().tpsRate);
+}
+
+// [tag:tps_rate_detector] tpsEventConfirmation N: the detector uses the median of the
+// last 2N-1 samples, so a TPS change must last N samples. Shorter spikes disappear in
+// both directions; held steps pass N-1 samples late.
+class TpsEventConfirmation : public TpsRateDetector {
+protected:
+	int openings = 0;
+	int closings = 0;
+
+	void setConfirmation(int samples) {
+		config->tpsEventConfirmation = static_cast<tps_event_confirmation_e>(samples);
+		ae().resetAE();
+		openings = 0;
+		closings = 0;
+	}
+
+	// Feeds samples and counts event starts.
+	void feedCounting(float tps, int samples = 1) {
+		for (int i = 0; i < samples; i++) {
+			bool wasOpening = ae().isAboveAccelThreshold;
+			bool wasClosing = ae().isBelowDecelThreshold;
+			feed(tps);
+			if (ae().isAboveAccelThreshold && !wasOpening) {
+				openings++;
+			}
+			if (ae().isBelowDecelThreshold && !wasClosing) {
+				closings++;
+			}
+		}
+	}
+};
+
+TEST_F(TpsEventConfirmation, SingleSampleSpike) {
+	// One sample: the spike is an opening, and its return a closing.
+	setConfirmation(1);
+	feedCounting(20, 5);
+	feedCounting(23);
+	feedCounting(20, 30);
+	EXPECT_EQ(1, openings);
+	EXPECT_EQ(1, closings);
+
+	// Two samples: the spike is gone in both directions.
+	setConfirmation(2);
+	feedCounting(20, 5);
+	feedCounting(23);
+	feedCounting(20, 30);
+	EXPECT_EQ(0, openings);
+	EXPECT_EQ(0, closings);
+	EXPECT_FLOAT_EQ(0, ae().tpsRate);
+}
+
+TEST_F(TpsEventConfirmation, TwoSampleSpike) {
+	setConfirmation(2);
+	feedCounting(20, 5);
+	feedCounting(23, 2);
+	feedCounting(20, 30);
+	EXPECT_EQ(1, openings);
+	EXPECT_EQ(1, closings);
+
+	setConfirmation(3);
+	feedCounting(20, 5);
+	feedCounting(23, 2);
+	feedCounting(20, 30);
+	EXPECT_EQ(0, openings);
+	EXPECT_EQ(0, closings);
+}
+
+TEST_F(TpsEventConfirmation, HeldStepStartsAfterConfirmationSamples) {
+	for (int samples = 1; samples <= 3; samples++) {
+		setConfirmation(samples);
+		feed(20, 5);
+		int samplesUntilEvent = 0;
+		while (!ae().isAboveAccelThreshold && samplesUntilEvent < 10) {
+			feed(50);
+			samplesUntilEvent++;
+		}
+		EXPECT_EQ(samples, samplesUntilEvent) << "confirmation " << samples;
+		EXPECT_FLOAT_EQ(20, ae().tpsFrom) << "confirmation " << samples;
+		EXPECT_FLOAT_EQ(50, ae().tpsTo) << "confirmation " << samples;
+		EXPECT_TRUE(ae().isAccelEventTriggered());
+	}
+}
+
+TEST_F(TpsEventConfirmation, RampLatencyGrowsFiveMsPerSample) {
+	// 1300 %/s: 6.5 % per 5 ms sample.
+	for (int samples = 1; samples <= 3; samples++) {
+		setConfirmation(samples);
+		feed(10, 5);
+		float tps = 10;
+		int samplesUntilEvent = 0;
+		while (!ae().isAboveAccelThreshold && samplesUntilEvent < 10) {
+			tps += 6.5f;
+			feed(tps);
+			samplesUntilEvent++;
+		}
+		EXPECT_EQ(samples, samplesUntilEvent) << "confirmation " << samples;
+	}
+}
+
+TEST_F(TpsEventConfirmation, SteppedTpsFromCanIsDetected) {
+	// A TPS received at 20 Hz moves in steps held for ten samples (50 ms).
+	setConfirmation(3);
+	feedCounting(20, 5);
+	for (int step = 1; step <= 4; step++) {
+		feedCounting(20 + 5 * step, 10);
+	}
+	// The 100 ms hold time joins the steps into one event.
+	EXPECT_EQ(1, openings);
+	EXPECT_EQ(0, closings);
+	EXPECT_FLOAT_EQ(20, ae().tpsFrom);
+	EXPECT_FLOAT_EQ(40, ae().tpsTo);
+
+	// Without hold time every step is an event of its own.
+	engineConfiguration->tpsAccelHoldTime = 0;
+	setConfirmation(3);
+	feedCounting(20, 5);
+	for (int step = 1; step <= 4; step++) {
+		feedCounting(20 + 5 * step, 10);
+	}
+	EXPECT_EQ(4, openings);
+	EXPECT_EQ(0, closings);
+}
+
+TEST_F(TpsEventConfirmation, NoiseRejection) {
+	// Deterministic noise on a steady 20 % TPS: the sum of four uniform integers,
+	// about 0.3 % standard deviation, so every platform produces the same samples.
+	auto countEvents = [this](int samples) {
+		setConfirmation(samples);
+		uint32_t seed = 12345;
+		auto uniform = [&seed]() {
+			seed = seed * 1664525u + 1013904223u;
+			return static_cast<int>((seed >> 16) % 1001) - 500;
+		};
+		for (int i = 0; i < 12000; i++) { // 60 s
+			int sum = uniform() + uniform() + uniform() + uniform();
+			feedCounting(20 + sum * 0.0005196f);
+		}
+		return openings + closings;
+	};
+	int one = countEvents(1);
+	int two = countEvents(2);
+	int three = countEvents(3);
+	EXPECT_GT(one, 100);
+	EXPECT_LT(two * 20, one);
+	EXPECT_LE(three, two);
+}
+
+TEST_F(TpsEventConfirmation, SettingChangeWhileRunning) {
+	setConfirmation(3);
+	feed(20, 5);
+	config->tpsEventConfirmation = TPS_EVENT_CONFIRM_1;
+	feed(50);
+	EXPECT_TRUE(ae().isAboveAccelThreshold);
+	EXPECT_FLOAT_EQ(20, ae().tpsFrom);
+}
+
+TEST(TpsEventConfirmationDefaults, DefaultAndOldTunes) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	EXPECT_EQ(TPS_EVENT_CONFIRM_2, config->tpsEventConfirmation);
+	// Tunes that predate the setting store zero.
+	config->tpsEventConfirmation = TPS_EVENT_CONFIRM_INVALID;
+	EXPECT_TRUE(applyDefaultsOrFixAfterBurn(nullptr));
+	EXPECT_EQ(TPS_EVENT_CONFIRM_2, config->tpsEventConfirmation);
+	config->tpsEventConfirmation = TPS_EVENT_CONFIRM_3;
+	applyDefaultsOrFixAfterBurn(nullptr);
+	EXPECT_EQ(TPS_EVENT_CONFIRM_3, config->tpsEventConfirmation);
+}
 
-	engine->rpmCalculator.setRpmValue(600);
+TEST(fuel, tpsRateDetectorRunsFromFastCallbackBeforeFuelMath) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->tpsAccelRateThreshold = 100;
+	engineConfiguration->tpsAccelHoldTime = 0.2f;
+	// Default: a TPS change must last two samples.
+	ASSERT_EQ(TPS_EVENT_CONFIRM_2, config->tpsEventConfirmation);
+	auto& ae = engine->module<TpsAccelEnrichment>().unmock();
+	ae.resetAE();
+	fastCallbacksWithTps(eth, 10, 4);
+	EXPECT_FALSE(ae.isAboveAccelThreshold);
+	fastCallbacksWithTps(eth, 60, 1);
+	EXPECT_FALSE(ae.isAboveAccelThreshold); // first sample of the change: not confirmed yet
+	fastCallbacksWithTps(eth, 60, 1);
+	EXPECT_TRUE(ae.isAboveAccelThreshold);
+	EXPECT_FLOAT_EQ(10, ae.tpsFrom);
+	EXPECT_FLOAT_EQ(60, ae.tpsTo);
+	// Further calls at the same instant are ignored, not treated as a zero-length window.
 	engine->periodicFastCallback();
+	engine->periodicFastCallback();
+	EXPECT_TRUE(ae.isAboveAccelThreshold);
+	EXPECT_FLOAT_EQ(60, ae.tpsTo);
 
-	engine->module<TpsAccelEnrichment>()->setLength(4);
-
-	engine->module<TpsAccelEnrichment>()->onNewValue(0);
-	ASSERT_EQ( 0,  engine->module<TpsAccelEnrichment>()->getMaxDelta()) << "maxDelta";
-	engine->module<TpsAccelEnrichment>()->onNewValue(10);
-	ASSERT_EQ( 10,  engine->module<TpsAccelEnrichment>()->getMaxDelta()) << "maxDelta#1";
-	engine->module<TpsAccelEnrichment>()->onNewValue(30);
-	ASSERT_EQ( 20,  engine->module<TpsAccelEnrichment>()->getMaxDelta()) << "maxDelta#2";
-
-	engine->module<TpsAccelEnrichment>()->onNewValue(0);
-	ASSERT_EQ( 20,  engine->module<TpsAccelEnrichment>()->getMaxDelta()) << "maxDelta#3";
-	engine->module<TpsAccelEnrichment>()->onNewValue(0);
-	ASSERT_EQ( 20,  engine->module<TpsAccelEnrichment>()->getMaxDelta()) << "maxDelta#4";
-	engine->module<TpsAccelEnrichment>()->onNewValue(0);
-	ASSERT_EQ( 0,  engine->module<TpsAccelEnrichment>()->getMaxDelta()) << "maxDelta#5";
-	engine->module<TpsAccelEnrichment>()->onNewValue(0);
-	ASSERT_EQ( 0,  engine->module<TpsAccelEnrichment>()->getMaxDelta()) << "maxDelta";
+	// Invalid TPS ends the event.
+	Sensor::setInvalidMockValue(SensorType::Tps1);
+	eth.moveTimeForwardMs(5);
+	engine->periodicFastCallback();
+	EXPECT_FALSE(ae.isAboveAccelThreshold);
 }
 
 TEST(fuel, testTpsAccelEnrichmentScheduling) {
@@ -48,39 +389,41 @@ TEST(fuel, testTpsAccelEnrichmentScheduling) {
 
 	setCrankOperationMode();
 
-	engineConfiguration->tpsAccelEnrichmentThreshold = 5;
-	engineConfiguration->tpsAccelLookback = 2;
+	engineConfiguration->tpsAccelRateThreshold = 100;
+	engineConfiguration->tpsAccelHoldTime = 2;
 
 	eth.setTriggerType(trigger_type_e::TT_HALF_MOON);
 
-
 	eth.fireTriggerEvents2(/* count */ 4, 25 /* ms */);
 	ASSERT_EQ( 1200,  Sensor::getOrZero(SensorType::Rpm)) << "RPM";
-	// Establish the TPS baseline after crank synchronization, which clears AE state.
-	Sensor::setMockValue(SensorType::Tps1, 0);
-	engine->periodicSlowCallback();
-	Sensor::setMockValue(SensorType::Tps1, 7);
-	engine->periodicSlowCallback();
+	// Establish the TPS baseline after crank synchronization, which clears AE state,
+	// then a step held for the default two-sample confirmation.
+	fastCallbacksWithTps(eth, 0, 3);
+	fastCallbacksWithTps(eth, 7, 2);
 	int expectedInvocationCounter = 1;
 	ASSERT_EQ(expectedInvocationCounter, engine->module<TpsAccelEnrichment>()->onUpdateInvocationCounter);
 
-	Sensor::setMockValue(SensorType::Tps1, 70);
+	auto& ae = engine->module<TpsAccelEnrichment>().unmock();
+	ASSERT_TRUE(ae.isAboveAccelThreshold);
+	float expectedAEValue = interpolate3d(config->tpsTpsAccelTable,
+		config->tpsTpsAccelToRpmBins, 7.0f,
+		config->tpsTpsAccelFromRpmBins, 0.0f);
+
 	eth.fireTriggerEvents2(/* count */ 1, 25 /* ms */);
 
-	float expectedAEValue = 7;
 	// it does not matter how many times we invoke 'getTpsEnrichment' - state does not change
 	for (int i = 0; i < 20; i++) {
-		ASSERT_NEAR(expectedAEValue, engine->module<TpsAccelEnrichment>()->getTpsEnrichment(), EPS4D);
+		ASSERT_NEAR(expectedAEValue, ae.getTpsEnrichment(), EPS4D);
 	}
 
 	expectedInvocationCounter++;
-	ASSERT_EQ(expectedInvocationCounter, engine->module<TpsAccelEnrichment>()->onUpdateInvocationCounter);
+	ASSERT_EQ(expectedInvocationCounter, ae.onUpdateInvocationCounter);
 
 	eth.engine.periodicFastCallback();
 	eth.engine.periodicFastCallback();
 	eth.engine.periodicFastCallback();
 
-	ASSERT_EQ(expectedInvocationCounter, engine->module<TpsAccelEnrichment>()->onUpdateInvocationCounter);
+	ASSERT_EQ(expectedInvocationCounter, ae.onUpdateInvocationCounter);
 }
 
 static void doFractionalTpsIteration(int period, int divisor, int numCycles, std::vector<floatms_t> &tpsEnrich) {
@@ -89,12 +432,15 @@ static void doFractionalTpsIteration(int period, int divisor, int numCycles, std
 	// split into 2 portions
 	engineConfiguration->tpsAccelFractionDivisor = divisor;
 
-	engine->module<TpsAccelEnrichment>()->resetAE();
-	engine->module<TpsAccelEnrichment>()->onNewValue(0);
+	auto& ae = engine->module<TpsAccelEnrichment>().unmock();
+	ae.resetAE();
 	for (int i = 0; i < numCycles; i++) {
-		engine->module<TpsAccelEnrichment>()->onNewValue(10);
-		engine->module<TpsAccelEnrichment>()->onEngineCycleTps();
-		tpsEnrich[i] = engine->module<TpsAccelEnrichment>()->getTpsEnrichment();
+		// The opening event lasts for the first engine cycle only; the pump spreads it.
+		ae.isAboveAccelThreshold = i == 0;
+		ae.tpsFrom = 0;
+		ae.tpsTo = 10;
+		ae.onEngineCycleTps();
+		tpsEnrich[i] = ae.getTpsEnrichment();
 	}
 }
 
@@ -104,8 +450,7 @@ TEST(fuel, testAccelEnrichmentFractionalTps) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// setup
-	engineConfiguration->tpsAccelEnrichmentThreshold = 5;
-	engineConfiguration->tpsAccelLookback = 2;
+	engineConfiguration->tpsAccelHoldTime = 2;
 
 	// fill tps2tps map (todo: there should be a better way?)
 	static const float tpsTpsConst = 1.0f;
@@ -119,9 +464,6 @@ TEST(fuel, testAccelEnrichmentFractionalTps) {
 
 	engine->rpmCalculator.setRpmValue(600);
 	engine->periodicFastCallback();
-
-	engine->module<TpsAccelEnrichment>()->setLength(2);
-
 
 	const int numCycles = 4;
 	std::vector<floatms_t> tpsEnrich(numCycles);
@@ -159,8 +501,8 @@ TEST(fuel, testTpsAccelEnrichment) {
 TEST(fuel, tpsAccelFlexFuelCompensation) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
-	engineConfiguration->tpsAccelEnrichmentThreshold = 5;
-	engineConfiguration->tpsAccelLookback = 2;
+	engineConfiguration->tpsAccelRateThreshold = 100;
+	engineConfiguration->tpsAccelHoldTime = 2;
 	// non-fractional so the raw enrichment is the table value directly
 	engineConfiguration->tpsAccelFractionPeriod = 1;
 	engineConfiguration->tpsAccelFractionDivisor = 1;
@@ -183,12 +525,10 @@ TEST(fuel, tpsAccelFlexFuelCompensation) {
 	engine->periodicFastCallback();
 
 	auto ae = engine->module<TpsAccelEnrichment>();
-	ae->setLength(2);
 
 	auto triggerAccel = [&]() {
 		ae->resetAE();
-		ae->onNewValue(0);
-		ae->onNewValue(10); // delta 10 > threshold 5 -> table value 1.0
+		feedTpsStep(*ae, 0, 10); // 2000 %/s > 100 %/s -> table value 1.0
 		return ae->getTpsEnrichment();
 	};
 
@@ -222,7 +562,7 @@ protected:
 		engineConfiguration->accelEnrichmentMode = AE_MODE_LUA;
 		engineConfiguration->isTuningDetectorEnabled = false;
 		engineConfiguration->coastingFuelCutEnabled = false;
-		engineConfiguration->tpsAccelLookback = 0;
+		engineConfiguration->tpsAccelHoldTime = 0;
 		initAccelEnrichment();
 	}
 
@@ -278,7 +618,7 @@ TEST_F(LuaAccelEnrichment, ScalesCycleMassOnceForEachInjectionMode) {
 }
 
 TEST_F(LuaAccelEnrichment, ReplacesNativeTpsCorrectionsAndLeavesOtherModesAlone) {
-	engineConfiguration->tpsAccelLookback = 1;
+	engineConfiguration->tpsAccelHoldTime = 1;
 	engineConfiguration->tpsAccelFractionPeriod = 3;
 	engineConfiguration->tpsAccelFractionDivisor = 2;
 	setTable(config->tpsTpsAccelTable, 10);
@@ -438,8 +778,8 @@ TEST(fuel, PreviousTpsAccelerationClearedOnFastPhaseResync) {
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->isTuningDetectorEnabled = false;
 	engineConfiguration->coastingFuelCutEnabled = false;
-	engineConfiguration->tpsAccelLookback = 1;
-	engineConfiguration->tpsAccelEnrichmentThreshold = 5;
+	engineConfiguration->tpsAccelHoldTime = 1;
+	engineConfiguration->tpsAccelRateThreshold = 100;
 	engineConfiguration->tpsAccelFractionPeriod = 1;
 	engineConfiguration->tpsAccelFractionDivisor = 1;
 	engineConfiguration->flexFuelTransientComp = false;
@@ -447,11 +787,10 @@ TEST(fuel, PreviousTpsAccelerationClearedOnFastPhaseResync) {
 	setTable(config->tpsTpsAccelTable, 0.20f);
 	initAccelEnrichment();
 	auto& ae = engine->module<TpsAccelEnrichment>().unmock();
-	ae.onNewValue(0);
 	const float baseline = getInjectionMass(1200);
 	ASSERT_TRUE(std::isfinite(baseline));
 	ASSERT_GT(baseline, 0);
-	ae.onNewValue(20);
+	feedTpsStep(ae, 0, 20);
 	ASSERT_NEAR(1.20f, getInjectionMass(1200) / baseline, 0.00001f);
 	engine->OnTriggerSynchronizationLost();
 	ASSERT_FALSE(engine->rpmCalculator.isRunning());
@@ -467,8 +806,8 @@ TEST(fuel, PreviousTpsAccelerationClearedOnFastPhaseResync) {
 TEST(fuel, StoppedTpsResetDoesNotInventAccelerationFromHeldThrottle) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->accelEnrichmentMode = AE_MODE_PERCENT_ADDER;
-	engineConfiguration->tpsAccelLookback = 1;
-	engineConfiguration->tpsAccelEnrichmentThreshold = 5;
+	engineConfiguration->tpsAccelHoldTime = 1;
+	engineConfiguration->tpsAccelRateThreshold = 100;
 	engineConfiguration->tpsAccelFractionPeriod = 1;
 	engineConfiguration->tpsAccelFractionDivisor = 1;
 	setArrayValues(config->tpsTspCorrValues, 1.0f);
@@ -478,13 +817,16 @@ TEST(fuel, StoppedTpsResetDoesNotInventAccelerationFromHeldThrottle) {
 	Sensor::setMockValue(SensorType::Tps1, 20);
 	ASSERT_FALSE(engine->rpmCalculator.isRunning());
 
-	// Reproduce the stopped branch of doPeriodicSlowCallback() followed by
-	// Engine::periodicSlowCallback() on each slow tick for two seconds.
+	// Reproduce the stopped branch of doPeriodicSlowCallback() on each slow tick for
+	// two seconds, with the fast callback (TPS detector) running in between.
 	for (int i = 0; i < 20; i++) {
-		eth.moveTimeForwardMs(100);
+		eth.moveTimeForwardMs(50);
+		engine->periodicFastCallback();
+		eth.moveTimeForwardMs(50);
 		engine->rpmCalculator.onSlowCallback();
 		ae.resetAE();
 		engine->periodicSlowCallback();
+		engine->periodicFastCallback();
 	}
 	ASSERT_FALSE(ae.isAboveAccelThreshold);
 	engine->rpmCalculator.setRpmValue(1200);

@@ -805,7 +805,6 @@ TEST(AirmassModes, PredictiveMapBlendTowardRisingSensor) {
 TEST(AirmassModes, PredictiveMapRetriggersRespectSessionDuration) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->accelEnrichmentMode = AE_MODE_PREDICTIVE_MAP;
-	engineConfiguration->tpsAccelEnrichmentThreshold = 5;
 	for (auto& duration : config->predictiveMapBlendDurationValues) {
 		duration = 0.5f;
 	}
@@ -863,10 +862,11 @@ TEST(AirmassModes, PredictiveMapRetriggersRespectSessionDuration) {
 	EXPECT_EQ(engine->outputChannels.predTimerResetCnt, 2);
 }
 
-TEST(AirmassModes, PredictiveMapSmallerEventHasItsOwnTpsPeak) {
+// [tag:tps_rate_detector] A closing event from the TPS detector ends prediction;
+// a lower TPS without a detected closing only lowers the estimate.
+TEST(AirmassModes, PredictiveMapEndsOnDetectedThrottleClosing) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->accelEnrichmentMode = AE_MODE_PREDICTIVE_MAP;
-	engineConfiguration->tpsAccelEnrichmentThreshold = 5;
 	for (auto& duration : config->predictiveMapBlendDurationValues) {
 		duration = 0.5f;
 	}
@@ -874,9 +874,8 @@ TEST(AirmassModes, PredictiveMapSmallerEventHasItsOwnTpsPeak) {
 	StrictMock<MockVp3d> veTable;
 	StrictMock<MockVp3d> mapFallback;
 	EXPECT_CALL(mapFallback, getValue(1500, 80)).WillRepeatedly(Return(100));
-	EXPECT_CALL(mapFallback, getValue(1500, 0)).WillRepeatedly(Return(40));
+	EXPECT_CALL(mapFallback, getValue(1500, 70)).WillRepeatedly(Return(90));
 	EXPECT_CALL(mapFallback, getValue(1500, 30)).WillRepeatedly(Return(70));
-	EXPECT_CALL(mapFallback, getValue(1500, 20)).WillRepeatedly(Return(60));
 	SpeedDensityAirmass dut(veTable, mapFallback);
 	Sensor::setMockValue(SensorType::Map, 40);
 	Sensor::setMockValue(SensorType::Tps1, 80);
@@ -884,28 +883,23 @@ TEST(AirmassModes, PredictiveMapSmallerEventHasItsOwnTpsPeak) {
 	ae.isAboveAccelThreshold = true;
 	ae.m_accelEventJustOccurred = true;
 	ASSERT_FLOAT_EQ(dut.getMap(1500, true), 100);
-	ASSERT_FLOAT_EQ(dut.getMap(1500, true), 100); // Record the first event's peak.
 
-	eth.moveTimeForwardMs(100);
-	Sensor::setMockValue(SensorType::Tps1, 0);
+	// A small, slow TPS drop: no closing event, prediction keeps running.
+	Sensor::setMockValue(SensorType::Tps1, 70);
 	ae.isAboveAccelThreshold = false;
-	ASSERT_FLOAT_EQ(dut.getMap(1500, true), 40);
-	ASSERT_FALSE(engine->outputChannels.isMapPredictionActive);
+	EXPECT_FLOAT_EQ(dut.getMap(1500, true), 100);
+	EXPECT_TRUE(engine->outputChannels.isMapPredictionActive);
 
-	eth.moveTimeForwardMs(500);
+	// The detector reports closing: prediction ends before MAP catches up.
+	ae.isBelowDecelThreshold = true;
+	EXPECT_FLOAT_EQ(dut.getMap(1500, true), 40);
+	EXPECT_FALSE(engine->outputChannels.isMapPredictionActive);
+
+	// A new opening starts a new event.
+	ae.isBelowDecelThreshold = false;
 	Sensor::setMockValue(SensorType::Tps1, 30);
 	ae.isAboveAccelThreshold = true;
 	ae.m_accelEventJustOccurred = true;
-	ASSERT_FLOAT_EQ(dut.getMap(1500, true), 70);
-	ASSERT_TRUE(engine->outputChannels.isMapPredictionActive);
-	// The new event retains its 30% peak instead of inheriting the old 80% peak.
 	EXPECT_FLOAT_EQ(dut.getMap(1500, true), 70);
 	EXPECT_TRUE(engine->outputChannels.isMapPredictionActive);
-	eth.moveTimeForwardMs(250);
-	EXPECT_FLOAT_EQ(dut.getMap(1500, true), 55);
-
-	// A real throttle release still cancels prediction before MAP catches up.
-	Sensor::setMockValue(SensorType::Tps1, 20);
-	EXPECT_FLOAT_EQ(dut.getMap(1500, true), 40);
-	EXPECT_FALSE(engine->outputChannels.isMapPredictionActive);
 }

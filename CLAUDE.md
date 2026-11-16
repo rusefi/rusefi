@@ -272,7 +272,7 @@ For detailed technical documentation intended for AI assistants, see:
 - [Firmware Business Logic Testing](docs/firmware-business-logic-testing.md) - Host-test seams, fuel-trim and PWM behavior tests, A/C state ownership and LTFT persistence follow-ups.
 - [Fueling System](docs/AI/fueling_system.md) - Mass-based fueling pipeline (17 stages).
 - [Cold-start Logic](docs/AI/cold_start.md) - Priming, cranking-state hysteresis, mass tables, ASE/WUE overlap, cycle counters and sensor fallbacks.
-- [Acceleration Enrichment](docs/AI/acceleration_enrichment.md) - Four selectable AE modes including Lua mass injection, independent wall wetting, TPS sampling, correction units, flex compensation and diagnostics.
+- [Acceleration Enrichment](docs/AI/acceleration_enrichment.md) - Four selectable AE modes including Lua mass injection, independent wall wetting, the 200 Hz TPS rate detector, correction units, flex compensation and diagnostics.
 - [Ignition System](docs/AI/ignition_system.md) - Timing calculation and spark scheduling.
 - [Launch Control](docs/AI/launch_control.md) - Activation modes, RPM arming latch, pre-launch timing/skip ramps, full cuts, shared-clutch flat shift, fuel-trim learning and diagnostic limitations.
 - [Rev Limiters](docs/AI/rev_limiters.md) - Constant/CLT hard limits, strict hysteresis, timing/fuel ramps, independent ETB taper, fault ceilings, cut priority and diagnostics.

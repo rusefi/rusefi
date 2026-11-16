@@ -22,10 +22,9 @@ void BurstKnock::onSlowCallback() {
 	}
 
 	auto& ae = engine->module<TpsAccelEnrichment>().unmock();
-	// AE supplies the largest adjacent TPS jump in its lookback buffer. This is a
-	// rate proxy using the configured lookback, not the instantaneous TPS derivative.
-	float lookback = maxF(engineConfiguration->tpsAccelLookback, 0.001f);
-	burstKnockTpsRate = ae.deltaTps / lookback;
+	// [tag:tps_rate_detector] This runs at 20 Hz while the detector samples at 200 Hz:
+	// use the event's peak opening rate so a short stab is not missed between samples.
+	burstKnockTpsRate = ae.isAboveAccelThreshold ? ae.peakTpsRate : ae.tpsRate;
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
 
 	if (ae.isAboveAccelThreshold) {

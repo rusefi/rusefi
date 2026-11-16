@@ -431,7 +431,12 @@ void setDefaultFuel() {
 	// Decel fuel cut
 	setDefaultFuelCutParameters();
 
-	engineConfiguration->tpsAccelEnrichmentThreshold = 40; // TPS % change, per engine cycle
+	// [tag:tps_rate_detector] TPS rate thresholds in %/s. Hold time stays 0, so the
+	// additive AE modes remain disabled until configured.
+	engineConfiguration->tpsAccelRateThreshold = 100;
+	engineConfiguration->tpsDecelRateThreshold = 100;
+	// A TPS change must last two samples: single-sample spikes are ignored.
+	config->tpsEventConfirmation = TPS_EVENT_CONFIRM_2;
 
 	setDefaultWallWetting();
 

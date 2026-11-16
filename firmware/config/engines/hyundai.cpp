@@ -304,11 +304,11 @@ static void commonGenesisCoupe() {
     // default 200.0
     setArrayValues(config->afterCrankingIACtaperDuration, 100);
     // default 0.0
-    engineConfiguration->tpsAccelLookback = 0.3f;
+    engineConfiguration->tpsAccelHoldTime = 0.3f;
     // default 40.0
-    engineConfiguration->tpsAccelEnrichmentThreshold = 12;
+    engineConfiguration->tpsAccelRateThreshold = 240;
     // default 0.0
-    engineConfiguration->tpsDecelEnleanmentThreshold = 7;
+    engineConfiguration->tpsDecelRateThreshold = 140;
     // default 0.0
     engineConfiguration->tpsAccelFractionPeriod = 3;
     // default 0.0

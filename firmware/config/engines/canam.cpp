@@ -36,9 +36,9 @@ void setMaverickX3() {
     engineConfiguration->useIdleTimingPidControl = true;
     engineConfiguration->idleTimingSoftEntryTime = 1;
 
-    engineConfiguration->tpsAccelLookback = 0.3f;
-    engineConfiguration->tpsAccelEnrichmentThreshold = 12;
-    engineConfiguration->tpsDecelEnleanmentThreshold = 7;
+    engineConfiguration->tpsAccelHoldTime = 0.3f;
+    engineConfiguration->tpsAccelRateThreshold = 240;
+    engineConfiguration->tpsDecelRateThreshold = 140;
     engineConfiguration->tpsAccelFractionPeriod = 3;
 
     engineConfiguration->isBoostControlEnabled = true;

@@ -111,19 +111,12 @@ float SpeedDensityAirmass::getPredictiveMap(float rpm, bool postState, float map
 		// cannot immediately re-trigger when the blend window ends.
 		ae->isAccelEventTriggered();
 
-		float currentTps = Sensor::getOrZero(SensorType::Tps1);
-
-		// Exit if TPS has dropped by more than the accel threshold below its peak
-		// (throttle released), OR if the sensor has already caught up to or exceeded
-		// what the table predicts at current TPS (no prediction benefit remaining).
-		if (currentTps < m_tpsPeak - engineConfiguration->tpsAccelEnrichmentThreshold
-				|| mapSensor >= predictedMap) {
+		// [tag:tps_rate_detector] Exit when the detector reports the throttle closing,
+		// OR if the sensor has already caught up to or exceeded what the table
+		// predicts at current TPS (no prediction benefit remaining).
+		if (ae->isBelowDecelThreshold || mapSensor >= predictedMap) {
 			m_isMapPredictionActive = false;
 		} else {
-			// Track rising TPS peak so the exit check above stays anchored to the
-			// highest point reached during this event.
-			m_tpsPeak = maxF(m_tpsPeak, currentTps);
-
 			// Track the rising TPS: if the table now predicts a higher MAP than our
 			// current base, adopt it and restart the blend so we don't under-fuel
 			// a still-opening throttle.
@@ -153,8 +146,6 @@ float SpeedDensityAirmass::getPredictiveMap(float rpm, bool postState, float map
 				engine->outputChannels.predTimerResetCnt++;
 				effectiveMap = predictedMap;
 				m_awaitingThrottleRelease = true;
-				// A new event's release threshold starts at its own TPS, not a previous peak.
-				m_tpsPeak = Sensor::getOrZero(SensorType::Tps1);
 			}
 		}
 	}
