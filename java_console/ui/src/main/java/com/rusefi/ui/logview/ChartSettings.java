@@ -1,5 +1,8 @@
 package com.rusefi.ui.logview;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /** Display options of the log chart: grid lines, cursor, values, plot colours and display-only trace smoothing. */
 final class ChartSettings {
     enum VerticalMode {
@@ -43,16 +46,39 @@ final class ChartSettings {
     private boolean pinValues;
     /** Width of the centred display-only moving average; zero draws recorded samples. */
     private double smoothingWindowSeconds;
+    /** Per-signal windows by log field name; absent means use {@link #smoothingWindowSeconds}. */
+    private final Map<String, Double> smoothingOverrides = new HashMap<>();
 
     double getSmoothingWindowSeconds() {
         return smoothingWindowSeconds;
     }
 
     void setSmoothingWindowSeconds(double smoothingWindowSeconds) {
+        validateSmoothingWindow(smoothingWindowSeconds);
+        this.smoothingWindowSeconds = smoothingWindowSeconds;
+    }
+
+    double getSmoothingWindowSeconds(String signal) {
+        return smoothingOverrides.getOrDefault(signal, smoothingWindowSeconds);
+    }
+
+    boolean usesGlobalSmoothing(String signal) {
+        return !smoothingOverrides.containsKey(signal);
+    }
+
+    void setSmoothingWindowSeconds(String signal, double smoothingWindowSeconds) {
+        validateSmoothingWindow(smoothingWindowSeconds);
+        smoothingOverrides.put(signal, smoothingWindowSeconds);
+    }
+
+    void useGlobalSmoothing(String signal) {
+        smoothingOverrides.remove(signal);
+    }
+
+    private static void validateSmoothingWindow(double smoothingWindowSeconds) {
         if (smoothingWindowSeconds < 0 || !Double.isFinite(smoothingWindowSeconds)) {
             throw new IllegalArgumentException("Smoothing window must be finite and non-negative");
         }
-        this.smoothingWindowSeconds = smoothingWindowSeconds;
     }
 
     CursorValues getCursorValues() {

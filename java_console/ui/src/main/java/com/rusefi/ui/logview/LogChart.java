@@ -704,9 +704,45 @@ final class LogChart extends JComponent {
         remove.addActionListener(e -> layout.remove(field));
         menu.add(remove);
         menu.addSeparator();
+        menu.add(smoothingSubmenu(field));
         menu.add(colorSubmenu(field));
         menu.add(scaleSubmenu(field));
         return menu;
+    }
+
+    /** Per-signal display smoothing: inherit the toolbar choice, stay raw, or use a separate time window. */
+    JMenu smoothingSubmenu(int field) {
+        JMenu smoothing = new JMenu("Smoothing");
+        smoothing.setToolTipText("Display-only; recorded values, cursor values and statistics stay raw");
+        String signal = log.name(field);
+        boolean usesGlobal = grid.usesGlobalSmoothing(signal);
+        double current = grid.getSmoothingWindowSeconds(signal);
+        ButtonGroup group = new ButtonGroup();
+
+        JRadioButtonMenuItem global = new JRadioButtonMenuItem(
+                "Use global (" + TimelineSmoothingLevel.label(grid.getSmoothingWindowSeconds()) + ")", usesGlobal);
+        global.addActionListener(e -> {
+            grid.useGlobalSmoothing(signal);
+            repaint();
+        });
+        group.add(global);
+        smoothing.add(global);
+        smoothing.addSeparator();
+
+        for (TimelineSmoothingLevel level : TimelineSmoothingLevel.values()) {
+            JRadioButtonMenuItem item = new JRadioButtonMenuItem(level.label,
+                    !usesGlobal && current == level.seconds);
+            item.setToolTipText(level == TimelineSmoothingLevel.RAW
+                    ? "Draw this signal's recorded samples"
+                    : "Display-only centred moving average for this signal");
+            item.addActionListener(e -> {
+                grid.setSmoothingWindowSeconds(signal, level.seconds);
+                repaint();
+            });
+            group.add(item);
+            smoothing.add(item);
+        }
+        return smoothing;
     }
 
     /** "Colour ▸" with the colour picker, for a signal's right-click menu; its icon shows the colour. */
@@ -2581,7 +2617,7 @@ final class LogChart extends JComponent {
 
     /** The cached display values, or null when the trace is raw. */
     private double[] smoothedValues(int field) {
-        double windowSeconds = grid.getSmoothingWindowSeconds();
+        double windowSeconds = grid.getSmoothingWindowSeconds(log.name(field));
         if (windowSeconds == 0) {
             return null;
         }
