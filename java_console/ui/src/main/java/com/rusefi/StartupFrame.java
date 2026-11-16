@@ -570,6 +570,12 @@ public class StartupFrame {
         log.info("setVisible");
         frame.setVisible(true);
 
+        ConsoleUI.setForwardedLogOpener(file -> {
+            openInitialLog(outerTabs, logViewer, logViewer::open, file);
+            revealControls();
+            ConsoleUI.raiseFrame(frame);
+        });
+
         if (initialLog != null) {
             revealControls();
         } else {
