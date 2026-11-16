@@ -23,6 +23,7 @@ import com.rusefi.ui.BasicLogoHelper;
 import com.rusefi.ui.LogoHelper;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.plugins.StartupTabProvider;
+import com.rusefi.ui.logview.LogViewerHost;
 import com.rusefi.ui.wizard.WizardCatalog;
 import com.rusefi.ui.wizard.WizardContainer;
 import com.rusefi.ui.wizard.WizardStep;
@@ -160,6 +161,7 @@ public class StartupFrame {
     private boolean hasSeenEcuOrSimulator = false;
     private final StatusAnimation status;
     private final JButton connectButton = new JButton("Connect");
+    private final JButton openLogButton = new JButton("Open data log…");
     private ProgramSelector selector;
     private boolean firstTimeAutoConnect = true;
 
@@ -513,6 +515,9 @@ public class StartupFrame {
         );
         outerTabs.addTab("Manage Tunes", tuneManagementTab.getContent());
         outerTabs.addTab("Connect", connectTabScroll);
+        LogViewerHost logViewer = new LogViewerHost(getConfig().getRoot().getChild("log_viewer"));
+        logViewer.setConfigSaver(() -> getConfig().save());
+        installLogViewerEntry(outerTabs, logViewer, openLogButton, logViewer::chooseAndOpen);
         addCustomTabs(outerTabs, uiContext);
 
         int savedTabIndex = getConfig().getRoot().getIntProperty(STARTUP_TAB_INDEX, 0);
@@ -731,6 +736,8 @@ public class StartupFrame {
         Dimension buttonSize = new Dimension(220, 42);
         connectButton.putClientProperty(FlatClientProperties.STYLE_CLASS, "primary");
         connectButton.setPreferredSize(buttonSize);
+        openLogButton.setPreferredSize(buttonSize);
+        openLogButton.setToolTipText("Open an .mlg or .msl data log without connecting an ECU");
         openTunerStudio.setPreferredSize(buttonSize);
         JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 0));
         buttons.setOpaque(false);
@@ -738,6 +745,12 @@ public class StartupFrame {
         buttons.add(openTunerStudio);
         startupCard.addRow(buttons, 20);
         startupCard.addRow(rememberPortBox, 12);
+
+        startupCard.addRow(StartupCard.divider(), 24);
+        JLabel logPrompt = new JLabel("Review a data log without connecting an ECU", SwingConstants.CENTER);
+        logPrompt.setForeground(StartupCard.themed("Console.TitleBar.mutedForeground", Color.GRAY));
+        startupCard.addRow(StartupCard.fullWidth(logPrompt), 20);
+        startupCard.addRow(openLogButton, 10);
 
         startupCard.addRow(StartupCard.divider(), 24);
         // the tips that the status message's tooltip and texts already give
@@ -760,6 +773,16 @@ public class StartupFrame {
 
         startupCard.addRow(StartupCard.divider(), 20);
         startupCard.addRow(createCardFooter(), 16);
+    }
+
+    /** Adds the startup log viewer and wires its entry button to select it before opening the file chooser. */
+    static void installLogViewerEntry(JTabbedPane tabs, JComponent viewer, AbstractButton openButton,
+                                      Runnable chooseAndOpen) {
+        tabs.addTab(LogViewerHost.TITLE, viewer);
+        openButton.addActionListener(e -> {
+            tabs.setSelectedComponent(viewer);
+            chooseAndOpen.run();
+        });
     }
 
     /** Small logo, the rusEFI link (default branding only) and the console version. */
