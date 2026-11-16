@@ -36,6 +36,7 @@ final class ChartToolbar extends ThemedStrip {
     final JButton openButton = LogViewerHost.openLogButton("Open  ▾");
     final JButton gridButton = new JButton();
     final JButton smoothingButton = new JButton();
+    final JButton smoothingRawButton = new JButton("Raw");
     final JToggleButton snapCursor = SegmentedControl.segment("Snap");
     final JToggleButton freeCursor = SegmentedControl.segment("Free");
     final JButton valuesButton = new JButton();
@@ -106,6 +107,8 @@ final class ChartToolbar extends ThemedStrip {
         smoothingButton.setToolTipText("<html>Display-only smoothing for timeline lines.<br>"
                 + "Recorded samples, cursor values, statistics and exports stay raw.</html>");
         smoothingButton.addActionListener(e -> editGlobalSmoothing());
+        smoothingRawButton.setToolTipText("Turn off global display smoothing and show recorded samples");
+        smoothingRawButton.addActionListener(e -> setGlobalSmoothing(0));
 
         ButtonGroup cursorGroup = new ButtonGroup();
         cursorGroup.add(snapCursor);
@@ -147,7 +150,7 @@ final class ChartToolbar extends ThemedStrip {
         add(labelled("Plot", new SegmentedControl(lightPlot, darkPlot)));
         add(new JoinedButtons(gridButton));
         add(Box.createHorizontalStrut(JoinedButtons.ROW_GAP));
-        add(new JoinedButtons(smoothingButton));
+        add(new JoinedButtons(smoothingButton, smoothingRawButton));
         add(Box.createHorizontalStrut(JoinedButtons.ROW_GAP));
         add(muted(new JLabel("Cursor")));
         add(new SegmentedControl(snapCursor, freeCursor));
@@ -368,6 +371,7 @@ final class ChartToolbar extends ThemedStrip {
         gridButton.setText(gridSummary(settings));
         smoothingButton.setText("Display smoothing: "
                 + TimelineSmoothingWindow.label(settings.getSmoothingWindowSeconds()) + "  \u25BE");
+        smoothingRawButton.setVisible(settings.getSmoothingWindowSeconds() > 0);
         valuesButton.setText(valuesSummary(settings));
         boolean valuesShown = settings.getCursorValues() != ChartSettings.CursorValues.OFF;
         atMouse.setEnabled(valuesShown);
