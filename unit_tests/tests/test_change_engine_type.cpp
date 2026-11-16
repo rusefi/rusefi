@@ -6,6 +6,7 @@
  */
 
 #include "pch.h"
+#include "board_overrides.h"
 
 extern engine_configuration_s & activeConfiguration;
 
@@ -45,3 +46,31 @@ TEST(misc, changeEngineType) {
 	ASSERT_FALSE(isBrainPinValid(engineConfiguration->hpfpValvePin));
 }
 
+
+static int fastCallbacksDuringReset = 0;
+
+// [tag:config_reset_fast_callback] a fuel pass must not observe the half-built configuration,
+// see ConfigurationResetGuard in engine_configuration.cpp
+TEST(EngineType, FastCallbackDuringConfigurationReset) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	fastCallbacksDuringReset = 0;
+	custom_board_periodicFastCallback = [] {
+		fastCallbacksDuringReset++;
+	};
+
+	// the board callback runs in the middle of the reset: defaults are only partially applied,
+	// this stands in for the fast callback thread preempting 'rewriteconfig'
+	resetConfigurationExt([](engine_configuration_s*) {
+		engine->periodicFastCallback();
+	}, engine_type_e::TEST_ENGINE);
+
+	// the pass is skipped rather than run against the configuration being rebuilt
+	EXPECT_EQ(0, fastCallbacksDuringReset);
+
+	// and passes are executed again once the reset is complete
+	engine->periodicFastCallback();
+	EXPECT_EQ(1, fastCallbacksDuringReset);
+
+	custom_board_periodicFastCallback.reset();
+}

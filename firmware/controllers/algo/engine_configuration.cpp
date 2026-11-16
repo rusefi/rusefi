@@ -675,7 +675,36 @@ void loadConfiguration() {
 	call_board_override(custom_board_ConfigOverrides);
 }
 
+// [tag:config_reset_fast_callback]
+// A reset zeroes the live configuration and refills it over many steps, on the console thread for
+// 'resetconfig'/'rewriteconfig'. Fast callback passes arrive from a higher priority thread and from
+// trigger context, so one can land mid-refill and compute fuel from zeroed tables: inf * 0 gave the
+// "NaN runningFuel" critical error of #10647. Engine::periodicFastCallback() skips its pass while
+// this is set; the next pass sees the complete configuration.
+static volatile bool configurationResetInProgress = false;
+
+bool isConfigurationResetInProgress() {
+	return configurationResetInProgress;
+}
+
+namespace {
+struct ConfigurationResetGuard {
+	// resets do not nest today, restoring the previous value keeps that from mattering
+	const bool m_previous = configurationResetInProgress;
+
+	ConfigurationResetGuard() {
+		configurationResetInProgress = true;
+	}
+
+	~ConfigurationResetGuard() {
+		configurationResetInProgress = m_previous;
+	}
+};
+}
+
 void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e engineType) {
+	ConfigurationResetGuard resetGuard;
+
 	enginePins.reset(); // that's mostly important for functional tests
 	/**
 	 * Let's apply global defaults first

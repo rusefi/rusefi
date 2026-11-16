@@ -612,6 +612,11 @@ injection_mode_e getCurrentInjectionMode() {
 void Engine::periodicFastCallback() {
 	ScopePerf pc(PE::EnginePeriodicFastCallback);
 
+	if (isConfigurationResetInProgress()) {
+		// [tag:config_reset_fast_callback] the configuration is half-built, see engine_configuration.cpp
+		return;
+	}
+
 	call_board_override(custom_board_periodicFastCallback);
 
 	engineState.periodicFastCallback();

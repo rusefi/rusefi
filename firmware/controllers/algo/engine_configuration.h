@@ -50,6 +50,8 @@ void loadConfiguration();
  */
 void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e engineType);
 void resetConfigurationExt(engine_type_e engineType);
+// [tag:config_reset_fast_callback] true while resetConfigurationExt() is rebuilding the live configuration
+bool isConfigurationResetInProgress();
 
 void rememberCurrentConfiguration();
 #endif /* __cplusplus */
