@@ -5,6 +5,11 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.field.ArrayIniField;
+import com.opensr5.ini.field.EnumIniField;
+import com.opensr5.ini.field.IniField;
+import com.opensr5.ini.field.ScalarIniField;
+import com.rusefi.config.FieldType;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.CalibrationsHelper;
@@ -13,8 +18,12 @@ import com.rusefi.maintenance.OfflineTuneLoader;
 import com.rusefi.maintenance.jobs.AsyncJob;
 import com.rusefi.maintenance.jobs.AsyncJobExecutor;
 import com.rusefi.maintenance.jobs.JobHelper;
+import com.rusefi.maintenance.migration.IniFieldMigrationUtils;
+import com.rusefi.tune.ConfigurationImageGetterSetter2;
+import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.tune.xml.MsqFactory;
+import com.rusefi.tune.xml.Page;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.basic.LoadTuneHelper;
 import com.rusefi.ui.widgets.JoinedButtons;
@@ -27,6 +36,8 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayDeque;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
@@ -332,7 +343,8 @@ public class TuningToolbarWidget {
                                     BinaryProtocol bp = uiContext.getBinaryProtocol();
                                     OfflineTuneLoader.Result result = bp == null
                                         ? OfflineTuneLoader.loadTuneFromFile(path, null, cb::logLine)
-                                        : OfflineTuneLoader.loadConnectedTuneFromFile(path, cb::logLine);
+                                        : OfflineTuneLoader.loadConnectedTuneFromFile(
+                                            path, uiContext.iniFileState.getIniFileModel(), cb::logLine);
                                     if (result == null) {
                                         cb.error();
                                         SwingUtilities.invokeLater(() -> onLoadFinished.accept(true));
@@ -409,6 +421,15 @@ public class TuningToolbarWidget {
     static ConfigurationImage applyLoadedTune(Msq tune, IniFileModel sourceIni,
                                                ConfigurationImage base, IniFileModel targetIni,
                                                UpdateOperationCallbacks callbacks) {
+        if (sourceIni == null) {
+            if (tune.getVersionInfo() == null
+                    || !Objects.equals(tune.getVersionInfo().getSignature(), targetIni.getSignature())) {
+                callbacks.logLine("Cannot import tune without its source INI because its signature differs "
+                    + "from the destination ECU.");
+                return base;
+            }
+            return applySameSignatureTune(tune, base, targetIni, callbacks);
+        }
         Set<String> secondaryFields = new HashSet<>(sourceIni.getSecondaryIniFields().keySet());
         secondaryFields.addAll(targetIni.getSecondaryIniFields().keySet());
 
@@ -420,6 +441,174 @@ public class TuningToolbarWidget {
         return result.mergedCalibrations
             .map(calibrations -> calibrations.getImage().getConfigurationImage())
             .orElse(base);
+    }
+
+    private static ConfigurationImage applySameSignatureTune(Msq tune, ConfigurationImage base,
+                                                              IniFileModel targetIni,
+                                                              UpdateOperationCallbacks callbacks) {
+        ConfigurationImage result = base.clone();
+        Page page = tune.findPage();
+        if (page == null) {
+            callbacks.logLine("Tune has no values to import.");
+            return result;
+        }
+        Map<String, IniField> targetFields = targetIni.getAllIniFields();
+        Set<String> secondaryFields = targetIni.getSecondaryIniFields().keySet();
+        for (Constant constant : page.constant) {
+            String name = constant.getName();
+            if (name.startsWith("UNALLOCATED_SPACE")) {
+                continue;
+            }
+            if (secondaryFields.contains(name)) {
+                callbacks.logLine("Skipped " + name + ": secondary calibration.");
+                continue;
+            }
+            IniField field = targetFields.get(name);
+            if (field == null) {
+                callbacks.logLine("Skipped " + name + ": not available.");
+                continue;
+            }
+            String sourceUnits = constant.getUnits();
+            String destinationUnits = field.getUnits();
+            boolean sourceUnitsMissing = sourceUnits == null || sourceUnits.isEmpty();
+            boolean destinationUnitsMissing = destinationUnits == null || destinationUnits.isEmpty();
+            if (sourceUnitsMissing != destinationUnitsMissing
+                    || !IniFieldMigrationUtils.checkIfUnitsCanBeMigrated(sourceUnits, destinationUnits)) {
+                callbacks.logLine("Skipped " + name + ": units do not match.");
+                continue;
+            }
+            if (field instanceof ArrayIniField) {
+                ArrayIniField array = (ArrayIniField) field;
+                if (!Objects.equals(constant.getRows(), Integer.toString(array.getRows()))
+                        || !Objects.equals(constant.getCols(), Integer.toString(array.getCols()))) {
+                    callbacks.logLine("Skipped " + name + ": table size does not match.");
+                    continue;
+                }
+            } else if (constant.getRows() != null || constant.getCols() != null) {
+                callbacks.logLine("Skipped " + name + ": table size does not match.");
+                continue;
+            }
+
+            try {
+                if (field instanceof EnumIniField) {
+                    ConfigurationImage candidate = result.clone();
+                    applyExactEnumValue((EnumIniField) field, constant, candidate);
+                    result = candidate;
+                } else {
+                    validateNumericValues(field, constant);
+                    ConfigurationImage candidate = result.clone();
+                    ConfigurationImageGetterSetter2.setValue(field, candidate, constant);
+                    result = candidate;
+                }
+            } catch (RuntimeException e) {
+                String reason = e instanceof IllegalArgumentException ? e.getMessage() : null;
+                if (!"unknown pin".equals(reason) && !"pin is not available".equals(reason)
+                        && !"pin label is ambiguous".equals(reason) && !"value is out of range".equals(reason)
+                        && !"table size does not match".equals(reason) && !"invalid value".equals(reason)) {
+                    reason = "invalid value";
+                }
+                callbacks.logLine("Skipped " + name + ": " + reason + ".");
+            }
+        }
+        return result;
+    }
+
+    private static void validateNumericValues(IniField field, Constant constant) {
+        if (field instanceof ScalarIniField) {
+            ScalarIniField scalar = (ScalarIniField) field;
+            validateNumericValue(constant.getValue(), scalar.getType(), scalar.getMultiplier(),
+                scalar.getSerializationOffset());
+        } else if (field instanceof ArrayIniField) {
+            ArrayIniField array = (ArrayIniField) field;
+            String[][] values;
+            try {
+                values = array.getValues(constant.getValue());
+            } catch (RuntimeException e) {
+                throw new IllegalArgumentException("table size does not match");
+            }
+            for (String[] row : values) {
+                for (String value : row) {
+                    validateNumericValue(value, array.getType(), array.getMultiplier(), 0);
+                }
+            }
+        }
+    }
+
+    private static void validateNumericValue(String value, FieldType type, double multiplier,
+                                            double serializationOffset) {
+        double parsed;
+        double raw;
+        try {
+            parsed = Double.parseDouble(value);
+            raw = (parsed - serializationOffset) / multiplier;
+        } catch (RuntimeException e) {
+            throw new IllegalArgumentException("invalid value");
+        }
+        if (!Double.isFinite(parsed) || !Double.isFinite(raw)) {
+            throw new IllegalArgumentException("value is out of range");
+        }
+
+        if (type == FieldType.FLOAT) {
+            if (!Float.isFinite((float) raw)) {
+                throw new IllegalArgumentException("value is out of range");
+            }
+            return;
+        }
+
+        long rounded = Math.round(raw);
+        long min;
+        long max;
+        switch (type) {
+            case INT8:
+                min = Byte.MIN_VALUE;
+                max = Byte.MAX_VALUE;
+                break;
+            case UINT8:
+                min = 0;
+                max = 0xff;
+                break;
+            case INT16:
+                min = Short.MIN_VALUE;
+                max = Short.MAX_VALUE;
+                break;
+            case UINT16:
+                min = 0;
+                max = 0xffff;
+                break;
+            case INT:
+                min = Integer.MIN_VALUE;
+                max = Integer.MAX_VALUE;
+                break;
+            default:
+                throw new IllegalArgumentException("invalid value");
+        }
+        if (rounded < min || rounded > max) {
+            throw new IllegalArgumentException("value is out of range");
+        }
+    }
+
+    private static void applyExactEnumValue(EnumIniField field, Constant constant, ConfigurationImage image) {
+        String value = constant.getValue();
+        if (value != null && !EnumIniField.isQuoted(value) && EnumIniField.isUnknownOrdinalValue(value)) {
+            throw new IllegalArgumentException("unknown pin");
+        }
+        String label = value != null && EnumIniField.isQuoted(value)
+            ? javax.management.ObjectName.unquote(value)
+            : value;
+        if (label == null) {
+            throw new IllegalArgumentException("unknown pin");
+        }
+        if (field.isPinEnum() && "INVALID".equalsIgnoreCase(label)) {
+            throw new IllegalArgumentException("unknown pin");
+        }
+        long matches = field.getEnums().values().stream().filter(label::equals).count();
+        int ordinal = field.getEnums().indexOf(value);
+        if (matches != 1 || ordinal < 0) {
+            throw new IllegalArgumentException(matches > 1
+                ? "pin label is ambiguous"
+                : "pin is not available");
+        }
+        image.setBitValue(field, ordinal);
     }
 
     public void setFirmwareUpdateInProgress(boolean inProgress) {

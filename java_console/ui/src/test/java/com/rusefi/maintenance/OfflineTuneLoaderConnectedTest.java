@@ -14,9 +14,11 @@ import com.rusefi.maintenance.migration.migrators.DefaultEnumIniFieldMigrator;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.tune.xml.MsqFactory;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +34,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.ArgumentMatchers.contains;
 
 class OfflineTuneLoaderConnectedTest {
+    @TempDir
+    Path tempDir;
+
     @Test
     void connectedLoadDoesNotRequireConvertingTheMsqToASourceImage() throws IniParsingException {
         IniFileModel customIni = pinIni("custom_pin_list", "0=\"NONE\",47=\"Auxiliary pin\"");
@@ -134,6 +139,55 @@ class OfflineTuneLoaderConnectedTest {
         assertNotNull(result);
         assertSame(sourceIni, result.ini);
         assertNull(result.image);
+    }
+
+    @Test
+    void matchingDestinationSignatureLoadsWithoutSourceResolutionOrPicker() throws Exception, IniParsingException {
+        IniFileModel destinationIni = pinIni("destination_pin_list", "0=\"NONE\",47=\"Auxiliary pin\"");
+        Msq tune = MsqFactory.valueOf(new ConfigurationImage(new byte[]{47, 0}), destinationIni);
+        Path file = tempDir.resolve("same-signature.msq");
+        tune.writeXmlFile(file.toString());
+        List<String> errors = new ArrayList<>();
+        List<String> sourceRequests = new ArrayList<>();
+
+        OfflineTuneLoader.Result result = OfflineTuneLoader.loadConnectedTuneFromFile(
+            file.toString(), destinationIni, errors::add,
+            signature -> {
+                throw new AssertionError("matching destination signature must not prompt for a source INI");
+            },
+            signature -> {
+                sourceRequests.add(signature);
+                throw new IniNotFoundException("not found");
+            });
+
+        assertNotNull(result);
+        assertNull(result.ini);
+        assertEquals("test-signature", result.signature);
+        assertTrue(sourceRequests.isEmpty());
+        assertTrue(errors.isEmpty());
+    }
+
+    @Test
+    void differentSignatureConnectedLoadResolvesTheGenuineSourceIni() throws Exception, IniParsingException {
+        IniFileModel sourceIni = pinIni("source_pin_list", "0=\"NONE\",47=\"Auxiliary pin\"");
+        IniFileModel destinationIni = pinIni(
+            "destination_pin_list", "0=\"NONE\",47=\"Auxiliary pin\"", "destination-signature");
+        Msq tune = MsqFactory.valueOf(new ConfigurationImage(new byte[]{47, 0}), sourceIni);
+        Path file = tempDir.resolve("different-signature.msq");
+        tune.writeXmlFile(file.toString());
+        List<String> sourceRequests = new ArrayList<>();
+
+        OfflineTuneLoader.Result result = OfflineTuneLoader.loadConnectedTuneFromFile(
+            file.toString(), destinationIni, ignored -> { },
+            signature -> { throw new AssertionError("automatic source INI should resolve"); },
+            signature -> {
+                sourceRequests.add(signature);
+                return sourceIni;
+            });
+
+        assertNotNull(result);
+        assertSame(sourceIni, result.ini);
+        assertEquals(List.of("test-signature"), sourceRequests);
     }
 
     @Test
