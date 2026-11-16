@@ -72,10 +72,58 @@ class ProgramSelectorDfuUiTest {
             ports.setSelectedItem(openBlt);
             assertTrue(mainButton.isEnabled(), "a currently detected OpenBLT device remains a normal update target");
             assertEquals("Update ECU firmware", findButton(selector.getControl(), "Update ECU firmware").getText());
+            selector.setPrimaryActionBranch("lts-26lima");
+            assertEquals("Update ECU · lts-26lima", findButton(selector.getControl(), "Update ECU · lts-26lima").getText());
+            selector.setPrimaryActionStatus(true, false);
+            assertEquals("Reflash anyway", findButton(selector.getControl(), "Reflash anyway").getText());
+            selector.setPrimaryActionStatus(false, true);
+            assertEquals("Update firmware", findButton(selector.getControl(), "Update firmware").getText());
+            selector.setPrimaryActionStatus(false, false);
+            assertEquals("Update ECU · lts-26lima", findButton(selector.getControl(), "Update ECU · lts-26lima").getText(),
+                "unknown status must not claim the ECU is current or newer");
             assertNull(findButton(selector.getControl(), "Recover ECU"), "there is no separate recovery control");
+            ports.setSelectedItem(dfu);
+            assertEquals("Recover ECU", findButton(selector.getControl(), "Recover ECU").getText(),
+                "branch-specific update labels must not replace the explicit recovery action");
             ports.setSelectedItem(ecu);
-            assertEquals("Update ECU firmware", findButton(selector.getControl(), "Update ECU firmware").getText());
+            assertEquals("Update ECU · lts-26lima", findButton(selector.getControl(), "Update ECU · lts-26lima").getText());
             assertEquals(1, countFirmwareActionButtons(selector.getControl()));
+        });
+    }
+
+    @Test
+    void enabledCatalogDiscoveryDisablesOnlyTheMainUpdateAction() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            PortResult ecu = new PortResult("ECU", SerialPortType.Ecu);
+            AvailableHardware hardware = new AvailableHardware(Collections.singletonList(ecu), false, false, false);
+            ConnectivityContext context = mock(ConnectivityContext.class);
+            when(context.getCurrentHardware()).thenReturn(hardware);
+            when(context.getConnectedEcuTarget()).thenReturn(ConnectedEcuTarget.forManualRecovery("proteus_f7"));
+            ProgramSelector selector = new ProgramSelector(context, new JComboBox<>(new PortResult[]{ecu}),
+                ignored -> {}, () -> {});
+            LinkManager linkManager = mock(LinkManager.class);
+            when(linkManager.getBinaryProtocol()).thenReturn(mock(BinaryProtocol.class));
+            when(linkManager.getLastTriedPort()).thenReturn(ecu.port);
+            selector.setLinkManager(linkManager);
+            AtomicBoolean discoveryBlocking = new AtomicBoolean();
+            selector.setExternalPrimaryActionBusySupplier(discoveryBlocking::get);
+
+            selector.apply(hardware, true, false, "proteus_f7", "proteus_f7");
+            JButton main = findButton(selector.getControl(), "Update ECU firmware");
+            JButton arrow = findButton(selector.getControl(), "");
+            assertNotNull(main);
+            assertNotNull(arrow);
+            assertTrue(main.isEnabled());
+            assertTrue(arrow.isEnabled());
+
+            discoveryBlocking.set(true);
+            selector.apply(hardware, true, false, "proteus_f7", "proteus_f7");
+            assertFalse(main.isEnabled(), "do not consume the main action while the enabled LTS interceptor is discovering");
+            assertTrue(arrow.isEnabled(), "the secondary programming/recovery menu remains available");
+
+            discoveryBlocking.set(false);
+            selector.apply(hardware, true, false, "proteus_f7", "proteus_f7");
+            assertTrue(main.isEnabled());
         });
     }
 
@@ -1402,6 +1450,7 @@ class ProgramSelectorDfuUiTest {
         int count = 0;
         for (Component component : container.getComponents()) {
             if (component instanceof JButton && ("Update ECU firmware".equals(((JButton) component).getText())
+                || ((JButton) component).getText().startsWith("Update ECU · ")
                 || "Recover ECU".equals(((JButton) component).getText()))) {
                 count++;
             }

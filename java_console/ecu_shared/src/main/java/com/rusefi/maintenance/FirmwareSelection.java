@@ -52,12 +52,14 @@ public final class FirmwareSelection {
             return null;
         }
         Autoupdate.FirmwareArtifacts artifacts = Autoupdate.downloadFirmwareForBranch(destination,
-            callbacks::updateProgress, callbacks::logLine);
+            percent -> callbacks.updateFirmwareProgress(UpdateOperationCallbacks.FirmwareUpdateStage.DOWNLOAD, percent),
+            callbacks::logLine);
         if (artifacts == null || !sameIdentity(destination, artifacts.getBundleInfo())) {
             callbacks.firmwareUpdateBlocked("Couldn't download firmware for " + destination.getTarget()
                 + " (branch: " + destination.getBranchName() + "). Please try again.");
             return null;
         }
+        callbacks.updateFirmwareProgress(UpdateOperationCallbacks.FirmwareUpdateStage.DOWNLOAD, 100);
         return verifiedSelection(currentSignature, destination, artifacts.getSrecPath().orElse(null),
             artifacts.getBinPath().orElse(null), explicitSwitchConfirmed, callbacks);
     }

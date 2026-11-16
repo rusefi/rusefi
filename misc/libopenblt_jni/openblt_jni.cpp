@@ -153,6 +153,17 @@ static bool erase(JNIEnv* env, jobject jCallbacks) {
 	uint32_t segmentLen;
 	uint32_t segmentBase;
 	uint8_t const * segmentData;
+	uint32_t totalFirmwareLen = 0;
+	uint32_t totalFirmwareErased = 0;
+
+	for (segmentIdx = 0; segmentIdx < BltFirmwareGetSegmentCount(); segmentIdx++) {
+		segmentData = BltFirmwareGetSegment(segmentIdx, &segmentBase, &segmentLen);
+		if ((segmentData == nullptr) || (segmentLen == 0)) {
+			cb.error("BltFirmwareGetSegment not OK");
+			return false;
+		}
+		totalFirmwareLen += segmentLen;
+	}
 
 	/* Erase the memory segments on the target that are covered by the firmwware data. */
 	for (segmentIdx = 0; segmentIdx < BltFirmwareGetSegmentCount(); segmentIdx++)
@@ -202,7 +213,8 @@ static bool erase(JNIEnv* env, jobject jCallbacks) {
 			currentEraseBase += currentEraseCnt;
 			stillToEraseCnt -= currentEraseCnt;
 
-			uint8_t progressPct = (uint8_t)(((segmentLen - stillToEraseCnt) * 100ul) / segmentLen);
+			totalFirmwareErased += currentEraseCnt;
+			uint8_t progressPct = (uint8_t)(25 + (totalFirmwareErased * 20ul) / totalFirmwareLen);
 			cb.updateProgress(progressPct);
 		}
 	}
@@ -217,8 +229,19 @@ static bool program(JNIEnv* env, jobject jCallbacks) {
 	uint32_t segmentLen;
 	uint32_t segmentBase;
 	uint8_t const * segmentData;
+	uint32_t totalFirmwareLen = 0;
+	uint32_t totalFirmwareWritten = 0;
 
 	int lastPercent = -1;
+
+	for (segmentIdx = 0; segmentIdx < BltFirmwareGetSegmentCount(); segmentIdx++) {
+		segmentData = BltFirmwareGetSegment(segmentIdx, &segmentBase, &segmentLen);
+		if ((segmentData == nullptr) || (segmentLen == 0)) {
+			cb.error("BltFirmwareGetSegment not OK");
+			return false;
+		}
+		totalFirmwareLen += segmentLen;
+	}
 
 	/* Program the memory segments on the target with the firmware data. */
 	for (segmentIdx = 0; segmentIdx < BltFirmwareGetSegmentCount(); segmentIdx++)
@@ -268,7 +291,8 @@ static bool program(JNIEnv* env, jobject jCallbacks) {
 			currentWriteDataPtr += currentWriteCnt;
 			stillToWriteCnt -= currentWriteCnt;
 
-			int progressPct = (int)(((segmentLen - stillToWriteCnt) * 100ul) / segmentLen);
+			totalFirmwareWritten += currentWriteCnt;
+			int progressPct = (int)(45 + (totalFirmwareWritten * 50ul) / totalFirmwareLen);
 			if (progressPct != lastPercent) {
 				cb.updateProgress(progressPct);
 			}

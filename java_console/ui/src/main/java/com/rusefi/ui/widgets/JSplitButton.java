@@ -2,6 +2,7 @@ package com.rusefi.ui.widgets;
 
 import javax.swing.*;
 import java.awt.*;
+import com.formdev.flatlaf.util.UIScale;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Path2D;
@@ -50,6 +51,16 @@ public class JSplitButton extends JPanel {
     public void setFixedHeight(int height) {
         fixedHeight = height;
         revalidate();
+    }
+
+    /** Larger local presentation for a primary action card; does not change toolbar split buttons. */
+    public void useProminentStyle() {
+        Font font = mainButton.getFont();
+        mainButton.setFont(font);
+        mainButton.setMargin(new Insets(UIScale.scale(6), UIScale.scale(10),
+            UIScale.scale(6), UIScale.scale(10)));
+        arrowButton.setMargin(new Insets(0, UIScale.scale(10), 0, UIScale.scale(10)));
+        setFixedHeight(0);
     }
 
     @Override

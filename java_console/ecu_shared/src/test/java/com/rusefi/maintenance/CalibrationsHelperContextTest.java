@@ -49,6 +49,9 @@ public class CalibrationsHelperContextTest {
 
         verify(callbacks).logLine(
             "No previously backed-up tune available - ECU will keep its freshly flashed configuration.");
+        verify(callbacks).updateFirmwareProgress(UpdateOperationCallbacks.FirmwareUpdateStage.CALIBRATION_FINALIZE, 0);
+        verify(callbacks, org.mockito.Mockito.never()).updateFirmwareProgress(
+            UpdateOperationCallbacks.FirmwareUpdateStage.CALIBRATION_RESTORE, 0);
         verifyNoInteractions(context);
         verify(callbacks, org.mockito.Mockito.never()).done();
         verify(callbacks, org.mockito.Mockito.never()).error();
@@ -67,6 +70,29 @@ public class CalibrationsHelperContextTest {
         verify(callbacks, org.mockito.Mockito.never()).done();
         verify(callbacks, org.mockito.Mockito.never()).error();
         verifyNoInteractions(context);
+    }
+
+    @Test
+    public void migrationPhaseIsReportedOnlyWhenMergedTuneWillBeApplied() {
+        boolean previousSelection = com.rusefi.ui.basic.MigrateSettingsCheckboxState.isMigrationNeeded;
+        try {
+            UpdateOperationCallbacks callbacks = mock(UpdateOperationCallbacks.class);
+            when(callbacks.isInteractive()).thenReturn(true);
+            CalibrationsHelper.MergeResult merge = new CalibrationsHelper.MergeResult(
+                Optional.of(mock(CalibrationsInfo.class)), Collections.emptyList());
+
+            com.rusefi.ui.basic.MigrateSettingsCheckboxState.isMigrationNeeded = false;
+            assertFalse(CalibrationsHelper.startCalibrationRestoreIfSelected(merge, callbacks));
+            verify(callbacks, org.mockito.Mockito.never()).updateFirmwareProgress(
+                UpdateOperationCallbacks.FirmwareUpdateStage.CALIBRATION_RESTORE, 0);
+
+            com.rusefi.ui.basic.MigrateSettingsCheckboxState.isMigrationNeeded = true;
+            assertTrue(CalibrationsHelper.startCalibrationRestoreIfSelected(merge, callbacks));
+            verify(callbacks).updateFirmwareProgress(
+                UpdateOperationCallbacks.FirmwareUpdateStage.CALIBRATION_RESTORE, 0);
+        } finally {
+            com.rusefi.ui.basic.MigrateSettingsCheckboxState.isMigrationNeeded = previousSelection;
+        }
     }
 
     @Test

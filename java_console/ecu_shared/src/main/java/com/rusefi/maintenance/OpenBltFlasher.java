@@ -143,7 +143,7 @@ public class OpenBltFlasher {
         try {
             mLoader.start();
             started = true;
-            erase();
+            erase(writeData ? 25 : 0, writeData ? 45 : 100);
             if (writeData) {
                 write();
             }
@@ -219,14 +219,22 @@ public class OpenBltFlasher {
     }
 
     private class ProgressUpdater {
+        private final int startPercent;
+        private final int endPercent;
         private int mTotalProcessed = 0;
 
         private int mLastPercent = -1;
 
+        ProgressUpdater(int startPercent, int endPercent) {
+            this.startPercent = startPercent;
+            this.endPercent = endPercent;
+        }
+
         void processBytes(int thisChunk) {
             mTotalProcessed += thisChunk;
 
-            int percent = (int)(100.0 * mTotalProcessed / mTotalFileSize);
+            int phasePercent = (int)(100.0 * mTotalProcessed / mTotalFileSize);
+            int percent = startPercent + (endPercent - startPercent) * phasePercent / 100;
 
             if (percent != mLastPercent) {
                 mLastPercent = percent;
@@ -236,9 +244,9 @@ public class OpenBltFlasher {
         }
     }
 
-    private void erase() throws IOException {
+    private void erase(int startPercent, int endPercent) throws IOException {
         mCallbacks.setPhase("Erase", true);
-        final ProgressUpdater pu = new ProgressUpdater();
+        final ProgressUpdater pu = new ProgressUpdater(startPercent, endPercent);
 
         // Some bootloaders in the wild (F7 1MB, in particular) have a bug that they might not
         // erase the 2nd page if an erase request is made across a page boundary. Because of
@@ -254,7 +262,7 @@ public class OpenBltFlasher {
 
     private void write() throws IOException {
         mCallbacks.setPhase("Program", true);
-        final ProgressUpdater pu = new ProgressUpdater();
+        final ProgressUpdater pu = new ProgressUpdater(45, 95);
 
         forEachFirmwareChunk(PROGRAM_CHUNK_SIZE, (Chunk c) -> {
             mLoader.writeData(c.address, c.data);

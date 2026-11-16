@@ -20,6 +20,17 @@ import static org.mockito.Mockito.*;
 
 class FirmwareBranchSwitchControllerTest {
     @Test
+    void friendlyBranchNamesDoNotChangeRawBranchRouting() {
+        assertEquals("Lima", FirmwareBranchSwitchController.label("lts-26lima"));
+        assertEquals("Lima-Dev", FirmwareBranchSwitchController.label("lts-26lima-dev"));
+        assertEquals("Kansas", FirmwareBranchSwitchController.label("lts-25kansas"));
+        assertEquals("Dev", FirmwareBranchSwitchController.label("development"));
+        assertEquals("Dev", FirmwareBranchSwitchController.label("master"));
+        assertEquals("lts-25irvine", FirmwareBranchSwitchController.label("lts-25irvine"));
+        assertEquals("unknown-branch", FirmwareBranchSwitchController.label("unknown-branch"));
+    }
+
+    @Test
     void limaDevOffersBranchSwitch() throws Exception {
         Fixture f = new Fixture("lts-26lima-dev");
         SwingUtilities.invokeAndWait(() -> {

@@ -179,6 +179,11 @@ public enum AsyncJobExecutor {
         public void updateProgress(int percent) { emit(callbacks -> callbacks.updateProgress(percent)); }
 
         @Override
+        public void updateFirmwarePhase(UpdateOperationCallbacks.FirmwareUpdateStage stage) {
+            emit(callbacks -> callbacks.updateFirmwarePhase(stage));
+        }
+
+        @Override
         public void firmwareUpdateBlocked(String reason) { emit(callbacks -> callbacks.firmwareUpdateBlocked(reason)); }
 
         @Override

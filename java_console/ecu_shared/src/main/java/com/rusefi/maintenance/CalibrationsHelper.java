@@ -124,6 +124,19 @@ public class CalibrationsHelper {
             : PostMergeDecision.RESET_TO_DEFAULTS;
     }
 
+    static boolean startCalibrationRestoreIfSelected(
+        final MergeResult mergeResult,
+        final UpdateOperationCallbacks callbacks
+    ) {
+        if (!mergeResult.mergedCalibrations.isPresent()
+            || (callbacks.isInteractive() && !MigrateSettingsCheckboxState.isMigrationNeeded)) {
+            return false;
+        }
+
+        callbacks.updateFirmwareProgress(UpdateOperationCallbacks.FirmwareUpdateStage.CALIBRATION_RESTORE, 0);
+        return true;
+    }
+
     public static void main(String[] args) {
 //        args = new String[] {"destinationFileName.xml", "COM34"};
         if (args.length != 2) {
@@ -243,6 +256,8 @@ public class CalibrationsHelper {
     ) {
         AutoupdateUtil.assertNotAwtThread();
 
+        callbacks.updateFirmwareProgress(UpdateOperationCallbacks.FirmwareUpdateStage.CALIBRATION_BACKUP, 0);
+
         final String timestampFileNameComponent = DATE_FORMAT.format(new Date());
         final String backupName = getFileNameWithoutExtension(timestampFileNameComponent, "backup_from_ecu");
 
@@ -307,6 +322,7 @@ public class CalibrationsHelper {
         }
 
         prevCalibrations = calibrations;
+        callbacks.updateFirmwareProgress(UpdateOperationCallbacks.FirmwareUpdateStage.CALIBRATION_BACKUP, 100);
 
         if (!prepareFirmwareHandoff(bp, lm, beforeDisconnect)) {
             return false;
@@ -333,6 +349,7 @@ public class CalibrationsHelper {
             }
             case 1: {
                 final PortResult newEcuPort = ecuPortsAfterFirmwareUpdate.get(0);
+                callbacks.updateFirmwareProgress(UpdateOperationCallbacks.FirmwareUpdateStage.CALIBRATION_FINALIZE, 0);
                 callbacks.logLine(String.format(
                     "ECU is found on port %s after firmware update.",
                     newEcuPort.port
@@ -503,8 +520,7 @@ public class CalibrationsHelper {
                 }
 
                 // Headless callers have no checkbox to enable migration (its static default is false).
-                if (mergeResult.mergedCalibrations.isPresent() &&
-                    (!callbacks.isInteractive() || MigrateSettingsCheckboxState.isMigrationNeeded)) {
+                if (startCalibrationRestoreIfSelected(mergeResult, callbacks)) {
                     if (!backUpCalibrationsInfo(
                         mergeResult.mergedCalibrations.get(),
                         getFileNameWithoutExtension(timestampFileNameComponent, "merged_to_write"),
@@ -632,6 +648,7 @@ public class CalibrationsHelper {
     ) {
         if (rollbackLayoutsMatch(before, after)) {
             callbacks.logLine("Calibration layout is unchanged; restoring the pre-rollback tune.");
+            callbacks.updateFirmwareProgress(UpdateOperationCallbacks.FirmwareUpdateStage.CALIBRATION_RESTORE, 0);
             if (!CalibrationsUpdater.INSTANCE.updateCalibrations(
                 ecuPort.port,
                 before.withAllPagesToWrite(),
@@ -714,6 +731,7 @@ public class CalibrationsHelper {
         final ConnectivityContext connectivityContext
     ) {
         AutoupdateUtil.assertNotAwtThread();
+        callbacks.updateFirmwareProgress(UpdateOperationCallbacks.FirmwareUpdateStage.CALIBRATION_FINALIZE, 0);
 
         final Optional<CalibrationsInfo> prev = lastEcuCalibrations;
         if (!prev.isPresent()) {
@@ -771,6 +789,7 @@ public class CalibrationsHelper {
             callbacks.logLine("No settings changes were produced by migration - nothing to write.");
             return mergeResult.failedFields.isEmpty() ? RestoreResult.COMPLETE : RestoreResult.WARNING;
         }
+        callbacks.updateFirmwareProgress(UpdateOperationCallbacks.FirmwareUpdateStage.CALIBRATION_RESTORE, 0);
         if (!CalibrationsUpdater.INSTANCE.updateCalibrations(
             newEcuPort,
             mergeResult.mergedCalibrations.get(),

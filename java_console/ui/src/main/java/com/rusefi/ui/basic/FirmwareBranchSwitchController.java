@@ -278,6 +278,12 @@ public final class FirmwareBranchSwitchController {
         if ("lts-26lima".equals(branch)) {
             return "Lima";
         }
-        return "lts-26lima-dev".equals(branch) ? "Lima-Dev" : "Dev";
+        if ("lts-26lima-dev".equals(branch)) {
+            return "Lima-Dev";
+        }
+        if ("lts-25kansas".equals(branch)) {
+            return "Kansas";
+        }
+        return "master".equals(branch) || "development".equals(branch) ? "Dev" : branch;
     }
 }
