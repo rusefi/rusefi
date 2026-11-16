@@ -10,14 +10,14 @@ import java.util.function.Consumer;
  * File > Appearance: Light, Dark or Follow system. The choice is saved and applied on the next start, because
  * the console builds its colours once [tag:console_dark_mode].
  */
-final class AppearanceMenu {
+public final class AppearanceMenu {
     static final String TITLE = "Appearance";
     static final String RESTART_NOTE = "The new appearance applies the next time the console starts.";
 
     private AppearanceMenu() {
     }
 
-    static JMenu create(Component parent) {
+    public static JMenu create(Component parent) {
         return create(ConsoleTheme.saved(), ConsoleTheme::save,
             () -> JOptionPane.showMessageDialog(parent, RESTART_NOTE, TITLE, JOptionPane.INFORMATION_MESSAGE));
     }
