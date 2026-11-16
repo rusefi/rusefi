@@ -22,6 +22,7 @@ import com.rusefi.tools.TunerStudioHelper;
 import com.rusefi.ui.BasicLogoHelper;
 import com.rusefi.ui.LogoHelper;
 import com.rusefi.ui.UIContext;
+import com.rusefi.ui.console.AppearanceMenu;
 import com.rusefi.ui.plugins.StartupTabProvider;
 import com.rusefi.ui.wizard.WizardCatalog;
 import com.rusefi.ui.wizard.WizardContainer;
@@ -222,6 +223,7 @@ public class StartupFrame {
         }, SCANNING_PORTS);
 
         frame = FrameHelper.createFrame(title).getFrame();
+        frame.setJMenuBar(createStartupMenuBar(frame));
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent ev) {
@@ -260,6 +262,15 @@ public class StartupFrame {
                 SwingUtilities.invokeLater(this::restartConsole);
             }
         });
+    }
+
+    /** Application-level settings that must remain available before an ECU is connected. */
+    static JMenuBar createStartupMenuBar(Component parent) {
+        JMenuBar menuBar = new JMenuBar();
+        JMenu fileMenu = new JMenu("File");
+        fileMenu.add(AppearanceMenu.create(parent));
+        menuBar.add(fileMenu);
+        return menuBar;
     }
 
     public void showUi() {
