@@ -90,7 +90,7 @@ final class ChartToolbar extends ThemedStrip {
         this.onChange = onChange;
         this.smoothingWindow = smoothingWindow;
         smoothingPrompt = (initialMs, preview) -> TimelineSmoothingDialog.show(this,
-                "Timeline smoothing", smoothingWindow, initialMs, true, preview);
+                "Display smoothing", smoothingWindow, initialMs, true, preview);
         setBorder(BorderFactory.createEmptyBorder(8, JoinedButtons.ROW_END_INSET - JoinedButtons.ROW_GAP, 9, 0));
 
         ButtonGroup plotGroup = new ButtonGroup();
@@ -103,8 +103,8 @@ final class ChartToolbar extends ThemedStrip {
         gridButton.setToolTipText("Grid line options");
         gridButton.addActionListener(e -> gridPopup.show(gridButton, 0, gridButton.getHeight() + 4));
 
-        smoothingButton.setToolTipText("<html>Smooth timeline lines for readability.<br>"
-                + "Recorded data, cursor values and statistics stay raw.</html>");
+        smoothingButton.setToolTipText("<html>Display-only smoothing for timeline lines.<br>"
+                + "Recorded samples, cursor values, statistics and exports stay raw.</html>");
         smoothingButton.addActionListener(e -> editGlobalSmoothing());
 
         ButtonGroup cursorGroup = new ButtonGroup();
@@ -366,7 +366,7 @@ final class ChartToolbar extends ThemedStrip {
 
     private void updateControls() {
         gridButton.setText(gridSummary(settings));
-        smoothingButton.setText("Smoothing: "
+        smoothingButton.setText("Display smoothing: "
                 + TimelineSmoothingWindow.label(settings.getSmoothingWindowSeconds()) + "  \u25BE");
         valuesButton.setText(valuesSummary(settings));
         boolean valuesShown = settings.getCursorValues() != ChartSettings.CursorValues.OFF;

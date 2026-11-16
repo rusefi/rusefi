@@ -235,7 +235,7 @@ final class LogChart extends JComponent {
         this.grid = grid;
         smoothingWindow = TimelineSmoothingWindow.of(log);
         smoothingWindowPrompt = (signal, initialMs, preview) -> TimelineSmoothingDialog.show(this,
-                "Smoothing of " + signal, smoothingWindow, initialMs, false, preview);
+                "Display smoothing of " + signal, smoothingWindow, initialMs, false, preview);
         double fullStart = log.minimum(0);
         double fullEnd = log.maximum(0);
         double interval = log.minimumSampleInterval();
@@ -723,8 +723,8 @@ final class LogChart extends JComponent {
 
     /** Per-signal display smoothing: inherit the toolbar choice, stay raw, or use a separate time window. */
     JMenu smoothingSubmenu(int field) {
-        JMenu smoothing = new JMenu("Smoothing");
-        smoothing.setToolTipText("Display-only; recorded values, cursor values and statistics stay raw");
+        JMenu smoothing = new JMenu("Display smoothing");
+        smoothing.setToolTipText("Recorded samples, cursor values, statistics and exports stay raw");
         String signal = log.name(field);
         boolean usesGlobal = grid.usesGlobalSmoothing(signal);
         double current = grid.getSmoothingWindowSeconds(signal);
