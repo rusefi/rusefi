@@ -64,4 +64,17 @@ class StartupLogViewerEntryTest {
             assertEquals(log, opened.get());
         });
     }
+
+    @Test
+    void forwardedLogWaitsUntilAViewerIsReady() throws Exception {
+        ConsoleUI.ForwardedLogRequests requests = new ConsoleUI.ForwardedLogRequests();
+        File log = new File("forwarded.mlg");
+        AtomicReference<File> opened = new AtomicReference<>();
+
+        SwingUtilities.invokeAndWait(() -> requests.submit(log));
+        assertNull(opened.get());
+
+        SwingUtilities.invokeAndWait(() -> requests.setOpener(opened::set));
+        assertEquals(log, opened.get());
+    }
 }

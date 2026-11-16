@@ -94,6 +94,7 @@ public class ConsoleUI {
     private static final Logging log = getLogging(ConsoleUI.class);
     private static final String WIKI_URL = "https://wiki.rusefi.com/rusEFI-logs-folder";
     private static final String AUTO_LAUNCH_WIZARD = "auto_launch_wizard";
+    private static final ForwardedLogRequests FORWARDED_LOGS = new ForwardedLogRequests();
 
     protected static final String PORT_KEY = "port";
     protected static final String SPEED_KEY = "speed";
@@ -402,13 +403,16 @@ public class ConsoleUI {
             // the sidebar lists the logging profiles and can save a list as one
             logViewer.setLoggingProfiles(mainFrame.loggingProfiles());
             tabbedPane.addTab(LogViewerHost.TITLE, logViewer);
-            mainFrame.setLogViewerActions(file -> {
+            Consumer<File> openLog = file -> {
                 tabbedPane.selectTab(LogViewerHost.TITLE);
                 logViewer.open(file);
-            }, () -> {
+                raiseFrame(frame);
+            };
+            mainFrame.setLogViewerActions(openLog, () -> {
                 tabbedPane.selectTab(LogViewerHost.TITLE);
                 logViewer.chooseAndOpen();
             }, logViewer::recordingStopped);
+            setForwardedLogOpener(openLog);
 
             MessagesPane messagesPane = new MessagesPane(uiContext, getConfig().getRoot().getChild("messages"));
             installTextZoom(messagesPane.getContent(), "messages", messagesPane.getZoomableText());
@@ -978,6 +982,10 @@ console live data tab is broken #8402
     }
 
     private static void awtCode(String[] args, CompletableFuture<Autoupdate.UpdateOutcome> updateOutcome) {
+        File initialLog = logFileArgument(args);
+        if (initialLog != null && JustOneInstance.openLogInRunningInstance(initialLog)) {
+            System.exit(0);
+        }
         if (JustOneInstance.isAlreadyRunning()) {
             int result = JOptionPane.showConfirmDialog(createOnTopParent(), "Looks like another instance is already running. Do you really want to start another instance?",
                 TITLE, JOptionPane.YES_NO_OPTION);
@@ -985,10 +993,13 @@ console live data tab is broken #8402
                 System.exit(-1);
             }
         }
-        JustOneInstance.onStart();
+        JustOneInstance.onStart(file -> {
+            if (LogFiles.isSupported(file.getName())) {
+                SwingUtilities.invokeLater(() -> FORWARDED_LOGS.submit(file));
+            }
+        });
 
         try {
-            File initialLog = logFileArgument(args);
             boolean isPortDefined = initialLog == null && args.length > 0;
             boolean isBaudRateDefined = isPortDefined && args.length > 1;
             if (isBaudRateDefined)
@@ -1026,5 +1037,38 @@ console live data tab is broken #8402
     /** A supported log passed by the launcher, or null when the first argument belongs to the port/tool path. */
     static File logFileArgument(String[] args) {
         return args.length > 0 && LogFiles.isSupported(args[0]) ? new File(args[0]) : null;
+    }
+
+    static void setForwardedLogOpener(Consumer<File> opener) {
+        FORWARDED_LOGS.setOpener(opener);
+    }
+
+    static void raiseFrame(JFrame frame) {
+        frame.setExtendedState(frame.getExtendedState() & ~Frame.ICONIFIED);
+        frame.toFront();
+        frame.requestFocus();
+    }
+
+    /** Keeps requests that arrive during startup until either startup or the full console has a viewer. */
+    static final class ForwardedLogRequests {
+        private Consumer<File> opener;
+        private File pending;
+
+        void submit(File file) {
+            if (opener == null) {
+                pending = file;
+            } else {
+                opener.accept(file);
+            }
+        }
+
+        void setOpener(Consumer<File> opener) {
+            this.opener = opener;
+            if (pending != null) {
+                File file = pending;
+                pending = null;
+                opener.accept(file);
+            }
+        }
     }
 }
