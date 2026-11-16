@@ -40,10 +40,14 @@ import com.rusefi.ui.basic.FirmwareBranchSwitchController;
 import com.rusefi.ui.basic.StartupFirmwareOperationLifecycle;
 import com.rusefi.ui.basic.SingleAsyncJobExecutor;
 import com.rusefi.ui.basic.StatusPanelWithProgressBar;
+import com.rusefi.ui.basic.FirmwareUpdateCard;
 import com.rusefi.ui.basic.TuneManagementTab;
 import com.rusefi.ui.basic.UpdateFirmwareResult;
 import com.rusefi.ui.widgets.StatusPanel;
+import com.rusefi.ui.widgets.JoinedButtons;
+import com.rusefi.ui.widgets.ToolbarStrip;
 import com.rusefi.ui.widgets.ToolButtons;
+import com.rusefi.ui.widgets.CommandIcon;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 
@@ -490,17 +494,9 @@ public class StartupFrame {
             this::showFullScreenPanel, this::closeFullScreenPanel);
         startupUpdateActions.configureFirmwareSelector(selector);
 
-        JPanel firmwareTopPanel = new JPanel(new BorderLayout(0, 0));
-        firmwareTopPanel.add(selector.getControl(), BorderLayout.NORTH);
-        JPanel updateButtons = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
-        updateButtons.add(startupUpdateActions.getUpdateSoftwareStatus());
-        updateButtons.add(startupUpdateActions.getRollbackFirmwareButton());
-        firmwareTopPanel.add(updateButtons, BorderLayout.CENTER);
-        firmwareTopPanel.add(startupUpdateActions.getMigrateSettings(), BorderLayout.SOUTH);
-
-        JPanel firmwareTabPanel = new JPanel(new BorderLayout(0, 0));
-        firmwareTabPanel.add(firmwareTopPanel, BorderLayout.NORTH);
-        firmwareTabPanel.add(firmwareStatusPanel.getContent(), BorderLayout.CENTER);
+        JPanel firmwareTabPanel = new JPanel(new BorderLayout());
+        firmwareTabPanel.add(FirmwareUpdateCard.inResponsiveViewport(
+            createFirmwareUpdateCard(startupUpdateActions, selector, firmwareStatusPanel)), BorderLayout.CENTER);
         outerTabs.addTab("Update ECU firmware", firmwareTabPanel);
         final TuneManagementTab tuneManagementTab = new TuneManagementTab(
             connectivityContext,
@@ -562,6 +558,67 @@ public class StartupFrame {
         for (Component component : getAllComponents(frame)) {
             component.addKeyListener(hwTestEasterEgg);
         }
+    }
+
+    static JPanel createFirmwareTopPanel(StartupUpdateActions startupUpdateActions, ProgramSelector selector) {
+        selector.useProminentCardStyle(CommandIcon.UPLOAD);
+        JPanel firmwareTopPanel = new JPanel();
+        firmwareTopPanel.setLayout(new BoxLayout(firmwareTopPanel, BoxLayout.Y_AXIS));
+        firmwareTopPanel.setOpaque(false);
+        firmwareTopPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        firmwareTopPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+        JComponent firmwareSummary = startupUpdateActions.getFirmwareSummary();
+        firmwareSummary.setAlignmentX(Component.LEFT_ALIGNMENT);
+        firmwareTopPanel.add(firmwareSummary);
+        firmwareTopPanel.add(Box.createVerticalStrut(24));
+        JLabel softwareLabel = new JLabel("Tuner application:");
+        softwareLabel.setToolTipText("Updates the tuner application on this computer, not ECU firmware.");
+        JPanel updateButtons = stackControls(softwareLabel,
+            startupUpdateActions.getUpdateSoftwareButton(), startupUpdateActions.getUpdateSoftwareStatus());
+        updateButtons.setAlignmentX(Component.LEFT_ALIGNMENT);
+        updateButtons.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+        firmwareTopPanel.add(updateButtons);
+        firmwareTopPanel.add(Box.createVerticalStrut(8));
+        JPanel firmwareActions = stackControls(new JLabel("Firmware options:"),
+            startupUpdateActions.getRollbackFirmwareButton());
+        firmwareActions.setAlignmentX(Component.LEFT_ALIGNMENT);
+        firmwareActions.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+        firmwareTopPanel.add(firmwareActions);
+        return firmwareTopPanel;
+    }
+
+    static FirmwareUpdateCard createFirmwareUpdateCard(StartupUpdateActions actions, ProgramSelector selector,
+                                                        StatusPanelWithProgressBar statusPanel) {
+        FirmwareUpdateCard card = FirmwareUpdateCard.create("ECU firmware");
+        card.add(createFirmwareTopPanel(actions, selector));
+        card.add(Box.createVerticalStrut(28));
+        JButton copyLog = new JButton(DevicePane.COPY_LOG);
+        copyLog.setToolTipText("Copy the whole log, e.g. to paste into a support request");
+        copyLog.addActionListener(e -> statusPanel.copyLogToClipboard());
+        JPanel activity = new JPanel(new BorderLayout(0, 10));
+        activity.setOpaque(false);
+        activity.add(ToolbarStrip.header(DevicePane.ACTIVITY, new JoinedButtons(copyLog)), BorderLayout.NORTH);
+        activity.add(statusPanel.getContent(), BorderLayout.CENTER);
+        statusPanel.setActivityVisibilityListener(visible -> {
+            activity.setVisible(visible);
+            card.revalidate();
+        });
+        activity.setVisible(statusPanel.isActivityVisible());
+        card.add(activity);
+        return card;
+    }
+
+    static JPanel stackControls(Component... components) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setOpaque(false);
+        for (Component component : components) {
+            if (component instanceof JComponent) {
+                ((JComponent) component).setAlignmentX(Component.LEFT_ALIGNMENT);
+            }
+            panel.add(component);
+        }
+        return panel;
     }
 
     // Package-private so service discovery can be tested without creating a frame or scanning hardware.

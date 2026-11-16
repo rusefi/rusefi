@@ -47,9 +47,14 @@ public class ProgramSelector {
     private final JPanel content = new JPanel(new BorderLayout());
     private final JLabel noHardware = new JLabel("Nothing detected");
     private final JPanel updateModeAndButton = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
+    private final JPanel primaryActionRow = new ResponsiveActionRow();
     private final JSplitButton splitButton = new JSplitButton("Update ECU firmware", AutoupdateUtil.loadIcon("upload48.png"));
     private boolean recoveryDefault;
+    private String primaryActionBranch;
     private boolean directJobInProgress;
+    private boolean prominentCardStyle;
+    private boolean confirmedUpToDate;
+    private boolean confirmedNewerBuild;
     private final List<JComponent> additionalFirmwareControls = new ArrayList<>();
     private final ConnectivityContext connectivityContext;
     private final JComboBox<PortResult> comboPorts;
@@ -61,6 +66,7 @@ public class ProgramSelector {
     private LinkManager linkManager;
     private BiFunction<JComponent, PortResult, Boolean> firmwareUpdateInterceptor = (source, port) -> false;
     private BooleanSupplier externalBusy = () -> false;
+    private BooleanSupplier externalPrimaryActionBusy = () -> false;
     @Nullable
     private Predicate<String> confirmDfuRecoveryForTests;
     private long modalGeneration;
@@ -160,8 +166,21 @@ public class ProgramSelector {
 
     private void refreshMainButtonText(boolean recoveryDefault) {
         this.recoveryDefault = recoveryDefault;
-        splitButton.setText(recoveryDefault ? "Recover ECU" : "Update ECU firmware");
+        splitButton.setText(recoveryDefault ? "Recover ECU" : confirmedUpToDate ? "Reflash anyway"
+            : confirmedNewerBuild ? "Update firmware" : primaryActionBranch == null
+                ? "Update ECU firmware" : "Update ECU · " + primaryActionBranch);
         matchFirmwareControlSizes();
+    }
+
+    public void setPrimaryActionBranch(@Nullable String branch) {
+        primaryActionBranch = branch == null || branch.trim().isEmpty() ? null : branch.trim();
+        refreshMainButtonText();
+    }
+
+    public void setPrimaryActionStatus(boolean upToDate, boolean newerBuild) {
+        confirmedUpToDate = upToDate;
+        confirmedNewerBuild = newerBuild;
+        refreshMainButtonText();
     }
 
     private boolean isDfuRecoveryDefault(@Nullable AvailableHardware hardware) {
@@ -592,6 +611,10 @@ public class ProgramSelector {
         this.externalBusy = Objects.requireNonNull(externalBusy);
     }
 
+    public void setExternalPrimaryActionBusySupplier(BooleanSupplier busy) {
+        externalPrimaryActionBusy = Objects.requireNonNull(busy);
+    }
+
     void setDfuRecoveryConfirmationForTests(Predicate<String> confirmation) {
         confirmDfuRecoveryForTests = Objects.requireNonNull(confirmation);
     }
@@ -606,7 +629,7 @@ public class ProgramSelector {
      * "Update ECU" menu shortcut [tag:better_ux_for_flashing].
      */
     public void triggerUpdateFirmware() {
-        if (isJobRunning()) {
+        if (isJobRunning() || externalPrimaryActionBusy.getAsBoolean()) {
             return;
         }
         final PortResult targetPort = resolveNormalFlashPort();
@@ -637,7 +660,9 @@ public class ProgramSelector {
 
     @NotNull
     public static JComponent createHelpButton() {
-        return new URLLabel("HOWTO Update ECU firmware", UiProperties.getUpdateHelpUrl());
+        URLLabel help = new URLLabel("How it works ↗", UiProperties.getUpdateHelpUrl());
+        help.setToolTipText("How ECU firmware updates work");
+        return help;
     }
 
     public JPanel getControl() {
@@ -658,16 +683,162 @@ public class ProgramSelector {
         matchFirmwareControlSizes();
     }
 
+    /** Primary-action presentation used inside the live firmware summary card. */
+    public void useProminentCardStyle(Icon icon) {
+        prominentCardStyle = true;
+        updateModeAndButton.setLayout(new BoxLayout(updateModeAndButton, BoxLayout.Y_AXIS));
+        updateModeAndButton.setOpaque(false);
+        primaryActionRow.setOpaque(false);
+        content.setOpaque(false);
+        splitButton.setIcon(icon);
+        splitButton.useProminentStyle();
+        for (JComponent control : additionalFirmwareControls) {
+            control.setPreferredSize(null);
+        }
+        updateModeAndButton.remove(splitButton);
+        primaryActionRow.add(splitButton, 0);
+        rebuildFirmwareControls();
+    }
+
     public void addFirmwareControl(JComponent control) {
         additionalFirmwareControls.add(control);
-        updateModeAndButton.add(control, 0);
+        if (prominentCardStyle) {
+            rebuildFirmwareControls();
+        } else {
+            updateModeAndButton.add(control, 0);
+        }
         matchFirmwareControlSizes();
     }
 
+    public void addPrimaryFirmwareControl(JComponent control) {
+        primaryActionRow.add(control);
+        primaryActionRow.revalidate();
+    }
+
+    private void rebuildFirmwareControls() {
+        updateModeAndButton.setLayout(new BoxLayout(updateModeAndButton, BoxLayout.Y_AXIS));
+        updateModeAndButton.removeAll();
+        updateModeAndButton.add(primaryActionRow);
+        if (!additionalFirmwareControls.isEmpty()) {
+            updateModeAndButton.add(Box.createVerticalStrut(8));
+            for (JComponent control : additionalFirmwareControls) {
+                JPanel controlRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+                controlRow.setOpaque(false);
+                controlRow.add(control);
+                updateModeAndButton.add(controlRow);
+                updateModeAndButton.add(Box.createVerticalStrut(6));
+            }
+            updateModeAndButton.remove(updateModeAndButton.getComponentCount() - 1);
+        }
+        updateModeAndButton.revalidate();
+        updateModeAndButton.repaint();
+        content.invalidate();
+        content.revalidate();
+    }
+
     private void matchFirmwareControlSizes() {
+        if (prominentCardStyle) {
+            return;
+        }
         Dimension size = splitButton.getPreferredSize();
         for (JComponent control : additionalFirmwareControls) {
             control.setPreferredSize(size);
+        }
+    }
+
+    private static final class ResponsiveActionRow extends JPanel {
+        private static final int GAP = 10;
+        private boolean stacked;
+
+        private ResponsiveActionRow() {
+            setLayout(null);
+            setOpaque(false);
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            boolean stacked = getWidth() > 0 && getWidth() < horizontalWidth();
+            int width = 0;
+            int height = 0;
+            int count = 0;
+            for (Component component : getComponents()) {
+                if (!component.isVisible()) {
+                    continue;
+                }
+                Dimension size = component.getPreferredSize();
+                width = Math.max(width, size.width);
+                height += size.height;
+                count++;
+            }
+            if (count == 0) {
+                return new Dimension();
+            }
+            return stacked
+                ? new Dimension(width, height + GAP * (count - 1))
+                : new Dimension(horizontalWidth(), maxVisibleHeight());
+        }
+
+        @Override
+        public void doLayout() {
+            boolean nextStacked = getWidth() < horizontalWidth();
+            if (stacked != nextStacked) {
+                stacked = nextStacked;
+                if (getParent() != null) {
+                    getParent().revalidate();
+                }
+            }
+            int count = 0;
+            int totalHeight = 0;
+            for (Component component : getComponents()) {
+                if (component.isVisible()) {
+                    totalHeight += component.getPreferredSize().height;
+                    count++;
+                }
+            }
+            if (count == 0) {
+                return;
+            }
+            if (stacked) {
+                int y = (getHeight() - totalHeight - GAP * (count - 1)) / 2;
+                for (Component component : getComponents()) {
+                    if (component.isVisible()) {
+                        Dimension size = component.getPreferredSize();
+                        component.setBounds((getWidth() - size.width) / 2, y, size.width, size.height);
+                        y += size.height + GAP;
+                    }
+                }
+            } else {
+                int x = (getWidth() - horizontalWidth()) / 2;
+                for (Component component : getComponents()) {
+                    if (component.isVisible()) {
+                        Dimension size = component.getPreferredSize();
+                        component.setBounds(x, (getHeight() - size.height) / 2, size.width, size.height);
+                        x += size.width + GAP;
+                    }
+                }
+            }
+        }
+
+        private int horizontalWidth() {
+            int width = 0;
+            int count = 0;
+            for (Component component : getComponents()) {
+                if (component.isVisible()) {
+                    width += component.getPreferredSize().width;
+                    count++;
+                }
+            }
+            return count == 0 ? 0 : width + GAP * (count - 1);
+        }
+
+        private int maxVisibleHeight() {
+            int height = 0;
+            for (Component component : getComponents()) {
+                if (component.isVisible()) {
+                    height = Math.max(height, component.getPreferredSize().height);
+                }
+            }
+            return height;
         }
     }
 
@@ -744,7 +915,7 @@ public class ProgramSelector {
         final UpdateMode normalMode = flashPort == null ? null
             : mainButtonModeFor(flashPort, isLiveConnection(), canUseDfu);
         splitButton.setMainButtonEnabled(recoveryDefault ? recoveryAvailable && !isJobRunning
-            : shouldEnableMainButton(hasFirmwareTarget, isJobRunning, normalMode));
+            : shouldEnableMainButton(hasFirmwareTarget, isJobRunning || externalPrimaryActionBusy.getAsBoolean(), normalMode));
         splitButton.setArrowButtonEnabled(popupMenu.getComponentCount() > 0 && !isJobRunning);
 
         // Keep the main-button mode/label in sync with the connection state too (not just combo changes):

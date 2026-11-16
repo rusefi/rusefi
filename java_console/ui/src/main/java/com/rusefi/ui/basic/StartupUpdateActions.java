@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -26,7 +27,7 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
     private static final Logging log = getLogging(StartupUpdateActions.class);
 
     private final JLabel updateSoftwareStatus = new JLabel();
-    private final JCheckBox migrateSettings = new JCheckBox("Try to keep my current tune");
+    private final JCheckBox migrateSettings = createMigrateSettingsCheckBox();
     private final JCheckBox verboseMessages = new JCheckBox("Verbose Status");
 
     private final JButton updateSoftwareButton = new JButton("Update application");
@@ -42,6 +43,7 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
     private final AtomicReference<Optional<PortResult>> ecuPortToUse;
     private final FirmwareRollbackController rollbackController;
     private final FirmwareBranchSwitchController branchSwitchController;
+    private FirmwareStatusSummaryPanel firmwareSummary;
     private volatile @Nullable LinkManager linkManager;
 
     private String latestReportedHash;
@@ -62,6 +64,8 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
             connectivityContext, updateOperationCallbacks, singleAsyncJobExecutor, ecuPortToUse::get,
             () -> !softwareUpdateInProgress, this::refreshButtons,
             showRollbackPicker, closeRollbackPicker);
+        // Release status is read-only; keep it available even when the rollback action is disabled.
+        rollbackController.enableReleaseStatusDiscovery();
         branchSwitchController = new FirmwareBranchSwitchController(
             connectivityContext, updateOperationCallbacks, singleAsyncJobExecutor, ecuPortToUse::get,
             () -> !softwareUpdateInProgress && linkManager != null && linkManager.getBinaryProtocol() != null
@@ -97,6 +101,7 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
         verboseMessages.addActionListener(e -> updateMigrateSettingState());
 
         updateMigrateSettingState();
+
     }
 
     public ImportTuneControl getImportTuneButton() {
@@ -109,22 +114,36 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
         rollbackController.setLinkManager(lm);
         branchSwitchController.setLinkManager(lm);
         importTuneButton.setLinkManager(lm);
+        rollbackController.refresh(ecuPortToUse.get().orElse(null));
+        refreshFirmwareSummary();
     }
 
     public JCheckBox getMigrateSettings() {
         return migrateSettings;
     }
 
+    public static JCheckBox createMigrateSettingsCheckBox() {
+        return new JCheckBox("Keep my current tune");
+    }
+
     public JButton getRollbackFirmwareButton() {
         return rollbackController.getRollbackButton();
     }
 
+    public JButton getBranchSwitchButton() {
+        return branchSwitchController.getButton();
+    }
+
     public void configureFirmwareSelector(ProgramSelector selector) {
-        selector.addFirmwareControl(updateSoftwareButton);
-        selector.addFirmwareControl(branchSwitchController.getButton());
+        firmwareSummary = new FirmwareStatusSummaryPanel(
+            rollbackController, selector, branchSwitchController.getButton(), migrateSettings);
         selector.setTargetedFirmwareUpdateInterceptor(rollbackController::startLatestUpdate);
-        selector.setExternalBusySupplier(() -> rollbackController.isBusy() || softwareUpdateInProgress);
-        rollbackController.addStateChangedListener(() -> selector.apply(connectivityContext.getCurrentHardware()));
+        selector.setExternalBusySupplier(() -> rollbackController.isDownloadInProgress() || softwareUpdateInProgress);
+        selector.setExternalPrimaryActionBusySupplier(rollbackController::isPrimaryUpdateBlockedByCatalogDiscovery);
+        rollbackController.addStateChangedListener(() -> {
+            selector.apply(connectivityContext.getCurrentHardware());
+            refreshFirmwareSummary();
+        });
         singleAsyncJobExecutor.addOnJobReleasedListener(() -> SwingUtilities.invokeLater(() -> {
             branchSwitchController.refreshButton();
             selector.apply(connectivityContext.getCurrentHardware());
@@ -133,6 +152,15 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
 
     public JButton getUpdateSoftwareButton() {
         return updateSoftwareButton;
+    }
+
+    public JComponent getFirmwareSummary() {
+        return firmwareSummary;
+    }
+
+    /** Cross-package test seam for deterministic Dev status on the startup firmware tab. */
+    public void setDevMetadataProviderForTests(BiFunction<String, String, Long> provider) {
+        rollbackController.setDevMetadataProviderForTests(provider);
     }
 
     public JLabel getUpdateSoftwareStatus() {
@@ -221,6 +249,7 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
         ecuPortToUse.set(Optional.of(port));
         rollbackController.refresh(port);
         branchSwitchController.refreshButton();
+        refreshFirmwareSummary();
 
         SwingUtilities.invokeLater(() -> {
             refreshButtons();
@@ -245,6 +274,7 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
         ecuPortToUse.set(Optional.empty());
         rollbackController.reset();
         branchSwitchController.refreshButton();
+        refreshFirmwareSummary();
         SwingUtilities.invokeLater(() -> {
             importTuneButton.setEnabled(false);
         });
@@ -259,13 +289,26 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
         final Optional<PortResult> ecuPort = ecuPortToUse.get();
         final boolean noUpdateInProgress = singleAsyncJobExecutor.isNotInProgress()
             && !softwareUpdateInProgress
-            && !rollbackController.isBusy();
+            && !rollbackController.isDownloadInProgress();
         final boolean isEcuPortJobPossible = ecuPort.isPresent() && noUpdateInProgress;
         importTuneButton.setEnabled(isEcuPortJobPossible);
         updateSoftwareButton.setEnabled(
             updateSoftwareButton.isVisible() && softwareUpdateAvailable && noUpdateInProgress);
         rollbackController.refreshButton();
         branchSwitchController.refreshButton();
+    }
+
+    private void refreshFirmwareSummary() {
+        Runnable update = () -> {
+            if (firmwareSummary != null) {
+                firmwareSummary.refresh();
+            }
+        };
+        if (SwingUtilities.isEventDispatchThread()) {
+            update.run();
+        } else {
+            SwingUtilities.invokeLater(update);
+        }
     }
 
     @Override

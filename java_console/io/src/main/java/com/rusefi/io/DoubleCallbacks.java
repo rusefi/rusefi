@@ -22,6 +22,12 @@ public class DoubleCallbacks implements UpdateOperationCallbacks {
     }
 
     @Override
+    public void revealActivity() {
+        one.revealActivity();
+        two.revealActivity();
+    }
+
+    @Override
     public void firmwareUpdateBlocked(String reason) {
         one.firmwareUpdateBlocked(reason);
         two.firmwareUpdateBlocked(reason);
@@ -56,6 +62,12 @@ public class DoubleCallbacks implements UpdateOperationCallbacks {
     public void updateProgress(int percent) {
         one.updateProgress(percent);
         two.updateProgress(percent);
+    }
+
+    @Override
+    public void updateFirmwarePhase(UpdateOperationCallbacks.FirmwareUpdateStage stage) {
+        one.updateFirmwarePhase(stage);
+        two.updateFirmwarePhase(stage);
     }
 
     @Override

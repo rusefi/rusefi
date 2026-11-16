@@ -79,6 +79,11 @@ abstract class AbstractAutoFlashJob extends AsyncJobWithContext<SerialPortWithPa
         }
 
         @Override
+        public void updateFirmwarePhase(UpdateOperationCallbacks.FirmwareUpdateStage stage) {
+            delegate.updateFirmwarePhase(stage);
+        }
+
+        @Override
         public void firmwareUpdateBlocked(String reason) {
             delegate.firmwareUpdateBlocked(reason);
         }

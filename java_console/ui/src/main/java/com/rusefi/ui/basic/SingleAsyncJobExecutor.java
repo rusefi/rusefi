@@ -85,6 +85,11 @@ public class SingleAsyncJobExecutor implements com.rusefi.DeviceSessionManager.J
             }
 
             @Override
+            public void revealActivity() {
+                delegate.revealActivity();
+            }
+
+            @Override
             public void warning() {
                 if (lastResult == UpdateFirmwareResult.FAILURE) {
                     return;
@@ -102,6 +107,16 @@ public class SingleAsyncJobExecutor implements com.rusefi.DeviceSessionManager.J
             @Override
             public void updateProgress(final int percent) {
                 delegate.updateProgress(percent);
+            }
+
+            @Override
+            public void updateFirmwarePhase(UpdateOperationCallbacks.FirmwareUpdateStage stage) {
+                delegate.updateFirmwarePhase(stage);
+            }
+
+            @Override
+            public void updateFirmwareProgress(UpdateOperationCallbacks.FirmwareUpdateStage stage, int percent) {
+                delegate.updateFirmwareProgress(stage, percent);
             }
         };
     }
@@ -169,8 +184,19 @@ public class SingleAsyncJobExecutor implements com.rusefi.DeviceSessionManager.J
         ), onAccepted);
     }
 
+    /** Starts a job that continues firmware progress already shown during its pre-job artifact download. */
+    public boolean startJobContinuingProgress(final AsyncJob job, final Component parent, final Runnable onAccepted) {
+        return startJob(job, parent, message -> JOptionPane.showMessageDialog(
+            parent, message, "Error", JOptionPane.ERROR_MESSAGE), onAccepted, false);
+    }
+
     private boolean startJob(final AsyncJob job, final Component parent, Consumer<String> errorHandler,
                              final Runnable onAccepted) {
+        return startJob(job, parent, errorHandler, onAccepted, true);
+    }
+
+    private boolean startJob(final AsyncJob job, final Component parent, Consumer<String> errorHandler,
+                             final Runnable onAccepted, boolean clearCallbacks) {
         final Optional<AsyncJob> prevJobInProgress = setJobInProgressIfEmpty(job);
         if (!prevJobInProgress.isPresent()) {
             onAccepted.run();
@@ -179,7 +205,12 @@ public class SingleAsyncJobExecutor implements com.rusefi.DeviceSessionManager.J
             }
             UpdateOperationCallbacks delegate = callbacksProvider.apply(job);
             UpdateOperationCallbacks callbacks = recordResult.test(job) ? recordingCallbacks(delegate) : delegate;
-            callbacks.clear(); // clears the selected status panel; recorded jobs also reset lastResult
+            if (clearCallbacks) {
+                callbacks.clear(); // clears the selected status panel; recorded jobs also reset lastResult
+            } else {
+                lastResult = UpdateFirmwareResult.NONE;
+            }
+            callbacks.revealActivity();
             AsyncJobExecutor.INSTANCE.executeJob(job, callbacks, () -> {
                 updating = true;
                 for (Runnable listener : onJobWorkerAboutToStart) {

@@ -18,6 +18,8 @@ import java.util.zip.ZipOutputStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AutoupdateFirmwareDownloadTest {
@@ -27,14 +29,43 @@ class AutoupdateFirmwareDownloadTest {
     Path tempDir;
 
     @Test
+    void parsesOptionalFirmwareSignatureAndKeepsLegacyRowsUsable() {
+        String signature = "rusEFI lts-26lima.2026.10.16.uaefi_pro.1167482973";
+        List<FirmwareRollbackResolver.Build> builds = FirmwareRollbackResolver.parseIndex(
+            "<a href=\"" + SHA + "/\" data-firmware-signature=\"" + signature + "\">build</a> 2026-10-16 10:00 -\n" +
+                "<a href=\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/\">legacy</a> 2026-10-15 10:00 -\n" +
+                "<a href=\"cccccccccccccccccccccccccccccccccccccccc/\" data-firmware-signature=\"" +
+                signature + "\" data-firmware-signature=\"" + signature +
+                "\">duplicate</a> 2026-10-14 10:00 -\n" +
+                "<a href=\"dddddddddddddddddddddddddddddddddddddddd/\" data-firmware-signature=\"bad&value\">" +
+                "malformed</a> 2026-10-13 10:00 -\n" +
+                "<a href=\"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee/\" title=' data-firmware-signature=\"" +
+                signature + "\" '>title</a> 2026-10-12 10:00 -\n" +
+                "<a href=\"ffffffffffffffffffffffffffffffffffffffff/\" data-firmware-signature=\"" +
+                signature + "\" data-firmware-signature>bare duplicate</a> 2026-10-11 10:00 -",
+            "uaefi_pro", "lts-26lima", "https://example.test/build_server/uaefi_pro/lts-26lima/");
+
+        assertEquals(6, builds.size());
+        assertEquals(signature, builds.get(0).getFirmwareSignature());
+        assertNull(builds.get(1).getFirmwareSignature());
+        assertNull(builds.get(2).getFirmwareSignature(), "duplicate metadata must fail closed");
+        assertNull(builds.get(3).getFirmwareSignature(), "malformed metadata must fail closed");
+        assertNull(builds.get(4).getFirmwareSignature(), "quoted title text is not an attribute");
+        assertNull(builds.get(5).getFirmwareSignature(), "a trailing bare duplicate fails closed");
+    }
+
+    @Test
     void fallsBackToObfuscatedZipAndExtractsOnlyFirmware() {
         FirmwareRollbackResolver.Build build = build();
         List<Boolean> attempts = new ArrayList<>();
+        List<Integer> progress = new ArrayList<>();
 
         Autoupdate.FirmwareArtifacts artifacts = Autoupdate.downloadFirmware(
-            build, ignored -> {}, ignored -> {}, tempDir,
-            (ignoredBuild, destination, obfuscated, progress, logger) -> {
+            build, progress::add, ignored -> {}, tempDir,
+            (ignoredBuild, destination, obfuscated, progressListener, logger) -> {
                 attempts.add(obfuscated);
+                progressListener.onPercentage(0);
+                progressListener.onPercentage(100);
                 if (!obfuscated) {
                     return null;
                 }
@@ -42,6 +73,7 @@ class AutoupdateFirmwareDownloadTest {
             });
 
         assertEquals(Arrays.asList(false, true), attempts);
+        assertEquals(Arrays.asList(0, 50, 50, 100), progress);
         assertTrue(artifacts.getSrecPath().isPresent());
         assertTrue(artifacts.getBinPath().isPresent());
         assertEquals("lts-26-test", artifacts.getBundleInfo().getBranchName());
@@ -96,6 +128,133 @@ class AutoupdateFirmwareDownloadTest {
         assertTrue(Arrays.equals(new byte[]{1}, Files.readAllBytes(active.resolve("rusefi.bin"))));
         assertEquals("console metadata", new String(Files.readAllBytes(active.resolve("release.txt")), StandardCharsets.UTF_8));
         assertFalse(Files.exists(active.resolve("firmware.srec")));
+    }
+
+    @Test
+    void branchDownloadProgressContinuesAcrossPublicAndObfuscatedArchives() throws Exception {
+        List<Integer> progress = new ArrayList<>();
+        Autoupdate.FirmwareArtifacts result = Autoupdate.downloadFirmwareForBranch(
+            new BundleInfo("master", null, "board-x"), progress::add, ignored -> {}, tempDir.resolve("cache"),
+            (info, destination, obfuscated, listener, logger) -> {
+                listener.onPercentage(0);
+                listener.onPercentage(100);
+                return obfuscated ? branchZip(destination.resolve("obfuscated.zip"), "board-x", "development", "one") : null;
+            });
+
+        assertEquals(Arrays.asList(0, 50, 50, 100), progress);
+        assertTrue(result.getBinPath().isPresent());
+    }
+
+    @Test
+    void devMetadataUsesBoardSpecificUpdaterUrlAndPublicThenObfuscatedNames() throws Exception {
+        List<String> requests = new ArrayList<>();
+        long published = 1_800_000_000_000L;
+        long result = Autoupdate.getDevFirmwareLastModified("uaefi_pro", "master", "https://updates.test",
+            (baseUrl, zipName) -> {
+                requests.add(baseUrl + zipName);
+                if (!zipName.contains("obfuscated")) {
+                    return new Autoupdate.FirmwareZipMetadata(404, "text/html", 0);
+                }
+                return new Autoupdate.FirmwareZipMetadata(200, "application/zip", published);
+            });
+
+        assertEquals(published, result);
+        assertEquals(Arrays.asList(
+            "https://updates.test/autoupdate/rusefi_bundle_uaefi_pro_autoupdate.zip",
+            "https://updates.test/autoupdate/rusefi_bundle_uaefi_pro_obfuscated_public_autoupdate.zip"), requests);
+    }
+
+    @Test
+    void devMetadataRejectsOtherBranchesAndDoesNotFallBackToAnotherBoard() {
+        List<String> requests = new ArrayList<>();
+        assertThrows(IOException.class, () -> Autoupdate.getDevFirmwareLastModified(
+            "uaefi_pro", "lts-26lima", "https://updates.test",
+            (baseUrl, zipName) -> {
+                requests.add(baseUrl + zipName);
+                return new Autoupdate.FirmwareZipMetadata(200, "application/zip", 1_800_000_000_000L);
+            }));
+        assertTrue(requests.isEmpty());
+
+        Autoupdate.DevFirmwareMetadataException failure = assertThrows(
+            Autoupdate.DevFirmwareMetadataException.class, () -> Autoupdate.getDevFirmwareLastModified(
+            "uaefi_pro", "development", "https://updates.test",
+            (baseUrl, zipName) -> {
+                requests.add(baseUrl + zipName);
+                throw new IOException("missing board bundle");
+            }));
+        assertEquals(Autoupdate.DevFirmwareMetadataFailure.CONNECTION_FAILED, failure.getFailure());
+        assertTrue(requests.stream().allMatch(url -> url.contains("uaefi_pro")));
+        assertTrue(requests.stream().noneMatch(url -> url.contains("other_board")));
+    }
+
+    @Test
+    void rejectsHtmlResponseEvenWhenItHasLastModifiedAndNeverFallsBackToAnotherVariant() {
+        long errorPageDate = 1_800_000_000_000L;
+        List<String> names = new ArrayList<>();
+        Autoupdate.DevFirmwareMetadataException failure = assertThrows(
+            Autoupdate.DevFirmwareMetadataException.class, () -> Autoupdate.getDevFirmwareLastModified(
+            "uaefi_pro", "development", "https://updates.test",
+            (baseUrl, zipName) -> {
+                names.add(zipName);
+                return new Autoupdate.FirmwareZipMetadata(200, "text/html", errorPageDate);
+            }));
+        assertEquals(Autoupdate.DevFirmwareMetadataFailure.INVALID_SERVER_RESPONSE, failure.getFailure());
+        assertEquals(1, names.size());
+    }
+
+    @Test
+    void missingPublicLastModifiedDoesNotSelectDifferentObfuscatedBuild() {
+        List<String> names = new ArrayList<>();
+        long obfuscatedDate = 1_800_000_000_000L;
+        Autoupdate.DevFirmwareMetadataException failure = assertThrows(
+            Autoupdate.DevFirmwareMetadataException.class, () -> Autoupdate.getDevFirmwareLastModified(
+            "uaefi_pro", "development", "https://updates.test",
+            (baseUrl, zipName) -> {
+                names.add(zipName);
+                return zipName.contains("obfuscated")
+                    ? new Autoupdate.FirmwareZipMetadata(200, "application/zip", obfuscatedDate)
+                    : new Autoupdate.FirmwareZipMetadata(200, "application/zip", 0);
+            }));
+        assertEquals(Autoupdate.DevFirmwareMetadataFailure.NO_PUBLICATION_DATE, failure.getFailure());
+        assertEquals(1, names.size(), "public bundle succeeded, so do not infer obfuscated metadata instead");
+    }
+
+    @Test
+    void missingBothBoardBundlesIsDistinguishedFromMetadataTransportFailure() {
+        Autoupdate.DevFirmwareMetadataException failure = assertThrows(
+            Autoupdate.DevFirmwareMetadataException.class, () -> Autoupdate.getDevFirmwareLastModified(
+            "uaefi_pro", "development", "https://updates.test",
+            (baseUrl, zipName) -> new Autoupdate.FirmwareZipMetadata(404, "text/html", 0)));
+        assertEquals(Autoupdate.DevFirmwareMetadataFailure.DOWNLOAD_NOT_FOUND, failure.getFailure());
+    }
+
+    @Test
+    void fallsBackToObfuscatedOnlyWhenPublicBundleIsNotFound() throws Exception {
+        List<String> names = new ArrayList<>();
+        long obfuscatedDate = 1_800_000_000_000L;
+        long result = Autoupdate.getDevFirmwareLastModified("uaefi_pro", "development", "https://updates.test",
+            (baseUrl, zipName) -> {
+                names.add(zipName);
+                return zipName.contains("obfuscated")
+                    ? new Autoupdate.FirmwareZipMetadata(200, "application/zip; charset=binary", obfuscatedDate)
+                    : new Autoupdate.FirmwareZipMetadata(404, "text/html", 0);
+            });
+        assertEquals(obfuscatedDate, result);
+        assertEquals(2, names.size());
+    }
+
+    @Test
+    void authorizationOrServerErrorsDoNotTriggerObfuscatedFallback() {
+        List<String> names = new ArrayList<>();
+        Autoupdate.DevFirmwareMetadataException failure = assertThrows(
+            Autoupdate.DevFirmwareMetadataException.class, () -> Autoupdate.getDevFirmwareLastModified(
+            "uaefi_pro", "development", "https://updates.test",
+            (baseUrl, zipName) -> {
+                names.add(zipName);
+                return new Autoupdate.FirmwareZipMetadata(503, "text/html", 0);
+            }));
+        assertEquals(Autoupdate.DevFirmwareMetadataFailure.INVALID_SERVER_RESPONSE, failure.getFailure());
+        assertEquals(1, names.size());
     }
 
     @Test

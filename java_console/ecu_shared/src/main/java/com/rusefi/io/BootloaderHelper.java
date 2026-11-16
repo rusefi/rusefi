@@ -48,7 +48,9 @@ public class BootloaderHelper {
                     }
                     // #9714:  fetch the matching firmware on demand before rebooting to bootloader.
                     callbacks.logLine("[universal_bundle]: downloading firmware for \"" + ecuTarget + "\"...");
-                    if (!Autoupdate.ensureFirmwareForTarget(ecuTarget, callbacks::updateProgress, callbacks::logLine)) {
+                    if (!Autoupdate.ensureFirmwareForTarget(ecuTarget,
+                        percent -> callbacks.updateFirmwareProgress(
+                            UpdateOperationCallbacks.FirmwareUpdateStage.DOWNLOAD, percent), callbacks::logLine)) {
                         callbacks.logLine("Failed to download firmware for " + ecuTarget);
                         if (callbacks.isInteractive()) {
                             SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(parent, String.format(
@@ -56,6 +58,7 @@ public class BootloaderHelper {
                         }
                         return false;
                     }
+                    callbacks.updateFirmwareProgress(UpdateOperationCallbacks.FirmwareUpdateStage.DOWNLOAD, 100);
                 } else {
                     String message = String.format("You have \"%s\" controller does not look right to program it with \"%s\"", ecuTarget, fileSystemBundleTarget);
                     callbacks.logLine(message);

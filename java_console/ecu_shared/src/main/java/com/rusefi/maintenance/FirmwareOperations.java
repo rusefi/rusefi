@@ -468,7 +468,7 @@ public final class FirmwareOperations {
             parent, openbltPort, callbacks, connectivityContext.getConnectedEcuTarget(), firmwareSrecFile);
     }
 
-    private static OpenbltJni.OpenbltCallbacks makeOpenbltCallbacks(UpdateOperationCallbacks callbacks) {
+    static OpenbltJni.OpenbltCallbacks makeOpenbltCallbacks(UpdateOperationCallbacks callbacks) {
         return new OpenbltJni.OpenbltCallbacks() {
             @Override
             public void log(String line) {
@@ -487,6 +487,11 @@ public final class FirmwareOperations {
 
             @Override
             public void setPhase(String title, boolean hasProgress) {
+                if ("Erase".equals(title)) {
+                    callbacks.updateFirmwarePhase(UpdateOperationCallbacks.FirmwareUpdateStage.ERASE);
+                } else if ("Program".equals(title)) {
+                    callbacks.updateFirmwarePhase(UpdateOperationCallbacks.FirmwareUpdateStage.PROGRAM);
+                }
                 callbacks.logLine("Phase: " + title);
             }
         };
