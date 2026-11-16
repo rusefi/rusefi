@@ -12,6 +12,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.JToggleButton;
@@ -35,6 +36,7 @@ final class ChartToolbar extends ThemedStrip {
     final JToggleButton darkPlot = SegmentedControl.segment("Dark");
     final JButton openButton = LogViewerHost.openLogButton("Open  ▾");
     final JButton gridButton = new JButton();
+    final JButton smoothingButton = new JButton();
     final JToggleButton snapCursor = SegmentedControl.segment("Snap");
     final JToggleButton freeCursor = SegmentedControl.segment("Free");
     final JButton valuesButton = new JButton();
@@ -62,6 +64,8 @@ final class ChartToolbar extends ThemedStrip {
     final JSpinner horizontalDivisions;
 
     private final JPopupMenu gridPopup = new JPopupMenu();
+    final JPopupMenu smoothingPopup = new JPopupMenu();
+    final JRadioButtonMenuItem[] smoothingItems = new JRadioButtonMenuItem[TimelineSmoothingLevel.values().length];
     private final ChartSettings settings;
     private final Runnable onChange;
 
@@ -85,6 +89,12 @@ final class ChartToolbar extends ThemedStrip {
 
         gridButton.setToolTipText("Grid line options");
         gridButton.addActionListener(e -> gridPopup.show(gridButton, 0, gridButton.getHeight() + 4));
+
+        smoothingButton.setToolTipText("<html>Smooth timeline lines for readability.<br>"
+                + "Recorded data, cursor values and statistics stay raw.</html>");
+        smoothingButton.addActionListener(e ->
+                smoothingPopup.show(smoothingButton, 0, smoothingButton.getHeight() + 4));
+        buildSmoothingMenu();
 
         ButtonGroup cursorGroup = new ButtonGroup();
         cursorGroup.add(snapCursor);
@@ -125,6 +135,8 @@ final class ChartToolbar extends ThemedStrip {
         // right after the view switch, as in the Scatter view's toolbar, so it stays put when switching views
         add(labelled("Plot", new SegmentedControl(lightPlot, darkPlot)));
         add(new JoinedButtons(gridButton));
+        add(Box.createHorizontalStrut(JoinedButtons.ROW_GAP));
+        add(new JoinedButtons(smoothingButton));
         add(Box.createHorizontalStrut(JoinedButtons.ROW_GAP));
         add(muted(new JLabel("Cursor")));
         add(new SegmentedControl(snapCursor, freeCursor));
@@ -185,6 +197,27 @@ final class ChartToolbar extends ThemedStrip {
         GridBagConstraints noteConstraints = constraints(0, row, 2, 0);
         noteConstraints.insets = new Insets(8, 0, 0, 0);
         gridPanel.add(note, noteConstraints);
+    }
+
+    private void buildSmoothingMenu() {
+        ButtonGroup group = new ButtonGroup();
+        TimelineSmoothingLevel[] levels = TimelineSmoothingLevel.values();
+        for (int i = 0; i < levels.length; i++) {
+            TimelineSmoothingLevel level = levels[i];
+            JRadioButtonMenuItem item = new JRadioButtonMenuItem(level.label,
+                    settings.getSmoothingWindowSeconds() == level.seconds);
+            item.setToolTipText(level == TimelineSmoothingLevel.RAW
+                    ? "Draw every recorded sample"
+                    : "Display-only centred moving average; recorded values stay unchanged");
+            item.addActionListener(e -> {
+                settings.setSmoothingWindowSeconds(level.seconds);
+                updateControls();
+                onChange.run();
+            });
+            smoothingItems[i] = item;
+            group.add(item);
+            smoothingPopup.add(item);
+        }
     }
 
     private void buildValuesPanel() {
@@ -325,6 +358,8 @@ final class ChartToolbar extends ThemedStrip {
 
     private void updateControls() {
         gridButton.setText(gridSummary(settings));
+        smoothingButton.setText("Smoothing: "
+                + TimelineSmoothingLevel.label(settings.getSmoothingWindowSeconds()) + "  \u25BE");
         valuesButton.setText(valuesSummary(settings));
         boolean valuesShown = settings.getCursorValues() != ChartSettings.CursorValues.OFF;
         atMouse.setEnabled(valuesShown);
