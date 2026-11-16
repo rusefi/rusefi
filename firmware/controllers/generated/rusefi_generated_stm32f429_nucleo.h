@@ -517,7 +517,6 @@
 #define DYNO_SAE_TEMPERATURE_C_UNITS "C"
 #define EFI_CAN_BUS_COUNT 2
 #define EFI_CAN_CANFD FALSE
-#define EFI_LUA FALSE
 #define ego_sensor_e_auto_enum 0="ES_BPSX_D1",2="ES_14Point7_Free",6="ES_AEM",5="ES_Custom",1="ES_Innovate_MTX_L",4="ES_PLX"
 #define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "INVALID", "PLX", "Custom", "AEM"
 #define ego_sensor_e_ES_14Point7_Free 2
