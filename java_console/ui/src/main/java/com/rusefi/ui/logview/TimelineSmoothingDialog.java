@@ -60,7 +60,8 @@ final class TimelineSmoothingDialog {
         content.add(windowRow);
         content.add(new JLabel("Range " + limits.minimumMs + "\u2013" + limits.maximumMs
                 + " ms; step " + limits.minimumMs + " ms"));
-        content.add(new JLabel("Display only; recorded values and statistics stay raw."));
+        content.add(new JLabel("<html><b>Display only</b> \u2014 recorded samples, cursor values,<br>"
+                + "statistics and exports stay raw.</html>"));
 
         Window window = SwingUtilities.getWindowAncestor(parent);
         Component dialogParent = window == null ? parent : window;

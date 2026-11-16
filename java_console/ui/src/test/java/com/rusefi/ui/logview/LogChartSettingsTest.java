@@ -374,7 +374,7 @@ class LogChartSettingsTest {
         ChartToolbar toolbar = new ChartToolbar(settings, () -> repaints[0]++, null,
                 new TimelineSmoothingWindow(4, 10_000));
 
-        assertEquals("Smoothing: Raw  \u25BE", toolbar.smoothingButton.getText());
+        assertEquals("Display smoothing: Raw  \u25BE", toolbar.smoothingButton.getText());
         toolbar.smoothingPrompt = (initialMs, preview) -> {
             assertEquals(0, initialMs);
             preview.accept(5_000);
@@ -382,7 +382,7 @@ class LogChartSettingsTest {
         };
         toolbar.smoothingButton.doClick();
         assertEquals(5, settings.getSmoothingWindowSeconds());
-        assertEquals("Smoothing: 5000 ms  \u25BE", toolbar.smoothingButton.getText());
+        assertEquals("Display smoothing: 5000 ms  \u25BE", toolbar.smoothingButton.getText());
         assertEquals(1, repaints[0]);
 
         toolbar.smoothingPrompt = (initialMs, preview) -> {
@@ -392,13 +392,13 @@ class LogChartSettingsTest {
         };
         toolbar.smoothingButton.doClick();
         assertEquals(5, settings.getSmoothingWindowSeconds(), "Cancel restores the setting before the preview");
-        assertEquals("Smoothing: 5000 ms  \u25BE", toolbar.smoothingButton.getText());
+        assertEquals("Display smoothing: 5000 ms  \u25BE", toolbar.smoothingButton.getText());
         assertEquals(3, repaints[0], "one live preview and one restoration");
 
         toolbar.smoothingPrompt = (initialMs, preview) -> 0;
         toolbar.smoothingButton.doClick();
         assertEquals(0, settings.getSmoothingWindowSeconds());
-        assertEquals("Smoothing: Raw  \u25BE", toolbar.smoothingButton.getText());
+        assertEquals("Display smoothing: Raw  \u25BE", toolbar.smoothingButton.getText());
         assertEquals(4, repaints[0]);
     }
 
