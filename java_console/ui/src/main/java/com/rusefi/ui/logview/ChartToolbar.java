@@ -1,6 +1,7 @@
 package com.rusefi.ui.logview;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import com.rusefi.ui.util.WrapLayout;
 import com.rusefi.ui.widgets.JoinedButtons;
 import com.rusefi.ui.widgets.SegmentedControl;
 
@@ -22,6 +23,8 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
@@ -53,6 +56,10 @@ final class ChartToolbar extends ThemedStrip {
     /** Shows the statistics table; the viewer panel listens to it. */
     final JToggleButton measureButton = new JToggleButton("Measure");
     final JToggleButton statsButton = new JToggleButton("Stats");
+    final JLabel plotLabel = muted(new JLabel("Plot"));
+    final JLabel cursorLabel = muted(new JLabel("Cursor"));
+    private boolean compact;
+    private int expandAtWidth;
 
     // grid options, shown in a popup under the Grid button
     final JPanel gridPanel = new JPanel(new GridBagLayout());
@@ -86,13 +93,13 @@ final class ChartToolbar extends ThemedStrip {
 
     ChartToolbar(ChartSettings settings, Runnable onChange, Consumer<Component> onOpen,
                  TimelineSmoothingWindow smoothingWindow) {
-        super(new FlowLayout(FlowLayout.LEFT, JoinedButtons.ROW_GAP, 0), "Console.Toolbar.background", false);
+        super(new WrapLayout(FlowLayout.LEFT, JoinedButtons.ROW_GAP, 4), "Console.Toolbar.background", false);
         this.settings = settings;
         this.onChange = onChange;
         this.smoothingWindow = smoothingWindow;
         smoothingPrompt = (initialMs, preview) -> TimelineSmoothingDialog.show(this,
                 "Display smoothing", smoothingWindow, initialMs, true, preview);
-        setBorder(BorderFactory.createEmptyBorder(8, JoinedButtons.ROW_END_INSET - JoinedButtons.ROW_GAP, 9, 0));
+        setBorder(BorderFactory.createEmptyBorder(4, JoinedButtons.ROW_END_INSET - JoinedButtons.ROW_GAP, 5, 0));
 
         ButtonGroup plotGroup = new ButtonGroup();
         plotGroup.add(lightPlot);
@@ -147,12 +154,12 @@ final class ChartToolbar extends ThemedStrip {
             add(Box.createHorizontalStrut(JoinedButtons.ROW_GAP));
         }
         // right after the view switch, as in the Scatter view's toolbar, so it stays put when switching views
-        add(labelled("Plot", new SegmentedControl(lightPlot, darkPlot)));
+        add(labelled(plotLabel, new SegmentedControl(lightPlot, darkPlot)));
         add(new JoinedButtons(gridButton));
         add(Box.createHorizontalStrut(JoinedButtons.ROW_GAP));
         add(new JoinedButtons(smoothingButton, smoothingRawButton));
         add(Box.createHorizontalStrut(JoinedButtons.ROW_GAP));
-        add(muted(new JLabel("Cursor")));
+        add(cursorLabel);
         add(new SegmentedControl(snapCursor, freeCursor));
         add(Box.createHorizontalStrut(JoinedButtons.ROW_GAP));
         add(new JoinedButtons(valuesButton));
@@ -168,6 +175,12 @@ final class ChartToolbar extends ThemedStrip {
         statsButton.setToolTipText("Show the value at the cursor and the min, max and average over the "
                 + "visible time of every plotted signal");
         add(new JoinedButtons(statsButton));
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent event) {
+                updateResponsiveLayout();
+            }
+        });
         updateControls();
     }
 
@@ -177,6 +190,54 @@ final class ChartToolbar extends ThemedStrip {
         int index = openButton.getParent() != null ? 2 : 0;
         add(viewSwitch, index);
         add(Box.createHorizontalStrut(JoinedButtons.ROW_GAP), index + 1);
+    }
+
+    /** Compacts labels first; {@link WrapLayout} adds rows only when the compact controls still cannot fit. */
+    void updateResponsiveLayout() {
+        if (getWidth() <= 0) {
+            return;
+        }
+        if (!compact) {
+            int required = naturalRowWidth();
+            if (getWidth() < required) {
+                expandAtWidth = required;
+                setCompact(true);
+            }
+        } else if (getWidth() >= expandAtWidth) {
+            setCompact(false);
+            int required = naturalRowWidth();
+            if (getWidth() < required) {
+                expandAtWidth = required;
+                setCompact(true);
+            }
+        }
+    }
+
+    private void setCompact(boolean compact) {
+        if (this.compact == compact) {
+            return;
+        }
+        this.compact = compact;
+        plotLabel.setVisible(!compact);
+        cursorLabel.setVisible(!compact);
+        updateControls();
+        revalidate();
+        repaint();
+    }
+
+    int naturalRowWidth() {
+        Insets insets = getInsets();
+        int width = insets.left + insets.right;
+        int count = 0;
+        for (Component component : getComponents()) {
+            if (!component.isVisible()) {
+                continue;
+            }
+            width += component.getPreferredSize().width;
+            count++;
+        }
+        FlowLayout layout = (FlowLayout) getLayout();
+        return width + Math.max(0, count - 1) * layout.getHgap() + layout.getHgap() * 2;
     }
 
     private void buildGridPanel() {
@@ -309,9 +370,13 @@ final class ChartToolbar extends ThemedStrip {
 
     /** A muted label and its control as one piece, so a wrapping toolbar never puts them on different lines. */
     static JPanel labelled(String text, Component control) {
+        return labelled(muted(new JLabel(text)), control);
+    }
+
+    private static JPanel labelled(Component label, Component control) {
         JPanel pair = new JPanel(new FlowLayout(FlowLayout.LEFT, JoinedButtons.ROW_GAP, 0));
         pair.setOpaque(false);
-        pair.add(muted(new JLabel(text)));
+        pair.add(label);
         pair.add(control);
         return pair;
     }
@@ -369,10 +434,10 @@ final class ChartToolbar extends ThemedStrip {
 
     private void updateControls() {
         gridButton.setText(gridSummary(settings));
-        smoothingButton.setText("Display smoothing: "
+        smoothingButton.setText((compact ? "Smoothing: " : "Display smoothing: ")
                 + TimelineSmoothingWindow.label(settings.getSmoothingWindowSeconds()) + "  \u25BE");
         smoothingRawButton.setVisible(settings.getSmoothingWindowSeconds() > 0);
-        valuesButton.setText(valuesSummary(settings));
+        valuesButton.setText(compact ? "Values  \u25BE" : valuesSummary(settings));
         boolean valuesShown = settings.getCursorValues() != ChartSettings.CursorValues.OFF;
         atMouse.setEnabled(valuesShown);
         atClick.setEnabled(valuesShown);
