@@ -3,6 +3,8 @@ package com.rusefi.ui.logview;
 import com.rusefi.logview.CsvLogReader;
 import org.junit.jupiter.api.Test;
 
+import javax.swing.JMenu;
+import javax.swing.JRadioButtonMenuItem;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -16,12 +18,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class LogChartSmoothingTest {
     private static CsvLogReader log() throws IOException {
         return CsvLogReader.read(new StringReader(
-                "Time\tSignal\n"
-                        + "s\tV\n"
-                        + "0\t0\n"
-                        + "0.01\t10\n"
-                        + "0.09\t90\n"
-                        + "0.10\t100\n"));
+                "Time\tSignal\tOther\n"
+                        + "s\tV\tV\n"
+                        + "0\t0\t0\n"
+                        + "0.01\t10\t10\n"
+                        + "0.09\t90\t90\n"
+                        + "0.10\t100\t100\n"));
     }
 
     private static LogChart chart(CsvLogReader log, double windowSeconds) {
@@ -71,5 +73,42 @@ class LogChartSmoothingTest {
         for (int sample = 0; sample < log.sampleCount(); sample++) {
             assertEquals(log.value(sample, 1), chart.traceValue(sample, 1));
         }
+    }
+
+    @Test
+    void legendMenuOverridesOneSignalAndCanRestoreTheGlobalLevel() throws IOException {
+        CsvLogReader log = log();
+        ChartSettings settings = new ChartSettings();
+        settings.setSmoothingWindowSeconds(0.10);
+        PlotLayout layout = new PlotLayout(log.fieldCount());
+        layout.add(1);
+        layout.add(2);
+        LogChart chart = new LogChart(log, layout, settings);
+
+        JMenu smoothing = chart.smoothingSubmenu(1);
+        assertTrue(item(smoothing, "Use global (100 ms)").isSelected());
+        item(smoothing, "1 s").doClick();
+        assertEquals(50, chart.traceValue(0, 1), 1e-12, "Signal uses its 1 s override");
+        assertEquals(5, chart.traceValue(0, 2), 1e-12, "Other still uses the 100 ms global level");
+
+        smoothing = chart.smoothingSubmenu(1);
+        assertTrue(item(smoothing, "1 s").isSelected());
+        item(smoothing, "Raw").doClick();
+        assertEquals(0, chart.traceValue(0, 1), 1e-12);
+        assertEquals(5, chart.traceValue(0, 2), 1e-12);
+
+        smoothing = chart.smoothingSubmenu(1);
+        item(smoothing, "Use global (100 ms)").doClick();
+        assertTrue(settings.usesGlobalSmoothing("Signal"));
+        assertEquals(5, chart.traceValue(0, 1), 1e-12);
+    }
+
+    private static JRadioButtonMenuItem item(JMenu menu, String text) {
+        for (int i = 0; i < menu.getItemCount(); i++) {
+            if (menu.getItem(i) instanceof JRadioButtonMenuItem && text.equals(menu.getItem(i).getText())) {
+                return (JRadioButtonMenuItem) menu.getItem(i);
+            }
+        }
+        throw new AssertionError("No smoothing item " + text);
     }
 }
