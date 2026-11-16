@@ -213,7 +213,8 @@ DDEFS += -DSHORT_BOARD_NAME=$(SHORT_BOARD_NAME)
 # diverge from the pages the firmware actually serves (a divergence makes the firmware
 # answer reads of a page the .ini still lists with out_of_range, and TunerStudio
 # retries that page until it drops the connection).
-# Keep the list in sync with the guardFlag column of TS_PAGES in TSProjectConsumer.java.
+# Keep this list in sync with simulator/Makefile, VariableRegistry.TS_PAGE_GUARD_FLAGS and the
+# guardFlag column of TS_PAGES in TSProjectConsumer.java.
 TS_PAGE_GUARD_FLAGS = EFI_LTFT_CONTROL|EFI_LUA
 TS_PAGE_GUARD_DEFS := $(shell sed -nE 's/^#define[[:space:]]+($(TS_PAGE_GUARD_FLAGS))[[:space:]]+(TRUE|FALSE)[[:space:]]*$$/-D\1=\2/p' $(BOARD_DIR)/prepend.txt $(BOARD_DIR)/prepend_$(SHORT_BOARD_NAME).txt 2>/dev/null)
 DDEFS += $(TS_PAGE_GUARD_DEFS)
