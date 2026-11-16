@@ -31,6 +31,8 @@ import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.sensor_logs.LoggingProfiles;
 import com.rusefi.ui.basic.LoadTuneHelper;
+import com.rusefi.ui.basic.ApplicationUpdatePrompt;
+import com.rusefi.ui.basic.SoftwareUpdateCoordinator;
 import com.rusefi.ui.logview.LogViewerHost;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.util.ExitUtil;
@@ -43,6 +45,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.time.LocalDateTime;
@@ -274,20 +277,23 @@ public class MainFrame {
     private ShortcutsDialog shortcutsDialog;
     private TitleBarPanel titleBarPanel;
     private Runnable updateEcuAction;
-    private Runnable exitRequestHandler;
+    private Consumer<Runnable> exitRequestHandler;
     private LogViewerHost logViewerHost;
     private boolean firmwareUpdateInProgress;
     private boolean updateSoftwareAvailable;
+    private boolean softwareRestartRequired;
     private boolean updateEcuAvailable;
     private boolean firmwareUpdateCheckInProgress;
     private int firmwareUpdateCheckGeneration;
     private boolean unsupportedEcuBlocking;
     private final UnsupportedEcuCardHost unsupportedEcuHost;
+    private final SoftwareUpdateCoordinator softwareUpdateCoordinator;
     private FrameOverlay firmwareUpdateCheckOverlay;
     private FrameOverlay connectionFailureOverlay;
     private FrameOverlay unsavedTuneChangesOverlay;
     private boolean installerAnnouncementShown;
     private final JPanel installerBannerHost = new JPanel(new BorderLayout());
+    private final JPanel softwareUpdateBannerHost = new JPanel(new BorderLayout());
     private FrameOverlay activeOverlay;
     private FrameOverlay configErrorOverlay;
     private final ConfigErrorOverlayController configErrorController = new ConfigErrorOverlayController(
@@ -307,7 +313,7 @@ public class MainFrame {
     private Component previousFocusOwner;
 
     public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane) {
-        this(consoleUI, tabbedPane, null, null);
+        this(consoleUI, tabbedPane, null, null, idleUpdateCoordinator());
     }
 
     /**
@@ -315,14 +321,16 @@ public class MainFrame {
      *                   (handed off from {@link StartupFrame}) instead of creating a new window (#9715).
      */
     public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane, JFrame reuseFrame) {
-        this(consoleUI, tabbedPane, reuseFrame, null);
+        this(consoleUI, tabbedPane, reuseFrame, null, idleUpdateCoordinator());
     }
 
     public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane, JFrame reuseFrame,
-                     UnsupportedEcuCardHost unsupportedEcuHost) {
+                     UnsupportedEcuCardHost unsupportedEcuHost,
+                     SoftwareUpdateCoordinator softwareUpdateCoordinator) {
         this.consoleUI = Objects.requireNonNull(consoleUI);
         this.tabbedPane = tabbedPane;
         this.unsupportedEcuHost = unsupportedEcuHost;
+        this.softwareUpdateCoordinator = softwareUpdateCoordinator;
         listener = ConnectionStatusLogic.Listener.VOID;
         // reuseFrame == null creates a new window; non-null reuses the splash frame in place (#9715).
         this.frame = new FrameHelper(reuseFrame, JFrame.DO_NOTHING_ON_CLOSE) {
@@ -347,7 +355,10 @@ public class MainFrame {
 
         installerBannerHost.setVisible(false);
         installerBannerHost.setOpaque(false);
+        softwareUpdateBannerHost.setVisible(false);
+        softwareUpdateBannerHost.setOpaque(false);
         createMenuBar();
+        softwareUpdateCoordinator.addListener(this::applySoftwareUpdateState);
         // Keep the error bit in selective output polling on every tab, including after splash hand-off.
         configErrorSubscription = SensorCentral.getInstance().addListener(
             () -> SwingUtilities.invokeLater(this::refreshConfigErrorOverlay),
@@ -361,6 +372,11 @@ public class MainFrame {
                 refreshFirmwareUpdateExclusion();
             });
         }
+    }
+
+    private static SoftwareUpdateCoordinator idleUpdateCoordinator() {
+        return new SoftwareUpdateCoordinator(
+            CompletableFuture.completedFuture(Autoupdate.UpdateOutcome.SKIPPED));
     }
 
     private void createMenuBar() {
@@ -545,7 +561,7 @@ public class MainFrame {
         toolsMenu.setVisible(toolsMenu.getItemCount() > 0);
     }
 
-    public void setExitRequestHandler(Runnable exitRequestHandler) {
+    public void setExitRequestHandler(Consumer<Runnable> exitRequestHandler) {
         this.exitRequestHandler = exitRequestHandler;
     }
 
@@ -554,6 +570,10 @@ public class MainFrame {
     }
 
     private void requestExit() {
+        requestExit(() -> frame.getFrame().dispose());
+    }
+
+    private void requestExit(Runnable exitAction) {
         if (firmwareUpdateInProgress) {
             int choice = JOptionPane.showConfirmDialog(
                 frame.getFrame(),
@@ -570,9 +590,9 @@ public class MainFrame {
             return;
         }
         if (exitRequestHandler == null) {
-            frame.getFrame().dispose();
+            exitAction.run();
         } else {
-            exitRequestHandler.run();
+            exitRequestHandler.accept(exitAction);
         }
     }
 
@@ -906,9 +926,13 @@ public class MainFrame {
         installerBannerHost.repaint();
     }
 
-    public JComponent wrapContentWithInstallerBanner(JComponent content) {
+    public JComponent wrapContentWithBanners(JComponent content) {
         JPanel wrapper = new JPanel(new BorderLayout());
-        wrapper.add(installerBannerHost, BorderLayout.NORTH);
+        JPanel banners = new JPanel();
+        banners.setLayout(new BoxLayout(banners, BoxLayout.Y_AXIS));
+        banners.add(softwareUpdateBannerHost);
+        banners.add(installerBannerHost);
+        wrapper.add(banners, BorderLayout.NORTH);
         wrapper.add(content, BorderLayout.CENTER);
         return wrapper;
     }
@@ -962,15 +986,134 @@ public class MainFrame {
     }
 
     private void onUpdateSoftwareClicked() {
-        setUpdateSoftwareAvailable(false);
-        Thread updateThread = new Thread(() ->
-            Autoupdate.runManualUpdate(msg -> {
-                if (msg != null) {
-                    Autoupdate.relaunchConsole();
+        if (softwareRestartRequired) {
+            restartApplication();
+            return;
+        }
+        softwareUpdateCoordinator.install();
+    }
+
+    private void applySoftwareUpdateState(SoftwareUpdateCoordinator.State state) {
+        switch (state) {
+            case CHECKING:
+                updateSoftwareItem.setText("Checking for Software Updates…");
+                setUpdateSoftwareAvailable(false);
+                break;
+            case AVAILABLE:
+                softwareRestartRequired = false;
+                updateSoftwareItem.setText("Update Software");
+                setUpdateSoftwareAvailable(true);
+                hideSoftwareUpdateBanner();
+                SwingUtilities.invokeLater(() ->
+                    ApplicationUpdatePrompt.show(frame.getFrame(), softwareUpdateCoordinator));
+                break;
+            case AVAILABLE_DEFERRED:
+                softwareRestartRequired = false;
+                updateSoftwareItem.setText("Update Software");
+                setUpdateSoftwareAvailable(true);
+                showDeferredSoftwareUpdate();
+                break;
+            case INSTALLING:
+                softwareRestartRequired = false;
+                updateSoftwareItem.setText("Updating Software…");
+                setUpdateSoftwareAvailable(false);
+                showSoftwareUpdateBanner("Downloading application update…");
+                break;
+            case RESTART_REQUIRED:
+                showSoftwareRestartRequired();
+                break;
+            case FAILED:
+                softwareRestartRequired = false;
+                updateSoftwareItem.setText("Retry Software Update");
+                setUpdateSoftwareAvailable(true);
+                showSoftwareUpdateFailed();
+                break;
+            default:
+                softwareRestartRequired = false;
+                updateSoftwareItem.setText("Update Software");
+                hideSoftwareUpdateBanner();
+                // The check runs whatever the auto-update setting, so idle means nothing to offer.
+                setUpdateSoftwareAvailable(false);
+                break;
+        }
+    }
+
+    private void showDeferredSoftwareUpdate() {
+        JButton update = new JButton("Update now");
+        update.addActionListener(e -> softwareUpdateCoordinator.install());
+        showSoftwareUpdateBanner("Application update available.", update);
+    }
+
+    private void showSoftwareUpdateFailed() {
+        JButton later = new JButton("Later");
+        later.addActionListener(e -> softwareUpdateCoordinator.later());
+        JButton retry = new JButton("Retry");
+        retry.addActionListener(e -> softwareUpdateCoordinator.install());
+        showSoftwareUpdateBanner("Application update failed. You can retry.", later, retry);
+    }
+
+    private void showSoftwareUpdateBanner(String text, JButton... buttons) {
+        JPanel banner = new JPanel(new BorderLayout(12, 0));
+        banner.setBackground(FrameOverlay.themed("Console.InstallerBanner.background", new Color(255, 243, 205)));
+        banner.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(0, 0, 1, 0,
+                FrameOverlay.themed("Console.InstallerBanner.borderColor", new Color(180, 140, 50))),
+            BorderFactory.createEmptyBorder(6, 12, 6, 6)
+        ));
+        JLabel message = new JLabel(text);
+        message.setFont(message.getFont().deriveFont(Font.BOLD));
+        banner.add(message, BorderLayout.CENTER);
+        if (buttons.length > 0) {
+            JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+            actions.setOpaque(false);
+            for (int i = 0; i < buttons.length; i++) {
+                if (i > 0) {
+                    actions.add(Box.createHorizontalStrut(5));
                 }
-            }), "manual-update");
-        updateThread.setDaemon(true);
-        updateThread.start();
+                JButton button = buttons[i];
+                actions.add(button);
+            }
+            banner.add(actions, BorderLayout.EAST);
+        }
+        softwareUpdateBannerHost.removeAll();
+        softwareUpdateBannerHost.add(banner, BorderLayout.CENTER);
+        softwareUpdateBannerHost.setVisible(true);
+        softwareUpdateBannerHost.revalidate();
+        softwareUpdateBannerHost.repaint();
+    }
+
+    private void hideSoftwareUpdateBanner() {
+        softwareUpdateBannerHost.setVisible(false);
+        softwareUpdateBannerHost.removeAll();
+        softwareUpdateBannerHost.revalidate();
+        softwareUpdateBannerHost.repaint();
+    }
+
+    private void showSoftwareRestartRequired() {
+        softwareRestartRequired = true;
+        setUpdateSoftwareAvailable(true);
+        applySoftwareRestartRequired(updateSoftwareItem);
+
+        JButton later = new JButton("Restart later");
+        later.addActionListener(e -> later.setVisible(false));
+        JButton restart = new JButton("Restart now");
+        restart.addActionListener(e -> restartApplication());
+        showSoftwareUpdateBanner("Application update ready. Restart to finish updating.", later, restart);
+    }
+
+    static void applySoftwareRestartRequired(JMenuItem updateItem) {
+        updateItem.setText("Restart Application");
+        updateItem.setEnabled(true);
+    }
+
+    private void restartApplication() {
+        requestExit(() -> {
+            if (Autoupdate.startUpdatedConsole()) {
+                frame.getFrame().dispose();
+            } else {
+                showMessageOverlay("The updated application could not be started. Please try restarting manually.");
+            }
+        });
     }
 
     private void windowOpenedHandler() {
@@ -982,18 +1125,6 @@ public class MainFrame {
         consoleUI.uiContext.addOfflineModeListener(o -> SwingUtilities.invokeLater(this::setTitle));
         consoleUI.uiContext.addTuneFileListener(() -> SwingUtilities.invokeLater(this::setTitle));
 
-        // Offer manual update whenever the launch-time silent update did not run - either because
-        // the user preference is off or because the bundle hard-disables auto-update (#9775).
-        if (!Autoupdate.isAutoUpdateEnabled()) {
-            Thread checkThread = new Thread(() -> {
-                boolean available = Autoupdate.isUpdateAvailable();
-                if (available) {
-                    SwingUtilities.invokeLater(() -> setUpdateSoftwareAvailable(true));
-                }
-            }, "update-availability-check");
-            checkThread.setDaemon(true);
-            checkThread.start();
-        }
         ConnectionStatusLogic.INSTANCE.addListener(isConnected -> {
             SwingUtilities.invokeLater(() -> {
                 ConnectionStatusValue status = ConnectionStatusLogic.INSTANCE.getValue();

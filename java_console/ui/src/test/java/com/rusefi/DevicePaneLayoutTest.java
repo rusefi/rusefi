@@ -5,8 +5,8 @@ import com.rusefi.ui.basic.SingleAsyncJobExecutor;
 import com.rusefi.ui.basic.StatusPanelWithProgressBar;
 import com.rusefi.ui.basic.FirmwareStatusSummaryPanel;
 import com.rusefi.ui.basic.FirmwareUpdateCard;
+import com.rusefi.ui.basic.SoftwareUpdateCoordinator;
 import com.rusefi.ui.basic.StartupUpdateActions;
-import com.rusefi.autoupdate.Autoupdate;
 import com.rusefi.autoupdate.FirmwareRollbackResolver;
 import com.rusefi.maintenance.ProgramSelector;
 import com.rusefi.ui.util.UiUtils;
@@ -459,7 +459,8 @@ class DevicePaneLayoutTest {
             AtomicReference<Optional<PortResult>> selected = new AtomicReference<>(Optional.of(connected));
             StartupUpdateActions actions = new StartupUpdateActions(connectivity, statusPanel,
                 new SingleAsyncJobExecutor(statusPanel), selected,
-                CompletableFuture.completedFuture(Autoupdate.UpdateOutcome.UP_TO_DATE), ignored -> { }, () -> { });
+                new SoftwareUpdateCoordinator(new CompletableFuture<>()),
+                ignored -> { }, () -> { }, () -> null, () -> { });
             // Exercise the visible manual-update control regardless of this machine's persisted auto-update preference.
             actions.getUpdateSoftwareButton().setVisible(true);
             actions.getUpdateSoftwareButton().setEnabled(true);

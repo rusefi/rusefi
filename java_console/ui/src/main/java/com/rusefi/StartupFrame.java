@@ -38,6 +38,7 @@ import com.rusefi.maintenance.jobs.ImportTuneJob;
 import com.rusefi.maintenance.jobs.OpenBltAutoJob;
 import com.rusefi.maintenance.jobs.OpenBltSwitchJob;
 import com.rusefi.ui.basic.StartupUpdateActions;
+import com.rusefi.ui.basic.SoftwareUpdateCoordinator;
 import com.rusefi.ui.basic.FirmwareBranchSwitchController;
 import com.rusefi.ui.basic.StartupFirmwareOperationLifecycle;
 import com.rusefi.ui.basic.SingleAsyncJobExecutor;
@@ -74,7 +75,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.ServiceLoader;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -183,8 +183,8 @@ public class StartupFrame {
     private JTabbedPane outerTabs;
 
     private final UIContext uiContext;
-    private final CompletableFuture<Autoupdate.UpdateOutcome> softwareUpdateOutcome;
     private final File initialLog;
+    private final SoftwareUpdateCoordinator softwareUpdateCoordinator;
     private LogViewerHost logViewer;
     private final JPanel rootContent = new JPanel(new CardLayout());
     private UnsupportedEcuCardHost unsupportedEcuHost;
@@ -209,16 +209,16 @@ public class StartupFrame {
     private PortResult postLiveConnectionJobPort;
 
     public StartupFrame(ConnectivityContext connectivityContext, UIContext uiContext,
-                        CompletableFuture<Autoupdate.UpdateOutcome> softwareUpdateOutcome) {
-        this(connectivityContext, uiContext, softwareUpdateOutcome, null);
+                        SoftwareUpdateCoordinator softwareUpdateCoordinator) {
+        this(connectivityContext, uiContext, softwareUpdateCoordinator, null);
     }
 
     StartupFrame(ConnectivityContext connectivityContext, UIContext uiContext,
-                 CompletableFuture<Autoupdate.UpdateOutcome> softwareUpdateOutcome, File initialLog) {
+                 SoftwareUpdateCoordinator softwareUpdateCoordinator, File initialLog) {
         this.connectivityContext = connectivityContext;
         this.uiContext = uiContext;
-        this.softwareUpdateOutcome = softwareUpdateOutcome;
         this.initialLog = initialLog;
+        this.softwareUpdateCoordinator = softwareUpdateCoordinator;
         // Firmware-update and tune operations open the serial port themselves via a fresh
         // LinkManager. If our splash auto-connect is holding the same port, they'd deadlock on
         // "Connecting...". Release it only after preparation is accepted and before active work.
@@ -275,11 +275,6 @@ public class StartupFrame {
             }
         });
         new NamedThreadFactory("ecuDef primer").newThread(PrimeTunerStudioCache::primeWithLocalFile).start();
-        softwareUpdateOutcome.thenAccept(outcome -> {
-            if (outcome == Autoupdate.UpdateOutcome.UPDATED) {
-                SwingUtilities.invokeLater(this::restartConsole);
-            }
-        });
     }
 
     /** Application-level settings that must remain available before an ECU is connected. */
@@ -515,8 +510,9 @@ public class StartupFrame {
         };
         BinaryProtocol.iniFileProvider.setStatusConsumer(firmwareStatusPanel);
         startupUpdateActions = new StartupUpdateActions(connectivityContext, firmwareStatusPanel,
-            asyncJobExecutor, ecuPortToUse, softwareUpdateOutcome,
-            this::showFullScreenPanel, this::closeFullScreenPanel);
+            asyncJobExecutor, ecuPortToUse, softwareUpdateCoordinator,
+            this::showFullScreenPanel, this::closeFullScreenPanel, () -> frame,
+            this::restartApplication);
         startupUpdateActions.configureFirmwareSelector(selector);
 
         JPanel firmwareTabPanel = new JPanel(new BorderLayout());
@@ -556,7 +552,11 @@ public class StartupFrame {
         tuneManagementTab.onHardwareUpdated(connectivityContext.getCurrentHardware());
 
         wizardContainer = new WizardContainer(uiContext, /*compact=*/true);
-        rootContent.add(outerTabs, CARD_STARTUP);
+        JPanel startupContent = new JPanel(new BorderLayout());
+        JPanel applicationUpdateOffer = startupUpdateActions.getSoftwareUpdateOffer();
+        startupContent.add(applicationUpdateOffer, BorderLayout.NORTH);
+        startupContent.add(outerTabs, BorderLayout.CENTER);
+        rootContent.add(startupContent, CARD_STARTUP);
         rootContent.add(wizardContainer, CARD_WIZARD);
         rootContent.add(rollbackPicker, CARD_ROLLBACK);
         rootContent.add(createScanningPanel(), CARD_SCANNING);
@@ -1047,7 +1047,7 @@ public class StartupFrame {
         LoadingOverlay.show(frame, "Loading " + UiProperties.getDisplayName() + "…", LogoHelper.createLogoLabel());
         SwingUtilities.invokeLater(() ->
             new ConsoleUI(uiContext, selectedPort.port, selectedPort.type, alreadyConnected,
-                frame, unsupportedEcuHost, connectivityContext));
+                frame, unsupportedEcuHost, connectivityContext, softwareUpdateCoordinator));
     }
 
     /**
@@ -1068,7 +1068,8 @@ public class StartupFrame {
         prepareForHandoff();
         LoadingOverlay.show(frame, "Loading " + UiProperties.getDisplayName() + "…", LogoHelper.createLogoLabel());
         SwingUtilities.invokeLater(() ->
-            new ConsoleUI(uiContext, ini, image, frame, unsupportedEcuHost, connectivityContext));
+            new ConsoleUI(uiContext, ini, image, frame, unsupportedEcuHost, connectivityContext,
+                softwareUpdateCoordinator));
     }
 
     /**
@@ -1579,12 +1580,21 @@ public class StartupFrame {
         };
     }
 
-    public void restartConsole() {
-        // not much point requesting an extra click - if we have updated, we shall restart
-        if (frame.isDisplayable())
+    private void restartApplication() {
+        // Restarting closes the window too, so offer to save log edits just like windowClosing does.
+        if (logViewer != null && !logViewer.confirmExit()) {
+            return;
+        }
+        // Start the replacement before closing anything: if it cannot start, keep this window so
+        // the user is not left with no console. The exe fallback has already shown an error then.
+        if (!Autoupdate.startUpdatedConsole()) {
+            return;
+        }
+        if (frame.isDisplayable()) {
             disposeFrameAndProceed();
+        }
         SimulatorHelper.onWindowClosed();
-        Autoupdate.relaunchConsole();
+        System.exit(0);
     }
 
     private void saveTabIndex() {
