@@ -269,7 +269,7 @@ public final class LogViewerPanel extends JPanel {
             // the list and table dots use the plot palette, which follows the Light / Dark switch
             fieldList.repaint();
             statsPanel.table.repaint();
-        }, onOpen);
+        }, onOpen, TimelineSmoothingWindow.of(log));
         layout.addListener(statsPanel::refresh);
         chart.addColorListener(() -> {
             fieldList.repaint();

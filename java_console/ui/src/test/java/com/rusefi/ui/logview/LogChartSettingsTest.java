@@ -371,21 +371,41 @@ class LogChartSettingsTest {
     void smoothingButtonAppliesTheGlobalDisplayWindow() {
         ChartSettings settings = new ChartSettings();
         int[] repaints = {0};
-        ChartToolbar toolbar = new ChartToolbar(settings, () -> repaints[0]++);
+        ChartToolbar toolbar = new ChartToolbar(settings, () -> repaints[0]++, null,
+                new TimelineSmoothingWindow(4, 10_000));
 
         assertEquals("Smoothing: Raw  \u25BE", toolbar.smoothingButton.getText());
-        assertEquals(6, toolbar.smoothingPopup.getComponentCount());
-        assertTrue(toolbar.smoothingItems[TimelineSmoothingLevel.RAW.ordinal()].isSelected());
-
-        toolbar.smoothingItems[TimelineSmoothingLevel.MS_250.ordinal()].doClick();
-        assertEquals(0.25, settings.getSmoothingWindowSeconds());
-        assertEquals("Smoothing: 250 ms  \u25BE", toolbar.smoothingButton.getText());
-        assertTrue(toolbar.smoothingItems[TimelineSmoothingLevel.MS_250.ordinal()].isSelected());
+        toolbar.smoothingPrompt = (initialMs, preview) -> {
+            assertEquals(0, initialMs);
+            preview.accept(5_000);
+            return 5_000;
+        };
+        toolbar.smoothingButton.doClick();
+        assertEquals(5, settings.getSmoothingWindowSeconds());
+        assertEquals("Smoothing: 5000 ms  \u25BE", toolbar.smoothingButton.getText());
         assertEquals(1, repaints[0]);
 
-        toolbar.smoothingItems[TimelineSmoothingLevel.RAW.ordinal()].doClick();
+        toolbar.smoothingPrompt = (initialMs, preview) -> {
+            assertEquals(5_000, initialMs);
+            preview.accept(8_000);
+            return null;
+        };
+        toolbar.smoothingButton.doClick();
+        assertEquals(5, settings.getSmoothingWindowSeconds(), "Cancel restores the setting before the preview");
+        assertEquals("Smoothing: 5000 ms  \u25BE", toolbar.smoothingButton.getText());
+        assertEquals(3, repaints[0], "one live preview and one restoration");
+
+        toolbar.smoothingPrompt = (initialMs, preview) -> 0;
+        toolbar.smoothingButton.doClick();
         assertEquals(0, settings.getSmoothingWindowSeconds());
         assertEquals("Smoothing: Raw  \u25BE", toolbar.smoothingButton.getText());
-        assertEquals(2, repaints[0]);
+        assertEquals(4, repaints[0]);
+    }
+
+    @Test
+    void smoothingInputUsesTheTypicalIntervalAndLogDuration() throws IOException {
+        TimelineSmoothingWindow window = TimelineSmoothingWindow.of(sparseLog());
+        assertEquals(1_000, window.minimumMs, "1 Hz logging has a 1000 ms interval");
+        assertEquals(10_000, window.maximumMs, "the input can cover the whole ten-second log");
     }
 }

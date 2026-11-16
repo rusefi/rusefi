@@ -12,7 +12,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.JToggleButton;
@@ -24,11 +23,11 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 
 /**
- * Toolbar above the log chart, styled like the Gauges toolbar: Open, plot colours, a Grid button that
- * opens the grid options, the cursor Snap / Free switch, a Values button that opens the options of the values
- * at the cursor, the Measure (A/B cursors) and Stats toggles.
+ * Toolbar above the log chart, styled like the Gauges toolbar: Open, plot colours, Grid and display-smoothing
+ * options, the cursor Snap / Free switch, cursor values, Measure (A/B cursors) and Stats.
  * [tag:console_theme]
  */
 final class ChartToolbar extends ThemedStrip {
@@ -64,20 +63,34 @@ final class ChartToolbar extends ThemedStrip {
     final JSpinner horizontalDivisions;
 
     private final JPopupMenu gridPopup = new JPopupMenu();
-    final JPopupMenu smoothingPopup = new JPopupMenu();
-    final JRadioButtonMenuItem[] smoothingItems = new JRadioButtonMenuItem[TimelineSmoothingLevel.values().length];
     private final ChartSettings settings;
     private final Runnable onChange;
+    private final TimelineSmoothingWindow smoothingWindow;
+
+    interface SmoothingPrompt {
+        Integer show(int initialMs, IntConsumer preview);
+    }
+
+    /** Replaced in tests so the dialog behaviour can be exercised without showing a window. */
+    SmoothingPrompt smoothingPrompt;
 
     ChartToolbar(ChartSettings settings, Runnable onChange) {
-        this(settings, onChange, null);
+        this(settings, onChange, null, TimelineSmoothingWindow.unrestricted());
     }
 
     /** @param onOpen action of the Open button at the start of the toolbar, given the button, or null for none */
     ChartToolbar(ChartSettings settings, Runnable onChange, Consumer<Component> onOpen) {
+        this(settings, onChange, onOpen, TimelineSmoothingWindow.unrestricted());
+    }
+
+    ChartToolbar(ChartSettings settings, Runnable onChange, Consumer<Component> onOpen,
+                 TimelineSmoothingWindow smoothingWindow) {
         super(new FlowLayout(FlowLayout.LEFT, JoinedButtons.ROW_GAP, 0), "Console.Toolbar.background", false);
         this.settings = settings;
         this.onChange = onChange;
+        this.smoothingWindow = smoothingWindow;
+        smoothingPrompt = (initialMs, preview) -> TimelineSmoothingDialog.show(this,
+                "Timeline smoothing", smoothingWindow, initialMs, true, preview);
         setBorder(BorderFactory.createEmptyBorder(8, JoinedButtons.ROW_END_INSET - JoinedButtons.ROW_GAP, 9, 0));
 
         ButtonGroup plotGroup = new ButtonGroup();
@@ -92,9 +105,7 @@ final class ChartToolbar extends ThemedStrip {
 
         smoothingButton.setToolTipText("<html>Smooth timeline lines for readability.<br>"
                 + "Recorded data, cursor values and statistics stay raw.</html>");
-        smoothingButton.addActionListener(e ->
-                smoothingPopup.show(smoothingButton, 0, smoothingButton.getHeight() + 4));
-        buildSmoothingMenu();
+        smoothingButton.addActionListener(e -> editGlobalSmoothing());
 
         ButtonGroup cursorGroup = new ButtonGroup();
         cursorGroup.add(snapCursor);
@@ -199,25 +210,22 @@ final class ChartToolbar extends ThemedStrip {
         gridPanel.add(note, noteConstraints);
     }
 
-    private void buildSmoothingMenu() {
-        ButtonGroup group = new ButtonGroup();
-        TimelineSmoothingLevel[] levels = TimelineSmoothingLevel.values();
-        for (int i = 0; i < levels.length; i++) {
-            TimelineSmoothingLevel level = levels[i];
-            JRadioButtonMenuItem item = new JRadioButtonMenuItem(level.label,
-                    settings.getSmoothingWindowSeconds() == level.seconds);
-            item.setToolTipText(level == TimelineSmoothingLevel.RAW
-                    ? "Draw every recorded sample"
-                    : "Display-only centred moving average; recorded values stay unchanged");
-            item.addActionListener(e -> {
-                settings.setSmoothingWindowSeconds(level.seconds);
-                updateControls();
-                onChange.run();
-            });
-            smoothingItems[i] = item;
-            group.add(item);
-            smoothingPopup.add(item);
+    private void editGlobalSmoothing() {
+        double previous = settings.getSmoothingWindowSeconds();
+        int initialMs = previous == 0 ? 0 : smoothingWindow.initialMilliseconds(previous);
+        Integer picked = smoothingPrompt.show(initialMs, milliseconds ->
+                setGlobalSmoothing(milliseconds / 1000.0));
+        setGlobalSmoothing(picked == null ? previous : picked / 1000.0);
+    }
+
+    private void setGlobalSmoothing(double seconds) {
+        if (Double.compare(settings.getSmoothingWindowSeconds(), seconds) == 0) {
+            updateControls();
+            return;
         }
+        settings.setSmoothingWindowSeconds(seconds);
+        updateControls();
+        onChange.run();
     }
 
     private void buildValuesPanel() {
@@ -359,7 +367,7 @@ final class ChartToolbar extends ThemedStrip {
     private void updateControls() {
         gridButton.setText(gridSummary(settings));
         smoothingButton.setText("Smoothing: "
-                + TimelineSmoothingLevel.label(settings.getSmoothingWindowSeconds()) + "  \u25BE");
+                + TimelineSmoothingWindow.label(settings.getSmoothingWindowSeconds()) + "  \u25BE");
         valuesButton.setText(valuesSummary(settings));
         boolean valuesShown = settings.getCursorValues() != ChartSettings.CursorValues.OFF;
         atMouse.setEnabled(valuesShown);
