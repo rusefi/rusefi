@@ -241,13 +241,18 @@ public class LuaTextEditor {
         textArea.setText(text);
     }
 
-    /** Accept ECU text only if the user has not edited since the previous ECU read. */
+    /** Accept ECU text only if it still matches the previous read or acknowledged write. */
     void setTextIfUnmodified(String text) {
         if (!cleanText.equals(textArea.getText())) {
             return;
         }
         textArea.setText(text);
         cleanText = textArea.getText();
+    }
+
+    /** The ECU now has this acknowledged write; a later refresh must compare against it. */
+    void markWrittenTextClean(String text) {
+        cleanText = text;
     }
 
     public String getText() {

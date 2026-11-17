@@ -39,7 +39,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
@@ -83,6 +83,9 @@ public class TuningToolbarWidget {
     private final Timer undoCommitTimer;
     private final Timer uploadTimer;
     private volatile boolean firmwareUpdateInProgress;
+    private boolean burnInProgress;
+    private long editGeneration;
+    private long connectionGeneration;
     private Consumer<String> errorHandler = message -> JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
 
     /**
@@ -241,7 +244,7 @@ public class TuningToolbarWidget {
     }
 
     public void burnToEcuAndThen(CalibrationDialogWidget right, Runnable onSuccess) {
-        if (firmwareUpdateInProgress) {
+        if (firmwareUpdateInProgress || burnInProgress) {
             return;
         }
         BinaryProtocol bp = uiContext.getBinaryProtocol();
@@ -252,23 +255,64 @@ public class TuningToolbarWidget {
         if (bp == null || toBurn == null) {
             return;
         }
-        final ConfigurationImage image = toBurn;
-        sessionImage.set(image);
-        submit.accept(() -> {
-            bp.burn();
-            bp.setConfigurationImage(image);
-            SwingUtilities.invokeLater(() -> {
-                setBaselineImage(image.clone());
-                if (onSuccess != null) {
-                    onSuccess.run();
+        uploadTimer.stop();
+        final ConfigurationImage image = toBurn.clone();
+        final long savedEditGeneration = editGeneration;
+        final long savedConnectionGeneration = connectionGeneration;
+        burnInProgress = true;
+        burnButton.setEnabled(false);
+        discardButton.setEnabled(false);
+        loadTuneAction.setEnabled(false);
+        try {
+            submit.accept(() -> {
+                RuntimeException failure = null;
+                try {
+                    bp.uploadChangesWithoutBurn(image);
+                    bp.burn();
+                    bp.setConfigurationImage(image);
+                } catch (RuntimeException ex) {
+                    failure = ex;
                 }
+                RuntimeException operationFailure = failure;
+                SwingUtilities.invokeLater(() -> {
+                    boolean sameConnection = savedConnectionGeneration == connectionGeneration
+                        && uiContext.getBinaryProtocol() == bp;
+                    ConfigurationImage currentImage = sessionImage.get();
+                    boolean sameTune = currentImage != null
+                        && java.util.Arrays.equals(currentImage.getContent(), image.getContent());
+                    boolean noNewEdits = savedEditGeneration == editGeneration && sameTune;
+                    burnInProgress = false;
+                    burnButton.setEnabled(!firmwareUpdateInProgress && uiContext.getBinaryProtocol() != null);
+                    discardButton.setEnabled(baselineImage != null);
+                    loadTuneAction.setEnabled(!firmwareUpdateInProgress);
+                    if (!sameConnection) {
+                        return;
+                    }
+                    if (operationFailure != null) {
+                        refreshState();
+                        errorHandler.accept("Failed to burn tune: " + operationFailure.getMessage());
+                        return;
+                    }
+                    setBaselineImage(image.clone());
+                    refreshState();
+                    if (noNewEdits && onSuccess != null) {
+                        onSuccess.run();
+                    }
+                });
             });
-        });
+        } catch (RuntimeException ex) {
+            burnInProgress = false;
+            burnButton.setEnabled(uiContext.getBinaryProtocol() != null);
+            discardButton.setEnabled(baselineImage != null);
+            loadTuneAction.setEnabled(!firmwareUpdateInProgress);
+            errorHandler.accept("Failed to burn tune: " + ex.getMessage());
+        }
     }
 
     /** Call when ECU connects to enable the burn button. */
     public void onEcuConnected() {
-        burnButton.setEnabled(true);
+        connectionGeneration++;
+        burnButton.setEnabled(!burnInProgress);
         refreshState();
     }
 
@@ -281,7 +325,7 @@ public class TuningToolbarWidget {
         discardButton.setToolTipText("Restore the tune from the last load or burn");
 
         discardButton.addActionListener(e -> {
-            if (baselineImage == null) {
+            if (burnInProgress || baselineImage == null) {
                 return;
             }
             sessionImage.set(baselineImage.clone());
@@ -322,7 +366,19 @@ public class TuningToolbarWidget {
             return;
         }
         final ConfigurationImage snapshot = image.clone();
-        submit.accept(() -> bp.uploadChangesWithoutBurn(snapshot));
+        try {
+            submit.accept(() -> {
+                try {
+                    bp.uploadChangesWithoutBurn(snapshot);
+                } catch (RuntimeException ex) {
+                    SwingUtilities.invokeLater(() ->
+                        errorHandler.accept("Failed to upload tune: " + ex.getMessage()));
+                }
+            });
+        } catch (RuntimeException ex) {
+            SwingUtilities.invokeLater(() ->
+                errorHandler.accept("Failed to upload tune: " + ex.getMessage()));
+        }
     }
 
     /** Fires the pending debounce upload deterministically in unit tests. */
@@ -346,7 +402,7 @@ public class TuningToolbarWidget {
         loadTuneAction = new AbstractAction(LoadTuneHelper.LOAD_TUNE_TEXT) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (firmwareUpdateInProgress) {
+                if (firmwareUpdateInProgress || burnInProgress) {
                     return;
                 }
                 TuneFileFolder.openIn(chooser);
@@ -402,15 +458,14 @@ public class TuningToolbarWidget {
 
                                     if (bp != null) {
                                         cb.logLine("Uploading and burning to ECU...");
-                                        CountDownLatch latch = new CountDownLatch(1);
-                                        uiContext.getLinkManager().submit(() -> {
-                                            try {
-                                                bp.uploadChanges(newImage);
-                                            } finally {
-                                                latch.countDown();
-                                            }
-                                        });
-                                        latch.await();
+                                        Future<?> upload = uiContext.getLinkManager().submit(
+                                            () -> bp.uploadChanges(newImage));
+                                        try {
+                                            upload.get();
+                                        } catch (InterruptedException ex) {
+                                            Thread.currentThread().interrupt();
+                                            throw ex;
+                                        }
                                     }
 
                                     final boolean loadedWhileDisconnected = (bp == null);
@@ -643,7 +698,7 @@ public class TuningToolbarWidget {
         if (inProgress) {
             uploadTimer.stop();
         }
-        loadTuneAction.setEnabled(!inProgress);
+        loadTuneAction.setEnabled(!inProgress && !burnInProgress);
     }
 
     private void buildSaveTuneAction(UIContext uiContext,
@@ -797,8 +852,8 @@ public class TuningToolbarWidget {
 
     /** Sets the baseline image for discard and enables the discard button. */
     public void setBaselineImage(ConfigurationImage image) {
-        this.baselineImage = image;
-        discardButton.setEnabled(image != null);
+        this.baselineImage = image == null ? null : image.clone();
+        discardButton.setEnabled(!burnInProgress && image != null);
         refreshState();
     }
 
@@ -827,6 +882,7 @@ public class TuningToolbarWidget {
      * Captures the pre-edit baseline for undo and restarts the debounce + upload timers.
      */
     public void onEdit(ConfigurationImage previousSessionImage) {
+        editGeneration++;
         undoBaseline.compareAndSet(null, previousSessionImage);
         undoCommitTimer.restart();
         uploadTimer.restart();
@@ -865,6 +921,7 @@ public class TuningToolbarWidget {
      * [tag:offline_tune] Preserves baselineImage so discard still works in offline mode.
      */
     public void onDisconnect() {
+        connectionGeneration++;
         undoCommitTimer.stop();
         uploadTimer.stop();
         undoStack.clear();
@@ -874,6 +931,8 @@ public class TuningToolbarWidget {
         redoButton.setEnabled(false);
         // Disable burn button when ECU disconnects
         burnButton.setEnabled(false);
+        discardButton.setEnabled(!burnInProgress && baselineImage != null);
+        loadTuneAction.setEnabled(!firmwareUpdateInProgress && !burnInProgress);
         refreshState();
     }
 }

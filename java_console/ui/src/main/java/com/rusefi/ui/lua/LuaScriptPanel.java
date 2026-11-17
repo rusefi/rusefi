@@ -381,33 +381,40 @@ public class LuaScriptPanel {
 
     private void writeScriptToEcu() {
         String script = getScript();
-
-        LinkManager linkManager = context.getLinkManager();
+        BinaryProtocol bp = context.getBinaryProtocol();
+        if (bp == null) {
+            return;
+        }
+        StringIniField field = getLuaScriptField(bp);
+        if (field == null) {
+            log.error("luaScript field not found in .ini — cannot write");
+            return;
+        }
+        byte[] paddedScript = getScriptBytes(field, script);
+        // Legacy firmware keeps Lua in the main tune: later tune uploads must retain this edit.
+        if (field.getPageIndex() == 0 && !context.applyTuneEdit(image ->
+                System.arraycopy(paddedScript, 0, image.getContent(), field.getOffset(), paddedScript.length))) {
+            log.error("Cannot edit the active tune — Lua script was not sent");
+            return;
+        }
 
         submitCommunicationTask.accept(() -> {
-            BinaryProtocol bp = linkManager.getBinaryProtocol();
-
-            StringIniField field = getLuaScriptField(bp);
-            if (field == null) {
-                log.error("luaScript field not found in .ini — cannot write");
+            if (context.getBinaryProtocol() != bp || bp.isClosed()) {
                 return;
             }
-
-            byte[] paddedScript = getScriptBytes(field, script);
-
-            log.info("Sending " + field + " page=" + field.getDisplayPage());
-            bp.writeInBlocks(paddedScript, 0, field.getOffset(), paddedScript.length, field.getPageIndex());
-
-// need a way to modify script on the fly with shorter execution gaps to keep E65 CAN network happy
-// todo: auto-burn on console close check box in case of Lua changes?
-// todo: check box for auto-burn?
-//            bp.burn();
-
-            // writeInBlocks above already updated the ECU's RAM copy of the script (on the
-            // main page for old firmware, or the dedicated Lua page for new firmware). The
-            // running Lua VM does not reload on its own, so trigger a reset to re-run the new
-            // script. (Note: there is no automatic reload on burn — the reset is what reloads.)
-            resetLua();
+            try {
+                log.info("Sending " + field + " page=" + field.getDisplayPage());
+                bp.writeInBlocks(paddedScript, 0, field.getOffset(), paddedScript.length, field.getPageIndex());
+                // Reset only after the direct write is acknowledged, not after the tune's debounce.
+                resetLua();
+                SwingUtilities.invokeLater(() -> {
+                    if (context.getBinaryProtocol() == bp) {
+                        scriptText.markWrittenTextClean(script);
+                    }
+                });
+            } catch (RuntimeException e) {
+                log.error("Failed to write Lua script", e);
+            }
         });
         // resume messages on 'write new script to ECU'
         mp.setPaused(false);

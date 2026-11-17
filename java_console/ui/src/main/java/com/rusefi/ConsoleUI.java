@@ -663,14 +663,15 @@ console live data tab is broken #8402
                 tabbedPane.selectTab("Tuning");
                 tuningHolder[0].navigateToField(dialogKey, fieldKey);
             });
-            // Pin assignments from Pinout are edits of Tuning's tune: undo, Burn and Save work as there.
-            pinoutPane.setTuneEditor(edit -> {
+            // Auxiliary tabs edit Tuning's working image, including changes still waiting for upload.
+            uiContext.setTuneEditor(edit -> {
                 if (deviceSessionManager.getState() == SessionState.FLASHING) {
                     return false;
                 }
                 buildTuning.run();
                 return tuningHolder[0].applyEdit(edit);
             });
+            pinoutPane.setTuneEditor(uiContext::applyTuneEdit);
 
             // Build eagerly if Tuning was the user's last-opened tab (shown immediately on startup).
             if (savedTab.is("Tuning", tuningIndex)) {

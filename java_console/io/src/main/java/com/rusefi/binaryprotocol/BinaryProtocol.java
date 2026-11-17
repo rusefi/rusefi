@@ -380,7 +380,8 @@ public class BinaryProtocol {
 
     /**
      * Patches configuration inside ECU RAM by writing only regions with different content.
-     * Does not burn to flash or update the local configuration image.
+     * Does not burn to flash. Acknowledged writes update the local view of ECU RAM;
+     * the separately cached loaded image remains unchanged.
      */
     public void uploadChangesWithoutBurn(ConfigurationImage newVersion) {
         ConfigurationImage current = getControllerConfiguration();
@@ -832,8 +833,6 @@ public class BinaryProtocol {
     }
 
     private void writeData(byte[] content, int contentOffset, int ecuOffset, int size, int page) {
-        isBurnPending = true;
-
         byte[] packet = WriteCommand.getWritePacket(this, content, contentOffset, ecuOffset, size, page);
 
         long start = System.currentTimeMillis();
@@ -848,14 +847,25 @@ public class BinaryProtocol {
                 } else {
                     log.error("writeData: Something is wrong, retrying... code = " + response[0]);
                 }
-                // huh?! when do we retry what here?!
                 continue;
             }
-            break;
+            if (page == 0) {
+                // Only an acknowledged main-page write advances our RAM comparison image.
+                // The separately cached loaded baseline remains unchanged.
+                state.recordPage0Write(content, contentOffset, ecuOffset, size);
+            }
+            isBurnPending = true;
+            return;
         }
+        stream.close();
+        throw new IllegalStateException("Configuration write failed at page " + page
+            + ", ECU offset " + ecuOffset + ", size " + size);
     }
 
     public void burn() {
+        if (stream.isClosed()) {
+            throw new IllegalStateException("ECU connection is closed; cannot burn configuration");
+        }
         if (!isBurnPending)
             return;
         log.info("Need to burn");
@@ -873,6 +883,7 @@ public class BinaryProtocol {
         // can trigger a reconnection rather than leaving the executor permanently blocked.
         log.error("Burn timed out or stream closed, giving up");
         stream.close();
+        throw new IllegalStateException("ECU burn failed");
     }
 
     public boolean burnPage(int pageIdentifier) {
