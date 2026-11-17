@@ -35,6 +35,7 @@ import static org.mockito.Mockito.when;
 class LuaScriptPanelCharacterizationTest {
     private static final String ECU_SCRIPT = "-- scriptname script.lua\nreturn 'from ECU'\n";
     private static final String DISK_SCRIPT = "-- scriptname script.lua\nreturn 'from disk'\n";
+    private static final String REFRESHED_SCRIPT = "-- scriptname script.lua\nreturn 'refreshed ECU'\n";
 
     @TempDir
     Path tempDir;
@@ -86,6 +87,55 @@ class LuaScriptPanelCharacterizationTest {
     }
 
     @Test
+    void cleanReconnectRefreshUpdatesEditor() throws Exception {
+        TestProtocol testProtocol = new TestProtocol();
+        when(testProtocol.protocol.readFromPage(eq(testProtocol.field.getPageIndex()),
+            eq(testProtocol.field.getOffset()), eq(testProtocol.field.getSize())))
+            .thenReturn(scriptBytes(ECU_SCRIPT, testProtocol.field.getSize()),
+                scriptBytes(REFRESHED_SCRIPT, testProtocol.field.getSize()));
+
+        Harness harness = harness(testProtocol.protocol, new Node(), true);
+        harness.runPendingCommunicationTasks();
+        flushEdt();
+
+        harness.statusListener.onConnectionStatus(false);
+        harness.runPendingCommunicationTasks();
+        harness.statusListener.onConnectionStatus(true);
+        harness.runPendingCommunicationTasks();
+        flushEdt();
+
+        AtomicReference<String> visibleText = new AtomicReference<>();
+        SwingUtilities.invokeAndWait(() -> visibleText.set(editor(harness.panel).getText()));
+        assertEquals(REFRESHED_SCRIPT, visibleText.get(),
+            "A clean editor should still accept the refreshed ECU script");
+        verify(testProtocol.protocol, org.mockito.Mockito.times(2)).readFromPage(
+            testProtocol.field.getPageIndex(), testProtocol.field.getOffset(), testProtocol.field.getSize());
+    }
+
+    @Test
+    void initialFailedReadDoesNotCauseLaterEditToBeReplaced() throws Exception {
+        TestProtocol testProtocol = new TestProtocol();
+        when(testProtocol.protocol.readFromPage(eq(testProtocol.field.getPageIndex()),
+            eq(testProtocol.field.getOffset()), eq(testProtocol.field.getSize())))
+            .thenReturn(null, scriptBytes(ECU_SCRIPT, testProtocol.field.getSize()));
+
+        Harness harness = harness(testProtocol.protocol, new Node(), true);
+        harness.runPendingCommunicationTasks();
+        flushEdt();
+
+        String unsavedEdit = "-- typed before a successful ECU read\nreturn 'keep me'\n";
+        SwingUtilities.invokeAndWait(() -> editor(harness.panel).setText(unsavedEdit));
+        harness.statusListener.onConnectionStatus(true);
+        harness.runPendingCommunicationTasks();
+        flushEdt();
+
+        AtomicReference<String> visibleText = new AtomicReference<>();
+        SwingUtilities.invokeAndWait(() -> visibleText.set(editor(harness.panel).getText()));
+        assertEquals(unsavedEdit, visibleText.get(),
+            "A failed initial read must not make later user edits eligible for replacement");
+    }
+
+    @Test
     void lateConnectedReadWithNewEdits() throws Exception {
         TestProtocol testProtocol = new TestProtocol();
         CountDownLatch readStarted = new CountDownLatch(1);
@@ -125,8 +175,8 @@ class LuaScriptPanelCharacterizationTest {
         AtomicReference<String> textAfterRefresh = new AtomicReference<>();
         SwingUtilities.invokeAndWait(() -> textAfterRefresh.set(editor(harness.panel).getText()));
 
-        assertEquals(ECU_SCRIPT, textAfterRefresh.get(),
-            "Current characterization: a late successful connected refresh replaces edits; intended: preserve them");
+        assertEquals(unsavedEdit + "-- more typing\n", textAfterRefresh.get(),
+            "A late successful connected refresh must preserve edits made while the read was in flight");
         verify(testProtocol.protocol, org.mockito.Mockito.times(2)).readFromPage(
             testProtocol.field.getPageIndex(), testProtocol.field.getOffset(), testProtocol.field.getSize());
     }
@@ -154,9 +204,9 @@ class LuaScriptPanelCharacterizationTest {
 
         AtomicReference<String> visibleText = new AtomicReference<>();
         SwingUtilities.invokeAndWait(() -> visibleText.set(editor(harness.panel).getText()));
-        assertEquals(ECU_SCRIPT, visibleText.get(),
-            "Current characterization: connection refresh replaces edits; intended: preserve them");
-        verify(testProtocol.protocol, org.mockito.Mockito.times(2)).readFromPage(
+        assertEquals(unsavedEdit, visibleText.get(),
+            "Connection refresh must preserve edits made since the last accepted ECU read/write");
+        verify(testProtocol.protocol, org.mockito.Mockito.times(connected ? 2 : 1)).readFromPage(
             testProtocol.field.getPageIndex(), testProtocol.field.getOffset(), testProtocol.field.getSize());
     }
 

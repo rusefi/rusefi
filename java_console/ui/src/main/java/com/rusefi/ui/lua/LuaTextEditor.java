@@ -48,6 +48,7 @@ public class LuaTextEditor {
     private final JLabel locationLabel = new JLabel();
     private final UIContext context;
     private final DefaultCompletionProvider completionProvider = new DefaultCompletionProvider();
+    private String cleanText = "";
 
     public LuaTextEditor(UIContext context) {
         this.context = context;
@@ -238,6 +239,15 @@ public class LuaTextEditor {
     public void setText(String text) {
         // note that text would be silently not-changed if it's too large to fit into control - see DocumentSizeFilter
         textArea.setText(text);
+    }
+
+    /** Accept ECU text only if the user has not edited since the previous ECU read. */
+    void setTextIfUnmodified(String text) {
+        if (!cleanText.equals(textArea.getText())) {
+            return;
+        }
+        textArea.setText(text);
+        cleanText = textArea.getText();
     }
 
     public String getText() {
