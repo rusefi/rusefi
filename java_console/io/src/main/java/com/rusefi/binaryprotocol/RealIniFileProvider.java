@@ -38,13 +38,23 @@ public class RealIniFileProvider implements IniFileProvider {
     }
 
     private final IniDownloader iniDownloader;
+    private final boolean manualPickerEnabled;
 
     public RealIniFileProvider() {
-        this(SignatureHelper::downloadIfNotAvailable);
+        this(SignatureHelper::downloadIfNotAvailable, true);
+    }
+
+    public RealIniFileProvider(boolean manualPickerEnabled) {
+        this(SignatureHelper::downloadIfNotAvailable, manualPickerEnabled);
     }
 
     RealIniFileProvider(IniDownloader iniDownloader) {
+        this(iniDownloader, true);
+    }
+
+    RealIniFileProvider(IniDownloader iniDownloader, boolean manualPickerEnabled) {
         this.iniDownloader = iniDownloader;
+        this.manualPickerEnabled = manualPickerEnabled;
     }
 
     /**
@@ -115,7 +125,7 @@ public class RealIniFileProvider implements IniFileProvider {
             // local compile) while TunerStudio has already loaded its .ini
             localIniFile = importFromTunerStudioCache(signature);
         }
-        ManualIniPicker picker = manualPicker;
+        ManualIniPicker picker = manualPickerEnabled ? manualPicker : null;
         if (localIniFile == null) {
             if (reportedMissingSignatures.add(signature)) {
                 String message = "Failed to download " + signature + " maybe custom board?";
@@ -138,6 +148,16 @@ public class RealIniFileProvider implements IniFileProvider {
             throw new IniNotFoundException("Parsing error: " + e, e);
         } catch (FileNotFoundException e) {
             throw new IniNotFoundException(e.toString());
+        }
+        if (!signature.equals(iniFileModel.getSignature())) {
+            // A manually selected file can be cached under another firmware's hash.
+            // Its offsets, enum ordinals and table dimensions cannot decode this tune.
+            if (picker != null && promptedSignatures.add(signature)) {
+                picker.pick(signature);
+            }
+            throw new IniNotFoundException("INI signature mismatch in " + localIniFile
+                + "\nExpected: " + signature + "\nFound: " + iniFileModel.getSignature()
+                + "\nSelect the original INI for this firmware; changing its signature does not convert its layout.");
         }
         PrimeTunerStudioCache.prime(iniFileModel, localIniFile);
         return iniFileModel;

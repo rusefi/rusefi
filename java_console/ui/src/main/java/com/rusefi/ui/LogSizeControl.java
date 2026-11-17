@@ -1,6 +1,7 @@
 package com.rusefi.ui;
 
 import com.rusefi.core.preferences.storage.Node;
+import com.rusefi.ui.widgets.CommandBox;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,12 +10,16 @@ import java.awt.event.ActionEvent;
 public class LogSizeControl {
     private static final String BYTES = "SCREEN_LOG_BYTES";
 
-    private final JPanel content = new JPanel(new FlowLayout());
+    private final JPanel content = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
 
     public LogSizeControl(Node config) {
-        content.add(new JLabel("On screen bytes: "));
+        JLabel caption = new JLabel("On-screen log buffer");
+        content.add(caption);
         JTextField lines = new JTextField(8);
-        content.add(lines);
+        caption.setLabelFor(lines);
+        lines.setToolTipText("Bytes of console messages kept on screen; press Enter to apply");
+        // same rounded frame as the console command box, with the unit in its shaded end
+        content.add(CommandBox.withSuffix(lines, "bytes"));
         lines.setText(Integer.toString(getValue(config)));
         lines.addActionListener(new AbstractAction() {
             @Override

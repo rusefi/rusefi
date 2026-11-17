@@ -5,8 +5,6 @@ import com.opensr5.ConfigurationImageMetaVersion0_0;
 import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.EventTriggerModel;
 import com.opensr5.ini.ExpressionEvaluator;
-import com.opensr5.ini.FrontPageModel;
-import com.opensr5.ini.IndicatorModel;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.SensorCentral;
@@ -15,10 +13,15 @@ import com.rusefi.maintenance.OfflineEditMigration;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.widgets.TextGaugeStrip;
+import com.rusefi.ui.widgets.SegmentedControl;
 import com.rusefi.ui.widgets.StatusPanel;
 import com.rusefi.ui.widgets.tune.CalibrationDialogWidget;
-import com.rusefi.ui.widgets.tune.IndicatorPanel;
+import com.rusefi.ui.widgets.tune.CalibrationPanelWorkspace;
+import com.rusefi.ui.widgets.tune.IndicatorStrip;
+import com.rusefi.ui.widgets.tune.PinoutLink;
 import com.rusefi.ui.widgets.tune.MainMenuTreeWidget;
+import com.rusefi.ui.widgets.tune.SettingHelpCard;
+import com.rusefi.ui.widgets.tune.TuningStyle;
 import com.rusefi.ui.widgets.tune.TuningToolbarWidget;
 
 import com.devexperts.logging.Logging;
@@ -44,6 +47,8 @@ public class TuningPane {
     private static final Logging log = Logging.getLogging(TuningPane.class);
     private static final String TUNING_CARD = "tuning";
     private static final String LOAD_CARD = "load";
+    /** Tuning setting: how setting help is offered, a {@link SettingHelpCard.Mode} name. */
+    static final String HELP_MODE = "help_mode";
 
     private final JPanel content = new JPanel(new CardLayout());
     private final JPanel tuningContent = new JPanel(new BorderLayout());
@@ -52,6 +57,7 @@ public class TuningPane {
     private final TuningToolbarWidget toolbar;
     private final TuneOperationStatusPanel loadStatusCard;
     private final CalibrationDialogWidget right;
+    private final CalibrationPanelWorkspace workspace;
     private TextGaugeStrip gaugeStrip;
     /** Accumulated tune edits across all dialogs for this session. Field so offline seeding can set it. */
     private final AtomicReference<ConfigurationImage> sessionImage = new AtomicReference<>();
@@ -60,11 +66,11 @@ public class TuningPane {
     /** [tag:offline_tune] The .ini the offline tune was loaded with — used to migrate edits if a different-signature ECU connects. */
     private IniFileModel offlineIni;
     private volatile boolean firmwareUpdateInProgress;
-    /** Fired when the user opens Wiring/Pinout from a pin-enum field. Wired from ConsoleUI after construction. */
-    private Consumer<String> navigateToPinout;
+    /** Fired by the "Show on connector" button beside a pin-enum field. Wired from ConsoleUI after construction. */
+    private PinoutLink navigateToPinout;
     private Runnable showTuningTab = () -> { };
     private SensorCentral.ResponseListenerToken eventTriggerToken;
-    private IndicatorPanel frontPageIndicatorPanel;
+    private IndicatorStrip indicatorStrip;
     private ConnectionStatusLogic.Listener connectionStatusListener;
     private boolean active;
     private boolean destroyed;
@@ -85,8 +91,10 @@ public class TuningPane {
         this.uiContext = uiContext;
         left = new MainMenuTreeWidget(uiContext);
 
-        right = new CalibrationDialogWidget(uiContext);
-        JScrollPane rightScrollPane = new JScrollPane(right.getViewportPane());
+        workspace = new CalibrationPanelWorkspace(uiContext,
+            config == null ? null : config.getChild(CalibrationPanelWorkspace.CONFIG_KEY),
+            config == null ? null : config.getChild("table_orientation"));
+        right = workspace.getPrimary();
 
         ConfigurationImage baseline = initialBaseline;
         BinaryProtocol initialBp = uiContext.getBinaryProtocol();
@@ -119,7 +127,7 @@ public class TuningPane {
             gaugeStrip = new TextGaugeStrip(uiContext, config.getChild("gauge_strip"));
         }
 
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, left.getContentPane(), rightScrollPane);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, left.getContentPane(), workspace.getContent());
         left.getContentPane().setMinimumSize(new Dimension(180, 0));
         splitPane.setDividerLocation(MENU_WIDTH);
         splitPane.setResizeWeight(0);
@@ -152,7 +160,7 @@ public class TuningPane {
 
         // All edit events (dialog fields, table cells, curve drags) flow through onConfigChange.
         // Text fields fire per-keystroke; the toolbar widget coalesces them into one undo point.
-        right.setOnConfigChange(image -> {
+        workspace.setOnConfigChange(image -> {
             toolbar.onEdit(sessionImage.get());
             // Clone because workingImage is mutated in-place by further edits.
             sessionImage.set(image.clone());
@@ -160,10 +168,8 @@ public class TuningPane {
             uiContext.fireConfigImageChanged(image);
         });
 
-        // The Wiring/Pinout button on a pin-enum combo fires the current value upward.
-        right.setOnShowInPinout(value -> {
-            if (navigateToPinout != null) navigateToPinout.accept(value);
-        });
+        // The "Show on connector" button on a pin-enum combo fires the current value upward.
+        workspace.setOnShowInPinout(PinoutLink.forwarding(() -> navigateToPinout));
 
         // Per-trigger edge-detection state: maps trigger index → previous boolean value.
         // ConcurrentHashMap because onSensorUpdate runs on the protocol thread while
@@ -211,9 +217,7 @@ public class TuningPane {
                                 assert newImage != null;
                                 sessionImage.set(newImage.clone());
                                 String key = currentKey.get();
-                                if (key != null) {
-                                    right.update(key, ini, sessionImage.get());
-                                }
+                                right.update(key, ini, sessionImage.get());
                             });
                         });
                     } else {
@@ -257,16 +261,17 @@ public class TuningPane {
                         return;
                     }
 
-                    // Default: adopt the ECU's current tune.
+                    // Default: adopt the ECU's current tune; it no longer comes from the loaded file.
+                    if (uiContext.isOfflineMode()) {
+                        uiContext.setTuneFilePath(null);
+                    }
                     uiContext.setOfflineMode(false);
                     toolbar.onEcuConnected();
                     sessionImage.set(bp.getControllerConfiguration().clone());
                     toolbar.setBaselineImage(sessionImage.get().clone());
                     left.refreshExpressions(sessionImage.get());
                     String key = currentKey.get();
-                    if (key != null) {
-                        right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
-                    }
+                    right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
                     // Refresh config-image-driven panes (e.g. PinoutPane "Tune use") to the adopted ECU tune.
                     uiContext.fireConfigImageChanged(sessionImage.get());
                 });
@@ -274,13 +279,16 @@ public class TuningPane {
         };
         ConnectionStatusLogic.INSTANCE.addListener(connectionStatusListener);
 
+        // Toolbar, indicator chips and live values share one strip in the toolbar colour.
         JPanel northPanel = new JPanel();
         northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
-        northPanel.add(toolbar.getPanel());
-        frontPageIndicatorPanel = buildFrontendIndicatorPanel(uiContext);
-        if (frontPageIndicatorPanel != null) {
-            northPanel.add(frontPageIndicatorPanel.getPanel());
-        }
+        TuningStyle.styleBar(northPanel);
+        northPanel.setBorder(BorderFactory.createCompoundBorder(northPanel.getBorder(),
+            BorderFactory.createEmptyBorder(0, 4, 6, 4)));
+        northPanel.add(withHelpChoices(toolbar.getPanel(), config, workspace::rebuildViews));
+        indicatorStrip = new IndicatorStrip(() -> uiContext.iniFileState.getIniFileModel(),
+            uiContext.indicatorStripSettings);
+        northPanel.add(indicatorStrip.getContent());
         if (gaugeStrip != null) {
             northPanel.add(gaugeStrip.getContent());
         }
@@ -290,24 +298,32 @@ public class TuningPane {
         content.add(tuningContent, TUNING_CARD);
         content.add(loadStatusCard.getContent(), LOAD_CARD);
         showTuningContent();
+        if (baseline != null) {
+            sessionImage.set(baseline.clone());
+            right.update((String) null, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
+        }
     }
 
-
-    private static IndicatorPanel buildFrontendIndicatorPanel(UIContext uiContext) {
-        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
-        if (ini == null) {
-            return null;
-        }
-        FrontPageModel frontPage = ini.getFrontPage();
-        if (frontPage == null) {
-            return null;
-        }
-        List<IndicatorModel> indicators = frontPage.getIndicators();
-        if (indicators.isEmpty()) {
-            return null;
-        }
-        return new IndicatorPanel(indicators, ini, 0);
+    public void restoreDetachedPanels(Window owner) {
+        workspace.restore(owner);
     }
+
+    /**
+     * Opens a menu page in a floating settings window over whatever tab is shown, without switching
+     * to Tuning. Works before the Tuning tab was ever opened.
+     *
+     * @return false while there is no tune to show or the loaded INI has no such page
+     */
+    public boolean openSettingsWindow(Window owner, String pageKey) {
+        workspace.restore(owner);
+        return workspace.openPanel(pageKey);
+    }
+
+    /** The tune being edited, including unsaved edits; null before one is loaded. */
+    public ConfigurationImage getTuneImage() {
+        return sessionImage.get();
+    }
+
 
     public JPanel getContent() {
         return content;
@@ -322,9 +338,7 @@ public class TuningPane {
             gaugeStrip.setActive(active);
         }
         right.setActive(active);
-        if (frontPageIndicatorPanel != null) {
-            frontPageIndicatorPanel.setActive(active);
-        }
+        indicatorStrip.setActive(active);
         updateEventTriggerDemand();
     }
 
@@ -337,10 +351,8 @@ public class TuningPane {
         if (gaugeStrip != null) {
             gaugeStrip.destroy();
         }
-        right.destroy();
-        if (frontPageIndicatorPanel != null) {
-            frontPageIndicatorPanel.destroy();
-        }
+        workspace.destroy();
+        indicatorStrip.destroy();
         eventTriggerToken.remove();
         ConnectionStatusLogic.INSTANCE.removeListener(connectionStatusListener);
     }
@@ -357,7 +369,7 @@ public class TuningPane {
         eventTriggerToken.setActive(active && !channels.isEmpty());
     }
 
-    public void setNavigateToPinout(Consumer<String> navigateToPinout) {
+    public void setNavigateToPinout(PinoutLink navigateToPinout) {
         this.navigateToPinout = navigateToPinout;
     }
 
@@ -375,18 +387,125 @@ public class TuningPane {
         ((CardLayout) content.getLayout()).show(content, LOAD_CARD);
     }
 
+    /**
+     * The toolbar with the Help choice at its right end, beside the dialogs it affects: Cards (a card
+     * on hover and Tab), Descriptions (each setting's first help sentence under its name) or Off; see
+     * {@link SettingHelpCard.Mode}. {@code rebuildViews} redraws open dialogs when descriptions turn on
+     * or off. With no settings node (tests, sandboxes) the mode keeps its default and there is no choice.
+     */
+    static JComponent withHelpChoices(JComponent toolbar, Node config, Runnable rebuildViews) {
+        if (config == null) {
+            return toolbar;
+        }
+        SettingHelpCard.setMode(savedHelpMode(config));
+        ButtonGroup group = new ButtonGroup();
+        JToggleButton cards = helpModeSegment("Cards", SettingHelpCard.Mode.CARDS,
+            "Show a setting's help in a card when the mouse rests on it or Tab reaches it",
+            group, config, rebuildViews);
+        JToggleButton descriptions = helpModeSegment("Descriptions", SettingHelpCard.Mode.DESCRIPTIONS,
+            "Show a short description under each setting's name", group, config, rebuildViews);
+        JToggleButton off = helpModeSegment("Off", SettingHelpCard.Mode.OFF,
+            "No help unless you click a setting's ? icon", group, config, rebuildViews);
+
+        JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT, 6, 0));
+        right.setOpaque(false);
+        right.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 8));
+        JLabel label = new JLabel("Help");
+        label.setForeground(UIManager.getColor("Label.disabledForeground"));
+        right.add(label);
+        right.add(new SegmentedControl(cards, descriptions, off));
+        JPanel east = new JPanel(new GridBagLayout());
+        east.setOpaque(false);
+        east.add(right);
+        JPanel row = new JPanel(new BorderLayout());
+        row.setOpaque(false);
+        row.add(toolbar, BorderLayout.CENTER);
+        row.add(east, BorderLayout.EAST);
+        return row;
+    }
+
+    private static SettingHelpCard.Mode savedHelpMode(Node config) {
+        try {
+            return SettingHelpCard.Mode.valueOf(config.getProperty(HELP_MODE, SettingHelpCard.Mode.CARDS.name()));
+        } catch (IllegalArgumentException e) {
+            return SettingHelpCard.Mode.CARDS;
+        }
+    }
+
+    private static JToggleButton helpModeSegment(String text, SettingHelpCard.Mode mode, String tooltip,
+                                                 ButtonGroup group, Node config, Runnable rebuildViews) {
+        JToggleButton segment = SegmentedControl.segment(text);
+        segment.setName("helpMode" + text);
+        segment.setToolTipText(tooltip + ". The ? icon always opens a setting's help.");
+        segment.setSelected(SettingHelpCard.getMode() == mode);
+        group.add(segment);
+        segment.addActionListener(e -> {
+            SettingHelpCard.Mode previous = SettingHelpCard.getMode();
+            if (previous == mode) {
+                return;
+            }
+            SettingHelpCard.setMode(mode);
+            config.setProperty(HELP_MODE, mode.name());
+            // rows read descriptions when built
+            if (previous == SettingHelpCard.Mode.DESCRIPTIONS || mode == SettingHelpCard.Mode.DESCRIPTIONS) {
+                rebuildViews.run();
+            }
+        });
+        return segment;
+    }
+
     private void showTuningContent() {
         ((CardLayout) content.getLayout()).show(content, TUNING_CARD);
     }
 
     /**
-     * Selects the dialog containing {@code fieldKey} in the left tree, which triggers the
-     * existing onSelect pipeline to render the dialog on the right.
+     * Selects the menu page containing {@code fieldKey}, including fields in nested panels,
+     * which triggers the existing onSelect pipeline to render the page on the right.
+     * The supplied dialog key is a fallback for fields not exposed by the menu.
      * Field-level scrolling within the dialog is deferred (see issue — "scroll into view").
      */
     public void navigateToField(String dialogKey, String fieldKey) {
-        if (dialogKey == null) return;
-        left.selectSubMenu(dialogKey);
+        if (!left.selectField(fieldKey) && dialogKey != null) {
+            left.selectSubMenu(dialogKey);
+        }
+        // queued: with a menu search active the page is shown one event later
+        SwingUtilities.invokeLater(() -> right.highlightField(fieldKey));
+    }
+
+    /**
+     * Applies a tune edit made outside Tuning, such as a pin assigned on the Pinout tab, exactly like an
+     * edit here: one undo step, sent to the ECU without burning, kept for Burn or Save. The page shown (and
+     * any detached panel) is redrawn from the edited tune, since it holds its own copy that would otherwise
+     * replace the edit on the next navigation.
+     *
+     * @return false when there is no tune to edit (not connected and no tune loaded)
+     */
+    public boolean applyEdit(Consumer<ConfigurationImage> edit) {
+        ConfigurationImage current = sessionImage.get();
+        if (current == null) {
+            BinaryProtocol bp = uiContext.getBinaryProtocol();
+            current = bp != null ? bp.getControllerConfiguration() : null;
+            if (current == null) {
+                return false;
+            }
+        }
+        ConfigurationImage edited = current.clone();
+        edit.accept(edited);
+        // an edit still being typed becomes its own undo step, then this one
+        toolbar.flushBeforeNavigate();
+        sessionImage.set(edited);
+        toolbar.onEdit(current);
+        toolbar.flushBeforeNavigate();
+        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+        right.update(currentKey.get(), ini, edited);
+        left.refreshExpressions(edited);
+        uiContext.fireConfigImageChanged(edited);
+        return true;
+    }
+
+    // Package-private so tests check the dialog navigation shows.
+    CalibrationDialogWidget getDialogForTests() {
+        return right;
     }
 
     public Action getLoadTuneAction() {
@@ -397,8 +516,16 @@ public class TuningPane {
         return toolbar.getSaveTuneAction();
     }
 
+    public Action getSaveTuneAsAction() {
+        return toolbar.getSaveTuneAsAction();
+    }
+
     public void setErrorHandler(Consumer<String> errorHandler) {
         toolbar.setErrorHandler(errorHandler);
+    }
+
+    public void setDialogOwner(Window owner) {
+        toolbar.setDialogOwner(owner);
     }
 
     enum ExitPrompt {
@@ -437,7 +564,7 @@ public class TuningPane {
         }
 
         boolean burn = prompt == ExitPrompt.BURN;
-        String offlineTunePath = uiContext.getOfflineTunePath();
+        String offlineTunePath = uiContext.getTuneFilePath();
         boolean autoSaveOfflineTune = uiContext.isOfflineMode() && offlineTunePath != null;
         String action = burn ? "Burn to ECU and Exit" : autoSaveOfflineTune ? "Save and Exit" : "Save Tune and Exit";
         String message = burn
@@ -475,6 +602,7 @@ public class TuningPane {
         toolbar.setBaselineImage(image.clone());
         // Remember which .ini these edits belong to so a different-signature ECU can migrate them.
         offlineIni = uiContext.iniFileState.getIniFileModel();
+        right.update(currentKey.get(), offlineIni, sessionImage.get());
         // Select the first dialog if none is selected yet
         if (dialogKey != null) {
             left.selectSubMenu(dialogKey);
@@ -598,9 +726,7 @@ public class TuningPane {
                 sessionImage.set(merged.clone());
                 toolbar.setBaselineImage(merged.clone());
                 String key = currentKey.get();
-                if (key != null) {
-                    right.update(key, targetIni, sessionImage.get());
-                }
+                right.update(key, targetIni, sessionImage.get());
                 uiContext.fireConfigImageChanged(merged);
             });
         });

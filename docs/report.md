@@ -435,3 +435,44 @@ Open follow-ups:
   applying/resetting learned trims, or introduce an explicit tuning session).
 - Decide how a future bank-2-aware VE Analyze correction should select/combine
   STFT banks; this change preserves the existing bank-1 behavior.
+
+## 2026-11-17 - Java migration onto lts-26lima-dev
+
+Migrated host-side Java from `e06b583d6a3` onto LTS base `2a474ae3090`,
+including the five Tuner persistence/state fixes and the EDT test-race fix.
+
+| Area | Change |
+|------|--------|
+| Java console and tools | Source, resources, tests, pinout-helper, and required Gradle/runtime companions |
+| Versions | Console and updater both use 20261117 |
+| LTS protocol compatibility | Keep target-generated definitions, optional INI-based SD channel lookup, and existing VVT mapping |
+| SD-field generator | Retain LTS constructors and constexpr registration while keeping compatible Java generator improvements |
+
+Decisions:
+- Preserve firmware, simulator, Java submodule pins, LTS hardware-CI launchers,
+  and firmware-derived stack resources.
+- Exclude tests whose requirements are the omitted firmware/template changes;
+  preserve Java regression coverage with target-compatible fixtures.
+- Keep the source's native host companions; firmware bundle integration is
+  outside this Java migration.
+
+Validation:
+- Pristine LTS baseline: 978 tests, one skipped, zero failures.
+- Migrated runtime suites: 311 ECU-I/O, 167 shared ECU, 88 MCP, and 1542 UI
+  tests, 19 skipped, zero failures. Pinout-helper and model tests also pass.
+- MCP Python companion: four passing tests.
+- Base generator compatibility tests pass; independent review confirms emitted
+  SD fields match the retained firmware API.
+- Console, updater, TS plugin launcher, and pinout-helper shadow jars build.
+  Console OBD resource matches the existing LTS header byte-for-byte.
+- All 18 Java paths touched by the five fixes, their characterization coverage,
+  and the CI race correction match the source revision exactly.
+- Full root `./gradlew test` with isolated test home passes: 3076 tests,
+  22 skipped, zero failures/errors, across 25 modules with tests.
+- Final scope audit: 643 changed files, no firmware/simulator changes, retained
+  generated Java definitions and submodule pins; `git diff HEAD --check` passes.
+
+Open follow-ups:
+- Migration is staged and uncommitted, pending commit review.
+- Hardware behavior and platform-specific native packaging are not validated
+  by these host Java checks.

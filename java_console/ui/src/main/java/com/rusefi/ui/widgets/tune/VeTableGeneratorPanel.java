@@ -45,6 +45,8 @@ public class VeTableGeneratorPanel extends JPanel {
     private JTabbedPane previewTabs;
     private JLabel statusLabel;
     private JButton applyButton;
+    private JButton closeButton;
+    private JPanel actionBar;
 
     private double[][] proposedVe;
 
@@ -80,6 +82,22 @@ public class VeTableGeneratorPanel extends JPanel {
             statusLabel.setText("Cannot generate: Speed Density (LM_SPEED_DENSITY) with VE_None or VE_MAP required.");
             applyButton.setEnabled(false);
         }
+    }
+
+    /** Allows the embedding workflow to style its confirmation action. */
+    public JButton getApplyButton() {
+        return applyButton;
+    }
+
+    public JButton getCloseButton() {
+        return closeButton;
+    }
+
+    /** Takes the apply and close buttons out of this panel and hides its note row, for a host that places them itself. */
+    public void detachActions() {
+        actionBar.remove(applyButton);
+        actionBar.remove(closeButton);
+        actionBar.setVisible(false);
     }
 
     // ---- questionnaire ----
@@ -125,7 +143,7 @@ public class VeTableGeneratorPanel extends JPanel {
         JLabel siNote = new JLabel(
             "<html>Note: version 1 supports four-stroke spark-ignition engines only.<br>" +
             "Two-stroke, rotary, and other types are not supported.</html>");
-        siNote.setForeground(new Color(120, 80, 0));
+        siNote.setForeground(TuningStyle.color("Console.Tuning.noteForeground", new Color(120, 80, 0)));
         siNote.setFont(siNote.getFont().deriveFont(siNote.getFont().getSize() - 1f));
 
         c.insets = new Insets(8, 6, 4, 6);
@@ -212,20 +230,20 @@ public class VeTableGeneratorPanel extends JPanel {
         applyButton.setEnabled(false);
         applyButton.addActionListener(e -> onApply());
 
-        JButton discardBtn = new JButton(closeLabel);
-        discardBtn.addActionListener(e -> onClose.run());
+        closeButton = new JButton(closeLabel);
+        closeButton.addActionListener(e -> onClose.run());
 
         JLabel note = new JLabel("Apply schedules ECU RAM upload; use Burn to ECU for flash persistence.");
         note.setFont(note.getFont().deriveFont(Font.ITALIC, note.getFont().getSize() - 1f));
 
-        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 4));
-        buttons.add(note);
-        buttons.add(applyButton);
-        buttons.add(discardBtn);
+        actionBar = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 4));
+        actionBar.add(note);
+        actionBar.add(applyButton);
+        actionBar.add(closeButton);
 
         JPanel south = new JPanel(new BorderLayout());
         south.add(statusLabel, BorderLayout.NORTH);
-        south.add(buttons,     BorderLayout.SOUTH);
+        south.add(actionBar,   BorderLayout.SOUTH);
         return south;
     }
 
@@ -330,12 +348,14 @@ public class VeTableGeneratorPanel extends JPanel {
                         try {
                             double val = Double.parseDouble(String.valueOf(getModel().getValueAt(row, column)));
                             if (isDelta) {
+                                // [tag:fixed_color] value cells: green/red change or blue-to-pink ramp, black text
                                 c.setBackground(val > 0.05 ? new Color(180, 230, 180) : val < -0.05 ? new Color(230, 180, 180) : Color.WHITE);
                             } else {
                                 double ratio = (max > min) ? Math.max(0, Math.min(1, (val - min) / (max - min))) : 0.5;
+                                // [tag:fixed_color] see above
                                 c.setBackground(new Color((int)(173 + ratio * 82), (int)(216 - ratio * 34), (int)(230 - ratio * 37)));
                             }
-                            c.setForeground(Color.BLACK);
+                            c.setForeground(Color.BLACK); // [tag:fixed_color] on the value cell
                         } catch (NumberFormatException ignored) {}
                     }
                 }

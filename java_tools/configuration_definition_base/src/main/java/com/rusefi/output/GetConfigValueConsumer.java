@@ -32,7 +32,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
                 "#include \"value_lookup.h\"\n";
     }
 
-    static final String GET_METHOD_FOOTER = "\treturn EFI_ERROR_CODE;\n" +
+    static final String GET_METHOD_FOOTER = "\treturn static_cast<float>(EFI_ERROR_CODE);\n" +
         "}\n" +
         "float getConfigValueByName(const char *name) {\n" +
             "\tint hash = djb2lowerCase(name);\n"
@@ -118,7 +118,11 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
 
         int bitOffset = cf.isBit() ? iterator.bitState.get() : 0;
 
-        variables.add(new VariableRecord(userName, javaName + cf.getName(), cf.getTypeName(), null, currentPosition, bitOffset));
+        String autoscaleSpec = cf.autoscaleSpec();
+        // "1, 1" is scaled_channel<T, 1, 1>, which only has the plain T constructor
+        boolean isFloatScaled = autoscaleSpec != null && !autoscaleSpec.equals("1, 1");
+
+        variables.add(new VariableRecord(userName, javaName + cf.getName(), cf.getTypeName(), null, currentPosition, bitOffset, isFloatScaled));
 
         mdContent.append("### " + userName + "\n");
         mdContent.append(cf.getComment() + "\n\n");
@@ -192,6 +196,24 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
         return fullSwitch + "\treturn 0;\n" + setterBody;
     }
 
+    /**
+     * Right-hand side of a generated table setter. Integer storage gets an explicit cast: an
+     * implicit float-to-integer store is exactly what -Wfloat-conversion flags, and the cast keeps
+     * the truncating semantics the implicit conversion had. Bits compare against zero, which is
+     * what the implicit float-to-bool conversion did (clang flags that one too, GCC does not).
+     * Float fields and float-scaled scaled_channel storage (whose float constructor rounds and
+     * scales) take the float as is.
+     */
+    static String getSetterValue(VariableRecord var) {
+        if (var.isFloatScaled || TypesHelper.isFloat(var.type)) {
+            return "value";
+        }
+        if (TypesHelper.isBoolean(var.type)) {
+            return "value != 0";
+        }
+        return "static_cast<" + var.type + ">(value)";
+    }
+
     public String getTableContent() {
         if (variables.isEmpty()) {
             return "";
@@ -208,8 +230,8 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
         sb.append("const ConfigParameter allParameters[] = {\n");
         for (VariableRecord var : sorted) {
             int hash = HashUtil.hash(var.getUserName());
-            sb.append(String.format("\t{ 0x%08X, // %s\n\t\t[]() -> float { return %s; },\n\t\t[](float value) { %s = value; } },\n",
-                    hash, var.getUserName(), var.getFullName(), var.getFullName()));
+            sb.append(String.format("\t{ 0x%08X, // %s\n\t\t[]() -> float { return %s; },\n\t\t[](float value) { %s = %s; } },\n",
+                    hash, var.getUserName(), var.getFullName(), var.getFullName(), getSetterValue(var)));
         }
         sb.append("};\n\n");
         sb.append("const size_t allParametersCount = efi::size(allParameters);\n");

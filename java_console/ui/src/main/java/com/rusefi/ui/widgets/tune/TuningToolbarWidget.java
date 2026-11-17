@@ -1,9 +1,15 @@
 package com.rusefi.ui.widgets.tune;
 
 import com.devexperts.logging.Logging;
+import com.formdev.flatlaf.FlatClientProperties;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.field.ArrayIniField;
+import com.opensr5.ini.field.EnumIniField;
+import com.opensr5.ini.field.IniField;
+import com.opensr5.ini.field.ScalarIniField;
+import com.rusefi.config.FieldType;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.CalibrationsHelper;
@@ -12,10 +18,15 @@ import com.rusefi.maintenance.OfflineTuneLoader;
 import com.rusefi.maintenance.jobs.AsyncJob;
 import com.rusefi.maintenance.jobs.AsyncJobExecutor;
 import com.rusefi.maintenance.jobs.JobHelper;
+import com.rusefi.maintenance.migration.IniFieldMigrationUtils;
+import com.rusefi.tune.ConfigurationImageGetterSetter2;
+import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.tune.xml.MsqFactory;
+import com.rusefi.tune.xml.Page;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.basic.LoadTuneHelper;
+import com.rusefi.ui.widgets.JoinedButtons;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -25,8 +36,10 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayDeque;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
@@ -42,10 +55,14 @@ public class TuningToolbarWidget {
     private static final int UPLOAD_DELAY_MS = 100;
 
     private final JPanel panel;
+    private Window dialogOwner;
+    private final JButton burnButton;
+    private final JButton discardButton;
 
     /** [tag:offline_tune] Shows offline / unburned-edit state. Empty when connected and clean. */
     private final JLabel stateLabel = new JLabel();
     private final UIContext uiContext;
+    private final Consumer<Runnable> submit;
     private final AtomicReference<ConfigurationImage> sessionImage;
 
     private final ArrayDeque<ConfigurationImage> undoStack = new ArrayDeque<>();
@@ -60,11 +77,15 @@ public class TuningToolbarWidget {
 
     private AbstractAction loadTuneAction;
     private AbstractAction saveTuneAction;
+    private AbstractAction saveTuneAsAction;
     private final JFileChooser saveTuneChooser = createMsqFileChooser();
 
     private final Timer undoCommitTimer;
     private final Timer uploadTimer;
     private volatile boolean firmwareUpdateInProgress;
+    private boolean burnInProgress;
+    private long editGeneration;
+    private volatile long connectionGeneration;
     private Consumer<String> errorHandler = message -> JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
 
     /**
@@ -82,7 +103,21 @@ public class TuningToolbarWidget {
                                  UpdateOperationCallbacks loadCallbacks,
                                  Runnable onLoadStarted,
                                  Consumer<Boolean> onLoadFinished) {
+        this(uiContext, right, currentKey, sessionImage, baselineImage, loadCallbacks,
+            onLoadStarted, onLoadFinished, operation -> uiContext.getLinkManager().submit(operation));
+    }
+
+    TuningToolbarWidget(UIContext uiContext,
+                        CalibrationDialogWidget right,
+                        AtomicReference<String> currentKey,
+                        AtomicReference<ConfigurationImage> sessionImage,
+                        ConfigurationImage baselineImage,
+                        UpdateOperationCallbacks loadCallbacks,
+                        Runnable onLoadStarted,
+                        Consumer<Boolean> onLoadFinished,
+                        Consumer<Runnable> submit) {
         this.uiContext = uiContext;
+        this.submit = submit;
         this.sessionImage = sessionImage;
         this.baselineImage = baselineImage;
         undoButton.setEnabled(false);
@@ -110,24 +145,13 @@ public class TuningToolbarWidget {
         undoCommitTimer = new Timer(IDLE_TIMEOUT_MS, e -> flushUndoBaseline.run());
         undoCommitTimer.setRepeats(false);
 
-        uploadTimer = new Timer(UPLOAD_DELAY_MS, e -> {
-            if (firmwareUpdateInProgress) {
-                return;
-            }
-            BinaryProtocol bp = uiContext.getBinaryProtocol();
-            ConfigurationImage image = sessionImage.get();
-            if (bp == null || image == null) {
-                return;
-            }
-            final ConfigurationImage snapshot = image.clone();
-            uiContext.getLinkManager().submit(() -> bp.uploadChangesWithoutBurn(snapshot));
-        });
+        uploadTimer = new Timer(UPLOAD_DELAY_MS, e -> uploadPendingChanges());
         uploadTimer.setRepeats(false);
 
-        JButton burnButton = getBurnToEcuButton(uiContext, right, sessionImage);
+        burnButton = getBurnToEcuButton(uiContext, right, sessionImage);
         burnButton.setEnabled(uiContext.getBinaryProtocol() != null);
 
-        JButton discardButton = getDiscardButton(uiContext, right, sessionImage, currentKey, updateButtons);
+        discardButton = getDiscardButton(uiContext, right, sessionImage, currentKey, updateButtons);
         discardButton.setEnabled(baselineImage != null);
 
         buildLoadTuneAction(uiContext, right, currentKey, sessionImage,
@@ -146,9 +170,10 @@ public class TuningToolbarWidget {
             }
             sessionImage.set(undoStack.pop());
             String key = currentKey.get();
-            if (key != null) {
-                right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
-            }
+            // [tag:detached_calibration_sync] Restored windows may be open before a primary page
+            // is selected. Publish replacements even with a null key (also redo/discard/load below).
+            right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
+            publishReplacement();
             updateButtons.run();
         });
 
@@ -164,17 +189,21 @@ public class TuningToolbarWidget {
             }
             sessionImage.set(redoStack.pop());
             String key = currentKey.get();
-            if (key != null) {
-                right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
-            }
+            right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
+            publishReplacement();
             updateButtons.run();
         });
 
-        panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panel = new JPanel(new FlowLayout(FlowLayout.LEFT, JoinedButtons.ROW_GAP, 6));
+        // sits on the Tuning tab's toolbar strip (TuningPane), which supplies the colour
+        panel.setOpaque(false);
+        stateLabel.setBorder(BorderFactory.createEmptyBorder(0, 6, 0, 0));
+        // same controls as the Gauges and Lua toolbars [tag:console_theme]: 36 px tall, primary
+        // Burn, outlined groups; Undo and Redo joined as one control
+        burnButton.setPreferredSize(new Dimension(burnButton.getPreferredSize().width + 24, JoinedButtons.HEIGHT));
         panel.add(burnButton);
-        panel.add(discardButton);
-        panel.add(undoButton);
-        panel.add(redoButton);
+        panel.add(new JoinedButtons(discardButton));
+        panel.add(new JoinedButtons(undoButton, redoButton));
         panel.add(stateLabel);
 
         // [tag:offline_tune] Refresh the state label whenever offline mode toggles (e.g. Load Tune
@@ -190,7 +219,7 @@ public class TuningToolbarWidget {
     public void refreshState() {
         boolean dirty = hasUnsavedChanges(sessionImage.get());
         stateLabel.setText(stateLabelText(uiContext.isOfflineMode(), dirty));
-        stateLabel.setForeground(dirty ? new Color(0xB0, 0x60, 0x00) : Color.GRAY);
+        stateLabel.setForeground(dirty ? TuningStyle.dirty() : TuningStyle.muted());
     }
 
     /**
@@ -209,12 +238,13 @@ public class TuningToolbarWidget {
                                                 AtomicReference<ConfigurationImage> sessionImage) {
         JButton burnButton = new JButton("Burn to ECU");
         burnButton.setToolTipText("Save the current tune to persistent ECU memory");
+        burnButton.putClientProperty(FlatClientProperties.STYLE_CLASS, "primary");
         burnButton.addActionListener(e -> burnToEcuAndThen(right, null));
         return burnButton;
     }
 
     public void burnToEcuAndThen(CalibrationDialogWidget right, Runnable onSuccess) {
-        if (firmwareUpdateInProgress) {
+        if (firmwareUpdateInProgress || burnInProgress) {
             return;
         }
         BinaryProtocol bp = uiContext.getBinaryProtocol();
@@ -225,29 +255,64 @@ public class TuningToolbarWidget {
         if (bp == null || toBurn == null) {
             return;
         }
-        final ConfigurationImage image = toBurn;
-        sessionImage.set(image);
-        uiContext.getLinkManager().submit(() -> {
-            bp.burn();
-            bp.setConfigurationImage(image);
-            SwingUtilities.invokeLater(() -> {
-                setBaselineImage(image.clone());
-                if (onSuccess != null) {
-                    onSuccess.run();
+        uploadTimer.stop();
+        final ConfigurationImage image = toBurn.clone();
+        final long savedEditGeneration = editGeneration;
+        final long savedConnectionGeneration = connectionGeneration;
+        burnInProgress = true;
+        burnButton.setEnabled(false);
+        discardButton.setEnabled(false);
+        loadTuneAction.setEnabled(false);
+        try {
+            submit.accept(() -> {
+                RuntimeException failure = null;
+                try {
+                    bp.uploadChangesWithoutBurn(image);
+                    bp.burn();
+                    bp.setConfigurationImage(image);
+                } catch (RuntimeException ex) {
+                    failure = ex;
                 }
+                RuntimeException operationFailure = failure;
+                SwingUtilities.invokeLater(() -> {
+                    boolean sameConnection = savedConnectionGeneration == connectionGeneration
+                        && uiContext.getBinaryProtocol() == bp;
+                    ConfigurationImage currentImage = sessionImage.get();
+                    boolean sameTune = currentImage != null
+                        && java.util.Arrays.equals(currentImage.getContent(), image.getContent());
+                    boolean noNewEdits = savedEditGeneration == editGeneration && sameTune;
+                    burnInProgress = false;
+                    burnButton.setEnabled(!firmwareUpdateInProgress && uiContext.getBinaryProtocol() != null);
+                    discardButton.setEnabled(baselineImage != null);
+                    loadTuneAction.setEnabled(!firmwareUpdateInProgress);
+                    if (!sameConnection) {
+                        return;
+                    }
+                    if (operationFailure != null) {
+                        refreshState();
+                        errorHandler.accept("Failed to burn tune: " + operationFailure.getMessage());
+                        return;
+                    }
+                    setBaselineImage(image.clone());
+                    refreshState();
+                    if (noNewEdits && onSuccess != null) {
+                        onSuccess.run();
+                    }
+                });
             });
-        });
+        } catch (RuntimeException ex) {
+            burnInProgress = false;
+            burnButton.setEnabled(uiContext.getBinaryProtocol() != null);
+            discardButton.setEnabled(baselineImage != null);
+            loadTuneAction.setEnabled(!firmwareUpdateInProgress);
+            errorHandler.accept("Failed to burn tune: " + ex.getMessage());
+        }
     }
 
     /** Call when ECU connects to enable the burn button. */
     public void onEcuConnected() {
-        Component[] components = panel.getComponents();
-        for (Component c : components) {
-            if (c instanceof JButton && "Burn to ECU".equals(((JButton) c).getText())) {
-                ((JButton) c).setEnabled(true);
-                break;
-            }
-        }
+        connectionGeneration++;
+        burnButton.setEnabled(!burnInProgress);
         refreshState();
     }
 
@@ -260,23 +325,97 @@ public class TuningToolbarWidget {
         discardButton.setToolTipText("Restore the tune from the last load or burn");
 
         discardButton.addActionListener(e -> {
-            if (baselineImage == null) {
+            if (burnInProgress || baselineImage == null) {
                 return;
             }
-            sessionImage.set(baselineImage.clone());
+            uploadTimer.stop();
+            ConfigurationImage restoration = baselineImage.clone();
+            sessionImage.set(restoration);
             String key = currentKey.get();
-            if (key != null) {
-                right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
-            }
+            right.update(key, uiContext.iniFileState.getIniFileModel(), restoration);
+            publishReplacement();
             undoCommitTimer.stop();
             undoStack.clear();
             redoStack.clear();
             undoBaseline.set(null);
             updateButtons.run();
             refreshState();
+
+            BinaryProtocol bp = uiContext.getBinaryProtocol();
+            if (bp == null || firmwareUpdateInProgress || uiContext.isOfflineMode()) {
+                return;
+            }
+            ConfigurationImage snapshot = restoration.clone();
+            long savedConnectionGeneration = connectionGeneration;
+            try {
+                submit.accept(() -> {
+                    if (savedConnectionGeneration != connectionGeneration
+                            || uiContext.getBinaryProtocol() != bp
+                            || firmwareUpdateInProgress || uiContext.isOfflineMode()) {
+                        return;
+                    }
+                    try {
+                        bp.uploadChangesWithoutBurn(snapshot);
+                    } catch (RuntimeException ex) {
+                        SwingUtilities.invokeLater(() ->
+                            errorHandler.accept("Failed to restore tune to ECU: " + ex.getMessage()));
+                    }
+                });
+            } catch (RuntimeException ex) {
+                SwingUtilities.invokeLater(() ->
+                    errorHandler.accept("Failed to restore tune to ECU: " + ex.getMessage()));
+            }
         });
 
         return discardButton;
+    }
+
+    /**
+     * Tells views following the working tune ({@link UIContext#fireConfigImageChanged}: Pinout's Tune use,
+     * the context's current image) that Undo, Redo or Discard replaced it. An edit notifies through the
+     * dialog's change callback, but these replace the tune directly, so without this those views keep showing
+     * the replaced tune (TuningUndoNotificationTest).
+     */
+    private void publishReplacement() {
+        ConfigurationImage image = sessionImage.get();
+        if (image != null) {
+            uiContext.fireConfigImageChanged(image);
+        }
+    }
+
+    private void uploadPendingChanges() {
+        if (firmwareUpdateInProgress) {
+            return;
+        }
+        BinaryProtocol bp = uiContext.getBinaryProtocol();
+        ConfigurationImage image = sessionImage.get();
+        if (bp == null || image == null) {
+            return;
+        }
+        final ConfigurationImage snapshot = image.clone();
+        try {
+            submit.accept(() -> {
+                try {
+                    bp.uploadChangesWithoutBurn(snapshot);
+                } catch (RuntimeException ex) {
+                    SwingUtilities.invokeLater(() ->
+                        errorHandler.accept("Failed to upload tune: " + ex.getMessage()));
+                }
+            });
+        } catch (RuntimeException ex) {
+            SwingUtilities.invokeLater(() ->
+                errorHandler.accept("Failed to upload tune: " + ex.getMessage()));
+        }
+    }
+
+    /** Fires the pending debounce upload deterministically in unit tests. */
+    void flushUploadTimerForUnitTest() {
+        uploadTimer.stop();
+        uploadPendingChanges();
+    }
+
+    boolean isUploadTimerRunningForUnitTest() {
+        return uploadTimer.isRunning();
     }
 
     private void buildLoadTuneAction(UIContext uiContext,
@@ -290,12 +429,14 @@ public class TuningToolbarWidget {
         loadTuneAction = new AbstractAction(LoadTuneHelper.LOAD_TUNE_TEXT) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (firmwareUpdateInProgress) {
+                if (firmwareUpdateInProgress || burnInProgress) {
                     return;
                 }
-                if (chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) {
+                TuneFileFolder.openIn(chooser);
+                if (chooser.showOpenDialog(getDialogParent()) != JFileChooser.APPROVE_OPTION) {
                     return;
                 }
+                TuneFileFolder.remember(chooser.getSelectedFile());
                 final String path = chooser.getSelectedFile().getAbsolutePath();
                 final String fileName = chooser.getSelectedFile().getName();
 
@@ -309,8 +450,11 @@ public class TuningToolbarWidget {
                             JobHelper.doJob(() -> {
                                 try {
                                     cb.logLine("Loading " + fileName + "...");
-                                    OfflineTuneLoader.Result result = OfflineTuneLoader.loadTuneFromFile(
-                                        path, null, cb::logLine);
+                                    BinaryProtocol bp = uiContext.getBinaryProtocol();
+                                    OfflineTuneLoader.Result result = bp == null
+                                        ? OfflineTuneLoader.loadTuneFromFile(path, null, cb::logLine)
+                                        : OfflineTuneLoader.loadConnectedTuneFromFile(
+                                            path, uiContext.iniFileState.getIniFileModel(), cb::logLine);
                                     if (result == null) {
                                         cb.error();
                                         SwingUtilities.invokeLater(() -> onLoadFinished.accept(true));
@@ -323,7 +467,6 @@ public class TuningToolbarWidget {
                                         return;
                                     }
                                     cb.logLine("Applying tune fields...");
-                                    BinaryProtocol bp = uiContext.getBinaryProtocol();
                                     IniFileModel targetIni = bp == null
                                         ? result.ini
                                         : uiContext.iniFileState.getIniFileModel();
@@ -342,15 +485,14 @@ public class TuningToolbarWidget {
 
                                     if (bp != null) {
                                         cb.logLine("Uploading and burning to ECU...");
-                                        CountDownLatch latch = new CountDownLatch(1);
-                                        uiContext.getLinkManager().submit(() -> {
-                                            try {
-                                                bp.uploadChanges(newImage);
-                                            } finally {
-                                                latch.countDown();
-                                            }
-                                        });
-                                        latch.await();
+                                        Future<?> upload = uiContext.getLinkManager().submit(
+                                            () -> bp.uploadChanges(newImage));
+                                        try {
+                                            upload.get();
+                                        } catch (InterruptedException ex) {
+                                            Thread.currentThread().interrupt();
+                                            throw ex;
+                                        }
                                     }
 
                                     final boolean loadedWhileDisconnected = (bp == null);
@@ -359,12 +501,10 @@ public class TuningToolbarWidget {
                                         // [tag:offline_tune] Loading a tune with no ECU attached is an offline session.
                                         if (loadedWhileDisconnected) {
                                             uiContext.setOfflineMode(true);
-                                            uiContext.setOfflineTunePath(path);
                                         }
+                                        uiContext.setTuneFilePath(path);
                                         String key = currentKey.get();
-                                        if (key != null) {
-                                            right.update(key, targetIni, newImage);
-                                        }
+                                        right.update(key, targetIni, newImage);
                                         // Adopt the loaded tune as baseline (enables discard + refreshes state label).
                                         setBaselineImage(newImage.clone());
                                         uiContext.fireConfigImageChanged(newImage);
@@ -390,6 +530,15 @@ public class TuningToolbarWidget {
     static ConfigurationImage applyLoadedTune(Msq tune, IniFileModel sourceIni,
                                                ConfigurationImage base, IniFileModel targetIni,
                                                UpdateOperationCallbacks callbacks) {
+        if (sourceIni == null) {
+            if (tune.getVersionInfo() == null
+                    || !Objects.equals(tune.getVersionInfo().getSignature(), targetIni.getSignature())) {
+                callbacks.logLine("Cannot import tune without its source INI because its signature differs "
+                    + "from the destination ECU.");
+                return base;
+            }
+            return applySameSignatureTune(tune, base, targetIni, callbacks);
+        }
         Set<String> secondaryFields = new HashSet<>(sourceIni.getSecondaryIniFields().keySet());
         secondaryFields.addAll(targetIni.getSecondaryIniFields().keySet());
 
@@ -403,12 +552,180 @@ public class TuningToolbarWidget {
             .orElse(base);
     }
 
+    private static ConfigurationImage applySameSignatureTune(Msq tune, ConfigurationImage base,
+                                                              IniFileModel targetIni,
+                                                              UpdateOperationCallbacks callbacks) {
+        ConfigurationImage result = base.clone();
+        Page page = tune.findPage();
+        if (page == null) {
+            callbacks.logLine("Tune has no values to import.");
+            return result;
+        }
+        Map<String, IniField> targetFields = targetIni.getAllIniFields();
+        Set<String> secondaryFields = targetIni.getSecondaryIniFields().keySet();
+        for (Constant constant : page.constant) {
+            String name = constant.getName();
+            if (name.startsWith("UNALLOCATED_SPACE")) {
+                continue;
+            }
+            if (secondaryFields.contains(name)) {
+                callbacks.logLine("Skipped " + name + ": secondary calibration.");
+                continue;
+            }
+            IniField field = targetFields.get(name);
+            if (field == null) {
+                callbacks.logLine("Skipped " + name + ": not available.");
+                continue;
+            }
+            String sourceUnits = constant.getUnits();
+            String destinationUnits = field.getUnits();
+            boolean sourceUnitsMissing = sourceUnits == null || sourceUnits.isEmpty();
+            boolean destinationUnitsMissing = destinationUnits == null || destinationUnits.isEmpty();
+            if (sourceUnitsMissing != destinationUnitsMissing
+                    || !IniFieldMigrationUtils.checkIfUnitsCanBeMigrated(sourceUnits, destinationUnits)) {
+                callbacks.logLine("Skipped " + name + ": units do not match.");
+                continue;
+            }
+            if (field instanceof ArrayIniField) {
+                ArrayIniField array = (ArrayIniField) field;
+                if (!Objects.equals(constant.getRows(), Integer.toString(array.getRows()))
+                        || !Objects.equals(constant.getCols(), Integer.toString(array.getCols()))) {
+                    callbacks.logLine("Skipped " + name + ": table size does not match.");
+                    continue;
+                }
+            } else if (constant.getRows() != null || constant.getCols() != null) {
+                callbacks.logLine("Skipped " + name + ": table size does not match.");
+                continue;
+            }
+
+            try {
+                if (field instanceof EnumIniField) {
+                    ConfigurationImage candidate = result.clone();
+                    applyExactEnumValue((EnumIniField) field, constant, candidate);
+                    result = candidate;
+                } else {
+                    validateNumericValues(field, constant);
+                    ConfigurationImage candidate = result.clone();
+                    ConfigurationImageGetterSetter2.setValue(field, candidate, constant);
+                    result = candidate;
+                }
+            } catch (RuntimeException e) {
+                String reason = e instanceof IllegalArgumentException ? e.getMessage() : null;
+                if (!"unknown pin".equals(reason) && !"pin is not available".equals(reason)
+                        && !"pin label is ambiguous".equals(reason) && !"value is out of range".equals(reason)
+                        && !"table size does not match".equals(reason) && !"invalid value".equals(reason)) {
+                    reason = "invalid value";
+                }
+                callbacks.logLine("Skipped " + name + ": " + reason + ".");
+            }
+        }
+        return result;
+    }
+
+    private static void validateNumericValues(IniField field, Constant constant) {
+        if (field instanceof ScalarIniField) {
+            ScalarIniField scalar = (ScalarIniField) field;
+            validateNumericValue(constant.getValue(), scalar.getType(), scalar.getMultiplier(),
+                scalar.getSerializationOffset());
+        } else if (field instanceof ArrayIniField) {
+            ArrayIniField array = (ArrayIniField) field;
+            String[][] values;
+            try {
+                values = array.getValues(constant.getValue());
+            } catch (RuntimeException e) {
+                throw new IllegalArgumentException("table size does not match");
+            }
+            for (String[] row : values) {
+                for (String value : row) {
+                    validateNumericValue(value, array.getType(), array.getMultiplier(), 0);
+                }
+            }
+        }
+    }
+
+    private static void validateNumericValue(String value, FieldType type, double multiplier,
+                                            double serializationOffset) {
+        double parsed;
+        double raw;
+        try {
+            parsed = Double.parseDouble(value);
+            raw = (parsed - serializationOffset) / multiplier;
+        } catch (RuntimeException e) {
+            throw new IllegalArgumentException("invalid value");
+        }
+        if (!Double.isFinite(parsed) || !Double.isFinite(raw)) {
+            throw new IllegalArgumentException("value is out of range");
+        }
+
+        if (type == FieldType.FLOAT) {
+            if (!Float.isFinite((float) raw)) {
+                throw new IllegalArgumentException("value is out of range");
+            }
+            return;
+        }
+
+        long rounded = Math.round(raw);
+        long min;
+        long max;
+        switch (type) {
+            case INT8:
+                min = Byte.MIN_VALUE;
+                max = Byte.MAX_VALUE;
+                break;
+            case UINT8:
+                min = 0;
+                max = 0xff;
+                break;
+            case INT16:
+                min = Short.MIN_VALUE;
+                max = Short.MAX_VALUE;
+                break;
+            case UINT16:
+                min = 0;
+                max = 0xffff;
+                break;
+            case INT:
+                min = Integer.MIN_VALUE;
+                max = Integer.MAX_VALUE;
+                break;
+            default:
+                throw new IllegalArgumentException("invalid value");
+        }
+        if (rounded < min || rounded > max) {
+            throw new IllegalArgumentException("value is out of range");
+        }
+    }
+
+    private static void applyExactEnumValue(EnumIniField field, Constant constant, ConfigurationImage image) {
+        String value = constant.getValue();
+        if (value != null && !EnumIniField.isQuoted(value) && EnumIniField.isUnknownOrdinalValue(value)) {
+            throw new IllegalArgumentException("unknown pin");
+        }
+        String label = value != null && EnumIniField.isQuoted(value)
+            ? javax.management.ObjectName.unquote(value)
+            : value;
+        if (label == null) {
+            throw new IllegalArgumentException("unknown pin");
+        }
+        if (field.isPinEnum() && "INVALID".equalsIgnoreCase(label)) {
+            throw new IllegalArgumentException("unknown pin");
+        }
+        long matches = field.getEnums().values().stream().filter(label::equals).count();
+        int ordinal = field.getEnums().indexOf(value);
+        if (matches != 1 || ordinal < 0) {
+            throw new IllegalArgumentException(matches > 1
+                ? "pin label is ambiguous"
+                : "pin is not available");
+        }
+        image.setBitValue(field, ordinal);
+    }
+
     public void setFirmwareUpdateInProgress(boolean inProgress) {
         firmwareUpdateInProgress = inProgress;
         if (inProgress) {
             uploadTimer.stop();
         }
-        loadTuneAction.setEnabled(!inProgress);
+        loadTuneAction.setEnabled(!inProgress && !burnInProgress);
     }
 
     private void buildSaveTuneAction(UIContext uiContext,
@@ -420,9 +737,26 @@ public class TuningToolbarWidget {
                 saveTuneAndThen(right, null);
             }
         };
+        saveTuneAsAction = new AbstractAction(LoadTuneHelper.SAVE_TUNE_AS_TEXT) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveTuneAsAndThen(right, null);
+            }
+        };
     }
 
+    /** Saves to the current tune file without asking; asks for a file when there is none yet. */
     public void saveTuneAndThen(CalibrationDialogWidget right, Runnable onSuccess) {
+        String current = uiContext.getTuneFilePath();
+        if (current != null) {
+            saveTuneToPathAndThen(right, current, onSuccess);
+        } else {
+            saveTuneAsAndThen(right, onSuccess);
+        }
+    }
+
+    /** Asks for a file, starting at the current tune file, and makes the chosen file the current one. */
+    public void saveTuneAsAndThen(CalibrationDialogWidget right, Runnable onSuccess) {
         IniFileModel ini = uiContext.iniFileState.getIniFileModel();
         BinaryProtocol bp = uiContext.getBinaryProtocol();
         ConfigurationImage image = imageToSave(
@@ -435,13 +769,28 @@ public class TuningToolbarWidget {
             errorHandler.accept("No configuration loaded");
             return;
         }
-        if (saveTuneChooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
+        String current = uiContext.getTuneFilePath();
+        if (current != null) {
+            saveTuneChooser.setSelectedFile(new File(current));
+        } else {
+            saveTuneChooser.setSelectedFile(null);
+            TuneFileFolder.openIn(saveTuneChooser);
+        }
+        if (saveTuneChooser.showSaveDialog(getDialogParent()) != JFileChooser.APPROVE_OPTION) {
             return;
         }
         File selected = saveTuneChooser.getSelectedFile();
+        TuneFileFolder.remember(selected);
         String path = selected.getAbsolutePath();
         if (!path.toLowerCase().endsWith(".msq")) {
             path += ".msq";
+        }
+        // JFileChooser does not ask before replacing a file; the current file is replaced by plain Save anyway
+        if (new File(path).exists() && !new File(path).equals(current == null ? null : new File(current))
+                && JOptionPane.showConfirmDialog(getDialogParent(), new File(path).getName() + " already exists. Replace it?",
+                LoadTuneHelper.SAVE_TUNE_AS_TEXT, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)
+                != JOptionPane.YES_OPTION) {
+            return;
         }
         saveTuneToPathAndThen(ini, image, path, onSuccess);
     }
@@ -468,9 +817,12 @@ public class TuningToolbarWidget {
         new Thread(() -> {
             try {
                 MsqFactory.valueOf(finalImage, ini).writeXmlFile(finalPath);
-                if (onSuccess != null) {
-                    SwingUtilities.invokeLater(onSuccess);
-                }
+                SwingUtilities.invokeLater(() -> {
+                    uiContext.setTuneFilePath(finalPath);
+                    if (onSuccess != null) {
+                        onSuccess.run();
+                    }
+                });
             } catch (Exception ex) {
                 SwingUtilities.invokeLater(() -> errorHandler.accept("Failed to save tune: " + ex.getMessage()));
             }
@@ -502,6 +854,10 @@ public class TuningToolbarWidget {
         return saveTuneAction;
     }
 
+    public AbstractAction getSaveTuneAsAction() {
+        return saveTuneAsAction;
+    }
+
     /**
      * @return true if {@code current} differs from the loaded baseline (i.e. there are pending edits).
      * If there is no baseline yet, any non-null image counts as a change.
@@ -523,14 +879,8 @@ public class TuningToolbarWidget {
 
     /** Sets the baseline image for discard and enables the discard button. */
     public void setBaselineImage(ConfigurationImage image) {
-        this.baselineImage = image;
-        Component[] components = panel.getComponents();
-        for (Component c : components) {
-            if (c instanceof JButton && "Discard changes".equals(((JButton) c).getText())) {
-                ((JButton) c).setEnabled(image != null);
-                break;
-            }
-        }
+        this.baselineImage = image == null ? null : image.clone();
+        discardButton.setEnabled(!burnInProgress && image != null);
         refreshState();
     }
 
@@ -545,11 +895,21 @@ public class TuningToolbarWidget {
         return panel;
     }
 
+    /** File menu actions can run before the lazy Tuning tab is attached to the console. */
+    public void setDialogOwner(Window owner) {
+        dialogOwner = owner;
+    }
+
+    private Component getDialogParent() {
+        return dialogOwner != null ? dialogOwner : panel;
+    }
+
     /**
      * Must be called on every edit event (from {@code right.setOnConfigChange}).
      * Captures the pre-edit baseline for undo and restarts the debounce + upload timers.
      */
     public void onEdit(ConfigurationImage previousSessionImage) {
+        editGeneration++;
         undoBaseline.compareAndSet(null, previousSessionImage);
         undoCommitTimer.restart();
         uploadTimer.restart();
@@ -588,6 +948,7 @@ public class TuningToolbarWidget {
      * [tag:offline_tune] Preserves baselineImage so discard still works in offline mode.
      */
     public void onDisconnect() {
+        connectionGeneration++;
         undoCommitTimer.stop();
         uploadTimer.stop();
         undoStack.clear();
@@ -596,13 +957,9 @@ public class TuningToolbarWidget {
         undoButton.setEnabled(false);
         redoButton.setEnabled(false);
         // Disable burn button when ECU disconnects
-        Component[] components = panel.getComponents();
-        for (Component c : components) {
-            if (c instanceof JButton && "Burn to ECU".equals(((JButton) c).getText())) {
-                ((JButton) c).setEnabled(false);
-                break;
-            }
-        }
+        burnButton.setEnabled(false);
+        discardButton.setEnabled(!burnInProgress && baselineImage != null);
+        loadTuneAction.setEnabled(!firmwareUpdateInProgress && !burnInProgress);
         refreshState();
     }
 }

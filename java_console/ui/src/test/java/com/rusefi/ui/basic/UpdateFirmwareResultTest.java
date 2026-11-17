@@ -16,15 +16,27 @@ public class UpdateFirmwareResultTest {
     public void successIsGreenAndSaysComplete() {
         assertEquals(new Color(0, 128, 0), UpdateFirmwareResult.SUCCESS.bannerColor());
         String text = UpdateFirmwareResult.SUCCESS.bannerText("COM14");
-        assertTrue(text.contains("complete"), text);
+        assertTrue(text.contains("completed"), text);
+        assertTrue(text.contains("COM14"), text);
+        assertTrue(text.contains("reconnect requested"), text);
+        assertTrue(text.contains("check firmware version and settings"), text);
+    }
+
+    @Test
+    public void settingsWarningIsDistinctFromSuccessAndFailure() {
+        assertEquals(new Color(160, 100, 0), UpdateFirmwareResult.WARNING.bannerColor());
+        String text = UpdateFirmwareResult.WARNING.bannerText("COM14");
+        assertTrue(text.contains("settings warnings remain"), text);
+        assertTrue(text.contains("see the report"), text);
         assertTrue(text.contains("COM14"), text);
     }
 
     @Test
-    public void failureIsRedAndSaysFailed() {
+    public void failureIsRedAndExplainsIncompleteUpdate() {
         assertEquals(Color.RED, UpdateFirmwareResult.FAILURE.bannerColor());
         String text = UpdateFirmwareResult.FAILURE.bannerText("COM14");
-        assertTrue(text.contains("failed"), text);
+        assertTrue(text.contains("did not complete all steps"), text);
+        assertTrue(text.contains("programming may have succeeded"), text);
         assertTrue(text.contains("COM14"), text);
     }
 

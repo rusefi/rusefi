@@ -46,13 +46,21 @@ public class FiringOrderPanel extends AbstractWizardStep {
     public FiringOrderPanel(UIContext uiContext, int cylindersCount) {
         super("Firing Order", "wizardFiringOrder");
 
-        JLabel title = new JLabel("Select Firing Order for " + cylindersCount + " cylinders");
-        title.setHorizontalAlignment(SwingConstants.CENTER);
-        styleTitle(title);
-        content.add(title, BorderLayout.NORTH);
+        JPanel card = new JPanel();
+        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
+        JLabel eyebrow = WizardStyle.sectionLabel("FIRING ORDER SETUP");
+        JLabel title = WizardStyle.cardTitle("Select Firing Order for " + cylindersCount + " cylinders");
+        JLabel description = WizardStyle.description("Click the firing order of your engine to save it.");
+        for (JComponent header : new JComponent[]{eyebrow, title, description}) {
+            header.setAlignmentX(Component.LEFT_ALIGNMENT);
+            card.add(header);
+            card.add(Box.createVerticalStrut(5));
+        }
+        card.add(Box.createVerticalStrut(8));
 
         JPanel ordersPanel = new JPanel();
         ordersPanel.setLayout(new BoxLayout(ordersPanel, BoxLayout.Y_AXIS));
+        ordersPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         IniField firingOrderField = uiContext.iniFileState.getIniFileModel().findIniField("firingOrder").orElse(null);
         if (firingOrderField instanceof EnumIniField) {
@@ -85,23 +93,29 @@ public class FiringOrderPanel extends AbstractWizardStep {
                     label += " (" + EXAMPLES.get(exampleKey) + ")";
                 }
                 JButton button = new JButton(label);
-                stylePrimaryAction(button);
-                button.setAlignmentX(Component.CENTER_ALIGNMENT);
-                button.setMaximumSize(button.getPreferredSize());
+                styleChoiceAction(button);
+                button.setHorizontalAlignment(SwingConstants.LEFT);
+                button.setAlignmentX(Component.LEFT_ALIGNMENT);
+                button.setMaximumSize(new Dimension(Integer.MAX_VALUE, button.getPreferredSize().height));
                 button.addActionListener(e -> fireCompleted(new WizardStepResult("firingOrder", order)));
                 ordersPanel.add(Box.createVerticalStrut(10));
                 ordersPanel.add(button);
             }
         } else {
             JLabel noIni = new JLabel("Firing order information not found in INI");
-            noIni.setAlignmentX(Component.CENTER_ALIGNMENT);
+            WizardStyle.styleError(noIni);
+            noIni.setAlignmentX(Component.LEFT_ALIGNMENT);
             ordersPanel.add(noIni);
         }
 
-        // Wrap ordersPanel so it centers horizontally within the scroll pane
-        JPanel centerWrapper = new JPanel(new GridBagLayout());
-        centerWrapper.add(ordersPanel);
-        content.add(new JScrollPane(centerWrapper), BorderLayout.CENTER);
+        card.add(ordersPanel);
+        WizardStyle.styleCard(card, 24, 28);
+        content.add(WizardStyle.cardPage(card), BorderLayout.CENTER);
+    }
+
+    @Override
+    public String getFooterHint() {
+        return "Click your firing order to save it and continue.";
     }
 
     @Override

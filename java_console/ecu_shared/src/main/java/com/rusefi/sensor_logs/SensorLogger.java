@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.function.LongSupplier;
 import java.util.function.Supplier;
 
 import static com.rusefi.config.generated.VariableRegistryValues.GAUGE_NAME_MAP;
@@ -28,13 +29,18 @@ import static com.rusefi.core.SensorNames.MAPGauge;
  * 4/15/2016.
  */
 public class SensorLogger {
-    private static List<CustomBinaryLogEntry> getOutputChannels(Supplier<BinaryProtocol> protocol) {
+    private static List<CustomBinaryLogEntry> getOutputChannels(Supplier<BinaryProtocol> protocol,
+                                                                LoggingProfile profile) {
         BinaryProtocol bp = protocol.get();
         if (bp == null) {
             return Collections.emptyList();
         }
         IniFileModel iniFileModel = bp.getIniFileNullable();
-        return iniFileModel == null ? Collections.emptyList() : getOutputChannels(iniFileModel);
+        if (iniFileModel == null) {
+            return Collections.emptyList();
+        }
+        List<CustomBinaryLogEntry> all = getOutputChannels(iniFileModel);
+        return profile == null ? all : profile.select(all, iniFileModel);
     }
 
     public static List<CustomBinaryLogEntry> getOutputChannels(IniFileModel iniFileModel) {
@@ -70,13 +76,23 @@ public class SensorLogger {
     }
 
     private final Supplier<BinaryProtocol> protocol;
+    private final LongSupplier clock;
     private BinarySensorLog<CustomBinaryLogEntry> sensorLog;
+    private long firstRowMillis = -1;
+    private long lastRowMillis = -1;
+    private double lastRecordingSeconds = Double.NaN;
     private SensorCentral.FullOutputLease fullOutputLease;
     private SensorCentral.SnapshotListenerToken snapshotListenerToken;
     private byte[] currentResponse;
 
     public SensorLogger(Supplier<BinaryProtocol> protocol) {
+        this(protocol, System::currentTimeMillis);
+    }
+
+    /** @param clock milliseconds, for the rows' timestamps and the recording duration */
+    SensorLogger(Supplier<BinaryProtocol> protocol, LongSupplier clock) {
         this.protocol = protocol;
+        this.clock = clock;
     }
 
     public synchronized boolean start(File file) {
@@ -84,18 +100,28 @@ public class SensorLogger {
     }
 
     public synchronized boolean start(File file, byte[] tune) {
+        return start(file, tune, null);
+    }
+
+    /**
+     * @param profile the signals to record, or null for every recordable channel. The full output block is
+     *                read either way; the profile only decides what goes into the file.
+     */
+    public synchronized boolean start(File file, byte[] tune, LoggingProfile profile) {
         if (sensorLog != null) {
             return true;
         }
 
-        List<CustomBinaryLogEntry> outputChannels = getOutputChannels(protocol);
+        List<CustomBinaryLogEntry> outputChannels = getOutputChannels(protocol, profile);
         if (outputChannels.isEmpty()) {
             return false;
         }
 
+        firstRowMillis = lastRowMillis = -1;
+        lastRecordingSeconds = Double.NaN;
         sensorLog = new BinarySensorLog<>(sensor -> {
             return currentResponse == null ? 0.0 : sensor.getValue(currentResponse);
-        }, outputChannels, System::currentTimeMillis, file.getAbsolutePath(), tune);
+        }, outputChannels, clock::getAsLong, file.getAbsolutePath(), tune);
         SensorCentral sensorCentral = SensorCentral.getInstance();
         fullOutputLease = sensorCentral.acquireFullOutput();
         snapshotListenerToken = sensorCentral.addSnapshotListener(this::writeSensorLogLine);
@@ -106,7 +132,12 @@ public class SensorLogger {
         if (sensorLog != null && fullOutputLease != null && snapshot.isFull()
                 && snapshot.getGeneration() >= fullOutputLease.getGeneration()) {
             currentResponse = snapshot.getResponse();
+            long now = clock.getAsLong();
             sensorLog.writeSensorLogLine();
+            if (firstRowMillis < 0) {
+                firstRowMillis = now;
+            }
+            lastRowMillis = now;
         }
     }
 
@@ -118,6 +149,7 @@ public class SensorLogger {
         if (sensorLog != null) {
             sensorLog.close();
             sensorLog = null;
+            lastRecordingSeconds = firstRowMillis < 0 ? Double.NaN : (lastRowMillis - firstRowMillis) / 1000.0;
         }
         currentResponse = null;
         if (fullOutputLease != null) {
@@ -128,5 +160,13 @@ public class SensorLogger {
 
     public synchronized boolean isLogging() {
         return sensorLog != null;
+    }
+
+    /**
+     * Seconds from the first to the last row of the recording stopped last, as a log viewer reads it from the
+     * rows' timestamps; NaN when no recording has stopped or it has no rows.
+     */
+    public synchronized double getLastRecordingSeconds() {
+        return lastRecordingSeconds;
     }
 }

@@ -9,8 +9,65 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import static com.rusefi.AssertCompatibility.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class LiveDataProcessorTest {
+    @Test
+    public void moduleLoggingSource() throws IOException {
+        String yaml = "Usages:\n"
+                + "  - name: sample\n"
+                + "    java: Sample.java\n"
+                + "    folder: test\n"
+                + "    engineModule: SampleModule\n"
+                + "    constexpr: engine->module<SampleModule>().unmock()\n"
+                + "    conditional_compilation: EFI_SAMPLE\n";
+        TestFileCaptor captor = new TestFileCaptor();
+        LiveDataProcessor processor = new LiveDataProcessor("test", fileName ->
+                new StringReader("struct_no_prefix sample_s\n"
+                        + "float value;Sample value;\n"
+                        + "bit enabled\n"
+                        + "end_struct\n"), captor, "");
+        processor.handleYaml(LiveDataProcessor.getStringObjectMap(new StringReader(yaml)));
+        String sd = captor.fileCapture.get(SdCardFieldsContent.SD_CARD_OUTPUT_FILE_NAME).sb.toString();
+        String lua = captor.fileCapture.get(LiveDataProcessor.getOutputLookupFileName()).sb.toString();
+        assertTrue(sd.contains("#if EFI_SAMPLE\n"), sd);
+        assertTrue(sd.contains("{engine->module<SampleModule>().unmock().value,"), sd);
+        assertTrue(sd.contains("{engine->module<SampleModule>().unmock(), 4, 0,"), sd);
+        assertFalse(sd.contains("MLG_SOURCE"), sd);
+        assertTrue(lua.contains("return engine->module<SampleModule>()->value;"), lua);
+
+    }
+
+    @Test
+    public void everyFragmentUsesIniConversion() throws IOException {
+        // Lua uses INI conversion; SD fields retain the LTS firmware constructor ABI.
+        String yaml = "Usages:\n"
+                + "  - name: scaled\n"
+                + "    java: Scaled.java\n"
+                + "    folder: test\n"
+                + "    constexpr: engine->scaled\n"
+                + "  - name: legacy\n"
+                + "    java: Legacy.java\n"
+                + "    folder: test\n"
+                + "    constexpr: engine->legacy\n";
+        TestFileCaptor captor = new TestFileCaptor();
+        LiveDataProcessor processor = new LiveDataProcessor("test", fileName -> {
+            String name = fileName.contains("scaled") ? "scaled" : "legacy";
+            return new StringReader("struct_no_prefix " + name + "_s\n"
+                    + "float " + name + "Mass;" + name + " mass;\"mg\", 1000, -1, 0, 100, 3\n"
+                    + "end_struct\n");
+        }, captor, "");
+        processor.handleYaml(LiveDataProcessor.getStringObjectMap(new StringReader(yaml)));
+
+        String sd = captor.fileCapture.get(SdCardFieldsContent.SD_CARD_OUTPUT_FILE_NAME).sb.toString();
+        String lua = captor.fileCapture.get(LiveDataProcessor.getOutputLookupFileName()).sb.toString();
+        assertTrue(sd.contains("{engine->scaled.scaledMass, \"scaled mass\", \"mg\", 3}"), sd);
+        assertTrue(sd.contains("{engine->legacy.legacyMass, \"legacy mass\", \"mg\", 3}"), sd);
+        assertTrue(lua.contains("return (engine->scaled.scaledMass + -1.0f) * 1000.0f;"), lua);
+        assertTrue(lua.contains("return (engine->legacy.legacyMass + -1.0f) * 1000.0f;"), lua);
+    }
+
     @Test
     public void testTwoSections() throws IOException {
         String testYaml = "Usages:\n" +
@@ -158,7 +215,7 @@ public class LiveDataProcessorTest {
                 "\t\t\treturn engine->wbo2.esr;\n" +
                 "#endif\n" +
                 "\t}\n" +
-                "\treturn EFI_ERROR_CODE;\n" +
+                "\treturn static_cast<float>(EFI_ERROR_CODE);\n" +
                 "}\n" +
                 "float getOutputValueByName(const char *name) {\n" +
                 "\tint hash = djb2lowerCase(name);\n" +

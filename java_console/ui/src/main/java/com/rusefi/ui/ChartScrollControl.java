@@ -1,6 +1,7 @@
 package com.rusefi.ui;
 
 import com.rusefi.KeyStrokeShortcut;
+import com.rusefi.ui.widgets.JoinedButtons;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Andrey Belomutskiy, (c) 2013-2020
  */
 public class ChartScrollControl {
-    private final JPanel content = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+    private final JPanel content = new JPanel(new FlowLayout(FlowLayout.LEFT, JoinedButtons.ROW_GAP, 0));
     private final AtomicInteger index = new AtomicInteger();
     private static final JLabel info = new JLabel();
     private ChartRepository.ChartRepositoryListener listener;
@@ -24,7 +25,8 @@ public class ChartScrollControl {
         this.listener = listener;
         info.setToolTipText("Current page index / total pages count");
 
-        content.setBorder(BorderFactory.createLineBorder(Color.red));
+        // toolbar style [tag:console_theme]: outlined arrows around the page index
+        content.setOpaque(false);
 
         setInfoText(index);
 
@@ -47,9 +49,9 @@ public class ChartScrollControl {
             }
         });
 
-        content.add(prev);
+        content.add(new JoinedButtons(prev));
         content.add(info);
-        content.add(next);
+        content.add(new JoinedButtons(next));
 
         bindKeyStrokeActions();
     }

@@ -70,7 +70,16 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
             javaName = expression + (isPtr ? "->" : ".") + prefix;
         }
 
-        getterPairs.add(new VariableRecord(userName, javaName + cf.getName(), null, conditional));
+        String value = javaName + cf.getName();
+        float scale = OutputScale.getAdditionalScale(cf);
+        float translation = OutputScale.getAdditionalTranslation(cf);
+        if (translation != 0) {
+            value = "(" + value + " + " + translation + "f)";
+        }
+        if (scale != 1) {
+            value += " * " + scale + "f";
+        }
+        getterPairs.add(new VariableRecord(userName, value, null, conditional));
 
 
         return "";
@@ -93,7 +102,7 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
                 additionalHeaders +
                 "float getOutputValueByHash(const int hash) {\n" +
                 fullSwitch +
-                getterBody + "\treturn EFI_ERROR_CODE;\n" +
+                getterBody + "\treturn static_cast<float>(EFI_ERROR_CODE);\n" +
                     "}\n" +
                     "float getOutputValueByName(const char *name) {\n" +
                     "\tint hash = djb2lowerCase(name);\n" +

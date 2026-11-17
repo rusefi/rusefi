@@ -80,9 +80,15 @@ public class URLLabel extends JLabel {
 
     public void setText(String text, boolean ul) {
         String link = ul ? "<u>" + text + "</u>" : text;
-        super.setText("<html><span style=\"color: #000099;\">" +
+        super.setText("<html><span style=\"color: " + linkColor() + ";\">" +
                 link + "</span></html>");
         this.text = text;
+    }
+
+    /** The console theme's link colour [tag:console_theme], or the classic dark blue without that theme. */
+    private static String linkColor() {
+        Color color = UIManager.getColor("Console.Link.foreground");
+        return color == null ? "#000099" : String.format("#%06x", color.getRGB() & 0xffffff);
     }
 
     public static void open(URI uri) {

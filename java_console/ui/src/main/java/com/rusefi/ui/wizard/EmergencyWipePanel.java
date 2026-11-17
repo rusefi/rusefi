@@ -43,9 +43,9 @@ public final class EmergencyWipePanel extends JPanel {
         card.add(Box.createVerticalGlue());
         card.add(Box.createVerticalStrut(WizardStyle.LARGE_GAP));
 
-        AbstractWizardStep.styleButton(cancelButton);
+        AbstractWizardStep.styleNegativeAction(cancelButton);
         cancelButton.addActionListener(e -> cancel.run());
-        AbstractWizardStep.stylePrimaryAction(eraseButton);
+        AbstractWizardStep.styleNegativeAction(eraseButton);
         eraseButton.addActionListener(e -> {
             eraseButton.setEnabled(false);
             erase.run();

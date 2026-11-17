@@ -46,6 +46,18 @@ public class BinaryProtocolExecutor {
         boolean isScanningForEcu,
         String msg,
         LinkManager.EcuCompatibilityListener compatibilityListener) {
+        return execute(port, callbacks, bpAction, failureResult, msg, compatibilityListener, true);
+    }
+
+    private static <T> T execute(
+        final String port,
+        final UpdateOperationCallbacks callbacks,
+        final BinaryProtocolAction<T> bpAction,
+        final T failureResult,
+        final String msg,
+        final LinkManager.EcuCompatibilityListener compatibilityListener,
+        final boolean needImage
+    ) {
         final AtomicReference<T> executionResult = new AtomicReference<>(failureResult);
         try (LinkManager linkManager = new LinkManager()
             .setEcuCompatibilityListener(compatibilityListener)
@@ -58,7 +70,7 @@ public class BinaryProtocolExecutor {
             final CountDownLatch connectionLatch = new CountDownLatch(1);
             final AtomicBoolean connectionSuccess = new AtomicBoolean(false);
 
-            linkManager.startAndConnect(port, new ConnectionStatusLogic.Listener() {
+            final ConnectionStatusLogic.Listener listener = new ConnectionStatusLogic.Listener() {
                 @Override
                 public void onConnectionStatus(boolean isConnected) {}
 
@@ -73,7 +85,8 @@ public class BinaryProtocolExecutor {
                     connectionSuccess.set(true);
                     connectionLatch.countDown();
                 }
-            });
+            };
+            connect(linkManager, port, listener, needImage);
 
             try {
                 if (connectionLatch.await(1, TimeUnit.MINUTES) && connectionSuccess.get()) {
@@ -103,12 +116,37 @@ public class BinaryProtocolExecutor {
         return executionResult.get();
     }
 
+    static void connect(final LinkManager linkManager, final String port,
+                        final ConnectionStatusLogic.Listener listener, final boolean needImage) {
+        if (needImage) {
+            linkManager.startAndConnect(port, listener);
+        } else {
+            // [tag:post_flash_layout_reset] Recovery must connect before reading a possibly locked image.
+            linkManager.start(port, listener);
+            linkManager.getConnector().connectAndReadConfiguration(
+                new BinaryProtocol.Arguments(false, false), listener);
+        }
+    }
+
     public static <T> T executeWithSuspendedPortScanner(
         final String port,
         final UpdateOperationCallbacks callbacks,
         final BinaryProtocolAction<T> bpAction,
         final T failureResult, ConnectivityContext connectivityContext,
         String msg) {
+        return executeWithSuspendedPortScanner(port, callbacks, bpAction, failureResult,
+            connectivityContext, msg, true);
+    }
+
+    static <T> T executeWithSuspendedPortScanner(
+        final String port,
+        final UpdateOperationCallbacks callbacks,
+        final BinaryProtocolAction<T> bpAction,
+        final T failureResult,
+        final ConnectivityContext connectivityContext,
+        final String msg,
+        final boolean needImage
+    ) {
         try {
             callbacks.logLine(msg + ": Suspending port scanning...");
             try {
@@ -125,7 +163,8 @@ public class BinaryProtocolExecutor {
             } else {
                 waitForPort(port);
             }
-            return execute(port, callbacks, bpAction, failureResult, false, msg);
+            return execute(port, callbacks, bpAction, failureResult, msg,
+                LinkManager.EcuCompatibilityListener.VOID, needImage);
         } finally {
             callbacks.logLine(msg + ": Resuming port scanning...");
             connectivityContext.getPortScanner().resume();
@@ -145,7 +184,7 @@ public class BinaryProtocolExecutor {
                 return; // bail without extra logging
             }
         }
-        // sametimes we need to wait for the port to re-appear
+        // sometimes we need to wait for the port to re-appear
         long start = System.currentTimeMillis();
         while (!portAvailable && (System.currentTimeMillis() - start) < Timeouts.MINUTE) {
             sleep(200);

@@ -14,6 +14,7 @@ import java.awt.*;
 public class VeTableWizardStep extends AbstractWizardStep {
     private final UIContext uiContext;
     private final JPanel panel;
+    private VeTableGeneratorPanel inner;
 
     public VeTableWizardStep(UIContext uiContext) {
         super("Base VE Table", "wizardVeTable");
@@ -26,6 +27,7 @@ public class VeTableWizardStep extends AbstractWizardStep {
     public void onShow() {
         WizardConfig cfg = WizardConfig.snapshot(uiContext);
         if (cfg == null) {
+            inner = null;
             panel.removeAll();
             panel.add(new JLabel("ECU not connected — click Skip to continue.", SwingConstants.CENTER),
                 BorderLayout.CENTER);
@@ -37,19 +39,32 @@ public class VeTableWizardStep extends AbstractWizardStep {
         // ponytail: one-element array so both lambdas share a mutable fired flag in the closure
         final boolean[] fired = {false};
 
-        VeTableGeneratorPanel inner = new VeTableGeneratorPanel(
+        inner = new VeTableGeneratorPanel(
             cfg.ini,
             cfg.image,
             patched -> { if (!fired[0]) { fired[0] = true; fireCompleted(new WizardStepResult(patched)); } },
             ()      -> { if (!fired[0]) { fired[0] = true; fireCompleted(new WizardStepResult(null, null)); } },
-            "Apply and Continue",
-            "Skip"
+            CONTINUE_TEXT,
+            SKIP_TEXT
         );
+        styleContinueAction(inner.getApplyButton());
+        styleSkipAction(inner.getCloseButton(), "Keep the current VE table and continue");
+        inner.detachActions();
 
         panel.removeAll();
         panel.add(inner, BorderLayout.CENTER);
         panel.revalidate();
         panel.repaint();
+    }
+
+    @Override
+    public JButton getContinueButton() {
+        return inner == null ? null : inner.getApplyButton();
+    }
+
+    @Override
+    public JButton getSkipButton() {
+        return inner == null ? null : inner.getCloseButton();
     }
 
     @Override

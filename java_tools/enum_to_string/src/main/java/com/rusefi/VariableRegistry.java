@@ -6,7 +6,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -30,6 +33,14 @@ public class VariableRegistry {
     public static final String ARRAY_FORMAT_ENUM = "_fullenum";
     public static final char MULT_TOKEN = '*';
     public static final String DEFINE = "#define";
+    /**
+     * TS page guard flags, see [tag:ts_page_table] in TSProjectConsumer. A board declares them in
+     * prepend.txt for the .ini generator; firmware/Makefile and simulator/Makefile lift them into
+     * DDEFS. They must not be emitted into the generated C header: efifeatures.h is included in
+     * different orders across translation units.
+     */
+    public static final Set<String> TS_PAGE_GUARD_FLAGS = Collections.unmodifiableSet(
+            new HashSet<>(Arrays.asList("EFI_LTFT_CONTROL", "EFI_LUA")));
     private static final String HEX_PREFIX = "0x";
     private static final String TEMPLATE_QUITE_OPEN_TAG = "@#";
     private final TreeMap<String, String> data = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -253,7 +264,9 @@ public class VariableRegistry {
         if (!value.contains("\n")) {
             // multi-lines are not supported in C headers
             if (!var.endsWith(_16_HEX_SUFFIX) && !var.endsWith(_HEX_SUFFIX)) {
-                cAllDefinitions.put(var, "#define " + var + (value.isEmpty() ? "" : " " + value) + ToolUtil.EOL);
+                if (!TS_PAGE_GUARD_FLAGS.contains(var)) {
+                    cAllDefinitions.put(var, DEFINE + " " + var + (value.isEmpty() ? "" : " " + value) + ToolUtil.EOL);
+                }
             }
         }
         return value;

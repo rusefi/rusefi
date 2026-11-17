@@ -4,167 +4,244 @@ import com.rusefi.core.ui.AutoupdateUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
 
 import static com.rusefi.ts_plugin.knock.KnockAnalyzerTab.VALUE_COUNT;
-import static org.apache.commons.math3.util.Precision.round;
 
+/**
+ * Magnitude (single FFT slice) plot drawn under the spectrogram.
+ * <p>
+ * Painting happens directly in {@code paintComponent} from the last received slice, so the plot
+ * always fits the current component size: no stale back-buffer, no stretched/torn geometry after
+ * a resize. Frequency labels are drawn horizontally every {@link #LABEL_STEP} bins to keep them
+ * readable instead of overlapping 64 rotated strings.
+ */
 public class KnockMagnitudeCanvas {
+    private static final int LABEL_STEP = 8;
+    private static final float MAX_MAGNITUDE = 255f;
+
+    private static final int MARGIN_LEFT = 52;
+    private static final int MARGIN_RIGHT = 10;
+    private static final int MARGIN_TOP = 8;
+
+    private KnockPlotStyle style = KnockPlotStyle.DEFAULT;
 
     private final JComponent component = new JComponent() {
         @Override
-        public void paint(Graphics g) {
-            super.paint(g);
-
-            Dimension size = getSize();
-
-            // flip buffers
-            g.drawImage(bufferedImage, 0, 0, size.width, size.height, null);
+        protected void paintComponent(Graphics g) {
+            render((Graphics2D) g, getWidth(), getHeight());
         }
     };
 
-    private BufferedImage bufferedImage;
-    private Graphics2D bufferedGraphics;
+    private final double[] yAxisHz = new double[VALUE_COUNT];
+    private final float[] magnitudes = new float[VALUE_COUNT];
 
-    private final double[] yAxisHz;
     private int yAxisFrequencyStart = -1;
     private float yAxisFrequencyStep = -1;
 
-    private final int[] xPoints = new int[VALUE_COUNT + 2]; // + 2 last points for polygon
-    private final int[] yPoints = new int[VALUE_COUNT + 2]; // + 2 last points for polygon
-
     public KnockMagnitudeCanvas() {
-
-        SwingUtilities.invokeLater(() -> {
-            AutoupdateUtil.trueLayoutAndRepaint(component);
-        });
-
-        bufferedImage = new BufferedImage(640, 480, BufferedImage.TYPE_INT_RGB);
-        bufferedGraphics = bufferedImage.createGraphics();
-        ComponentListener componentListener = new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                bufferedImage = new BufferedImage(component.getWidth(), component.getHeight(), BufferedImage.TYPE_INT_RGB);
-                bufferedGraphics = bufferedImage.createGraphics();
-            }
-        };
-        component.addComponentListener(componentListener);
-
-        yAxisHz = new double[64]; // protocol size
+        component.setOpaque(true);
+        component.setBackground(style.background);
+        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayoutAndRepaint(component));
     }
-
 
     public JComponent getComponent() {
         return component;
     }
 
+    /** Replaces the colours, e.g. with the console's Log Viewer palette. */
+    public void setStyle(KnockPlotStyle style) {
+        this.style = style;
+        component.setBackground(style.background);
+        component.repaint();
+    }
+
     public void setFrequencyStart(int start) {
         boolean needSetup = this.yAxisFrequencyStart < 0;
-
         this.yAxisFrequencyStart = start;
-
-        if (needSetup) {
+        if (needSetup)
             setupFrequencyyAxis();
-        }
     }
 
     public void setFrequencyStep(float step) {
-
         boolean needSetup = this.yAxisFrequencyStep < 0;
-
         this.yAxisFrequencyStep = step;
-
-        if (needSetup) {
+        if (needSetup)
             setupFrequencyyAxis();
-        }
     }
 
     public void setupFrequencyyAxis() {
-
-        if (this.yAxisFrequencyStep < 0 || this.yAxisFrequencyStart < 0) {
+        if (this.yAxisFrequencyStep < 0 || this.yAxisFrequencyStart < 0)
             return;
-        }
 
-        for (int i = 0; i < 64; ++i) {
-            float y = (float) this.yAxisFrequencyStart + (this.yAxisFrequencyStep * (float) i);
-            this.yAxisHz[i] = y;
-        }
+        for (int i = 0; i < VALUE_COUNT; ++i)
+            yAxisHz[i] = yAxisFrequencyStart + (double) yAxisFrequencyStep * i;
     }
 
-    private int searchPeak(int[] yPoints) {
-
-        int max = 256;
-        int index = -1;
-
-        for (int i = 0; i < 64; ++i) {
-            int value = yPoints[i];
-
-            if (value < max) {
-                max = value;
-                index = i;
-            }
-        }
-
-        return index;
+    /** A copy of the slice currently shown. */
+    public float[] getMagnitudes() {
+        return magnitudes.clone();
     }
 
-    public void processValues(float magnitudes[]) {
-
-        int width = bufferedImage.getWidth();
-        int height = bufferedImage.getHeight();
-
-        bufferedGraphics.clearRect(0, 0, width, height);
-
-        float bx = (float) width / (float) 64;
-
-        for (int i = 0; i < 64; ++i) {
-
-            xPoints[i] = (int) (bx * i);
-
-            float normalized = magnitudes[i] / 255.f;
-            float y = height * normalized;
-
-            yPoints[i] = (int) (height - y);
-        }
-        //last point 2 always in corners
-        xPoints[64] = xPoints[63];
-        yPoints[64] = height;
-        xPoints[65] = 0;
-        yPoints[65] = height;
-
-        bufferedGraphics.setColor(Color.lightGray);
-        bufferedGraphics.drawPolygon(xPoints, yPoints, 66);
-        bufferedGraphics.setColor(Color.gray);
-        bufferedGraphics.fillPolygon(xPoints, yPoints, 66);
-
-        int index = searchPeak(yPoints);
-        int xLine = xPoints[index];
-
-        bufferedGraphics.setColor(Color.yellow);
-        bufferedGraphics.drawLine(xLine, 0, xLine, height);
-
-        double hz = this.yAxisHz[index];
-        bufferedGraphics.drawString(Double.valueOf(round(hz, 1)).toString(), xLine, 10);
-
-        Font defaultFont = bufferedGraphics.getFont();
-        Font font = new Font(null, Font.PLAIN, 14);
-        AffineTransform rotate90 = new AffineTransform();
-        rotate90.rotate(-Math.PI / 2);
-        Font rotatedFont = font.deriveFont(rotate90);
-        bufferedGraphics.setFont(rotatedFont);
-
-        for (int i = 0; i < 64; ++i) {
-            int x = (int) (bx * i);
-            double hzZxis = this.yAxisHz[i];
-            bufferedGraphics.setColor(Color.white);
-            bufferedGraphics.drawLine(x, height, x, height - 10);
-            bufferedGraphics.drawString(Double.valueOf(round(hzZxis, 1)).toString(), x, height - 20);
-        }
-        bufferedGraphics.setFont(defaultFont);
-
+    public void processValues(float[] values) {
+        System.arraycopy(values, 0, magnitudes, 0, Math.min(values.length, VALUE_COUNT));
         AutoupdateUtil.trueLayoutAndRepaint(component);
     }
 
+    // ---- rendering -----------------------------------------------------------
+
+    private void render(Graphics2D g, int width, int height) {
+        g.setColor(style.background);
+        g.fillRect(0, 0, width, height);
+
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+        Font base = g.getFont();
+        g.setFont(base.deriveFont(Font.PLAIN, Math.max(9f, base.getSize2D() - 2)));
+        FontMetrics fm = g.getFontMetrics();
+
+        int labelsHeight = fm.getHeight() + 6;
+        int left = MARGIN_LEFT;
+        int plotW = Math.max(1, width - MARGIN_LEFT - MARGIN_RIGHT);
+        int top = MARGIN_TOP;
+        int plotH = Math.max(1, height - MARGIN_TOP - labelsHeight);
+        int bottom = top + plotH;
+
+        drawAmplitudeAxis(g, fm, left, top, plotW, plotH);
+        drawFrequencyAxis(g, fm, left, bottom, plotW);
+        drawMagnitudes(g, left, bottom, plotW, plotH);
+        drawPeak(g, fm, left, top, bottom, plotW, plotH);
+
+        g.setFont(base);
+    }
+
+    private void drawAmplitudeAxis(Graphics2D g, FontMetrics fm, int left, int top, int plotW, int plotH) {
+        int lines = Math.max(1, Math.min(4, plotH / (fm.getHeight() * 2)));
+        for (int i = 0; i <= lines; i++) {
+            int y = top + plotH - plotH * i / lines;
+            g.setColor(style.grid);
+            g.drawLine(left, y, left + plotW, y);
+
+            String label = Integer.toString((int) (MAX_MAGNITUDE * i / lines));
+            g.setColor(style.axisText);
+            g.drawString(label, Math.max(2, left - 6 - fm.stringWidth(label)), y + fm.getAscent() / 2);
+        }
+    }
+
+    private void drawFrequencyAxis(Graphics2D g, FontMetrics fm, int left, int bottom, int plotW) {
+        int step = labelStep(plotW, fm.stringWidth("00.0k") + 8);
+        for (int i = 0; i < VALUE_COUNT; i += step) {
+            int x = binToX(i, left, plotW);
+
+            g.setColor(style.grid);
+            g.drawLine(x, bottom, x, bottom + 4);
+
+            String label = formatHz(yAxisHz[i]);
+            int textX = Math.max(0, Math.min(x - fm.stringWidth(label) / 2, left + plotW - fm.stringWidth(label)));
+            g.setColor(style.axisText);
+            g.drawString(label, textX, bottom + 4 + fm.getAscent());
+        }
+    }
+
+    /** Picks a label step so that neighbour labels never overlap on a narrow component. */
+    private static int labelStep(int plotW, int labelWidth) {
+        for (int step = LABEL_STEP; step < VALUE_COUNT; step *= 2) {
+            if ((double) plotW * step / VALUE_COUNT >= labelWidth)
+                return step;
+        }
+        return VALUE_COUNT;
+    }
+
+    private void drawMagnitudes(Graphics2D g, int left, int bottom, int plotW, int plotH) {
+        int[] xPoints = new int[VALUE_COUNT + 2];
+        int[] yPoints = new int[VALUE_COUNT + 2];
+
+        for (int i = 0; i < VALUE_COUNT; ++i) {
+            xPoints[i] = binToX(i, left, plotW);
+            yPoints[i] = magnitudeToY(magnitudes[i], bottom, plotH);
+        }
+        // close the polygon along the bottom edge
+        xPoints[VALUE_COUNT] = left + plotW;
+        yPoints[VALUE_COUNT] = bottom;
+        xPoints[VALUE_COUNT + 1] = left;
+        yPoints[VALUE_COUNT + 1] = bottom;
+
+        g.setColor(style.magnitudeFill);
+        g.fillPolygon(xPoints, yPoints, VALUE_COUNT + 2);
+        g.setColor(style.magnitudeLine);
+        g.drawPolyline(xPoints, yPoints, VALUE_COUNT);
+    }
+
+    private void drawPeak(Graphics2D g, FontMetrics fm, int left, int top, int bottom, int plotW, int plotH) {
+        int index = searchPeak();
+        if (index < 0)
+            return;
+
+        int x = binToX(index, left, plotW);
+        if (style.logViewerLayout) {
+            drawPeakLabel(g, fm, x, left, top, bottom, plotW, index);
+            return;
+        }
+        g.setColor(style.magnitudePeak);
+        g.drawLine(x, top, x, bottom);
+
+        String label = formatHz(yAxisHz[index]) + " Hz / " + String.format("%.0f", magnitudes[index]);
+        int textX = Math.max(left, Math.min(x + 4, left + plotW - fm.stringWidth(label)));
+        g.drawString(label, textX, top + fm.getAscent());
+    }
+
+    /** Log Viewer layout: dashed peak line and a tinted "Peak" label in the value font. */
+    private void drawPeakLabel(Graphics2D g, FontMetrics axis, int x, int left, int top, int bottom, int plotW, int index) {
+        Stroke stroke = g.getStroke();
+        g.setColor(style.magnitudePeak);
+        g.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10, new float[]{4, 3}, 0));
+        g.drawLine(x, top, x, bottom);
+        g.setStroke(stroke);
+
+        Font font = style.valueFontFamily == null ? axis.getFont().deriveFont(Font.BOLD)
+            : new Font(style.valueFontFamily, Font.BOLD, axis.getFont().getSize());
+        g.setFont(font);
+        FontMetrics fm = g.getFontMetrics();
+        String label = "Peak " + formatHz(yAxisHz[index]) + " Hz · " + String.format("%.0f", magnitudes[index]);
+        int w = fm.stringWidth(label) + 14;
+        int h = fm.getHeight() + 4;
+        int boxX = Math.max(left, Math.min(x + 6, left + plotW - w));
+        Color peak = style.magnitudePeak;
+        g.setColor(new Color(peak.getRed(), peak.getGreen(), peak.getBlue(), 40));
+        g.fillRoundRect(boxX, top + 2, w, h, 8, 8);
+        g.setColor(peak);
+        g.drawString(label, boxX + 7, top + 4 + fm.getAscent());
+        g.setFont(axis.getFont());
+    }
+
+    private int searchPeak() {
+        int index = -1;
+        float max = 0;
+        for (int i = 0; i < VALUE_COUNT; ++i) {
+            if (magnitudes[i] > max) {
+                max = magnitudes[i];
+                index = i;
+            }
+        }
+        return index;
+    }
+
+    private static int binToX(int bin, int left, int plotW) {
+        return left + (int) Math.round((double) plotW * bin / (VALUE_COUNT - 1));
+    }
+
+    private static int magnitudeToY(float magnitude, int bottom, int plotH) {
+        float normalized = magnitude / MAX_MAGNITUDE;
+        if (normalized < 0)
+            normalized = 0;
+        if (normalized > 1)
+            normalized = 1;
+        return bottom - (int) (plotH * normalized);
+    }
+
+    private static String formatHz(double hz) {
+        if (hz >= 1000)
+            return String.format("%.1fk", hz / 1000);
+        return String.format("%.0f", hz);
+    }
 }

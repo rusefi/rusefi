@@ -1,14 +1,21 @@
 package com.rusefi.ui;
 
+import com.opensr5.ini.GaugeModel;
+import com.opensr5.ini.IniFileModel;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.preferences.storage.Node;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.ConnectionStatusLogic;
+import com.rusefi.ui.widgets.GaugeDisplayKind;
+import com.rusefi.ui.widgets.GaugeMenuLabel;
+import com.rusefi.ui.widgets.GaugeScaleOverrides;
 import com.rusefi.ui.widgets.JPanelWithListener;
 import com.rusefi.ui.widgets.SensorGauge;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 
 /**
  * This panel contains either a {@link SensorGauge} or {@link SensorLiveGraph}
@@ -18,7 +25,11 @@ import java.awt.*;
  */
 public class GaugesGridElement {
     private static final String GAUGE_TYPE = "gauge";
+    /** Legacy flag, still written so older consoles show live graphs (other kinds fall back to round). */
     private static final String IS_LIVE_GRAPH = "type";
+    static final String DISPLAY = "display";
+    static final String DISPLAY_AS = "Display as";
+    static final String SCALE = "Scale\u2026";
 
     private final JPanelWithListener wrapper = new JPanelWithListener(new BorderLayout());
     private final UIContext uiContext;
@@ -36,10 +47,15 @@ public class GaugesGridElement {
     private void rebuildAsLiveBarElement() {
         wrapper.setLayout(new GridLayout(2, 1));
 
-        JMenuItem switchToGauge = getJMenuItem("Switch to Gauge Mode", false);
-
-        addLiveGraph(new SensorLiveGraph(uiContext, config.getChild("top"), config.getProperty(GAUGE_TYPE), switchToGauge));
-        addLiveGraph(new SensorLiveGraph(uiContext, config.getChild("bottom"), Sensor.RPMGauge.name(), switchToGauge));
+        addLiveGraph(new SensorLiveGraph(uiContext, config.getChild("top"), config.getProperty(GAUGE_TYPE),
+            createDisplayAsMenu(GaugeDisplayKind.LIVE_GRAPH)));
+        addLiveGraph(new SensorLiveGraph(uiContext, config.getChild("bottom"), Sensor.RPMGauge.name(),
+            createDisplayAsMenu(GaugeDisplayKind.LIVE_GRAPH)));
+        // Lay the graphs out now, as the round gauge path does; otherwise they stay zero-sized
+        // until some later layout pass and the empty graph appears with a delay.
+        wrapper.doLayout();
+        AutoupdateUtil.trueLayoutAndRepaint(wrapper.getParent());
+        wrapper.repaint();
     }
 
     private void addLiveGraph(SensorLiveGraph graph) {
@@ -54,37 +70,94 @@ public class GaugesGridElement {
         }
         // Clear existing components before rebuilding to prevent duplication on reconnect
         wrapper.removeAllChildrenAndListeners();
-        if (config.getBoolProperty(IS_LIVE_GRAPH)) {
+        GaugeDisplayKind kind = getDisplayKind();
+        if (kind == GaugeDisplayKind.LIVE_GRAPH) {
             rebuildAsLiveBarElement();
         } else {
-            rebuildAsCircleGauge();
+            rebuildAsGauge(kind);
         }
     }
 
-    private void rebuildAsCircleGauge() {
+    GaugeDisplayKind getDisplayKind() {
+        GaugeDisplayKind kind = GaugeDisplayKind.lookup(config.getProperty(DISPLAY, null));
+        if (kind != null) {
+            return kind;
+        }
+        return config.getBoolProperty(IS_LIVE_GRAPH) ? GaugeDisplayKind.LIVE_GRAPH : GaugeDisplayKind.ROUND;
+    }
+
+    private void rebuildAsGauge(GaugeDisplayKind kind) {
         SensorGauge.GaugeChangeListener gaugeChangeListener = new SensorGauge.GaugeChangeListener() {
             @Override
             public void onSensorChange(String gaugeName) {
                 config.setProperty(GAUGE_TYPE, gaugeName);
+                // Scale settings were chosen for the previous channel.
+                GaugeScaleOverrides.clear(config);
             }
         };
 
-        JMenuItem switchToLiveGraph = getJMenuItem("Switch to Live Graph", true);
-
         wrapper.setLayout(new BorderLayout());
-        SensorGauge.createGaugeBody(uiContext, config.getProperty(GAUGE_TYPE), wrapper, gaugeChangeListener, switchToLiveGraph);
-
+        SensorGauge.createGaugeBody(uiContext, config.getProperty(GAUGE_TYPE), wrapper, gaugeChangeListener,
+            Arrays.asList(createDisplayAsMenu(kind), createScaleMenuItem()), kind, GaugeScaleOverrides.read(config));
     }
 
-    private @NotNull JMenuItem getJMenuItem(String menuText, boolean value) {
-        JMenuItem switchToLiveGraph = new JMenuItem(menuText);
-        switchToLiveGraph.addActionListener(e -> {
-            wrapper.removeAllChildrenAndListeners();
-            config.setBoolProperty(IS_LIVE_GRAPH, value);
-
-            rebuild();
+    /** "Scale…" item: replaces the .ini min, max, danger value and decimals of this slot's gauge. */
+    // Package-private so tests drive the same menu users see.
+    @NotNull JMenuItem createScaleMenuItem() {
+        JMenuItem item = new JMenuItem(SCALE);
+        item.setToolTipText("Set this gauge's min, max, danger value and decimals");
+        item.addActionListener(e -> {
+            GaugeScaleDialog dialog = createScaleDialog();
+            if (dialog == null) {
+                return;
+            }
+            GaugeScaleOverrides overrides = dialog.show(wrapper);
+            if (overrides != null) {
+                setScaleOverrides(overrides);
+            }
         });
-        return switchToLiveGraph;
+        return item;
+    }
+
+    /** The dialog for the slot's current gauge, or {@code null} while its .ini definition is unknown. */
+    GaugeScaleDialog createScaleDialog() {
+        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+        GaugeModel model = ini == null ? null : ini.getGauge(config.getProperty(GAUGE_TYPE));
+        if (model == null) {
+            return null;
+        }
+        String units = model.getUnitsValue().isExpression() ? null : model.getUnits();
+        return new GaugeScaleDialog(GaugeMenuLabel.getTitle(uiContext, model), units,
+            SensorGauge.iniScale(uiContext, model), GaugeScaleOverrides.read(config));
+    }
+
+    void setScaleOverrides(GaugeScaleOverrides overrides) {
+        overrides.writeTo(config);
+        rebuild();
+    }
+
+    /** "Display as" submenu with the current presentation checked. */
+    // Package-private so tests drive the same menu users see.
+    @NotNull JMenu createDisplayAsMenu(GaugeDisplayKind current) {
+        JMenu menu = new JMenu(DISPLAY_AS);
+        ButtonGroup group = new ButtonGroup();
+        for (GaugeDisplayKind kind : GaugeDisplayKind.values()) {
+            JRadioButtonMenuItem item = new JRadioButtonMenuItem(kind.getLabel(), kind == current);
+            group.add(item);
+            item.addActionListener(e -> setDisplayKind(kind));
+            menu.add(item);
+        }
+        return menu;
+    }
+
+    void setDisplayKind(GaugeDisplayKind kind) {
+        if (kind == getDisplayKind()) {
+            return;
+        }
+        wrapper.removeAllChildrenAndListeners();
+        config.setProperty(DISPLAY, kind.getKey());
+        config.setBoolProperty(IS_LIVE_GRAPH, kind == GaugeDisplayKind.LIVE_GRAPH);
+        rebuild();
     }
 
     public JPanelWithListener getContent() {
@@ -98,7 +171,7 @@ public class GaugesGridElement {
     /**
      * Remove this element's {@link ConnectionStatusLogic} listener and tear down its inner components.
      * Must be called before discarding a {@code GaugesGridElement} (e.g. on grid resize)
-     * to prevent stale listeners from accumulating and keeping Radial gauge images alive.
+     * to prevent stale listeners from accumulating and keeping gauge widgets alive.
      */
     public void destroy() {
         destroyed = true;

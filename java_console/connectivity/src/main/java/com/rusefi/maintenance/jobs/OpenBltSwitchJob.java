@@ -60,6 +60,13 @@ public class OpenBltSwitchJob extends AsyncJobWithContext<SerialPortWithParentCo
                     // close() frees the port but leaves isDisconnectedByUser=false, so the returning ECU is
                     // classified by the scanner uncontested and a single reconnect brings the console back. [tag:better_ux_for_flashing]
                     linkManager.close();
+                    if (LinkManager.isCanPort(context.getPort().port)) {
+                        // The scanner pins the CAN ECU entry while a live connection holds the
+                        // single-client CAN channel (cachePort); a CAN "port" never physically
+                        // disappears, so without invalidation the stale ECU row would linger
+                        // while the board sits in OpenBLT.
+                        scanner.invalidatePort(context.getPort().port);
+                    }
                 } else {
                     try {
                         if (!scanner.suspend().await(30, TimeUnit.SECONDS)) {

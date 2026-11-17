@@ -1,12 +1,65 @@
-# rusEFI console
+# rusEFI tuner
 
-rusEFI frontend applications is historically known as rusEFI console.
+The rusEFI tuner is the beginner-friendly application for connecting to an ECU, initial setup, monitoring, calibration, and firmware updates.
 
 * firmware update
 * wizard for one-time initial setup
 * on-going monitoring and calibration
 
-Here we have source code for rusEFI console: while [TunerStudio](http://www.tunerstudio.com/index.php/products/tuner-studio) is the primary calibration frontend application we need secondary app for firmware update and some advanced troubleshooting. One day we shall combine but not yet :(
+For advanced calibration workflows, [TunerStudio](http://www.tunerstudio.com/index.php/products/tuner-studio) is also available.
+
+## Windows PCAN
+
+The console automatically probes a PCAN-USB adapter for a rusEFI ECU on Windows.
+Install the PEAK driver and connect the ECU
+
+Windows universal bundles include `PCANBasic_JNI.dll` and `PCANBasic.dll` beside
+the console JAR. If no ECU appears, check the driver, channel, bitrate, ECU power,
+wiring, and bus termination.
+
+## Linux SocketCAN
+
+The console automatically probes a Linux SocketCAN interface for a rusEFI ECU.
+It uses `can0` by default. The interface bitrate must match the ECU configuration;
+the standard rusEFI default is 500 kbit/s.
+
+Configure and enable `can0`:
+
+```bash
+sudo ip link set can0 down
+sudo ip link set can0 type can bitrate 500000 restart-ms 100
+sudo ip link set can0 up
+```
+
+Verify the interface state and bitrate:
+
+```bash
+ip -details -statistics link show can0
+```
+
+The output should report `state UP` and `bitrate 500000`. To monitor received
+traffic with the `can-utils` package:
+
+```bash
+candump can0
+```
+
+To use another SocketCAN interface, set the Java system property before `-jar`:
+
+```bash
+java -DCAN_DEVICE_NAME=can1 -jar rusefi_console.jar
+```
+
+Troubleshooting:
+
+- `Cannot find device "can0"`: the CAN adapter driver has not created the
+  interface. Native SocketCAN adapters usually create it automatically; serial
+  SLCAN adapters require adapter-specific `slcand` setup first.
+- `Network is down`: the interface exists but is not `UP`; run the configuration
+  commands above.
+- `CAN connected, but no ECU replied`: the interface is active, but no valid
+  rusEFI response was received. Check that the bitrate matches the ECU, the ECU
+  is powered, CAN high/low are not swapped, and the bus is correctly terminated.
 
 See also http://rusefi.com/build_server/ for pre-compiled full bundle
 

@@ -17,7 +17,7 @@ import static com.rusefi.ui.llm.ChatGptClient.*;
 final class ChatGptAgent {
     // Never log prompts, reply text or tool arguments; tool names, counts and sizes only.
     private static final com.devexperts.logging.Logging log = com.devexperts.logging.Logging.getLogging(ChatGptAgent.class);
-    static final String INSTRUCTIONS = "You are the rusEFI troubleshooting assistant in rusEFI Console. "
+    static final String INSTRUCTIONS = "You are the troubleshooting assistant in " + com.rusefi.UiProperties.getDisplayName() + ". "
             + "Use the read-only tools to collect evidence from the connected ECU before drawing conclusions. "
             + "Prefer diagnostic_snapshot or read_live_values when correlating faults and several live readings: their channels share one completed host poll and sample ID, not an atomic ECU measurement. "
             + "Missing channels are not zero or proof of healthy operation; last/recent error codes and counters may describe past events, not active faults. "
@@ -65,20 +65,30 @@ final class ChatGptAgent {
 
     static JSONArray run(ModelRequest request, Tools tools, JSONArray previous, String prompt,
                          Consumer<String> delta, Consumer<String> progress, Cancellation cancellation) throws Exception {
+        return run(request, tools, previous, prompt, java.util.Collections.emptyList(), delta, progress, cancellation);
+    }
+
+    /**
+     * One turn. Pictures attached to the prompt are sent on every round of this turn and then replaced by a note
+     * in the returned history (see {@link Attachment#withoutImages}).
+     */
+    static JSONArray run(ModelRequest request, Tools tools, JSONArray previous, String prompt, java.util.List<Attachment> attachments,
+                         Consumer<String> delta, Consumer<String> progress, Cancellation cancellation) throws Exception {
         ScheduledFuture<?> deadline = DEADLINES.schedule(cancellation::cancel, 120, TimeUnit.SECONDS);
         try {
-            return runLoop(request, tools, previous, prompt, delta, progress, cancellation);
+            JSONArray history = runLoop(request, tools, previous, Attachment.userMessage(prompt, attachments), delta, progress, cancellation);
+            return attachments.isEmpty() ? history : Attachment.withoutImages(history);
         } finally {
             deadline.cancel(false);
         }
     }
 
     @SuppressWarnings("unchecked")
-    private static JSONArray runLoop(ModelRequest request, Tools tools, JSONArray previous, String prompt,
+    private static JSONArray runLoop(ModelRequest request, Tools tools, JSONArray previous, JSONObject userMessage,
                                      Consumer<String> delta, Consumer<String> progress, Cancellation cancellation) throws Exception {
         JSONArray history = new JSONArray();
         history.addAll(previous);
-        history.add(object("role", "user", "content", prompt));
+        history.add(userMessage);
         Set<String> callIds = new HashSet<>();
         for (int round = 0; round < MAX_ROUNDS; round++) {
             cancellation.check();

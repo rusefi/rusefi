@@ -12,7 +12,7 @@ import java.lang.reflect.Field;
 
 public class TableTracerLayerUI extends LayerUI<JPanel> {
      //Private constants for UI styling
-    private static final Color TRACER_COLOR = new Color(255, 128, 0);
+    private static final Color TRACER_COLOR = new Color(255, 128, 0); // [tag:fixed_color] live position marker
     private static final int DOT_SIZE = 12;
 
      //Private constants for sensor mapping
@@ -77,7 +77,7 @@ public class TableTracerLayerUI extends LayerUI<JPanel> {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setColor(TRACER_COLOR);
         g2.fillOval(p.x - DOT_SIZE/2, p.y - DOT_SIZE/2, DOT_SIZE, DOT_SIZE);
-        g2.setColor(Color.WHITE);
+        g2.setColor(Color.WHITE); // [tag:fixed_color] ring of the marker
         g2.drawOval(p.x - DOT_SIZE/2, p.y - DOT_SIZE/2, DOT_SIZE, DOT_SIZE);
         g2.dispose();
     }

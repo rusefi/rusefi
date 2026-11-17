@@ -37,6 +37,48 @@ final class DiagnosticCaseStore {
         bytes = previous.bytes;
     }
 
+    private DiagnosticCaseStore(Path directory, String conversationId) {
+        this.directory = directory.toAbsolutePath().normalize();
+        this.conversationId = conversationId;
+    }
+
+    JSONObject snapshot() {
+        JSONArray saved = new JSONArray();
+        saved.addAll(records.values());
+        return object("conversation_id", conversationId, "records", saved);
+    }
+
+    static DiagnosticCaseStore restore(Path directory, JSONObject snapshot) throws IOException {
+        if (snapshot == null) { return new DiagnosticCaseStore(directory); }
+        Object id = snapshot.get("conversation_id");
+        Object saved = snapshot.get("records");
+        if (!(id instanceof String) || !(saved instanceof JSONArray) || ((JSONArray) saved).size() > MAX_RECORDS) {
+            throw new IOException("Cannot restore troubleshooting evidence.");
+        }
+        try {
+            if (!UUID.fromString((String) id).toString().equals(id)) { throw new IllegalArgumentException(); }
+            DiagnosticCaseStore result = new DiagnosticCaseStore(directory, (String) id);
+            for (Object item : (JSONArray) saved) {
+                if (!(item instanceof String)) { throw new IllegalArgumentException(); }
+                String serialized = (String) item;
+                JSONObject record = parseObject(serialized);
+                Object evidenceId = record.get("evidence_id");
+                if (!(evidenceId instanceof String) || !(record.get("arguments") instanceof JSONObject)
+                        || !(record.get("result") instanceof JSONObject) || !(record.get("tool") instanceof String)
+                        || !UUID.fromString((String) evidenceId).toString().equals(evidenceId)
+                        || result.records.containsKey(evidenceId)) {
+                    throw new IllegalArgumentException();
+                }
+                result.bytes += serialized.getBytes(StandardCharsets.UTF_8).length;
+                if (result.bytes > MAX_BYTES) { throw new IllegalArgumentException(); }
+                result.records.put((String) evidenceId, serialized);
+            }
+            return result;
+        } catch (RuntimeException e) {
+            throw new IOException("Cannot restore troubleshooting evidence.", e);
+        }
+    }
+
     static JSONObject definition() {
         JSONObject text = object("type", "string", "minLength", 1, "maxLength", 4000);
         return object("type", "function", "name", "export_diagnostic_case", "strict", false,

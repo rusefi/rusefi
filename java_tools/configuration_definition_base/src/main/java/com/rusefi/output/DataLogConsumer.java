@@ -31,6 +31,8 @@ public class DataLogConsumer implements ConfigurationConsumer {
     private final StringBuilder tsWriter = new StringBuilder();
     private final TreeSet<String> comments = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
     public String[] outputNames = new String[] {""};
+    // optional LiveData.yaml 'prefix_names', see getHumanGaugeName
+    public String[] prefixNames;
 
     public DataLogConsumer(String fileName, LazyFile.LazyFileFactory fileFactory) {
         this.fileName = fileName;
@@ -45,11 +47,12 @@ public class DataLogConsumer implements ConfigurationConsumer {
                 String temporaryLineComment = needComment(i) ? ";" : "";
 
                 String outputNamePrefix = outputNames.length > 1 ? outputNames[i] : "";
+                String humanNamePrefix = getPrefixName(prefixNames, i);
 
                 PerFieldWithStructuresIterator.Strategy strategy = new PerFieldWithStructuresIterator.Strategy() {
                     @Override
                     public String process(ReaderState state, ConfigField configField, String variableNamePrefixForEmptyComment, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator) {
-                        return handle(configField, variableNamePrefixForEmptyComment, temporaryLineComment, outputNamePrefix);
+                        return handle(configField, variableNamePrefixForEmptyComment, temporaryLineComment, outputNamePrefix, humanNamePrefix);
                     }
 
                     @Override
@@ -79,8 +82,9 @@ public class DataLogConsumer implements ConfigurationConsumer {
         }
     }
 
-    private String handle(ConfigField configField, String variableNamePrefixForEmptyComment, String temporaryLineComment, String outputNamePrefix) {
-        if (configField.getName().contains(UNUSED))
+    private String handle(ConfigField configField, String variableNamePrefixForEmptyComment, String temporaryLineComment, String outputNamePrefix, String humanNamePrefix) {
+        // alignment fill and unused fields are not logged, also keeps them away from the name length check
+        if (configField.isUnusedField())
             return "";
 
         if (configField.isArray()) {
@@ -98,7 +102,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
             typeString = "int,    \"%d\"";
         }
 
-        String comment = getHumanGaugeName(outputNamePrefix, variableNamePrefixForEmptyComment, configField, "");
+        String comment = getHumanGaugeName(outputNamePrefix, humanNamePrefix, variableNamePrefixForEmptyComment, configField, "");
 
         if (comments.contains(comment))
             throw new IllegalStateException(comment + " already present in the outputs! " + configField);
@@ -112,6 +116,16 @@ public class DataLogConsumer implements ConfigurationConsumer {
      */
     @NotNull
     public static String getHumanGaugeName(String outputNamePrefix, String variableNamePrefixForEmptyComment, ConfigField configField, String variableNameSuffix) {
+        return getHumanGaugeName(outputNamePrefix, "", variableNamePrefixForEmptyComment, configField, variableNameSuffix);
+    }
+
+    /**
+     * @param humanNamePrefix per-instance LiveData.yaml 'prefix_names' entry, empty if none. When present it replaces
+     *                        the technical outputNamePrefix and goes before the 'set_prefix' value:
+     *                        "WBO1 WBO: Heater duty", or "WBO1: Heater duty" without set_prefix
+     */
+    @NotNull
+    public static String getHumanGaugeName(String outputNamePrefix, String humanNamePrefix, String variableNamePrefixForEmptyComment, ConfigField configField, String variableNameSuffix) {
         String comment = configField.getCommentTemplated();
         comment = getFirstLine(comment);
 
@@ -120,6 +134,17 @@ public class DataLogConsumer implements ConfigurationConsumer {
              * @see ConfigFieldImpl#getCommentOrName()
              */
             comment = variableNamePrefixForEmptyComment + unquote(configField.getName());
+        }
+        String logNamePrefix = configField.getLogNamePrefix();
+        if (!logNamePrefix.isEmpty()) {
+            String fullPrefix = logNamePrefix + ": ";
+            // names coming from shared defines like @@GAUGE_NAME_IAC@@ may already carry the prefix
+            if (!comment.regionMatches(true, 0, fullPrefix, 0, fullPrefix.length()))
+                comment = fullPrefix + comment;
+        }
+        if (!humanNamePrefix.isEmpty()) {
+            comment = humanNamePrefix + (logNamePrefix.isEmpty() ? ": " : " ") + comment;
+            outputNamePrefix = "";
         }
         comment = outputNamePrefix + comment + variableNameSuffix;
         if (comment.length() > MSQ_LENGTH_LIMIT)
@@ -130,9 +155,15 @@ public class DataLogConsumer implements ConfigurationConsumer {
         return comment;
     }
 
+    @NotNull
+    public static String getPrefixName(String[] prefixNames, int index) {
+        return prefixNames == null ? "" : prefixNames[index];
+    }
+
     private static String getFirstLine(String comment) {
         String[] comments = comment == null ? new String[0] : unquote(comment).split("\\\\n");
-        comment = (comments.length > 0) ? comments[0] : "";
+        // a quoted define followed by more lines, like @@GAUGE_NAME_FUEL_BASE@@\nmore text, leaves quotes on the first line
+        comment = (comments.length > 0) ? unquote(comments[0]) : "";
         return comment;
     }
 

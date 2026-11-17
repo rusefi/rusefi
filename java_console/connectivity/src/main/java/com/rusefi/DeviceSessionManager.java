@@ -8,6 +8,7 @@ import com.rusefi.io.LinkManager;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Window-independent owner of the "one console, all device states" session [tag:better_ux_for_flashing].
@@ -35,11 +36,21 @@ public class DeviceSessionManager {
     public interface JobExecutor {
         boolean isNotInProgress();
 
+        /** Legacy executors have no preflight phase; reserving a modern executor need not mean flashing. */
+        default boolean isUpdating() {
+            return !isNotInProgress();
+        }
+
         void addOnJobAboutToStartListener(Runnable listener);
 
         void addOnJobWorkerAboutToStartListener(Runnable listener);
 
         void addOnJobInProgressFinishedListener(Runnable listener);
+
+        /** Legacy executors already release before their finished notifications. */
+        default void addOnJobReleasedListener(Runnable listener) {
+            addOnJobInProgressFinishedListener(listener);
+        }
     }
 
     private final ConnectivityContext connectivityContext;
@@ -95,24 +106,29 @@ public class DeviceSessionManager {
     public void setJobExecutor(final JobExecutor jobExecutor) {
         this.jobExecutor = jobExecutor;
         if (jobExecutor != null) {
-            // Jobs own serial-port transitions exclusively. Suspend the lifetime scanner rather than
-            // letting it probe while the live connection closes and USB re-enumerates.
+            final AtomicBoolean scannerSuspended = new AtomicBoolean();
+            // Reserve against competing connections immediately, but keep detection fresh during user
+            // preflight. Suspend scanning only when accepted work can close/reboot/program the device.
             jobExecutor.addOnJobAboutToStartListener(watchdogPause);
             jobExecutor.addOnJobWorkerAboutToStartListener(() -> {
                 try {
+                    scannerSuspended.set(true);
                     connectivityContext.getPortScanner().suspend().await(30, TimeUnit.SECONDS);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
             });
+            jobExecutor.addOnJobWorkerAboutToStartListener(this::refresh);
             jobExecutor.addOnJobAboutToStartListener(this::refresh);
             jobExecutor.addOnJobInProgressFinishedListener(() -> {
                 // RecurringStep.restart() is only valid after stop(). Resume the existing lifetime
                 // worker; its next scan runs within one normal scanner interval.
-                connectivityContext.getPortScanner().resume();
-                refresh();
+                if (scannerSuspended.getAndSet(false)) {
+                    connectivityContext.getPortScanner().resume();
+                }
                 watchdogResume.run();
             });
+            jobExecutor.addOnJobReleasedListener(this::refresh);
         }
         refresh();
     }
@@ -125,7 +141,7 @@ public class DeviceSessionManager {
     }
 
     private SessionState computeState() {
-        if (jobExecutor != null && !jobExecutor.isNotInProgress()) {
+        if (jobExecutor != null && jobExecutor.isUpdating()) {
             return SessionState.FLASHING;
         }
         final ConnectionStatusValue connectionValue = ConnectionStatusLogic.INSTANCE.getValue();

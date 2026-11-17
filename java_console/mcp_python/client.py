@@ -11,6 +11,10 @@ import time
 from typing import Any
 
 
+_GRACEFUL_SHUTDOWN_TIMEOUT_SECONDS = 10
+_TERMINATE_TIMEOUT_SECONDS = 5
+
+
 class McpClient:
     """Context-manager wrapper around a stdio JSON-RPC MCP server process.
 
@@ -65,10 +69,22 @@ class McpClient:
     def close(self):
         """Shut down the MCP server subprocess."""
         if self._proc is not None:
-            self._proc.stdin.close()
-            self._proc.terminate()
-            self._proc.wait(timeout=10)
-            self._proc = None
+            process = self._proc
+            try:
+                process.stdin.close()
+                try:
+                    process.wait(timeout=_GRACEFUL_SHUTDOWN_TIMEOUT_SECONDS)
+                except subprocess.TimeoutExpired:
+                    process.terminate()
+                    try:
+                        process.wait(timeout=_TERMINATE_TIMEOUT_SECONDS)
+                    except subprocess.TimeoutExpired:
+                        process.kill()
+                        process.wait()
+            finally:
+                if process.stdout is not None:
+                    process.stdout.close()
+                self._proc = None
 
     def __enter__(self) -> "McpClient":
         return self.start()

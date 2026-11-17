@@ -84,7 +84,7 @@ public final class FirmwareRollbackPanel extends JPanel {
         card.add(Box.createVerticalStrut(WizardStyle.LARGE_GAP));
 
         JButton cancelButton = new JButton("Cancel");
-        AbstractWizardStep.styleButton(cancelButton);
+        AbstractWizardStep.styleNegativeAction(cancelButton);
         cancelButton.addActionListener(e -> cancel.run());
 
         JPanel actions = new JPanel(new BorderLayout(WizardStyle.GAP, 0));

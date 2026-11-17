@@ -1,5 +1,8 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.rusefi.ui.PinoutLookup;
+import com.rusefi.ui.widgets.ConnectorIcon;
+import com.rusefi.ui.widgets.TuningIcons;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.field.EnumIniField;
@@ -8,20 +11,22 @@ import com.opensr5.ini.field.StringIniField;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.ContextHelpModel;
 import com.opensr5.ini.IniFileModel;
-import com.rusefi.core.ui.AutoupdateUtil;
 
 import javax.swing.*;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -39,13 +44,7 @@ public class CalibrationFieldFactory {
     static final int MAX_LABEL_WIDTH = 360;
     private static final int HELP_ICON_SIZE = 18;
     private static final int HELP_COLUMN_WIDTH = 24;
-    private static final int HELP_MAX_TEXT_WIDTH = 500;
-    private static final int HELP_PADDING = 8;
-    private static final int HELP_MAX_HEIGHT = 300;
-    private static final int HELP_LAYOUT_ALLOWANCE = 8;
-    private static final Color HELP_BACKGROUND = new Color(255, 255, 190);
     private static final Icon SETTING_HELP_ICON = loadHelpIcon();
-    private static JPopupMenu openHelpPopup;
     private static final Pattern URL_PATTERN = Pattern.compile("https?://[^\\s<>\"']+");
 
     private static class CalibrationTextField extends JTextField {
@@ -85,28 +84,31 @@ public class CalibrationFieldFactory {
         return createFieldRow(field, iniField, ci, workingImage, onChange, null);
     }
 
-    public static JPanel createFieldRow(DialogModel.Field field, IniField iniField, ConfigurationImage ci, ConfigurationImage workingImage, Runnable onChange, Consumer<String> onShowInPinout) {
+    public static JPanel createFieldRow(DialogModel.Field field, IniField iniField, ConfigurationImage ci, ConfigurationImage workingImage, Runnable onChange, PinoutLink onShowInPinout) {
         return createFieldRow(field, iniField, ci, workingImage, onChange, onShowInPinout, 0);
     }
 
     static JPanel createFieldRow(DialogModel.Field field, IniField iniField, ConfigurationImage ci,
                                  ConfigurationImage workingImage, Runnable onChange,
-                                 Consumer<String> onShowInPinout, int labelWidth) {
+                                 PinoutLink onShowInPinout, int labelWidth) {
         return createFieldRow(field, iniField, ci, workingImage, onChange, onShowInPinout, labelWidth, 0);
     }
 
     static JPanel createFieldRow(DialogModel.Field field, IniField iniField, ConfigurationImage ci,
                                  ConfigurationImage workingImage, Runnable onChange,
-                                 Consumer<String> onShowInPinout, int labelWidth, int fieldEditorWidth) {
+                                 PinoutLink onShowInPinout, int labelWidth, int fieldEditorWidth) {
         return createFieldRow(field, iniField, ci, workingImage, onChange, onShowInPinout,
             labelWidth, fieldEditorWidth, null);
     }
 
     static JPanel createFieldRow(DialogModel.Field field, IniField iniField, ConfigurationImage ci,
                                  ConfigurationImage workingImage, Runnable onChange,
-                                 Consumer<String> onShowInPinout, int labelWidth, int fieldEditorWidth,
+                                 PinoutLink onShowInPinout, int labelWidth, int fieldEditorWidth,
                                  String helpText) {
         JPanel row = createRowPanel();
+        // a row with help shows its help card; tooltips that only repeat the row would compete with it
+        helpText = SettingHelpCard.usefulHelp(helpText);
+        boolean hasHelp = helpText != null;
         row.add(Box.createHorizontalStrut(10));
         row.add(createHelpSlot(helpText));
 
@@ -117,7 +119,9 @@ public class CalibrationFieldFactory {
             if (labelText != null && label.getPreferredSize().width > labelWidth && !labelText.startsWith("<html>")) {
                 label.setText("<html><div style='width: " + (labelWidth - 4) + "px'>" +
                     escapeHtml(labelText) + "</div></html>");
-                label.setToolTipText(labelText);
+                if (!hasHelp) {
+                    label.setToolTipText(labelText);
+                }
             }
             Dimension size = label.getPreferredSize();
             size.width = labelWidth;
@@ -139,11 +143,11 @@ public class CalibrationFieldFactory {
                 row.add(checkBox);
                 value = () -> checkBox.isSelected() ? "enabled" : "disabled";
             } else {
-                JComboBox<String> comboBox = createComboBox(
-                    enumField, iniField, currentValue, workingImage, onChange, fieldEditorWidth);
+                JComboBox<Object> comboBox = createComboBox(
+                    enumField, iniField, currentValue, workingImage, onChange, fieldEditorWidth, !hasHelp);
                 row.add(comboBox);
                 value = () -> String.valueOf(comboBox.getSelectedItem());
-                JButton pinoutButton = createPinoutButton(comboBox, field.getKey(), onShowInPinout);
+                JButton pinoutButton = createPinoutButton(comboBox, field.getKey(), enumField, onShowInPinout);
                 if (pinoutButton != null) {
                     row.add(Box.createHorizontalStrut(4));
                     row.add(pinoutButton);
@@ -156,8 +160,51 @@ public class CalibrationFieldFactory {
             row.add(textField);
             value = textField::getText;
         }
-        installCopyListener(label, labelText, value);
+        installCopyListener(label, labelText, value, !hasHelp);
+        fixRowHeight(row);
+        String description = SettingHelpCard.isShowDescriptions() ? SettingHelpCard.descriptionWithHint(helpText) : null;
+        if (description != null) {
+            row = withDescription(row, description);
+        }
+        SettingHelpCard.attach(row, labelText, iniField.getUnits(), helpText);
+        return row;
+    }
 
+    /**
+     * The row with its description on a second line, under the name ("Descriptions" on the Tuning
+     * toolbar). The text wraps within the width of the setting line above it, so descriptions never
+     * make a dialog wider. It stays one panel, so a hidden or disabled setting hides or greys its
+     * description too.
+     */
+    private static JPanel withDescription(JPanel line, String text) {
+        int indent = 10 + HELP_COLUMN_WIDTH;
+        int width = Math.max(120, line.getPreferredSize().width - indent);
+        JTextArea description = new JTextArea(text);
+        description.setName("settingDescription");
+        description.setLineWrap(true);
+        description.setWrapStyleWord(true);
+        description.setEditable(false);
+        description.setFocusable(false);
+        description.setHighlighter(null);
+        description.setOpaque(false);
+        description.setFont(UIManager.getFont("Label.font"));
+        Color muted = TuningStyle.color("Console.Tuning.mutedForeground", Color.GRAY);
+        description.setForeground(muted);
+        description.setDisabledTextColor(UIManager.getColor("Label.disabledForeground"));
+        description.setBorder(BorderFactory.createEmptyBorder(0, indent, 4, 0));
+        // measure the wrapped height at the line's width
+        description.setSize(new Dimension(width + indent, Short.MAX_VALUE));
+        Dimension size = new Dimension(width + indent, description.getPreferredSize().height);
+        description.setPreferredSize(size);
+        description.setMaximumSize(size);
+        description.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JPanel row = new JPanel();
+        row.setLayout(new BoxLayout(row, BoxLayout.Y_AXIS));
+        row.setAlignmentX(Component.LEFT_ALIGNMENT);
+        line.setAlignmentX(Component.LEFT_ALIGNMENT);
+        row.add(line);
+        row.add(description);
         fixRowHeight(row);
         return row;
     }
@@ -165,6 +212,8 @@ public class CalibrationFieldFactory {
     private static JComponent createHelpSlot(String helpText) {
         JPanel slot = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         slot.setName("settingHelpSlot");
+        // shows the row's background, including a FieldHighlight tint
+        slot.setOpaque(false);
         Dimension slotSize = new Dimension(HELP_COLUMN_WIDTH, HELP_ICON_SIZE);
         slot.setMinimumSize(slotSize);
         slot.setPreferredSize(slotSize);
@@ -176,7 +225,6 @@ public class CalibrationFieldFactory {
 
         JButton button = new JButton(SETTING_HELP_ICON);
         button.setName("settingHelpButton");
-        button.setToolTipText(formatHelpHtml(helpText));
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
         button.setFocusPainted(false);
@@ -184,13 +232,13 @@ public class CalibrationFieldFactory {
         button.setPreferredSize(new Dimension(HELP_ICON_SIZE, HELP_ICON_SIZE));
         button.setMaximumSize(button.getPreferredSize());
         button.getAccessibleContext().setAccessibleName("Setting help");
-        button.addActionListener(event -> showHelpPopup(button, helpText));
+        button.addActionListener(event -> SettingHelpCard.showExpanded(button));
         slot.add(button);
         return slot;
     }
 
     private static Icon loadHelpIcon() {
-        ImageIcon source = AutoupdateUtil.loadIcon("icons/tuning/help48.png");
+        ImageIcon source = TuningIcons.load("help");
         return source == null ? null : new ImageIcon(
             source.getImage().getScaledInstance(HELP_ICON_SIZE, HELP_ICON_SIZE, Image.SCALE_SMOOTH));
     }
@@ -201,132 +249,49 @@ public class CalibrationFieldFactory {
         }
         reference = reference.trim();
         ContextHelpModel help = ini.getContextHelp(reference);
-        String html;
+        SettingHelpCard.Help card;
         if (help != null) {
-            html = "<html>" + help.toHtml() + "</html>";
+            card = new SettingHelpCard.Help(help.getTitle(), "", topicText(help.getTextLines()), help.getWebHelp());
         } else if (reference.startsWith("https://") || reference.startsWith("http://")) {
-            html = formatHelpHtml(reference);
+            card = new SettingHelpCard.Help("Help", "", "", reference);
         } else {
             return null;
         }
         JButton button = new JButton("Help", SETTING_HELP_ICON);
         button.setName("topicHelpButton");
-        button.setToolTipText(html);
+        button.setToolTipText("Help for this page");
         button.getAccessibleContext().setAccessibleName(help == null ? "Topic help" : help.getTitle());
-        button.addActionListener(event -> showHtmlHelpPopup(button, html));
+        button.putClientProperty(SettingHelpCard.TOPIC_KEY, card);
+        button.addActionListener(event -> SettingHelpCard.showTopic(button, card));
         return button;
     }
 
-    private static void showHelpPopup(JButton owner, String helpText) {
-        showHtmlHelpPopup(owner, formatHelpHtml(helpText));
+    /** INI topic help lines may use simple HTML such as {@code <br>}; the card shows plain text. */
+    static String topicText(List<String> lines) {
+        return String.join("\n", lines)
+            .replaceAll("(?i)<br\\s*/?>|</p>", "\n")
+            .replaceAll("<[^>]*>", "")
+            .replace("&nbsp;", " ").replace("&lt;", "<").replace("&gt;", ">")
+            .replace("&quot;", "\"").replace("&#39;", "'").replace("&amp;", "&")
+            .trim();
     }
 
-    private static void showHtmlHelpPopup(JButton owner, String html) {
-        closeHelpPopup();
-        if (!owner.isShowing()) {
-            return;
+    static void openHelpLink(HyperlinkEvent event) {
+        if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED && event.getURL() != null) {
+            openUrl(event.getURL().toString());
         }
-
-        JScrollPane scrollPane = createHtmlHelpScrollPane(html);
-
-        JPanel content = new JPanel(new BorderLayout(4, 4));
-        content.setBackground(HELP_BACKGROUND);
-        content.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(60, 90, 160), 2),
-            BorderFactory.createEmptyBorder(6, 8, 8, 8)));
-        JButton close = new JButton("×");
-        close.setToolTipText("Close help");
-        close.setMargin(new Insets(0, 5, 0, 5));
-        JPanel closeRow = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
-        closeRow.setOpaque(false);
-        closeRow.add(close);
-        content.add(closeRow, BorderLayout.NORTH);
-        content.add(scrollPane, BorderLayout.CENTER);
-
-        JPopupMenu popup = new JPopupMenu();
-        popup.setBorder(BorderFactory.createEmptyBorder());
-        popup.add(content);
-        popup.addPopupMenuListener(new PopupMenuListener() {
-            @Override
-            public void popupMenuWillBecomeVisible(PopupMenuEvent event) {
-            }
-
-            @Override
-            public void popupMenuWillBecomeInvisible(PopupMenuEvent event) {
-                if (openHelpPopup == popup) {
-                    openHelpPopup = null;
-                }
-            }
-
-            @Override
-            public void popupMenuCanceled(PopupMenuEvent event) {
-                if (openHelpPopup == popup) {
-                    openHelpPopup = null;
-                }
-            }
-        });
-        close.addActionListener(event -> popup.setVisible(false));
-        openHelpPopup = popup;
-        popup.show(owner, 0, owner.getHeight());
     }
 
-    static JScrollPane createHelpScrollPane(String helpText) {
-        return createHtmlHelpScrollPane(formatHelpHtml(helpText));
-    }
-
-    static JScrollPane createHtmlHelpScrollPane(String html) {
-        JEditorPane helpPane = new JEditorPane("text/html", html);
-        helpPane.setEditable(false);
-        helpPane.setOpaque(true);
-        helpPane.setBackground(HELP_BACKGROUND);
-        helpPane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
-        helpPane.addHyperlinkListener(event -> {
-            if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED && event.getURL() != null) {
-                try {
-                    Desktop.getDesktop().browse(event.getURL().toURI());
-                } catch (Exception ignored) {
-                    // Help remains useful even when the desktop cannot open links.
-                }
-            }
-        });
-        helpPane.setBorder(BorderFactory.createEmptyBorder(
-            HELP_PADDING, HELP_PADDING, HELP_PADDING, HELP_PADDING));
-        helpPane.setCaretPosition(0);
-        Dimension naturalSize = helpPane.getPreferredSize();
-        int maxPaddedWidth = HELP_MAX_TEXT_WIDTH + HELP_PADDING * 2;
-        int viewportWidth = Math.min(naturalSize.width, maxPaddedWidth);
-        // Re-measure after constraining the width: the HTML renderer may wrap a long line into
-        // several rows, making its laid-out height larger than its unconstrained natural height.
-        helpPane.setSize(new Dimension(viewportWidth, Short.MAX_VALUE));
-        Dimension laidOutSize = helpPane.getPreferredSize();
-        int viewportHeight = Math.min(laidOutSize.height, HELP_MAX_HEIGHT);
-        boolean needsHorizontalScroll = naturalSize.width > viewportWidth;
-        boolean needsVerticalScroll = laidOutSize.height > viewportHeight;
-
-        JScrollPane scrollPane = new JScrollPane(helpPane);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder());
-        scrollPane.setHorizontalScrollBarPolicy(needsHorizontalScroll
-            ? ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
-            : ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setVerticalScrollBarPolicy(needsVerticalScroll
-            ? ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED
-            : ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        scrollPane.getViewport().setBackground(HELP_BACKGROUND);
-        int preferredWidth = viewportWidth + (needsVerticalScroll
-            ? scrollPane.getVerticalScrollBar().getPreferredSize().width : 0);
-        int preferredHeight = viewportHeight + (needsHorizontalScroll
-            ? scrollPane.getHorizontalScrollBar().getPreferredSize().height : 0)
-            + HELP_LAYOUT_ALLOWANCE;
-        scrollPane.setPreferredSize(new Dimension(preferredWidth, preferredHeight));
-        return scrollPane;
+    static void openUrl(String url) {
+        try {
+            Desktop.getDesktop().browse(new URI(url));
+        } catch (Exception ignored) {
+            // Help remains useful even when the desktop cannot open links.
+        }
     }
 
     static void closeHelpPopup() {
-        if (openHelpPopup != null) {
-            JPopupMenu popup = openHelpPopup;
-            openHelpPopup = null;
-            popup.setVisible(false);
-        }
+        SettingHelpCard.hideCard();
     }
 
     static String formatHelpHtml(String helpText) {
@@ -415,16 +380,37 @@ public class CalibrationFieldFactory {
         return checkBox;
     }
 
-    private static JComboBox<String> createComboBox(EnumIniField enumField, IniField iniField, String currentValue,
+    private static JComboBox<Object> createComboBox(EnumIniField enumField, IniField iniField, String currentValue,
                                                      ConfigurationImage workingImage, Runnable onChange,
-                                                     int fieldEditorWidth) {
+                                                     int fieldEditorWidth, boolean valueTooltip) {
+        boolean unknownCurrentValue = !EnumIniField.isQuoted(currentValue)
+            && EnumIniField.isUnknownOrdinalValue(currentValue);
         String cleanValue = currentValue.replace("\"", "");
-        String[] comboValues = getComboValues(enumField);
-        JComboBox<String> comboBox = new JComboBox<>(comboValues);
+        List<Object> comboValues = new ArrayList<>(Arrays.asList(getComboValues(enumField)));
+        UnknownPinChoice unknownChoice = unknownCurrentValue
+            ? new UnknownPinChoice(EnumIniField.parseUnknownOrdinal(cleanValue))
+            : null;
+        if (unknownChoice != null) {
+            comboValues.add(unknownChoice);
+        }
+        JComboBox<Object> comboBox = new JComboBox<>(comboValues.toArray());
         applyStyle(comboBox);
-        comboBox.setSelectedItem(cleanValue);
-        comboBox.setToolTipText(cleanValue);
-        applyBackgroundColor(comboBox, cleanValue);
+        comboBox.setSelectedItem(unknownChoice == null ? cleanValue : unknownChoice);
+        UnknownPinChoice[] currentUnknownChoice = {unknownChoice};
+        String[] lastKnownValue = {unknownChoice == null ? cleanValue : null};
+        boolean[] restoringSelection = {false};
+        comboBox.setRenderer((list, value, index, isSelected, cellHasFocus) -> {
+            JLabel label = (JLabel) new DefaultListCellRenderer()
+                .getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            if (value instanceof UnknownPinChoice) {
+                label.setText(value.toString());
+            }
+            return label;
+        });
+        if (valueTooltip) {
+            comboBox.setToolTipText(unknownChoice == null ? cleanValue : unknownChoice.toString());
+        }
+        applyBackgroundColor(comboBox, unknownChoice == null ? cleanValue : unknownChoice.toString());
         Dimension size = comboBox.getPreferredSize();
         size.width = fieldEditorWidth > 0
             ? Math.min(fieldEditorWidth, MAX_FIELD_EDITOR_WIDTH)
@@ -433,15 +419,47 @@ public class CalibrationFieldFactory {
         comboBox.setPreferredSize(size);
         comboBox.setMaximumSize(size);
         comboBox.addActionListener(e -> {
+            if (restoringSelection[0]) return;
             if (workingImage == null) return;
-            String selected = (String) comboBox.getSelectedItem();
-            if (selected != null) {
-                comboBox.setToolTipText(selected);
-                ConfigurationImageGetterSetter.setValue2(iniField, workingImage, iniField.getName(), selected);
+            Object selectedItem = comboBox.getSelectedItem();
+            if (selectedItem instanceof UnknownPinChoice) {
+                if (selectedItem == currentUnknownChoice[0]) return;
+                if (lastKnownValue[0] != null) {
+                    restoringSelection[0] = true;
+                    comboBox.setSelectedItem(lastKnownValue[0]);
+                    restoringSelection[0] = false;
+                }
+                return;
+            }
+            if (selectedItem instanceof String) {
+                String selected = (String) selectedItem;
+                if (valueTooltip) {
+                    comboBox.setToolTipText(selected);
+                }
+                ConfigurationImageGetterSetter.setValue2(iniField, workingImage, iniField.getName(),
+                    enumField.isPinEnum() ? javax.management.ObjectName.quote(selected) : selected);
+                lastKnownValue[0] = selected;
+                if (currentUnknownChoice[0] != null) {
+                    comboBox.removeItem(currentUnknownChoice[0]);
+                    currentUnknownChoice[0] = null;
+                }
                 if (onChange != null) onChange.run();
             }
         });
         return comboBox;
+    }
+
+    private static final class UnknownPinChoice {
+        private final int ordinal;
+
+        private UnknownPinChoice(int ordinal) {
+            this.ordinal = ordinal;
+        }
+
+        @Override
+        public String toString() {
+            return "Unknown pin (ID " + ordinal + ")";
+        }
     }
 
     static int getFieldEditorPreferredWidth(IniField iniField, String currentValue) {
@@ -461,32 +479,57 @@ public class CalibrationFieldFactory {
     }
 
     private static String[] getComboValues(EnumIniField enumField) {
-        return enumField.getEnums().values().stream()
+        return enumField.getDisplayValues().stream()
             .filter(value -> !value.contains("INVALID"))
             .toArray(String[]::new);
     }
 
+    static final String SHOW_ON_CONNECTOR = "Show on connector";
+    /** Written beside the connector icon: an icon alone did not read as a connector. */
+    static final String PINOUT_BUTTON_TEXT = "Pinout";
+
+    /** Tooltip of the connector button: names the chosen pin, or says that none is chosen. */
+    static String pinoutButtonToolTip(String pin) {
+        return pin == null ? "Choose a pin to show it on its connector"
+            : "Show " + pin + " on its connector (opens Pinout)";
+    }
+
     /**
-     * For pin-enum fields (name matches .*pins?\d*), adds a button that fires the
-     * current combo value up to the caller for cross-tab navigation.
+     * For pin selectors ({@link PinoutLookup#isPinSetting}, analog inputs included), adds a connector button
+     * that fires the current combo value up to the caller for cross-tab navigation.
      */
-    private static JButton createPinoutButton(JComboBox<String> comboBox, String fieldKey, Consumer<String> onShowInPinout) {
+    private static JButton createPinoutButton(JComboBox<?> comboBox, String fieldKey, EnumIniField field,
+                                              PinoutLink onShowInPinout) {
         if (onShowInPinout == null || fieldKey == null) {
             return null;
         }
-        if (!fieldKey.toLowerCase().matches(".*pins?\\d*")) {
+        if (!PinoutLookup.isPinSetting(fieldKey, field)) {
             return null;
         }
 
-        JButton button = new JButton("W") {
+        JButton button = new JButton(PINOUT_BUTTON_TEXT, new ConnectorIcon()) {
             @Override
             public void setEnabled(boolean enabled) {
-                super.setEnabled(enabled && getSelectedPin(comboBox) != null);
+                String pin = getSelectedPin(comboBox);
+                super.setEnabled(enabled && pin != null);
+                setToolTipText(pinoutButtonToolTip(pin));
+            }
+
+            /** As tall as the drop-down beside it, so the row reads as one control. */
+            @Override
+            public Dimension getPreferredSize() {
+                Dimension size = super.getPreferredSize();
+                return new Dimension(size.width, Math.max(size.height, comboBox.getPreferredSize().height));
+            }
+
+            @Override
+            public Dimension getMaximumSize() {
+                return getPreferredSize();
             }
         };
-        button.setToolTipText("Wiring/Pinout");
-        button.setMargin(new Insets(0, 6, 0, 6));
-        button.setMaximumSize(button.getPreferredSize());
+        button.getAccessibleContext().setAccessibleName(SHOW_ON_CONNECTOR);
+        button.setIconTextGap(6);
+        button.setMargin(new Insets(0, 6, 0, 8));
         button.setEnabled(comboBox.isEnabled());
         comboBox.addActionListener(e -> button.setEnabled(comboBox.isEnabled()));
         button.addActionListener(e -> {
@@ -494,19 +537,20 @@ public class CalibrationFieldFactory {
             if (value == null) {
                 return;
             }
-            onShowInPinout.accept(value);
+            onShowInPinout.show(value);
+        });
+        HoverPreview.install(button, () -> {
+            String pin = getSelectedPin(comboBox);
+            return pin == null ? null : onShowInPinout.preview(pin);
         });
         return button;
     }
 
-    private static String getSelectedPin(JComboBox<String> comboBox) {
-        Object selected = comboBox.getSelectedItem();
-        if (selected == null) {
+    private static String getSelectedPin(JComboBox<?> comboBox) {
+        if (comboBox.getSelectedItem() instanceof UnknownPinChoice) {
             return null;
         }
-        String value = selected.toString().replace("\"", "").trim();
-        return value.isEmpty() || "NONE".equalsIgnoreCase(value) || "INVALID".equalsIgnoreCase(value)
-            ? null : value;
+        return PinoutLookup.pinChoice(comboBox.getSelectedItem());
     }
 
     private static JTextField createTextField(IniField iniField, String currentValue,
@@ -552,9 +596,40 @@ public class CalibrationFieldFactory {
         int columns = iniField instanceof StringIniField
             ? Math.min(((StringIniField) iniField).getSize(), 32) : 0;
         CalibrationTextField textField = new CalibrationTextField(currentValue, columns);
+        if (iniField instanceof StringIniField) {
+            ((AbstractDocument) textField.getDocument()).setDocumentFilter(
+                new StringLengthFilter(((StringIniField) iniField).getSize()));
+        }
         applyStyle(textField);
         applyBackgroundColor(textField, currentValue);
         return textField;
+    }
+
+    private static final class StringLengthFilter extends DocumentFilter {
+        private final int maximumLength;
+
+        private StringLengthFilter(int maximumLength) {
+            this.maximumLength = maximumLength;
+        }
+
+        @Override
+        public void insertString(FilterBypass bypass, int offset, String text, AttributeSet attributes)
+                throws BadLocationException {
+            replace(bypass, offset, 0, text, attributes);
+        }
+
+        @Override
+        public void replace(FilterBypass bypass, int offset, int length, String text, AttributeSet attributes)
+                throws BadLocationException {
+            String inserted = text == null ? "" : text;
+            int available = maximumLength - (bypass.getDocument().getLength() - length);
+            if (available <= 0) {
+                inserted = "";
+            } else if (inserted.length() > available) {
+                inserted = inserted.substring(0, available);
+            }
+            bypass.replace(offset, length, inserted, attributes);
+        }
     }
 
     private static JPanel createRowPanel() {
@@ -568,8 +643,9 @@ public class CalibrationFieldFactory {
         return label + ": " + value;
     }
 
-    private static void installCopyListener(JLabel label, String labelText, Supplier<String> value) {
-        if (label.getToolTipText() == null) {
+    private static void installCopyListener(JLabel label, String labelText, Supplier<String> value,
+                                            boolean copyTooltip) {
+        if (copyTooltip && label.getToolTipText() == null) {
             label.setToolTipText("Double-click to copy");
         }
         label.addMouseListener(new MouseAdapter() {
@@ -594,10 +670,11 @@ public class CalibrationFieldFactory {
         JLabel message = new JLabel("Copied: " + copied);
         message.setOpaque(true);
         message.setBorder(BorderFactory.createCompoundBorder(
+            // [tag:fixed_color] a dark toast with white text reads the same in every theme
             BorderFactory.createLineBorder(Color.DARK_GRAY),
             BorderFactory.createEmptyBorder(4, 8, 4, 8)));
-        message.setBackground(Color.DARK_GRAY);
-        message.setForeground(Color.WHITE);
+        message.setBackground(Color.DARK_GRAY); // [tag:fixed_color] the dark toast
+        message.setForeground(Color.WHITE); // [tag:fixed_color] text on the dark toast
         Point location = label.getLocationOnScreen();
         Popup popup = PopupFactory.getSharedInstance().getPopup(label, message, location.x, location.y + label.getHeight());
         popup.show();
@@ -608,6 +685,11 @@ public class CalibrationFieldFactory {
 
     static void fixRowHeight(JPanel row) {
         row.setMaximumSize(new Dimension(Integer.MAX_VALUE, row.getPreferredSize().height + 5));
+    }
+
+    /** Background of the setting help popup [tag:console_theme]. */
+    static Color helpBackground() {
+        return TuningStyle.color("Console.Tuning.help.background", Color.WHITE);
     }
 
     public static void applyStyle(JComponent component) {
@@ -630,11 +712,11 @@ public class CalibrationFieldFactory {
 
     static void applyBackgroundColor(JComponent component, String value) {
         if (value.startsWith(BLUE_PREFIX)) {
-            component.setBackground(Color.BLUE);
-            component.setForeground(Color.WHITE);
+            component.setBackground(Color.BLUE); // [tag:fixed_color] INI '#' label markup asks for blue
+            component.setForeground(Color.WHITE); // [tag:fixed_color] text on the INI colour
         } else if (value.startsWith(RED_PREFIX)) {
-            component.setBackground(Color.RED);
-            component.setForeground(Color.WHITE);
+            component.setBackground(Color.RED); // [tag:fixed_color] INI '!' label markup asks for red
+            component.setForeground(Color.WHITE); // [tag:fixed_color] text on the INI colour
         }
     }
 

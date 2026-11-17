@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -115,7 +116,7 @@ public interface ISensorHolder {
             if (!snapshot.isRangeValid(field.getOffset(), field.getSize())) {
                 return null;
             }
-            Double value = readFieldValue(response, channel, field);
+            Double value = readFieldValue(response, channel, field, ini.getByteOrder());
             if (value != null) {
                 context.put(channel, value);
                 setValue(value, channel);
@@ -173,7 +174,7 @@ public interface ISensorHolder {
     static Double tryReadOutputChannel(byte[] response, String label, IniFileModel ini, String channelName) {
         try {
             IniField field = ini.getOutputChannel(channelName);
-            return readFieldValue(response, label, field);
+            return readFieldValue(response, label, field, ini.getByteOrder());
         } catch (IniMemberNotFound e) {
             return null;
         } catch (IllegalArgumentException e) {
@@ -189,7 +190,7 @@ public interface ISensorHolder {
         if (field == null || !snapshot.isRangeValid(field.getOffset(), field.getSize())) {
             return null;
         }
-        return readFieldValue(response, label, field);
+        return readFieldValue(response, label, field, ini.getByteOrder());
     }
 
     /**
@@ -257,11 +258,17 @@ public interface ISensorHolder {
      */
     @Nullable
     static Double readFieldValue(byte[] response, String label, IniField field) {
-        ByteBuffer bb = getByteBuffer(response, label, field.getOffset(), field.getSize());
+        return readFieldValue(response, label, field, ByteOrder.LITTLE_ENDIAN);
+    }
+
+    @Nullable
+    static Double readFieldValue(byte[] response, String label, IniField field, ByteOrder order) {
+        ByteBuffer bb = getByteBuffer(response, label, field.getOffset(), field.getSize(), order);
         if (field instanceof ScalarIniField) {
             ScalarIniField scalarField = (ScalarIniField) field;
             double rawValue = scalarField.getType().readRawValue(bb);
-            return rawValue * scalarField.getMultiplier();
+            // TunerStudio: userValue = (raw + translate) * scale
+            return (rawValue + scalarField.getSerializationOffset()) * scalarField.getMultiplier();
         } else if (field instanceof EnumIniField) {
             EnumIniField enumField = (EnumIniField) field;
             int rawValue = (int) enumField.getType().readRawValue(bb);
@@ -283,6 +290,10 @@ public interface ISensorHolder {
     }
 
     static @NotNull ByteBuffer getByteBuffer(byte[] response, String message, int fieldOffset, int size) {
+        return getByteBuffer(response, message, fieldOffset, size, ByteOrder.LITTLE_ENDIAN);
+    }
+
+    static @NotNull ByteBuffer getByteBuffer(byte[] response, String message, int fieldOffset, int size, ByteOrder order) {
         int offset = fieldOffset + 1; // first byte is response code
         // Use the field's actual storage size (1/2/4 bytes) rather than assuming 4: a 1- or 2-byte
         // channel at the very end of the output block would otherwise fail this bounds check and read as null.
@@ -296,6 +307,8 @@ public interface ISensorHolder {
             bb = littleEndianWrap(response, 0, response.length);
             holder[0] = bb;
         }
+        // the cached buffer may have been wrapped for a different-endian connection
+        bb.order(order);
         bb.limit(offset + size);
         bb.position(offset);
         return bb;
@@ -333,8 +346,10 @@ public interface ISensorHolder {
 
             if (resolvedTitle != null || resolvedUnits != null) {
                 result.put(e.getKey(), new ResolvedGaugeLabels(
-                    resolvedTitle != null ? resolvedTitle : gauge.getTitle(),
-                    resolvedUnits != null ? resolvedUnits : gauge.getUnits()
+                    TsStringFunction.containsStringFunction(gauge.getTitle())
+                        ? (resolvedTitle != null ? resolvedTitle : "") : gauge.getTitle(),
+                    TsStringFunction.containsStringFunction(gauge.getUnits())
+                        ? (resolvedUnits != null ? resolvedUnits : "") : gauge.getUnits()
                 ));
             }
         }

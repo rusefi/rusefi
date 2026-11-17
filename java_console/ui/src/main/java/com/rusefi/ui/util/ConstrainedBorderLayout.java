@@ -1,5 +1,6 @@
 package com.rusefi.ui.util;
 
+import javax.swing.JComponent;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
@@ -12,10 +13,25 @@ import java.util.List;
  * A {@link BorderLayout} that shrinks its horizontal regions when their preferred widths do not
  * fit. Standard BorderLayout always gives West and East their preferred widths, which can make
  * them overlap in a viewport that tracks its parent's width.
+ * <p>
+ * When there is spare width and a West/Center/East child is marked {@link #GROWS}, the spare
+ * width goes to the marked children (up to their maximum widths) instead of only to Center, so
+ * e.g. a West gauge panel can use the space a wide window offers. Center still takes what is left.
  */
 public class ConstrainedBorderLayout extends BorderLayout {
+    /**
+     * Client property ({@code Boolean.TRUE}) for a panel that should take spare width, such as one
+     * holding gauges that scale with their width.
+     */
+    public static final String GROWS = "rusefi.growsWithSpace";
+
     public ConstrainedBorderLayout(int hgap, int vgap) {
         super(hgap, vgap);
+    }
+
+    public static boolean grows(Component component) {
+        return component instanceof JComponent
+            && Boolean.TRUE.equals(((JComponent) component).getClientProperty(GROWS));
     }
 
     @Override
@@ -36,6 +52,7 @@ public class ConstrainedBorderLayout extends BorderLayout {
                 .mapToLong(size -> Math.max(0, size.width))
                 .sum();
             if (preferredWidth <= availableWidth) {
+                growIntoSpareWidth(target, horizontal, availableWidth - (int) preferredWidth);
                 return;
             }
 
@@ -47,6 +64,51 @@ public class ConstrainedBorderLayout extends BorderLayout {
                 component.setBounds(x, reference.getY(), widths[i], reference.getHeight());
                 x += widths[i] + getHgap();
             }
+        }
+    }
+
+    private void growIntoSpareWidth(Container target, List<Component> horizontal, int spare) {
+        int count = horizontal.size();
+        int[] capacities = new int[count];
+        boolean anyGrows = false;
+        for (int i = 0; i < count; i++) {
+            Component component = horizontal.get(i);
+            if (grows(component)) {
+                anyGrows = true;
+                int room = component.getMaximumSize().width - component.getPreferredSize().width;
+                // Capping at the spare width shares it evenly between unbounded panels.
+                capacities[i] = Math.max(0, Math.min(room, spare));
+            }
+        }
+        if (!anyGrows || spare <= 0) {
+            return;
+        }
+        long capacityTotal = 0;
+        for (int capacity : capacities) {
+            capacityTotal += capacity;
+        }
+        int[] growth = allocateProportionally(capacities, (int) Math.min(spare, capacityTotal));
+
+        Component center = getLayoutComponent(CENTER);
+        Component east = getLayoutComponent(EAST);
+        int[] widths = new int[count];
+        int leftover = spare;
+        for (int i = 0; i < count; i++) {
+            widths[i] = Math.max(0, horizontal.get(i).getPreferredSize().width) + growth[i];
+            leftover -= growth[i];
+        }
+        Insets insets = target.getInsets();
+        Component reference = horizontal.get(0);
+        int x = insets.left;
+        for (int i = 0; i < count; i++) {
+            Component component = horizontal.get(i);
+            int width = widths[i] + (component == center ? leftover : 0);
+            if (component == east) {
+                // Like BorderLayout, East stays at the right edge; without Center the rest is a gap.
+                x = target.getWidth() - insets.right - width;
+            }
+            component.setBounds(x, reference.getY(), width, reference.getHeight());
+            x += width + getHgap();
         }
     }
 

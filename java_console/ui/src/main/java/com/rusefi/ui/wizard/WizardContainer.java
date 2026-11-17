@@ -10,6 +10,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.ui.UIContext;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -33,8 +34,12 @@ public class WizardContainer extends JPanel {
     private final JPanel stepContentPanel = new JPanel(new CardLayout());
     private final JButton cancelButton = new JButton("Exit Wizard");
     private final JButton dontShowAgainButton = new JButton("Don't Show Again");
-    private final JPanel exitPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, WizardStyle.GAP, 0));
-    private final JPanel footerPanel = new JPanel(new BorderLayout());
+    private final JPanel exitPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, WizardStyle.GAP / 2, 0));
+    /** Right side of the footer: the shown step's Skip and Continue buttons, the same place on every step. */
+    private final JPanel navigationPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, WizardStyle.GAP / 2, 0));
+    private final JLabel footerHint = new JLabel();
+    private final JButton returnToConsoleButton = new JButton("Return to Console");
+    private final JPanel footerPanel = new JPanel(new BorderLayout(WizardStyle.GAP, 0));
     private final List<WizardStep> steps = new ArrayList<>();
     private final List<Integer> visibleCatalogIndices = new ArrayList<>();
 
@@ -69,19 +74,29 @@ public class WizardContainer extends JPanel {
         this.uiContext = uiContext;
 
         JPanel headerPanel = new JPanel(new BorderLayout());
-        headerPanel.setBorder(BorderFactory.createEmptyBorder(
-            compact ? WizardStyle.GAP : WizardStyle.LARGE_GAP,
-            WizardStyle.LARGE_GAP,
-            WizardStyle.GAP,
-            WizardStyle.LARGE_GAP));
+        headerPanel.setBackground(WizardStyle.barBackground());
+        headerPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(0, 0, 1, 0, WizardStyle.separator()),
+            BorderFactory.createEmptyBorder(
+                compact ? WizardStyle.GAP : WizardStyle.LARGE_GAP,
+                WizardStyle.LARGE_GAP,
+                WizardStyle.GAP / 2,
+                WizardStyle.LARGE_GAP)));
         wizardTitle.setFont(wizardTitle.getFont().deriveFont(Font.BOLD, compact ? 16f : 20f));
-        wizardTitle.setBorder(BorderFactory.createEmptyBorder(0, 0, WizardStyle.GAP / 2, 0));
-        headerPanel.add(wizardTitle, BorderLayout.NORTH);
+        wizardTitle.setForeground(WizardStyle.text());
+        // title on the left and the way out at the top right, where people look to leave a full-window flow
+        JPanel titleRow = new JPanel(new BorderLayout());
+        titleRow.setOpaque(false);
+        titleRow.setBorder(BorderFactory.createEmptyBorder(0, 0, WizardStyle.GAP / 2, 0));
+        titleRow.add(wizardTitle, BorderLayout.WEST);
+        titleRow.add(exitPanel, BorderLayout.EAST);
+        headerPanel.add(titleRow, BorderLayout.NORTH);
         headerPanel.add(progressPanel, BorderLayout.CENTER);
 
-        AbstractWizardStep.stylePrimaryAction(cancelButton);
+        AbstractWizardStep.styleFooterAction(cancelButton);
+        cancelButton.setIcon(WizardStyle.ActionIcon.CANCEL);
         cancelButton.addActionListener(e -> exitWizard());
-        AbstractWizardStep.stylePrimaryAction(dontShowAgainButton);
+        AbstractWizardStep.styleFooterAction(dontShowAgainButton);
         dontShowAgainButton.setVisible(false);
         dontShowAgainButton.addActionListener(e -> {
             if (onDontShowAgain != null) {
@@ -89,10 +104,15 @@ public class WizardContainer extends JPanel {
             }
             exitWizard();
         });
-        exitPanel.setBorder(BorderFactory.createEmptyBorder(
-            WizardStyle.GAP, WizardStyle.LARGE_GAP, WizardStyle.LARGE_GAP, WizardStyle.LARGE_GAP));
-        exitPanel.add(cancelButton);
+        exitPanel.setOpaque(false);
         exitPanel.add(dontShowAgainButton);
+        exitPanel.add(cancelButton);
+        navigationPanel.setOpaque(false);
+        footerHint.setForeground(WizardStyle.muted());
+        footerHint.setHorizontalAlignment(SwingConstants.RIGHT);
+        AbstractWizardStep.styleContinueAction(returnToConsoleButton);
+        returnToConsoleButton.setText("Return to Console");
+        returnToConsoleButton.addActionListener(e -> exitWizard());
         progressPanel.setOnCompletedSelected(this::showStep);
 
         add(headerPanel, BorderLayout.NORTH);
@@ -103,17 +123,20 @@ public class WizardContainer extends JPanel {
         // Debug panel at the bottom showing wizard flag states
         buildDebugPanel();
         debugPanel.setVisible(false);
-        footerPanel.add(debugPanel, BorderLayout.CENTER);
-        footerPanel.add(exitPanel, BorderLayout.EAST);
+        footerPanel.setBackground(WizardStyle.barBackground());
+        footerPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(1, 0, 0, 0, WizardStyle.separator()),
+            BorderFactory.createEmptyBorder(WizardStyle.GAP, WizardStyle.LARGE_GAP, WizardStyle.GAP, WizardStyle.LARGE_GAP)));
+        footerPanel.add(debugPanel, BorderLayout.NORTH);
+        footerPanel.add(footerHint, BorderLayout.CENTER);
+        footerPanel.add(navigationPanel, BorderLayout.EAST);
         add(footerPanel, BorderLayout.SOUTH);
     }
 
     private void buildDebugPanel() {
         debugPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 5));
-        debugPanel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY),
-            BorderFactory.createEmptyBorder(5, 10, 5, 10)
-        ));
+        debugPanel.setOpaque(false);
+        debugPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
         JLabel header = new JLabel("Debug flags:");
         header.setFont(header.getFont().deriveFont(Font.BOLD));
@@ -167,13 +190,13 @@ public class WizardContainer extends JPanel {
 
             if (ini == null || image == null) {
                 label.setText(shortName + ": --");
-                label.setForeground(Color.GRAY);
+                label.setForeground(WizardStyle.muted());
                 continue;
             }
 
             if (!d.applicable.test(uiContext)) {
                 label.setText(shortName + ": N/A");
-                label.setForeground(Color.GRAY);
+                label.setForeground(WizardStyle.muted());
                 continue;
             }
 
@@ -181,7 +204,7 @@ public class WizardContainer extends JPanel {
             if (field == null) {
                 // Board's INI doesn't declare this wizard flag — render as unsupported.
                 label.setText(shortName + ": --");
-                label.setForeground(Color.GRAY);
+                label.setForeground(WizardStyle.muted());
                 continue;
             }
             if (field instanceof EnumIniField) {
@@ -190,10 +213,10 @@ public class WizardContainer extends JPanel {
                 int ordinal = ConfigurationImage.getBitRange(raw, ef.getBitPosition(), ef.getBitSize0() + 1);
                 boolean isSet = ordinal == 1;
                 label.setText(shortName + ": " + (isSet ? "yes" : "no"));
-                label.setForeground(isSet ? new Color(0, 160, 0) : Color.RED);
+                label.setForeground(isSet ? WizardStyle.success() : WizardStyle.error());
             } else {
                 label.setText(shortName + ": ?");
-                label.setForeground(Color.GRAY);
+                label.setForeground(WizardStyle.muted());
             }
         }
     }
@@ -211,7 +234,6 @@ public class WizardContainer extends JPanel {
     }
 
     public void startWizard(boolean autoLaunch) {
-        configureExitLayout(false);
         configureExitButtons(autoLaunch);
         hideCurrentStep();
         currentStepIndex = 0;
@@ -307,17 +329,19 @@ public class WizardContainer extends JPanel {
 
         // Completion card
         JPanel completionPanel = new JPanel(new GridBagLayout());
-        JLabel doneLabel = new JLabel("Wizard Complete!");
-        doneLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        AbstractWizardStep.styleTitle(doneLabel);
-        completionPanel.add(doneLabel);
-        JButton doneButton = new JButton("Return to Console");
-        AbstractWizardStep.stylePrimaryAction(doneButton);
-        doneButton.addActionListener(e -> exitWizard());
+        JPanel completionCard = new JPanel(new GridBagLayout());
+        WizardStyle.styleCard(completionCard, 32, 48);
+        JLabel doneLabel = WizardStyle.cardTitle("Wizard Complete!");
+        doneLabel.setIcon(WizardStyle.ActionIcon.CONFIRM);
+        doneLabel.setIconTextGap(WizardStyle.GAP);
+        doneLabel.setForeground(WizardStyle.success());
         GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridy = 0;
+        completionCard.add(doneLabel, gbc);
         gbc.gridy = 1;
-        gbc.insets = new Insets(20, 0, 0, 0);
-        completionPanel.add(doneButton, gbc);
+        gbc.insets = new Insets(WizardStyle.GAP, 0, 0, 0);
+        completionCard.add(WizardStyle.description("All setup steps are saved to the ECU."), gbc);
+        completionPanel.add(completionCard);
         stepContentPanel.add(completionPanel, "complete");
 
         // If step 0 is already done, read cylindersCount before building the remaining flow.
@@ -345,7 +369,6 @@ public class WizardContainer extends JPanel {
      * satisfied), the wizard auto-exits. Used for targeted prompts like an empty-VIN auto-launch.
      */
     public void startSingleStep(WizardStep step) {
-        configureExitLayout(true);
         configureExitButtons(false);
         hideCurrentStep();
         currentStepIndex = 0;
@@ -370,6 +393,53 @@ public class WizardContainer extends JPanel {
         refreshProgress();
         CardLayout cl = (CardLayout) stepContentPanel.getLayout();
         cl.show(stepContentPanel, "complete");
+        setNavigation(null, returnToConsoleButton, null);
+    }
+
+    /**
+     * Exit sits first in focus order (top right), so the window's initial focus would land on it and a stray
+     * Space would leave the wizard; start in the step's first control instead.
+     */
+    private void moveFocusOffExit(Container stepPanel) {
+        if (cancelButton.isFocusOwner() || dontShowAgainButton.isFocusOwner()) {
+            Component first = firstFocusable(stepPanel);
+            if (first != null) {
+                first.requestFocusInWindow();
+            }
+        }
+    }
+
+    private static Component firstFocusable(Container root) {
+        for (Component child : root.getComponents()) {
+            if (!child.isShowing() || !child.isEnabled()) {
+                continue;
+            }
+            if ((child instanceof AbstractButton || child instanceof JComboBox || child instanceof JTextComponent
+                || child instanceof JList) && child.isFocusable()) {
+                return child;
+            }
+            if (child instanceof Container) {
+                Component found = firstFocusable((Container) child);
+                if (found != null) {
+                    return found;
+                }
+            }
+        }
+        return null;
+    }
+
+    /** Puts the shown page's actions at the right of the footer, or its hint when it has no Continue. */
+    private void setNavigation(JButton skip, JButton next, String hint) {
+        navigationPanel.removeAll();
+        if (skip != null) {
+            navigationPanel.add(skip);
+        }
+        if (next != null) {
+            navigationPanel.add(next);
+        }
+        footerHint.setText(next == null && hint != null ? hint : "");
+        navigationPanel.revalidate();
+        navigationPanel.repaint();
     }
 
     private int readCylindersCountFromEcu() {
@@ -403,13 +473,6 @@ public class WizardContainer extends JPanel {
         List<Integer> visibleIndices = findVisibleCatalogIndices(
             uiContext, uiContext.iniFileState.getIniFileModel());
         return findFirstIncomplete(visibleIndices, this::isStepSatisfied) >= 0;
-    }
-
-    private void configureExitLayout(boolean singleStep) {
-        footerPanel.removeAll();
-        ((FlowLayout) exitPanel.getLayout()).setAlignment(singleStep ? FlowLayout.CENTER : FlowLayout.RIGHT);
-        footerPanel.add(debugPanel, singleStep ? BorderLayout.NORTH : BorderLayout.CENTER);
-        footerPanel.add(exitPanel, singleStep ? BorderLayout.CENTER : BorderLayout.EAST);
     }
 
     private void configureExitButtons(boolean autoLaunch) {
@@ -654,6 +717,10 @@ public class WizardContainer extends JPanel {
         cl.show(stepContentPanel, "step" + index);
         if (step != null) {
             step.onShow();
+            setNavigation(step.getSkipButton(), step.getContinueButton(), step.getFooterHint());
+            SwingUtilities.invokeLater(() -> moveFocusOffExit(step.getPanel()));
+        } else {
+            setNavigation(null, null, null);
         }
     }
 
@@ -698,12 +765,20 @@ public class WizardContainer extends JPanel {
         return dontShowAgainButton.isVisible();
     }
 
-    int getExitPanelAlignmentForTests() {
-        return ((FlowLayout) exitPanel.getLayout()).getAlignment();
+    Object getExitPanelConstraintForTests() {
+        return ((BorderLayout) exitPanel.getParent().getLayout()).getConstraints(exitPanel);
     }
 
-    Object getExitPanelConstraintForTests() {
-        return ((BorderLayout) footerPanel.getLayout()).getConstraints(exitPanel);
+    Object getNavigationConstraintForTests() {
+        return ((BorderLayout) footerPanel.getLayout()).getConstraints(navigationPanel);
+    }
+
+    List<Component> getNavigationForTests() {
+        return java.util.Arrays.asList(navigationPanel.getComponents());
+    }
+
+    String getFooterHintForTests() {
+        return footerHint.getText();
     }
 
     void clickDontShowAgainForTests() {

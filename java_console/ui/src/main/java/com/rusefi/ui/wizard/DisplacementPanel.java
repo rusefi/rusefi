@@ -14,7 +14,7 @@ import java.awt.*;
 
 public class DisplacementPanel extends AbstractWizardStep {
     private final UIContext uiContext;
-    private final JPanel content = new JPanel(new GridBagLayout());
+    private final JPanel content = new JPanel(new BorderLayout());
     private final JTextField displacement = new JTextField(10);
     private final JLabel error = new JLabel(" ");
     private final JButton save = new JButton("Save and Continue");
@@ -25,23 +25,23 @@ public class DisplacementPanel extends AbstractWizardStep {
         this.uiContext = uiContext;
 
         JPanel card = new JPanel(new GridBagLayout());
-        card.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(WizardStyle.border()),
-            BorderFactory.createEmptyBorder(24, 28, 24, 28)));
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 0;
-        c.insets = new Insets(8, 8, 8, 8);
+        c.insets = new Insets(0, 0, 5, 0);
         c.anchor = GridBagConstraints.WEST;
         c.fill = GridBagConstraints.HORIZONTAL;
-        JLabel title = new JLabel(getTitle());
-        styleTitle(title);
-        card.add(title, c);
+        card.add(WizardStyle.sectionLabel("DISPLACEMENT SETUP"), c);
         c.gridy++;
-        card.add(new JLabel("<html>engine total displacement.<br>" +
-            "This value scales fueling for all cylinders combined.</html>"), c);
+        card.add(WizardStyle.cardTitle(getTitle()), c);
         c.gridy++;
-        JLabel label = new JLabel("Total displacement (litres)");
+        c.insets = new Insets(0, 0, 18, 0);
+        JLabel description = WizardStyle.description("<html>engine total displacement.<br>" +
+            "This value scales fueling for all cylinders combined.</html>");
+        card.add(description, c);
+        c.gridy++;
+        c.insets = new Insets(0, 0, 5, 0);
+        JLabel label = WizardStyle.sectionLabel("TOTAL DISPLACEMENT (LITRES)");
         label.setLabelFor(displacement);
         card.add(label, c);
         c.gridy++;
@@ -49,15 +49,15 @@ public class DisplacementPanel extends AbstractWizardStep {
         scale(displacement, 1.5f);
         card.add(displacement, c);
         c.gridy++;
-        card.add(new JLabel("Example: 1998 cc = 1.998 L"), c);
+        c.insets = new Insets(0, 0, 8, 0);
+        card.add(WizardStyle.description("Example: 1998 cc = 1.998 L"), c);
         c.gridy++;
-        error.setForeground(Color.RED);
+        WizardStyle.styleError(error);
         card.add(error, c);
-        c.gridy++;
-        stylePrimaryAction(save);
+        styleContinueAction(save);
         save.setEnabled(false);
-        card.add(save, c);
-        content.add(card);
+        WizardStyle.styleCard(card, 24, 28);
+        content.add(WizardStyle.cardPage(card), BorderLayout.CENTER);
 
         displacement.getDocument().addDocumentListener(new DocumentListener() {
             @Override public void insertUpdate(DocumentEvent e) { updateValidity(); }
@@ -128,6 +128,11 @@ public class DisplacementPanel extends AbstractWizardStep {
         displacement.setText(available ? ConfigurationImageGetterSetter.getStringValue(field, cfg.image) : "");
         displacement.setEnabled(available);
         updateValidity();
+    }
+
+    @Override
+    public JButton getContinueButton() {
+        return save;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.opensr5.ini;
 
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class IniFileMetaInfoImpl implements IniFileMetaInfo {
     // page= blocks.  May be empty for older inis without a pageIdentifier line.
     private final List<Integer> pageIdentifiers = new ArrayList<>();
     private final int ochBlockSize;
+    private final ByteOrder byteOrder;
 
     /**
      * read maximum chunk size
@@ -76,6 +78,18 @@ public class IniFileMetaInfoImpl implements IniFileMetaInfo {
             } catch (MandatoryLineMissing ignored) {
                 // leave pageIdentifiers empty -> getPageIdentifier() falls back to the ordinal
             }
+
+            // optional 'endianness' line: same default/semantics as IniFileModel.isLittleEndian()
+            ByteOrder order = ByteOrder.LITTLE_ENDIAN;
+            try {
+                List<String> endianness = file.getValues("endianness");
+                if (!endianness.isEmpty() && !"little".equalsIgnoreCase(endianness.get(0))) {
+                    order = ByteOrder.BIG_ENDIAN;
+                }
+            } catch (MandatoryLineMissing ignored) {
+                // omitted line means little-endian
+            }
+            byteOrder = order;
         } catch (MandatoryLineMissing e) {
             throw new RuntimeException("While reading " + file.msg, e);
         }
@@ -89,6 +103,11 @@ public class IniFileMetaInfoImpl implements IniFileMetaInfo {
     @Override
     public int getOchBlockSize() {
         return ochBlockSize;
+    }
+
+    @Override
+    public ByteOrder getByteOrder() {
+        return byteOrder;
     }
 
     /*

@@ -191,8 +191,8 @@ public class WizardContainerTest {
             WizardContainer container = new WizardContainer(new UIContext());
             container.startSingleStep(new StubStep());
 
-            assertEquals(FlowLayout.CENTER, container.getExitPanelAlignmentForTests());
-            assertEquals(BorderLayout.CENTER, container.getExitPanelConstraintForTests());
+            assertEquals(BorderLayout.EAST, container.getExitPanelConstraintForTests());
+            assertEquals(BorderLayout.EAST, container.getNavigationConstraintForTests());
         });
     }
 
@@ -202,8 +202,8 @@ public class WizardContainerTest {
             WizardContainer container = new WizardContainer(new UIContext());
             container.startSingleStep(new StubStep());
             container.startWizard(true);
-            assertEquals(FlowLayout.RIGHT, container.getExitPanelAlignmentForTests());
             assertEquals(BorderLayout.EAST, container.getExitPanelConstraintForTests());
+            assertEquals(BorderLayout.EAST, container.getNavigationConstraintForTests());
         });
     }
 

@@ -7,6 +7,7 @@ import com.opensr5.ini.IniValue;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.preferences.storage.Node;
+import com.rusefi.ui.basic.UiHelper;
 
 import javax.swing.*;
 import java.awt.*;
@@ -73,8 +74,9 @@ public class GaugesPanelMockedSandbox {
     }
 
     private void initApplication() {
+        // the console theme; -Dconsole.theme=dark selects the dark one [tag:console_dark_mode]
+        UiHelper.configureLaf();
         UIContext uiContext = new UIContext();
-        GaugesPanel.IS_PAUSED = false;
 
         setupMocking(uiContext);
 
@@ -126,8 +128,6 @@ public class GaugesPanelMockedSandbox {
 
     private void tick() {
         try {
-            if (GaugesPanel.IS_PAUSED) return;
-
             SensorCentral sensorCentral = SensorCentral.getInstance();
             ThreadLocalRandom safeRandom = ThreadLocalRandom.current();
 

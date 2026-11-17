@@ -30,6 +30,8 @@ sandbox class also carries a brief comment on top describing what it does.
 | Sandbox | Purpose |
 | --- | --- |
 | `PCanSandbox` | Reads an ECU signature over a PCAN (Peak CAN) adapter. |
+| `SLCANConnectorSandbox` | Uses a standalone SLCAN adapter to verify 17 ECU signatures, read configuration and output channels over CAN/ISO-TP. Run `gradlew :ecu_io:slcanConnectorSandbox -PslcanPort=COM112`; optional `-PslcanBitrate=6` (500 kbit/s) and `"-PslcanExpectedSignature=<full ECU signature>"`. Explicit adapter port required; does not write/burn the tune. Shares the PCAN ISO-TP implementation, so some logs say PCAN. |
+| `SlcanPortScanner` | Continuously scans serial ports and classifies each as SLCAN sniffer VCP / TS console VCP / other. |
 | `SocketCANSandbox` | Reads an ECU signature over Linux SocketCAN. |
 | `PCanIoProxySandbox` | Bridges a PCAN stream through the CAN connector startup. |
 | `M74_9_UdsSandbox` | Exercises UDS communication (incl. security access) with a BMW M74.9 ECU. |
@@ -89,6 +91,7 @@ sandbox class also carries a brief comment on top describing what it does.
 | `KnockCanvasSandbox` | The `KnockCanvas` with simulated spectrogram data. |
 | `RemoteTabSandbox` | The TS plugin "remote" tab. |
 | `LogUploadSelectorSandbox` | Log-upload selector with a mocked `ControllerAccess`. |
+| `LogViewerSandbox` | Opens a bundled time-series log in a standalone chart viewer. Run `./gradlew :ui:runLogViewerSandbox`. |
 
 ## Logging & sensor data
 
