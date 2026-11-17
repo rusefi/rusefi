@@ -25,6 +25,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.MouseWheelEvent;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
@@ -119,8 +120,11 @@ final class ChartToolbar extends ThemedStrip {
         gridButton.addActionListener(e -> gridPopup.show(gridButton, 0, gridButton.getHeight() + 4));
 
         smoothingButton.setToolTipText("<html>Display-only smoothing for timeline lines.<br>"
-                + "Cursor values follow the smoothed line; min/max, statistics and exports stay raw.</html>");
+                + "Cursor values follow the smoothed line; min/max, statistics and exports stay raw.<br>"
+                + "While smoothing is on, scroll the mouse wheel here to change it by "
+                + WHEEL_STEP_MS + " ms.</html>");
         smoothingButton.addActionListener(e -> editGlobalSmoothing());
+        smoothingButton.addMouseWheelListener(this::wheelSmoothing);
         smoothingRawButton.setToolTipText("Turn off global display smoothing and show recorded samples");
         smoothingRawButton.addActionListener(e -> setGlobalSmoothing(0));
 
@@ -283,6 +287,35 @@ final class ChartToolbar extends ThemedStrip {
         GridBagConstraints noteConstraints = constraints(0, row, 2, 0);
         noteConstraints.insets = new Insets(8, 0, 0, 0);
         gridPanel.add(note, noteConstraints);
+    }
+
+    /** Milliseconds one mouse wheel notch over the smoothing button adds or removes. */
+    static final int WHEEL_STEP_MS = 100;
+
+    /** Wheel up widens the global smoothing window, wheel down narrows it; nothing happens while it is Raw. */
+    void wheelSmoothing(MouseWheelEvent event) {
+        int notches = event.getWheelRotation();
+        double current = settings.getSmoothingWindowSeconds();
+        if (notches == 0 || current == 0) {
+            return;
+        }
+        int milliseconds = wheelStep((int) Math.round(current * 1000), -notches, smoothingWindow);
+        setGlobalSmoothing(milliseconds / 1000.0);
+    }
+
+    /**
+     * The window after {@code steps} wheel notches (positive widens): it moves to the next multiple of
+     * {@link #WHEEL_STEP_MS} in that direction per notch, so 150 ms goes to 200 or 100, and stays within the log's
+     * limits; it never reaches Raw, which has its own button.
+     */
+    static int wheelStep(int currentMs, int steps, TimelineSmoothingWindow limits) {
+        int milliseconds = currentMs;
+        for (int i = 0; i < Math.abs(steps); i++) {
+            milliseconds = steps > 0
+                    ? (milliseconds / WHEEL_STEP_MS + 1) * WHEEL_STEP_MS
+                    : ((milliseconds + WHEEL_STEP_MS - 1) / WHEEL_STEP_MS - 1) * WHEEL_STEP_MS;
+        }
+        return Math.max(limits.minimumMs, Math.min(limits.maximumMs, milliseconds));
     }
 
     private void editGlobalSmoothing() {
