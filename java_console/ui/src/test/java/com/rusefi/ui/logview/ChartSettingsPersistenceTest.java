@@ -18,6 +18,7 @@ class ChartSettingsPersistenceTest {
         settings.addListener(() -> saves[0]++);
 
         settings.setAlwaysMinMax(true);
+        settings.setShowRawValues(false);
         settings.setCursorValues(ChartSettings.CursorValues.LIST);
         settings.setPinValues(true);
         settings.setSnapCursor(false);
@@ -28,10 +29,11 @@ class ChartSettingsPersistenceTest {
         settings.setHorizontalDivisions(7);
         settings.setSmoothingWindowSeconds(0.2);
         settings.setSmoothingWindowSeconds("RPM", 0.05);
-        assertEquals(11, saves[0], "every change is saved");
+        assertEquals(12, saves[0], "every change is saved");
 
         ChartSettings restored = new ChartSettings(node);
         assertTrue(restored.isAlwaysMinMax());
+        assertFalse(restored.isShowRawValues());
         assertEquals(ChartSettings.CursorValues.LIST, restored.getCursorValues());
         assertTrue(restored.isPinValues());
         assertFalse(restored.isSnapCursor());
@@ -52,6 +54,7 @@ class ChartSettingsPersistenceTest {
     void defaultsWhenNothingIsStored() {
         ChartSettings settings = new ChartSettings(new Node());
         assertFalse(settings.isAlwaysMinMax(), "min/max on hover");
+        assertTrue(settings.isShowRawValues(), "raw values beside smoothed ones");
         assertEquals(ChartSettings.CursorValues.LABELS, settings.getCursorValues());
         assertTrue(settings.isSnapCursor());
         assertEquals(ChartSettings.DEFAULT_TIME_SPACING, settings.getTimeSpacing());
@@ -82,6 +85,23 @@ class ChartSettingsPersistenceTest {
 
         settings.setDarkPlot(!themeDark);
         assertEquals(!themeDark, new ChartSettings(node).isDarkPlot());
+    }
+
+    @Test
+    void rawValuesSwitchIsUsableOnlyWhileSmoothing() {
+        ChartSettings settings = new ChartSettings();
+        ChartToolbar toolbar = new ChartToolbar(settings, () -> {
+        });
+        assertFalse(toolbar.rawShow.isEnabled());
+        assertFalse(toolbar.smoothingNote.isVisible());
+
+        settings.setSmoothingWindowSeconds("RPM", 0.1);
+        // what opening the Values popup does
+        toolbar.updateControls();
+        assertTrue(toolbar.rawShow.isEnabled(), "per-signal smoothing counts too");
+        assertTrue(toolbar.smoothingNote.isVisible(), "warns that min/max stay raw");
+        toolbar.rawHide.doClick();
+        assertFalse(settings.isShowRawValues());
     }
 
     @Test

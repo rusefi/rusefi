@@ -743,7 +743,7 @@ final class LogChart extends JComponent {
     /** Per-signal display smoothing: inherit the toolbar choice, stay raw, or use a separate time window. */
     JMenu smoothingSubmenu(int field) {
         JMenu smoothing = new JMenu("Display smoothing");
-        smoothing.setToolTipText("Recorded samples, cursor values, statistics and exports stay raw");
+        smoothing.setToolTipText("Cursor values follow the smoothed line; min/max, statistics and exports stay raw");
         String signal = log.name(field);
         boolean usesGlobal = grid.usesGlobalSmoothing(signal);
         double current = grid.getSmoothingWindowSeconds(signal);
@@ -1535,7 +1535,7 @@ final class LogChart extends JComponent {
                 // The line no longer sits on the sample being read, so mark that sample on each trace.
                 int sampleX = xOf(log.value(cursorSample, 0));
                 for (int field : fields) {
-                    double value = log.value(cursorSample, field);
+                    double value = traceValue(cursorSample, field);
                     if (Double.isFinite(value)) {
                         int y = (int) Math.round(yOf(field, value, area));
                         plot.setColor(traceColor(field, palette));
@@ -1692,16 +1692,16 @@ final class LogChart extends JComponent {
         int sampleX = xOf(log.value(sample, 0));
         List<Integer> shown = new ArrayList<>();
         for (int field : fields) {
-            if (Double.isFinite(log.value(sample, field))) {
+            if (Double.isFinite(traceValue(sample, field))) {
                 shown.add(field);
             }
         }
         // top to bottom, so pushing apart keeps each label on the same side of its neighbours as its trace
-        shown.sort((a, b) -> Double.compare(yOf(a, log.value(sample, a), area), yOf(b, log.value(sample, b), area)));
+        shown.sort((a, b) -> Double.compare(yOf(a, traceValue(sample, a), area), yOf(b, traceValue(sample, b), area)));
         double[] centers = new double[shown.size()];
         for (int i = 0; i < centers.length; i++) {
             int field = shown.get(i);
-            centers[i] = Math.max(area.y, Math.min(area.y + area.height, yOf(field, log.value(sample, field), area)));
+            centers[i] = Math.max(area.y, Math.min(area.y + area.height, yOf(field, traceValue(sample, field), area)));
         }
         int[] tops = spreadLabels(centers, LABEL_HEIGHT, LABEL_SPACING, area.y, area.y + area.height);
         if (tops == null) {
@@ -1714,7 +1714,7 @@ final class LogChart extends JComponent {
         int widest = 0;
         for (int i = 0; i < values.length; i++) {
             int field = shown.get(i);
-            values[i] = ValueFormat.format(log, field, log.value(sample, field));
+            values[i] = cursorText(sample, field);
             widths[i] = 6 + valueMetrics.stringWidth(values[i]) + metrics.stringWidth(unitSuffix(field)) + 6;
             widest = Math.max(widest, widths[i]);
         }
@@ -1770,7 +1770,7 @@ final class LogChart extends JComponent {
         int valueWidth = 0;
         int unitWidth = 0;
         for (int field : fields) {
-            String value = ValueFormat.format(log, field, log.value(sample, field));
+            String value = cursorText(sample, field);
             values.add(value);
             valueWidth = Math.max(valueWidth, valueMetrics.stringWidth(value));
             unitWidth = Math.max(unitWidth, metrics.stringWidth(unitSuffix(field)));
@@ -1848,7 +1848,7 @@ final class LogChart extends JComponent {
             double value = log.value(sample, field);
             int x = Math.max(area.x, Math.min(area.x + area.width, xOf(log.value(sample, 0))));
             int y = (int) Math.round(yOf(field, value, area));
-            String text = ValueFormat.format(log, field, value);
+            String text = ValueFormat.format(log, field, value) + rawTag(field);
             int width = valueMetrics.stringWidth(text) + 10;
             int tagX = Math.max(area.x, Math.min(area.x + area.width - width, x - width / 2));
             int above = y - TAG_OFFSET - TAG_HEIGHT;
@@ -1890,7 +1890,7 @@ final class LogChart extends JComponent {
             double value = log.value(sample, field);
             int x = Math.max(area.x, Math.min(area.x + area.width, xOf(log.value(sample, 0))));
             int y = (int) Math.round(yOf(field, value, area));
-            String text = ValueFormat.format(log, field, value);
+            String text = ValueFormat.format(log, field, value) + rawTag(field);
             int width = metrics.stringWidth(text) + 8;
             int tagX = Math.max(area.x, Math.min(area.x + area.width - width, x - width / 2));
             int above = y - COMPACT_TAG_OFFSET - COMPACT_TAG_HEIGHT;
@@ -2045,6 +2045,10 @@ final class LogChart extends JComponent {
         String range = stats.isBetweenCursors()
                 ? String.format(Locale.ROOT, "A–B %.2f–%.2f s", stats.rangeStart(), stats.rangeEnd())
                 : String.format(Locale.ROOT, "visible %.1f–%.1f s", window.start(), window.end());
+        if (isSmoothed(field)) {
+            // the drawn line is smoothed, these statistics are not
+            range += ", raw values";
+        }
         String[][] rows = traceStats.isEmpty()
                 ? new String[][]{{"", "no values in the visible time", ""}}
                 : new String[][]{
@@ -2798,7 +2802,10 @@ final class LogChart extends JComponent {
         return path;
     }
 
-    /** Value used only for the painted trace; cursor values, statistics, scales and exports read {@link #log}. */
+    /**
+     * Value of the drawn trace: smoothed when display smoothing is on. Cursor values follow it; min/max, statistics,
+     * scales, A–B deltas and exports read the recorded values in {@link #log}.
+     */
     double traceValue(int sample, int field) {
         double[] smoothed = smoothedValues(field);
         return smoothed == null ? log.value(sample, field) : smoothed[sample];
@@ -2896,7 +2903,7 @@ final class LogChart extends JComponent {
      */
     String legendValue(int field, int sample) {
         TraceStats traceStats = stats.get(field);
-        String value = sample >= 0 ? ValueFormat.format(log, field, log.value(sample, field))
+        String value = sample >= 0 ? cursorText(sample, field)
                 : traceStats.isEmpty() ? ValueFormat.range(log, field, traceStats) : bracketedRange(field);
         return cursors.isRange() ? value + "  Δ" + delta(field) : value;
     }
@@ -2914,10 +2921,35 @@ final class LogChart extends JComponent {
         return range.isEmpty() ? "" : " " + range;
     }
 
-    /** The visible min–max in brackets, "(1001–3515)"; empty when nothing is visible. */
+    /**
+     * The visible min–max in brackets, "(1001–3515)", tagged "(1001–3515 raw)" while the trace is drawn smoothed,
+     * because min/max always come from the recorded samples; empty when nothing is visible.
+     */
     private String bracketedRange(int field) {
         TraceStats traceStats = stats.get(field);
-        return traceStats.isEmpty() ? "" : "(" + ValueFormat.range(log, field, traceStats) + ")";
+        return traceStats.isEmpty() ? "" : "(" + ValueFormat.range(log, field, traceStats) + rawTag(field) + ")";
+    }
+
+    /** " raw" while {@code field} is drawn smoothed, so recorded values are not mistaken for the drawn line. */
+    private String rawTag(int field) {
+        return isSmoothed(field) ? " raw" : "";
+    }
+
+    /** True when {@code field} is drawn smoothed. */
+    boolean isSmoothed(int field) {
+        return grid.getSmoothingWindowSeconds(log.name(field)) > 0;
+    }
+
+    /**
+     * The value at the cursor as drawn: the smoothed value on a smoothed trace, followed by the recorded one when
+     * raw values are shown, "15.5 (12.2 raw)"; the recorded value on a raw trace.
+     */
+    String cursorText(int sample, int field) {
+        String drawn = ValueFormat.format(log, field, traceValue(sample, field));
+        if (!isSmoothed(field) || !grid.isShowRawValues()) {
+            return drawn;
+        }
+        return drawn + " (" + ValueFormat.format(log, field, log.value(sample, field)) + " raw)";
     }
 
     /** The legend's signal name and unit font. */

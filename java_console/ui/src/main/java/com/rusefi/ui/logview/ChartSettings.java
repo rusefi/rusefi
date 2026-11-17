@@ -52,6 +52,8 @@ final class ChartSettings {
     private CursorValues cursorValues = CursorValues.LABELS;
     private boolean pinValues;
     private boolean alwaysMinMax;
+    /** Recorded value in brackets after a smoothed cursor value: "15.5 (12.2 raw)". */
+    private boolean showRawValues = true;
     /** Width of the centred display-only moving average; zero draws recorded samples. */
     private double smoothingWindowSeconds;
     /** Per-signal windows by log field name; absent means use {@link #smoothingWindowSeconds}. */
@@ -67,6 +69,7 @@ final class ChartSettings {
     private static final String CURSOR_VALUES = "cursorValues";
     private static final String PIN_VALUES = "pinValues";
     private static final String ALWAYS_MIN_MAX = "alwaysMinMax";
+    private static final String SHOW_RAW_VALUES = "showRawValues";
     private static final String SMOOTHING = "smoothing";
     private static final String SMOOTHING_OVERRIDES = "smoothingSignals";
 
@@ -92,6 +95,7 @@ final class ChartSettings {
         cursorValues = enumProperty(CURSOR_VALUES, CursorValues.values(), cursorValues);
         pinValues = node.getBoolProperty(PIN_VALUES, pinValues);
         alwaysMinMax = node.getBoolProperty(ALWAYS_MIN_MAX, alwaysMinMax);
+        showRawValues = node.getBoolProperty(SHOW_RAW_VALUES, showRawValues);
         smoothingWindowSeconds = validWindow(node.getDoubleProperty(SMOOTHING, 0), 0);
         for (Map.Entry<String, Object> entry : node.getChild(SMOOTHING_OVERRIDES).getConfig().entrySet()) {
             if (entry.getValue() instanceof String && Node.isNumeric((String) entry.getValue())) {
@@ -143,6 +147,7 @@ final class ChartSettings {
         node.setProperty(CURSOR_VALUES, cursorValues.name());
         node.setProperty(PIN_VALUES, pinValues);
         node.setProperty(ALWAYS_MIN_MAX, alwaysMinMax);
+        node.setProperty(SHOW_RAW_VALUES, showRawValues);
         node.setProperty(SMOOTHING, smoothingWindowSeconds);
         Node overrides = node.getChild(SMOOTHING_OVERRIDES);
         overrides.getConfig().clear();
@@ -222,6 +227,32 @@ final class ChartSettings {
     void setAlwaysMinMax(boolean alwaysMinMax) {
         this.alwaysMinMax = alwaysMinMax;
         changed();
+    }
+
+    /**
+     * True: a smoothed trace's cursor value is followed by the recorded one, "15.5 (12.2 raw)". False: only the
+     * smoothed value, as on the drawn line. Traces drawn raw always show just their recorded value.
+     */
+    boolean isShowRawValues() {
+        return showRawValues;
+    }
+
+    void setShowRawValues(boolean showRawValues) {
+        this.showRawValues = showRawValues;
+        changed();
+    }
+
+    /** True when any trace may be drawn smoothed: the global window or a per-signal one is above zero. */
+    boolean isAnySmoothing() {
+        if (smoothingWindowSeconds > 0) {
+            return true;
+        }
+        for (double seconds : smoothingOverrides.values()) {
+            if (seconds > 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Plot area colours, chosen independently of the console theme; dark by default in the dark theme. */
