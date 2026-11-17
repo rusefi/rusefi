@@ -168,14 +168,14 @@ public class BinaryProtocol {
         // stale sensor data so a subsequent ECU doesn't inherit values from this one.
         // This is the only mechanism that fires NOT_CONNECTED on the splash screen — the
         // ConnectionWatchdog exists only inside ConsoleUI and is not created during splash.
-        // Skip the global status change for short-lived scanner probes (notifyGlobalStatusOnClose=false)
-        // so they don't disrupt the main console connection.
+        // Scanner probes (notifyGlobalStatusOnClose=false) own neither the global connection
+        // status nor its sensor readings. Closing one must leave the active console data intact.
         stream.addCloseListener(() -> {
             synchronized (publicationLock) {
                 if (linkManager.getNotifyGlobalStatusOnClose()) {
                     ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
+                    SensorCentral.getInstance().reset();
                 }
-                SensorCentral.getInstance().reset();
             }
         });
     }
