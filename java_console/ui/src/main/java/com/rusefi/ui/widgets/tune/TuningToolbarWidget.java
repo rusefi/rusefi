@@ -85,7 +85,7 @@ public class TuningToolbarWidget {
     private volatile boolean firmwareUpdateInProgress;
     private boolean burnInProgress;
     private long editGeneration;
-    private long connectionGeneration;
+    private volatile long connectionGeneration;
     private Consumer<String> errorHandler = message -> JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
 
     /**
@@ -328,9 +328,11 @@ public class TuningToolbarWidget {
             if (burnInProgress || baselineImage == null) {
                 return;
             }
-            sessionImage.set(baselineImage.clone());
+            uploadTimer.stop();
+            ConfigurationImage restoration = baselineImage.clone();
+            sessionImage.set(restoration);
             String key = currentKey.get();
-            right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
+            right.update(key, uiContext.iniFileState.getIniFileModel(), restoration);
             publishReplacement();
             undoCommitTimer.stop();
             undoStack.clear();
@@ -338,6 +340,31 @@ public class TuningToolbarWidget {
             undoBaseline.set(null);
             updateButtons.run();
             refreshState();
+
+            BinaryProtocol bp = uiContext.getBinaryProtocol();
+            if (bp == null || firmwareUpdateInProgress || uiContext.isOfflineMode()) {
+                return;
+            }
+            ConfigurationImage snapshot = restoration.clone();
+            long savedConnectionGeneration = connectionGeneration;
+            try {
+                submit.accept(() -> {
+                    if (savedConnectionGeneration != connectionGeneration
+                            || uiContext.getBinaryProtocol() != bp
+                            || firmwareUpdateInProgress || uiContext.isOfflineMode()) {
+                        return;
+                    }
+                    try {
+                        bp.uploadChangesWithoutBurn(snapshot);
+                    } catch (RuntimeException ex) {
+                        SwingUtilities.invokeLater(() ->
+                            errorHandler.accept("Failed to restore tune to ECU: " + ex.getMessage()));
+                    }
+                });
+            } catch (RuntimeException ex) {
+                SwingUtilities.invokeLater(() ->
+                    errorHandler.accept("Failed to restore tune to ECU: " + ex.getMessage()));
+            }
         });
 
         return discardButton;
