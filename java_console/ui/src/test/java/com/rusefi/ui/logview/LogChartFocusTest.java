@@ -131,6 +131,86 @@ class LogChartFocusTest {
     }
 
     @Test
+    void minMaxOnHoverMarksOnlyTheFocusedTrace() throws IOException {
+        LogChart chart = chart();
+        assertTrue(chart.markers().isEmpty());
+        assertTrue(chart.minMaxMarkers().isEmpty(), "on hover by default");
+    }
+
+    @Test
+    void minMaxAlwaysMarksEveryTraceWithoutOverlappingTags() throws IOException {
+        LogChart chart = chart();
+        chart.chartSettings().setAlwaysMinMax(true);
+        paint(chart);
+        // RPM and TPS get a max and a min, the flat trace one marker
+        assertEquals(List.of(1, 1, 2, 2, 3), chart.minMaxFields());
+        assertEquals("6000", chart.minMaxMarkers().get(0).text);
+        assertEquals("1000", chart.minMaxMarkers().get(1).text);
+        assertTagsApartAndInside(chart, chart.minMaxMarkers());
+
+        chart.focus().togglePin(1);
+        paint(chart);
+        assertEquals(2, chart.markers().size(), "the pinned trace keeps its full markers");
+        assertEquals(List.of(2, 2, 3), chart.minMaxFields(), "the others keep compact ones");
+        List<LogChart.Marker> all = new java.util.ArrayList<>(chart.markers());
+        all.addAll(chart.minMaxMarkers());
+        assertTagsApartAndInside(chart, all);
+    }
+
+    @Test
+    void legendShowsTheRangeBesideTheCursorValueWhateverTheMinMaxSetting() throws IOException {
+        LogChart chart = chart();
+        assertEquals("2500", chart.legendValue(1, 30));
+        assertEquals(" (1000–6000)", chart.legendRange(1, 30), "min/max on hover");
+        assertEquals("", chart.legendRange(1, -1), "pointer away: the legend already shows the range");
+
+        chart.chartSettings().setAlwaysMinMax(true);
+        assertEquals(" (1000–6000)", chart.legendRange(1, 30), "min/max always");
+        chart.timeWindow().show(2, 4);
+        assertEquals(" (2000–3000)", chart.legendRange(1, 30), "follows the visible window");
+    }
+
+    /** Four identical traces share their extremes: only some tags fit, the others keep just their triangle. */
+    @Test
+    void crowdedTagsAreDroppedNotStacked() throws IOException {
+        StringBuilder text = new StringBuilder("Time\tA\tB\tC\tD\ns\t\t\t\t\n");
+        for (int i = 0; i <= 100; i++) {
+            double v = 50 + Math.abs(i - 50);
+            text.append(i / 10.0).append('\t').append(v).append('\t').append(v).append('\t').append(v)
+                    .append('\t').append(v).append('\n');
+        }
+        PlotLayout layout = new PlotLayout(5);
+        for (int field = 1; field <= 4; field++) {
+            layout.add(field);
+        }
+        ChartSettings settings = new ChartSettings();
+        settings.setAlwaysMinMax(true);
+        LogChart chart = new LogChart(CsvLogReader.read(new StringReader(text.toString())), layout, settings);
+        paint(chart);
+
+        List<LogChart.Marker> markers = chart.minMaxMarkers();
+        assertEquals(8, markers.size(), "every trace keeps its triangles");
+        assertTrue(markers.stream().anyMatch(marker -> marker.tag == null), "some tags dropped");
+        assertTrue(markers.stream().anyMatch(marker -> marker.tag != null), "some tags shown");
+        assertTagsApartAndInside(chart, markers);
+    }
+
+    private static void assertTagsApartAndInside(LogChart chart, List<LogChart.Marker> markers) {
+        Rectangle area = chart.bands().get(0).traces;
+        for (int i = 0; i < markers.size(); i++) {
+            Rectangle tag = markers.get(i).tag;
+            if (tag == null) {
+                continue;
+            }
+            assertTrue(area.contains(tag), markers.get(i).text + " tag " + tag + " inside " + area);
+            for (int j = i + 1; j < markers.size(); j++) {
+                Rectangle other = markers.get(j).tag;
+                assertFalse(other != null && tag.intersects(other), "tags " + i + " and " + j + " overlap");
+            }
+        }
+    }
+
+    @Test
     void flatTraceGetsOneMarker() throws IOException {
         LogChart chart = chart();
         chart.focus().togglePin(3);

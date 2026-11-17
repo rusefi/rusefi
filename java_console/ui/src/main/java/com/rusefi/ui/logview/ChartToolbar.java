@@ -52,6 +52,8 @@ final class ChartToolbar extends ThemedStrip {
     final JToggleButton atMouse = SegmentedControl.segment("Mouse");
     final JToggleButton atClick = SegmentedControl.segment("Clicked time");
     private final JLabel atNote = muted(new JLabel());
+    final JToggleButton minMaxHover = SegmentedControl.segment("On hover");
+    final JToggleButton minMaxAlways = SegmentedControl.segment("Always");
     private final JPopupMenu valuesPopup = new JPopupMenu();
     /** Shows the statistics table; the viewer panel listens to it. */
     final JToggleButton measureButton = new JToggleButton("Measure");
@@ -125,7 +127,7 @@ final class ChartToolbar extends ThemedStrip {
         freeCursor.setToolTipText("<html>The cursor line follows the mouse; values come from the<br>"
                 + "nearest logged sample, marked with a dot on each trace</html>");
 
-        valuesButton.setToolTipText("How the signal values at the cursor show on the plots");
+        valuesButton.setToolTipText("How the signal values at the cursor and the min/max markers show on the plots");
         valuesButton.addActionListener(e -> valuesPopup.show(valuesButton, 0, valuesButton.getHeight() + 4));
         buildValuesPanel();
         valuesPopup.add(valuesPanel);
@@ -314,12 +316,27 @@ final class ChartToolbar extends ThemedStrip {
         atMouse.addActionListener(e -> apply());
         atClick.addActionListener(e -> apply());
 
+        ButtonGroup minMaxGroup = new ButtonGroup();
+        minMaxGroup.add(minMaxHover);
+        minMaxGroup.add(minMaxAlways);
+        (settings.isAlwaysMinMax() ? minMaxAlways : minMaxHover).setSelected(true);
+        minMaxHover.setToolTipText("Min and max of the visible time on the trace you hover or pin in a legend");
+        minMaxAlways.setToolTipText("<html>Min and max of the visible time on every trace;<br>"
+                + "the hovered or pinned trace keeps the larger markers</html>");
+        minMaxHover.addActionListener(e -> apply());
+        minMaxAlways.addActionListener(e -> apply());
+
         int row = 0;
         addRow(valuesPanel, muted(new JLabel("Show")), new SegmentedControl(valuesSegments()), row++, 0);
         addRow(valuesPanel, muted(new JLabel("At")), new SegmentedControl(atMouse, atClick), row++, 0);
-        GridBagConstraints noteConstraints = constraints(0, row, 2, 0);
+        GridBagConstraints noteConstraints = constraints(0, row++, 2, 0);
         noteConstraints.insets = new Insets(8, 0, 0, 0);
         valuesPanel.add(atNote, noteConstraints);
+        GridBagConstraints separator = constraints(0, row++, 2, 0);
+        separator.fill = GridBagConstraints.HORIZONTAL;
+        separator.insets = new Insets(8, 0, 8, 0);
+        valuesPanel.add(new JSeparator(), separator);
+        addRow(valuesPanel, muted(new JLabel("Min/max")), new SegmentedControl(minMaxHover, minMaxAlways), row, 0);
     }
 
     /** The Values button's text: "Values: Labels  ▾", "Values: List at click  ▾". */
@@ -422,6 +439,7 @@ final class ChartToolbar extends ThemedStrip {
             }
         }
         settings.setPinValues(atClick.isSelected());
+        settings.setAlwaysMinMax(minMaxAlways.isSelected());
         settings.setVertical(verticalBox.isSelected());
         settings.setVerticalMode(samplesMode.isSelected()
                 ? ChartSettings.VerticalMode.SAMPLES : ChartSettings.VerticalMode.TIME_TICKS);
