@@ -185,6 +185,7 @@ public class StartupFrame {
     private final UIContext uiContext;
     private final CompletableFuture<Autoupdate.UpdateOutcome> softwareUpdateOutcome;
     private final File initialLog;
+    private LogViewerHost logViewer;
     private final JPanel rootContent = new JPanel(new CardLayout());
     private UnsupportedEcuCardHost unsupportedEcuHost;
     private final JPanel rollbackPicker = new JPanel(new BorderLayout());
@@ -243,7 +244,8 @@ public class StartupFrame {
             @Override
             public void windowClosing(WindowEvent ev) {
                 if (!isFirmwareOperationInProgress()) {
-                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    frame.setDefaultCloseOperation(logViewer == null || logViewer.confirmExit()
+                        ? JFrame.EXIT_ON_CLOSE : JFrame.DO_NOTHING_ON_CLOSE);
                     return;
                 }
                 int choice = JOptionPane.showConfirmDialog(
@@ -254,6 +256,7 @@ public class StartupFrame {
                     JOptionPane.WARNING_MESSAGE
                 );
                 frame.setDefaultCloseOperation(choice == JOptionPane.YES_OPTION
+                    && (logViewer == null || logViewer.confirmExit())
                     ? JFrame.EXIT_ON_CLOSE
                     : JFrame.DO_NOTHING_ON_CLOSE);
             }
@@ -531,7 +534,7 @@ public class StartupFrame {
         );
         outerTabs.addTab("Manage Tunes", tuneManagementTab.getContent());
         outerTabs.addTab("Connect", connectTabScroll);
-        LogViewerHost logViewer = new LogViewerHost(getConfig().getRoot().getChild("log_viewer"));
+        logViewer = new LogViewerHost(getConfig().getRoot().getChild("log_viewer"));
         logViewer.setConfigSaver(() -> getConfig().save());
         installLogViewerEntry(outerTabs, logViewer, openLogButton, logViewer::chooseAndOpen);
         addCustomTabs(outerTabs, uiContext);

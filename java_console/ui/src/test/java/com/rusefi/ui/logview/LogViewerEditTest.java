@@ -206,4 +206,17 @@ class LogViewerEditTest {
         assertFalse(host.hasUnsavedEdits(), "dropped without saving");
         assertFalse(host.editBar().isVisible());
     }
+
+    @Test
+    void exitAfterTrimming() throws Exception {
+        LogViewerHost host = hostWithLog();
+        click(host, 100, "Drop data before cursor");
+        assertTrue(host.hasUnsavedEdits(), "the trimmed log is unsaved");
+
+        // Characterizes the current loss path; the corrected behavior must prompt before allowing exit.
+        boolean[] mayExit = {false};
+        SwingUtilities.invokeAndWait(() -> mayExit[0] = host.confirmExit());
+        assertTrue(mayExit[0], "current exit entry allows closing");
+        assertTrue(questions.isEmpty(), "current exit entry does not prompt about the trimmed log");
+    }
 }

@@ -62,6 +62,7 @@ public class TuningToolbarWidget {
     /** [tag:offline_tune] Shows offline / unburned-edit state. Empty when connected and clean. */
     private final JLabel stateLabel = new JLabel();
     private final UIContext uiContext;
+    private final Consumer<Runnable> submit;
     private final AtomicReference<ConfigurationImage> sessionImage;
 
     private final ArrayDeque<ConfigurationImage> undoStack = new ArrayDeque<>();
@@ -99,7 +100,21 @@ public class TuningToolbarWidget {
                                  UpdateOperationCallbacks loadCallbacks,
                                  Runnable onLoadStarted,
                                  Consumer<Boolean> onLoadFinished) {
+        this(uiContext, right, currentKey, sessionImage, baselineImage, loadCallbacks,
+            onLoadStarted, onLoadFinished, operation -> uiContext.getLinkManager().submit(operation));
+    }
+
+    TuningToolbarWidget(UIContext uiContext,
+                        CalibrationDialogWidget right,
+                        AtomicReference<String> currentKey,
+                        AtomicReference<ConfigurationImage> sessionImage,
+                        ConfigurationImage baselineImage,
+                        UpdateOperationCallbacks loadCallbacks,
+                        Runnable onLoadStarted,
+                        Consumer<Boolean> onLoadFinished,
+                        Consumer<Runnable> submit) {
         this.uiContext = uiContext;
+        this.submit = submit;
         this.sessionImage = sessionImage;
         this.baselineImage = baselineImage;
         undoButton.setEnabled(false);
@@ -127,18 +142,7 @@ public class TuningToolbarWidget {
         undoCommitTimer = new Timer(IDLE_TIMEOUT_MS, e -> flushUndoBaseline.run());
         undoCommitTimer.setRepeats(false);
 
-        uploadTimer = new Timer(UPLOAD_DELAY_MS, e -> {
-            if (firmwareUpdateInProgress) {
-                return;
-            }
-            BinaryProtocol bp = uiContext.getBinaryProtocol();
-            ConfigurationImage image = sessionImage.get();
-            if (bp == null || image == null) {
-                return;
-            }
-            final ConfigurationImage snapshot = image.clone();
-            uiContext.getLinkManager().submit(() -> bp.uploadChangesWithoutBurn(snapshot));
-        });
+        uploadTimer = new Timer(UPLOAD_DELAY_MS, e -> uploadPendingChanges());
         uploadTimer.setRepeats(false);
 
         burnButton = getBurnToEcuButton(uiContext, right, sessionImage);
@@ -250,7 +254,7 @@ public class TuningToolbarWidget {
         }
         final ConfigurationImage image = toBurn;
         sessionImage.set(image);
-        uiContext.getLinkManager().submit(() -> {
+        submit.accept(() -> {
             bp.burn();
             bp.setConfigurationImage(image);
             SwingUtilities.invokeLater(() -> {
@@ -306,6 +310,29 @@ public class TuningToolbarWidget {
         if (image != null) {
             uiContext.fireConfigImageChanged(image);
         }
+    }
+
+    private void uploadPendingChanges() {
+        if (firmwareUpdateInProgress) {
+            return;
+        }
+        BinaryProtocol bp = uiContext.getBinaryProtocol();
+        ConfigurationImage image = sessionImage.get();
+        if (bp == null || image == null) {
+            return;
+        }
+        final ConfigurationImage snapshot = image.clone();
+        submit.accept(() -> bp.uploadChangesWithoutBurn(snapshot));
+    }
+
+    /** Fires the pending debounce upload deterministically in unit tests. */
+    void flushUploadTimerForUnitTest() {
+        uploadTimer.stop();
+        uploadPendingChanges();
+    }
+
+    boolean isUploadTimerRunningForUnitTest() {
+        return uploadTimer.isRunning();
     }
 
     private void buildLoadTuneAction(UIContext uiContext,

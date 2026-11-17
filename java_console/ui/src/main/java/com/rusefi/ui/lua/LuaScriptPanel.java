@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -48,10 +49,21 @@ public class LuaScriptPanel {
     private final AnyCommand command;
     private final LuaTextEditor scriptText;
     private final MessagesPanel mp;
+    private final Consumer<Runnable> submitCommunicationTask;
+    private final Consumer<String> commandWriter;
 
     public LuaScriptPanel(UIContext context, Node config) {
+        this(context, config, task -> context.getLinkManager().submit(task),
+            ConnectionStatusLogic.INSTANCE::addAndFireListener, command -> context.getCommandQueue().write(command));
+    }
+
+    LuaScriptPanel(UIContext context, Node config, Consumer<Runnable> submitCommunicationTask,
+                   Consumer<ConnectionStatusLogic.Listener> connectionListenerRegistrar,
+                   Consumer<String> commandWriter) {
         this.context = context;
         this.config = config;
+        this.submitCommunicationTask = submitCommunicationTask;
+        this.commandWriter = commandWriter;
         command = AnyCommand.createField(context, config, true, false);
 
         JButton writeButton = new JButton(WRITE);
@@ -116,11 +128,11 @@ public class LuaScriptPanel {
         // addAndFireListener (not addListener): the Lua tab is usually opened AFTER the ECU is
         // already connected, so a plain listener would miss the connect event and never read the
         // script, leaving the editor blank. Firing immediately reads the current script on open.
-        ConnectionStatusLogic.INSTANCE.addAndFireListener(isConnected -> {
+        connectionListenerRegistrar.accept(isConnected -> {
             // readFromECU() does live ECU I/O (the Lua script lives on its own TS page now), which
             // must run on the communication thread — not the EDT — or executeCommand() throws
             // "Communication on wrong thread"
-            context.getLinkManager().submit(() -> {
+            submitCommunicationTask.accept(() -> {
                 try {
                     readFromECU();
                 } catch (Throwable e) {
@@ -359,7 +371,7 @@ public class LuaScriptPanel {
 
         LinkManager linkManager = context.getLinkManager();
 
-        linkManager.submit(() -> {
+        submitCommunicationTask.accept(() -> {
             BinaryProtocol bp = linkManager.getBinaryProtocol();
 
             StringIniField field = getLuaScriptField(bp);
@@ -403,6 +415,6 @@ public class LuaScriptPanel {
     }
 
     void resetLua() {
-        this.context.getCommandQueue().write(Integration.CMD_LUA_RESET);
+        commandWriter.accept(Integration.CMD_LUA_RESET);
     }
 }
