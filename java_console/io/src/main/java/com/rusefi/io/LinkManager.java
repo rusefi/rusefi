@@ -231,8 +231,8 @@ public class LinkManager implements Closeable {
 
     /**
      * When false, {@link #close()} does not push {@link ConnectionStatusValue#NOT_CONNECTED} to the
-     * global {@link ConnectionStatusLogic#INSTANCE}.  Set this on short-lived scanner probes so they
-     * do not evict the splash-screen auto-connect or any other persistent connection.
+     * global {@link ConnectionStatusLogic#INSTANCE} or clear shared sensor data when the stream closes.
+     * Set this on short-lived scanner probes so they do not disrupt a persistent connection.
      */
     public LinkManager setNotifyGlobalStatusOnClose(boolean notify) {
         this.notifyGlobalStatusOnClose = notify;
