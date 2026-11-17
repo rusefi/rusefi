@@ -1,9 +1,16 @@
 package com.rusefi.ui.logview;
 
+import com.rusefi.core.preferences.storage.Node;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-/** Display options of the log chart: grid lines, cursor, values, plot colours and display-only trace smoothing. */
+/**
+ * Display options of the log chart: grid lines, cursor, values, min/max markers, plot colours and display-only trace
+ * smoothing. Kept in the console config, so they carry over from one log to the next and survive a restart.
+ */
 final class ChartSettings {
     enum VerticalMode {
         /** One line per time-axis tick; spacing follows {@link #getTimeSpacing()}. */
@@ -44,10 +51,108 @@ final class ChartSettings {
     private boolean darkPlot = com.rusefi.ui.basic.UiHelper.isDarkTheme();
     private CursorValues cursorValues = CursorValues.LABELS;
     private boolean pinValues;
+    private boolean alwaysMinMax;
     /** Width of the centred display-only moving average; zero draws recorded samples. */
     private double smoothingWindowSeconds;
     /** Per-signal windows by log field name; absent means use {@link #smoothingWindowSeconds}. */
     private final Map<String, Double> smoothingOverrides = new HashMap<>();
+
+    private static final String VERTICAL = "vertical";
+    private static final String HORIZONTAL = "horizontal";
+    private static final String VERTICAL_MODE = "verticalMode";
+    private static final String TIME_SPACING = "timeSpacing";
+    private static final String HORIZONTAL_DIVISIONS = "horizontalDivisions";
+    private static final String SNAP_CURSOR = "snapCursor";
+    private static final String DARK_PLOT = "darkPlot";
+    private static final String CURSOR_VALUES = "cursorValues";
+    private static final String PIN_VALUES = "pinValues";
+    private static final String ALWAYS_MIN_MAX = "alwaysMinMax";
+    private static final String SMOOTHING = "smoothing";
+    private static final String SMOOTHING_OVERRIDES = "smoothingSignals";
+
+    private final Node node;
+    private final List<Runnable> listeners = new ArrayList<>();
+
+    /** Options that are forgotten with the viewer, e.g. in the sandbox. */
+    ChartSettings() {
+        this(new Node());
+    }
+
+    /** Options read from {@code node} and written back to it on every change; unset ones keep their defaults. */
+    ChartSettings(Node node) {
+        this.node = node;
+        vertical = node.getBoolProperty(VERTICAL, vertical);
+        horizontal = node.getBoolProperty(HORIZONTAL, horizontal);
+        verticalMode = enumProperty(VERTICAL_MODE, VerticalMode.values(), verticalMode);
+        timeSpacing = clamp(node.getIntProperty(TIME_SPACING, timeSpacing), MIN_TIME_SPACING, MAX_TIME_SPACING);
+        horizontalDivisions = clamp(node.getIntProperty(HORIZONTAL_DIVISIONS, horizontalDivisions),
+                MIN_HORIZONTAL_DIVISIONS, MAX_HORIZONTAL_DIVISIONS);
+        snapCursor = node.getBoolProperty(SNAP_CURSOR, snapCursor);
+        darkPlot = node.getBoolProperty(DARK_PLOT, darkPlot);
+        cursorValues = enumProperty(CURSOR_VALUES, CursorValues.values(), cursorValues);
+        pinValues = node.getBoolProperty(PIN_VALUES, pinValues);
+        alwaysMinMax = node.getBoolProperty(ALWAYS_MIN_MAX, alwaysMinMax);
+        smoothingWindowSeconds = validWindow(node.getDoubleProperty(SMOOTHING, 0), 0);
+        for (Map.Entry<String, Object> entry : node.getChild(SMOOTHING_OVERRIDES).getConfig().entrySet()) {
+            if (entry.getValue() instanceof String && Node.isNumeric((String) entry.getValue())) {
+                double seconds = validWindow(Double.parseDouble((String) entry.getValue()), -1);
+                if (seconds >= 0) {
+                    smoothingOverrides.put(entry.getKey(), seconds);
+                }
+            }
+        }
+    }
+
+    /** Called after every change, e.g. to save the config. */
+    void addListener(Runnable listener) {
+        listeners.add(listener);
+    }
+
+    private <E extends Enum<E>> E enumProperty(String key, E[] values, E fallback) {
+        String name = node.getProperty(key, null);
+        for (E value : values) {
+            if (value.name().equals(name)) {
+                return value;
+            }
+        }
+        return fallback;
+    }
+
+    private static int clamp(int value, int min, int max) {
+        return Math.max(min, Math.min(max, value));
+    }
+
+    private static double validWindow(double seconds, double fallback) {
+        return seconds >= 0 && Double.isFinite(seconds) ? seconds : fallback;
+    }
+
+    /** Writes every option to the node and tells the listeners. */
+    private void changed() {
+        node.setProperty(VERTICAL, vertical);
+        node.setProperty(HORIZONTAL, horizontal);
+        node.setProperty(VERTICAL_MODE, verticalMode.name());
+        node.setProperty(TIME_SPACING, timeSpacing);
+        node.setProperty(HORIZONTAL_DIVISIONS, horizontalDivisions);
+        node.setProperty(SNAP_CURSOR, snapCursor);
+        // stored only when it differs from the console theme, so an untouched choice keeps following the theme
+        if (darkPlot == com.rusefi.ui.basic.UiHelper.isDarkTheme()) {
+            node.getConfig().remove(DARK_PLOT);
+        } else {
+            node.setProperty(DARK_PLOT, darkPlot);
+        }
+        node.setProperty(CURSOR_VALUES, cursorValues.name());
+        node.setProperty(PIN_VALUES, pinValues);
+        node.setProperty(ALWAYS_MIN_MAX, alwaysMinMax);
+        node.setProperty(SMOOTHING, smoothingWindowSeconds);
+        Node overrides = node.getChild(SMOOTHING_OVERRIDES);
+        overrides.getConfig().clear();
+        for (Map.Entry<String, Double> entry : smoothingOverrides.entrySet()) {
+            overrides.setProperty(entry.getKey(), entry.getValue());
+        }
+        for (Runnable listener : listeners) {
+            listener.run();
+        }
+    }
 
     double getSmoothingWindowSeconds() {
         return smoothingWindowSeconds;
@@ -56,6 +161,7 @@ final class ChartSettings {
     void setSmoothingWindowSeconds(double smoothingWindowSeconds) {
         validateSmoothingWindow(smoothingWindowSeconds);
         this.smoothingWindowSeconds = smoothingWindowSeconds;
+        changed();
     }
 
     double getSmoothingWindowSeconds(String signal) {
@@ -69,10 +175,12 @@ final class ChartSettings {
     void setSmoothingWindowSeconds(String signal, double smoothingWindowSeconds) {
         validateSmoothingWindow(smoothingWindowSeconds);
         smoothingOverrides.put(signal, smoothingWindowSeconds);
+        changed();
     }
 
     void useGlobalSmoothing(String signal) {
         smoothingOverrides.remove(signal);
+        changed();
     }
 
     private static void validateSmoothingWindow(double smoothingWindowSeconds) {
@@ -87,6 +195,7 @@ final class ChartSettings {
 
     void setCursorValues(CursorValues cursorValues) {
         this.cursorValues = cursorValues;
+        changed();
     }
 
     /**
@@ -99,6 +208,20 @@ final class ChartSettings {
 
     void setPinValues(boolean pinValues) {
         this.pinValues = pinValues;
+        changed();
+    }
+
+    /**
+     * False: min/max markers show only on the hovered or pinned trace. True: every trace shows its visible min and
+     * max; the hovered or pinned one keeps the full-size markers.
+     */
+    boolean isAlwaysMinMax() {
+        return alwaysMinMax;
+    }
+
+    void setAlwaysMinMax(boolean alwaysMinMax) {
+        this.alwaysMinMax = alwaysMinMax;
+        changed();
     }
 
     /** Plot area colours, chosen independently of the console theme; dark by default in the dark theme. */
@@ -108,6 +231,7 @@ final class ChartSettings {
 
     void setDarkPlot(boolean darkPlot) {
         this.darkPlot = darkPlot;
+        changed();
     }
 
     /**
@@ -120,6 +244,7 @@ final class ChartSettings {
 
     void setSnapCursor(boolean snapCursor) {
         this.snapCursor = snapCursor;
+        changed();
     }
 
     boolean isVertical() {
@@ -128,6 +253,7 @@ final class ChartSettings {
 
     void setVertical(boolean vertical) {
         this.vertical = vertical;
+        changed();
     }
 
     boolean isHorizontal() {
@@ -136,6 +262,7 @@ final class ChartSettings {
 
     void setHorizontal(boolean horizontal) {
         this.horizontal = horizontal;
+        changed();
     }
 
     VerticalMode getVerticalMode() {
@@ -144,6 +271,7 @@ final class ChartSettings {
 
     void setVerticalMode(VerticalMode verticalMode) {
         this.verticalMode = verticalMode;
+        changed();
     }
 
     /** Approximate pixels between time ticks; also spaces the time-axis labels. */
@@ -152,7 +280,8 @@ final class ChartSettings {
     }
 
     void setTimeSpacing(int pixels) {
-        timeSpacing = Math.max(MIN_TIME_SPACING, Math.min(MAX_TIME_SPACING, pixels));
+        timeSpacing = clamp(pixels, MIN_TIME_SPACING, MAX_TIME_SPACING);
+        changed();
     }
 
     int getHorizontalDivisions() {
@@ -160,6 +289,7 @@ final class ChartSettings {
     }
 
     void setHorizontalDivisions(int divisions) {
-        horizontalDivisions = Math.max(MIN_HORIZONTAL_DIVISIONS, Math.min(MAX_HORIZONTAL_DIVISIONS, divisions));
+        horizontalDivisions = clamp(divisions, MIN_HORIZONTAL_DIVISIONS, MAX_HORIZONTAL_DIVISIONS);
+        changed();
     }
 }
