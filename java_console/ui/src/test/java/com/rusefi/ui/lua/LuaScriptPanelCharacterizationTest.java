@@ -76,9 +76,8 @@ class LuaScriptPanelCharacterizationTest {
             eq(testProtocol.field.getOffset()), eq(testProtocol.field.getSize()),
             eq(testProtocol.field.getPageIndex()));
         String sent = new String(transmitted.getValue(), StandardCharsets.US_ASCII);
-        assertTrue(sent.startsWith(ECU_SCRIPT),
-            "Current characterization: write snapshots editor before deferred reload; intended: transmit disk content");
-        assertFalse(sent.startsWith(DISK_SCRIPT));
+        assertTrue(sent.startsWith(DISK_SCRIPT), "Reload transmits the same script displayed in the editor");
+        assertFalse(sent.startsWith(ECU_SCRIPT));
     }
 
     @Test

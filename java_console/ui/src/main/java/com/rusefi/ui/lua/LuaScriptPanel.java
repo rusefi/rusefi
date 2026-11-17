@@ -266,7 +266,11 @@ public class LuaScriptPanel {
 
     private void setText(String luaScript) {
         // May be called from the communication thread (readFromECU); Swing requires EDT.
-        SwingUtilities.invokeLater(() -> scriptText.setText(luaScript));
+        if (SwingUtilities.isEventDispatchThread()) {
+            scriptText.setText(luaScript);
+        } else {
+            SwingUtilities.invokeLater(() -> scriptText.setText(luaScript));
+        }
     }
 
     private String getWorkingFolder() {
