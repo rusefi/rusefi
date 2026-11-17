@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import javax.swing.SwingUtilities;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.StringReader;
@@ -404,6 +405,45 @@ class LogChartSettingsTest {
         assertEquals("Display smoothing: Raw  \u25BE", toolbar.smoothingButton.getText());
         assertFalse(toolbar.smoothingRawButton.isVisible());
         assertEquals(4, repaints[0]);
+    }
+
+    @Test
+    void wheelStepsToTheNextHundredMillisecondsWithinTheLimits() {
+        TimelineSmoothingWindow limits = new TimelineSmoothingWindow(20, 1_000);
+        assertEquals(200, ChartToolbar.wheelStep(100, 1, limits));
+        assertEquals(400, ChartToolbar.wheelStep(100, 3, limits));
+        assertEquals(200, ChartToolbar.wheelStep(150, 1, limits), "snaps up to a multiple");
+        assertEquals(100, ChartToolbar.wheelStep(150, -1, limits), "snaps down to a multiple");
+        assertEquals(100, ChartToolbar.wheelStep(200, -1, limits));
+        assertEquals(20, ChartToolbar.wheelStep(100, -1, limits), "stops at the shortest window, not Raw");
+        assertEquals(20, ChartToolbar.wheelStep(20, -1, limits));
+        assertEquals(1_000, ChartToolbar.wheelStep(950, 2, limits), "stops at the longest window");
+    }
+
+    @Test
+    void wheelOverTheSmoothingButtonChangesItOnlyWhileSmoothing() {
+        ChartSettings settings = new ChartSettings();
+        int[] repaints = {0};
+        ChartToolbar toolbar = new ChartToolbar(settings, () -> repaints[0]++, null,
+                new TimelineSmoothingWindow(4, 10_000));
+
+        toolbar.wheelSmoothing(wheel(toolbar, -1));
+        assertEquals(0, settings.getSmoothingWindowSeconds(), "Raw stays Raw");
+        assertEquals(0, repaints[0]);
+
+        settings.setSmoothingWindowSeconds(0.1);
+        toolbar.wheelSmoothing(wheel(toolbar, -1));
+        assertEquals(0.2, settings.getSmoothingWindowSeconds(), 1e-9, "wheel up widens");
+        assertEquals("Display smoothing: 200 ms  \u25BE", toolbar.smoothingButton.getText());
+        toolbar.wheelSmoothing(wheel(toolbar, 1));
+        toolbar.wheelSmoothing(wheel(toolbar, 1));
+        assertEquals(0.004, settings.getSmoothingWindowSeconds(), 1e-9, "wheel down narrows to the shortest window");
+        assertEquals(3, repaints[0]);
+    }
+
+    private static MouseWheelEvent wheel(ChartToolbar toolbar, int rotation) {
+        return new MouseWheelEvent(toolbar.smoothingButton, MouseEvent.MOUSE_WHEEL, 0, 0, 5, 5, 0, false,
+                MouseWheelEvent.WHEEL_UNIT_SCROLL, 3, rotation);
     }
 
     @Test
