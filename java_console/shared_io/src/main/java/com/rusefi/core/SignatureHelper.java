@@ -124,6 +124,10 @@ public class SignatureHelper {
         if (srecName.endsWith(".srec")) {
             srecName = srecName.substring(0, srecName.length() - 5);
         }
+        if (srecName.startsWith("rusefi-") && srecName.endsWith("_obfuscated")) {
+            // firmware/bundle.mk uses a dash prefix and a suffix for obfuscated update images.
+            srecName = "rusefi_" + srecName.substring("rusefi-".length(), srecName.length() - "_obfuscated".length());
+        }
         if (srecName.endsWith("_update")) {
             srecName = srecName.substring(0, srecName.length() - 7);
         }

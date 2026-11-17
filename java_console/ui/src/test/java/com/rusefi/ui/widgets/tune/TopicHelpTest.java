@@ -8,8 +8,6 @@ import com.rusefi.ui.UIContext;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
-import javax.swing.text.html.HTML;
-import javax.swing.text.html.HTMLDocument;
 import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
@@ -46,14 +44,15 @@ class TopicHelpTest {
                 JButton button = buttons.get(0);
                 assertEquals("Example help", button.getAccessibleContext().getAccessibleName());
                 assertEquals(1, button.getActionListeners().length);
-                JEditorPane editor = (JEditorPane) CalibrationFieldFactory.createHtmlHelpScrollPane(
-                    button.getToolTipText()).getViewport().getView();
-                assertTrue(editor.getText().contains("First line<br>Second line"));
-                HTMLDocument document = (HTMLDocument) editor.getDocument();
-                assertEquals("https://rusefi.com/s/knock",
-                    document.getIterator(HTML.Tag.A).getAttributes().getAttribute(HTML.Attribute.HREF));
-                assertFalse(editor.isEditable());
-                assertEquals(1, editor.getHyperlinkListeners().length);
+                SettingHelpCard.Help help = (SettingHelpCard.Help) button.getClientProperty(SettingHelpCard.TOPIC_KEY);
+                assertEquals("Example help", help.name);
+                assertEquals("First line\nSecond line", help.text, "INI <br> becomes a line break");
+                assertEquals("https://rusefi.com/s/knock", help.link);
+                JComponent card = SettingHelpCard.createCard(help, true, () -> { });
+                JEditorPane text = (JEditorPane) find(card, "settingHelpText");
+                assertFalse(text.isEditable());
+                assertEquals(1, text.getHyperlinkListeners().length);
+                assertNotNull(find(card, "settingHelpLink"), "Read more opens the web help");
             } finally {
                 widget.destroy();
             }
@@ -71,8 +70,9 @@ class TopicHelpTest {
             try {
                 widget.update("web", ini, null);
                 assertEquals(1, helpButtons(widget.getContentPane()).size());
-                assertTrue(helpButtons(widget.getContentPane()).get(0).getToolTipText()
-                    .contains("href='https://rusefi.com/s/fuel'"));
+                SettingHelpCard.Help web = (SettingHelpCard.Help) helpButtons(widget.getContentPane()).get(0)
+                    .getClientProperty(SettingHelpCard.TOPIC_KEY);
+                assertEquals("https://rusefi.com/s/fuel", web.link);
                 widget.update("missing", ini, null);
                 assertTrue(helpButtons(widget.getContentPane()).isEmpty());
                 widget.update("empty", ini, null);
@@ -145,6 +145,21 @@ class TopicHelpTest {
                 widget.destroy();
             }
         });
+    }
+
+    private static Component find(Container container, String name) {
+        for (Component component : container.getComponents()) {
+            if (name.equals(component.getName())) {
+                return component;
+            }
+            if (component instanceof Container) {
+                Component nested = find((Container) component, name);
+                if (nested != null) {
+                    return nested;
+                }
+            }
+        }
+        return null;
     }
 
     private static List<JButton> helpButtons(Component component) {

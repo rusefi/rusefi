@@ -5,8 +5,9 @@ import com.opensr5.ConfigurationImageMetaVersion0_0;
 import com.opensr5.ConfigurationImageWithMeta;
 import com.rusefi.config.generated.Integration;
 
+import com.rusefi.io.commands.ByteRange;
+
 import static com.rusefi.binaryprotocol.IoHelper.putShort;
-import static com.rusefi.binaryprotocol.IoHelper.swap16;
 
 /**
  * Utility class for reading configuration pages from the ECU.
@@ -29,7 +30,7 @@ public class PageReader {
         int pageIndex = iniPageNumber - 1;
 
         ConfigurationImageMetaVersion0_0 pageMeta = new ConfigurationImageMetaVersion0_0(pageSize, signature);
-        ConfigurationImageWithMeta imageWithMeta = new ConfigurationImageWithMeta(pageMeta);
+        ConfigurationImageWithMeta imageWithMeta = new ConfigurationImageWithMeta(pageMeta, bp.getWireByteOrder());
         ConfigurationImage image = imageWithMeta.getConfigurationImage();
 
         int offset = 0;
@@ -47,8 +48,8 @@ public class PageReader {
             byte[] packet = new byte[6];
             packet[0] = 0x00;
             packet[1] = (byte) pageIndex;
-            putShort(packet, 2, swap16(offset));
-            putShort(packet, 4, swap16(requestSize));
+            putShort(packet, 2, ByteRange.toWire16(offset, bp.getWireByteOrder()));
+            putShort(packet, 4, ByteRange.toWire16(requestSize, bp.getWireByteOrder()));
 
             byte[] response = bp.executeCommand(Integration.TS_READ_COMMAND, packet,
                 String.format("read page %d offset=%d size=%d", iniPageNumber, offset, requestSize));

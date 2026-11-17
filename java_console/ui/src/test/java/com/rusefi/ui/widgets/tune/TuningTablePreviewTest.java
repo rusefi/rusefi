@@ -47,6 +47,17 @@ class TuningTablePreviewTest {
             JPanel cards = (JPanel) view.getContent().getComponent(1);
             resize(cards, cards.getWidth(), cards.getHeight());
             JPanel grid = (JPanel) cards.getComponent(0);
+            JTable table = (JTable) ((JScrollPane) grid.getComponent(0)).getViewport().getView();
+            assertEquals(16, table.getRowCount());
+            assertEquals(17, table.getColumnCount());
+            assertEquals("650", table.getColumnName(1));
+            assertEquals("7000", table.getColumnName(16));
+            assertEquals("120", table.getValueAt(0, 0));
+            assertEquals("21", table.getValueAt(15, 0));
+            assertEquals("10.5", table.getValueAt(0, 1));
+            assertEquals("35", table.getValueAt(0, 16));
+            assertEquals("12.2", table.getValueAt(15, 1));
+            assertEquals("42.9", table.getValueAt(15, 16));
             assertTrue(grid.getComponent(1).isVisible(), "The sandbox's real 16x16 ignition table must have a preview");
             invalidateTree(scroll);
             layoutTree(scroll);
@@ -82,8 +93,11 @@ class TuningTablePreviewTest {
             scroll.doLayout();
             scroll.getViewport().doLayout();
             resize(cards, 800, 400);
-            assertFalse(grid.getComponent(1).isVisible(),
-                "A previously expanded table must not keep the preview visible in a short viewport");
+            assertTrue(grid.getComponent(1).isVisible(), "A short viewport keeps the preview");
+            assertEquals(240, grid.getComponent(1).getPreferredSize().height,
+                "A short viewport keeps the preview at its minimum height");
+            assertTrue(dialog.getPreferredSize().height > scroll.getViewport().getExtentSize().height,
+                "The dialog grows past the short viewport, so it scrolls to the preview");
         });
     }
 
@@ -118,6 +132,35 @@ class TuningTablePreviewTest {
             resize(cards, 600, 400);
             loadTable(view, false);
             assertFalse(preview.isVisible(), "Missing axes must not enable a misleading preview");
+        });
+    }
+
+    @Test
+    void tableSelectionIsShownOnBothSurfaces() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            TuningTableView view = new TuningTableView("VE");
+            loadTable(view, true);
+            JPanel cards = (JPanel) view.getContent().getComponent(1);
+            JPanel grid = (JPanel) cards.getComponent(0);
+            Surface3DView preview = (Surface3DView) grid.getComponent(1);
+            Surface3DView full = (Surface3DView) cards.getComponent(1);
+            JTable table = (JTable) ((JScrollPane) grid.getComponent(0)).getViewport().getView();
+            assertFalse(preview.isSelected(1, 0), "A newly displayed table has no selection");
+
+            // The top table row shows the last data row; column 0 holds the load axis.
+            table.changeSelection(0, 1, false, false);
+            table.changeSelection(0, 2, false, true);
+            for (Surface3DView surface : new Surface3DView[]{preview, full}) {
+                assertTrue(surface.isSelected(1, 0));
+                assertTrue(surface.isSelected(1, 1));
+                assertFalse(surface.isSelected(0, 0));
+                assertFalse(surface.isSelected(1, 2));
+            }
+
+            table.changeSelection(1, 0, false, false);
+            assertFalse(preview.isSelected(0, 0), "Selecting the axis column selects no surface point");
+            table.clearSelection();
+            assertFalse(preview.isSelected(1, 0));
         });
     }
 

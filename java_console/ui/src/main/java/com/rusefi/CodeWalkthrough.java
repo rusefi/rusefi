@@ -27,13 +27,13 @@ import static com.devexperts.logging.Logging.getLogging;
 public class CodeWalkthrough {
     private static final Logging log = getLogging(CodeWalkthrough.class);
     // active statements - light green
-    public static final Color ACTIVE_STATEMENT = new Color(102, 255, 102);
+    public static final Color ACTIVE_STATEMENT = new Color(102, 255, 102); // [tag:fixed_color] developer Live Data view, not opened by the console
     // cost past active return statement
-    public static final Color PASSIVE_CODE = Color.lightGray;
-    public static final Color BROKEN_CODE = Color.orange;
-    public static final Color TRUE_CONDITION = Color.GREEN;
-    public static final Color FALSE_CONDITION = Color.RED;
-    public static final Color CONFIG = Color.BLUE;
+    public static final Color PASSIVE_CODE = Color.lightGray; // [tag:fixed_color] developer Live Data view, not opened by the console
+    public static final Color BROKEN_CODE = Color.orange; // [tag:fixed_color] developer Live Data view, not opened by the console
+    public static final Color TRUE_CONDITION = Color.GREEN; // [tag:fixed_color] developer Live Data view, not opened by the console
+    public static final Color FALSE_CONDITION = Color.RED; // [tag:fixed_color] developer Live Data view, not opened by the console
+    public static final Color CONFIG = Color.BLUE; // [tag:fixed_color] developer Live Data view, not opened by the console
 
     static {
         log.configureDebugEnabled(false);

@@ -23,10 +23,9 @@ public class MessagesPaneBackgroundColor {
     private static final Logging log = getLogging(MessagesPaneBackgroundColor.class);
 
     public static final String SET_BG_COLOR_PREFIX = "set_bg_color=";
-    public static final Color DEFAULT_COLOR = Color.white;
-
     private static final List<JTextPane> panes = new CopyOnWriteArrayList<>();
-    private static volatile Color currentColor = DEFAULT_COLOR;
+    /** Null until a script sets a colour: the panes then use the theme's Messages background. */
+    private static volatile Color currentColor;
 
     static {
         // plain addListener, not addListenerAndReplay: we do not want a stale backlog message
@@ -43,7 +42,13 @@ public class MessagesPaneBackgroundColor {
      */
     static void register(JTextPane pane) {
         panes.add(pane);
-        pane.setBackground(currentColor);
+        pane.setBackground(currentColor != null ? currentColor : defaultColor());
+    }
+
+    /** The Messages background of the console theme [tag:console_theme], white without one. */
+    public static Color defaultColor() {
+        Color color = UIManager.getColor("Console.Messages.background");
+        return color != null ? color : Color.WHITE;
     }
 
     /**
@@ -70,17 +75,18 @@ public class MessagesPaneBackgroundColor {
     }
 
     /**
-     * Back to default white, e.g. when a new Lua script is written to the ECU.
+     * Back to the theme's background, e.g. when a new Lua script is written to the ECU.
      */
     public static void reset() {
-        applyColor(DEFAULT_COLOR);
+        applyColor(null);
     }
 
     private static void applyColor(Color color) {
         currentColor = color;
         SwingUtilities.invokeLater(() -> {
+            Color background = color != null ? color : defaultColor();
             for (JTextPane pane : panes) {
-                pane.setBackground(color);
+                pane.setBackground(background);
             }
         });
     }
@@ -108,7 +114,7 @@ public class MessagesPaneBackgroundColor {
                 if (isOutOfRange(r) || isOutOfRange(g) || isOutOfRange(b)) {
                     return null;
                 }
-                return new Color(r, g, b);
+                return new Color(r, g, b); // [tag:fixed_color] the colour the script asked for
             } catch (NumberFormatException e) {
                 return null;
             }
@@ -116,7 +122,7 @@ public class MessagesPaneBackgroundColor {
         if (!value.matches("[0-9a-fA-F]{6}")) {
             return null;
         }
-        return new Color(Integer.parseInt(value, 16));
+        return new Color(Integer.parseInt(value, 16)); // [tag:fixed_color] the colour the script asked for
     }
 
     private static boolean isOutOfRange(int component) {

@@ -29,9 +29,10 @@ public class WrapLayout extends FlowLayout {
             }
 
             Insets insets = target.getInsets();
-            int maxWidth = targetWidth - insets.left - insets.right;
             int hgap = getHgap();
             int vgap = getVgap();
+            // the room FlowLayout fills before it wraps
+            int maxWidth = targetWidth - insets.left - insets.right - hgap * 2;
 
             int rowWidth = 0;
             int rowHeight = 0;
@@ -61,9 +62,10 @@ public class WrapLayout extends FlowLayout {
             totalHeight += rowHeight;
             totalWidth = Math.max(totalWidth, rowWidth);
 
+            // FlowLayout lays the rows out with hgap / vgap on every side, not only between components
             return new Dimension(
-                totalWidth + insets.left + insets.right,
-                totalHeight + insets.top + insets.bottom
+                totalWidth + insets.left + insets.right + hgap * 2,
+                totalHeight + insets.top + insets.bottom + vgap * 2
             );
         }
     }

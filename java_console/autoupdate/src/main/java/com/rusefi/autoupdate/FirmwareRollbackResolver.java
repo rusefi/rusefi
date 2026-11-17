@@ -23,9 +23,10 @@ public final class FirmwareRollbackResolver {
     private static final int TIMEOUT_MILLIS = 10_000;
     private static final Pattern SAFE_SEGMENT = Pattern.compile("[A-Za-z0-9._-]+");
     private static final Pattern BUILD_LINK = Pattern.compile(
-        "<a\\s+href=[\"']([0-9a-f]{40})/[\"'][^>]*>[^\\r\\n]*?</a>\\s+" +
+        "<a\\s+href=[\"']([0-9a-f]{40})/[\"']([^>]*)>[^\\r\\n]*?</a>\\s+" +
             "(\\d{4}-\\d{2}-\\d{2}\\s+\\d{2}:\\d{2})",
         Pattern.CASE_INSENSITIVE);
+    private static final Pattern VALID_FIRMWARE_SIGNATURE = Pattern.compile("[A-Za-z0-9._ -]{1,200}");
     private static final DateTimeFormatter APACHE_TIMESTAMP = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     private static final Comparator<Build> NEWEST_FIRST = Comparator.comparingLong(Build::getLastModified)
         .reversed()
@@ -89,7 +90,7 @@ public final class FirmwareRollbackResolver {
         return sorted;
     }
 
-    static List<Build> parseIndex(String html, String board, String branch, String directoryUrl) {
+    public static List<Build> parseIndex(String html, String board, String branch, String directoryUrl) {
         requireSafeSegment(board, "board");
         requireSafeSegment(branch, "branch");
         String baseUrl = withTrailingSlash(directoryUrl);
@@ -98,16 +99,95 @@ public final class FirmwareRollbackResolver {
         while (matcher.find()) {
             try {
                 String sha = matcher.group(1).toLowerCase();
-                long lastModified = LocalDateTime.parse(matcher.group(2), APACHE_TIMESTAMP)
+                long lastModified = LocalDateTime.parse(matcher.group(3), APACHE_TIMESTAMP)
                     .toInstant(ZoneOffset.UTC)
                     .toEpochMilli();
-                builds.add(new Build(board, branch, sha, lastModified, baseUrl + sha + "/"));
+                builds.add(new Build(board, branch, sha, lastModified, baseUrl + sha + "/",
+                    parseFirmwareSignature(matcher.group(2))));
             } catch (DateTimeParseException ignored) {
                 // Ignore malformed index rows; a valid row still remains usable.
             }
         }
         builds.sort(NEWEST_FIRST);
         return builds;
+    }
+
+    private static String parseFirmwareSignature(String attributes) {
+        int cursor = 0;
+        int signatureCount = 0;
+        String signature = null;
+        while (cursor < attributes.length()) {
+            while (cursor < attributes.length() && Character.isWhitespace(attributes.charAt(cursor))) {
+                cursor++;
+            }
+            if (cursor == attributes.length()) {
+                break;
+            }
+            if (attributes.charAt(cursor) == '/') {
+                cursor++;
+                while (cursor < attributes.length() && Character.isWhitespace(attributes.charAt(cursor))) {
+                    cursor++;
+                }
+                return cursor == attributes.length() ? signature : null;
+            }
+
+            int nameStart = cursor;
+            while (cursor < attributes.length() && !Character.isWhitespace(attributes.charAt(cursor))
+                && attributes.charAt(cursor) != '=' && attributes.charAt(cursor) != '/') {
+                cursor++;
+            }
+            if (cursor == nameStart) {
+                return null;
+            }
+            String name = attributes.substring(nameStart, cursor);
+            while (cursor < attributes.length() && Character.isWhitespace(attributes.charAt(cursor))) {
+                cursor++;
+            }
+
+            boolean hasValue = cursor < attributes.length() && attributes.charAt(cursor) == '=';
+            boolean quotedValue = false;
+            String value = null;
+            if (hasValue) {
+                cursor++;
+                while (cursor < attributes.length() && Character.isWhitespace(attributes.charAt(cursor))) {
+                    cursor++;
+                }
+                if (cursor == attributes.length()) {
+                    return null;
+                }
+                char quote = attributes.charAt(cursor);
+                if (quote == '"' || quote == '\'') {
+                    quotedValue = true;
+                    int valueStart = ++cursor;
+                    while (cursor < attributes.length() && attributes.charAt(cursor) != quote) {
+                        cursor++;
+                    }
+                    if (cursor == attributes.length()) {
+                        return null;
+                    }
+                    value = attributes.substring(valueStart, cursor++);
+                    if (cursor < attributes.length() && !Character.isWhitespace(attributes.charAt(cursor))
+                        && attributes.charAt(cursor) != '/') {
+                        return null;
+                    }
+                } else {
+                    int valueStart = cursor;
+                    while (cursor < attributes.length() && !Character.isWhitespace(attributes.charAt(cursor))) {
+                        cursor++;
+                    }
+                    value = attributes.substring(valueStart, cursor);
+                }
+            }
+
+            if ("data-firmware-signature".equalsIgnoreCase(name)) {
+                if (++signatureCount != 1 || !hasValue || !quotedValue
+                    || !VALID_FIRMWARE_SIGNATURE.matcher(value).matches()) {
+                    return null;
+                }
+                signature = value;
+            }
+        }
+        return signature;
     }
 
     private static List<Build> sorted(List<Build> builds) {
@@ -147,13 +227,16 @@ public final class FirmwareRollbackResolver {
         private final String sha;
         private final long lastModified;
         private final String directoryUrl;
+        private final String firmwareSignature;
 
-        private Build(String board, String branch, String sha, long lastModified, String directoryUrl) {
+        private Build(String board, String branch, String sha, long lastModified, String directoryUrl,
+                      String firmwareSignature) {
             this.board = board;
             this.branch = branch;
             this.sha = sha;
             this.lastModified = lastModified;
             this.directoryUrl = directoryUrl;
+            this.firmwareSignature = firmwareSignature;
         }
 
         public String getBoard() {
@@ -174,6 +257,10 @@ public final class FirmwareRollbackResolver {
 
         public String getDirectoryUrl() {
             return directoryUrl;
+        }
+
+        public String getFirmwareSignature() {
+            return firmwareSignature;
         }
     }
 }

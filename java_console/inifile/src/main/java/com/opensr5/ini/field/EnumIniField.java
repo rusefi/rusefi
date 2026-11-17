@@ -9,12 +9,15 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public class EnumIniField extends IniField {
+    private static final String UNKNOWN_ORDINAL_PREFIX = "__rusefi_unknown_enum_ordinal_";
+    private static final String UNKNOWN_ORDINAL_SUFFIX = "__";
     private final FieldType type;
     private final EnumKeyValueMap enums;
     private final int bitPosition;
     // weird format where 'one bit' width means 0 and "two bits" means "1"
     private final int bitSize0;
     private final boolean pinEnum;
+    private final boolean alphabeticalOrder;
 
     public EnumIniField(String name, int offset, FieldType type, EnumKeyValueMap enums, int bitPosition, int bitSize0) {
         this(name, offset, type, enums, bitPosition, bitSize0, false);
@@ -22,12 +25,18 @@ public class EnumIniField extends IniField {
 
     public EnumIniField(String name, int offset, FieldType type, EnumKeyValueMap enums, int bitPosition, int bitSize0,
                         boolean pinEnum) {
+        this(name, offset, type, enums, bitPosition, bitSize0, pinEnum, false);
+    }
+
+    public EnumIniField(String name, int offset, FieldType type, EnumKeyValueMap enums, int bitPosition, int bitSize0,
+                        boolean pinEnum, boolean alphabeticalOrder) {
         super(name, offset);
         this.type = type;
         this.enums = enums;
         this.bitPosition = bitPosition;
         this.bitSize0 = bitSize0;
         this.pinEnum = pinEnum;
+        this.alphabeticalOrder = alphabeticalOrder;
     }
 
     @Override
@@ -52,12 +61,41 @@ public class EnumIniField extends IniField {
         return enums;
     }
 
+    /** Display ordering is independent of the firmware ordinals used to read and write tunes. */
+    public List<String> getDisplayValues() {
+        List<String> values = new ArrayList<>(enums.values());
+        if (alphabeticalOrder) {
+            values.sort(String.CASE_INSENSITIVE_ORDER);
+        }
+        return values;
+    }
+
     public FieldType getType() {
         return type;
     }
 
     public boolean isPinEnum() {
         return pinEnum;
+    }
+
+    public static String unknownOrdinalValue(int ordinal) {
+        return UNKNOWN_ORDINAL_PREFIX + ordinal + UNKNOWN_ORDINAL_SUFFIX;
+    }
+
+    public static boolean isUnknownOrdinalValue(String value) {
+        return value.startsWith(UNKNOWN_ORDINAL_PREFIX) && value.endsWith(UNKNOWN_ORDINAL_SUFFIX);
+    }
+
+    public static int parseUnknownOrdinal(String value) {
+        if (!isUnknownOrdinalValue(value)) {
+            throw new IllegalArgumentException("Not an unknown enum ordinal: " + value);
+        }
+        try {
+            return Integer.parseInt(value.substring(UNKNOWN_ORDINAL_PREFIX.length(),
+                value.length() - UNKNOWN_ORDINAL_SUFFIX.length()));
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Malformed unknown enum ordinal: " + value, e);
+        }
     }
 
     public static boolean isQuoted(String q) {

@@ -7,6 +7,7 @@ import com.rusefi.core.RusEfiSignature;
 import com.rusefi.core.SignatureHelper;
 import com.rusefi.core.io.BoardCompatibility;
 import com.rusefi.core.io.BundleUtil;
+import com.rusefi.maintenance.FirmwareSelection;
 
 import javax.swing.*;
 
@@ -21,6 +22,19 @@ public class BootloaderHelper {
     private static final Logging log = getLogging(BootloaderHelper.class);
 
     public static boolean sendBootloaderRebootCommand(JComponent parent, String signature, IoStream stream, UpdateOperationCallbacks callbacks, String command) {
+        return sendBootloaderRebootCommandInternal(parent, signature, stream, callbacks, command, null);
+    }
+
+    public static boolean sendBootloaderRebootCommand(JComponent parent, String signature, IoStream stream,
+            UpdateOperationCallbacks callbacks, String command, FirmwareSelection selection) {
+        return sendBootloaderRebootCommandInternal(parent, signature, stream, callbacks, command, selection);
+    }
+
+    private static boolean sendBootloaderRebootCommandInternal(JComponent parent, String signature, IoStream stream,
+            UpdateOperationCallbacks callbacks, String command, FirmwareSelection selection) {
+        if (selection != null && !selection.revalidate(signature, callbacks)) {
+            return false;
+        }
         RusEfiSignature controllerSignature = SignatureHelper.parse(signature);
         String fileSystemBundleTarget = BundleUtil.getBundleTarget();
         if (fileSystemBundleTarget != null && controllerSignature != null) {
@@ -29,9 +43,14 @@ public class BootloaderHelper {
             boolean ownBoard = fileSystemBundleTarget.equalsIgnoreCase(ecuTarget) || fileSystemBundleTarget.contains("_QC_");
             if (!ownBoard && !UiProperties.skipEcuTypeDetection()) {
                 if (BoardCompatibility.matchesCompatibility(ecuTarget)) {
+                    if (selection != null) {
+                        return BootloaderCommsHelper.sendBootloaderRebootCommand(stream, callbacks, command);
+                    }
                     // #9714:  fetch the matching firmware on demand before rebooting to bootloader.
                     callbacks.logLine("[universal_bundle]: downloading firmware for \"" + ecuTarget + "\"...");
-                    if (!Autoupdate.ensureFirmwareForTarget(ecuTarget, callbacks::updateProgress, callbacks::logLine)) {
+                    if (!Autoupdate.ensureFirmwareForTarget(ecuTarget,
+                        percent -> callbacks.updateFirmwareProgress(
+                            UpdateOperationCallbacks.FirmwareUpdateStage.DOWNLOAD, percent), callbacks::logLine)) {
                         callbacks.logLine("Failed to download firmware for " + ecuTarget);
                         if (callbacks.isInteractive()) {
                             SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(parent, String.format(
@@ -39,6 +58,7 @@ public class BootloaderHelper {
                         }
                         return false;
                     }
+                    callbacks.updateFirmwareProgress(UpdateOperationCallbacks.FirmwareUpdateStage.DOWNLOAD, 100);
                 } else {
                     String message = String.format("You have \"%s\" controller does not look right to program it with \"%s\"", ecuTarget, fileSystemBundleTarget);
                     callbacks.logLine(message);

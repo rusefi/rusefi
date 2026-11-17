@@ -1,11 +1,13 @@
 package com.rusefi.io.can;
 
+import peak.can.MutableInteger;
 import peak.can.basic.PCANBasic;
 import peak.can.basic.TPCANBaudrate;
 import peak.can.basic.TPCANHandle;
 import peak.can.basic.TPCANMessageType;
-import peak.can.basic.TPCANMode;
 import peak.can.basic.TPCANMsg;
+import peak.can.basic.TPCANParameter;
+import peak.can.basic.TPCANParameterValue;
 import peak.can.basic.TPCANStatus;
 import peak.can.basic.TPCANType;
 
@@ -13,6 +15,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Optional;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -45,6 +48,7 @@ public class PCanRawPort implements RawCanPort {
     private final PCanClock clock;
 
     private PCanApi api;
+    private CanAddress receiveAddress;
     private boolean ownsChannel;
 
     public PCanRawPort() {
@@ -59,6 +63,7 @@ public class PCanRawPort implements RawCanPort {
 
     @Override
     public void open(CanAddress receiveAddress) throws IOException {
+        Objects.requireNonNull(receiveAddress, "receiveAddress");
         synchronized (lifecycleLock) {
             if (api != null) {
                 throw new IOException("PCAN port is already open");
@@ -80,12 +85,14 @@ public class PCanRawPort implements RawCanPort {
                     }
                     requireOk("initialize channel", newApi.initialize(channel, TPCANBaudrate.PCAN_BAUD_500K));
                     channelInitialized = true;
-                    requireOk("configure receive filter", newApi.filterMessages(
+                    // Native ID filtering dropped ECU replies on Windows; filter in receive() instead.
+                    requireOk("configure receive filter", newApi.setValue(
                         channel,
-                        receiveAddress.getId(),
-                        receiveAddress.getId(),
-                        receiveAddress.isExtended() ? TPCANMode.PCAN_MODE_EXTENDED : TPCANMode.PCAN_MODE_STANDARD));
+                        TPCANParameter.PCAN_MESSAGE_FILTER,
+                        new MutableInteger(TPCANParameterValue.PCAN_FILTER_OPEN.getValue()),
+                        Integer.BYTES));
                     api = newApi;
+                    this.receiveAddress = receiveAddress;
                 } catch (IOException e) {
                     if (channelInitialized) {
                         uninitializeAfterFailedOpen(newApi, e);
@@ -141,7 +148,9 @@ public class PCanRawPort implements RawCanPort {
             // described by #4370. Valid Classic CAN frames are still rejected above eight bytes below.
             TPCANMsg message = new TPCANMsg(Byte.MAX_VALUE);
             final TPCANStatus status;
+            final CanAddress expectedReceiveAddress;
             synchronized (lifecycleLock) {
+                expectedReceiveAddress = receiveAddress;
                 synchronized (NATIVE_LOCK) {
                     try {
                         status = currentApi().read(channel, message);
@@ -152,7 +161,13 @@ public class PCanRawPort implements RawCanPort {
             }
 
             if (status == TPCANStatus.PCAN_ERROR_OK) {
-                return Optional.of(toClassicCanFrame(message));
+                if (matchesAddress(message, expectedReceiveAddress)) {
+                    return Optional.of(toClassicCanFrame(message));
+                }
+                if (clock.nanoTime() >= deadline) {
+                    return Optional.empty();
+                }
+                continue;
             }
             if (status != TPCANStatus.PCAN_ERROR_QRCVEMPTY) {
                 throw statusFailure("read", status);
@@ -176,6 +191,7 @@ public class PCanRawPort implements RawCanPort {
             final PCanApi currentApi;
             currentApi = api;
             api = null;
+            receiveAddress = null;
 
             if (currentApi != null) {
                 synchronized (NATIVE_LOCK) {
@@ -240,6 +256,13 @@ public class PCanRawPort implements RawCanPort {
         }
     }
 
+    private static boolean matchesAddress(TPCANMsg message, CanAddress expectedAddress) {
+        int type = Byte.toUnsignedInt(message.getType());
+        int extendedFlag = Byte.toUnsignedInt(TPCANMessageType.PCAN_MESSAGE_EXTENDED.getValue());
+        return message.getID() == expectedAddress.getId()
+            && ((type & extendedFlag) != 0) == expectedAddress.isExtended();
+    }
+
     private static void requireOk(String operation, TPCANStatus status) throws IOException {
         if (status != TPCANStatus.PCAN_ERROR_OK) {
             throw statusFailure(operation, status);
@@ -276,8 +299,8 @@ public class PCanRawPort implements RawCanPort {
         }
 
         @Override
-        public TPCANStatus filterMessages(TPCANHandle channel, int fromId, int toId, TPCANMode mode) {
-            return api.FilterMessages(channel, fromId, toId, mode);
+        public TPCANStatus setValue(TPCANHandle channel, TPCANParameter parameter, MutableInteger value, int bufferLength) {
+            return api.SetValue(channel, parameter, value, bufferLength);
         }
 
         @Override
@@ -302,7 +325,7 @@ interface PCanApi {
 
     TPCANStatus initialize(TPCANHandle channel, TPCANBaudrate bitrate);
 
-    TPCANStatus filterMessages(TPCANHandle channel, int fromId, int toId, TPCANMode mode);
+    TPCANStatus setValue(TPCANHandle channel, TPCANParameter parameter, MutableInteger value, int bufferLength);
 
     TPCANStatus write(TPCANHandle channel, TPCANMsg message);
 

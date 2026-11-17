@@ -1,0 +1,107 @@
+package com.rusefi.pinout;
+
+import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+/**
+ * Wire color strings from connector yamls ("red", "orange/brown") to paintable colors.
+ */
+public final class WireColors {
+    private WireColors() {
+    }
+
+    public static final Color UNKNOWN = Color.MAGENTA;
+
+    /**
+     * Paint marker on the vehicle end of every wire: the four corner circles of vehicle-side
+     * connector images and the second dot in the "Adapter pin" column of the wire tables.
+     */
+    public static final Color PAINT_MARKER = new Color(255, 102, 0);
+
+    private static final Map<String, Color> BY_NAME = new HashMap<>();
+
+    static {
+        BY_NAME.put("red", new Color(220, 30, 30));
+        BY_NAME.put("black", Color.BLACK);
+        BY_NAME.put("white", Color.WHITE);
+        BY_NAME.put("grey", Color.GRAY);
+        BY_NAME.put("gray", Color.GRAY);
+        BY_NAME.put("green", new Color(20, 150, 40));
+        BY_NAME.put("blue", new Color(30, 70, 220));
+        BY_NAME.put("yellow", new Color(240, 210, 0));
+        BY_NAME.put("orange", new Color(255, 140, 0));
+        BY_NAME.put("brown", new Color(130, 75, 30));
+        BY_NAME.put("purple", new Color(130, 30, 180));
+        BY_NAME.put("pink", Color.PINK);
+    }
+
+    private static final List<String> OFFICIAL = loadOfficial();
+
+    public static List<String> officialColors() {
+        return OFFICIAL;
+    }
+
+    public static boolean isOfficial(String name) {
+        return name != null && OFFICIAL.contains(name.trim().toLowerCase(Locale.ROOT));
+    }
+
+    private static List<String> loadOfficial() {
+        InputStream input = WireColors.class.getResourceAsStream("official-wire-colors.md");
+        if (input == null) {
+            throw new IllegalStateException("Missing official-wire-colors.md resource");
+        }
+        List<String> colors = new ArrayList<>();
+        Set<String> seen = new HashSet<>();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (!line.startsWith("- ")) {
+                    continue;
+                }
+                String name = line.substring(2).trim().toLowerCase(Locale.ROOT);
+                if (!BY_NAME.containsKey(name) || !seen.add(name)) {
+                    throw new IllegalStateException("Invalid official wire color: " + name);
+                }
+                colors.add(name);
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not read official-wire-colors.md", e);
+        }
+        if (colors.size() != 9) {
+            throw new IllegalStateException("Expected nine official wire colors, found " + colors.size());
+        }
+        return Collections.unmodifiableList(colors);
+    }
+
+    /**
+     * @return one entry per stripe, e.g. "orange/brown" gives two colors
+     */
+    public static Color[] resolve(String wireColor) {
+        if (wireColor == null || wireColor.trim().isEmpty()) {
+            return new Color[]{UNKNOWN};
+        }
+        String[] parts = wireColor.toLowerCase(Locale.ROOT).split("[/,]");
+        Color[] result = new Color[parts.length];
+        for (int i = 0; i < parts.length; i++) {
+            Color color = BY_NAME.get(parts[i].trim());
+            result[i] = color == null ? UNKNOWN : color;
+        }
+        return result;
+    }
+
+    public static boolean isLight(Color color) {
+        return (0.299 * color.getRed() + 0.587 * color.getGreen() + 0.114 * color.getBlue()) > 150;
+    }
+}

@@ -2,6 +2,8 @@ package com.rusefi.ui.widgets.tune;
 
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.DialogModel;
+import com.opensr5.ini.AxisModel;
+import com.opensr5.ini.CurveModel;
 import com.opensr5.ini.IndicatorModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileMetaInfo;
@@ -19,6 +21,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -33,6 +36,211 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class CalibrationDialogWidgetTest {
+
+    @Test
+    public void viewportRepaintsReuseDecorativeMosaic() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+            try {
+                JPanel viewport = widget.getViewportPane();
+                viewport.setSize(600, 400);
+                viewport.doLayout();
+                BufferedImage target = new BufferedImage(600, 400, BufferedImage.TYPE_INT_ARGB);
+                Graphics2D graphics = target.createGraphics();
+                try {
+                    viewport.paint(graphics);
+                    int firstPaint = widget.getViewportBackgroundRenderCountForTests();
+                    viewport.paint(graphics);
+                    assertEquals(firstPaint, widget.getViewportBackgroundRenderCountForTests(),
+                        "An unchanged viewport repaint should reuse its decorative mosaic");
+                    viewport.setSize(620, 400);
+                    viewport.doLayout();
+                    viewport.paint(graphics);
+                    assertEquals(firstPaint + 1, widget.getViewportBackgroundRenderCountForTests(),
+                        "Resizing invalidates the cached mosaic");
+                    int afterResize = widget.getViewportBackgroundRenderCountForTests();
+                    JComponent frame = widget.getPanelFrame();
+                    Rectangle originalFrameBounds = frame.getBounds();
+                    frame.setBounds(originalFrameBounds.x + 1, originalFrameBounds.y,
+                        originalFrameBounds.width, originalFrameBounds.height);
+                    viewport.paint(graphics);
+                    assertEquals(afterResize + 1, widget.getViewportBackgroundRenderCountForTests(),
+                        "Changing frame bounds invalidates the cached unused-area mask");
+                    frame.setBounds(originalFrameBounds);
+                    viewport.paint(graphics);
+                    assertEquals(afterResize + 2, widget.getViewportBackgroundRenderCountForTests(),
+                        "Restoring frame bounds invalidates the cached unused-area mask");
+                    afterResize = widget.getViewportBackgroundRenderCountForTests();
+                    graphics.setClip(0, 0, 90, 80);
+                    viewport.setBackground(new Color(20, 30, 40));
+                    viewport.paint(graphics);
+                    assertEquals(afterResize + 1, widget.getViewportBackgroundRenderCountForTests(),
+                        "A small dirty clip after a background change uses the vector path");
+                    int afterSmallClip = widget.getViewportBackgroundRenderCountForTests();
+                    viewport.paint(graphics);
+                    assertEquals(afterSmallClip + 1, widget.getViewportBackgroundRenderCountForTests(),
+                        "Repeated small dirty clips keep using the vector path");
+                    graphics.setClip(null);
+                    viewport.paint(graphics);
+                    assertEquals(afterSmallClip + 2, widget.getViewportBackgroundRenderCountForTests(),
+                        "The next full paint rebuilds the cache with the new background");
+                    int beforeTranslation = widget.getViewportBackgroundRenderCountForTests();
+                    graphics.translate(17, 25);
+                    viewport.paint(graphics);
+                    viewport.paint(graphics);
+                    assertEquals(beforeTranslation, widget.getViewportBackgroundRenderCountForTests(),
+                        "Ordinary translated child painting reuses the device-aligned cache");
+                    graphics.setTransform(new java.awt.geom.AffineTransform());
+                    graphics.scale(1.25, 1.25);
+                    graphics.translate(17, 25);
+                    viewport.paint(graphics);
+                    int afterScaledPaint = widget.getViewportBackgroundRenderCountForTests();
+                    assertEquals(beforeTranslation + 1, afterScaledPaint,
+                        "A fractional device phase gets its own raster");
+                    viewport.paint(graphics);
+                    assertEquals(afterScaledPaint, widget.getViewportBackgroundRenderCountForTests(),
+                        "A fractional HiDPI transform builds once and then reuses its cache");
+                } finally {
+                    graphics.dispose();
+                }
+            } finally {
+                widget.destroy();
+            }
+        });
+    }
+
+    @Test
+    public void tallViewportCachesOnlyItsVisibleScrolledExtent() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+            try {
+                JPanel dialogViewport = widget.getViewportPane();
+                JViewport scrollingViewport = new JViewport();
+                scrollingViewport.setView(dialogViewport);
+                scrollingViewport.setExtentSize(new Dimension(400, 300));
+                scrollingViewport.setViewSize(new Dimension(600, 5_000));
+                scrollingViewport.setViewPosition(new Point(0, 1_200));
+                scrollingViewport.setSize(400, 300);
+                BufferedImage target = new BufferedImage(400, 300, BufferedImage.TYPE_INT_ARGB);
+                Graphics2D graphics = target.createGraphics();
+                try {
+                    scrollingViewport.paint(graphics);
+                    int firstPaint = widget.getViewportBackgroundRenderCountForTests();
+                    assertTrue(firstPaint > 0, "A tall view should cache its visible viewport extent");
+                    assertTrue(widget.getViewportBackgroundCachePixelsForTests() <= 400L * 300L,
+                        "The raster is bounded by the visible JViewport extent, not the 5,000-pixel view");
+                    assertTrue(widget.getViewportBackgroundCellRenderCountForTests() < 500,
+                        "Raster work should be bounded by the visible viewport rather than the tall component");
+                    scrollingViewport.paint(graphics);
+                    assertEquals(firstPaint, widget.getViewportBackgroundRenderCountForTests(),
+                        "The same scrolled extent reuses the raster");
+                    scrollingViewport.setViewPosition(new Point(0, 1_500));
+                    scrollingViewport.paint(graphics);
+                    int scrolledPaint = widget.getViewportBackgroundRenderCountForTests();
+                    assertEquals(firstPaint + 1, scrolledPaint,
+                        "Scrolling rebuilds a bounded raster for the new visible logical origin");
+                    scrollingViewport.paint(graphics);
+                    assertEquals(scrolledPaint, widget.getViewportBackgroundRenderCountForTests(),
+                        "Repainting after scrolling reuses the newly anchored raster");
+                } finally {
+                    graphics.dispose();
+                }
+            } finally {
+                widget.destroy();
+            }
+        });
+    }
+
+    @Test
+    public void translatedCacheBlitTracksCurrentIntegerDeviceOrigin() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            CalibrationDialogWidget reused = new CalibrationDialogWidget(new UIContext());
+            CalibrationDialogWidget fresh = new CalibrationDialogWidget(new UIContext());
+            try {
+                JPanel reusedViewport = reused.getViewportPane();
+                JPanel freshViewport = fresh.getViewportPane();
+                reusedViewport.setSize(400, 300);
+                freshViewport.setSize(400, 300);
+                reusedViewport.doLayout();
+                freshViewport.doLayout();
+                BufferedImage initial = paintAtTranslation(reusedViewport, 17, 25);
+                BufferedImage reusedAtOffset = paintAtTranslation(reusedViewport, 21, 30);
+                BufferedImage freshAtOffset = paintAtTranslation(freshViewport, 21, 30);
+                assertNotEquals(Arrays.hashCode(initial.getRGB(0, 0, 500, 400, null, 0, 500)),
+                    Arrays.hashCode(reusedAtOffset.getRGB(0, 0, 500, 400, null, 0, 500)),
+                    "Different target positions should have different pixels");
+                assertArrayEquals(reusedAtOffset.getRGB(0, 0, 500, 400, null, 0, 500),
+                    freshAtOffset.getRGB(0, 0, 500, 400, null, 0, 500),
+                    "A reused cache must match a fresh render at the same translated origin");
+            } finally {
+                reused.destroy();
+                fresh.destroy();
+            }
+        });
+    }
+
+    @Test
+    public void nonOpaqueViewportDoesNotFlattenMosaicOverTransparentTarget() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+            try {
+                JPanel viewport = widget.getViewportPane();
+                viewport.setOpaque(false);
+                viewport.setSize(400, 300);
+                viewport.doLayout();
+                BufferedImage target = new BufferedImage(400, 300, BufferedImage.TYPE_INT_ARGB);
+                Graphics2D graphics = target.createGraphics();
+                try {
+                    viewport.paint(graphics);
+                } finally {
+                    graphics.dispose();
+                }
+                assertTrue(((target.getRGB(0, 0) >>> 24) & 0xff) < 255,
+                    "A nonopaque viewport must preserve transparency outside its framed form");
+            } finally {
+                widget.destroy();
+            }
+        });
+    }
+
+    @Test
+    public void fourKViewportReusesBoundedRaster() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+            try {
+                JPanel viewport = widget.getViewportPane();
+                viewport.setSize(3_840, 2_160);
+                viewport.doLayout();
+                BufferedImage target = new BufferedImage(3_840, 2_160, BufferedImage.TYPE_INT_RGB);
+                Graphics2D graphics = target.createGraphics();
+                try {
+                    viewport.paint(graphics);
+                    int firstPaint = widget.getViewportBackgroundRenderCountForTests();
+                    assertTrue(widget.getViewportBackgroundCachePixelsForTests() <= 16_777_216L,
+                        "4K cache remains within the physical-pixel cap");
+                    viewport.paint(graphics);
+                    assertEquals(firstPaint, widget.getViewportBackgroundRenderCountForTests(),
+                        "An ordinary 4K viewport remains within the bounded raster limit");
+                } finally {
+                    graphics.dispose();
+                }
+            } finally {
+                widget.destroy();
+            }
+        });
+    }
+
+    private static BufferedImage paintAtTranslation(JPanel viewport, int x, int y) {
+        BufferedImage target = new BufferedImage(500, 400, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = target.createGraphics();
+        try {
+            graphics.translate(x, y);
+            viewport.paint(graphics);
+        } finally {
+            graphics.dispose();
+        }
+        return target;
+    }
 
     /** Issue #10352: dialog fields referencing individual gear voltages. */
     @Test
@@ -364,6 +572,221 @@ public class CalibrationDialogWidgetTest {
         }
         assertTrue(foundLabel, "Should find table title label when updating by key");
     }
+
+    /**
+     * LTFT trims live on TS page 0x0200, outside the main settings image: the table must show
+     * the values read from that page, read-only, not main-page bytes at the trim offsets.
+     */
+    @Test
+    public void tableOnSecondaryPageReadsItsOwnPage() {
+        IniFileModel iniFileModel = ltftTableIni();
+        ConfigurationImage mainPage = ltftMainPage();
+        byte[] mainBefore = mainPage.getContent().clone();
+        List<int[]> requests = new ArrayList<>();
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        widget.setPageReaderForUnitTest((pageIndex, offset, size, onResult) -> {
+            requests.add(new int[]{pageIndex, offset, size});
+            ConfigurationImage trims = new ConfigurationImage(new byte[size]);
+            trims.getByteBuffer(0, 4).putFloat(0.125f);
+            onResult.accept(trims.getContent());
+        });
+        try {
+            widget.update("ltftBank1Tbl", iniFileModel, mainPage);
+
+            assertEquals(1, requests.size());
+            assertArrayEquals(new int[]{0x0200, 0, 4}, requests.get(0));
+            JTable table = findTable(widget.getContentPane());
+            assertNotNull(table, "LTFT table should be rendered");
+            assertEquals("12.5", table.getValueAt(0, 1));
+            assertFalse(table.isCellEditable(0, 1), "Secondary-page table must be read-only");
+            assertArrayEquals(mainBefore, widget.getWorkingImage().getContent(), "Main page untouched");
+        } finally {
+            widget.destroy();
+        }
+    }
+
+    @Test
+    public void tableOnSecondaryPageWithoutEcuShowsNoValues() {
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        widget.setPageReaderForUnitTest((pageIndex, offset, size, onResult) -> onResult.accept(null));
+        try {
+            widget.update("ltftBank1Tbl", ltftTableIni(), ltftMainPage());
+
+            JTable table = findTable(widget.getContentPane());
+            assertNotNull(table);
+            assertEquals(0, table.getRowCount(), "No main-page bytes may be shown as trims");
+            assertNotNull(findLabel(widget.getContentPane(), "Connect to the ECU to view this table"));
+        } finally {
+            widget.destroy();
+        }
+    }
+
+    @Test
+    public void curveOnSecondaryPageReadsItsOwnPageAndResolvesHeader() {
+        IniFileModel ini = mock(IniFileModel.class);
+        CurveModel curve = new CurveModel("secondVeBias", "Second VE blend bias",
+            "{bitStringValue(axisLabels, blendParameter)}", "bias %",
+            new AxisModel(0, 100, 8), new AxisModel(0, 100, 8), "blendBins", "blendValues");
+        when(ini.getDialogs()).thenReturn(Collections.emptyMap());
+        when(ini.getCurves()).thenReturn(Collections.singletonMap("secondVeBias", curve));
+        ArrayIniField x = new ArrayIniField("blendBins", 580, FieldType.INT16, 1, 8, "", 0.1, "-3200", "3200", "1");
+        ArrayIniField y = new ArrayIniField("blendValues", 596, FieldType.UINT8, 1, 8, "%", 0.5, "0", "100", "1");
+        x.setPageIndex(0x0300);
+        y.setPageIndex(0x0300);
+        EnumIniField selector = new EnumIniField("blendParameter", 579, FieldType.UINT8,
+            new EnumIniField.EnumKeyValueMap(Map.of(0, "Zero", 1, "Input")), 0, 5);
+        selector.setPageIndex(0x0300);
+        EnumIniField labels = mock(EnumIniField.class);
+        when(labels.getEnums()).thenReturn(new EnumIniField.EnumKeyValueMap(Map.of(0, "Off", 1, "TPS")));
+        when(ini.findIniField("blendBins")).thenReturn(java.util.Optional.of(x));
+        when(ini.findIniField("blendValues")).thenReturn(java.util.Optional.of(y));
+        when(ini.findIniField("blendParameter")).thenReturn(java.util.Optional.of(selector));
+        when(ini.findIniField("axisLabels")).thenReturn(java.util.Optional.of(labels));
+        ConfigurationImage main = new ConfigurationImage(620);
+        main.getByteBuffer(580, 2).putShort((short) 16384);
+        byte[] before = main.getContent().clone();
+        List<int[]> requests = new ArrayList<>();
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        widget.setPageReaderForUnitTest((page, offset, size, onResult) -> {
+            requests.add(new int[]{page, offset, size});
+            byte[] secondary = new byte[size];
+            secondary[0] = 1;
+            new ConfigurationImage(secondary).getByteBuffer(1, 2).putShort((short) 100);
+            onResult.accept(secondary);
+        });
+        try {
+            widget.update("secondVeBias", ini, main);
+            JTable table = findTable(widget.getContentPane());
+            assertNotNull(table);
+            assertEquals("10.0", table.getValueAt(0, 0));
+            assertEquals("TPS", table.getColumnName(0));
+            assertFalse(table.isCellEditable(0, 0));
+            table.setValueAt("42", 0, 0);
+            assertEquals("10.0", table.getValueAt(0, 0));
+            assertEquals(1, requests.size());
+            assertArrayEquals(new int[]{0x0300, 579, 25}, requests.get(0));
+            assertArrayEquals(before, widget.getWorkingImage().getContent());
+        } finally {
+            widget.destroy();
+        }
+    }
+
+    @Test
+    public void curveOnSecondaryPageWithoutEcuShowsNoMainPageValues() {
+        IniFileModel ini = mock(IniFileModel.class);
+        CurveModel curve = new CurveModel("remote", "Remote", "X", "Y",
+            new AxisModel(0, 100, 2), new AxisModel(0, 100, 2), "x", "y");
+        when(ini.getDialogs()).thenReturn(Collections.emptyMap());
+        when(ini.getCurves()).thenReturn(Collections.singletonMap("remote", curve));
+        ArrayIniField x = new ArrayIniField("x", 4, FieldType.INT16, 1, 1, "", 1, "0", "100", "0");
+        ArrayIniField y = new ArrayIniField("y", 6, FieldType.INT16, 1, 1, "", 1, "0", "100", "0");
+        x.setPageIndex(0x0300);
+        y.setPageIndex(0x0300);
+        when(ini.findIniField("x")).thenReturn(java.util.Optional.of(x));
+        when(ini.findIniField("y")).thenReturn(java.util.Optional.of(y));
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        widget.setPageReaderForUnitTest((page, offset, size, onResult) -> onResult.accept(null));
+        try {
+            widget.update("remote", ini, new ConfigurationImage(20));
+            assertNull(findTable(widget.getContentPane()));
+            assertNotNull(findLabel(widget.getContentPane(), "Connect to the ECU to view this curve"));
+        } finally {
+            widget.destroy();
+        }
+    }
+
+    @Test
+    public void readoutLabelsResolveFunctionsAndHideUnresolvedFunctions() {
+        IniFileModel ini = mock(IniFileModel.class);
+        EnumIniField selector = new EnumIniField("selector", 4, FieldType.UINT8,
+            new EnumIniField.EnumKeyValueMap(Map.of(0, "Off", 1, "On")), 0, 0);
+        EnumIniField labels = mock(EnumIniField.class);
+        when(labels.getEnums()).thenReturn(new EnumIniField.EnumKeyValueMap(Map.of(0, "Off", 1, "Input")));
+        when(ini.findIniField("selector")).thenReturn(java.util.Optional.of(selector));
+        when(ini.findIniField("labels")).thenReturn(java.util.Optional.of(labels));
+        String conditional = "{selector ? bitStringValue(labels, selector) : bitStringValue(labels, 0)}";
+        String missing = "{bitStringValue(missingLabels, selector)}";
+        ReadoutModel resolved = new ReadoutModel("input", conditional, conditional,
+            null, null, null, null, null, null, 1, 0);
+        ReadoutModel unresolved = new ReadoutModel("other", missing, "",
+            null, null, null, null, null, null, 1, 0);
+        DialogModel dialog = new DialogModel("readouts", "Readouts", Collections.emptyList(), Collections.emptyList(),
+            Collections.emptyList(), Collections.emptyList(), Arrays.asList(resolved, unresolved), 2,
+            Collections.emptyList(), null, null);
+        ConfigurationImage image = new ConfigurationImage(8);
+        image.getContent()[4] = 1;
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        try {
+            widget.update(dialog, ini, image);
+            assertNotNull(findLabel(widget.getContentPane(), "Input"));
+            assertNull(findLabel(widget.getContentPane(), conditional));
+            assertNull(findLabel(widget.getContentPane(), missing));
+        } finally {
+            widget.destroy();
+        }
+    }
+
+    private static IniFileModel ltftTableIni() {
+        IniFileModel iniFileModel = mock(IniFileModel.class);
+        when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
+        when(iniFileModel.getDialogs()).thenReturn(Collections.emptyMap());
+
+        TableModel tableModel = new TableModel("ltftBank1Tbl", "ltftBank1Map", "Long Term Fuel Trim Bank 1",
+                null, "RPM", "Load", "veRpmBins", null, true, "veLoadBins", null, true, "ltft_table_bank1",
+                null, null, null, null);
+        when(iniFileModel.getTable("ltftBank1Tbl")).thenReturn(tableModel);
+
+        ArrayIniField xBinsField = new ArrayIniField("veRpmBins", 100, FieldType.FLOAT, 1, 1, "RPM", 1, "0", "18000", "0");
+        ArrayIniField yBinsField = new ArrayIniField("veLoadBins", 104, FieldType.FLOAT, 1, 1, "kPa", 1, "0", "650", "0");
+        ArrayIniField ltftField = new ArrayIniField("ltft_table_bank1", 0, FieldType.FLOAT, 1, 1, "%", 100, "-35", "35", "1");
+        ltftField.setPageIndex(0x0200);
+        when(iniFileModel.findIniField("veRpmBins")).thenReturn(java.util.Optional.of(xBinsField));
+        when(iniFileModel.findIniField("veLoadBins")).thenReturn(java.util.Optional.of(yBinsField));
+        when(iniFileModel.findIniField("ltft_table_bank1")).thenReturn(java.util.Optional.of(ltftField));
+        return iniFileModel;
+    }
+
+    private static ConfigurationImage ltftMainPage() {
+        // main settings page: an unrelated setting happens to occupy the trim's offset
+        ConfigurationImage mainPage = new ConfigurationImage(new byte[200]);
+        mainPage.getByteBuffer(0, 4).putFloat(50.0f);
+        mainPage.getByteBuffer(100, 4).putFloat(650);
+        mainPage.getByteBuffer(104, 4).putFloat(10);
+        return mainPage;
+    }
+
+    private static JLabel findLabel(Container container, String text) {
+        for (Component component : container.getComponents()) {
+            if (component instanceof JLabel && text.equals(((JLabel) component).getText())) {
+                return (JLabel) component;
+            }
+            if (component instanceof Container) {
+                JLabel nested = findLabel((Container) component, text);
+                if (nested != null) {
+                    return nested;
+                }
+            }
+        }
+        return null;
+    }
+
+    private static JTable findTable(Container container) {
+        for (Component component : container.getComponents()) {
+            if (component instanceof JTable) {
+                return (JTable) component;
+            }
+            if (component instanceof Container) {
+                JTable nested = findTable((Container) component);
+                if (nested != null) {
+                    return nested;
+                }
+            }
+        }
+        return null;
+    }
+
     @Test
     public void testCommandButtonAndPanelTitle() {
         IniFileModel iniFileModel = mock(IniFileModel.class);
@@ -659,8 +1082,15 @@ public class CalibrationDialogWidgetTest {
 
         JButton button = getButtonFromRow(row);
         assertNotNull(button);
-        assertEquals("W", button.getText());
-        assertEquals("Wiring/Pinout", button.getToolTipText());
+        assertTrue(button.getIcon() instanceof com.rusefi.ui.widgets.ConnectorIcon, "A connector icon, not a cryptic letter");
+        assertEquals(CalibrationFieldFactory.PINOUT_BUTTON_TEXT, button.getText(), "Named, since the icon alone was unclear");
+        JComboBox<?> pinCombo = getComboBoxFromRow(row);
+        assertEquals(pinCombo.getPreferredSize().height, button.getPreferredSize().height,
+            "As tall as the drop-down beside it");
+        assertEquals(button.getPreferredSize(), button.getMaximumSize(), "The row's layout cannot stretch it");
+        assertEquals(CalibrationFieldFactory.SHOW_ON_CONNECTOR, button.getAccessibleContext().getAccessibleName());
+        assertEquals("Show B16 Low Side output 4 on its connector (opens Pinout)", button.getToolTipText(),
+            "The tooltip names the pin and what happens");
         assertTrue(button.isEnabled());
         button.doClick();
         assertEquals("B16 Low Side output 4", selectedPin.get());
@@ -669,6 +1099,7 @@ public class CalibrationDialogWidgetTest {
         assertNotNull(combo);
         combo.setSelectedItem("NONE");
         assertFalse(button.isEnabled());
+        assertEquals("Choose a pin to show it on its connector", button.getToolTipText());
         button.setEnabled(true);
         assertFalse(button.isEnabled());
         selectedPin.set(null);
@@ -723,8 +1154,74 @@ public class CalibrationDialogWidgetTest {
         JButton helpButton = findButtonByName(widget.getContentPane(), "settingHelpButton");
         assertNotNull(helpButton);
         assertNotNull(helpButton.getIcon());
-        assertTrue(helpButton.getToolTipText().contains("First line<br>Second line"));
         assertEquals(1, helpButton.getActionListeners().length);
+        // the row's help card replaces the icon's tooltip
+        assertNull(helpButton.getToolTipText());
+        JComponent row = SettingHelpCard.findRow(helpButton);
+        assertNotNull(row);
+        SettingHelpCard.Help help = (SettingHelpCard.Help) row.getClientProperty(SettingHelpCard.KEY);
+        assertEquals("Helped field", help.name);
+        assertEquals("First line", help.summary());
+        assertTrue(help.hasMore());
+    }
+
+    @Test
+    public void testRowsWithHelpDropTooltipsThatRepeatTheRow() {
+        IniFileModel iniFileModel = mock(IniFileModel.class);
+        when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
+        when(iniFileModel.getTooltips()).thenReturn(Collections.singletonMap("helped", "Help text"));
+        com.opensr5.ini.field.StringIniField helped = new com.opensr5.ini.field.StringIniField("helped", 0, 4);
+        com.opensr5.ini.field.StringIniField unhelped = new com.opensr5.ini.field.StringIniField("unhelped", 4, 4);
+        when(iniFileModel.findIniField("helped")).thenReturn(java.util.Optional.of(helped));
+        when(iniFileModel.findIniField("unhelped")).thenReturn(java.util.Optional.of(unhelped));
+
+        DialogModel dialog = new DialogModel("main", "Main", Arrays.asList(
+            new DialogModel.Field("helped", "Helped"),
+            new DialogModel.Field("unhelped", "Unhelped")), Collections.emptyList());
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        widget.update(dialog, iniFileModel, new ConfigurationImage(new byte[8]));
+
+        JPanel helpedRow = (JPanel) widget.getContentPane().getComponent(0);
+        JPanel unhelpedRow = (JPanel) widget.getContentPane().getComponent(1);
+        assertNull(findLabel(helpedRow, "Helped").getToolTipText());
+        assertEquals("Double-click to copy", findLabel(unhelpedRow, "Unhelped").getToolTipText());
+        assertNull(SettingHelpCard.findRow(unhelpedRow));
+    }
+
+    @Test
+    public void testDescriptionsShowTheFirstSentenceUnderHelpedSettings() {
+        IniFileModel iniFileModel = mock(IniFileModel.class);
+        when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
+        when(iniFileModel.getTooltips()).thenReturn(Collections.singletonMap(
+            "helped", "Turns the fan on above this. Below it the fan stays off."));
+        com.opensr5.ini.field.StringIniField helped = new com.opensr5.ini.field.StringIniField("helped", 0, 4);
+        com.opensr5.ini.field.StringIniField unhelped = new com.opensr5.ini.field.StringIniField("unhelped", 4, 4);
+        when(iniFileModel.findIniField("helped")).thenReturn(java.util.Optional.of(helped));
+        when(iniFileModel.findIniField("unhelped")).thenReturn(java.util.Optional.of(unhelped));
+        DialogModel dialog = new DialogModel("main", "Main", Arrays.asList(
+            new DialogModel.Field("helped", "Helped"),
+            new DialogModel.Field("unhelped", "Unhelped")), Collections.emptyList());
+
+        SettingHelpCard.setMode(SettingHelpCard.Mode.DESCRIPTIONS);
+        try {
+            CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+            widget.update(dialog, iniFileModel, new ConfigurationImage(new byte[8]));
+            JPanel helpedRow = (JPanel) widget.getContentPane().getComponent(0);
+            JPanel unhelpedRow = (JPanel) widget.getContentPane().getComponent(1);
+
+            JTextArea description = (JTextArea) findComponentByName(helpedRow, "settingDescription");
+            assertNotNull(description);
+            assertEquals("Turns the fan on above this. " + SettingHelpCard.MORE_HINT, description.getText(),
+                "the rest of the help is behind the ? icon");
+            JComponent line = (JComponent) helpedRow.getComponent(0);
+            assertTrue(description.getPreferredSize().width <= line.getPreferredSize().width,
+                "a description never makes its row wider");
+            assertFalse(description.getText().contains("stays off"), "only the first sentence");
+            assertSame(helpedRow, SettingHelpCard.findRow(description), "the description is part of its row");
+            assertNull(findComponentByName(unhelpedRow, "settingDescription"));
+        } finally {
+            SettingHelpCard.setMode(SettingHelpCard.Mode.CARDS);
+        }
     }
 
     @Test
@@ -735,32 +1232,6 @@ public class CalibrationDialogWidgetTest {
         assertTrue(html.contains("Use &lt;unsafe&gt; &amp; value<br>See "));
         assertTrue(html.contains(
             "<a href='https://rusefi.com/docs'>https://rusefi.com/docs</a>"));
-    }
-
-    @Test
-    public void testSettingHelpFitsShortTextAndScrollsWideText() {
-        JScrollPane shortHelp = CalibrationFieldFactory.createHelpScrollPane(
-            "Cylinder diameter in mm");
-        JComponent shortEditor = (JComponent) shortHelp.getViewport().getView();
-        assertEquals(new Insets(8, 8, 8, 8), shortEditor.getBorder().getBorderInsets(shortEditor));
-        assertTrue(shortHelp.getPreferredSize().width < 516);
-        assertEquals(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER,
-            shortHelp.getHorizontalScrollBarPolicy());
-        assertEquals(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
-            shortHelp.getVerticalScrollBarPolicy());
-
-        JScrollPane wideHelp = CalibrationFieldFactory.createHelpScrollPane(
-            String.join("", Collections.nCopies(100, "wide-content")));
-        assertEquals(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED,
-            wideHelp.getHorizontalScrollBarPolicy());
-        assertTrue(wideHelp.getPreferredSize().width <= 516);
-        assertTrue(wideHelp.getHorizontalScrollBar().getPreferredSize().height > 0);
-
-        JScrollPane tallHelp = CalibrationFieldFactory.createHelpScrollPane(
-            String.join("\\n", Collections.nCopies(100, "tall content")));
-        assertEquals(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-            tallHelp.getVerticalScrollBarPolicy());
-        assertEquals(0, ((JEditorPane) tallHelp.getViewport().getView()).getCaretPosition());
     }
 
     @Test
@@ -939,6 +1410,10 @@ public class CalibrationDialogWidgetTest {
         assertEquals("Normal Label", normalLabel.getText());
         assertNotEquals(Color.RED, normalLabel.getBackground());
         assertNotEquals(Color.BLUE, normalLabel.getBackground());
+        // Current bad behaviour: an uncoloured label is opaque in the theme's panel grey, which
+        // shows as a grey box behind the text on the white dialog card.
+        assertTrue(normalLabel.isOpaque());
+        assertTrue(normalLabel.getBackground() instanceof javax.swing.plaf.UIResource);
     }
 
     private JLabel getLabelFromRow(JPanel row) {

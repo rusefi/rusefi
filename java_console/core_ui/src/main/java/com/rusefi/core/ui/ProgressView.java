@@ -5,6 +5,8 @@ import com.rusefi.core.net.ConnectionAndMeta;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicHTML;
+import javax.swing.text.View;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -14,6 +16,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  */
 public class ProgressView {
+    /**
+     * The frame is 480 px wide with a 40 px border on each side, minus the frame's own insets.
+     */
+    static final int ERROR_TEXT_WIDTH = 360;
+
     private final FrameHelper frameHelper;
     private final JProgressBar progressBar;
     private final JPanel panel;
@@ -32,6 +39,7 @@ public class ProgressView {
             errorLabel = new JLabel();
             errorLabel.setForeground(Color.RED);
             errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
             errorLabel.setVisible(false);
 
             retryButton = new JButton("Retry");
@@ -110,13 +118,7 @@ public class ProgressView {
         retryLatch = new CountDownLatch(1);
         retryRequested.set(false);
 
-        SwingUtilities.invokeLater(() -> {
-            errorLabel.setText(message);
-            errorLabel.setVisible(true);
-            retryButton.setVisible(true);
-            panel.revalidate();
-            panel.repaint();
-        });
+        SwingUtilities.invokeLater(() -> showError(message));
 
         try {
             retryLatch.await();
@@ -124,6 +126,41 @@ public class ProgressView {
             Thread.currentThread().interrupt();
         }
         return retryRequested.get();
+    }
+
+    /**
+     * Shows the error and the Retry button, on the AWT thread.
+     */
+    void showError(String message) {
+        // wrapped to the window width: a plain JLabel stays on one line and is cut off at the window edge.
+        // Not a CSS width: Swing's HTML renderer scales CSS pixels, so the label still came out too wide.
+        errorLabel.setText("<html><div style='text-align:center'>" + escapeHtml(message) + "</div></html>");
+        View html = (View) errorLabel.getClientProperty(BasicHTML.propertyKey);
+        if (html != null) {
+            html.setSize(ERROR_TEXT_WIDTH, 0);
+            Dimension size = new Dimension(ERROR_TEXT_WIDTH, (int) Math.ceil(html.getPreferredSpan(View.Y_AXIS)));
+            errorLabel.setPreferredSize(size);
+            errorLabel.setMaximumSize(size);
+        }
+        errorLabel.setVisible(true);
+        retryButton.setVisible(true);
+        panel.revalidate();
+        panel.repaint();
+        if (frameHelper != null) {
+            JFrame frame = frameHelper.getFrame();
+            int neededHeight = frame.getPreferredSize().height;
+            if (neededHeight > frame.getHeight()) {
+                frame.setSize(frame.getWidth(), neededHeight);
+            }
+        }
+    }
+
+    private static String escapeHtml(String text) {
+        return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+    }
+
+    JLabel getErrorLabelForUnitTest() {
+        return errorLabel;
     }
 
     /**

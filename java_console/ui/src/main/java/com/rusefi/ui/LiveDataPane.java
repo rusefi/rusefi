@@ -44,7 +44,7 @@ public class LiveDataPane {
         long start = System.currentTimeMillis();
 
         JPanel vertical = new JPanel(new MigLayout("wrap 1", "[grow,fill]"));
-        vertical.setBorder(BorderFactory.createLineBorder(Color.orange));
+        vertical.setBorder(BorderFactory.createLineBorder(Color.orange)); // [tag:fixed_color] developer Live Data view
         JScrollPane scroll = new JScrollPane(vertical, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         JPanel legend = populateLegend();
 

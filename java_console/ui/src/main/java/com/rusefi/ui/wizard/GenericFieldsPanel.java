@@ -50,10 +50,10 @@ public class GenericFieldsPanel extends AbstractWizardStep {
     }
 
     private void buildUi() {
-        JLabel titleLabel = new JLabel(getTitle());
+        JPanel card = new JPanel(new BorderLayout(0, WizardStyle.GAP));
+        JLabel titleLabel = WizardStyle.cardTitle(getTitle());
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        styleTitle(titleLabel);
-        content.add(titleLabel, BorderLayout.NORTH);
+        card.add(titleLabel, BorderLayout.NORTH);
 
         IniFileModel ini = uiContext.iniFileState.getIniFileModel();
 
@@ -94,30 +94,23 @@ public class GenericFieldsPanel extends AbstractWizardStep {
             gbc.gridx = 1;
             gbc.gridy = row++;
             JLabel errorLabel = new JLabel(" ");
-            errorLabel.setForeground(Color.RED);
+            WizardStyle.styleError(errorLabel);
             errorLabels.put(fieldName, errorLabel);
             form.add(errorLabel, gbc);
         }
 
-        JPanel centerWrapper = new JPanel(new GridBagLayout());
-        centerWrapper.add(form);
-        content.add(centerWrapper, BorderLayout.CENTER);
+        card.add(form, BorderLayout.CENTER);
 
         saveButton = new JButton("Save and Continue");
-        stylePrimaryAction(saveButton);
+        styleContinueAction(saveButton);
         saveButton.addActionListener(e -> onSave());
 
         connectionStatusLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        connectionStatusLabel.setForeground(Color.RED);
+        WizardStyle.styleError(connectionStatusLabel);
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        buttonPanel.add(saveButton);
-
-        JPanel southPanel = new JPanel(new BorderLayout());
-        southPanel.add(connectionStatusLabel, BorderLayout.NORTH);
-        southPanel.add(buttonPanel, BorderLayout.CENTER);
-        content.add(southPanel, BorderLayout.SOUTH);
+        card.add(connectionStatusLabel, BorderLayout.SOUTH);
+        WizardStyle.styleCard(card, 24, 28);
+        content.add(WizardStyle.cardPage(card), BorderLayout.CENTER);
 
         content.addHierarchyListener(e -> {
             if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) == 0) {
@@ -135,7 +128,7 @@ public class GenericFieldsPanel extends AbstractWizardStep {
         if (field instanceof EnumIniField) {
             JComboBox<String> combo = new JComboBox<>();
             combo.setEditable(false);
-            for (String v : ((EnumIniField) field).getEnums().values()) {
+            for (String v : ((EnumIniField) field).getDisplayValues()) {
                 if (v == null || v.isEmpty()) continue;
                 if (INVALID_SENTINEL.equalsIgnoreCase(v)) continue;
                 combo.addItem(v);
@@ -249,6 +242,9 @@ public class GenericFieldsPanel extends AbstractWizardStep {
 
     @Override
     public JComponent getPanel() { return content; }
+
+    @Override
+    public JButton getContinueButton() { return saveButton; }
 
     @Override
     public void onShow() {

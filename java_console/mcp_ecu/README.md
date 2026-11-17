@@ -3,7 +3,58 @@
 An [MCP (Model Context Protocol)](https://modelcontextprotocol.io/) server that lets an
 LLM client (Claude Desktop, JetBrains AI, Cursor, etc.) iterate on rusEFI Lua scripts:
 write a candidate script, upload it to the ECU, reset Lua, and observe the resulting
-`print(...)` / `efiPrintf` output.
+`print(...)` / `efiPrintf` output. It also reads live ECU values and records operating
+data to host-side `.mlg` files using the Java frontend's binary log format. It captures
+Console Digital Sniffer charts as structured crank/cam and output events. It can
+also read and write complete TunerStudio-compatible tunes, and convert existing
+binary MLG and text TunerStudio MSL logs to CSV offline. The `update_firmware` tool
+updates firmware via OpenBLT while backing up and migrating the ECU configuration.
+`download_bundle` fetches fresh board or universal autoupdate bundles and returns
+the extracted firmware paths.
+
+## Embedded Console use
+
+The Console's **Troubleshooting** tab uses `ConsoleEcuSession` in process. This
+adapter exposes only `ecu_info`, `list_output_channels`, `read_output_channel`,
+`read_live_values`, `diagnostic_snapshot`, `read_tune_fields`, `get_lua`,
+`capture_live_log`, `capture_engine_sniffer` and `read_messages` through the
+Console-owned connection. It validates arguments
+and rejects changed connections; closing it releases its subscriptions without
+closing the port. There is no second stdio process or port discovery. See
+[Console troubleshooting assistant](../../docs/llm-troubleshooting.md).
+
+The embedded adapters bound results more tightly than the standalone catalog:
+`get_lua` returns paged fresh RAM source with line citations and a hash;
+`capture_live_log` returns an in-memory trend (up to 16 channels, 20 samples,
+10 seconds); and `capture_engine_sniffer` returns up to 128 events and 32 channel
+summaries from the next chart, without raw chart text. It uses an EngineState
+observer alongside existing UI actions. Cancellation and connection changes
+stop these operations without closing the borrowed port or replacing UI listeners.
+The assistant does not write/reset Lua, configure acquisition, record arbitrary
+paths, or enable the standalone server's write tools.
+
+`list_output_channels` includes INI gauge-title/datalog descriptions and units,
+with source and availability metadata. Output-channel units take precedence
+over gauge units. Missing, dynamic or conflicting units are explicit; discovery
+does not evaluate expressions or read the tune. Its filter also matches returned
+descriptions and known units, and results remain bounded to at most 100 entries.
+
+The Console-only batch tools read at most 32 requested channel names from one
+recent completed full poll. `diagnostic_snapshot` adds raw warning/error channels
+from that same poll. They return a shared sample ID, timestamp and age; missing
+channels are explicit. Last/recent codes and counters can be historical, and a
+host poll is not an atomic ECU measurement. These tools do not send commands,
+clear faults, or alter the standalone stdio tool catalog below.
+
+The Console-only `read_tune_fields` reads fresh selected calibration ranges on
+the existing communication thread. Supply 1-32 INI calibration names; scalars,
+enums/bitfields and arrays of up to 64 elements are supported, with at most 512
+values per request. String/Lua fields and larger arrays are excluded. Results
+identify pages, offsets, per-field failures and read timestamps. Reads are
+sequential ECU RAM observations, not an atomic snapshot or a flash-persistence
+check. Cancellation prevents remaining chunks and queued work without
+interrupting an in-flight wire transaction. It does not use the editable tune
+cache or download the entire tune.
 
 ## Architecture
 
@@ -16,6 +67,10 @@ LLM client  <-- stdio JSON-RPC (MCP) -->  EcuMcpServer
                                               |       +-- BurnCommand
                                               |       +-- StringIniField (LUASCRIPT)
                                               |
+                                              +-- CalibrationsHelper / CalibrationsUpdater
+                                              |       +-- MSQ compatibility migration
+                                              |       +-- page-aware write, burn, readback
+                                              |
                                               +-- MessagesCentral listener
                                                       (same hook as Swing MessagesView,
                                                        captures Lua print() + efiPrintf)
@@ -24,6 +79,12 @@ LLM client  <-- stdio JSON-RPC (MCP) -->  EcuMcpServer
 `LuaService` (in `:ecu_io`) is the headless reusable core that `SetLuaTool` and
 `EcuMcpServer` both depend on. It owns connecting to the ECU, locating the `LUASCRIPT`
 ini field, writing/burning, and `luareset`.
+
+`:mcp_ecu` and `:ui` both depend on `:ecu_shared` for calibration backup/migration,
+firmware operations, hardware probes, binary logging, and Lua include expansion.
+MCP no longer depends on `:ui`, and UI does not yet depend on MCP. The shared
+module retains the existing `:autoupdate`/`:core_ui` helpers and optional maintenance
+dialogs; it does not include the console widgets, editors, or visualization modules.
 
 ## Prerequisite: a matching .ini file
 
@@ -54,11 +115,82 @@ Behavior common to all tools:
 | `lua_reset` | Restart the Lua VM. |
 | `send_command`, `command` | Queue any text command. |
 | `read_output_channel` | Latest gauge value by name. |
+| `capture_engine_sniffer` | Next Digital Sniffer chart as parsed events, channel summaries, and raw text. |
+| `mount_to_ecu`, `mount_to_pc` | Switch SD-card ownership and confirm the reported mount mode. |
+| `start_data_logging` | Record ECU operating data to a new `.mlg` file. |
+| `stop_data_logging` | Stop recording and close the file. |
+| `data_logging_status` | Recording state, file path, sample count, and errors. |
+| `convert_log_to_csv` | Convert a host-side MLG/MSL log to CSV without connecting to an ECU. |
+| `extract_tune_from_log` | Extract the starting MSQ tune embedded in a host-side MLG log without connecting to an ECU. |
 | `read_messages` | Pull recent ECU messages (Lua `print` included). |
 | `wait_for_message` | Block until a message matches a regex. |
 | `read_tune` | Save the complete ECU tune as a `.msq` file. |
+| `write_tune` | Merge, burn, and verify a host-side `.msq` tune on the ECU. |
+| `download_bundle` | Download a fresh board or universal autoupdate bundle, optionally combining the universal console with board firmware. |
+| `update_firmware` | Update via OpenBLT, back up and migrate the configuration, then reconnect. |
 | `reboot` | Reboot the ECU. |
 | `reboot_to_blt` | Reboot the ECU into the OpenBLT bootloader. |
+
+### `extract_tune_from_log`
+
+| Argument | Type | Required | Description |
+|---|---|---|---|
+| `inputPath` | string | yes | Existing TunerStudio or rusEFI MLVLG v2 `.mlg` file on the MCP server host. |
+| `outputPath` | string | no | New MSQ file; defaults to the input path with its extension replaced by `.msq`. Parent directory must exist. |
+
+Extracts `LogStart_MAIN_TUNE` from the log's information section, preserving the
+original XML bytes, encoding, comments and all tune pages. No ECU connection or
+INI file is needed. Relative paths resolve against the server's working directory.
+Returns `success`, absolute `path` and `byteCount`.
+
+```json
+{"name":"extract_tune_from_log","arguments":{"inputPath":"/tmp/engine-run.mlg"}}
+```
+
+Existing output files are never overwritten. Missing tunes, unsupported formats,
+invalid offsets/provider lengths and malformed MSQ XML return errors without
+publishing a partial file. Information sections are limited to 32 MiB; XML DTDs
+and external entities are not supported. This extracts the tune at logging start,
+not subsequent tune edits. Text MSL logs and logs without embedded tunes are not
+supported by this tool.
+
+### `convert_log_to_csv`
+
+| Argument | Type | Required | Description |
+|---|---|---|---|
+| `inputPath` | string | yes | Existing binary MLVLG v2 or text TunerStudio MSL file on the MCP server host. |
+| `outputPath` | string | no | New CSV file; defaults to the input path with its extension replaced by `.csv`. Parent directory must exist. |
+
+Relative paths resolve against the server's working directory. No ECU connection
+or INI file is needed. Stop recording before converting the log. Existing output
+files are never overwritten. Conversion errors do not publish a partial CSV.
+
+Returns `success`, absolute `path`, `inputFormat` (`mlg` or `msl`), `recordCount`,
+and `fieldCount`. Example tool call:
+
+```json
+{"name":"convert_log_to_csv","arguments":{"inputPath":"/tmp/engine-run.mlg"}}
+```
+
+CSV columns follow the C++ `msl2csv` helper: one column per logged field, with
+units appended to the column name. Binary values use `(raw + transform) * scale`
+and the field's declared decimal precision (clamped to 0..12); NaN becomes an
+empty cell. No timestamp column is synthesized from the wrapping record header;
+a logged `Time` field is exported like any other field. Text MSL input must have
+a tab-separated field-name row, units row, and data rows with matching widths.
+Binary checksum mismatches, truncated records, unsupported scalar/block types,
+and inconsistent headers fail conversion. Marker blocks are not supported.
+
+The converter lives in `:mcp_ecu` as `com.rusefi.mcp.MslToCsv`, adapted from
+`misc/mlg2csv/MlgToCsv.java` on `at32-vovansss`. It streams records and can also run
+as a CLI after building `./gradlew :mcp_ecu:fatJar` (substitute the built jar path):
+
+```bash
+java -cp /path/to/mcp_ecu-all.jar com.rusefi.mcp.MslToCsv input.mlg output.csv
+```
+
+The output argument is optional. The existing C++ converter remains available
+for unit-test tooling.
 
 ### `connect`
 
@@ -115,7 +247,152 @@ messages — read it back with `read_messages` / `wait_for_message`.
 
 Returns `found` plus `value` when found; `found: false` means the channel does not
 exist **or** no data has arrived yet — retry after a moment before concluding the name
-is wrong.
+is wrong. The console's output-channel polling is subscription based (it fetches only
+the byte ranges of channels somebody subscribed to), so the server holds a full-frame
+lease for the lifetime of the ECU connection: every channel of the `.ini` is polled,
+like before that change.
+
+### `capture_engine_sniffer`
+
+Waits for the next nonempty Console Digital Sniffer (`wave_chart`) packet received
+after subscribing. Connects if necessary. Optional `timeoutMs` defaults to 10000
+and must be 1..120000; connection has its own timeout.
+
+```json
+{"name":"capture_engine_sniffer","arguments":{"timeoutMs":20000}}
+```
+
+Returns `success`, firmware `signature`, `source: "wave_chart"`, `receivedAt`
+(host Unix milliseconds), `resolutionUs` (10), `eventCount`, `durationUs`
+(maximum minus minimum event time), `events`, `channels`, and `raw`.
+
+- Each event has `channel`, original `signal`, and `timeUs` relative to the
+  chart's origin. Digital transitions also have `edge` (`rising`/`falling`);
+  indexed crank transitions have `triggerIndex`. TDC (`r`) events have `rpm`.
+- Channel summaries contain `channel`, `eventCount`, `risingEdges`,
+  `fallingEdges`, `firstTimeUs`, and `lastTimeUs`. Names are the firmware's logical
+  channel names, not physical pin mappings. Events remain in producer order.
+- `raw` preserves the chart triplets for independent analysis. Unknown signal
+  tokens are retained. Malformed or oversized charts fail instead of returning
+  partial data.
+
+This is one bounded snapshot, not continuous logging or the binary composite
+logger. No previous MCP capture is replayed, but a newly received chart can contain
+events collected before the call. The tool does not reset the chart, change the
+tune, or start/stop firmware acquisition. It uses the current `engineChartSize`,
+`engineSnifferRpmThreshold`, input focus, and logic-level settings. Use
+`send_command` separately for intentional changes such as `chartsize 180` or
+`reset_engine_chart` (the latter skips three revolutions).
+
+Timeout or disconnect returns `success: false` and an explanation. An empty
+capture can mean no engine activity, RPM above the sniffer threshold, a chart not
+yet ready to publish, or firmware without sniffer/text support. Listener ownership
+is released after every call, including failures. Output edges describe firmware
+commands and do not measure electrical current or mechanical timing. See
+[Engine Sniffer](../../docs/AI/engine_sniffer.md) for capture semantics.
+
+### `mount_to_ecu` and `mount_to_pc`
+
+Switch the SD card to ECU ownership (logging and ECU-side file access) or PC
+ownership (USB mass storage). The request uses the same binary command as the
+TunerStudio SD Card dialog. The selection lasts until power-off or `sdmode auto`.
+
+Optional `timeoutMs` defaults to 20000 and must be 1..120000. It covers command
+acknowledgement and mount confirmation; implicit connection has its separate timeout.
+These tools require firmware and a matching `.ini` exposing `sdCardMode` and
+`sd_present`. Older firmware returns an error before sending a mount command.
+
+Success requires a fresh output poll after acknowledgement reporting a present card
+in the requested mode. Logging may be paused or suppressed in ECU mode; its activity
+bit is not used to determine ownership. Results include `success`, `mounted`,
+`requestedMode`, and, when a fresh status arrived, `sdCardMode`, `mode`, `sd_present`.
+Timeouts and disconnects return an error with completion unconfirmed.
+
+Safely eject the PC drive before calling `mount_to_ecu`. Switching ownership can
+drop the shared USB console connection. Reconnect and use `read_output_channel`
+with `name: "sdCardMode"` to check the result before retrying. Mode values are
+0 idle, 1 ECU, 2 PC, 3 unmounted, 4 formatting. `sd_present` must also be set for
+the card to be usable. A PC-mode report confirms firmware ownership, not that
+the host OS has mounted a drive letter.
+
+```json
+{"name":"mount_to_ecu","arguments":{"timeoutMs":20000}}
+{"name":"mount_to_pc","arguments":{}}
+```
+
+### `start_data_logging`
+
+| Argument | Type | Required | Default | Description |
+|---|---|---|---|---|
+| `path` | string | no | Temporary `rusefi_data_*.mlg` file | New file on the MCP server host; parent directory must exist. Relative paths resolve against the server's working directory. |
+| `saveTune` | boolean | no | `true` | Embed the starting tune in the log and save an MSQ snapshot in the same folder. |
+
+Connects if necessary, creates the file and writes its header before returning.
+Existing files are never overwritten. Starting while already recording fails and
+leaves the active recording intact. Records all supported numeric and enum output
+channels from the connected ECU's `.ini`, using the same field selection and binary
+MLG format as the frontend. Computed expression channels are not included.
+Fields use the INI's `[Datalog]` display labels and declaration order, matching
+TunerStudio names such as `RPM`, `CLT`, and `Ign: Timing Cyl 1`. Recordable channels
+without a datalog entry are appended using their original INI identifiers.
+
+By default, start reads the ECU's configuration pages afresh on the communication
+thread and saves a TunerStudio `.msq` tune beside the data log before recording
+begins. The filename uses the server's local date: `YYYY-MM-DD.msq`. An identical
+existing tune is reused; a changed tune uses `YYYY-MM-DD_1.msq`, then `_2`, etc.
+Existing files are preserved, including invalid MSQ files. Comparison includes
+firmware signature and calibration constants on each page, ignoring comments and
+writer metadata. Unchanged numbered snapshots are reused too.
+
+The saved MSQ is also embedded in the MLG information section using TunerStudio's
+`NEW_INFO_PROVIDER,LogStart_MAIN_TUNE,Type:msqVisible:falseLength:...` format.
+Sharing the log alone therefore includes its starting tune. Use
+`extract_tune_from_log` to recover it; `convert_log_to_csv` skips this metadata
+and continues to export the recorded samples.
+
+Set `"saveTune": false` to disable both embedded and separate tune snapshots and
+record only data. If the required tune read/save fails,
+start fails without activating recording; any newly created data log is removed.
+The snapshot describes the tune at logging start; edits during a recording do not
+create further tune snapshots.
+
+Each complete poll supplies one row; the sampling rate is the connection's polling
+rate, not a separate high-speed ECU or SD-card logger. Recording continues between
+MCP requests. Partial polls and snapshots predating the recording's full-output
+subscription are excluded. Zero samples means no qualifying poll has arrived yet.
+
+### `stop_data_logging` and `data_logging_status`
+
+Neither takes arguments or requires an ECU connection. Stop closes the file and
+releases recording resources; repeated stops are safe. Both return the same status
+fields as start:
+
+| Field | Meaning |
+|---|---|
+| `success` | False if recording encountered an encoding, write, or close error. |
+| `logging` | Whether the recorder is active. |
+| `path` | Absolute file path, or null before the first successful start. |
+| `format` | `mlg`. |
+| `tunePath` | Absolute path of the saved/reused tune, or null when tune saving is disabled or no recording has started. |
+| `tuneEmbedded` | Whether the log includes that MSQ in its information section. |
+| `sampleCount` | Rows successfully written in this recording. |
+| `channelCount` | Fields in the log, including the frontend's MAP compatibility alias. |
+| `error` | Failure description, when present. |
+
+After stopping, status retains the last recording's details. A write/encoding error
+stops recording and remains visible until another recording starts successfully;
+a partially written file may remain. A disconnected ECU supplies no new samples.
+Reconnecting through an ECU tool stops the old recording to avoid mixing channel
+layouts; start a new recording afterwards. Normal server shutdown or stdin failure
+also closes the file. An abrupt process kill may leave an incomplete file.
+
+Example tool calls:
+
+```json
+{"name":"start_data_logging","arguments":{"path":"/tmp/engine-run.mlg"}}
+{"name":"data_logging_status","arguments":{}}
+{"name":"stop_data_logging","arguments":{}}
+```
 
 ### `read_messages`
 
@@ -152,13 +429,113 @@ wait — pass `sinceSeq` captured before triggering the action you're waiting on
 
 Reads the complete tune (every calibration constant defined by the matching `.ini`) and
 writes it as a TunerStudio-compatible `.msq` XML file — the same format the rusEFI
-console and TunerStudio use for tune save/load. The tune is built from the controller
-configuration image fetched over this connection (read in full at connect and kept in
-sync by writes made through this connection).
+console and TunerStudio use for tune save/load. Every page declared by the matching
+`.ini` is freshly read from the ECU when the tool is called, including secondary
+calibration pages such as the dedicated Lua page on newer firmware.
 
 Returns `path` (absolute), `constantCount`, `fileSize` (bytes) and `signature`. The XML
 can easily run to hundreds of kilobytes — read the file with your own file tools
 (ideally selectively) instead of trying to pull it through an MCP response.
+
+### `write_tune`
+
+| Argument | Type | Required | Description |
+|---|---|---|---|
+| `path` | string | yes | Existing input `.msq` path **on the MCP-server host** (not the client). |
+
+Loads the MSQ and resolves the `.ini` named by its firmware signature. It freshly reads
+all tune pages from the connected ECU, compatibility-migrates fields from the input tune
+onto that current image, writes and burns only changed pages, then freshly reads all
+pages again and requires an exact byte-for-byte match with the intended merged result.
+The ECU's `vinNumber` is deliberately preserved, matching the console tune-import path.
+Fields incompatible with the connected firmware are skipped and reported rather than
+causing compatible fields to be discarded.
+
+Returns `success`, absolute `path`, `constantCount`, `fileSize`, `sourceSignature`,
+`ecuSignature`, `changed`, `verified`, `failedFields`, and `warnings`. `changed: false`
+is a successful no-op when the ECU already contains the requested calibration. A write,
+burn, or readback mismatch returns `success: false` and `verified: false`.
+
+```json
+{"name":"write_tune","arguments":{"path":"/tmp/edited-tune.msq"}}
+```
+
+### `download_bundle`
+
+Downloads a fresh autoupdate ZIP and extracts it into a new directory on the MCP
+server host. No ECU connection is required. This downloads files; flashing is a
+separate `update_firmware` call.
+
+| Argument | Type | Required | Description |
+|---|---|---|---|
+| `board` | string | unless `universal` is true | Board target such as `proteus_f7` or `uaefi`. |
+| `universal` | boolean | no | Default `false`. Download the universal updater bundle. Also supply `board` to add that board's SREC files to the extracted universal bundle. |
+| `branch` | string | no | `development` (default), `master` (alias for development), or an LTS release name such as `lts-26`. |
+| `destination` | string | no | New host directory; must not exist and its parent must exist. Defaults to a new temporary directory. |
+
+Board-specific bundle:
+
+```json
+{"name":"download_bundle","arguments":{"board":"proteus_f7"}}
+```
+
+Universal updater with a board's firmware:
+
+```json
+{"name":"download_bundle","arguments":{"universal":true,"board":"uaefi","branch":"lts-26"}}
+```
+
+Universal updater alone:
+
+```json
+{"name":"download_bundle","arguments":{"universal":true}}
+```
+
+The universal archive ships no firmware. When `board` is also supplied, its
+S-records are added to the extracted bundle while the universal console and
+`release.txt` remain intact. The original ZIP archives are retained separately.
+These are autoupdate archives, not the full installer/driver distribution.
+
+The result contains `directory`, `bundleDirectory`, `archives` (target, source URL,
+local ZIP path, and size), `srecPaths`, and `firmwareIncluded`. When exactly one SREC
+is present, `firmwarePath` is returned for direct use with `update_firmware`.
+Universal-only downloads normally return an empty `srecPaths` list. Board downloads
+fail if no SREC is present or its contents are invalid.
+
+Each call fetches fresh content using the updater's configured download server
+(`RE_UPDATE_URL` override supported), with the public-to-obfuscated archive fallback
+when a board's public ZIP is absent. Existing directories are never overwritten;
+failed downloads/extractions remove their newly created destination. The current
+MCP installation is not replaced or restarted. Allow several minutes for large bundles.
+
+### `update_firmware`
+
+Runs the Console's automatic OpenBLT update with configuration migration. Start with a
+live ECU connection over serial or SocketCAN; do not call `reboot_to_blt` first, since
+running firmware is needed to back up the tune. TCP/simulator connections are unsupported.
+
+| Argument | Type | Required | Description |
+|---|---|---|---|
+| `firmwarePath` | string | no | Existing S-record firmware file on the MCP server host. Omit to select the bundle firmware for the connected board (including its normal download behavior). |
+
+```json
+{"name":"update_firmware","arguments":{"firmwarePath":"/path/to/rusefi_update.srec"}}
+```
+
+The call blocks for several minutes while it backs up the current tune and INI,
+flashes firmware, reads the new configuration, migrates compatible settings, writes
+and burns the migrated tune, and reconnects. Allow a sufficiently long MCP client
+request timeout. Data logging stops when the update job takes over the connection.
+Explicit firmware files are parsed before connecting; known board mismatches and
+firmware eligibility failures are rejected without dialogs.
+
+The result includes `success`, `handoffStarted`, `connected`, `port`, firmware
+`previousSignature`/`signature`, `warnings`, and `messages` (including backup paths).
+Fields that cannot be migrated remain at firmware defaults and are reported in the
+warnings/messages. A backup failure aborts before flashing. A later failure can leave
+new firmware installed without the restored tune: inspect `messages` and the saved
+backup before retrying. `connected` reports the connection separately from update
+success; reconnect manually if the ECU did not reappear.
 
 ### `reboot`
 

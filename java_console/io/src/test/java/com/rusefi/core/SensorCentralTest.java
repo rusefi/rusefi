@@ -1,14 +1,20 @@
 package com.rusefi.core;
 
+import com.opensr5.ini.IniFileMetaInfo;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.ImmutableIniFileModel;
 import com.opensr5.ini.IniFileModelMocks;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.config.FieldType;
+import com.rusefi.ini.reader.IniFileReaderUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayInputStream;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -435,6 +441,46 @@ public class SensorCentralTest {
         // Removing a listener that was never added should not throw
         SensorCentral.SensorListener listener = value -> {};
         assertDoesNotThrow(() -> sensorCentral.removeListener("nonExistentSensor", listener));
+    }
+
+    /**
+     * Trim channels are sent as a multiplier (1.0 = no correction) with scale 100 and
+     * translate -1, which TunerStudio shows as (1.0 - 1) * 100 = 0 %.
+     */
+    @Test
+    void outputChannelTranslateIsAppliedBeforeScale() throws Throwable {
+        String text = "[OutputChannels]\n"
+            + "ltftCorrection1 = scalar, F32, 0, \"%\", 100.0, -1.0\n";
+        IniFileModel ini = IniFileReaderUtil.readIniFile(IniFileReaderUtil.read(
+            new ByteArrayInputStream(text.getBytes(StandardCharsets.US_ASCII))),
+            "translate.ini", mock(IniFileMetaInfo.class));
+        IniField field = ini.getOutputChannel("ltftCorrection1");
+
+        byte[] response = new byte[5];
+        ByteBuffer.wrap(response, 1, 4).order(ByteOrder.LITTLE_ENDIAN).putFloat(1.0f);
+
+        assertEquals(0.0, ISensorHolder.readFieldValue(response, "ltftCorrection1", field), 1e-9);
+
+        ByteBuffer.wrap(response, 1, 4).order(ByteOrder.LITTLE_ENDIAN).putFloat(1.05f);
+        assertEquals(5.0, ISensorHolder.readFieldValue(response, "ltftCorrection1", field), 1e-4);
+    }
+
+    /** A big-endian controller ('endianness = big', e.g. PowerPC) sends MSB-first output channels. */
+    @Test
+    void outputChannelBigEndianRead() throws Throwable {
+        String text = "[OutputChannels]\n"
+            + "rpmValue = scalar, U16, 0, \"rpm\", 1.0, 0.0\n";
+        IniFileModel ini = IniFileReaderUtil.readIniFile(IniFileReaderUtil.read(
+            new ByteArrayInputStream(text.getBytes(StandardCharsets.US_ASCII))),
+            "bigendian.ini", mock(IniFileMetaInfo.class));
+        IniField field = ini.getOutputChannel("rpmValue");
+
+        byte[] response = new byte[3];
+        ByteBuffer.wrap(response, 1, 2).order(ByteOrder.BIG_ENDIAN).putShort((short) 0x1234);
+
+        assertEquals(0x1234, ISensorHolder.readFieldValue(response, "rpmValue", field, ByteOrder.BIG_ENDIAN), 1e-9);
+        // same bytes misread as little-endian give the swapped value - proves the order parameter matters
+        assertEquals(0x3412, ISensorHolder.readFieldValue(response, "rpmValue", field, ByteOrder.LITTLE_ENDIAN), 1e-9);
     }
 
 }

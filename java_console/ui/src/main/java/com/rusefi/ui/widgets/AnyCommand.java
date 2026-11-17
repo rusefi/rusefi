@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets;
 
+import com.formdev.flatlaf.FlatClientProperties;
 import com.rusefi.FileLog;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.core.MessagesCentral;
@@ -35,7 +36,9 @@ public class AnyCommand {
 
     private final UIContext uiContext;
     private final JTextComponent text;
-    private JPanel content = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    // no vertical gap, so the command box lines up with the other toolbar controls
+    private JPanel content = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+    private final JButton go = new JButton("Go");
     private boolean reentrant;
     private Listener listener;
 
@@ -44,14 +47,13 @@ public class AnyCommand {
         this.text = text;
         installCtrlEnterAction();
         text.setText(defaultCommand);
-        content.setBorder(BorderFactory.createLineBorder(Color.PINK));
+        // transparent, so the command box sits on its toolbar's own background
+        content.setOpaque(false);
         if (withCommandCaption) {
             content.add(new JLabel("Command: "));
         }
         content.add(text);
-        JButton go = new JButton("Go");
         go.setToolTipText("Send command text (Ctrl+Enter)");
-        go.setContentAreaFilled(false);
         go.addActionListener(e -> send());
         content.add(go);
 
@@ -73,7 +75,8 @@ public class AnyCommand {
             @Override
             public void changedUpdate(DocumentEvent e) {
                 boolean isOk = isValidInput(text.getText());
-                text.setBorder(isOk ? null : BorderFactory.createLineBorder(Color.red));
+                // FlatLaf's error outline keeps the field's normal border when the input is valid
+                text.putClientProperty(FlatClientProperties.OUTLINE, isOk ? null : FlatClientProperties.OUTLINE_ERROR);
                 config.setProperty(KEY, text.getText());
             }
         });
@@ -209,9 +212,14 @@ public class AnyCommand {
     }
 
     public static AnyCommand createField(UIContext uiContext, Node config, String defaultCommand, boolean listenToCommands, boolean withCommandCaption) {
-        final JTextField text = new JTextFieldWithWidth(200);
+        final JTextField text = new JTextFieldWithWidth(340);
 
         final AnyCommand command = new AnyCommand(uiContext, text, config, defaultCommand, listenToCommands, withCommandCaption);
+        // one joined control: "> command | Go" [tag:console_theme]
+        command.content.remove(text);
+        command.content.remove(command.go);
+        command.content.add(new CommandBox(text, command.go));
+        text.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Console command");
         text.setToolTipText("Enter or Ctrl+Enter to send; Up/Down for command history");
         text.addActionListener(new ActionListener() {
             @Override
@@ -240,15 +248,26 @@ public class AnyCommand {
     }
 
     public static AnyCommand createArea(UIContext uiContext, Node config, String defaultCommand, boolean listenToCommands, boolean withCommandCaption) {
-        final JTextArea text = new JTextArea(3, 20) {
+        // starts one line tall and grows with each line typed or pasted; every line is sent
+        final JTextArea text = new JTextArea() {
             @Override
             public Dimension getPreferredSize() {
                 Dimension size = super.getPreferredSize();
-                return new Dimension(200, size.height);
+                return new Dimension(340, size.height);
             }
         };
-//        text.setMax
 
-        return new AnyCommand(uiContext, text, config, defaultCommand, listenToCommands, withCommandCaption);
+        AnyCommand command = new AnyCommand(uiContext, text, config, defaultCommand, listenToCommands, withCommandCaption);
+        // the same rounded "> command | Go" control as createField [tag:console_theme]
+        command.content.remove(text);
+        command.content.remove(command.go);
+        command.content.add(new CommandBox(text, command.go));
+        // centre a single line in the box, which is as tall as the toolbar controls
+        int lineHeight = text.getFontMetrics(text.getFont()).getHeight();
+        int padding = Math.max(0, (JoinedButtons.HEIGHT - 2 - lineHeight) / 2);
+        text.setBorder(BorderFactory.createEmptyBorder(padding, 0, padding, 8));
+        text.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Console command");
+        text.setToolTipText("Ctrl+Enter sends; Enter starts a new line and each line is sent as its own command");
+        return command;
     }
 }

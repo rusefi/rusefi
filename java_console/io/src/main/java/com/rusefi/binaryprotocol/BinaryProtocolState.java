@@ -81,4 +81,19 @@ public class BinaryProtocolState {
             System.arraycopy(src, scrPos, configurationImage.getContent(), offset, count);
         }
     }
+
+    /**
+     * Reflect an acknowledged write to the ECU's main configuration page.
+     * Deliberately leaves cachedImage untouched: that remains the loaded baseline.
+     */
+    public void recordPage0Write(byte[] src, int sourceOffset, int ecuOffset, int count) {
+        synchronized (imageLock) {
+            if (configurationImage == null || sourceOffset < 0 || ecuOffset < 0 || count < 0
+                    || sourceOffset > src.length - count
+                    || ecuOffset > configurationImage.getSize() - count) {
+                return;
+            }
+            System.arraycopy(src, sourceOffset, configurationImage.getContent(), ecuOffset, count);
+        }
+    }
 }

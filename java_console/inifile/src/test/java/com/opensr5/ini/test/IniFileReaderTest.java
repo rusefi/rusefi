@@ -215,6 +215,51 @@ public class IniFileReaderTest {
     }
 
     @Test
+    public void testEndianness() {
+        String declared =
+                "[Constants]\n" +
+                        "endianness = little\n" +
+                        "page = 1\n" +
+                        "primingSquirtDurationMs\t\t\t= scalar, F32,\t96,\t\"*C\", 1.0, 0, -40, 200, 1\n";
+        IniFileModel declaredModel = readLines(IniFileReaderUtil.read(new ByteArrayInputStream(declared.getBytes())));
+        assertTrue(declaredModel.isLittleEndian());
+
+        String omitted =
+                "[Constants]\n" +
+                        "page = 1\n" +
+                        "primingSquirtDurationMs\t\t\t= scalar, F32,\t96,\t\"*C\", 1.0, 0, -40, 200, 1\n";
+        IniFileModel omittedModel = readLines(IniFileReaderUtil.read(new ByteArrayInputStream(omitted.getBytes())));
+        assertTrue(omittedModel.isLittleEndian());
+
+        String big =
+                "[Constants]\n" +
+                        "endianness = big\n" +
+                        "page = 1\n" +
+                        "primingSquirtDurationMs\t\t\t= scalar, F32,\t96,\t\"*C\", 1.0, 0, -40, 200, 1\n";
+        IniFileModel bigModel = readLines(IniFileReaderUtil.read(new ByteArrayInputStream(big.getBytes())));
+        assertFalse(bigModel.isLittleEndian());
+        assertEquals(java.nio.ByteOrder.BIG_ENDIAN, bigModel.getByteOrder());
+    }
+
+    @Test
+    public void testMetaInfoByteOrder() {
+        String common = "   nPages              = 1\n" +
+                SIGNATURE_UNIT_TEST +
+                PAGE_READ +
+                "ochBlockSize=1\n" +
+                "   pageSize            = 288\n";
+
+        IniFileMetaInfo omitted = new IniFileMetaInfoImpl(fromString(common));
+        assertEquals(java.nio.ByteOrder.LITTLE_ENDIAN, omitted.getByteOrder());
+
+        IniFileMetaInfo little = new IniFileMetaInfoImpl(fromString(common + "endianness = little\n"));
+        assertEquals(java.nio.ByteOrder.LITTLE_ENDIAN, little.getByteOrder());
+
+        IniFileMetaInfo big = new IniFileMetaInfoImpl(fromString(common + "endianness = big\n"));
+        assertEquals(java.nio.ByteOrder.BIG_ENDIAN, big.getByteOrder());
+    }
+
+    @Test
     public void testSetBits() {
         assertEquals(0xFE, EnumIniField.setBitRange(0xFF, 0, 0, 1));
         assertEquals(0xF0, EnumIniField.setBitRange(0xFF, 0, 0, 4));

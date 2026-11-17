@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -25,6 +26,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -258,6 +260,207 @@ public class AbstractAutoFlashJobAwaitEcuPortTest {
         org.mockito.InOrder order = inOrder(linkManager, completion);
         order.verify(linkManager).reconnect("COM_NEW");
         order.verify(completion).run();
+    }
+
+    /**
+     * Regression for the completion-boundary bug: done() is terminal to the UI and must follow the
+     * reconnect wait/attempt. This retains the original characterization's successful flash setup.
+     */
+    @Test
+    public void characterizesSuccessReportedBeforeReconnectWait() {
+        LinkManager linkManager = mock(LinkManager.class);
+        UpdateOperationCallbacks callbacks = mock(UpdateOperationCallbacks.class);
+        Runnable reconnectWait = mock(Runnable.class);
+        Runnable completion = mock(Runnable.class);
+        AbstractAutoFlashJob reconnectingJob = successfulFlashJob(linkManager, reconnectWait, "COM_NEW");
+
+        reconnectingJob.doJob(callbacks, completion);
+
+        org.mockito.InOrder order = inOrder(callbacks, reconnectWait, linkManager, completion);
+        order.verify(reconnectWait).run();
+        order.verify(linkManager).reconnect("COM_NEW");
+        order.verify(callbacks).done();
+        order.verify(linkManager).allowAutomaticReconnect();
+        order.verify(completion).run();
+        verify(callbacks).done();
+        verify(callbacks, never()).error();
+    }
+
+    /**
+     * A successful programming/settings step followed by no detected ECU is not a complete update.
+     * Retains the characterization's timeout/flash setup, but requires a non-success final outcome.
+     */
+    @Test
+    public void characterizesSuccessDespiteReconnectTimeout() {
+        LinkManager linkManager = mock(LinkManager.class);
+        UpdateOperationCallbacks callbacks = mock(UpdateOperationCallbacks.class);
+        Runnable reconnectWait = mock(Runnable.class);
+        Runnable completion = mock(Runnable.class);
+        AbstractAutoFlashJob reconnectingJob = successfulFlashJob(linkManager, reconnectWait, null);
+
+        reconnectingJob.doJob(callbacks, completion);
+
+        org.mockito.InOrder order = inOrder(callbacks, reconnectWait, linkManager, completion);
+        order.verify(reconnectWait).run();
+        order.verify(callbacks).logLine(
+            "ECU did not re-appear after flashing — reconnect manually once it enumerates.");
+        order.verify(callbacks).error();
+        order.verify(linkManager).allowAutomaticReconnect();
+        order.verify(completion).run();
+        verify(callbacks, never()).done();
+        verify(linkManager, never()).reconnect(anyString());
+    }
+
+    /**
+     * Direct callbacks (such as MassUpdater's StatusWindow) must retain a warning after reconnect,
+     * without SingleAsyncJobExecutor to protect them. Uses the original characterization stimulus.
+     */
+    @Test
+    public void characterizesDirectCallbacksWarningOverwrittenByCompletion() {
+        LinkManager linkManager = mock(LinkManager.class);
+        when(linkManager.getBinaryProtocol()).thenReturn(mock(BinaryProtocol.class));
+        when(linkManager.getCommandQueue()).thenReturn(mock(CommandQueue.class));
+        UpdateOperationCallbacks callbacks = mock(UpdateOperationCallbacks.class);
+        Runnable reconnectWait = mock(Runnable.class);
+        Runnable completion = mock(Runnable.class);
+        AbstractAutoFlashJob warningJob = new AbstractAutoFlashJob("test", ecu("COM_OLD"), null,
+            new ConnectivityContext(scanner), linkManager) {
+            @Override
+            protected boolean flash(LinkManager lm, BinaryProtocol bp, UpdateOperationCallbacks cb) {
+                cb.warning();
+                return true;
+            }
+
+            @Override
+            String awaitEcuPort(long timeoutMs, Clock clock) {
+                reconnectWait.run();
+                return "COM_NEW";
+            }
+        };
+
+        warningJob.doJob(callbacks, completion);
+
+        org.mockito.InOrder order = inOrder(callbacks, reconnectWait, linkManager, completion);
+        order.verify(reconnectWait).run();
+        order.verify(linkManager).reconnect("COM_NEW");
+        order.verify(callbacks).warning();
+        order.verify(completion).run();
+        verify(callbacks).warning();
+        verify(callbacks, never()).done();
+        verify(callbacks, never()).error();
+    }
+
+    @Test
+    public void nestedDoneDoesNotPublishSuccessBeforeReconnect() {
+        UpdateOperationCallbacks callbacks = mock(UpdateOperationCallbacks.class);
+
+        LinkManager lm = runFlashAction(callbacks, nested -> {
+            nested.done();
+            verify(callbacks, never()).done();
+        });
+
+        org.mockito.InOrder order = inOrder(lm, callbacks);
+        order.verify(lm).reconnect("COM_NEW");
+        order.verify(callbacks).done();
+        verify(callbacks).done();
+        verify(callbacks, never()).warning();
+        verify(callbacks, never()).error();
+    }
+
+    @Test
+    public void nestedFailureSurvivesWarningDoneAndPresentationClear() {
+        UpdateOperationCallbacks callbacks = mock(UpdateOperationCallbacks.class);
+
+        LinkManager lm = runFlashAction(callbacks, nested -> {
+            nested.error();
+            nested.warning();
+            nested.clear();
+            nested.done();
+            verify(callbacks, never()).error();
+            verify(callbacks, never()).warning();
+            verify(callbacks, never()).done();
+        });
+
+        org.mockito.InOrder order = inOrder(callbacks, lm);
+        order.verify(callbacks).clear();
+        order.verify(lm).reconnect("COM_NEW");
+        order.verify(callbacks).error();
+        verify(callbacks).error();
+        verify(callbacks, never()).warning();
+        verify(callbacks, never()).done();
+    }
+
+    @Test
+    public void flashCallbacksForwardNonterminalEventsAndInteractivePolicy() {
+        UpdateOperationCallbacks callbacks = mock(UpdateOperationCallbacks.class);
+        when(callbacks.isInteractive()).thenReturn(true);
+
+        runFlashAction(callbacks, nested -> {
+            assertTrue(nested.isInteractive());
+            nested.log("step details", false, true);
+            nested.logLine("step status");
+            nested.updateProgress(42);
+            nested.firmwareUpdateBlocked("step rejection details");
+            nested.firmwareHandoffStarted();
+        });
+
+        verify(callbacks).log("step details", false, true);
+        verify(callbacks).logLine("step status");
+        verify(callbacks).updateProgress(42);
+        verify(callbacks).firmwareUpdateBlocked("step rejection details");
+        // The job's own pre-flash handoff and the explicitly forwarded nested event.
+        verify(callbacks, times(2)).firmwareHandoffStarted();
+    }
+
+    @Test
+    public void flashCallbacksPreserveHeadlessPolicyForLoggerDummyAndCustomCallbacks() {
+        UpdateOperationCallbacks customHeadless = mock(UpdateOperationCallbacks.class);
+        when(customHeadless.isInteractive()).thenReturn(false);
+        for (UpdateOperationCallbacks callbacks : new UpdateOperationCallbacks[]{
+            UpdateOperationCallbacks.LOGGER, UpdateOperationCallbacks.DUMMY, customHeadless}) {
+            runFlashAction(callbacks, nested -> assertFalse(nested.isInteractive()));
+        }
+    }
+
+    private LinkManager runFlashAction(UpdateOperationCallbacks callbacks,
+                                       Consumer<UpdateOperationCallbacks> flashAction) {
+        LinkManager lm = mock(LinkManager.class);
+        when(lm.getBinaryProtocol()).thenReturn(mock(BinaryProtocol.class));
+        when(lm.getCommandQueue()).thenReturn(mock(CommandQueue.class));
+        AbstractAutoFlashJob nestedStepJob = new AbstractAutoFlashJob("test", ecu("COM_OLD"), null,
+            new ConnectivityContext(scanner), lm) {
+            @Override
+            protected boolean flash(LinkManager link, BinaryProtocol bp, UpdateOperationCallbacks nested) {
+                flashAction.accept(nested);
+                return true;
+            }
+
+            @Override
+            String awaitEcuPort(long timeoutMs, Clock clock) {
+                return "COM_NEW";
+            }
+        };
+        nestedStepJob.doJob(callbacks, () -> {});
+        return lm;
+    }
+
+    private AbstractAutoFlashJob successfulFlashJob(final LinkManager linkManager, final Runnable reconnectWait,
+                                                   final String detectedPort) {
+        when(linkManager.getBinaryProtocol()).thenReturn(mock(BinaryProtocol.class));
+        when(linkManager.getCommandQueue()).thenReturn(mock(CommandQueue.class));
+        return new AbstractAutoFlashJob("test", ecu("COM_OLD"), null,
+            new ConnectivityContext(scanner), linkManager) {
+            @Override
+            protected boolean flash(LinkManager lm, BinaryProtocol bp, UpdateOperationCallbacks cb) {
+                return true;
+            }
+
+            @Override
+            String awaitEcuPort(long timeoutMs, Clock clock) {
+                reconnectWait.run();
+                return detectedPort;
+            }
+        };
     }
 
     /** An eligibility rejection must prevent handoff and recovery. */

@@ -38,6 +38,7 @@ public class ImmutableIniFileModel implements IniFileModel {
     private final List<String> lambdaTargetTables;
     private final List<VeAnalyzeFilter> veAnalyzeFilters;
     private final List<EventTriggerModel> eventTriggers;
+    private final Set<String> requiresPowerCycle;
 
     private static <V> Map<String, V> copyWithCaseInsensitiveKeys(Map<String, V> source) {
         LowercaseHashMap<V> result = new LowercaseHashMap<>(source.size() * 2);
@@ -82,7 +83,8 @@ public class ImmutableIniFileModel implements IniFileModel {
                                  List<VeAnalyzeMap> veAnalyzeMaps,
                                  List<String> lambdaTargetTables,
                                  List<VeAnalyzeFilter> veAnalyzeFilters,
-                                 List<EventTriggerModel> eventTriggers) {
+                                 List<EventTriggerModel> eventTriggers,
+                                 Collection<String> requiresPowerCycle) {
         this.signature = signature;
         this.blockingFactor = blockingFactor;
         this.defines = Collections.unmodifiableMap(new TreeMap<>(defines));
@@ -127,6 +129,10 @@ public class ImmutableIniFileModel implements IniFileModel {
         this.lambdaTargetTables = Collections.unmodifiableList(new ArrayList<>(lambdaTargetTables));
         this.veAnalyzeFilters = Collections.unmodifiableList(new ArrayList<>(veAnalyzeFilters));
         this.eventTriggers = Collections.unmodifiableList(new ArrayList<>(eventTriggers));
+        // field names compare case-insensitively, as in allIniFields
+        TreeSet<String> powerCycle = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+        powerCycle.addAll(requiresPowerCycle);
+        this.requiresPowerCycle = Collections.unmodifiableSet(powerCycle);
     }
 
     /**
@@ -167,6 +173,13 @@ public class ImmutableIniFileModel implements IniFileModel {
         if (blockingFactor == 0)
             throw new IllegalStateException("blockingFactor not found in " + iniFilePath);
         return blockingFactor;
+    }
+
+    @Override
+    public boolean isLittleEndian() {
+        // Sourced from the [Constants] 'endianness' line captured into protocolMeta; the
+        // whole wire protocol is little-endian, so an ini that omits it means little-endian.
+        return "little".equalsIgnoreCase(protocolMeta.getOrDefault("endianness", "little"));
     }
 
     @Override
@@ -405,5 +418,10 @@ public class ImmutableIniFileModel implements IniFileModel {
     @Override
     public List<EventTriggerModel> getEventTriggers() {
         return eventTriggers;
+    }
+
+    @Override
+    public Set<String> getRequiresPowerCycle() {
+        return requiresPowerCycle;
     }
 }

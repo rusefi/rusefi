@@ -33,7 +33,16 @@ public final class ManualDfuRecovery {
     }
 
     static void run(ConnectedEcuTarget previousTarget, UpdateOperationCallbacks callbacks,
-                    BoardPicker picker, FirmwarePreparation preparation, FlashAction flash) {
+                     BoardPicker picker, FirmwarePreparation preparation, FlashAction flash) {
+        ConnectedEcuTarget selected = selectBoard(previousTarget, callbacks, picker);
+        if (selected != null) {
+            runSelected(selected, callbacks, preparation, flash);
+        }
+    }
+
+    /** Consent only: no firmware preparation, download or device access. Null is cancellation or a reported error. */
+    public static ConnectedEcuTarget selectBoard(ConnectedEcuTarget previousTarget, UpdateOperationCallbacks callbacks,
+                                                BoardPicker picker) {
         try {
             if (picker == null) {
                 throw new IOException("Open Manual DFU Update in the console to select a board.");
@@ -41,9 +50,24 @@ public final class ManualDfuRecovery {
             String selected = picker.pick(previousTarget.effectiveTarget());
             if (selected == null) {
                 callbacks.logLine("Manual DFU update cancelled; no firmware downloaded or flashed.");
-                return;
+                return null;
             }
-            ConnectedEcuTarget recoveryTarget = ConnectedEcuTarget.forManualRecovery(selected);
+            return ConnectedEcuTarget.forManualRecovery(selected);
+        } catch (IOException | IllegalArgumentException e) {
+            callbacks.logLine("Manual DFU update unavailable: " + e.getMessage());
+            callbacks.error();
+            return null;
+        }
+    }
+
+    static void runSelected(ConnectedEcuTarget recoveryTarget, UpdateOperationCallbacks callbacks, FlashAction flash) {
+        runSelected(recoveryTarget, callbacks, target -> DfuRecoveryFirmware.prepare(target, callbacks), flash);
+    }
+
+    private static void runSelected(ConnectedEcuTarget recoveryTarget, UpdateOperationCallbacks callbacks,
+                                    FirmwarePreparation preparation, FlashAction flash) {
+        try {
+            String selected = recoveryTarget.effectiveTarget();
             callbacks.logLine("Manual DFU recovery board: " + selected);
             String firmware = preparation.prepare(selected);
             if (firmware == null) {

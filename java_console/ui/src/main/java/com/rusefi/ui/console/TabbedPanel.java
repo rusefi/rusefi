@@ -1,18 +1,23 @@
 package com.rusefi.ui.console;
 
+import com.rusefi.ui.widgets.TuningIcons;
+import com.formdev.flatlaf.FlatClientProperties;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.MessagesCentral;
-import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionStatusValue;
 import com.rusefi.ui.LogDownloader;
 import com.rusefi.ui.UIContext;
+import com.rusefi.ui.logview.LogViewerHost;
+import com.rusefi.ui.obd.ObdCodesPane;
+import com.rusefi.ui.widgets.SparkleIcon;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.HierarchyEvent;
 
 public class TabbedPanel {
+    private static final int TAB_ICON_SIZE = 18;
     // todo: the logic around 'criticalError' could be implemented nicer
     private String criticalError;
 
@@ -38,18 +43,19 @@ public class TabbedPanel {
             Font f = g.getFont();
             g.setFont(new Font(f.getName(), f.getStyle(), f.getSize() * 4));
             String text;
+            // [tag:fixed_color] status words on a translucent black card, the same in every theme
             Color textColor;
             if (criticalError != null) {
                 text = criticalError;
-                textColor = Color.red;
+                textColor = Color.red; // [tag:fixed_color] on the black card
             } else if (Boolean.TRUE.equals(tabbedPane.getClientProperty("isUpdating"))) {
                 text = "Updating";
-                textColor = Color.orange;
+                textColor = Color.orange; // [tag:fixed_color] on the black card
             } else {
                 ConnectionStatusValue status = ConnectionStatusLogic.INSTANCE.getValue();
                 if (status == ConnectionStatusValue.LOADING) {
                     text = "Loading";
-                    textColor = Color.white;
+                    textColor = Color.white; // [tag:fixed_color] on the black card
                 } else {
                     // Don't show "Not connected" overlay — the status is visible in the
                     // title bar and corner icon. Blocking the entire UI with a black overlay
@@ -62,14 +68,37 @@ public class TabbedPanel {
             int x = (d.width - labelWidth) / 2;
             int y = d.height / 2;
             int padding = 12;
-            g.setColor(new Color(0, 0, 0, 180));
+            g.setColor(new Color(0, 0, 0, 180)); // [tag:fixed_color] the black card
             g.fillRoundRect(x - padding, y - fm.getAscent() - padding, labelWidth + padding * 2, fm.getHeight() + padding * 2, 16, 16);
             g.setColor(textColor);
             g.drawString(text, x, y);
         }
     };
 
-    public final JTabbedPane tabbedPane = new JTabbedPane();
+    public final JTabbedPane tabbedPane = new JTabbedPane() {
+        @Override
+        public void updateUI() {
+            super.updateUI();
+            // White tab row above the grey page [tag:console_theme]. A ColorUIResource keeps the
+            // colour replaceable by the next theme, like the look-and-feel default it overrides.
+            Color tabArea = UIManager.getColor("Console.TabArea.background");
+            if (tabArea != null) {
+                setBackground(new javax.swing.plaf.ColorUIResource(tabArea));
+            }
+        }
+
+        @Override
+        public void paint(Graphics g) {
+            super.paint(g);
+            // over the tab row, which the scroll tab layout draws in a child component
+            if (reorder != null) {
+                reorder.paintLine(g);
+            }
+        }
+    };
+    /** Drag to reorder; null until {@link #enableReordering}. */
+    private TabReorder reorder;
+    private boolean reordering;
 
     void installGlassPane() {
         JRootPane rootPane = tabbedPane.getRootPane();
@@ -92,6 +121,13 @@ public class TabbedPanel {
     }
 
     public TabbedPanel(UIContext uiContext) {
+        // One row at any width. Wrapping moved the first tabs onto a second row and stretched
+        // that row's tabs to fill it; tabs that do not fit are listed by FlatLaf's "more" button.
+        tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        tabbedPane.putClientProperty(FlatClientProperties.TABBED_PANE_TABS_POPUP_POLICY,
+            FlatClientProperties.TABBED_PANE_POLICY_AS_NEEDED);
+        tabbedPane.putClientProperty(FlatClientProperties.TABBED_PANE_SCROLL_BUTTONS_POLICY,
+            FlatClientProperties.TABBED_PANE_POLICY_NEVER);
         tabbedPane.addHierarchyListener(e -> {
             if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0 && tabbedPane.isShowing())
                 SwingUtilities.invokeLater(this::installGlassPane);
@@ -117,7 +153,103 @@ public class TabbedPanel {
     }
 
     public void addTab(String title, Component component) {
+        insertTab(title, component, tabbedPane.getTabCount());
+    }
+
+    public void insertTab(String title, Component component, int index) {
+        Icon icon = loadTabIcon(title);
+        tabbedPane.insertTab(title, icon, component, null, index);
+        tabbedPane.setTabComponentAt(index, new TabTitle(tabbedPane, component, title, icon));
+    }
+
+    /** Adds a tab at the end of the row with an already built title, such as {@link #createClosableTitle}. */
+    void addTab(String title, Component component, Component tabTitle) {
         tabbedPane.addTab(title, loadTabIcon(title), component);
+        tabbedPane.setTabComponentAt(tabbedPane.indexOfComponent(component), tabTitle);
+    }
+
+    /**
+     * Tab title with a close button. Build it once per tab content: each TabTitle listens to the
+     * pane for as long as the pane lives.
+     */
+    JComponent createClosableTitle(String title, Component content, Runnable onClose) {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEADING, 0, 0));
+        panel.setOpaque(false);
+        panel.add(new TabTitle(tabbedPane, content, title, loadTabIcon(title)));
+        JButton close = new JButton();
+        Icon closeIcon = UIManager.getIcon("TabbedPane.closeIcon");
+        if (closeIcon != null) {
+            close.setIcon(closeIcon);
+        } else {
+            close.setText("×");
+        }
+        close.setToolTipText("Close " + title + " (reopen it from the Tools menu)");
+        close.setBorder(BorderFactory.createEmptyBorder(0, 6, 0, 0));
+        close.setContentAreaFilled(false);
+        close.setFocusable(false);
+        close.addActionListener(e -> onClose.run());
+        panel.add(close);
+        return panel;
+    }
+
+    /**
+     * Tab title that turns bold and takes the selected colour on the selected tab, which FlatLaf
+     * cannot do per tab. Its width always fits the bold text so the tabs do not shift on selection.
+     * The tab keeps its own title, so indexOfTab() and the hidden-tabs menu still work.
+     */
+    static class TabTitle extends JLabel {
+        private final JTabbedPane pane;
+        private final Component content;
+
+        TabTitle(JTabbedPane pane, Component content, String title, Icon icon) {
+            super(title, icon, SwingConstants.LEADING);
+            this.pane = pane;
+            this.content = content;
+            setIconTextGap(6);
+            pane.addChangeListener(e -> refresh());
+            refresh();
+        }
+
+        boolean isSelectedTab() {
+            return pane.getSelectedComponent() == content;
+        }
+
+        private void refresh() {
+            if (pane == null) {
+                return;
+            }
+            boolean selected = isSelectedTab();
+            Font base = UIManager.getFont("TabbedPane.font");
+            if (base != null) {
+                setFont(base.deriveFont(selected ? Font.BOLD : Font.PLAIN));
+            }
+            Color color = UIManager.getColor(selected ? "TabbedPane.selectedForeground" : "TabbedPane.foreground");
+            if (color != null) {
+                setForeground(color);
+            }
+            int index = pane.indexOfComponent(content);
+            setEnabled(index < 0 || pane.isEnabledAt(index));
+            revalidate();
+            repaint();
+        }
+
+        @Override
+        public void updateUI() {
+            super.updateUI();
+            refresh();
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            Dimension size = super.getPreferredSize();
+            Font font = getFont();
+            String text = getText();
+            if (font != null && text != null && !font.isBold()) {
+                size.width += getFontMetrics(font.deriveFont(Font.BOLD)).stringWidth(text)
+                    - getFontMetrics(font).stringWidth(text);
+            }
+            return size;
+        }
     }
 
     static Icon loadTabIcon(String title) {
@@ -125,6 +257,9 @@ public class TabbedPanel {
         switch (title) {
             case "Gauges":
                 iconName = "idle";
+                break;
+            case LogViewerHost.TITLE:
+                iconName = "view";
                 break;
             case "Messages":
                 iconName = "message";
@@ -150,15 +285,69 @@ public class TabbedPanel {
             case "Device":
                 iconName = "controller";
                 break;
+            case ObdCodesPane.TITLE:
+                iconName = "file-info";
+                break;
+            case "AI Troubleshooting":
+                return new SparkleIcon(TAB_ICON_SIZE);
+            case "SLCAN Sniffer":
+                iconName = "can";
+                break;
             default:
                 return null;
         }
 
-        ImageIcon icon = AutoupdateUtil.loadIcon("icons/tuning/" + iconName + "48.png");
+        ImageIcon icon = TuningIcons.load(iconName);
         if (icon == null) {
             return null;
         }
-        return new ImageIcon(icon.getImage().getScaledInstance(18, 18, Image.SCALE_SMOOTH));
+        return new ImageIcon(icon.getImage().getScaledInstance(TAB_ICON_SIZE, TAB_ICON_SIZE, Image.SCALE_SMOOTH));
+    }
+
+    /** Lets the user drag tabs into their own order, kept in {@code config} between runs. */
+    public void enableReordering(com.rusefi.core.preferences.storage.Node config) {
+        reorder = TabReorder.install(this, config);
+    }
+
+    /** Puts the tabs in the order the user last dragged them into; call once the startup tabs exist. */
+    public void applySavedOrder() {
+        if (reorder != null) {
+            reorder.applySavedOrder();
+        }
+    }
+
+    /**
+     * True while a tab is being moved. JTabbedPane cannot move a tab, so it is removed and inserted
+     * again, which briefly selects a neighbour; selection listeners should ignore those changes.
+     */
+    public boolean isReordering() {
+        return reordering;
+    }
+
+    /** Moves tab {@code from} to {@code to}, keeping its title, icon, title component and selection. */
+    void moveTab(int from, int to) {
+        if (from == to) {
+            return;
+        }
+        String title = tabbedPane.getTitleAt(from);
+        Icon icon = tabbedPane.getIconAt(from);
+        Component content = tabbedPane.getComponentAt(from);
+        String tip = tabbedPane.getToolTipTextAt(from);
+        Component tabTitle = tabbedPane.getTabComponentAt(from);
+        boolean enabled = tabbedPane.isEnabledAt(from);
+        Component selected = tabbedPane.getSelectedComponent();
+        reordering = true;
+        try {
+            tabbedPane.removeTabAt(from);
+            tabbedPane.insertTab(title, icon, content, tip, to);
+            tabbedPane.setTabComponentAt(to, tabTitle);
+            tabbedPane.setEnabledAt(to, enabled);
+            if (selected != null) {
+                tabbedPane.setSelectedComponent(selected);
+            }
+        } finally {
+            reordering = false;
+        }
     }
 
     public void selectTab(String title) {

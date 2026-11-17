@@ -35,7 +35,7 @@ class DfuBoardPickerTest {
 
     private static void clickConfirm(Container container) {
         for (Component component : container.getComponents()) {
-            if (component instanceof JButton && "Download and flash".equals(((JButton) component).getText())) {
+            if (component instanceof JButton && "Download firmware and recover ECU".equals(((JButton) component).getText())) {
                 ((JButton) component).doClick();
             } else if (component instanceof Container) {
                 clickConfirm((Container) component);

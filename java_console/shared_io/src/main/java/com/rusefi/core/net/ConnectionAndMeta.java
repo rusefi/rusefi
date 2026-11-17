@@ -26,14 +26,28 @@ public class ConnectionAndMeta {
     public static final String RUSEFI_WIKI_DOWNLOAD_PAGE = "https://wiki.rusefi.com/Download/";
 
     private static final int BUFFER_SIZE = 32 * 1024;
+    private static final int TIMEOUT_MILLIS = 10_000;
     public static final int CENTUM = 100;
     private final String zipFileName;
+    private final ConnectionFactory connectionFactory;
     private HttpsURLConnection httpConnection;
     private long completeFileSize;
     private long lastModified;
+    private int responseCode;
+    private String contentType;
+
+    @FunctionalInterface
+    interface ConnectionFactory {
+        HttpsURLConnection open(URL url) throws IOException;
+    }
 
     public ConnectionAndMeta(String zipFileName) {
+        this(zipFileName, url -> (HttpsURLConnection) url.openConnection());
+    }
+
+    ConnectionAndMeta(String zipFileName, ConnectionFactory connectionFactory) {
         this.zipFileName = zipFileName;
+        this.connectionFactory = connectionFactory;
     }
 
     public static String getWhiteLabel(Properties properties) {
@@ -151,30 +165,56 @@ public class ConnectionAndMeta {
         return lastModified;
     }
 
+    public int getResponseCode() {
+        return responseCode;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
     public ConnectionAndMeta invoke(String baseUrl) throws IOException {
+        return invoke(baseUrl, "GET");
+    }
+
+    /** Request response headers without downloading the firmware ZIP body. */
+    public ConnectionAndMeta invokeMetadata(String baseUrl) throws IOException {
+        return invoke(baseUrl, "HEAD");
+    }
+
+    private ConnectionAndMeta invoke(String baseUrl, String method) throws IOException {
         SSLContext ctx = acceptAnyCertificate();
 
         String randomSuffix = "?u=" + UUID.randomUUID();
         URL url = new URL(baseUrl + zipFileName + randomSuffix);
         log.info("Connecting to " + url);
-        httpConnection = (HttpsURLConnection) url.openConnection();
-        configureDownloadRequest(httpConnection);
-        httpConnection.setSSLSocketFactory(ctx.getSocketFactory());
-        log.info("Request Headers: " + httpConnection.getRequestProperties());
-        int responseCode = httpConnection.getResponseCode();
-        log.info("Response code " + responseCode);
-        if (responseCode == HttpURLConnection.HTTP_FORBIDDEN) {
-            InputStream errorStream = httpConnection.getErrorStream();
-            echoErrorStream(errorStream);
+        httpConnection = connectionFactory.open(url);
+        httpConnection.setConnectTimeout(TIMEOUT_MILLIS);
+        httpConnection.setReadTimeout(TIMEOUT_MILLIS);
+        try {
+            configureRequest(httpConnection, method);
+            httpConnection.setSSLSocketFactory(ctx.getSocketFactory());
+            log.info("Request Headers: " + httpConnection.getRequestProperties());
+            responseCode = httpConnection.getResponseCode();
+            log.info("Response code " + responseCode);
+            if ("GET".equals(method) && responseCode == HttpURLConnection.HTTP_FORBIDDEN) {
+                InputStream errorStream = httpConnection.getErrorStream();
+                echoErrorStream(errorStream);
+            }
+            completeFileSize = httpConnection.getContentLength();
+            lastModified = httpConnection.getLastModified();
+            contentType = httpConnection.getContentType();
+            return this;
+        } catch (IOException | RuntimeException e) {
+            httpConnection.disconnect();
+            httpConnection = null;
+            throw e;
         }
-        completeFileSize = httpConnection.getContentLength();
-        lastModified = httpConnection.getLastModified();
-        return this;
     }
 
-    private static void configureDownloadRequest(HttpsURLConnection connection) throws ProtocolException {
+    private static void configureRequest(HttpsURLConnection connection, String method) throws ProtocolException {
         String mySecretUA = "RE-Internal-Sync";
-        connection.setRequestMethod("GET");
+        connection.setRequestMethod(method);
         connection.setUseCaches(false);
         connection.setDefaultUseCaches(false);
         connection.setRequestProperty("User-Agent", mySecretUA);

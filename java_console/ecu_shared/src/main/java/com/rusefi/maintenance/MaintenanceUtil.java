@@ -107,12 +107,15 @@ public class MaintenanceUtil {
             return false;
         }
         callbacks.logLine("[universal_bundle]: downloading firmware for \"" + ecuTarget + "\"...");
-        if (!Autoupdate.ensureFirmwareForTarget(ecuTarget, callbacks::updateProgress, callbacks::logLine)) {
+        if (!Autoupdate.ensureFirmwareForTarget(ecuTarget,
+            percent -> callbacks.updateFirmwareProgress(UpdateOperationCallbacks.FirmwareUpdateStage.DOWNLOAD, percent),
+            callbacks::logLine)) {
             callbacks.logLine(String.format(
                 "Universal bundle could not download firmware for \"%s\" — aborting to avoid flashing the wrong firmware.",
                 ecuTarget));
             return false;
         }
+        callbacks.updateFirmwareProgress(UpdateOperationCallbacks.FirmwareUpdateStage.DOWNLOAD, 100);
         return true;
     }
 

@@ -69,7 +69,7 @@ class StartupWizardHandoffTest {
             Fixture f = holder[0] = new Fixture("");
             f.start();
             component(f.wizard, JTextField.class).setText("1HD1KBC11KB123456");
-            JButton save = button(f.wizard, "Save and Continue");
+            JButton save = button(f.wizard, "Continue");
             assertTrue(save.isEnabled());
             save.doClick(0);
             assertEquals(List.of("wizard"), f.events);
@@ -157,7 +157,7 @@ class StartupWizardHandoffTest {
             Fixture f = holder[0] = new Fixture("");
             f.start();
             component(f.wizard, JTextField.class).setText("1HD1KBC11KB123456");
-            button(f.wizard, "Save and Continue").doClick(0);
+            button(f.wizard, "Continue").doClick(0);
             button(f.wizard, "Exit Wizard").doClick(0);
             assertEquals(List.of("wizard", "console"), f.events);
             f.uploads.remove(0).run();
@@ -169,18 +169,20 @@ class StartupWizardHandoffTest {
     }
 
     @Test
-    void exitIsCenteredBelowSave() throws Exception {
+    void exitIsTopRightAndContinueBottomRight() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
             Fixture f = new Fixture("");
             f.start();
             f.wizard.setSize(1000, 700);
             layout(f.wizard);
-            JButton save = button(f.wizard, "Save and Continue");
+            JButton save = button(f.wizard, "Continue");
             JButton exit = button(f.wizard, "Exit Wizard");
-            Point saveCenter = SwingUtilities.convertPoint(save, save.getWidth() / 2, save.getHeight(), f.wizard);
-            Point exitCenter = SwingUtilities.convertPoint(exit, exit.getWidth() / 2, 0, f.wizard);
-            assertTrue(exitCenter.y > saveCenter.y);
-            assertEquals(saveCenter.x, exitCenter.x, 1);
+            Point saveRight = SwingUtilities.convertPoint(save, save.getWidth(), 0, f.wizard);
+            Point exitRight = SwingUtilities.convertPoint(exit, exit.getWidth(), exit.getHeight(), f.wizard);
+            // the way out in the header, moving forward in the footer, both on the right edge
+            assertTrue(exitRight.y < f.wizard.getHeight() / 2);
+            assertTrue(saveRight.y > f.wizard.getHeight() / 2);
+            assertEquals(saveRight.x, exitRight.x, 1);
         });
     }
 

@@ -29,6 +29,8 @@ public class CamTriggerPanel extends AbstractWizardStep {
         }
     };
     private final UIContext uiContext;
+    private final JButton saveButton = new JButton();
+    private final JButton skipButton = new JButton();
     private final CalibrationDialogWidget dialogWidget;
     private ConfigurationImage workingImage;
 
@@ -39,9 +41,7 @@ public class CamTriggerPanel extends AbstractWizardStep {
         dialogWidget.setFieldRowVerticalMargin(3);
         dialogWidget.getContentPane().setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
 
-        card.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(WizardStyle.border()),
-            BorderFactory.createEmptyBorder(22, 26, 22, 26)));
+        WizardStyle.styleCard(card, 22, 26);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -51,48 +51,36 @@ public class CamTriggerPanel extends AbstractWizardStep {
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(0, 0, 5, 0);
 
-        JLabel eyebrow = new JLabel("CAM TRIGGER SETUP");
-        eyebrow.setForeground(WizardStyle.muted());
+        JLabel eyebrow = WizardStyle.sectionLabel("CAM TRIGGER SETUP");
         card.add(eyebrow, gbc);
 
         gbc.gridy++;
-        JLabel title = new JLabel(getTitle());
-        scale(title, 1.5f);
-        title.setFont(title.getFont().deriveFont(Font.BOLD));
+        JLabel title = WizardStyle.cardTitle(getTitle());
         card.add(title, gbc);
 
         gbc.gridy++;
         gbc.insets = new Insets(0, 0, 18, 0);
-        card.add(new JLabel("Configure the first cam/VVT input and verify its wheel pattern."), gbc);
+        card.add(WizardStyle.description("Configure the first cam/VVT input and verify its wheel pattern."), gbc);
 
         gbc.gridy++;
         gbc.insets = new Insets(0, 0, 16, 0);
         card.add(dialogWidget.getContentPane(), gbc);
 
-        JButton saveButton = new JButton("Save and Continue");
-        stylePrimaryAction(saveButton);
+        styleContinueAction(saveButton);
         saveButton.addActionListener(e -> {
             if (workingImage != null) {
                 fireCompleted(new WizardStepResult(workingImage.clone()));
             }
         });
-        JButton skipButton = new JButton("Skip / Use Default");
-        stylePrimaryAction(skipButton);
+        styleSkipAction(skipButton, "Keep the current trigger settings and continue");
         skipButton.addActionListener(e -> fireCompleted(new WizardStepResult(null, null)));
-
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
-        buttonPanel.add(saveButton);
-        buttonPanel.add(skipButton);
-        gbc.gridy++;
-        gbc.insets = new Insets(0, 0, 0, 0);
-        card.add(buttonPanel, gbc);
 
         JPanel wrapper = new ScrollablePanel();
         wrapper.setLayout(new BoxLayout(wrapper, BoxLayout.Y_AXIS));
         wrapper.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
         card.setAlignmentX(Component.CENTER_ALIGNMENT);
         wrapper.add(card);
-        content.add(new JScrollPane(wrapper), BorderLayout.CENTER);
+        content.add(WizardStyle.pageScrollPane(wrapper), BorderLayout.CENTER);
 
         dialogWidget.setOnConfigChange(image -> workingImage = image.clone());
     }
@@ -112,6 +100,16 @@ public class CamTriggerPanel extends AbstractWizardStep {
         }
         workingImage = cfg.image.clone();
         dialogWidget.update(dialog, cfg.ini, cfg.image);
+    }
+
+    @Override
+    public JButton getContinueButton() {
+        return saveButton;
+    }
+
+    @Override
+    public JButton getSkipButton() {
+        return skipButton;
     }
 
     @Override

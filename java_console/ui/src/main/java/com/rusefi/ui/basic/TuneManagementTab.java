@@ -19,6 +19,7 @@ import com.rusefi.tune_manifest.TuneManifestHelper;
 import com.rusefi.tune_manifest.TuneModel;
 import com.rusefi.ui.table.ButtonEditor;
 import com.rusefi.ui.table.ButtonRenderer;
+import com.rusefi.ui.widgets.tune.TuneFileFolder;
 import com.rusefi.ui.widgets.StatusPanel;
 import org.jetbrains.annotations.Nullable;
 import org.json.simple.parser.ParseException;
@@ -211,7 +212,8 @@ public class TuneManagementTab {
             JLabel offlineHint = new JLabel("<html><div style='text-align:center;'>"
                     + "No ECU connected. Load a tune file to view and edit it offline,<br>"
                     + "then connect an ECU to burn your changes.</div></html>");
-            offlineHint.setForeground(Color.DARK_GRAY);
+            Color plain = UIManager.getColor("Console.Overlay.foreground");
+            offlineHint.setForeground(plain != null ? plain : Color.DARK_GRAY);
 
             // [tag:offline_tune] The import pair pushes a tune to a *connected* ECU; on this pre-connection
             // splash it has nothing to talk to (clicking just prints "Not connected?"), so only show it
@@ -416,16 +418,18 @@ public class TuneManagementTab {
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         chooser.setFileFilter(new FileNameExtensionFilter("Tune files (.msq)", "msq"));
+        TuneFileFolder.openIn(chooser);
         if (chooser.showOpenDialog(totalContent) != JFileChooser.APPROVE_OPTION) {
             return;
         }
+        TuneFileFolder.remember(chooser.getSelectedFile());
 
         String path = chooser.getSelectedFile().getAbsolutePath();
         OfflineTuneLoader.Result result = OfflineTuneLoader.loadTuneFromFile(path, totalContent);
         if (result == null) {
             return;
         }
-        uiContext.setOfflineTunePath(path);
+        uiContext.setTuneFilePath(path);
 
         // Hand off to the splash, which disposes itself and opens the console on the shared uiContext
         // (keeping the scanner alive so a later ECU connect transitions this console online — no 2nd window).

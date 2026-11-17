@@ -59,6 +59,7 @@ public class ExpressionEvaluator {
 
     // Pattern to match variable names (identifiers) in expressions
     private static final Pattern VARIABLE_PATTERN = Pattern.compile("\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b");
+    private static final Pattern QUOTED_TEXT = Pattern.compile("\"[^\"]*\"");
     // Pre-compiled patterns reused across calls — never use String.matches/replaceAll with these literals
     private static final Pattern CONTAINS_FUNCTION_CALL = Pattern.compile(".*(stringValue|bitStringValue|getValue)\\s*\\(.*");
     private static final Pattern HAS_ARITHMETIC_OPERATORS = Pattern.compile(".*[+*()].*");
@@ -201,15 +202,6 @@ public class ExpressionEvaluator {
         // Remove braces if present
         String cleaned = stripBraces(expression);
 
-        // For string function calls, extract variables from the expression argument
-        if (containsUnsupportedConstruct(cleaned)) {
-            String innerExpr = TsStringFunction.extractBitStringValueExpression(cleaned);
-            if (innerExpr != null) {
-                return Collections.unmodifiableSet(extractVariablesFromSimpleExpr(innerExpr));
-            }
-            return Collections.emptySet();
-        }
-
         Set<String> variables = new HashSet<>();
         if (containsTernary(cleaned)) {
             TernaryExpression ternary = parseTernary(cleaned);
@@ -217,10 +209,19 @@ public class ExpressionEvaluator {
                 String condition = ternary.condition.startsWith("!") ?
                     ternary.condition.substring(1).trim() : ternary.condition;
                 variables.addAll(extractVariablesFromSimpleExpr(condition));
-                variables.addAll(extractVariablesFromSimpleExpr(ternary.trueExpr));
-                variables.addAll(extractVariablesFromSimpleExpr(ternary.falseExpr));
+                variables.addAll(computeExtractVariables(ternary.trueExpr));
+                variables.addAll(computeExtractVariables(ternary.falseExpr));
                 return Collections.unmodifiableSet(variables);
             }
+        }
+
+        // For string function calls, extract variables from the expression argument
+        if (containsUnsupportedConstruct(cleaned)) {
+            String innerExpr = TsStringFunction.extractBitStringValueExpression(cleaned);
+            if (innerExpr != null) {
+                return Collections.unmodifiableSet(extractVariablesFromSimpleExpr(innerExpr));
+            }
+            return Collections.emptySet();
         }
 
         return Collections.unmodifiableSet(extractVariablesFromSimpleExpr(cleaned));
@@ -235,7 +236,8 @@ public class ExpressionEvaluator {
             return variables;
         }
 
-        Matcher matcher = VARIABLE_PATTERN.matcher(expression);
+        // Quoted text such as "kPa" is a label, not a channel or setting.
+        Matcher matcher = VARIABLE_PATTERN.matcher(QUOTED_TEXT.matcher(expression).replaceAll(" "));
         while (matcher.find()) {
             String varName = matcher.group(1);
             variables.add(varName);

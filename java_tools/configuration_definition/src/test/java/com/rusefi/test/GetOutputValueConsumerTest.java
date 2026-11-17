@@ -44,7 +44,7 @@ public class GetOutputValueConsumerTest {
     "\t\t\treturn engine->outputChannels->hwChannel;\n" +
     "#endif\n" +
     "\t}\n" +
-    "\treturn EFI_ERROR_CODE;\n" +
+    "\treturn static_cast<float>(EFI_ERROR_CODE);\n" +
     "}\n" +
     "float getOutputValueByName(const char *name) {\n" +
     "\tint hash = djb2lowerCase(name);\n" +
@@ -89,7 +89,7 @@ public class GetOutputValueConsumerTest {
     "\t\tcase -381519965:\n" +
     "\t\t\treturn engine->module<FuelPumpController>()->ignitionOn;\n" +
     "\t}\n" +
-    "\treturn EFI_ERROR_CODE;\n" +
+    "\treturn static_cast<float>(EFI_ERROR_CODE);\n" +
     "}\n" +
     "float getOutputValueByName(const char *name) {\n" +
     "\tint hash = djb2lowerCase(name);\n" +

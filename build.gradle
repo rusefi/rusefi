@@ -34,6 +34,8 @@ allprojects {
 
     gradle.projectsEvaluated {
         tasks.withType(JavaCompile) {
+            // [tag:java_source_encoding] Keep non-ASCII Java literals portable across host platforms.
+            options.encoding = 'UTF-8'
             options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
         }
     }

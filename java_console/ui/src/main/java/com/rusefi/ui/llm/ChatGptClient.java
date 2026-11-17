@@ -50,6 +50,8 @@ public final class ChatGptClient implements Closeable {
     public static final class Account {
         public final String id;
         public final String label;
+        /** The account's e-mail address, or empty if the sign-in did not report one. */
+        public final String email;
         public final boolean connected;
         public final boolean planEnabled;
         public final boolean reLoginRequired;
@@ -63,7 +65,8 @@ public final class ChatGptClient implements Closeable {
             reLoginRequired = Boolean.TRUE.equals(profile.get("relogin_required"))
                     || (!hasAccessToken && !hasRefreshToken)
                     || (hasAccessToken && !hasRefreshToken && accessTokenNeedsRefresh(profile));
-            label = string(profile, "label") + " - " + string(profile, "email")
+            email = string(profile, "email");
+            label = string(profile, "label") + " - " + email
                     + (connected ? "" : " (signed out)");
         }
 
@@ -527,7 +530,7 @@ public final class ChatGptClient implements Closeable {
                     "resource", RESOURCE, "state", state, "nonce", nonce,
                     "code_challenge_method", "S256", "code_challenge", Base64.getUrlEncoder().withoutPadding()
                             .encodeToString(MessageDigest.getInstance("SHA-256").digest(verifier.getBytes(StandardCharsets.US_ASCII))));
-            if (clientId.isEmpty()) { query += "&" + form("agent_name_hint", "rusEFI Updater"); }
+            if (clientId.isEmpty()) { query += "&" + form("agent_name_hint", com.rusefi.UiProperties.getDisplayName()); }
             return URI.create(ISSUER + "/api/accounts/authorize?" + query);
         }
 

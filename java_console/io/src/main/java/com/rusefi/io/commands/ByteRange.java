@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.nio.ByteOrder;
 
 import static com.rusefi.binaryprotocol.IoHelper.putShort;
 import static com.rusefi.binaryprotocol.IoHelper.swap16;
@@ -24,8 +25,12 @@ public class ByteRange {
     }
 
     public static void packOffsetAndSize(int offset, int requestSize, byte[] packet) {
-        putShort(packet, 0, swap16(offset));
-        putShort(packet, 2, swap16(requestSize));
+        packOffsetAndSize(offset, requestSize, packet, ByteOrder.LITTLE_ENDIAN);
+    }
+
+    public static void packOffsetAndSize(int offset, int requestSize, byte[] packet, ByteOrder order) {
+        putShort(packet, 0, toWire16(offset, order));
+        putShort(packet, 2, toWire16(requestSize, order));
     }
 
     public static void packPageOffsetAndSize(int offset, int requestSize, byte[] packet) {
@@ -33,9 +38,22 @@ public class ByteRange {
     }
 
     public static void packPageOffsetAndSize(int page, int offset, int requestSize, byte[] packet) {
-        putShort(packet, 0, swap16(page));
-        putShort(packet, 2, swap16(offset));
-        putShort(packet, 4, swap16(requestSize));
+        packPageOffsetAndSize(page, offset, requestSize, packet, ByteOrder.LITTLE_ENDIAN);
+    }
+
+    public static void packPageOffsetAndSize(int page, int offset, int requestSize, byte[] packet, ByteOrder order) {
+        putShort(packet, 0, toWire16(page, order));
+        putShort(packet, 2, toWire16(offset, order));
+        putShort(packet, 4, toWire16(requestSize, order));
+    }
+
+    /**
+     * Command arguments (page/offset/count) follow the .ini's declared {@code endianness}.
+     * {@link com.rusefi.binaryprotocol.IoHelper#putShort} writes big-endian, so little-endian
+     * targets (rusEFI) pre-swap while a big-endian target (e.g. PowerPC) writes as-is.
+     */
+    public static int toWire16(int value, ByteOrder order) {
+        return order == ByteOrder.BIG_ENDIAN ? value : swap16(value);
     }
 
     public int getOffset() {
@@ -54,6 +72,8 @@ public class ByteRange {
                 '}';
     }
 
+    // valueOf/valueOf2 parse requests on the rusEFI-emulating server side (TCP proxy/simulator),
+    // which is always little-endian; they intentionally do not take a ByteOrder.
     public static ByteRange valueOf(byte[] payload) throws IOException {
         try (DataInputStream dis = createPayLoadStream(payload)) {
             int offset = swap16(dis.readShort());

@@ -28,6 +28,12 @@ public class ProductionFlashSteps {
                                         final ConnectivityContext connectivityContext) {
             CalibrationsHelper.restorePreviousCalibrationsAfterManualFlash(callbacks, connectivityContext);
         }
+
+        @Override
+        public OpenBltManualJob.RestoreResult restoreCalibrationsWithResult(final UpdateOperationCallbacks callbacks,
+                                                                          final ConnectivityContext connectivityContext) {
+            return CalibrationsHelper.restorePreviousCalibrationsAfterManualFlashWithResult(callbacks, connectivityContext);
+        }
     };
 
     public static OpenBltManualJob.FlashSteps emergencyWipe(final OpenBltWipeArtifact artifact) {
@@ -47,6 +53,12 @@ public class ProductionFlashSteps {
             public void restoreCalibrations(final UpdateOperationCallbacks callbacks,
                                             final ConnectivityContext connectivityContext) {
                 // Emergency wipe intentionally leaves the ECU in OpenBLT with no tune restoration.
+            }
+
+            @Override
+            public OpenBltManualJob.RestoreResult restoreCalibrationsWithResult(final UpdateOperationCallbacks callbacks,
+                                                                              final ConnectivityContext connectivityContext) {
+                return OpenBltManualJob.RestoreResult.SKIPPED;
             }
         };
     }
