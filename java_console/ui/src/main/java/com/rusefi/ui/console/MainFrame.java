@@ -31,6 +31,7 @@ import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.sensor_logs.LoggingProfiles;
 import com.rusefi.ui.basic.LoadTuneHelper;
+import com.rusefi.ui.logview.LogViewerHost;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.util.ExitUtil;
 import javax.swing.Action;
@@ -274,6 +275,7 @@ public class MainFrame {
     private TitleBarPanel titleBarPanel;
     private Runnable updateEcuAction;
     private Runnable exitRequestHandler;
+    private LogViewerHost logViewerHost;
     private boolean firmwareUpdateInProgress;
     private boolean updateSoftwareAvailable;
     private boolean updateEcuAvailable;
@@ -547,6 +549,10 @@ public class MainFrame {
         this.exitRequestHandler = exitRequestHandler;
     }
 
+    public void setLogViewerHost(LogViewerHost logViewerHost) {
+        this.logViewerHost = logViewerHost;
+    }
+
     private void requestExit() {
         if (firmwareUpdateInProgress) {
             int choice = JOptionPane.showConfirmDialog(
@@ -559,6 +565,9 @@ public class MainFrame {
             if (choice != JOptionPane.YES_OPTION) {
                 return;
             }
+        }
+        if (logViewerHost != null && !logViewerHost.confirmExit()) {
+            return;
         }
         if (exitRequestHandler == null) {
             frame.getFrame().dispose();

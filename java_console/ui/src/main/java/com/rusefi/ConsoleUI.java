@@ -396,6 +396,7 @@ public class ConsoleUI {
 
             // record a log, then view it: near the live gauges, after Tuning which is inserted between them
             logViewer = new LogViewerHost(getConfig().getRoot().getChild("log_viewer"));
+            mainFrame.setLogViewerHost(logViewer);
             logViewer.setConfigSaver(() -> getConfig().save());
             logViewer.setIniSupplier(() -> uiContext.iniFileState.getIniFileModel());
             // the histogram can bin by a tune table's axes: the working tune, offline edits included

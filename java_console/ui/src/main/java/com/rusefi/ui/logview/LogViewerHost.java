@@ -359,6 +359,14 @@ public final class LogViewerHost extends JPanel {
         return !edits.isEmpty();
     }
 
+    /**
+     * Confirms that the application may exit. This currently allows exit without prompting; the exit paths use this
+     * entry point so log edits can be guarded consistently.
+     */
+    public boolean confirmExit() {
+        return true;
+    }
+
     /** Before the edited log is replaced: offers to save it. False when the user cancels or saving fails. */
     private boolean confirmDiscardEdits() {
         if (edits.isEmpty()) {
