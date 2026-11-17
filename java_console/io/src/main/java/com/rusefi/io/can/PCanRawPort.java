@@ -83,7 +83,7 @@ public class PCanRawPort implements RawCanPort {
                     if (!newApi.initializeApi()) {
                         throw new IOException("Unable to initialize PCAN API");
                     }
-                    requireOk("initialize channel", newApi.initialize(channel, TPCANBaudrate.PCAN_BAUD_500K));
+                    requireOk("initialize channel", newApi.initialize(channel, PCanHelper.get500kBaudrate()));
                     channelInitialized = true;
                     // Native ID filtering dropped ECU replies on Windows; filter in receive() instead.
                     requireOk("configure receive filter", newApi.setValue(

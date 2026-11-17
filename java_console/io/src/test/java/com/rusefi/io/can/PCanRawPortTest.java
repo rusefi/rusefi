@@ -41,7 +41,7 @@ class PCanRawPortTest {
         assertEquals(1, api.initializeApiCalls);
         assertEquals(1, api.initializeCalls);
         assertEquals(CHANNEL, api.lastChannel);
-        assertEquals(TPCANBaudrate.PCAN_BAUD_500K, api.lastBitrate);
+        assertEquals(PCanHelper.get500kBaudrate(), api.lastBitrate);
         assertEquals(1, api.setValueCalls);
         assertEquals(TPCANParameter.PCAN_MESSAGE_FILTER, api.setValueParameter);
         assertEquals(TPCANParameterValue.PCAN_FILTER_OPEN.getValue(), api.setValueValue);

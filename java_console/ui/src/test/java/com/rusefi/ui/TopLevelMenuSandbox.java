@@ -42,7 +42,7 @@ public class TopLevelMenuSandbox {
     public static void main(String[] args) throws JAXBException, IOException, IniParsingException, java.net.URISyntaxException {
         commonUiStartup();
 
-        // Load test resources from the classpath so the working directory does not matter
+        // Resolve fixtures independently of the working directory, including direct IDEA launches.
         IniFileModel model = readIniFromClasspath(INI_RESOURCE);
         Msq msq = Msq.readTune(resourceFile(TUNE_RESOURCE).getAbsolutePath());
         ConfigurationImage ci = msq.asImage(model);
@@ -83,19 +83,44 @@ public class TopLevelMenuSandbox {
     }
 
     private static IniFileModel readIniFromClasspath(String resource) throws IOException, IniParsingException {
-        try (InputStream is = TopLevelMenuSandbox.class.getResourceAsStream(resource)) {
-            if (is == null)
-                throw new IllegalStateException("Resource not found on classpath: " + resource);
+        try (InputStream is = resourceUrl(resource).openStream()) {
             RawIniFile content = IniFileReaderUtil.read(is, resource);
             return IniFileReaderUtil.readIniFile(content, resource, new IniFileMetaInfoImpl(content));
         }
     }
 
-    private static File resourceFile(String resource) throws java.net.URISyntaxException {
-        URL url = TopLevelMenuSandbox.class.getResource(resource);
-        if (url == null)
-            throw new IllegalStateException("Resource not found on classpath: " + resource);
-        return new File(url.toURI());
+    private static File resourceFile(String resource) throws java.net.URISyntaxException, IOException {
+        return new File(resourceUrl(resource).toURI());
+    }
+
+    private static URL resourceUrl(String resource) throws IOException {
+        return findResource(resource, TopLevelMenuSandbox.class.getClassLoader(),
+            TopLevelMenuSandbox.class.getProtectionDomain().getCodeSource().getLocation());
+    }
+
+    static URL findResource(String resource, ClassLoader loader, URL classes) throws IOException {
+        String name = resource.startsWith("/") ? resource.substring(1) : resource;
+        URL url = loader.getResource(name);
+        if (url != null) {
+            return url;
+        }
+        // IDEA can omit Gradle's resource output. Locate source fixtures relative
+        // to the compiled module instead of the run configuration's working directory.
+        if ("file".equals(classes.getProtocol())) {
+            final File output;
+            try {
+                output = new File(classes.toURI());
+            } catch (java.net.URISyntaxException e) {
+                throw new IOException("Invalid sandbox classes location: " + classes, e);
+            }
+            for (File dir = output; dir != null; dir = dir.getParentFile()) {
+                File fixture = new File(dir, "src/test/resources/" + name);
+                if (fixture.isFile()) {
+                    return fixture.toURI().toURL();
+                }
+            }
+        }
+        throw new IOException("Sandbox resource not found: " + resource + " (classes: " + classes + ")");
     }
 
     private static void runAwt(UIContext uiContext) {
