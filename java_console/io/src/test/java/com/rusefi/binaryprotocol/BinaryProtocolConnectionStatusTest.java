@@ -451,6 +451,29 @@ class BinaryProtocolConnectionStatusTest {
     }
 
     @Test
+    void probeCloseClearsActiveConsoleSensorData() throws Exception {
+        SensorCentral sensors = SensorCentral.getInstance();
+        status.setValue(ConnectionStatusValue.CONNECTED);
+        assertTrue(poll());
+        sensors.setValue(1, "sd_present");
+        assertNotNull(sensors.getCurrentSnapshot());
+        assertEquals(42, sensors.getValue(SECONDS));
+
+        try (LinkManager probeLink = new LinkManager().setNotifyGlobalStatusOnClose(false)) {
+            TestStream probeStream = new TestStream();
+            new BinaryProtocol(probeLink, probeStream);
+            probeStream.close();
+        }
+
+        // Reproduction: an unrelated probe leaves the connection up but erases its readings.
+        assertEquals(ConnectionStatusValue.CONNECTED, status.getValue());
+        assertFalse(stream.isClosed());
+        assertTrue(Double.isNaN(sensors.getValue("sd_present")));
+        assertTrue(Double.isNaN(sensors.getValue(SECONDS)));
+        assertNull(sensors.getCurrentSnapshot());
+    }
+
+    @Test
     void probeCloseDoesNotDisconnectTheConsole() {
         link.setNotifyGlobalStatusOnClose(false);
         status.setValue(ConnectionStatusValue.CONNECTED);
