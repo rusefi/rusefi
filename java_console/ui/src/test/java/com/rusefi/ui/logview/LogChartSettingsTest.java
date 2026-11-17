@@ -371,7 +371,7 @@ class LogChartSettingsTest {
     }
 
     @Test
-    void smoothingButtonAppliesTheGlobalDisplayWindow() {
+    void smoothingPopupAppliesTheGlobalDisplayWindowAtOnce() {
         ChartSettings settings = new ChartSettings();
         int[] repaints = {0};
         ChartToolbar toolbar = new ChartToolbar(settings, () -> repaints[0]++, null,
@@ -379,32 +379,34 @@ class LogChartSettingsTest {
 
         assertEquals("Display smoothing: Raw  \u25BE", toolbar.smoothingButton.getText());
         assertFalse(toolbar.smoothingRawButton.isVisible());
-        toolbar.smoothingPrompt = (initialMs, preview) -> {
-            assertEquals(0, initialMs);
-            preview.accept(5_000);
-            return 5_000;
-        };
-        toolbar.smoothingButton.doClick();
-        assertEquals(5, settings.getSmoothingWindowSeconds());
-        assertEquals("Display smoothing: 5000 ms  \u25BE", toolbar.smoothingButton.getText());
-        assertTrue(toolbar.smoothingRawButton.isVisible());
+        assertTrue(toolbar.smoothingOff.isSelected());
+        assertFalse(toolbar.smoothingInput.isEnabled(), "no window to edit while Raw");
+
+        toolbar.smoothingOn.doClick();
+        assertEquals(0.1, settings.getSmoothingWindowSeconds(), 1e-9, "starts at 100 ms");
+        assertTrue(toolbar.smoothingInput.isEnabled());
         assertEquals(1, repaints[0]);
 
-        toolbar.smoothingPrompt = (initialMs, preview) -> {
-            assertEquals(5_000, initialMs);
-            preview.accept(8_000);
-            return null;
-        };
-        toolbar.smoothingButton.doClick();
-        assertEquals(5, settings.getSmoothingWindowSeconds(), "Cancel restores the setting before the preview");
+        toolbar.smoothingInput.setValue(5_000);
+        assertEquals(5, settings.getSmoothingWindowSeconds(), 1e-9, "applies while typing, no OK needed");
         assertEquals("Display smoothing: 5000 ms  \u25BE", toolbar.smoothingButton.getText());
-        assertEquals(3, repaints[0], "one live preview and one restoration");
+        assertTrue(toolbar.smoothingRawButton.isVisible());
+        assertEquals(2, repaints[0]);
 
         toolbar.smoothingRawButton.doClick();
         assertEquals(0, settings.getSmoothingWindowSeconds());
+        assertTrue(toolbar.smoothingOff.isSelected(), "the popup follows the Raw button");
+        assertFalse(toolbar.smoothingInput.isEnabled());
         assertEquals("Display smoothing: Raw  \u25BE", toolbar.smoothingButton.getText());
-        assertFalse(toolbar.smoothingRawButton.isVisible());
-        assertEquals(4, repaints[0]);
+        assertEquals(3, repaints[0]);
+
+        toolbar.smoothingOn.doClick();
+        assertEquals(5, settings.getSmoothingWindowSeconds(), 1e-9, "back to the last window");
+
+        settings.setSmoothingWindowSeconds(0.3);
+        toolbar.updateControls();
+        assertEquals(300, toolbar.smoothingInput.getValue(), "follows changes made elsewhere, e.g. the wheel");
+        assertEquals(0.3, settings.getSmoothingWindowSeconds(), 1e-9, "syncing the input is not a change");
     }
 
     @Test
