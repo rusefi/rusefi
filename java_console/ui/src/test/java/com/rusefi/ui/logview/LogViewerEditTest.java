@@ -97,6 +97,12 @@ class LogViewerEditTest {
         SwingUtilities.invokeAndWait(() -> item(host.currentPanel().chart().editMenu(sample), prefix).doClick());
     }
 
+    private static boolean confirmExit(LogViewerHost host) throws Exception {
+        boolean[] mayExit = {false};
+        SwingUtilities.invokeAndWait(() -> mayExit[0] = host.confirmExit());
+        return mayExit[0];
+    }
+
     @Test
     void menuOffersTheEditsAtTheClickedSample() throws Exception {
         LogViewerHost host = hostWithLog();
@@ -213,10 +219,79 @@ class LogViewerEditTest {
         click(host, 100, "Drop data before cursor");
         assertTrue(host.hasUnsavedEdits(), "the trimmed log is unsaved");
 
-        // Characterizes the current loss path; the corrected behavior must prompt before allowing exit.
         boolean[] mayExit = {false};
         SwingUtilities.invokeAndWait(() -> mayExit[0] = host.confirmExit());
-        assertTrue(mayExit[0], "current exit entry allows closing");
-        assertTrue(questions.isEmpty(), "current exit entry does not prompt about the trimmed log");
+        assertFalse(mayExit[0]);
+        assertEquals(1, questions.size());
+        assertTrue(questions.get(0).contains("before exiting"));
+        assertTrue(host.hasUnsavedEdits(), "cancelled exit keeps the trimmed log");
+    }
+
+    @Test
+    void cleanLogExitsWithoutPrompt() throws Exception {
+        LogViewerHost host = hostWithLog();
+
+        assertTrue(confirmExit(host));
+        assertTrue(questions.isEmpty());
+    }
+
+    @Test
+    void discardingTrimmedLogAllowsExit() throws Exception {
+        LogViewerHost host = hostWithLog();
+        click(host, 100, "Drop data before cursor");
+        promptAnswer = JOptionPane.NO_OPTION;
+
+        assertTrue(confirmExit(host));
+        assertEquals(1, questions.size());
+    }
+
+    @Test
+    void savingTrimmedLogAllowsExit() throws Exception {
+        LogViewerHost host = hostWithLog();
+        click(host, 100, "Drop data before cursor");
+        promptAnswer = JOptionPane.YES_OPTION;
+        saveAs = "exit-saved.msl";
+
+        assertTrue(confirmExit(host));
+        assertEquals(1, questions.size());
+        assertTrue(folder.resolve("exit-saved.msl").toFile().isFile());
+        assertFalse(host.hasUnsavedEdits());
+    }
+
+    @Test
+    void cancellingOrClosingExitPromptKeepsTrimmedLog() throws Exception {
+        LogViewerHost host = hostWithLog();
+        click(host, 100, "Drop data before cursor");
+        for (int answer : new int[]{JOptionPane.CANCEL_OPTION, JOptionPane.CLOSED_OPTION}) {
+            promptAnswer = answer;
+
+            assertFalse(confirmExit(host));
+            assertTrue(host.hasUnsavedEdits());
+        }
+        assertEquals(2, questions.size());
+    }
+
+    @Test
+    void cancellingSaveForExitKeepsTrimmedLog() throws Exception {
+        LogViewerHost host = hostWithLog();
+        click(host, 100, "Drop data before cursor");
+        promptAnswer = JOptionPane.YES_OPTION;
+        saveAs = null;
+
+        assertFalse(confirmExit(host));
+        assertTrue(host.hasUnsavedEdits());
+        assertFalse(folder.resolve("drive_edited.msl").toFile().exists());
+    }
+
+    @Test
+    void failedSaveForExitKeepsTrimmedLog() throws Exception {
+        LogViewerHost host = hostWithLog();
+        click(host, 100, "Drop data before cursor");
+        promptAnswer = JOptionPane.YES_OPTION;
+        host.saveChooser = file -> folder.resolve("missing-parent/exit-saved.msl").toFile();
+
+        assertFalse(confirmExit(host));
+        assertTrue(host.hasUnsavedEdits());
+        assertEquals(1, errors.size());
     }
 }
