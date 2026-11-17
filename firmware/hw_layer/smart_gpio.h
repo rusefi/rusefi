@@ -11,6 +11,11 @@
 #define BOARD_HBRIDGE_GPIO_COUNT 0
 #endif
 
+// Board-owned chips register through gpiochip_register before initSmartGpio.
+#ifndef BOARD_CUSTOM_GPIO_COUNT
+#define BOARD_CUSTOM_GPIO_COUNT 0
+#endif
+
 #if EFI_PROD_CODE
 #include "drivers/gpio/mc33810.h"
 #include "drivers/gpio/tle6240.h"
@@ -41,6 +46,7 @@ BOARD_TLE9104_COUNT + \
 BOARD_HBRIDGE_GPIO_COUNT + \
 BOARD_ADS7128_COUNT + \
 BOARD_PCA9685_COUNT + \
+BOARD_CUSTOM_GPIO_COUNT + \
 0)
 #endif
 
