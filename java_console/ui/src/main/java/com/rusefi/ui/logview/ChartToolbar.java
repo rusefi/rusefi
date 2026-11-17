@@ -52,6 +52,11 @@ final class ChartToolbar extends ThemedStrip {
     final JToggleButton atMouse = SegmentedControl.segment("Mouse");
     final JToggleButton atClick = SegmentedControl.segment("Clicked time");
     private final JLabel atNote = muted(new JLabel());
+    final JToggleButton rawShow = SegmentedControl.segment("Show");
+    final JToggleButton rawHide = SegmentedControl.segment("Hide");
+    /** Shown while smoothing is on: min/max stay raw although the line is smoothed. */
+    final JLabel smoothingNote = muted(new JLabel("<html>Smoothing is on: cursor values follow the<br>"
+            + "smoothed line, min/max are raw values.</html>"));
     final JToggleButton minMaxHover = SegmentedControl.segment("On hover");
     final JToggleButton minMaxAlways = SegmentedControl.segment("Always");
     private final JPopupMenu valuesPopup = new JPopupMenu();
@@ -114,7 +119,7 @@ final class ChartToolbar extends ThemedStrip {
         gridButton.addActionListener(e -> gridPopup.show(gridButton, 0, gridButton.getHeight() + 4));
 
         smoothingButton.setToolTipText("<html>Display-only smoothing for timeline lines.<br>"
-                + "Recorded samples, cursor values, statistics and exports stay raw.</html>");
+                + "Cursor values follow the smoothed line; min/max, statistics and exports stay raw.</html>");
         smoothingButton.addActionListener(e -> editGlobalSmoothing());
         smoothingRawButton.setToolTipText("Turn off global display smoothing and show recorded samples");
         smoothingRawButton.addActionListener(e -> setGlobalSmoothing(0));
@@ -128,7 +133,11 @@ final class ChartToolbar extends ThemedStrip {
                 + "nearest logged sample, marked with a dot on each trace</html>");
 
         valuesButton.setToolTipText("How the signal values at the cursor and the min/max markers show on the plots");
-        valuesButton.addActionListener(e -> valuesPopup.show(valuesButton, 0, valuesButton.getHeight() + 4));
+        valuesButton.addActionListener(e -> {
+            // per-signal smoothing changes elsewhere, so refresh the smoothing note before showing it
+            updateControls();
+            valuesPopup.show(valuesButton, 0, valuesButton.getHeight() + 4);
+        });
         buildValuesPanel();
         valuesPopup.add(valuesPanel);
 
@@ -326,6 +335,15 @@ final class ChartToolbar extends ThemedStrip {
         minMaxHover.addActionListener(e -> apply());
         minMaxAlways.addActionListener(e -> apply());
 
+        ButtonGroup rawGroup = new ButtonGroup();
+        rawGroup.add(rawShow);
+        rawGroup.add(rawHide);
+        (settings.isShowRawValues() ? rawShow : rawHide).setSelected(true);
+        rawShow.setToolTipText("A smoothed trace's value is followed by the recorded one: 15.5 (12.2 raw)");
+        rawHide.setToolTipText("Only the smoothed value, as on the drawn line");
+        rawShow.addActionListener(e -> apply());
+        rawHide.addActionListener(e -> apply());
+
         int row = 0;
         addRow(valuesPanel, muted(new JLabel("Show")), new SegmentedControl(valuesSegments()), row++, 0);
         addRow(valuesPanel, muted(new JLabel("At")), new SegmentedControl(atMouse, atClick), row++, 0);
@@ -336,7 +354,11 @@ final class ChartToolbar extends ThemedStrip {
         separator.fill = GridBagConstraints.HORIZONTAL;
         separator.insets = new Insets(8, 0, 8, 0);
         valuesPanel.add(new JSeparator(), separator);
-        addRow(valuesPanel, muted(new JLabel("Min/max")), new SegmentedControl(minMaxHover, minMaxAlways), row, 0);
+        addRow(valuesPanel, muted(new JLabel("Min/max")), new SegmentedControl(minMaxHover, minMaxAlways), row++, 0);
+        addRow(valuesPanel, muted(new JLabel("Raw values")), new SegmentedControl(rawShow, rawHide), row++, 0);
+        GridBagConstraints smoothingNoteConstraints = constraints(0, row, 2, 0);
+        smoothingNoteConstraints.insets = new Insets(8, 0, 0, 0);
+        valuesPanel.add(smoothingNote, smoothingNoteConstraints);
     }
 
     /** The Values button's text: "Values: Labels  ▾", "Values: List at click  ▾". */
@@ -440,6 +462,7 @@ final class ChartToolbar extends ThemedStrip {
         }
         settings.setPinValues(atClick.isSelected());
         settings.setAlwaysMinMax(minMaxAlways.isSelected());
+        settings.setShowRawValues(rawShow.isSelected());
         settings.setVertical(verticalBox.isSelected());
         settings.setVerticalMode(samplesMode.isSelected()
                 ? ChartSettings.VerticalMode.SAMPLES : ChartSettings.VerticalMode.TIME_TICKS);
@@ -450,7 +473,8 @@ final class ChartToolbar extends ThemedStrip {
         onChange.run();
     }
 
-    private void updateControls() {
+    /** Refreshes the button texts and the enabled and visible states from the settings. */
+    void updateControls() {
         gridButton.setText(gridSummary(settings));
         smoothingButton.setText((compact ? "Smoothing: " : "Display smoothing: ")
                 + TimelineSmoothingWindow.label(settings.getSmoothingWindowSeconds()) + "  \u25BE");
@@ -463,7 +487,11 @@ final class ChartToolbar extends ThemedStrip {
                 : settings.isPinValues() ? "<html>Click a plot to show the values there.<br>"
                 + "Click the same spot again or press Esc to hide them.</html>"
                 : "<html>Move the mouse over the plots<br>to see the values at the cursor.</html>");
-        // the note's height changes with its text
+        boolean smoothing = settings.isAnySmoothing();
+        rawShow.setEnabled(smoothing);
+        rawHide.setEnabled(smoothing);
+        smoothingNote.setVisible(smoothing);
+        // the notes' height changes with their text
         valuesPopup.pack();
         timeTicksMode.setEnabled(settings.isVertical());
         samplesMode.setEnabled(settings.isVertical());
