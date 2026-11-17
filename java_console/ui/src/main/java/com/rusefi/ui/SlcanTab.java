@@ -5,7 +5,6 @@ import com.rusefi.io.can.HexUtil;
 import com.rusefi.io.can.slcan.SlcanClient;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileModel;
-import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
@@ -302,27 +301,20 @@ public class SlcanTab {
             uiContext.addConfigImageListener(listener);
 
             // Initial state
-            BinaryProtocol bp = uiContext.getBinaryProtocol();
-            if (bp != null) {
-                ConfigurationImage image = bp.getBinaryProtocolState().getConfigurationImage();
-                if (image != null) {
-                    updateCheckbox(cb, fieldName1, fieldName2, ini, image);
-                }
+            ConfigurationImage image = uiContext.getCurrentConfigurationImage();
+            if (image != null) {
+                updateCheckbox(cb, fieldName1, fieldName2, ini, image);
             }
 
             cb.addActionListener(e -> {
-                BinaryProtocol bp2 = uiContext.getBinaryProtocol();
-                if (bp2 == null) return;
-                ConfigurationImage image = bp2.getBinaryProtocolState().getConfigurationImage();
-                if (image == null) return;
-
                 int newValue = cb.isSelected() ? 1 : 0;
-                applyValue(image, ini.getIniField(fieldName1), newValue);
-                applyValue(image, ini.getIniField(fieldName2), newValue);
-
-                ConfigurationImage snapshot = image.clone();
-                uiContext.getLinkManager().submit(() -> bp2.uploadChangesWithoutBurn(snapshot));
-                uiContext.fireConfigImageChanged(image);
+                boolean applied = uiContext.getBinaryProtocol() != null && uiContext.applyTuneEdit(edited -> {
+                    applyValue(edited, ini.getIniField(fieldName1), newValue);
+                    applyValue(edited, ini.getIniField(fieldName2), newValue);
+                });
+                if (!applied) {
+                    cb.setSelected(!cb.isSelected());
+                }
             });
 
             busPanel.add(cb);

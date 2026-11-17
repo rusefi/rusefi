@@ -19,6 +19,7 @@ import java.util.function.Supplier;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * key frontend app state singleton
@@ -133,6 +134,17 @@ public class UIContext {
     private final List<Consumer<ConfigurationImage>> configImageListeners = new ArrayList<>();
     private ConfigurationImage currentConfigurationImage;
     private IniFileModel configurationImageIni;
+    private Function<Consumer<ConfigurationImage>, Boolean> tuneEditor = edit -> false;
+
+    /** Edits from auxiliary tabs share Tuning's working image, undo history and upload queue. */
+    public void setTuneEditor(Function<Consumer<ConfigurationImage>, Boolean> tuneEditor) {
+        this.tuneEditor = tuneEditor;
+    }
+
+    /** On the EDT; false when a tune cannot currently be edited. */
+    public boolean applyTuneEdit(Consumer<ConfigurationImage> edit) {
+        return tuneEditor.apply(edit);
+    }
 
     public void addConfigImageListener(Consumer<ConfigurationImage> listener) {
         configImageListeners.add(listener);
