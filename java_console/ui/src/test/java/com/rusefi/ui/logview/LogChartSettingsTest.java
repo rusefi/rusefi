@@ -3,6 +3,7 @@ package com.rusefi.ui.logview;
 import com.rusefi.logview.CsvLogReader;
 import org.junit.jupiter.api.Test;
 
+import javax.swing.SwingUtilities;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -413,39 +414,42 @@ class LogChartSettingsTest {
     }
 
     @Test
-    void toolbarCompactsBeforeItWrapsAndNeverHidesActions() {
-        ChartToolbar toolbar = new ChartToolbar(new ChartSettings(), () -> {
-        }, component -> {
-        });
-        int fullWidth = toolbar.naturalRowWidth();
-        toolbar.setSize(fullWidth, 1_000);
-        toolbar.updateResponsiveLayout();
-        int singleRowHeight = toolbar.getPreferredSize().height;
-        assertTrue(toolbar.plotLabel.isVisible());
-        assertTrue(toolbar.cursorLabel.isVisible());
-        assertEquals("Display smoothing: Raw  \u25BE", toolbar.smoothingButton.getText());
+    void toolbarCompactsBeforeItWrapsAndNeverHidesActions() throws Exception {
+        // Resize callbacks run on the EDT; keep measurements on that thread too.
+        SwingUtilities.invokeAndWait(() -> {
+            ChartToolbar toolbar = new ChartToolbar(new ChartSettings(), () -> {
+            }, component -> {
+            });
+            int fullWidth = toolbar.naturalRowWidth();
+            toolbar.setSize(fullWidth, 1_000);
+            toolbar.updateResponsiveLayout();
+            int singleRowHeight = toolbar.getPreferredSize().height;
+            assertTrue(toolbar.plotLabel.isVisible());
+            assertTrue(toolbar.cursorLabel.isVisible());
+            assertEquals("Display smoothing: Raw  \u25BE", toolbar.smoothingButton.getText());
 
-        toolbar.setSize(fullWidth - 1, 1_000);
-        toolbar.updateResponsiveLayout();
-        int compactHeight = toolbar.getPreferredSize().height;
-        assertEquals(singleRowHeight, compactHeight, "labels compact before controls need another row");
-        assertFalse(toolbar.plotLabel.isVisible());
-        assertFalse(toolbar.cursorLabel.isVisible());
-        assertEquals("Smoothing: Raw  \u25BE", toolbar.smoothingButton.getText());
-        assertTrue(toolbar.measureButton.getParent().isVisible());
-        assertTrue(toolbar.statsButton.getParent().isVisible());
+            toolbar.setSize(fullWidth - 1, 1_000);
+            toolbar.updateResponsiveLayout();
+            int compactHeight = toolbar.getPreferredSize().height;
+            assertEquals(singleRowHeight, compactHeight, "labels compact before controls need another row");
+            assertFalse(toolbar.plotLabel.isVisible());
+            assertFalse(toolbar.cursorLabel.isVisible());
+            assertEquals("Smoothing: Raw  \u25BE", toolbar.smoothingButton.getText());
+            assertTrue(toolbar.measureButton.getParent().isVisible());
+            assertTrue(toolbar.statsButton.getParent().isVisible());
 
-        toolbar.setSize(500, 1_000);
-        toolbar.updateResponsiveLayout();
-        int wrappedHeight = toolbar.getPreferredSize().height;
-        assertTrue(wrappedHeight > compactHeight, "extremely narrow windows wrap the same controls dynamically");
-        toolbar.setSize(500, wrappedHeight);
-        toolbar.doLayout();
-        for (Component control : toolbar.getComponents()) {
-            if (control.isVisible()) {
-                assertTrue(control.getY() + control.getHeight() <= wrappedHeight,
-                        control + " is clipped below the toolbar");
+            toolbar.setSize(500, 1_000);
+            toolbar.updateResponsiveLayout();
+            int wrappedHeight = toolbar.getPreferredSize().height;
+            assertTrue(wrappedHeight > compactHeight, "extremely narrow windows wrap the same controls dynamically");
+            toolbar.setSize(500, wrappedHeight);
+            toolbar.doLayout();
+            for (Component control : toolbar.getComponents()) {
+                if (control.isVisible()) {
+                    assertTrue(control.getY() + control.getHeight() <= wrappedHeight,
+                            control + " is clipped below the toolbar");
+                }
             }
-        }
+        });
     }
 }
