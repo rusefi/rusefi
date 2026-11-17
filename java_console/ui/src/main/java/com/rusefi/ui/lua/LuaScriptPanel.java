@@ -129,6 +129,10 @@ public class LuaScriptPanel {
         // already connected, so a plain listener would miss the connect event and never read the
         // script, leaving the editor blank. Firing immediately reads the current script on open.
         connectionListenerRegistrar.accept(isConnected -> {
+            if (!isConnected) {
+                return;
+            }
+
             // readFromECU() does live ECU I/O (the Lua script lives on its own TS page now), which
             // must run on the communication thread — not the EDT — or executeCommand() throws
             // "Communication on wrong thread"
@@ -273,6 +277,15 @@ public class LuaScriptPanel {
         }
     }
 
+    private void setTextIfUnmodified(String luaScript) {
+        Runnable update = () -> scriptText.setTextIfUnmodified(luaScript);
+        if (SwingUtilities.isEventDispatchThread()) {
+            update.run();
+        } else {
+            SwingUtilities.invokeLater(update);
+        }
+    }
+
     private String getWorkingFolder() {
         return config.getProperty(SCRIPT_FOLDER_CONFIG_KEY, System.getProperty("user.home"));
     }
@@ -297,28 +310,24 @@ public class LuaScriptPanel {
         BinaryProtocol bp = context.getBinaryProtocol();
 
         if (bp == null) {
-            setText("No ECU located");
             return;
         }
 
         StringIniField luaScript = getLuaScriptField(bp);
         if (luaScript == null) {
-            setText("luaScript field not found in .ini");
             return;
         }
 
         if (luaScript.getPageIndex() == 0 && bp.getControllerConfiguration() == null) {
             log.info("readFromECU: page 0 branch but no configuration image");
-            setText("No configuration image");
             return;
         }
         String script = readScript(bp, luaScript);
         if (script == null) {
             log.info("readFromECU: readFromPage returned null for page=" + luaScript.getDisplayPage());
-            setText("Failed to read luaScript from page " + luaScript.getDisplayPage());
             return;
         }
-        setText(script);
+        setTextIfUnmodified(script);
     }
 
     /**
