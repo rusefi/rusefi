@@ -10,7 +10,7 @@ public class OpenBltCanJob extends AsyncJobWithContext<ParentComponentContext> {
     private final PortScanner scanner;
 
     public OpenBltCanJob(final JComponent parent, PortScanner scanner) {
-        super("OpenBLT via CAN", new ParentComponentContext(parent));
+        super("Manual OpenBLT Update via CAN", new ParentComponentContext(parent));
         this.scanner = scanner;
     }
 

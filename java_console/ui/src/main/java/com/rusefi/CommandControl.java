@@ -37,7 +37,7 @@ abstract class CommandControl {
 
         int GAP = 3;
 
-        panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(GAP, GAP, GAP, GAP)));
+        panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(lineColor()), BorderFactory.createEmptyBorder(GAP, GAP, GAP, GAP)));
 
         button.addActionListener(createButtonListener());
     }
@@ -51,5 +51,11 @@ abstract class CommandControl {
 
     public Component getContent() {
         return UiUtils.wrap(panel);
+    }
+
+    /** Frame around the command: black in the light theme [tag:console_theme]. */
+    private static Color lineColor() {
+        Color line = UIManager.getColor("Console.HorizontalLine.foreground");
+        return line != null ? line : Color.black;
     }
 }

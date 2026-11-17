@@ -113,9 +113,11 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     // rebuilt from the surviving pages so they stay consistent. See issue #9699.
     // A guarded page is dropped from the .ini when its guardFlag is FALSE in the registry (read
     // from a board prepend). The board's prepend.txt is the single declaration point for a guard
-    // flag: firmware/Makefile lifts flags listed in TS_PAGE_GUARD_FLAGS from prepend.txt into
-    // DDEFS (keep that list in sync with this column), and tunerstudio.cpp static_asserts that
-    // the compile flag matches the generated *_PAGE_ENABLED value. IMPORTANT: a page
+    // flag: firmware/Makefile and simulator/Makefile lift flags listed in TS_PAGE_GUARD_FLAGS from
+    // prepend.txt into DDEFS (keep both lists and VariableRegistry.TS_PAGE_GUARD_FLAGS in sync
+    // with this column; the registry retains but does not emit these flags into the C header), and
+    // tunerstudio.cpp static_asserts that the compile flag matches the generated *_PAGE_ENABLED
+    // value. IMPORTANT: a page
     // that has a reference surface (tooltips, [TableEditor], menus, triggeredPageRefresh that name
     // its fields) also needs an enabledFlag and those references wrapped in @@if_block <enabledFlag>,
     // exactly as LTFT does - otherwise the drop leaves dangling references. LTFT has such a surface
@@ -152,6 +154,11 @@ public class TSProjectConsumer implements ConfigurationConsumer {
             this.refreshFlag = refreshFlag;
             this.guardFlag = guardFlag;
             this.enabledFlag = enabledFlag;
+            if (guardFlag != null && !VariableRegistry.TS_PAGE_GUARD_FLAGS.contains(guardFlag)) {
+                throw new IllegalStateException("TS page guard flag " + guardFlag
+                        + " must be listed in VariableRegistry.TS_PAGE_GUARD_FLAGS, firmware/Makefile"
+                        + " and simulator/Makefile TS_PAGE_GUARD_FLAGS");
+            }
         }
 
         boolean isEnabled(VariableRegistry registry) {

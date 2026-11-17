@@ -39,10 +39,12 @@ public final class DfuRecoveryFirmware {
         BundleInfo wanted = new BundleInfo(branch, null, target);
         String baseUrl = BundleInfoStrategy.getDownloadUrl(wanted, PropertiesHolder.getBaseUrl(), BundleInfo::getBranchName);
         String zip = Autoupdate.downloadZipForTarget(wanted, baseUrl,
-            callbacks::updateProgress, callbacks::logLine);
+            percent -> callbacks.updateFirmwareProgress(UpdateOperationCallbacks.FirmwareUpdateStage.DOWNLOAD, percent),
+            callbacks::logLine);
         if (zip == null) {
             throw noDfuImage("The public firmware archive could not be downloaded");
         }
+        callbacks.updateFirmwareProgress(UpdateOperationCallbacks.FirmwareUpdateStage.DOWNLOAD, 100);
 
         return extractDfuImage(target, Path.of(zip), Path.of(zip).toAbsolutePath().getParent());
     }

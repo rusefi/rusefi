@@ -8,9 +8,12 @@ import com.opensr5.ini.TsStringFunction;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.SensorSubscription;
+import com.rusefi.ui.util.WrapLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.*;
 import java.util.List;
 
@@ -31,23 +34,44 @@ public class IndicatorPanel {
     private final IniFileModel ini;
     private final SensorCentral.ResponseListenerToken listenerToken;
     private final boolean hasDemand;
+    /** Extra tooltip text per chip, or null. */
+    private final String[] notes;
+    /** What the tooltip calls each chip, or null. */
+    private final String[] titles;
+    /** A second tooltip line on every chip, or null. */
+    private String hint;
     private ConfigurationImage currentImage;
 
     /**
      * @param indicators models to display
      * @param ini        INI file model used for field lookups and label resolution
      * @param columns    {@code > 0} → {@link GridLayout} with that many columns;
-     *                   {@code <= 0} → {@link FlowLayout} (left-aligned, for toolbar-style rows)
+     *                   {@code <= 0} → {@link WrapLayout} (left-aligned rows that wrap, for toolbar-style strips)
      */
     public IndicatorPanel(List<IndicatorModel> indicators, IniFileModel ini, int columns) {
         this.indicators = new ArrayList<>(indicators);
         this.ini = ini;
+        notes = new String[this.indicators.size()];
+        titles = new String[this.indicators.size()];
 
         if (columns > 0) {
-            panel = new JPanel(new GridLayout(0, columns, 4, 4));
+            panel = new JPanel(new GridLayout(0, columns, 4, 4)) {
+                @Override
+                public Dimension getMaximumSize() {
+                    // Chips keep their height instead of stretching over a tall dialog column.
+                    return new Dimension(super.getMaximumSize().width, getPreferredSize().height);
+                }
+            };
             panel.setAlignmentX(Component.LEFT_ALIGNMENT);
         } else {
-            panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
+            // chips wrap onto further rows instead of running off the right edge of a narrow window
+            panel = new JPanel(new WrapLayout(FlowLayout.LEFT, 6, 4));
+            panel.addComponentListener(new ComponentAdapter() {
+                @Override
+                public void componentResized(ComponentEvent e) {
+                    fitRowsToWidth();
+                }
+            });
         }
 
         for (IndicatorModel model : this.indicators) {
@@ -76,6 +100,34 @@ public class IndicatorPanel {
         return panel;
     }
 
+    /**
+     * A parent such as a BoxLayout asks for the preferred height before it gives the strip its new
+     * width, so the row count it reserved belongs to the old width; lay out again once the width is known.
+     */
+    void fitRowsToWidth() {
+        if (panel.getPreferredSize().height != panel.getHeight()) {
+            panel.revalidate();
+        }
+    }
+
+    /** Adds {@code note} to the tooltip of chip {@code index}, e.g. why it cannot show its state. */
+    public void setNote(int index, String note) {
+        notes[index] = note;
+        applyAll(currentImage);
+    }
+
+    /** Starts the tooltip of chip {@code index} with {@code title}, e.g. the name the user gave it. */
+    public void setTitle(int index, String title) {
+        titles[index] = title;
+        applyAll(currentImage);
+    }
+
+    /** Adds {@code hint} as a small second tooltip line on every chip, e.g. how to rearrange them. */
+    public void setHint(String hint) {
+        this.hint = hint;
+        applyAll(currentImage);
+    }
+
     public void setActive(boolean active) {
         listenerToken.setActive(active && hasDemand);
     }
@@ -97,19 +149,30 @@ public class IndicatorPanel {
         Component[] children = panel.getComponents();
         for (int i = 0; i < indicators.size() && i < children.length; i++) {
             if (children[i] instanceof JLabel) {
-                applyState((JLabel) children[i], indicators.get(i), ini, image);
+                JLabel label = (JLabel) children[i];
+                applyState(label, indicators.get(i), ini, image);
+                String tooltip = label.getText().trim();
+                if (titles[i] != null) {
+                    tooltip = titles[i] + ": " + tooltip;
+                }
+                if (notes[i] != null) {
+                    tooltip += ": " + notes[i];
+                }
+                if (hint != null) {
+                    tooltip = "<html>" + escape(tooltip) + "<br><small>" + escape(hint) + "</small></html>";
+                }
+                label.setToolTipText(tooltip);
             }
         }
     }
 
 
+    private static String escape(String text) {
+        return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+    }
+
     static JLabel makeLabel() {
-        JLabel label = new JLabel(" ");
-        label.setOpaque(true);
-        label.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.GRAY, 1),
-                BorderFactory.createEmptyBorder(4, 8, 4, 8)));
-        return label;
+        return new TuningStyle.Chip();
     }
 
     /**
@@ -123,6 +186,11 @@ public class IndicatorPanel {
         candidates.addAll(TsStringFunction.allPossibleResolutions(model.getOffLabel(), ini));
 
         String saved = label.getText();
+        // measure in bold: a solid chip shows its text in bold (TuningStyle.Chip#setSolid)
+        Font savedFont = label.getFont();
+        if (savedFont != null) {
+            label.setFont(savedFont.deriveFont(Font.BOLD));
+        }
         int maxW = 0, maxH = 0;
         for (String text : candidates) {
             label.setText(text == null || text.isEmpty() ? " " : text);
@@ -131,6 +199,7 @@ public class IndicatorPanel {
             if (d.height > maxH) maxH = d.height;
         }
         label.setText(saved);
+        label.setFont(savedFont);
         if (maxW > 0) {
             Dimension fixed = new Dimension(fixedWidth > 0 ? fixedWidth : maxW, maxH);
             label.setPreferredSize(fixed);
@@ -146,7 +215,8 @@ public class IndicatorPanel {
         addLabelVariables(vars, indicator.getOffLabel());
         Map<String, Double> context = new HashMap<>();
         for (String var : vars) {
-            Optional<IniField> field = ini.findIniField(var);
+            // custom indicators can be shown before any INI is known
+            Optional<IniField> field = ini == null ? Optional.empty() : ini.findIniField(var);
             if (field.isPresent() && ci != null) {
                 Double val = ci.readNumericValue(field.get());
                 if (val != null) { context.put(var, val); continue; }
@@ -156,21 +226,25 @@ public class IndicatorPanel {
         }
         Boolean active = ExpressionEvaluator.evaluateBooleanExpression(indicator.getExpression(), context);
         final String text;
-        final Color bg, fg;
+        final String iniBg, iniFg;
         if (Boolean.TRUE.equals(active)) {
             text = resolveLabel(indicator.getOnLabel(), ini, context);
-            bg = parseColor(indicator.getOnBg());
-            fg = parseColor(indicator.getOnFg());
+            iniBg = indicator.getOnBg();
+            iniFg = indicator.getOnFg();
         } else {
             String off = resolveLabel(indicator.getOffLabel(), ini, context);
             text = off.isEmpty() ? " " : off;
-            bg = parseColor(indicator.getOffBg());
-            fg = parseColor(indicator.getOffFg());
+            iniBg = indicator.getOffBg();
+            iniFg = indicator.getOffFg();
+        }
+        Color[] colors = TuningStyle.indicatorColors(iniBg, iniFg);
+        if (label instanceof TuningStyle.Chip) {
+            ((TuningStyle.Chip) label).setSolid(TuningStyle.isSolidTone(TuningStyle.indicatorTone(iniBg, iniFg)));
         }
         label.setText(text);
         label.setToolTipText(text);
-        label.setBackground(bg);
-        label.setForeground(fg);
+        label.setBackground(colors[0]);
+        label.setForeground(colors[1]);
     }
 
     private static void addLabelVariables(Set<String> variables, String label) {
@@ -190,16 +264,20 @@ public class IndicatorPanel {
         return t;
     }
 
+    /**
+     * The colour an INI indicator names, used when the theme has no Console.Tuning.indicator.* chip for
+     * it (TuningStyle.indicatorColors). These are the INI's own colours. [tag:fixed_color]
+     */
     static Color parseColor(String name) {
-        if (name == null) return Color.LIGHT_GRAY;
+        if (name == null) return Color.LIGHT_GRAY; // [tag:fixed_color] INI colour
         switch (name.toLowerCase().trim()) {
-            case "white":  return Color.WHITE;
-            case "black":  return Color.BLACK;
-            case "red":    return Color.RED;
-            case "yellow": return Color.YELLOW;
-            case "green":  return Color.GREEN;
-            case "blue":   return Color.BLUE;
-            default:       return Color.LIGHT_GRAY;
+            case "white":  return Color.WHITE; // [tag:fixed_color] INI colour
+            case "black":  return Color.BLACK; // [tag:fixed_color] INI colour
+            case "red":    return Color.RED; // [tag:fixed_color] INI colour
+            case "yellow": return Color.YELLOW; // [tag:fixed_color] INI colour
+            case "green":  return Color.GREEN; // [tag:fixed_color] INI colour
+            case "blue":   return Color.BLUE; // [tag:fixed_color] INI colour
+            default:       return Color.LIGHT_GRAY; // [tag:fixed_color] INI colour
         }
     }
 }

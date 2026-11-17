@@ -28,6 +28,7 @@ public class InjectorFlowPanel extends AbstractWizardStep {
     private static final String FLOW_FIELD = "injector_flow";
     private static final String UNITS_FIELD = "injectorFlowAsMassFlow";
     private static final String UNITS_CC_MIN = "cc/min";
+    private static final int CARD_WIDTH = 760;
 
     /**
      * cmd_preset_injector_preset payload: TS_BOARD_ACTION (u16 BE) + BOARD_ACTION_INJECTOR_PRESET (u16 BE).
@@ -43,6 +44,7 @@ public class InjectorFlowPanel extends AbstractWizardStep {
     private final UIContext uiContext;
     private final JPanel content = new JPanel(new BorderLayout());
     private final JPanel body = new JPanel(new GridBagLayout());
+    private final JButton continueButton = new JButton();
 
     private JList<String> presetList;
     private JTextField flowTextField;
@@ -51,20 +53,32 @@ public class InjectorFlowPanel extends AbstractWizardStep {
         super("Injector Flow", "wizardInjectorFlow");
         this.uiContext = uiContext;
 
-        JLabel title = new JLabel(getTitle());
-        title.setHorizontalAlignment(SwingConstants.CENTER);
-        styleTitle(title);
-        content.add(title, BorderLayout.NORTH);
+        JPanel card = new JPanel(new BorderLayout(0, 16)) {
+            @Override
+            public Dimension getPreferredSize() {
+                Dimension preferred = super.getPreferredSize();
+                preferred.width = Math.max(preferred.width, CARD_WIDTH);
+                return preferred;
+            }
+        };
+        JPanel header = new JPanel();
+        header.setLayout(new BoxLayout(header, BoxLayout.Y_AXIS));
+        JLabel eyebrow = WizardStyle.sectionLabel("INJECTOR SETUP");
+        JLabel title = WizardStyle.cardTitle(getTitle());
+        JLabel description = WizardStyle.description("Pick your injector, or enter its flow rate, then continue.");
+        for (JComponent line : new JComponent[]{eyebrow, title, description}) {
+            line.setAlignmentX(Component.LEFT_ALIGNMENT);
+            header.add(line);
+            header.add(Box.createVerticalStrut(5));
+        }
+        card.add(header, BorderLayout.NORTH);
 
-        content.add(body, BorderLayout.CENTER);
+        card.add(body, BorderLayout.CENTER);
 
-        JButton continueButton = new JButton("Continue");
-        stylePrimaryAction(continueButton);
+        styleContinueAction(continueButton);
         continueButton.addActionListener(e -> onContinue());
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-        buttonPanel.add(continueButton);
-        content.add(buttonPanel, BorderLayout.SOUTH);
+        WizardStyle.styleCard(card, 24, 28);
+        content.add(WizardStyle.cardPage(card), BorderLayout.CENTER);
 
         rebuildBody();
     }
@@ -82,8 +96,9 @@ public class InjectorFlowPanel extends AbstractWizardStep {
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.weightx = 1;
+        gbc.insets = new Insets(0, 0, 6, 0);
+        gbc.anchor = GridBagConstraints.WEST;
 
         if (hardcoded instanceof EnumIniField) {
             buildHardcodedMode((EnumIniField) hardcoded, gbc);
@@ -96,8 +111,7 @@ public class InjectorFlowPanel extends AbstractWizardStep {
     }
 
     private void buildHardcodedMode(EnumIniField hardcoded, GridBagConstraints gbc) {
-        JLabel prompt = new JLabel("Select your injector:");
-        scale(prompt, 1.5f);
+        JLabel prompt = WizardStyle.sectionLabel("SELECT YOUR INJECTOR");
         gbc.gridy = 0;
         body.add(prompt, gbc);
 
@@ -111,7 +125,8 @@ public class InjectorFlowPanel extends AbstractWizardStep {
         presetList = new JList<>(model);
         presetList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         presetList.setVisibleRowCount(Math.min(12, Math.max(5, model.size())));
-        scale(presetList, 1.5f);
+        scale(presetList, 1.2f);
+        presetList.setFixedCellHeight(presetList.getFontMetrics(presetList.getFont()).getHeight() + 10);
         presetList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -149,13 +164,13 @@ public class InjectorFlowPanel extends AbstractWizardStep {
     }
 
     private void buildFlowMode(GridBagConstraints gbc) {
-        JLabel prompt = new JLabel("Injector flow (cc/min):");
-        scale(prompt, 1.5f);
+        JLabel prompt = WizardStyle.sectionLabel("INJECTOR FLOW (CC/MIN)");
         gbc.gridy = 0;
         body.add(prompt, gbc);
 
         flowTextField = new JTextField(10);
         scale(flowTextField, 1.5f);
+        prompt.setLabelFor(flowTextField);
         gbc.gridy = 1;
         body.add(flowTextField, gbc);
 
@@ -232,6 +247,11 @@ public class InjectorFlowPanel extends AbstractWizardStep {
         }
         bp.setConfigurationImage(imageWithMeta.getConfigurationImage());
         log.info("Config refreshed after preset injector");
+    }
+
+    @Override
+    public JButton getContinueButton() {
+        return continueButton;
     }
 
     @Override

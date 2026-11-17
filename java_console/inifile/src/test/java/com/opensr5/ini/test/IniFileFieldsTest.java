@@ -6,16 +6,56 @@ import com.opensr5.ini.RawIniFile;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
+import com.opensr5.ini.field.PcVariableArrayIniField;
+import com.opensr5.ConfigurationImage;
+import com.opensr5.ConfigurationImageGetterSetter;
 import com.rusefi.config.FieldType;
 import com.rusefi.ini.reader.IniFileReaderUtil;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class IniFileFieldsTest {
+    @Test
+    public void alphabeticalDisplayOrderUsesEnumListNameAndPreservesSparseOrdinals() {
+        for (String enumName : Arrays.asList("pin_mode_e_enum", "pin_input_mode_e_enum",
+            "spi_device_e_enum", "gppwm_channel_e_enum")) {
+            EnumIniField field = readDisplayOrderField(enumName);
+            assertEquals(Arrays.asList("alpha", "Beta", "Zulu"), field.getDisplayValues(), enumName);
+            assertEquals(Arrays.asList("Zulu", "alpha", "Beta"), new ArrayList<>(field.getEnums().values()), enumName);
+            assertEquals("Zulu", field.getEnums().get(0));
+            assertEquals("alpha", field.getEnums().get(4));
+            assertEquals("Beta", field.getEnums().get(6));
+            assertEquals(4, field.getEnums().indexOf("alpha"));
+            assertEquals(6, field.getEnums().indexOf("Beta"));
+            assertFalse(field.isPinEnum(), "Sorting does not enable pin-label migration rules");
+        }
+    }
+
+    @Test
+    public void otherEnumListsRetainOrdinalDisplayOrder() {
+        for (String enumName : Arrays.asList("unrelated_enum", "pin_output_mode_e_enum", "output_pin_e_list")) {
+            EnumIniField field = readDisplayOrderField(enumName);
+            assertEquals(Arrays.asList("Zulu", "alpha", "Beta"), field.getDisplayValues(), enumName);
+            assertEquals("output_pin_e_list".equals(enumName), field.isPinEnum());
+        }
+    }
+
+    private static EnumIniField readDisplayOrderField(String enumName) {
+        // Use the same arbitrary field name for every list: sorting belongs to the referenced list.
+        String text = "#define " + enumName + "=0=\"Zulu\",4=\"alpha\",6=\"Beta\"\n"
+            + "[Constants]\npage = 1\n"
+            + "mode = bits, U08, 0, [0:2], $" + enumName + "\n";
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8)));
+        return (EnumIniField) IniFileReaderTest.readLines(lines).getAllIniFields().get("mode");
+    }
+
     @Test
     public void testCurve() {
         String string =
@@ -229,5 +269,59 @@ public class IniFileFieldsTest {
         // Line with fewer than 4 tokens should be ignored
         assertEquals(1, model.getSecondaryIniFields().size());
         assertTrue(model.getSecondaryIniFields().containsKey("goodVar"));
+    }
+
+    @Test
+    public void testPcVariableArrayTakesItsDefaultValue() {
+        // #10626: PC variable arrays are used as curve and table bins
+        String string = "page = 1\n" +
+            "[PcVariables]\n" +
+            "\tgearCountArray = array, S08, [4], \"Gear\", 1, 0, -1, { 4 - 2 }, 0, noMsqSave\n" +
+            "\tnoDefault = array, U08, [2], \"Solenoid\", 1, 0, 1, 2, 0, noMsqSave\n" +
+            "[ConstantsExtensions]\n" +
+            "\tdefaultValue = gearCountArray, -1 0 1 2\n" +
+            "\tdefaultValue = noDefault, 1 2 3\n" +
+            "\tdefaultValue = unknownName, 1 2\n" +
+            "\treadOnly = gearCountArray\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = IniFileReaderTest.readLines(lines);
+
+        assertEquals(0, model.getAllIniFields().size());
+        PcVariableArrayIniField gears = (PcVariableArrayIniField) model.findIniField("gearCountArray").get();
+        assertEquals(4, gears.getRows());
+        assertEquals("Gear", gears.getUnits());
+        assertEquals("-1", gears.getMin());
+        ConfigurationImage image = new ConfigurationImage(4);
+        Double[][] values = ConfigurationImageGetterSetter.getArrayValues(gears, image);
+        assertArrayEquals(new Double[]{-1.0, 0.0, 1.0, 2.0},
+            new Double[]{values[0][0], values[1][0], values[2][0], values[3][0]});
+        // there is no ECU storage behind a PC variable
+        ConfigurationImageGetterSetter.setArrayValues(gears, image, new Double[]{9.0, 9.0, 9.0, 9.0});
+        assertArrayEquals(new byte[4], image.getContent());
+        assertEquals(-1.0, ConfigurationImageGetterSetter.getArrayValues(gears, image)[0][0]);
+
+        // a default of the wrong length is ignored
+        PcVariableArrayIniField noDefault = (PcVariableArrayIniField) model.findIniField("noDefault").get();
+        assertEquals(0.0, ConfigurationImageGetterSetter.getArrayValues(noDefault, image)[1][0]);
+    }
+
+    @Test
+    public void testRequiresPowerCycleListsRebootOnlySettings() {
+        // as generated into every rusEFI .ini, beside other [ConstantsExtensions] entries
+        String string = "page = 1\n" +
+            "[ConstantsExtensions]\n" +
+            "  requiresPowerCycle = gppwm1_pin\n" +
+            "  requiresPowerCycle = startStopButtonPin\n" +
+            "  requiresPowerCycle\n" +
+            "  readOnly = gppwm1_pin\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = IniFileReaderTest.readLines(lines);
+
+        assertEquals(2, model.getRequiresPowerCycle().size(), "a line without a name is ignored");
+        assertTrue(model.getRequiresPowerCycle().contains("gppwm1_pin"));
+        assertTrue(model.getRequiresPowerCycle().contains("StartStopButtonPin"), "names compare case-insensitively");
+        assertFalse(model.getRequiresPowerCycle().contains("fuelPumpPin"));
     }
 }

@@ -65,7 +65,7 @@ public class GaugesPanelSandbox {
                 grid.panel.add(GaugesGridElement.create(uiContext, layoutNode.getChild("g" + i), resolvedGauges[i]).getContent());
             }
 
-            JFrame frame = new JFrame("RusEFI Sandbox - Dual View");
+            JFrame frame = new JFrame("rusEFI Sandbox - Dual View");
             frame.add(grid.panel);
             frame.setSize(1000, 500);
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -84,7 +84,6 @@ public class GaugesPanelSandbox {
     }
 
     private void tick() {
-        if (GaugesPanel.IS_PAUSED) return;
         SensorCentral sc = SensorCentral.getInstance();
         java.util.concurrent.ThreadLocalRandom rnd = java.util.concurrent.ThreadLocalRandom.current();
 

@@ -6,7 +6,6 @@ import com.rusefi.config.generated.Integration;
 
 import static com.rusefi.binaryprotocol.IoHelper.checkResponseCode;
 import static com.rusefi.binaryprotocol.IoHelper.putShort;
-import static com.rusefi.binaryprotocol.IoHelper.swap16;
 import static com.rusefi.config.generated.Integration.TS_RESPONSE_BURN_OK;
 
 public class BurnCommand {
@@ -25,7 +24,7 @@ public class BurnCommand {
         if (!bp.isSinglePageController()) {
             // same 16-bit wire encoding as ByteRange.packPageOffsetAndSize
             page = new byte[2];
-            putShort(page, 0, swap16(pageIndex));
+            putShort(page, 0, ByteRange.toWire16(pageIndex, bp.getWireByteOrder()));
         }
         byte[] response = bp.executeCommand(Integration.TS_BURN_COMMAND, page, "burn");
         boolean isExpectedBurnResponseCode = checkResponseCode(response, (byte) TS_RESPONSE_BURN_OK);

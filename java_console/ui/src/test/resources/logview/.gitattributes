@@ -1,0 +1,2 @@
+*.msl -text -diff
+*.mlg -text -diff

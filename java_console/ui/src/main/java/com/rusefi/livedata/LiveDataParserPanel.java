@@ -62,7 +62,7 @@ public class LiveDataParserPanel {
             if (ci == null)
                 return;
 
-            g.setColor(Color.red);
+            g.setColor(Color.red); // [tag:fixed_color] developer Live Data view
 
             for (Token setting : parseResult.getConfigTokens()) {
                 // todo: something like binaryProtocol.getIniFile().getFieldsInUiOrder().values()?

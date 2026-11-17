@@ -21,8 +21,7 @@ import java.util.concurrent.TimeUnit;
 final class SdCardMount {
     // Wire values of SD_MODE in firmware/hw_layer/mmc_card.h.
     private static final String[] MODE_NAMES = {"idle", "ecu", "pc", "unmounted", "formatting"};
-    // Newer firmware exposes this channel; LTS metadata does not define it.
-    // Keep the runtime capability check below before sending any mount command.
+    // Optional newer-firmware channel: resolve through its INI, not the LTS generated layout.
     private static final String MODE_CHANNEL = "sdCardMode";
     private static final String PRESENT_CHANNEL = VariableRegistryValues.OUTPUT_CHANNEL_SD_PRESENT;
 

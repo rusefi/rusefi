@@ -17,6 +17,8 @@ public class GaugeConsumer implements ConfigurationConsumer {
     private final LazyFile.LazyFileFactory fileFactory;
     private final LinkedHashMap<String, StringBuilder> byCategory = new LinkedHashMap<>();
     public String[] outputNames = new String[]{""};
+    // optional LiveData.yaml 'prefix_names', see DataLogConsumer#getHumanGaugeName
+    public String[] prefixNames;
 
     public GaugeConsumer(String fileName, LazyFile.LazyFileFactory fileFactory) {
         this.fileName = fileName;
@@ -29,9 +31,10 @@ public class GaugeConsumer implements ConfigurationConsumer {
             for (int i = 0; i < outputNames.length; i++) {
 
                 String variableNamePrefix = outputNames.length > 1 ? outputNames[i] : "";
+                String humanNamePrefix = DataLogConsumer.getPrefixName(prefixNames, i);
 
                 PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(readerState, structure.getTsFields(), variableNamePrefix,
-                        (state, configField, prefix, currentPosition, perFieldWithStructuresIterator) -> handle(configField, prefix, ""));
+                        (state, configField, prefix, currentPosition, perFieldWithStructuresIterator) -> handle(configField, prefix, humanNamePrefix, ""));
                 iterator.loop(0);
             }
         }
@@ -46,10 +49,12 @@ public class GaugeConsumer implements ConfigurationConsumer {
         }
     }
 
-    private String handle(ConfigField configField, String prefix, String variableNameSuffix) {
-        String comment = getHumanGaugeName("", "", configField, variableNameSuffix);
+    private String handle(ConfigField configField, String prefix, String humanNamePrefix, String variableNameSuffix) {
+        if (configField.isUnusedField())
+            return "";
+        String comment = getHumanGaugeName("", humanNamePrefix, "", configField, variableNameSuffix);
         comment = ConfigFieldImpl.unquote(comment);
-        if (!prefix.isEmpty()) {
+        if (!prefix.isEmpty() && humanNamePrefix.isEmpty()) {
             comment = prefix + " " + comment;
         }
         comment = VariableRegistry.quote(comment);

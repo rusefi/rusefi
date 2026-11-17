@@ -100,6 +100,21 @@ public class VariableRegistryTest {
     }
 
     @Test
+    public void testTsPageGuardFlagsAreKeptOutOfCHeader() throws IOException {
+        for (String value : new String[]{"TRUE", "FALSE"}) {
+            VariableRegistry registry = new VariableRegistry();
+            registry.readPrependValues(new StringReader("#define EFI_LUA " + value + "\n" +
+                    "#define EFI_LTFT_CONTROL " + value + "\n" +
+                    "#define EFI_CAN_CANFD " + value), false);
+
+            assertEquals("#define EFI_CAN_CANFD " + value + "\n", registry.getDefinesSection());
+            assertEquals(value, registry.get("EFI_LUA"));
+            assertEquals(value, registry.get("EFI_LTFT_CONTROL"));
+            assertEquals(value + value, registry.applyVariables("@@EFI_LUA@@@@EFI_LTFT_CONTROL@@"));
+        }
+    }
+
+    @Test
     public void testDefineAndQuotes() throws IOException {
         VariableRegistry registry = new VariableRegistry();
         registry.readPrependValues(new StringReader("#define SINGLE 'L'\n" +

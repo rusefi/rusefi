@@ -24,6 +24,7 @@ public class MessagesPanel {
 
     private final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
     private final JButton pauseButton = UiUtils.createPauseButton();
+    private final JButton clearButton = UiUtils.createClearButton();
 
     public MessagesPanel(JComponent extraButton, Node config) {
         JPanel middlePanel = new JPanel(new BorderLayout());
@@ -33,7 +34,6 @@ public class MessagesPanel {
 
         pauseButton.addActionListener(event -> setPaused(!messagesView.isPaused()));
 
-        JButton clearButton = UiUtils.createClearButton();
         clearButton.addActionListener(event -> {
             messagesView.clear();
             setPaused(false);
@@ -54,12 +54,22 @@ public class MessagesPanel {
         return buttonPanel;
     }
 
+    /** Clear and Pause, for callers that place them in their own toolbar instead of {@link #getButtonPanel}. */
+    public AbstractButton[] getButtons() {
+        return new AbstractButton[]{clearButton, pauseButton};
+    }
+
     public JScrollPane getMessagesScroll() {
         return messagesView.messagesScroll;
     }
 
     public Font getFont() {
         return messagesView.messages.getFont();
+    }
+
+    /** The message text, e.g. for {@link com.rusefi.ui.widgets.TextZoom}. */
+    public JComponent getText() {
+        return messagesView.messages;
     }
 
     public MessagesView getMessagesView() {

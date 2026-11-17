@@ -1,5 +1,7 @@
 package com.opensr5.ini;
 
+import java.nio.ByteOrder;
+
 public interface IniFileMetaInfo {
 /*
     int getTotalSize();
@@ -23,6 +25,16 @@ public interface IniFileMetaInfo {
     String getCrc32CheckCommand(int pageIndex);
 */
     int getPageSize(int pageIndex);
+
+    /**
+     * Wire/image byte order declared by the ini's {@code endianness} line.  Governs multi-byte
+     * scalars in config pages and output channels AND the offset/count arguments of TS
+     * read/write/burn commands.  rusEFI (and an omitted line) means little-endian; a PowerPC
+     * controller declares {@code endianness = big}.  See {@link IniFileModel#isLittleEndian()}.
+     */
+    default ByteOrder getByteOrder() {
+        return ByteOrder.LITTLE_ENDIAN;
+    }
 
     /**
      * The TunerStudio wire page identifier for the given 0-based page (e.g. 0x0400 for the

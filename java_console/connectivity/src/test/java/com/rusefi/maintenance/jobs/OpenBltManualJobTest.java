@@ -36,6 +36,7 @@ public class OpenBltManualJobTest {
 
     private static class RecordingCallbacks implements UpdateOperationCallbacks {
         int doneCount;
+        int warningCount;
         int errorCount;
         final List<String> lines = new ArrayList<>();
 
@@ -51,6 +52,7 @@ public class OpenBltManualJobTest {
 
         @Override
         public void warning() {
+            warningCount++;
         }
 
         @Override
@@ -71,6 +73,8 @@ public class OpenBltManualJobTest {
         boolean ensureFirmwareResult = true;
         boolean flashResult = true;
         boolean flashThrows;
+        OpenBltManualJob.RestoreResult restoreResult = OpenBltManualJob.RestoreResult.COMPLETE;
+        String restoreMessage;
 
         int ensureFirmwareCount;
         int flashCount;
@@ -106,6 +110,16 @@ public class OpenBltManualJobTest {
                                         final ConnectivityContext connectivityContext) {
             restoreCount++;
             resumeCountAtRestore = scanner.resumeCount;
+            if (restoreMessage != null) {
+                callbacks.logLine(restoreMessage);
+            }
+        }
+
+        @Override
+        public OpenBltManualJob.RestoreResult restoreCalibrationsWithResult(final UpdateOperationCallbacks callbacks,
+                                                                          final ConnectivityContext connectivityContext) {
+            restoreCalibrations(callbacks, connectivityContext);
+            return restoreResult;
         }
     }
 
@@ -133,7 +147,87 @@ public class OpenBltManualJobTest {
         assertEquals(1, steps.resumeCountAtRestore, "restore waits for the rebooted ECU, so the scanner must already be running");
 
         assertEquals(1, callbacks.doneCount);
+        assertEquals(0, callbacks.warningCount);
         assertEquals(0, callbacks.errorCount);
+        assertEquals(1, jobFinishedCount.get());
+    }
+
+    @Test
+    public void failedRestoreIsNotReportedAsSuccessfulProgrammingAndSettings() {
+        steps.restoreResult = OpenBltManualJob.RestoreResult.FAILED;
+        steps.restoreMessage = "Failed to write restored tune to ECU...";
+
+        newJob().doJob(callbacks, jobFinishedCount::incrementAndGet);
+
+        assertEquals(1, steps.flashCount);
+        assertEquals(1, steps.restoreCount);
+        assertEquals(1, steps.resumeCountAtRestore);
+        assertEquals(0, callbacks.doneCount);
+        assertEquals(0, callbacks.warningCount);
+        assertEquals(1, callbacks.errorCount);
+        assertTrue(callbacks.lines.contains(steps.restoreMessage));
+        assertTrue(callbacks.lines.stream().anyMatch(line -> line.contains("settings restoration failed")));
+        assertEquals(1, jobFinishedCount.get());
+    }
+
+    @Test
+    public void noPreviousBackupReportsSettingsWarningNotCleanSuccessOrProgrammingFailure() {
+        steps.restoreResult = OpenBltManualJob.RestoreResult.WARNING;
+        steps.restoreMessage = "No previously backed-up tune available - ECU will keep its freshly flashed configuration.";
+
+        newJob().doJob(callbacks, jobFinishedCount::incrementAndGet);
+
+        assertEquals(1, steps.flashCount);
+        assertEquals(1, steps.restoreCount);
+        assertEquals(1, steps.resumeCountAtRestore);
+        assertEquals(0, callbacks.doneCount);
+        assertEquals(1, callbacks.warningCount);
+        assertEquals(0, callbacks.errorCount);
+        assertTrue(callbacks.lines.contains(steps.restoreMessage));
+        assertTrue(callbacks.lines.stream().anyMatch(line -> line.contains("settings warnings")));
+        assertEquals(1, jobFinishedCount.get());
+    }
+
+    @Test
+    public void intentionallySkippedRestorationRemainsSuccessfulWithoutClaimingRestoredSettings() {
+        steps.restoreResult = OpenBltManualJob.RestoreResult.SKIPPED;
+
+        newJob().doJob(callbacks, jobFinishedCount::incrementAndGet);
+
+        assertEquals(1, callbacks.doneCount);
+        assertEquals(0, callbacks.warningCount);
+        assertEquals(0, callbacks.errorCount);
+        assertTrue(callbacks.lines.contains("Programming operation finished; settings restoration was intentionally skipped."));
+        assertEquals(1, jobFinishedCount.get());
+    }
+
+    @Test
+    public void legacyVoidRestoreDoesNotImplyVerifiedRestoration() {
+        OpenBltManualJob.FlashSteps legacySteps = new OpenBltManualJob.FlashSteps() {
+            @Override
+            public boolean ensureFirmware(UpdateOperationCallbacks cb, ConnectedEcuTarget target) {
+                return steps.ensureFirmware(cb, target);
+            }
+
+            @Override
+            public boolean flash(JComponent parent, String port, UpdateOperationCallbacks cb, ConnectedEcuTarget target) {
+                return steps.flash(parent, port, cb, target);
+            }
+
+            @Override
+            public void restoreCalibrations(UpdateOperationCallbacks cb, ConnectivityContext context) {
+                steps.restoreCalibrations(cb, context);
+            }
+        };
+
+        new OpenBltManualJob(new PortResult(PORT, SerialPortType.OpenBlt), null, connectivityContext, legacySteps)
+            .doJob(callbacks, jobFinishedCount::incrementAndGet);
+
+        assertEquals(1, steps.restoreCount);
+        assertEquals(0, callbacks.doneCount);
+        assertEquals(1, callbacks.warningCount);
+        assertEquals(0, callbacks.errorCount);
+        assertTrue(callbacks.lines.stream().anyMatch(line -> line.contains("restoration outcome was not reported")));
         assertEquals(1, jobFinishedCount.get());
     }
 

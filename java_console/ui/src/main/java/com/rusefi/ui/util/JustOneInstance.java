@@ -2,13 +2,18 @@ package com.rusefi.ui.util;
 
 import com.devexperts.logging.Logging;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Date;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.function.Consumer;
 
 /**
  * This class is used to figure out if we have multiple instances of rusEfi console running
@@ -20,50 +25,95 @@ public class JustOneInstance {
     private final static Logging log = Logging.getLogging(JustOneInstance.class);
     private static final int PORT = 29213;
     private static final int LOCAL_CONNECTION_TIMEOUT_MS = 100;
+    private static final int LOCAL_RESPONSE_TIMEOUT_MS = 500;
+    static final String PING = "PING";
+    private static final String OPEN_LOG = "OPEN_LOG ";
+    private static final String ACK = "RUSEFI_ACK";
 
     public static boolean isAlreadyRunning() {
         if (Boolean.getBoolean("SKIP_ONE_INSTANCE_CHECK"))
             return false;
+        boolean running = send(PING) != null;
+        log.info(running ? "Another instance is running" : "No other instances seem to be running");
+        return running;
+    }
+
+    /** Sends a log to the running instance; false when none is listening or it does not support forwarding. */
+    public static boolean openLogInRunningInstance(File file) {
+        return ACK.equals(send(openLogRequest(file)));
+    }
+
+    private static String send(String request) {
+        return send(PORT, request);
+    }
+
+    private static String send(int port, String request) {
         try {
-            Socket clientSocket = new Socket();
-            clientSocket.connect(new InetSocketAddress("localhost", PORT), LOCAL_CONNECTION_TIMEOUT_MS);
-            String msg = "*** Already running!";
-            System.out.println(msg);
-            log.info(msg);
-            return true;
+            try (Socket socket = new Socket()) {
+                socket.connect(new InetSocketAddress(InetAddress.getLoopbackAddress(), port),
+                    LOCAL_CONNECTION_TIMEOUT_MS);
+                socket.setSoTimeout(LOCAL_RESPONSE_TIMEOUT_MS);
+                PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
+                writer.println(request);
+                return new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8))
+                    .readLine();
+            }
         } catch (IOException e) {
-            log.info("No other instances seem to be running");
-            return false;
+            return null;
         }
     }
 
-    public static void onStart() {
+    static boolean sendRequest(int port, String request) {
+        return ACK.equals(send(port, request));
+    }
+
+    static String openLogRequest(File file) {
+        String path = file.getAbsolutePath();
+        return OPEN_LOG + Base64.getEncoder().encodeToString(path.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public static void onStart(Consumer<File> openLog) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                ServerSocket serverSocket;
                 log.info("server socket " + PORT);
-                try {
-                    serverSocket = new ServerSocket(PORT, 1);
-
+                try (ServerSocket serverSocket = new ServerSocket(PORT, 1, InetAddress.getLoopbackAddress())) {
                     while (true) {
-                        // Wait for a connection
-                        Socket clientSocket = serverSocket.accept();
-                        handleConnection(clientSocket);
+                        try (Socket clientSocket = serverSocket.accept()) {
+                            handleConnection(clientSocket, openLog);
+                        } catch (IOException e) {
+                            log.warn("Single-instance request failed: " + e);
+                        }
                     }
                 } catch (IOException e) {
+                    log.warn("Could not start the single-instance server: " + e);
                 }
             }
         };
         new Thread(runnable, "JustOneInstance").start();
     }
 
-    private static void handleConnection(Socket clientSocket) throws IOException {
-        try (OutputStream outputStream = clientSocket.getOutputStream()) {
-            PrintWriter networkWriter = new PrintWriter(outputStream, true);
-            String msg = new Date() + "Already running " + /* todo [tag:java8] ProcessHandle.current().pid() + */"\r\n";
-            log.info(msg);
-            networkWriter.println(msg);
+    static void handleConnection(Socket socket, Consumer<File> openLog) throws IOException {
+        socket.setSoTimeout(LOCAL_RESPONSE_TIMEOUT_MS);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+        String request = reader.readLine();
+        File file = logFile(request);
+        if (file != null) {
+            openLog.accept(file);
+        }
+        new PrintWriter(socket.getOutputStream(), true).println(ACK);
+    }
+
+    private static File logFile(String request) {
+        if (request == null || !request.startsWith(OPEN_LOG)) {
+            return null;
+        }
+        try {
+            byte[] path = Base64.getDecoder().decode(request.substring(OPEN_LOG.length()));
+            return new File(new String(path, StandardCharsets.UTF_8));
+        } catch (IllegalArgumentException e) {
+            log.warn("Ignoring an invalid open-log request");
+            return null;
         }
     }
 }

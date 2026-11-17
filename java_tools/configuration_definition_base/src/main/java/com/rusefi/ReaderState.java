@@ -48,4 +48,9 @@ public interface ReaderState {
     boolean isStackEmpty();
 
     ConfigStructure peek();
+
+    /**
+     * human-readable prefix set by the latest 'set_prefix' line of the current definition file, empty if none
+     */
+    String getLogNamePrefix();
 }

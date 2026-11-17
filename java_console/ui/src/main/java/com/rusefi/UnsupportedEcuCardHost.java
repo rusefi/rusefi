@@ -313,7 +313,7 @@ public final class UnsupportedEcuCardHost implements LinkManager.EcuCompatibilit
 
         downloadButton.putClientProperty("JButton.buttonType", "roundRect");
         downloadButton.setBackground(accent);
-        downloadButton.setForeground(Color.WHITE);
+        downloadButton.setForeground(Color.WHITE); // [tag:fixed_color] on the accent button in every theme
         downloadButton.setFont(downloadButton.getFont().deriveFont(Font.BOLD));
         downloadButton.setMargin(new Insets(10, 20, 10, 20));
         downloadButton.setAlignmentX(Component.LEFT_ALIGNMENT);

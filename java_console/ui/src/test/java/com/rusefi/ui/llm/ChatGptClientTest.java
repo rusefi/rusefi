@@ -31,7 +31,7 @@ class ChatGptClientTest {
         ChatGptClient.Attempt second = new ChatGptClient.Attempt("client", "urn:uuid:host");
         Map<String, String> query = ChatGptClient.parseQuery(first.authorizationUri("http://127.0.0.1:1234/auth/callback").getRawQuery());
         assertEquals("dynamic_agent_client", query.get("client_id"));
-        assertEquals("rusEFI Updater", query.get("agent_name_hint"));
+        assertEquals("rusEFI tuner", query.get("agent_name_hint"));
         assertEquals("urn:uuid:host", query.get("ext_agent_host_id"));
         assertEquals("S256", query.get("code_challenge_method"));
         assertEquals(Base64.getUrlEncoder().withoutPadding().encodeToString(java.security.MessageDigest.getInstance("SHA-256")

@@ -12,11 +12,14 @@ class DoubleCallbacksTest {
 
         callbacks.firmwareUpdateBlocked("Intermediate update required");
         callbacks.firmwareHandoffStarted();
+        callbacks.revealActivity();
 
         verify(first).firmwareUpdateBlocked("Intermediate update required");
         verify(second).firmwareUpdateBlocked("Intermediate update required");
         verify(first).firmwareHandoffStarted();
         verify(second).firmwareHandoffStarted();
+        verify(first).revealActivity();
+        verify(second).revealActivity();
         verifyNoMoreInteractions(first, second);
     }
 }

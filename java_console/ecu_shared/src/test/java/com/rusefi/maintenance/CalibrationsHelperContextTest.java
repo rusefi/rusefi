@@ -13,6 +13,8 @@ import com.rusefi.config.generated.Integration;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.UpdateOperationCallbacks;
+import com.rusefi.ConnectivityContext;
+import com.rusefi.maintenance.jobs.OpenBltManualJob.RestoreResult;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -35,6 +37,63 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 public class CalibrationsHelperContextTest {
+
+    @Test
+    public void manualRestoreWithoutBackupReturnsWarningWithoutLookingForHardware() {
+        CalibrationsHelper.discardLastEcuCalibrations();
+        ConnectivityContext context = mock(ConnectivityContext.class);
+        UpdateOperationCallbacks callbacks = mock(UpdateOperationCallbacks.class);
+
+        assertEquals(RestoreResult.WARNING,
+            CalibrationsHelper.restorePreviousCalibrationsAfterManualFlashWithResult(callbacks, context));
+
+        verify(callbacks).logLine(
+            "No previously backed-up tune available - ECU will keep its freshly flashed configuration.");
+        verify(callbacks).updateFirmwareProgress(UpdateOperationCallbacks.FirmwareUpdateStage.CALIBRATION_FINALIZE, 0);
+        verify(callbacks, org.mockito.Mockito.never()).updateFirmwareProgress(
+            UpdateOperationCallbacks.FirmwareUpdateStage.CALIBRATION_RESTORE, 0);
+        verifyNoInteractions(context);
+        verify(callbacks, org.mockito.Mockito.never()).done();
+        verify(callbacks, org.mockito.Mockito.never()).error();
+        verify(callbacks, org.mockito.Mockito.never()).warning();
+    }
+
+    @Test
+    public void legacyManualRestoreReportsMissingBackupAsWarning() {
+        CalibrationsHelper.discardLastEcuCalibrations();
+        ConnectivityContext context = mock(ConnectivityContext.class);
+        UpdateOperationCallbacks callbacks = mock(UpdateOperationCallbacks.class);
+
+        CalibrationsHelper.restorePreviousCalibrationsAfterManualFlash(callbacks, context);
+
+        verify(callbacks).warning();
+        verify(callbacks, org.mockito.Mockito.never()).done();
+        verify(callbacks, org.mockito.Mockito.never()).error();
+        verifyNoInteractions(context);
+    }
+
+    @Test
+    public void migrationPhaseIsReportedOnlyWhenMergedTuneWillBeApplied() {
+        boolean previousSelection = com.rusefi.ui.basic.MigrateSettingsCheckboxState.isMigrationNeeded;
+        try {
+            UpdateOperationCallbacks callbacks = mock(UpdateOperationCallbacks.class);
+            when(callbacks.isInteractive()).thenReturn(true);
+            CalibrationsHelper.MergeResult merge = new CalibrationsHelper.MergeResult(
+                Optional.of(mock(CalibrationsInfo.class)), Collections.emptyList());
+
+            com.rusefi.ui.basic.MigrateSettingsCheckboxState.isMigrationNeeded = false;
+            assertFalse(CalibrationsHelper.startCalibrationRestoreIfSelected(merge, callbacks));
+            verify(callbacks, org.mockito.Mockito.never()).updateFirmwareProgress(
+                UpdateOperationCallbacks.FirmwareUpdateStage.CALIBRATION_RESTORE, 0);
+
+            com.rusefi.ui.basic.MigrateSettingsCheckboxState.isMigrationNeeded = true;
+            assertTrue(CalibrationsHelper.startCalibrationRestoreIfSelected(merge, callbacks));
+            verify(callbacks).updateFirmwareProgress(
+                UpdateOperationCallbacks.FirmwareUpdateStage.CALIBRATION_RESTORE, 0);
+        } finally {
+            com.rusefi.ui.basic.MigrateSettingsCheckboxState.isMigrationNeeded = previousSelection;
+        }
+    }
 
     @Test
     public void testIsUiContext_withDummyCallbacks() {

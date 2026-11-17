@@ -71,9 +71,7 @@ public class MapSensorTypePanel extends AbstractWizardStep {
     }
 
     private void buildUi() {
-        card.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(uiColor("Separator.foreground", Color.GRAY)),
-            BorderFactory.createEmptyBorder(22, 26, 22, 26)));
+        WizardStyle.styleCard(card, 22, 26);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -83,19 +81,16 @@ public class MapSensorTypePanel extends AbstractWizardStep {
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(0, 0, 5, 0);
 
-        JLabel question = new JLabel("MAP SENSOR SETUP");
-        question.setForeground(uiColor("Label.disabledForeground", Color.GRAY));
+        JLabel question = WizardStyle.sectionLabel("MAP SENSOR SETUP");
         card.add(question, gbc);
 
         gbc.gridy++;
-        JLabel title = new JLabel(getTitle());
-        scale(title, 1.5f);
-        title.setFont(title.getFont().deriveFont(Font.BOLD));
+        JLabel title = WizardStyle.cardTitle(getTitle());
         card.add(title, gbc);
 
         gbc.gridy++;
         gbc.insets = new Insets(0, 0, 18, 0);
-        card.add(new JLabel("Choose the analog input and the MAP sensor model installed on the engine."), gbc);
+        card.add(WizardStyle.description("Choose the analog input and the MAP sensor model installed on the engine."), gbc);
 
         gbc.gridy++;
         gbc.insets = new Insets(0, 0, 5, 0);
@@ -116,6 +111,7 @@ public class MapSensorTypePanel extends AbstractWizardStep {
         calibrationPoints.add(calibrationPoint("HIGH POINT", highVoltageField, highPressureField));
         customCalibration.add(calibrationPoints, BorderLayout.CENTER);
         mapValidity.setOpaque(true);
+        mapValidity.setFont(mapValidity.getFont().deriveFont(Font.BOLD));
         mapValidity.setHorizontalAlignment(SwingConstants.CENTER);
         mapValidity.setBorder(BorderFactory.createEmptyBorder(5, 8, 5, 8));
         customCalibration.add(mapValidity, BorderLayout.SOUTH);
@@ -129,22 +125,17 @@ public class MapSensorTypePanel extends AbstractWizardStep {
 
         gbc.gridy++;
         gbc.insets = new Insets(0, 0, 8, 0);
-        errorLabel.setForeground(Color.RED);
+        WizardStyle.styleError(errorLabel);
         card.add(errorLabel, gbc);
 
-        gbc.gridy++;
-        gbc.insets = new Insets(0, 0, 0, 0);
-        JPanel actions = new JPanel(new BorderLayout());
-        nextButton.setFont(nextButton.getFont().deriveFont(Font.BOLD));
-        actions.add(nextButton, BorderLayout.EAST);
-        card.add(actions, gbc);
+        styleContinueAction(nextButton);
 
         JPanel wrapper = new ScrollablePanel();
         wrapper.setLayout(new BoxLayout(wrapper, BoxLayout.Y_AXIS));
         wrapper.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
         card.setAlignmentX(Component.CENTER_ALIGNMENT);
         wrapper.add(card);
-        content.add(new JScrollPane(wrapper), BorderLayout.CENTER);
+        content.add(WizardStyle.pageScrollPane(wrapper), BorderLayout.CENTER);
 
         typeCombo.addActionListener(e -> updateCustomCalibrationVisibility());
         nextButton.addActionListener(e -> saveAndContinue());
@@ -176,9 +167,7 @@ public class MapSensorTypePanel extends AbstractWizardStep {
 
     private JPanel readout(String title, JLabel value) {
         JPanel panel = new JPanel(new BorderLayout(0, 4));
-        panel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(uiColor("Separator.foreground", Color.GRAY)),
-            BorderFactory.createEmptyBorder(10, 12, 10, 12)));
+        WizardStyle.styleSection(panel, 10, 12);
         panel.add(sectionLabel(title), BorderLayout.NORTH);
         value.setFont(value.getFont().deriveFont(Font.BOLD, value.getFont().getSize2D() * 1.3f));
         panel.add(value, BorderLayout.CENTER);
@@ -186,9 +175,7 @@ public class MapSensorTypePanel extends AbstractWizardStep {
     }
 
     private JLabel sectionLabel(String text) {
-        JLabel label = new JLabel(text);
-        label.setForeground(uiColor("Label.disabledForeground", Color.GRAY));
-        return label;
+        return WizardStyle.sectionLabel(text);
     }
 
     private void loadValues() {
@@ -341,11 +328,6 @@ public class MapSensorTypePanel extends AbstractWizardStep {
         return value == null ? "" : value;
     }
 
-    private static Color uiColor(String key, Color fallback) {
-        Color color = UIManager.getColor(key);
-        return color == null ? fallback : color;
-    }
-
     private void updateReadout(JLabel label, double value, int precision, String units) {
         SwingUtilities.invokeLater(() -> label.setText(Double.isFinite(value)
             ? String.format("%." + precision + "f %s", value, units) : "-- " + units));
@@ -367,8 +349,8 @@ public class MapSensorTypePanel extends AbstractWizardStep {
         SwingUtilities.invokeLater(() -> {
             boolean valid = Double.isFinite(value) && value != 0;
             mapValidity.setText(valid ? "Good MAP Input" : "BAD Map Input");
-            mapValidity.setBackground(valid ? Color.GREEN : Color.RED);
-            mapValidity.setForeground(Color.BLACK);
+            mapValidity.setBackground(valid ? WizardStyle.successBackground() : WizardStyle.errorBackground());
+            mapValidity.setForeground(valid ? WizardStyle.success() : WizardStyle.error());
         });
     }
 
@@ -406,6 +388,11 @@ public class MapSensorTypePanel extends AbstractWizardStep {
     @Override
     public void onHide() {
         stopLiveUpdates();
+    }
+
+    @Override
+    public JButton getContinueButton() {
+        return nextButton;
     }
 
     @Override

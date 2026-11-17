@@ -92,6 +92,8 @@ public enum BooleanIniFieldMigrator implements TuneMigrator {
         new BooleanField("useFordRedundantTps", "yes", "no"),
         new BooleanField("enableKline", "enabled", "disabled"),
         new BooleanField("overrideTriggerGaps", "yes", "no"),
+        // [tag:fan_ac_mode_migration] Keep historical Boolean targets supported;
+        // FanAcModeMigrator handles targets that replaced these fields with A/C modes.
         new BooleanField("enableFan1WithAc", "yes", "no"),
         new BooleanField("enableFan2WithAc", "yes", "no"),
         new BooleanField("enableTrailingSparks", "yes", "no"),

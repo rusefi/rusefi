@@ -22,13 +22,14 @@ import com.rusefi.tools.TunerStudioHelper;
 import com.rusefi.ui.BasicLogoHelper;
 import com.rusefi.ui.LogoHelper;
 import com.rusefi.ui.UIContext;
+import com.rusefi.ui.console.AppearanceMenu;
 import com.rusefi.ui.plugins.StartupTabProvider;
+import com.rusefi.ui.logview.LogViewerHost;
 import com.rusefi.ui.wizard.WizardCatalog;
 import com.rusefi.ui.wizard.WizardContainer;
 import com.rusefi.ui.wizard.WizardStep;
 import com.rusefi.ui.wizard.WizardStepDescriptor;
 import com.rusefi.ui.duplicates.ConsoleBundleUtil;
-import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.maintenance.jobs.AsyncJob;
 import com.rusefi.maintenance.jobs.DfuAutoJob;
@@ -37,21 +38,36 @@ import com.rusefi.maintenance.jobs.ImportTuneJob;
 import com.rusefi.maintenance.jobs.OpenBltAutoJob;
 import com.rusefi.maintenance.jobs.OpenBltSwitchJob;
 import com.rusefi.ui.basic.StartupUpdateActions;
+import com.rusefi.ui.basic.FirmwareBranchSwitchController;
+import com.rusefi.ui.basic.StartupFirmwareOperationLifecycle;
 import com.rusefi.ui.basic.SingleAsyncJobExecutor;
 import com.rusefi.ui.basic.StatusPanelWithProgressBar;
+import com.rusefi.ui.basic.FirmwareUpdateCard;
 import com.rusefi.ui.basic.TuneManagementTab;
 import com.rusefi.ui.basic.UpdateFirmwareResult;
 import com.rusefi.ui.widgets.StatusPanel;
+import com.rusefi.ui.widgets.JoinedButtons;
+import com.rusefi.ui.widgets.ToolbarStrip;
 import com.rusefi.ui.widgets.ToolButtons;
+import com.rusefi.ui.widgets.CommandIcon;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
-import org.putgemin.VerticalFlowLayout;
+
+import com.formdev.flatlaf.FlatClientProperties;
+import com.rusefi.ui.startup.Banner;
+import com.rusefi.ui.startup.ConnectionHelpSection;
+import com.rusefi.ui.startup.ConnectionIllustration;
+import com.rusefi.ui.startup.StartupCard;
+import com.rusefi.ui.startup.StatusDotIcon;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Collections;
 import java.util.Iterator;
@@ -60,6 +76,7 @@ import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -100,33 +117,58 @@ public class StartupFrame {
     private static final int REVEAL_CONTROLS_DELAY_MS = 4000;
 
     private final JFrame frame;
-    private final JPanel connectPanel = new JPanel(new FlowLayout());
-    // todo: move this line to the connectPanel
-    private final PortsComboBox portsComboBox = new PortsComboBox();
-    private final JPanel leftPanel = new JPanel(new VerticalFlowLayout());
-
-    private final JPanel realHardwarePanel = new JPanel(new MigLayout());
-    private final JPanel miscPanel = new JPanel(new MigLayout()) {
+    /**
+     * "Device" label and port dropdown. The Connect button and the "Remember last used port" box sit
+     * in other rows of the startup card but are shown and hidden together with this panel, as when
+     * they all shared it.
+     */
+    private final JPanel connectPanel = new JPanel(new BorderLayout(0, 6)) {
         @Override
-        public Dimension getPreferredSize() {
-            // want miscPanel and realHardwarePanel to be the same width
-            Dimension size = super.getPreferredSize();
-            return new Dimension(Math.max(size.width, realHardwarePanel.getPreferredSize().width), size.height);
+        public void setVisible(boolean visible) {
+            super.setVisible(visible);
+            if (connectButton != null) {
+                connectButton.setVisible(visible);
+            }
+            if (rememberPortBox != null) {
+                rememberPortBox.setVisible(visible);
+            }
         }
     };
+    // todo: move this line to the connectPanel
+    private final PortsComboBox portsComboBox = new PortsComboBox();
+    /** The Connect tab's content: a centred card [tag:console_theme]. */
+    private final StartupCard startupCard = new StartupCard();
+    /** Visible form of the ALWAYS_AUTO_PORT setting (inverted: ticked = pre-select the last used port). */
+    private final JCheckBox rememberPortBox = new JCheckBox("Remember last used port");
     private final ConnectivityContext connectivityContext;
     /**
      * this flag tells us if we are closing the startup frame in order to proceed with console start or if we are
      * closing the application.
      */
     private boolean isProceeding;
+    /** Markers for {@link #noPortsMessage}, which replaces them with theme colours [tag:fixed_color] */
+    private static final Color STATUS_ERROR = Color.red; // [tag:fixed_color] marker, never painted
+    private static final Color STATUS_INFO = Color.darkGray; // [tag:fixed_color] marker, never painted
     // TODO: we should rename this!; now we are showing more than the "no ports connected" message
-    private final JLabel noPortsMessage = new JLabel();
+    // The status logic sets STATUS_ERROR / STATUS_INFO; show those as the theme's readable
+    // red and grey, with a status dot in the same colour [tag:console_theme].
+    private final JLabel noPortsMessage = new JLabel("", new StatusDotIcon(), SwingConstants.CENTER) {
+        @Override
+        public void setForeground(Color color) {
+            if (STATUS_ERROR.equals(color)) {
+                color = StartupCard.themed("Console.Status.disconnected.foreground", new Color(0xb91c1c));
+            } else if (STATUS_INFO.equals(color)) {
+                color = StartupCard.themed("Console.TitleBar.mutedForeground", new Color(0x586273));
+            }
+            super.setForeground(color);
+        }
+    };
     private final JLabel dfuErrorMessage = new JLabel(
         "Failed to check for DFU devices. Try 'Run as Administrator'");
     private boolean hasSeenEcuOrSimulator = false;
     private final StatusAnimation status;
-    private final JButton connectButton = new JButton("Connect", new ImageIcon(getClass().getResource("/com/rusefi/connect48.png")));
+    private final JButton connectButton = new JButton("Connect");
+    private final JButton openLogButton = new JButton("Open data log…");
     private ProgramSelector selector;
     private boolean firstTimeAutoConnect = true;
 
@@ -142,6 +184,8 @@ public class StartupFrame {
 
     private final UIContext uiContext;
     private final CompletableFuture<Autoupdate.UpdateOutcome> softwareUpdateOutcome;
+    private final File initialLog;
+    private LogViewerHost logViewer;
     private final JPanel rootContent = new JPanel(new CardLayout());
     private UnsupportedEcuCardHost unsupportedEcuHost;
     private final JPanel rollbackPicker = new JPanel(new BorderLayout());
@@ -166,23 +210,27 @@ public class StartupFrame {
 
     public StartupFrame(ConnectivityContext connectivityContext, UIContext uiContext,
                         CompletableFuture<Autoupdate.UpdateOutcome> softwareUpdateOutcome) {
+        this(connectivityContext, uiContext, softwareUpdateOutcome, null);
+    }
+
+    StartupFrame(ConnectivityContext connectivityContext, UIContext uiContext,
+                 CompletableFuture<Autoupdate.UpdateOutcome> softwareUpdateOutcome, File initialLog) {
         this.connectivityContext = connectivityContext;
         this.uiContext = uiContext;
         this.softwareUpdateOutcome = softwareUpdateOutcome;
+        this.initialLog = initialLog;
         // Firmware-update and tune operations open the serial port themselves via a fresh
         // LinkManager. If our splash auto-connect is holding the same port, they'd deadlock on
-        // "Connecting...". Release the splash connection just before any job starts so the port
-        // is free for the exclusive operation.
-        asyncJobExecutor.addOnJobAboutToStartListener(() -> SwingUtilities.invokeLater(() ->
-            setStartupFirmwareUpdateInProgress(isFirmwareOperationInProgress())));
-        asyncJobExecutor.addOnJobAboutToStartListener(() -> asyncJobExecutor.getJobInProgress()
-            .ifPresent(job -> prepareSplashForJob(job, this::releaseSplashConnection)));
+        // "Connecting...". Release it only after preparation is accepted and before active work.
+        StartupFirmwareOperationLifecycle.registerAboutToStart(asyncJobExecutor,
+            this::setStartupFirmwareUpdateInProgress,
+            job -> prepareSplashForJob(job, this::releaseSplashConnection));
         asyncJobExecutor.addOnJobInProgressFinishedListener(this::onLiveConnectionJobFinished);
-        asyncJobExecutor.addOnJobInProgressFinishedListener(() -> SwingUtilities.invokeLater(() ->
-            setStartupFirmwareUpdateInProgress(false)));
-        String title = UiProperties.getWhiteLabel() + " console " + Launcher.CONSOLE_VERSION;
+        StartupFirmwareOperationLifecycle.registerReleased(asyncJobExecutor,
+            this::setStartupFirmwareUpdateInProgress);
+        String title = UiProperties.getDisplayName() + " " + Launcher.CONSOLE_VERSION;
         log.info(title);
-        noPortsMessage.setForeground(Color.red);
+        noPortsMessage.setForeground(STATUS_ERROR);
         status = new StatusAnimation(new StatusAnimation.StatusConsumer() {
             @Override
             public void onStatus(String niceStatus) {
@@ -191,11 +239,13 @@ public class StartupFrame {
         }, SCANNING_PORTS);
 
         frame = FrameHelper.createFrame(title).getFrame();
+        frame.setJMenuBar(createStartupMenuBar(frame));
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent ev) {
                 if (!isFirmwareOperationInProgress()) {
-                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    frame.setDefaultCloseOperation(logViewer == null || logViewer.confirmExit()
+                        ? JFrame.EXIT_ON_CLOSE : JFrame.DO_NOTHING_ON_CLOSE);
                     return;
                 }
                 int choice = JOptionPane.showConfirmDialog(
@@ -206,6 +256,7 @@ public class StartupFrame {
                     JOptionPane.WARNING_MESSAGE
                 );
                 frame.setDefaultCloseOperation(choice == JOptionPane.YES_OPTION
+                    && (logViewer == null || logViewer.confirmExit())
                     ? JFrame.EXIT_ON_CLOSE
                     : JFrame.DO_NOTHING_ON_CLOSE);
             }
@@ -231,6 +282,15 @@ public class StartupFrame {
         });
     }
 
+    /** Application-level settings that must remain available before an ECU is connected. */
+    static JMenuBar createStartupMenuBar(Component parent) {
+        JMenuBar menuBar = new JMenuBar();
+        JMenu fileMenu = new JMenu("File");
+        fileMenu.add(AppearanceMenu.create(parent));
+        menuBar.add(fileMenu);
+        return menuBar;
+    }
+
     public void showUi() {
         unsupportedEcuHost = new UnsupportedEcuCardHost(connectivityContext, uiContext.getLinkManager());
         unsupportedEcuHost.addBlockingListener(blocking -> {
@@ -240,9 +300,12 @@ public class StartupFrame {
             }
             updateConnectButtonState();
         });
-        miscPanel.setBorder(new TitledBorder(BorderFactory.createLineBorder(Color.darkGray), "Miscellaneous"));
-
-        connectPanel.add(portsComboBox.getComboPorts());
+        JLabel deviceLabel = new JLabel("Device");
+        connectPanel.setOpaque(false);
+        connectPanel.add(deviceLabel, BorderLayout.NORTH);
+        portsComboBox.getComboPorts().setPreferredSize(new Dimension(StartupCard.CONTENT_WIDTH, 40));
+        deviceLabel.setLabelFor(portsComboBox.getComboPorts());
+        connectPanel.add(portsComboBox.getComboPorts(), BorderLayout.CENTER);
 /*
     make baud rate selection much less visible #9103
         final JComboBox<String> comboSpeeds = createSpeedCombo();
@@ -253,7 +316,20 @@ public class StartupFrame {
 
         JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem("Always auto-connect port");
         menuItem.setState(PersistentConfiguration.getBoolProperty(ALWAYS_AUTO_PORT));
-        menuItem.addActionListener(e -> PersistentConfiguration.setBoolProperty(ALWAYS_AUTO_PORT, menuItem.getState()));
+        menuItem.addActionListener(e -> {
+            PersistentConfiguration.setBoolProperty(ALWAYS_AUTO_PORT, menuItem.getState());
+            rememberPortBox.setSelected(!menuItem.getState());
+        });
+        // Same setting as the right-click menu item above. It only decides whether the dropdown
+        // pre-selects the last used port; it does not switch auto-connect on or off.
+        rememberPortBox.setOpaque(false);
+        rememberPortBox.setSelected(!PersistentConfiguration.getBoolProperty(ALWAYS_AUTO_PORT));
+        rememberPortBox.setToolTipText("Pre-select the port used last time in the Device list");
+        rememberPortBox.addActionListener(e -> {
+            boolean alwaysAutoPort = !rememberPortBox.isSelected();
+            PersistentConfiguration.setBoolProperty(ALWAYS_AUTO_PORT, alwaysAutoPort);
+            menuItem.setState(alwaysAutoPort);
+        });
 
         connectButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -266,7 +342,6 @@ public class StartupFrame {
             }
         });
 
-        connectPanel.add(connectButton);
         connectPanel.setVisible(false);
 
         portsComboBox.getComboPorts().addActionListener(e -> {
@@ -300,37 +375,34 @@ public class StartupFrame {
         final Optional<JPanel> newReleaseNotification = newReleaseAnnounce(
             "rusefi_autoupdate.exe",
             "left",
-            () -> realHardwarePanel.getPreferredSize().width
+            () -> StartupCard.CONTENT_WIDTH - 60
         );
-        if (newReleaseNotification.isPresent()) {
-            leftPanel.add(newReleaseNotification.get());
-        }
-        leftPanel.add(realHardwarePanel);
-        if (UiProperties.useSimulator()) {
-            leftPanel.add(miscPanel);
-        }
 
+        List<Component> helpTools = new ArrayList<>();
         if (OsUtil.isWindows()) {
-            JPanel topButtons = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
-            topButtons.add(ToolButtons.createShowDeviceManagerButton());
+            Component deviceManager = ToolButtons.createShowDeviceManagerButton();
+            if (deviceManager instanceof AbstractButton) {
+                // the shared button is a bare icon; the card shows it as a regular labelled button
+                AbstractButton button = (AbstractButton) deviceManager;
+                button.setIcon(null);
+                button.setText("Open Device Manager");
+                button.setMargin(new Insets(2, 14, 2, 14));
+            }
+            helpTools.add(deviceManager);
             if (DriverInstall.isFolderExist())
-                topButtons.add(DriverInstall.createButton());
-            realHardwarePanel.add(topButtons, "right, wrap");
+                helpTools.add(DriverInstall.createButton());
         }
-        realHardwarePanel.add(connectPanel, "right, wrap");
-        realHardwarePanel.add(noPortsMessage, "right, wrap");
         noPortsMessage.setToolTipText("Check you cables. Check your drivers. Do you want to start simulator maybe?");
 
-        dfuErrorMessage.setForeground(Color.red);
+        dfuErrorMessage.setForeground(StartupCard.themed("Console.Banner.error.accent", new Color(0xb91c1c)));
         dfuErrorMessage.setVisible(false);
-        realHardwarePanel.add(dfuErrorMessage, "right, wrap");
 
         // After a grace period, warn the user if DFU scanning failed and no ECU was ever seen.
         // This typically means the console needs to be run as Administrator on Windows.
         Timer dfuErrorTimer = new Timer(15_000, e -> {
             if (DfuFlasher.dfuDetectionCommandFailed && !hasSeenEcuOrSimulator) {
                 dfuErrorMessage.setVisible(true);
-                AutoupdateUtil.trueLayoutAndRepaint(realHardwarePanel);
+                AutoupdateUtil.trueLayoutAndRepaint(startupCard);
             }
         });
         dfuErrorTimer.setRepeats(false);
@@ -340,16 +412,13 @@ public class StartupFrame {
             this::showFullScreenPanel, this::closeFullScreenPanel);
         selector.setJobExecutor(asyncJobExecutor);
 
-        realHardwarePanel.add(new HorizontalLine(), "right, wrap");
-
         JButton openTunerStudio = new JButton("Open TunerStudio");
-        setToolTip(openTunerStudio, "Launch TunerStudio and close this console so the serial port is released");
+        setToolTip(openTunerStudio, "Launch TunerStudio and close " + UiProperties.getDisplayName() + " so the serial port is released");
         openTunerStudio.addActionListener(e -> {
             if (TunerStudioHelper.launchTunerStudio(frame)) {
                 frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
             }
         });
-        realHardwarePanel.add(openTunerStudio, "right, wrap");
 
         connectivityContext.getPortScanner().addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
             // [tag:better_ux_for_flashing]: after a normal handoff the live console (DeviceSessionManager) owns device state —
@@ -404,10 +473,9 @@ public class StartupFrame {
         miscPanel.add(buttonLogViewer, "wrap");
         miscPanel.add(new HorizontalLine(), "wrap");
 */
-        miscPanel.add(SimulatorHelper.createSimulatorComponent(this, connectivityContext));
+        Component simulator = SimulatorHelper.createSimulatorComponent(this, connectivityContext);
 
-        JPanel rightPanel = new JPanel(new VerticalFlowLayout());
-
+        URLLabel proteusWarning = null;
         if (ConsoleBundleUtil.readBundleFullNameNotNull().getTarget().contains("proteus_f7")) {
             String text = "WARNING: Proteus F7";
             URLLabel urlLabel = new URLLabel(text, "https://wiki.rusefi.com/F7-requires-full-erase");
@@ -419,23 +487,21 @@ public class StartupFrame {
                     urlLabel.setText(text, counter++ % 2 == 0);
                 }
             }).start();
-            rightPanel.add(urlLabel);
+            proteusWarning = urlLabel;
         }
 
-        JLabel logo = LogoHelper.createLogoLabel();
-        if (logo != null)
-            rightPanel.add(logo);
-        if (ConnectionAndMeta.isDefaultWhitelabel(UiProperties.getWhiteLabel()))
-            rightPanel.add(LogoHelper.createUrlLabel());
-        rightPanel.add(new JLabel("Console " + Launcher.CONSOLE_VERSION));
+        buildConnectCard(newReleaseNotification, proteusWarning, openTunerStudio, helpTools,
+            UiProperties.useSimulator() ? simulator : null);
 
-        JPanel content = new JPanel(new BorderLayout());
-        content.add(leftPanel, BorderLayout.WEST);
-        content.add(rightPanel, BorderLayout.EAST);
-
-        // Center the connect controls in the maximized window instead of pinning them top-left (#9715).
+        // Center the connect card in the maximized window instead of pinning it top-left (#9715);
+        // scroll instead of clipping on short screens.
         JPanel connectTabWrapper = new JPanel(new GridBagLayout());
-        connectTabWrapper.add(content, new GridBagConstraints());
+        GridBagConstraints cardPosition = new GridBagConstraints();
+        cardPosition.insets = new Insets(32, 16, 32, 16);
+        connectTabWrapper.add(startupCard, cardPosition);
+        JScrollPane connectTabScroll = new JScrollPane(connectTabWrapper);
+        connectTabScroll.setBorder(BorderFactory.createEmptyBorder());
+        connectTabScroll.getVerticalScrollBar().setUnitIncrement(16);
 
         outerTabs = new JTabbedPane() {
             @Override
@@ -443,7 +509,7 @@ public class StartupFrame {
                 Dimension superPref = super.getPreferredSize();
                 Component sel = getSelectedComponent();
                 if (sel == null) return superPref;
-                int connectTabHeight = Math.max(sel.getPreferredSize().height, leftPanel.getPreferredSize().height);
+                int connectTabHeight = Math.max(sel.getPreferredSize().height, startupCard.getPreferredSize().height);
                 return new Dimension(superPref.width, 100 + connectTabHeight);
             }
         };
@@ -453,18 +519,10 @@ public class StartupFrame {
             this::showFullScreenPanel, this::closeFullScreenPanel);
         startupUpdateActions.configureFirmwareSelector(selector);
 
-        JPanel firmwareTopPanel = new JPanel(new BorderLayout(0, 0));
-        firmwareTopPanel.add(selector.getControl(), BorderLayout.NORTH);
-        JPanel updateButtons = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
-        updateButtons.add(startupUpdateActions.getUpdateSoftwareStatus());
-        updateButtons.add(startupUpdateActions.getRollbackFirmwareButton());
-        firmwareTopPanel.add(updateButtons, BorderLayout.CENTER);
-        firmwareTopPanel.add(startupUpdateActions.getMigrateSettings(), BorderLayout.SOUTH);
-
-        JPanel firmwareTabPanel = new JPanel(new BorderLayout(0, 0));
-        firmwareTabPanel.add(firmwareTopPanel, BorderLayout.NORTH);
-        firmwareTabPanel.add(firmwareStatusPanel.getContent(), BorderLayout.CENTER);
-        outerTabs.addTab("Update Firmware", firmwareTabPanel);
+        JPanel firmwareTabPanel = new JPanel(new BorderLayout());
+        firmwareTabPanel.add(FirmwareUpdateCard.inResponsiveViewport(
+            createFirmwareUpdateCard(startupUpdateActions, selector, firmwareStatusPanel)), BorderLayout.CENTER);
+        outerTabs.addTab("Update ECU firmware", firmwareTabPanel);
         final TuneManagementTab tuneManagementTab = new TuneManagementTab(
             connectivityContext,
             uiContext,
@@ -475,11 +533,15 @@ public class StartupFrame {
             this::openOfflineConsole
         );
         outerTabs.addTab("Manage Tunes", tuneManagementTab.getContent());
-        outerTabs.addTab("Connect", connectTabWrapper);
+        outerTabs.addTab("Connect", connectTabScroll);
+        logViewer = new LogViewerHost(getConfig().getRoot().getChild("log_viewer"));
+        logViewer.setConfigSaver(() -> getConfig().save());
+        installLogViewerEntry(outerTabs, logViewer, openLogButton, logViewer::chooseAndOpen);
         addCustomTabs(outerTabs, uiContext);
 
         int savedTabIndex = getConfig().getRoot().getIntProperty(STARTUP_TAB_INDEX, 0);
         outerTabs.setSelectedIndex(Math.min(savedTabIndex, outerTabs.getTabCount() - 1));
+        openInitialLog(outerTabs, logViewer, logViewer::open, initialLog);
 
         connectivityContext.getPortScanner().addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
             // [tag:better_ux_for_flashing]: stop updating splash firmware-tab widgets once the live console has taken over.
@@ -518,13 +580,84 @@ public class StartupFrame {
         log.info("setVisible");
         frame.setVisible(true);
 
-        startRevealControlsTimer();
+        ConsoleUI.setForwardedLogOpener(file -> {
+            openInitialLog(outerTabs, logViewer, logViewer::open, file);
+            revealControls();
+            ConsoleUI.raiseFrame(frame);
+        });
+
+        if (initialLog != null) {
+            revealControls();
+        } else {
+            startRevealControlsTimer();
+        }
 
         KeyListener hwTestEasterEgg = functionalTestEasterEgg();
 
         for (Component component : getAllComponents(frame)) {
             component.addKeyListener(hwTestEasterEgg);
         }
+    }
+
+    static JPanel createFirmwareTopPanel(StartupUpdateActions startupUpdateActions, ProgramSelector selector) {
+        selector.useProminentCardStyle(CommandIcon.UPLOAD);
+        JPanel firmwareTopPanel = new JPanel();
+        firmwareTopPanel.setLayout(new BoxLayout(firmwareTopPanel, BoxLayout.Y_AXIS));
+        firmwareTopPanel.setOpaque(false);
+        firmwareTopPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        firmwareTopPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+        JComponent firmwareSummary = startupUpdateActions.getFirmwareSummary();
+        firmwareSummary.setAlignmentX(Component.LEFT_ALIGNMENT);
+        firmwareTopPanel.add(firmwareSummary);
+        firmwareTopPanel.add(Box.createVerticalStrut(24));
+        JLabel softwareLabel = new JLabel("Tuner application:");
+        softwareLabel.setToolTipText("Updates the tuner application on this computer, not ECU firmware.");
+        JPanel updateButtons = stackControls(softwareLabel,
+            startupUpdateActions.getUpdateSoftwareButton(), startupUpdateActions.getUpdateSoftwareStatus());
+        updateButtons.setAlignmentX(Component.LEFT_ALIGNMENT);
+        updateButtons.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+        firmwareTopPanel.add(updateButtons);
+        firmwareTopPanel.add(Box.createVerticalStrut(8));
+        JPanel firmwareActions = stackControls(new JLabel("Firmware options:"),
+            startupUpdateActions.getRollbackFirmwareButton());
+        firmwareActions.setAlignmentX(Component.LEFT_ALIGNMENT);
+        firmwareActions.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+        firmwareTopPanel.add(firmwareActions);
+        return firmwareTopPanel;
+    }
+
+    static FirmwareUpdateCard createFirmwareUpdateCard(StartupUpdateActions actions, ProgramSelector selector,
+                                                        StatusPanelWithProgressBar statusPanel) {
+        FirmwareUpdateCard card = FirmwareUpdateCard.create("ECU firmware");
+        card.add(createFirmwareTopPanel(actions, selector));
+        card.add(Box.createVerticalStrut(28));
+        JButton copyLog = new JButton(DevicePane.COPY_LOG);
+        copyLog.setToolTipText("Copy the whole log, e.g. to paste into a support request");
+        copyLog.addActionListener(e -> statusPanel.copyLogToClipboard());
+        JPanel activity = new JPanel(new BorderLayout(0, 10));
+        activity.setOpaque(false);
+        activity.add(ToolbarStrip.header(DevicePane.ACTIVITY, new JoinedButtons(copyLog)), BorderLayout.NORTH);
+        activity.add(statusPanel.getContent(), BorderLayout.CENTER);
+        statusPanel.setActivityVisibilityListener(visible -> {
+            activity.setVisible(visible);
+            card.revalidate();
+        });
+        activity.setVisible(statusPanel.isActivityVisible());
+        card.add(activity);
+        return card;
+    }
+
+    static JPanel stackControls(Component... components) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setOpaque(false);
+        for (Component component : components) {
+            if (component instanceof JComponent) {
+                ((JComponent) component).setAlignmentX(Component.LEFT_ALIGNMENT);
+            }
+            panel.add(component);
+        }
+        return panel;
     }
 
     // Package-private so service discovery can be tested without creating a frame or scanning hardware.
@@ -593,7 +726,7 @@ public class StartupFrame {
                 }
             };
             newReleaseAnnouncePanel.setBorder(new TitledBorder(
-                BorderFactory.createLineBorder(Color.darkGray),
+                BorderFactory.createLineBorder(StartupCard.themed("Console.Announcement.borderColor", Color.darkGray)),
                 ""
             ));
             newReleaseAnnouncePanel.add(newReleaseAmmomceMessage);
@@ -607,7 +740,7 @@ public class StartupFrame {
         JLabel jLabel;
         if (binaryModificationTimestamp == 0) {
             jLabel = new JLabel("firmware file not found");
-            jLabel.setForeground(Color.red);
+            jLabel.setForeground(StartupCard.themed("Console.ErrorText.foreground", Color.red));
         } else {
             final Date binaryModificationDate = new Date(binaryModificationTimestamp);
             final String branchNameToDisplay = ConsoleBundleUtil.readBundleFullNameNotNull().getBranchName();
@@ -634,6 +767,153 @@ public class StartupFrame {
         }
 
         return jLabel;
+    }
+
+    /**
+     * Lays out the Connect tab as one centred card. Every control keeps its existing behaviour and
+     * visibility logic; this only decides where it sits and how it looks [tag:console_theme].
+     */
+    private void buildConnectCard(Optional<JPanel> newReleaseNotification, JComponent proteusWarning,
+                                  JButton openTunerStudio, List<Component> helpTools, Component simulator) {
+        newReleaseNotification.ifPresent(panel -> {
+            panel.setBorder(null);
+            panel.setOpaque(false);
+            startupCard.addRow(new Banner(Banner.Kind.WARNING, panel, null), 0);
+        });
+        if (proteusWarning != null) {
+            startupCard.addRow(new Banner(Banner.Kind.WARNING, proteusWarning, null), 12);
+        }
+
+        JLabel title = new JLabel("Connect to your ECU", SwingConstants.CENTER);
+        title.setFont(title.getFont().deriveFont(Font.BOLD, 28f));
+        startupCard.addRow(StartupCard.fullWidth(title), 16);
+        JLabel subtitle = new JLabel("Plug your ECU in by USB. It is detected automatically.", SwingConstants.CENTER);
+        subtitle.setForeground(StartupCard.themed("Console.TitleBar.mutedForeground", Color.GRAY));
+        subtitle.setFont(subtitle.getFont().deriveFont(subtitle.getFont().getSize() + 1f));
+        startupCard.addRow(StartupCard.fullWidth(subtitle), 8);
+
+        startupCard.addRow(new ConnectionIllustration(), 28);
+
+        // Status message and DFU error share one area whose gaps sit inside it, so the card
+        // closes up when both are hidden.
+        noPortsMessage.setIconTextGap(10);
+        noPortsMessage.setFont(noPortsMessage.getFont().deriveFont(noPortsMessage.getFont().getSize() + 1f));
+        noPortsMessage.setBorder(BorderFactory.createEmptyBorder(16, 0, 0, 0));
+        JPanel statusArea = new JPanel(new BorderLayout());
+        statusArea.setOpaque(false);
+        statusArea.add(noPortsMessage, BorderLayout.NORTH);
+        JPanel dfuArea = new JPanel(new BorderLayout());
+        dfuArea.setOpaque(false);
+        dfuArea.setBorder(BorderFactory.createEmptyBorder(12, 0, 0, 0));
+        Banner dfuBanner = new Banner(Banner.Kind.ERROR, dfuErrorMessage, null);
+        dfuArea.add(dfuBanner, BorderLayout.CENTER);
+        dfuBanner.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                dfuArea.setVisible(true);
+            }
+
+            @Override
+            public void componentHidden(ComponentEvent e) {
+                dfuArea.setVisible(false);
+            }
+        });
+        dfuArea.setVisible(dfuBanner.isVisible());
+        statusArea.add(dfuArea, BorderLayout.SOUTH);
+        startupCard.addRow(StartupCard.fullWidth(statusArea), 0);
+
+        startupCard.addRow(StartupCard.fullWidth(connectPanel), 20);
+
+        Dimension buttonSize = new Dimension(220, 42);
+        connectButton.putClientProperty(FlatClientProperties.STYLE_CLASS, "primary");
+        connectButton.setPreferredSize(buttonSize);
+        openLogButton.setPreferredSize(buttonSize);
+        openLogButton.setToolTipText("Open an .mlg or .msl data log without connecting an ECU");
+        openTunerStudio.setPreferredSize(buttonSize);
+        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 0));
+        buttons.setOpaque(false);
+        buttons.add(connectButton);
+        buttons.add(openTunerStudio);
+        startupCard.addRow(buttons, 20);
+        startupCard.addRow(rememberPortBox, 12);
+
+        startupCard.addRow(StartupCard.divider(), 24);
+        JLabel logPrompt = new JLabel("Review a data log without connecting an ECU", SwingConstants.CENTER);
+        logPrompt.setForeground(StartupCard.themed("Console.TitleBar.mutedForeground", Color.GRAY));
+        startupCard.addRow(StartupCard.fullWidth(logPrompt), 20);
+        startupCard.addRow(openLogButton, 10);
+
+        startupCard.addRow(StartupCard.divider(), 24);
+        // the tips that the status message's tooltip and texts already give
+        List<String> tips = new ArrayList<>(Arrays.asList(
+            "Check your cables.",
+            "Check your drivers.",
+            "Confirm the blue LED on the ECU is blinking.",
+            "Make sure you are disconnected from TunerStudio."));
+        if (simulator != null) {
+            tips.add("No ECU at hand? Start the virtual simulator below.");
+        }
+        startupCard.addRow(new ConnectionHelpSection(tips, helpTools), 20);
+
+        if (simulator != null) {
+            JComponent simulatorRow = simulator instanceof AbstractButton
+                ? new Banner(Banner.Kind.INFO, new JLabel("Try " + UiProperties.getDisplayName() + " without an ECU"), (JComponent) simulator)
+                : new Banner(Banner.Kind.INFO, (JComponent) simulator, null);
+            startupCard.addRow(simulatorRow, 12);
+        }
+
+        startupCard.addRow(StartupCard.divider(), 20);
+        startupCard.addRow(createCardFooter(), 16);
+    }
+
+    /** Adds the startup log viewer and wires its entry button to select it before opening the file chooser. */
+    static void installLogViewerEntry(JTabbedPane tabs, JComponent viewer, AbstractButton openButton,
+                                      Runnable chooseAndOpen) {
+        tabs.addTab(LogViewerHost.TITLE, viewer);
+        openButton.addActionListener(e -> {
+            tabs.setSelectedComponent(viewer);
+            chooseAndOpen.run();
+        });
+    }
+
+    /** Selects the startup viewer and opens a log supplied by the application launcher. */
+    static void openInitialLog(JTabbedPane tabs, JComponent viewer, Consumer<File> open, File initialLog) {
+        if (initialLog == null) {
+            return;
+        }
+        tabs.setSelectedComponent(viewer);
+        open.accept(initialLog);
+    }
+
+    /** Small logo, the rusEFI link (default branding only) and the console version. */
+    private static JComponent createCardFooter() {
+        JPanel footer = new JPanel();
+        footer.setLayout(new BoxLayout(footer, BoxLayout.Y_AXIS));
+        footer.setOpaque(false);
+        JLabel logo = LogoHelper.createLogoLabel();
+        if (logo != null && logo.getIcon() instanceof ImageIcon) {
+            ImageIcon icon = (ImageIcon) logo.getIcon();
+            int height = 36;
+            int width = Math.max(1, icon.getIconWidth() * height / Math.max(1, icon.getIconHeight()));
+            logo.setIcon(new ImageIcon(icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH)));
+            logo.setAlignmentX(Component.CENTER_ALIGNMENT);
+            footer.add(logo);
+            footer.add(Box.createVerticalStrut(8));
+        }
+        Color muted = StartupCard.themed("Console.TitleBar.mutedForeground", Color.GRAY);
+        if (ConnectionAndMeta.isDefaultWhitelabel(UiProperties.getWhiteLabel())) {
+            JPanel linkRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+            linkRow.setOpaque(false);
+            linkRow.add(LogoHelper.createUrlLabel());
+            linkRow.setAlignmentX(Component.CENTER_ALIGNMENT);
+            footer.add(linkRow);
+            footer.add(Box.createVerticalStrut(2));
+        }
+        JLabel version = new JLabel(UiProperties.getDisplayName() + " " + Launcher.CONSOLE_VERSION);
+        version.setForeground(muted);
+        version.setAlignmentX(Component.CENTER_ALIGNMENT);
+        footer.add(version);
+        return footer;
     }
 
     private void restoreContent(JComponent root) {
@@ -683,16 +963,16 @@ public class StartupFrame {
         boolean hasOpenBlt = openBltPort != null;
         if (ports.isEmpty()) {
             String message = emptyHardwareMessage(currentHardware);
-            noPortsMessage.setForeground(SOCKET_CAN_WITHOUT_ECU.equals(message) ? Color.darkGray : Color.red);
+            noPortsMessage.setForeground(SOCKET_CAN_WITHOUT_ECU.equals(message) ? STATUS_INFO : STATUS_ERROR);
             noPortsMessage.setText(message);
         } else if (hasOpenBlt) {
             // A board sitting in the OpenBLT bootloader has no running firmware to auto-connect to —
             // mirror the auto-connect status line and point the user at the firmware-update flow.
-            noPortsMessage.setForeground(Color.darkGray);
-            noPortsMessage.setText("Board in OpenBLT bootloader on " + openBltPort.port
-                + " — use the Update Firmware tab");
+            noPortsMessage.setForeground(STATUS_INFO);
+            noPortsMessage.setText("Bootloader detected on " + openBltPort.port
+                + " — use the Update ECU firmware tab");
         } else {
-            noPortsMessage.setForeground(Color.red);
+            noPortsMessage.setForeground(STATUS_ERROR);
             noPortsMessage.setText("Make sure you are disconnected from TunerStudio");
         }
 
@@ -764,7 +1044,7 @@ public class StartupFrame {
         // Reuse this maximized splash frame for the console
         log.info("connect: handing off splash frame to ConsoleUI");
         prepareForHandoff();
-        LoadingOverlay.show(frame, "Loading console…", LogoHelper.createLogoLabel());
+        LoadingOverlay.show(frame, "Loading " + UiProperties.getDisplayName() + "…", LogoHelper.createLogoLabel());
         SwingUtilities.invokeLater(() ->
             new ConsoleUI(uiContext, selectedPort.port, selectedPort.type, alreadyConnected,
                 frame, unsupportedEcuHost, connectivityContext));
@@ -786,7 +1066,7 @@ public class StartupFrame {
         offlineConsoleOpen = true;
         // Shared teardown-without-dispose; keeps the scanner alive for later auto-connect.
         prepareForHandoff();
-        LoadingOverlay.show(frame, "Loading console…", LogoHelper.createLogoLabel());
+        LoadingOverlay.show(frame, "Loading " + UiProperties.getDisplayName() + "…", LogoHelper.createLogoLabel());
         SwingUtilities.invokeLater(() ->
             new ConsoleUI(uiContext, ini, image, frame, unsupportedEcuHost, connectivityContext));
     }
@@ -809,13 +1089,11 @@ public class StartupFrame {
      * different startup tab last session.
      */
     private boolean shouldAutoConnect() {
-        return asyncJobExecutor.isNotInProgress() && !unsupportedEcuHost.isBlocking();
+        return initialLog == null && asyncJobExecutor.isNotInProgress() && !unsupportedEcuHost.isBlocking();
     }
 
     private boolean isFirmwareOperationInProgress() {
-        return asyncJobExecutor.getJobInProgress()
-            .map(job -> !(job instanceof ImportTuneJob) && !(job instanceof ExportTuneJob))
-            .orElse(false);
+        return StartupFirmwareOperationLifecycle.isFirmwareOperationInProgress(asyncJobExecutor);
     }
 
     private void setStartupFirmwareUpdateInProgress(boolean inProgress) {
@@ -855,7 +1133,7 @@ public class StartupFrame {
         connectButton.setText("Connecting...");
         portsComboBox.getComboPorts().setEnabled(false);
         noPortsMessage.setText("Connecting to " + target.port + "…");
-        noPortsMessage.setForeground(Color.darkGray);
+        noPortsMessage.setForeground(STATUS_INFO);
         noPortsMessage.setVisible(true);
 
         splashListener = new ConnectionStatusLogic.Listener() {
@@ -996,8 +1274,8 @@ public class StartupFrame {
         connectButton.setText("Connect");
         updateConnectButtonState();
         portsComboBox.getComboPorts().setEnabled(true);
-        String launchingMsg = "Connected to " + target.port + " — launching console…";
-        noPortsMessage.setForeground(Color.darkGray);
+        String launchingMsg = "Connected to " + target.port + " — launching " + UiProperties.getDisplayName() + "…";
+        noPortsMessage.setForeground(STATUS_INFO);
         noPortsMessage.setText(launchingMsg);
         noPortsMessage.setVisible(true);
         if (scanningStatusLabel != null) {
@@ -1009,6 +1287,7 @@ public class StartupFrame {
         final LinkManager lm = uiContext.getLinkManager();
         startupUpdateActions.setSplashLinkManager(lm);
         selector.setLinkManager(lm);
+        selector.apply(connectivityContext.getCurrentHardware());
 
         maybeAutoCreateTsProject(target);
 
@@ -1077,10 +1356,11 @@ public class StartupFrame {
     }
 
     /**
-     * Called just before an async job starts. Detaches the splash connection listener and decides
+     * Called on the EDT after preparation is accepted, just before an async job starts.
+     * Detaches the splash connection listener and decides
      * what to do with the live {@link LinkManager}:
      * <ul>
-     *   <li>Firmware jobs ({@link DfuAutoJob}, {@link OpenBltAutoJob}): keep the LM alive —
+     *   <li>Firmware jobs ({@link DfuAutoJob}, {@link OpenBltAutoJob}, branch switches): keep the LM alive —
      *       the job owns the disconnect/reconnect lifecycle.</li>
      *   <li>Tune import ({@link ImportTuneJob}): keep the LM alive — the job submits reads and
      *       writes through the executor queue while the pull thread runs.</li>
@@ -1089,10 +1369,15 @@ public class StartupFrame {
      */
     static void prepareSplashForJob(AsyncJob job, Runnable releaseConnection) {
         // Automatic firmware jobs must pass eligibility before replacing the live splash listeners.
-        if (job instanceof DfuAutoJob || job instanceof OpenBltAutoJob) {
+        if (isFirmwareJob(job)) {
             return;
         }
         releaseConnection.run();
+    }
+
+    static boolean isFirmwareJob(AsyncJob job) {
+        return job instanceof DfuAutoJob || job instanceof OpenBltAutoJob
+            || FirmwareBranchSwitchController.isBranchSwitchJob(job);
     }
 
     private void releaseSplashConnection() {
@@ -1100,7 +1385,7 @@ public class StartupFrame {
         log.info("Releasing splash auto-connection before async job");
 
         Optional<AsyncJob> job = asyncJobExecutor.getJobInProgress();
-        boolean isFirmwareJob = job.map(j -> j instanceof DfuAutoJob || j instanceof OpenBltAutoJob).orElse(false);
+        boolean isFirmwareJob = job.map(StartupFrame::isFirmwareJob).orElse(false);
         boolean isLiveConnectionJob = job.map(j -> j instanceof ImportTuneJob || j instanceof ExportTuneJob || j instanceof OpenBltSwitchJob).orElse(false);
 
         // Detach the original splash listener in all cases — the disconnect() inside
@@ -1151,7 +1436,7 @@ public class StartupFrame {
                 connectButton.setText("Connect");
                 connectButton.setEnabled(asyncJobExecutor.isNotInProgress());
                 portsComboBox.getComboPorts().setEnabled(asyncJobExecutor.isNotInProgress());
-                noPortsMessage.setForeground(Color.darkGray);
+                noPortsMessage.setForeground(STATUS_INFO);
                 noPortsMessage.setText("Updating firmware...");
                 noPortsMessage.setVisible(true);
             });
@@ -1174,7 +1459,7 @@ public class StartupFrame {
             connectButton.setText("Connect");
             connectButton.setEnabled(asyncJobExecutor.isNotInProgress());
             portsComboBox.getComboPorts().setEnabled(asyncJobExecutor.isNotInProgress());
-            noPortsMessage.setForeground(Color.darkGray);
+            noPortsMessage.setForeground(STATUS_INFO);
             noPortsMessage.setText("");
             noPortsMessage.setVisible(false);
         });
@@ -1195,10 +1480,11 @@ public class StartupFrame {
                 return;
             }
             selector.setLinkManager(lm);
+            selector.apply(connectivityContext.getCurrentHardware());
             autoConnectedPort = savedPort;
             startupUpdateActions.setSplashLinkManager(lm);
-            noPortsMessage.setForeground(Color.darkGray);
-            noPortsMessage.setText("Connected to " + savedPort.port + " — click Connect to open console");
+            noPortsMessage.setForeground(STATUS_INFO);
+            noPortsMessage.setText("Connected to " + savedPort.port + " — click Connect to open " + UiProperties.getDisplayName());
             noPortsMessage.setVisible(true);
         });
     }
@@ -1256,7 +1542,7 @@ public class StartupFrame {
         connectButton.setText("Connect");
         updateConnectButtonState();
         portsComboBox.getComboPorts().setEnabled(true);
-        noPortsMessage.setForeground(Color.red);
+        noPortsMessage.setForeground(STATUS_ERROR);
         noPortsMessage.setText("Auto-connect failed: " + msg);
         noPortsMessage.setVisible(true);
         // Reveal the connect controls so the user can retry/pick a port (#9715).

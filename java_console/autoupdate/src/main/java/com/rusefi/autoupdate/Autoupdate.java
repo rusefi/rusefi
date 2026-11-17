@@ -6,11 +6,13 @@ import com.rusefi.AutoupdateProperty;
 import com.rusefi.core.FindFileHelper;
 import com.rusefi.core.io.BundleInfo;
 import com.rusefi.core.io.BundleInfoStrategy;
+import com.rusefi.core.io.FirmwareBranch;
 import com.rusefi.core.io.ConnectedEcuTarget;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.FileUtil;
 import com.rusefi.core.OsUtil;
+import com.rusefi.core.SignatureHelper;
 import com.rusefi.core.net.PropertiesHolder;
 import com.rusefi.core.rusEFIVersion;
 import com.rusefi.core.ui.AutoupdateUtil;
@@ -27,7 +29,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.InvalidPathException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.UUID;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -77,9 +85,8 @@ import static com.rusefi.core.FindFileHelper.findFirmwareFile;
  *       bundle zip (only when server timestamp/size indicate it's newer than the local
  *       copy — see {@link #isNewerAvailable}); otherwise nothing is downloaded.</li>
  *   <li>{@link #unzipAutoUpdate} extracts the bundle over the installation.</li>
- *   <li>{@link #prefetchLastConnectedBoardFirmware} (issue #9714) refreshes firmware for
- *       the board the user last connected to, so a later in-console "Update ECU" is
- *       instant.</li>
+  *   <li>{@link #prefetchLastConnectedBoardFirmware} only has a persisted board hint, not
+  *       branch identity, so it skips branch-specific firmware prefetch.</li>
  *   <li>{@link #startConsoleAsANewProcess} launches the freshly unpacked console.</li>
  * </ol>
  *
@@ -131,7 +138,10 @@ import static com.rusefi.core.FindFileHelper.findFirmwareFile;
  */
 public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
-    private static final int AUTOUPDATE_VERSION = 20261011; // separate from rusEFIVersion#CONSOLE_VERSION
+    private static final int AUTOUPDATE_VERSION = 20261117; // separate from rusEFIVersion#CONSOLE_VERSION
+    // Resolve before unzipping can replace our own JAR. Installed launchers bypass
+    // ConsoleExeFileLocator's default lookup, so it may not have loaded OsUtil (#10368).
+    private static final boolean IS_WINDOWS = OsUtil.isWindows();
     private static final String userHomeSubDirectory = FileUtil.RUSEFI_SETTINGS_FOLDER + "updates" + File.separator;
 
     /**
@@ -285,12 +295,12 @@ public class Autoupdate {
     }
 
     /**
-     * #9714 At startup, fetch (or refresh to the latest) the
-     * firmware of the most recently connected board so a later "Update Firmware" is instant.
+     * The persisted last-board hint has no branch identity, so it cannot authorize
+     * fetching branch-specific firmware safely.
      * <p>
      * No-op when: autoupdate is disabled, no board has ever connected, or this is a single-board
      * bundle whose own firmware is the last-connected board (already refreshed by the bundle update
-     * above). Only downloads when the server has a newer build than the local cache.
+     * above), or the persisted board has no branch identity.
      */
     private static void prefetchLastConnectedBoardFirmware() {
         try {
@@ -302,8 +312,7 @@ public class Autoupdate {
                 log.info("[universal_bundle] prefetch: no previously connected board recorded");
                 return;
             }
-            log.info("[universal_bundle] prefetch: ensuring latest firmware for last connected board " + lastBoard);
-            ensureFirmwareForTarget(lastBoard, percent -> {}, log::info);
+            log.info("[universal_bundle] prefetch skipped for " + lastBoard + ": persisted board has no branch identity");
         } catch (Throwable e) {
             log.error("[universal_bundle] prefetch error: " + e);
         }
@@ -675,7 +684,7 @@ public class Autoupdate {
         String branchName = BundleInfo.isUndefined(local) ? "master" : local.getBranchName();
         BundleInfo wanted = new BundleInfo(branchName, null, ecuTarget);
         String baseUrl = BundleInfoStrategy.getDownloadUrl(wanted, PropertiesHolder.getBaseUrl(), BundleInfo::getBranchName);
-        String zip = downloadZipForTarget(wanted, baseUrl, progressListener, logger);
+        String zip = downloadZipForTargetContinuous(wanted, baseUrl, progressListener, logger);
         if (zip == null) {
             return false;
         }
@@ -699,11 +708,14 @@ public class Autoupdate {
     public static String downloadZipForTarget(BundleInfo info, String baseUrl,
                                               ConnectionAndMeta.DownloadProgressListener progressListener,
                                               Consumer<String> logger) {
-        // The universal console cannot know prior whether a given board ships open or obfuscated
-        // firmware. Try the public zip first and fall back to the obfuscated one - whichever the server has. #9714
-        String zip = downloadZipForTarget(info, baseUrl, progressListener, logger, false);
+        return downloadZipForTargetContinuous(info, baseUrl, progressListener, logger);
+    }
+
+    private static String downloadZipForTargetContinuous(BundleInfo info, String baseUrl,
+            ConnectionAndMeta.DownloadProgressListener progressListener, Consumer<String> logger) {
+        String zip = downloadZipForTarget(info, baseUrl, progressRange(progressListener, 0, 50), logger, false);
         if (zip == null) {
-            zip = downloadZipForTarget(info, baseUrl, progressListener, logger, true);
+            zip = downloadZipForTarget(info, baseUrl, progressRange(progressListener, 50, 50), logger, true);
         }
         return zip;
     }
@@ -743,6 +755,11 @@ public class Autoupdate {
         }
     }
 
+    private static ConnectionAndMeta.DownloadProgressListener progressRange(
+            ConnectionAndMeta.DownloadProgressListener progress, int start, int width) {
+        return percent -> progress.onPercentage(start + width * Math.max(0, Math.min(100, percent)) / 100);
+    }
+
     public static FirmwareArtifacts downloadFirmware(FirmwareRollbackResolver.Build build,
                                                       ConnectionAndMeta.DownloadProgressListener progress,
                                                       Consumer<String> logger) {
@@ -756,7 +773,7 @@ public class Autoupdate {
                       ConnectionAndMeta.DownloadProgressListener progress, Consumer<String> logger) throws IOException;
     }
 
-    static FirmwareArtifacts downloadFirmware(FirmwareRollbackResolver.Build build,
+    static synchronized FirmwareArtifacts downloadFirmware(FirmwareRollbackResolver.Build build,
                                                ConnectionAndMeta.DownloadProgressListener progress,
                                                Consumer<String> logger,
                                                Path ltsRoot,
@@ -768,30 +785,17 @@ public class Autoupdate {
                 .toAbsolutePath();
             Files.createDirectories(destination);
 
-            Path zip = downloader.download(build, destination, false, progress, logger);
+            Path zip = downloader.download(build, destination, false, progressRange(progress, 0, 50), logger);
             if (zip == null) {
-                zip = downloader.download(build, destination, true, progress, logger);
+                zip = downloader.download(build, destination, true, progressRange(progress, 50, 50), logger);
             }
             if (zip == null) {
                 logger.accept("Firmware build " + build.getSha() + " is unavailable");
                 return FirmwareArtifacts.empty();
             }
 
-            final String[] paths = new String[2];
-            FileUtil.unzip(zip.toString(), destination.toFile(), entry -> {
-                if (!isFirmwareArtifact.test(entry)) {
-                    return false;
-                }
-                String lower = entry.getName().toLowerCase();
-                String absolutePath = destination.resolve(entry.getName()).normalize().toAbsolutePath().toString();
-                if (lower.endsWith(".srec")) {
-                    paths[0] = absolutePath;
-                } else if (isDfuBin(lower)) {
-                    paths[1] = absolutePath;
-                }
-                return true;
-            });
-            FirmwareArtifacts artifacts = new FirmwareArtifacts(paths[0], paths[1]);
+            BundleInfo wanted = new BundleInfo(build.getBranch(), null, build.getBoard());
+            FirmwareArtifacts artifacts = extractBranchFirmware(zip, destination, wanted);
             if (!artifacts.getSrecPath().isPresent() && !artifacts.getBinPath().isPresent()) {
                 logger.accept("Firmware build " + build.getSha() + " contains no SREC or BIN artifact");
             }
@@ -800,6 +804,350 @@ public class Autoupdate {
             log.error("Firmware download failed for " + build.getSha() + ": " + e);
             logger.accept("Firmware download failed: " + e.getMessage());
             return FirmwareArtifacts.empty();
+        }
+    }
+
+    @FunctionalInterface
+    interface BranchFirmwareZipDownloader {
+        Path download(BundleInfo wanted, Path destination, boolean obfuscated,
+                      ConnectionAndMeta.DownloadProgressListener progress, Consumer<String> logger) throws IOException;
+    }
+
+    public static FirmwareArtifacts downloadFirmwareForBranch(BundleInfo wanted,
+            ConnectionAndMeta.DownloadProgressListener progress, Consumer<String> logger) {
+        Path cache = Paths.get(userHomeSubDirectory, "branch-firmware");
+        return downloadFirmwareForBranch(wanted, progress, logger, cache, Autoupdate::downloadBranchFirmwareZip);
+    }
+
+    static synchronized FirmwareArtifacts downloadFirmwareForBranch(BundleInfo wanted,
+            ConnectionAndMeta.DownloadProgressListener progress, Consumer<String> logger,
+            Path cacheRoot, BranchFirmwareZipDownloader downloader) {
+        try {
+            String branch = FirmwareBranch.normalize(wanted.getBranchName());
+            if (!FirmwareBranch.isSameBranch(branch, branch) || wanted.getTarget().trim().isEmpty()
+                || !wanted.getTarget().matches("[A-Za-z0-9_-]+")) {
+                return FirmwareArtifacts.empty();
+            }
+            BundleInfo normalized = new BundleInfo(branch, null, wanted.getTarget());
+            Path destination = cacheRoot.resolve(wanted.getTarget()).resolve(branch).toAbsolutePath().normalize();
+            Files.createDirectories(destination);
+            Path zip = downloader.download(normalized, destination, false, progressRange(progress, 0, 50), logger);
+            if (zip == null) {
+                zip = downloader.download(normalized, destination, true, progressRange(progress, 50, 50), logger);
+            }
+            if (zip == null) {
+                return FirmwareArtifacts.empty();
+            }
+            return extractBranchFirmware(zip, destination, normalized);
+        } catch (Exception e) {
+            log.error("Branch firmware download failed", e);
+            logger.accept("Branch firmware download failed: " + e.getMessage());
+            return FirmwareArtifacts.empty();
+        }
+    }
+
+    private static Path downloadBranchFirmwareZip(BundleInfo wanted, Path destination, boolean obfuscated,
+            ConnectionAndMeta.DownloadProgressListener progress, Consumer<String> logger) throws IOException {
+        String branchUrl = getBranchFirmwareBaseUrl(wanted, PropertiesHolder.getBaseUrl());
+        String name = getBranchFirmwareZipName(wanted, obfuscated);
+        Path zip = destination.resolve(name);
+        try {
+            ConnectionAndMeta metadata = new ConnectionAndMeta(name).invoke(branchUrl);
+            if (!AutoupdateUtil.hasExistingFile(zip.toString(), metadata.getCompleteFileSize(), metadata.getLastModified())) {
+                logger.accept("Downloading firmware for " + wanted.getTarget());
+                Path temporary = zip.resolveSibling(zip.getFileName() + ".part-" + UUID.randomUUID());
+                try {
+                    ConnectionAndMeta.downloadFile(temporary.toString(), metadata, progress);
+                    try {
+                        Files.move(temporary, zip, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+                    } catch (IOException atomicMoveUnsupported) {
+                        Files.move(temporary, zip, StandardCopyOption.REPLACE_EXISTING);
+                    }
+                } finally {
+                    Files.deleteIfExists(temporary);
+                }
+            }
+            return zip;
+        } catch (IOException e) {
+            log.info("Branch firmware variant unavailable: " + e);
+            return null;
+        }
+    }
+
+    @FunctionalInterface
+    interface FirmwareMetadataReader {
+        FirmwareZipMetadata read(String baseUrl, String zipName) throws IOException;
+    }
+
+    static final class FirmwareZipMetadata {
+        final int responseCode;
+        final String contentType;
+        final long lastModified;
+
+        FirmwareZipMetadata(int responseCode, String contentType, long lastModified) {
+            this.responseCode = responseCode;
+            this.contentType = contentType;
+            this.lastModified = lastModified;
+        }
+    }
+
+    public enum DevFirmwareMetadataFailure {
+        DOWNLOAD_NOT_FOUND,
+        NO_PUBLICATION_DATE,
+        INVALID_SERVER_RESPONSE,
+        CONNECTION_FAILED
+    }
+
+    public static final class DevFirmwareMetadataException extends IOException {
+        private final DevFirmwareMetadataFailure failure;
+
+        DevFirmwareMetadataException(DevFirmwareMetadataFailure failure, String message, Throwable cause) {
+            super(message, cause);
+            this.failure = failure;
+        }
+
+        DevFirmwareMetadataException(DevFirmwareMetadataFailure failure, String message) {
+            this(failure, message, null);
+        }
+
+        public DevFirmwareMetadataFailure getFailure() {
+            return failure;
+        }
+    }
+
+    /** Reads the same per-board Dev ZIP metadata as the updater, without opening its response body. */
+    public static long getDevFirmwareLastModified(String board, String branch) throws IOException {
+        return getDevFirmwareLastModified(board, branch, PropertiesHolder.getBaseUrl(), Autoupdate::readZipMetadata);
+    }
+
+    static long getDevFirmwareLastModified(String board, String branch, String rootUrl,
+                                           FirmwareMetadataReader reader) throws IOException {
+        String normalizedBranch = FirmwareBranch.normalize(branch);
+        if (!FirmwareBranch.isSameBranch(normalizedBranch, BundleInfo.DEVELOPMENT)
+            || board == null || !board.matches("[A-Za-z0-9_-]+")) {
+            throw new IOException("Unsupported Dev firmware target");
+        }
+        BundleInfo wanted = new BundleInfo(normalizedBranch, null, board);
+        String baseUrl = getBranchFirmwareBaseUrl(wanted, rootUrl);
+        for (boolean obfuscated : new boolean[]{false, true}) {
+            FirmwareZipMetadata metadata;
+            try {
+                metadata = reader.read(baseUrl, getBranchFirmwareZipName(wanted, obfuscated));
+            } catch (IOException e) {
+                throw new DevFirmwareMetadataException(DevFirmwareMetadataFailure.CONNECTION_FAILED,
+                    "Could not read Dev firmware metadata: " + e.getMessage(), e);
+            }
+            if (metadata.responseCode == 404) {
+                if (!obfuscated) {
+                    continue;
+                }
+                break;
+            }
+            if (metadata.responseCode < 200 || metadata.responseCode >= 300) {
+                throw new DevFirmwareMetadataException(DevFirmwareMetadataFailure.INVALID_SERVER_RESPONSE,
+                    "Dev firmware metadata unavailable (HTTP " + metadata.responseCode + ")");
+            }
+            if (!isFirmwareZipContentType(metadata.contentType)) {
+                throw new DevFirmwareMetadataException(DevFirmwareMetadataFailure.INVALID_SERVER_RESPONSE,
+                    "Unexpected Dev firmware content type: " + metadata.contentType);
+            }
+            if (metadata.lastModified <= 0) {
+                throw new DevFirmwareMetadataException(DevFirmwareMetadataFailure.NO_PUBLICATION_DATE,
+                    "Dev firmware Last-Modified metadata is unavailable");
+            }
+            return metadata.lastModified;
+        }
+        throw new DevFirmwareMetadataException(DevFirmwareMetadataFailure.DOWNLOAD_NOT_FOUND,
+            "No Dev firmware download was found for " + board);
+    }
+
+    private static boolean isFirmwareZipContentType(String contentType) {
+        if (contentType == null) {
+            return false;
+        }
+        String mediaType = contentType.split(";", 2)[0].trim().toLowerCase(Locale.ROOT);
+        return "application/zip".equals(mediaType)
+            || "application/octet-stream".equals(mediaType)
+            || "application/x-zip-compressed".equals(mediaType);
+    }
+
+    private static FirmwareZipMetadata readZipMetadata(String baseUrl, String zipName) throws IOException {
+        ConnectionAndMeta metadata = new ConnectionAndMeta(zipName).invokeMetadata(baseUrl);
+        try {
+            return new FirmwareZipMetadata(metadata.getResponseCode(), metadata.getContentType(), metadata.getLastModified());
+        } finally {
+            metadata.getHttpConnection().disconnect();
+        }
+    }
+
+    private static String getBranchFirmwareBaseUrl(BundleInfo wanted, String rootUrl) {
+        return BundleInfoStrategy.getDownloadUrl(wanted, rootUrl, ignored -> wanted.getBranchName());
+    }
+
+    private static String getBranchFirmwareZipName(BundleInfo wanted, boolean obfuscated) {
+        String suffix = obfuscated ? "_obfuscated_public" : "";
+        return ConnectionAndMeta.getWhiteLabel(ConnectionAndMeta.getProperties()) + "_bundle_"
+            + wanted.getTarget() + suffix + "_autoupdate.zip";
+    }
+
+    private static FirmwareArtifacts extractBranchFirmware(Path zip, Path destination, BundleInfo wanted) throws IOException {
+        destination = destination.resolve(zipDigest(zip));
+        Files.createDirectories(destination);
+        String release = null;
+        String platform = null;
+        boolean metadataSeen = false;
+        String srec = null;
+        String bin = null;
+        try (ZipInputStream input = new ZipInputStream(Files.newInputStream(zip))) {
+            ZipEntry entry;
+            while ((entry = input.getNextEntry()) != null) {
+                String name = entry.getName();
+                Path relative;
+                try {
+                    relative = Paths.get(name);
+                } catch (InvalidPathException e) {
+                    throw new IOException("Invalid ZIP entry path: " + name, e);
+                }
+                if (relative.isAbsolute() || name.startsWith("/") || name.startsWith("\\")
+                    || name.matches("^[A-Za-z]:.*") || name.contains("\\")
+                    || relative.normalize().startsWith("..")) {
+                    throw new IOException("Unsafe ZIP entry: " + name);
+                }
+                if ("console/release.txt".equals(name)) {
+                    if (metadataSeen) {
+                        throw new IOException("Duplicate release metadata");
+                    }
+                    metadataSeen = true;
+                    Properties properties = new Properties();
+                    try {
+                        properties.load(input);
+                    } catch (IllegalArgumentException e) {
+                        throw new IOException("Malformed release metadata", e);
+                    }
+                    release = properties.getProperty("release");
+                    platform = properties.getProperty("platform");
+                    continue;
+                }
+                if (entry.isDirectory() || name.contains("/")) {
+                    continue;
+                }
+                String lower = name.toLowerCase();
+                if (lower.endsWith(".srec") && !lower.contains("openblt")) {
+                    if (srec != null) {
+                        throw new IOException("Multiple SREC candidates");
+                    }
+                    srec = name;
+                } else if (isDfuBin(lower) && !lower.contains("openblt")) {
+                    if (bin != null) {
+                        throw new IOException("Multiple BIN candidates");
+                    }
+                    bin = name;
+                }
+            }
+        }
+        if (release == null || platform == null || !wanted.getTarget().equalsIgnoreCase(platform)
+            || !FirmwareBranch.normalize(wanted.getBranchName()).equals(FirmwareBranch.normalize(release))) {
+            return FirmwareArtifacts.empty();
+        }
+        if (srec != null) {
+            com.rusefi.core.RusEfiSignature signature = SignatureHelper.parseSrec(srec);
+            if (!isArtifactIdentityValid(signature, wanted, true)) {
+                return FirmwareArtifacts.empty();
+            }
+        }
+        if (bin != null && !"rusefi.bin".equalsIgnoreCase(bin)) {
+            com.rusefi.core.RusEfiSignature signature = SignatureHelper.parseSrec(
+                bin.substring(0, bin.length() - 4) + ".srec");
+            if (!isArtifactIdentityValid(signature, wanted, false)) {
+                return FirmwareArtifacts.empty();
+            }
+        }
+        String srecPath = copyZipEntry(zip, destination, srec);
+        String binPath = copyZipEntry(zip, destination, bin);
+        if (srecPath == null && binPath == null) {
+            return FirmwareArtifacts.empty();
+        }
+        return new FirmwareArtifacts(srecPath, binPath, wanted);
+    }
+
+    private static boolean isArtifactIdentityValid(com.rusefi.core.RusEfiSignature signature,
+                                                    BundleInfo wanted, boolean allowKansasLegacySrec) {
+        if (signature == null || !FirmwareBranch.normalize(wanted.getBranchName())
+            .equals(FirmwareBranch.normalize(signature.getBranch()))) {
+            return false;
+        }
+        if (Boolean.TRUE.equals(signature.getIsLegacyFormat())) {
+            return allowKansasLegacySrec && "lts-25kansas".equals(FirmwareBranch.normalize(wanted.getBranchName()));
+        }
+        return wanted.getTarget().equalsIgnoreCase(signature.getBundleTarget());
+    }
+
+    private static String zipDigest(Path zip) throws IOException {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            try (InputStream input = Files.newInputStream(zip)) {
+                byte[] buffer = new byte[8192];
+                int count;
+                while ((count = input.read(buffer)) != -1) {
+                    digest.update(buffer, 0, count);
+                }
+            }
+            StringBuilder result = new StringBuilder();
+            for (byte value : digest.digest()) {
+                result.append(String.format("%02x", value & 0xff));
+            }
+            return result.toString();
+        } catch (NoSuchAlgorithmException impossible) {
+            throw new IllegalStateException(impossible);
+        }
+    }
+
+    private static String copyZipEntry(Path zip, Path destination, String name) throws IOException {
+        if (name == null) {
+            return null;
+        }
+        Path target = destination.resolve(name).normalize();
+        if (!target.getParent().equals(destination)) {
+            throw new IOException("Unsafe firmware path: " + name);
+        }
+        try (ZipInputStream input = new ZipInputStream(Files.newInputStream(zip))) {
+            ZipEntry entry;
+            while ((entry = input.getNextEntry()) != null) {
+                if (name.equals(entry.getName())) {
+                    if (Files.exists(target)) {
+                        if (!sameContents(target, input)) {
+                            throw new IOException("Existing cached artifact differs from ZIP entry: " + name);
+                        }
+                        return target.toString();
+                    }
+                    Path temporary = target.resolveSibling(target.getFileName() + ".tmp-" + UUID.randomUUID());
+                    try {
+                        Files.copy(input, temporary);
+                        try {
+                            Files.move(temporary, target, StandardCopyOption.ATOMIC_MOVE);
+                        } catch (IOException atomicMoveUnsupported) {
+                            Files.move(temporary, target);
+                        }
+                    } finally {
+                        Files.deleteIfExists(temporary);
+                    }
+                    return target.toString();
+                }
+            }
+        }
+        throw new IOException("Missing firmware entry: " + name);
+    }
+
+    private static boolean sameContents(Path file, InputStream expected) throws IOException {
+        try (InputStream actual = new BufferedInputStream(Files.newInputStream(file))) {
+            InputStream reference = new BufferedInputStream(expected);
+            int next;
+            while ((next = reference.read()) != -1) {
+                if (actual.read() != next) {
+                    return false;
+                }
+            }
+            return actual.read() == -1;
         }
     }
 
@@ -838,14 +1186,16 @@ public class Autoupdate {
     public static final class FirmwareArtifacts {
         private final Optional<String> srecPath;
         private final Optional<String> binPath;
+        private final BundleInfo bundleInfo;
 
-        private FirmwareArtifacts(String srecPath, String binPath) {
+        private FirmwareArtifacts(String srecPath, String binPath, BundleInfo bundleInfo) {
             this.srecPath = Optional.ofNullable(srecPath);
             this.binPath = Optional.ofNullable(binPath);
+            this.bundleInfo = bundleInfo;
         }
 
         private static FirmwareArtifacts empty() {
-            return new FirmwareArtifacts(null, null);
+            return new FirmwareArtifacts(null, null, null);
         }
 
         public Optional<String> getSrecPath() {
@@ -854,6 +1204,10 @@ public class Autoupdate {
 
         public Optional<String> getBinPath() {
             return binPath;
+        }
+
+        public BundleInfo getBundleInfo() {
+            return bundleInfo;
         }
     }
 
@@ -879,8 +1233,8 @@ public class Autoupdate {
      * {@link ProcessBuilder} would then fail with "Permission denied", so give it one best-effort
      * chance to fix itself. See #8360.
      */
-    private static void ensureLauncherIsExecutable(final String launcherFileName) {
-        if (OsUtil.isWindows()) {
+    static void ensureLauncherIsExecutable(final String launcherFileName) {
+        if (IS_WINDOWS) {
             return;
         }
         final File launcher = new File(launcherFileName);
@@ -1011,10 +1365,16 @@ public class Autoupdate {
      * Text of the modal shown when the bundle download fails before any UI frame exists.
      */
     static String downloadErrorMessage(IOException e) {
-        if (e instanceof UnknownHostException) {
-            // DNS failure: rusefi.com is blocked in some regions, a Java exception is not actionable for the user #10191
-            return AutoupdateUtil.CHECK_INTERNET_CONNECTION;
+        try {
+            return AutoupdateUtil.downloadErrorMessage(e);
+        } catch (LinkageError olderCoreUi) {
+            // a newer autoupdate can run against an older core_ui, see AutoupdateUtil.CHECK_INTERNET_CONNECTION
+            log.error("downloadErrorMessage: " + olderCoreUi);
+            if (e instanceof UnknownHostException) {
+                // DNS failure: rusefi.com is blocked in some regions #10191
+                return AutoupdateUtil.CHECK_INTERNET_CONNECTION;
+            }
+            return "The download did not complete. Please try again.";
         }
-        return "Error downloading " + e;
     }
 }

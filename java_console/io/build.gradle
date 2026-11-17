@@ -43,3 +43,14 @@ tasks.register('slcanConnectorSandbox', JavaExec) {
         }
     }
 }
+
+// Explicitly selected hardware only: -PcanPort=auto|PCAN|SLCAN:<serial port>|SocketCAN, optional -PfsImage=<saved image>
+tasks.register('canIniDownloadSandbox', JavaExec) {
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.opensr5.ini.CanIniDownloadSandbox'
+    args project.findProperty('canPort') ?: 'auto'
+    if (project.hasProperty('fsImage')) {
+        args project.property('fsImage')
+    }
+}

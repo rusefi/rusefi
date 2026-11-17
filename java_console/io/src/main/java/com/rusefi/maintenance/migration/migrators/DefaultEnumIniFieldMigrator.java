@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import static com.rusefi.maintenance.migration.IniFieldMigrationUtils.checkIfTypeCanBeMigrated;
 import static javax.management.ObjectName.quote;
+import static javax.management.ObjectName.unquote;
 
 public enum DefaultEnumIniFieldMigrator {
     INSTANCE;
@@ -18,7 +19,13 @@ public enum DefaultEnumIniFieldMigrator {
         final UpdateOperationCallbacks callbacks
     ) {
         Optional<String> result = Optional.empty();
-        if (!checkIfTypeCanBeMigrated(prevField.getType(), newField.getType())) {
+        if (EnumIniField.isUnknownOrdinalValue(prevValue)) {
+            callbacks.logLine(String.format(
+                "Skipped `%s`: this tune has an unknown pin. Use the original tune with the INI used to save it, "
+                    + "or choose a supported pin.",
+                prevField.getName()
+            ));
+        } else if (!checkIfTypeCanBeMigrated(prevField.getType(), newField.getType())) {
             callbacks.logLine(String.format(
                 "WARNING! Field `%s` cannot be migrated because type is updated: `%s` -> `%s`",
                 prevField.getName(),
@@ -27,29 +34,40 @@ public enum DefaultEnumIniFieldMigrator {
             ));
         } else {
             final EnumIniField.EnumKeyValueMap newFieldKeyValues = newField.getEnums();
-            if (newFieldKeyValues.indexOf(prevValue) == -1) {
-                if (newFieldKeyValues.isBitField()) {
-                    final int prevValueOrdinal = prevField.getEnums().indexOf(prevValue);
-                    final String migratedValue = newFieldKeyValues.get(prevValueOrdinal);
-                    if (migratedValue != null) {
-                        result = Optional.of(quote(migratedValue));
-                    } else {
-                        callbacks.logLine(String.format(
-                            "WARNING! Field `%s` cannot be migrated because of internal error: " +
-                                "new enum doesn't value with ordinal %d",
-                            prevField.getName(),
-                            prevValueOrdinal
-                        ));
-                    }
+            final int matchingOrdinal = newFieldKeyValues.indexOf(prevValue);
+            if (matchingOrdinal != -1) {
+                final String label = EnumIniField.isQuoted(prevValue) ? unquote(prevValue) : prevValue;
+                final long matchingLabels = newFieldKeyValues.values().stream()
+                    .filter(label::equals)
+                    .count();
+                if (matchingLabels == 1) {
+                    result = Optional.of(prevValue);
                 } else {
                     callbacks.logLine(String.format(
-                        "WARNING! Field `%s` cannot be migrated because value `%s` has disappeared",
+                        "WARNING! Field `%s` cannot be migrated because value `%s` is ambiguous in the new enum",
                         prevField.getName(),
                         prevValue
                     ));
                 }
+            } else if (newFieldKeyValues.isBitField()) {
+                final int prevValueOrdinal = prevField.getEnums().indexOf(prevValue);
+                final String migratedValue = newFieldKeyValues.get(prevValueOrdinal);
+                if (migratedValue != null) {
+                    result = Optional.of(quote(migratedValue));
+                } else {
+                    callbacks.logLine(String.format(
+                        "WARNING! Field `%s` cannot be migrated because of internal error: " +
+                            "new enum doesn't value with ordinal %d",
+                        prevField.getName(),
+                        prevValueOrdinal
+                    ));
+                }
             } else {
-                result = Optional.of(prevValue);
+                callbacks.logLine(String.format(
+                    "WARNING! Field `%s` cannot be migrated because value `%s` has disappeared",
+                    prevField.getName(),
+                    prevValue
+                ));
             }
         }
         return result;

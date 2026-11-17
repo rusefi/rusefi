@@ -123,6 +123,17 @@ public class SensorCentral implements ISensorCentral {
         return INSTANCE;
     }
 
+    /** Includes inactive registrations: output demand alone cannot detect retained UI listeners. */
+    public int getSensorListenerCountForTests() {
+        synchronized (sensorListeners) {
+            int count = 0;
+            for (List<SensorListenerHolder> holders : sensorListeners.values()) {
+                count += holders.size();
+            }
+            return count;
+        }
+    }
+
     private SensorCentral() {
     }
 

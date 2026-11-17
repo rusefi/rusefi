@@ -9,6 +9,7 @@ import com.rusefi.config.generated.Integration;
 import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.ui.UIContext;
+import com.rusefi.ui.startup.Banner;
 import com.rusefi.ui.util.ScrollablePanel;
 
 import javax.swing.*;
@@ -85,39 +86,36 @@ public class OutputAssignmentPanel extends AbstractWizardStep {
                 return new Dimension(CARD_WIDTH, preferred.height);
             }
         };
-        card.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(uiColor("Separator.foreground", Color.GRAY)),
-            BorderFactory.createEmptyBorder(22, 26, 22, 26)));
+        WizardStyle.styleCard(card, 22, 26);
 
         JPanel header = new JPanel();
         header.setLayout(new BoxLayout(header, BoxLayout.Y_AXIS));
-        JLabel heading = new JLabel(type.heading);
-        heading.setForeground(uiColor("Label.disabledForeground", Color.GRAY));
+        JLabel heading = WizardStyle.sectionLabel(type.heading);
         heading.setAlignmentX(Component.LEFT_ALIGNMENT);
         header.add(heading);
         header.add(Box.createVerticalStrut(5));
 
-        JLabel title = new JLabel(getTitle());
-        title.setFont(title.getFont().deriveFont(Font.BOLD, title.getFont().getSize2D() * 1.5f));
+        JLabel title = WizardStyle.cardTitle(getTitle());
         title.setAlignmentX(Component.LEFT_ALIGNMENT);
         header.add(title);
         header.add(Box.createVerticalStrut(5));
 
-        JLabel guidance = new JLabel("Assign each cylinder output. Test applies all visible assignments first.");
+        JLabel guidance = WizardStyle.description("Assign each cylinder output. Test applies all visible assignments first.");
         guidance.setAlignmentX(Component.LEFT_ALIGNMENT);
         header.add(guidance);
         card.add(header, BorderLayout.NORTH);
 
         card.add(rows, BorderLayout.CENTER);
 
-        saveButton.setFont(saveButton.getFont().deriveFont(Font.BOLD));
+        styleContinueAction(saveButton);
         saveButton.addActionListener(e -> saveAndContinue());
-        statusLabel.setForeground(Color.RED);
+        statusLabel.setForeground(WizardStyle.error());
         enableBenchTests.addActionListener(e -> updateActions());
 
-        JLabel warning = new JLabel("<html><b>WARNING:</b> " + type.safetyWarning +
-            " The engine must be stopped.</html>");
-        warning.setForeground(Color.RED);
+        // fixed text width so the message wraps inside the banner instead of being cut off
+        JLabel warning = new JLabel("<html><body style='width: 560px'><b>WARNING:</b> " + type.safetyWarning +
+            " The engine must be stopped.</body></html>");
+        warning.setForeground(WizardStyle.text());
 
         JPanel safetyPanel = new JPanel();
         safetyPanel.setLayout(new BoxLayout(safetyPanel, BoxLayout.Y_AXIS));
@@ -129,10 +127,9 @@ public class OutputAssignmentPanel extends AbstractWizardStep {
 
         JPanel footer = new JPanel(new BorderLayout());
         footer.add(statusLabel, BorderLayout.CENTER);
-        footer.add(saveButton, BorderLayout.EAST);
 
         JPanel south = new JPanel(new BorderLayout(0, 8));
-        south.add(safetyPanel, BorderLayout.NORTH);
+        south.add(new Banner(Banner.Kind.WARNING, safetyPanel, null), BorderLayout.NORTH);
         south.add(footer, BorderLayout.SOUTH);
         card.add(south, BorderLayout.SOUTH);
 
@@ -141,7 +138,7 @@ public class OutputAssignmentPanel extends AbstractWizardStep {
         wrapper.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
         card.setAlignmentX(Component.CENTER_ALIGNMENT);
         wrapper.add(card);
-        content.add(new JScrollPane(wrapper), BorderLayout.CENTER);
+        content.add(WizardStyle.pageScrollPane(wrapper), BorderLayout.CENTER);
     }
 
     private void rebuildRows() {
@@ -188,7 +185,6 @@ public class OutputAssignmentPanel extends AbstractWizardStep {
             editors.put(fieldName, selector);
 
             JButton testButton = new JButton("Test " + index);
-            styleButton(testButton);
             int outputIndex = index;
             testButton.addActionListener(e -> startTest(outputIndex));
             testButtons.add(testButton);
@@ -282,7 +278,7 @@ public class OutputAssignmentPanel extends AbstractWizardStep {
         }
 
         busy = true;
-        statusLabel.setForeground(uiColor("Label.foreground", Color.BLACK));
+        statusLabel.setForeground(WizardStyle.text());
         statusLabel.setText("Applying assignments and testing output " + outputIndex + "...");
         updateActions();
 
@@ -296,7 +292,7 @@ public class OutputAssignmentPanel extends AbstractWizardStep {
 
     private void finishTest(int outputIndex, boolean success) {
         busy = false;
-        statusLabel.setForeground(success ? new Color(0, 140, 0) : Color.RED);
+        statusLabel.setForeground(success ? WizardStyle.success() : WizardStyle.error());
         statusLabel.setText(success
             ? "Test command sent for output " + outputIndex + "."
             : "Bench test command failed.");
@@ -340,14 +336,12 @@ public class OutputAssignmentPanel extends AbstractWizardStep {
     }
 
     private JLabel sectionLabel(String text) {
-        JLabel label = new JLabel(text);
-        label.setForeground(uiColor("Label.disabledForeground", Color.GRAY));
-        return label;
+        return WizardStyle.sectionLabel(text);
     }
 
-    private static Color uiColor(String key, Color fallback) {
-        Color color = UIManager.getColor(key);
-        return color == null ? fallback : color;
+    @Override
+    public JButton getContinueButton() {
+        return saveButton;
     }
 
     @Override

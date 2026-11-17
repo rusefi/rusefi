@@ -25,6 +25,11 @@ public class CustomBinaryLogEntry implements BinaryLogEntry {
         return name;
     }
 
+    /** The .ini output channel this entry records, whatever its log label. */
+    public String getChannel() {
+        return field.getName();
+    }
+
     @Override
     public SensorCategory getCategory() {
         return SensorCategory.OTHERS;

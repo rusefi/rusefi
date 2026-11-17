@@ -25,20 +25,21 @@ public class TextGaugeStrip {
     public TextGaugeStrip(UIContext uiContext, Node config) {
 
         content.setLayout(new BoxLayout(content, BoxLayout.X_AXIS));
-        content.setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 4));
+        content.setBorder(BorderFactory.createEmptyBorder(4, 6, 0, 6));
+        content.setOpaque(false);
 
         List<String> defaults = getFrontPageDefaults(uiContext);
 
         for (int i = 0; i < GAUGE_COUNT; i++) {
             final int index = i;
             String channel = config.getChild("gauge_" + index).getProperty(GAUGE_CHANNEL, defaults.get(index));
-            TextGauge gauge = new TextGauge(uiContext, channel, newName -> {
+            TextGauge gauge = new TextGauge(uiContext, channel, config.getChild("gauge_" + index), newName -> {
                 config.getChild("gauge_" + index).setProperty(GAUGE_CHANNEL, newName);
             });
             gauges.add(gauge);
             content.add(gauge.getContent());
             if (i < GAUGE_COUNT - 1) {
-                content.add(Box.createHorizontalStrut(2));
+                content.add(Box.createHorizontalStrut(6));
             }
         }
     }

@@ -132,7 +132,7 @@ public class LiveDataProcessor {
     }
 
     interface EntryHandler {
-        void onEntry(String name, String javaName, String inFolder, String prepend, String[] outputNames, String[] constexpr, String conditional, String engineModule, Boolean isPtr, String cppFileName, String outFolder) throws IOException;
+        void onEntry(String name, String javaName, String inFolder, String prepend, String[] outputNames, String[] prefixNames, String[] constexpr, String conditional, String engineModule, Boolean isPtr, String cppFileName, String outFolder) throws IOException;
     }
 
     public int handleYaml(List<LinkedHashMap> liveDocs) throws IOException {
@@ -149,7 +149,7 @@ public class LiveDataProcessor {
 
         EntryHandler handler = new EntryHandler() {
             @Override
-            public void onEntry(String name, String javaName, String inFolder, String prepend, String[] outputNames, String[] constexpr, String conditional, String engineModule, Boolean isPtr, String cppFileName, String outFolder) throws IOException {
+            public void onEntry(String name, String javaName, String inFolder, String prepend, String[] outputNames, String[] prefixNames, String[] constexpr, String conditional, String engineModule, Boolean isPtr, String cppFileName, String outFolder) throws IOException {
                 Objects.requireNonNull(outFolder);
                 // TODO: use outputNames
 
@@ -171,7 +171,10 @@ public class LiveDataProcessor {
 
                 outputsSections.outputNames = outputNames;
                 dataLogConsumer.outputNames = outputNames;
+                dataLogConsumer.prefixNames = prefixNames;
                 gaugeConsumer.outputNames = outputNames;
+                gaugeConsumer.prefixNames = prefixNames;
+                sdCardFieldsConsumer.prefixNames = prefixNames;
 
                 List<JavaSensorsConsumer> javaSensorsConsumers = new ArrayList<>();
                 for (int i = 0; i < outputNames.length; i++) {
@@ -209,24 +212,21 @@ public class LiveDataProcessor {
 
                 sdCardFieldsConsumer.structureStartingTsPosition = outputsSections.getBaseOffset();
 
+                if (engineModule != null && outputNames.length != 1) {
+                    throw new IllegalStateException("engineModule requires a single output: " + name);
+                }
                 if (constexpr != null) {
                     sdCardFieldsConsumer.expressions = constexpr;
                     sdCardFieldsConsumer.names = outputNames;
                     sdCardFieldsConsumer.conditional = conditional;
                     sdCardFieldsConsumer.isPtr = isPtr;
                     state.addDestination(sdCardFieldsConsumer::handleEndStruct);
+                }
 
-                    outputValueConsumer.expressions = constexpr;
-                    outputValueConsumer.names = outputNames;
-                    outputValueConsumer.moduleMode = false;
-                    outputValueConsumer.conditional = conditional;
-                    outputValueConsumer.isPtr = isPtr;
-                    state.addDestination(outputValueConsumer::handleEndStruct);
-
-                } else if (engineModule != null) {
+                if (constexpr != null || engineModule != null) {
                     outputValueConsumer.currentEngineModule = engineModule;
-                    outputValueConsumer.moduleMode = true;
-                    outputValueConsumer.expressions = new String[] {""};
+                    outputValueConsumer.moduleMode = engineModule != null;
+                    outputValueConsumer.expressions = engineModule == null ? constexpr : new String[] {""};
                     outputValueConsumer.names = outputNames;
                     outputValueConsumer.conditional = conditional;
                     outputValueConsumer.isPtr = isPtr;
@@ -273,6 +273,8 @@ public class LiveDataProcessor {
             isPtr = isPtr != null && isPtr;
 
             Object outputNames = entry.get("output_name");
+            // human-readable per-instance prefixes, see DataLogConsumer#getHumanGaugeName
+            Object prefixNames = entry.get("prefix_names");
             Object additionalHeaders = entry.get("additional_headers");
 
             if (additionalHeaders != null) {
@@ -290,6 +292,9 @@ public class LiveDataProcessor {
             }
 
             String[] outputNamesArr = getStrings(outputNames);
+            String[] prefixNamesArr = prefixNames == null ? null : getStrings(prefixNames);
+            if (prefixNamesArr != null && prefixNamesArr.length != outputNamesArr.length)
+                throw new IllegalStateException(name + ": prefix_names " + Arrays.toString(prefixNamesArr) + " vs output_name " + Arrays.toString(outputNamesArr));
             String[] constexpr = constexprValue == null ? null : getStrings(constexprValue);
 
             if (inputFolder != null) {
@@ -299,7 +304,7 @@ public class LiveDataProcessor {
                 inputFolder = inputOutputFolder;
             }
 
-            handler.onEntry(name, java, inputFolder, prepend, outputNamesArr, constexpr, conditional, engineModule, isPtr, cppFileName, "live_data_generated");
+            handler.onEntry(name, java, inputFolder, prepend, outputNamesArr, prefixNamesArr, constexpr, conditional, engineModule, isPtr, cppFileName, "live_data_generated");
 
             String enumName = "LDS_" + name;
             String type = name + "_s"; // convention

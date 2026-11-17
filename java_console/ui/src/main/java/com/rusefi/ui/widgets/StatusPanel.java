@@ -18,8 +18,8 @@ import static com.rusefi.ToolUtil.EOL;
 public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
     private static final Logging log = getLogging(StatusWindow.class);
 
-    private static final Color LIGHT_RED = new Color(255, 102, 102);
-    private static final Color LIGHT_GREEN = new Color(102, 255, 102);
+    // soft tints of the console's status colours [tag:console_theme]: still clearly
+    // success / failure / warning, without saturated backgrounds behind the text
     private final JTextArea logTextArea = new JTextArea();
     private final JLabel bottomStatusLabel = new JLabel();
 
@@ -27,6 +27,11 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
         super(new BorderLayout());
 
         logTextArea.setLineWrap(true);
+        logTextArea.setMargin(new Insets(8, 12, 8, 12));
+        // the console's monospaced font, as in the Messages log [tag:console_theme]
+        logTextArea.setFont(ConsoleFonts.mono(Font.PLAIN, ConsoleFonts.baseSize()));
+        // read-only status log: text arrives via log(), user keystrokes must not alter it
+        logTextArea.setEditable(false);
         JScrollPane messagesScroll = new JScrollPane(logTextArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
             @Override
             public Dimension getPreferredSize() {
@@ -38,8 +43,13 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
         clear();
     }
 
+    /** The log text, e.g. for {@link TextZoom}. */
+    public JComponent getLogTextArea() {
+        return logTextArea;
+    }
+
     public void setErrorState() {
-        logTextArea.setBackground(LIGHT_RED);
+        logTextArea.setBackground(failureBackground());
         copyContentToClipboard();
     }
 
@@ -55,14 +65,20 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
 
     @Override
     public void warning() {
-        SwingUtilities.invokeLater(() -> logTextArea.setBackground(Color.YELLOW));
+        SwingUtilities.invokeLater(() -> logTextArea.setBackground(themed("Console.Log.warningBackground", new Color(0xFDF0D5))));
     }
 
     public void setSuccessState() {
-        logTextArea.setBackground(LIGHT_GREEN);
+        logTextArea.setBackground(themed("Console.Log.successBackground", new Color(0xDCF5E3)));
     }
 
     public void copyContentToClipboard() {
+        copyLogToClipboard();
+        logLine("hint: error state is already in your clipboard, please use PASTE or Ctrl-V while reporting issues");
+    }
+
+    /** Copies the whole log, e.g. for a support request. */
+    public void copyLogToClipboard() {
         // kludge: due to 'append' method using invokeLater even while on AWT thread we also need invokeLater to
         // actually get overall status message
         SwingUtilities.invokeLater(() -> {
@@ -74,14 +90,21 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
                 log.error("getSystemClipboard error " + e, e);
             }
         });
+    }
 
-        logLine("hint: error state is already in your clipboard, please use PASTE or Ctrl-V while reporting issues");
+    private static Color failureBackground() {
+        return themed("Console.Log.failureBackground", new Color(0xFBE0E0));
+    }
+
+    private static Color themed(String key, Color fallback) {
+        Color color = UIManager.getColor(key);
+        return color != null ? color : fallback;
     }
 
     @Override
     public void clear() {
         logTextArea.setText("");
-        logTextArea.setBackground(Color.WHITE);
+        logTextArea.setBackground(themed("Console.Log.background", Color.WHITE));
         logLine("Console version " + UiVersion.CONSOLE_VERSION);
         log.info(OsUtil.getOsName() + " " + System.getProperty("os.version"));
         logLine("Bundle " + BundleUtil.readBundleFullNameNotNull());
@@ -113,6 +136,6 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
     }
 
     public boolean isInErrorState() {
-        return LIGHT_RED.equals(logTextArea.getBackground());
+        return failureBackground().equals(logTextArea.getBackground());
     }
 }

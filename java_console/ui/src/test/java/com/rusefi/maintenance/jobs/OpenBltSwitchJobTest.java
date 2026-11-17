@@ -39,7 +39,11 @@ public class OpenBltSwitchJobTest {
     private final AtomicInteger jobFinishedCount = new AtomicInteger();
 
     private OpenBltSwitchJob newJob(final LinkManager linkManager) {
-        return new OpenBltSwitchJob(new PortResult(PORT, SerialPortType.EcuWithOpenblt), null,
+        return newJob(linkManager, PORT);
+    }
+
+    private OpenBltSwitchJob newJob(final LinkManager linkManager, final String port) {
+        return new OpenBltSwitchJob(new PortResult(port, SerialPortType.EcuWithOpenblt), null,
             linkManager, scanner, rebooter);
     }
 
@@ -58,6 +62,27 @@ public class OpenBltSwitchJobTest {
         // disconnect() would set isDisconnectedByUser and kill any chance of auto-reconnecting
         // to the (possibly renumbered) port the board comes back on
         verify(linkManager, never()).disconnect();
+        // the serial port physically disappears on reboot, so the scanner needs no invalidation
+        assertEquals(Collections.emptyList(), scanner.invalidatedPorts);
+        assertEquals(1, jobFinishedCount.get());
+    }
+
+    @Test
+    public void liveCanSwitchInvalidatesThePinnedCanEntryAfterReleasingTheChannel() {
+        final LinkManager linkManager = mock(LinkManager.class);
+        final BinaryProtocol bp = mock(BinaryProtocol.class);
+        when(linkManager.getBinaryProtocol()).thenReturn(bp);
+
+        newJob(linkManager, LinkManager.PCAN).doJob(callbacks, jobFinishedCount::incrementAndGet);
+
+        // reboot over the live link, release the single-client CAN channel, THEN drop the pinned
+        // scanner entry — a CAN "port" never physically disappears, so without invalidation the
+        // stale ECU row would linger while the board sits in OpenBLT
+        final InOrder order = inOrder(rebooter, linkManager);
+        order.verify(rebooter).rebootToOpenblt(null, bp, callbacks);
+        order.verify(linkManager).close();
+        verify(linkManager, never()).disconnect();
+        assertEquals(Collections.singletonList(LinkManager.PCAN), scanner.invalidatedPorts);
         assertEquals(1, jobFinishedCount.get());
     }
 

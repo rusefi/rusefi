@@ -7,17 +7,21 @@ import com.opensr5.ini.RawIniFile;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.core.ui.FrameHelper;
+import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.opensr5.io.DataListener;
 import com.rusefi.io.serial.AbstractIoStream;
 import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.ini.reader.IniParsingException;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.widgets.tune.CalibrationDialogWidget;
+import com.rusefi.ui.widgets.tune.CalibrationPanelWorkspace;
 import com.rusefi.ui.widgets.tune.MainMenuTreeWidget;
 
 import javax.swing.*;
 import jakarta.xml.bind.JAXBException;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -99,17 +103,39 @@ public class TopLevelMenuSandbox {
 
         MainMenuTreeWidget left = new MainMenuTreeWidget(uiContext);
 
-        CalibrationDialogWidget right = new CalibrationDialogWidget(uiContext);
-        JScrollPane rightScrollPane = new JScrollPane(right.getViewportPane());
+        PersistentConfiguration config = PersistentConfiguration.getConfig();
+        CalibrationPanelWorkspace workspace = new CalibrationPanelWorkspace(uiContext,
+            config.getRoot().getChild("top_level_menu_sandbox").getChild(CalibrationPanelWorkspace.CONFIG_KEY));
+        CalibrationDialogWidget right = workspace.getPrimary();
+        right.setActive(true);
+        workspace.setOnConfigChange(image -> {
+            left.refreshExpressions(image);
+            uiContext.fireConfigImageChanged(image);
+        });
 
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, left.getContentPane(), rightScrollPane);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, left.getContentPane(), workspace.getContent());
         splitPane.setResizeWeight(0.3);
 
         left.setOnSelect(subMenu -> {
-            right.update(subMenu.getKey());
+            ConfigurationImage image = right.getWorkingImage();
+            right.update(subMenu.getKey(), uiContext.iniFileState.getIniFileModel(),
+                image == null ? uiContext.getBinaryProtocol().getControllerConfiguration() : image);
         });
 
-        frameHelper.showFrame(splitPane);
+        // Avoid WSL2 mouse-position offsets in maximized windows by using 90% of the usable screen.
+        Rectangle screen = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+        JFrame frame = frameHelper.getFrame();
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent event) {
+                workspace.destroy();
+                config.save();
+            }
+        });
+        frame.setSize((int) (screen.width * 0.9), (int) (screen.height * 0.9));
+        frame.setLocation(screen.x + (screen.width - frame.getWidth()) / 2,
+                screen.y + (screen.height - frame.getHeight()) / 2);
+        frameHelper.showFrame(splitPane, false);
         left.selectSubMenu("dwellSettings");
     }
 }

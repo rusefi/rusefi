@@ -5,7 +5,6 @@ import com.rusefi.io.can.HexUtil;
 import com.rusefi.io.can.slcan.SlcanClient;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileModel;
-import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
@@ -86,12 +85,18 @@ public class SlcanTab {
     private final JButton stopButton = new JButton("Stop");
     private final Consumer<String> messageHandler;
     private final UIContext uiContext;
+    private final List<Consumer<ConfigurationImage>> configImageListeners = new ArrayList<>();
 
     public SlcanTab(UIContext uiContext) {
         this(uiContext, null);
     }
 
     public SlcanTab(UIContext uiContext, Consumer<String> messageHandler) {
+        this(uiContext, messageHandler, true);
+    }
+
+    // Lifecycle tests build the real controls without scanning hardware or starting the UI timer.
+    SlcanTab(UIContext uiContext, Consumer<String> messageHandler, boolean startBackgroundWork) {
         this.uiContext = uiContext;
         this.messageHandler = messageHandler != null
             ? messageHandler
@@ -103,8 +108,8 @@ public class SlcanTab {
         stopButton.setEnabled(false);
 
         indicator.setPreferredSize(new Dimension(22, 22));
-        indicator.setBackground(Color.RED);
-        indicator.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+        indicator.setBackground(Color.RED); // [tag:fixed_color] connection lamp, red or green in every theme
+        indicator.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY)); // [tag:fixed_color] rim of the lamp
         JPanel indicatorWrapper = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         indicatorWrapper.setOpaque(false);
         indicatorWrapper.add(indicator);
@@ -145,11 +150,13 @@ public class SlcanTab {
         });
 
         refreshTimer = new Timer(250, e -> refresh());
-        refreshTimer.start();
 
         reader = new Thread(this::readerLoop, "SLCAN tab reader");
         reader.setDaemon(true);
-        reader.start();
+        if (startBackgroundWork) {
+            refreshTimer.start();
+            reader.start();
+        }
     }
 
     public JPanel getContent() {
@@ -162,6 +169,10 @@ public class SlcanTab {
         recording = false;
         refreshTimer.stop();
         reader.interrupt();
+        for (Consumer<ConfigurationImage> listener : configImageListeners) {
+            uiContext.removeConfigImageListener(listener);
+        }
+        configImageListeners.clear();
     }
 
     private void readerLoop() {
@@ -223,7 +234,7 @@ public class SlcanTab {
      */
     private void refresh() {
         String port = connectedPort;
-        indicator.setBackground(port != null ? new Color(0, 160, 0) : Color.RED);
+        indicator.setBackground(port != null ? new Color(0, 160, 0) : Color.RED); // [tag:fixed_color] connection lamp
         indicator.setToolTipText(port != null ? "Connected to " + port : "No SLCAN port");
 
         int bufferSize;
@@ -285,32 +296,25 @@ public class SlcanTab {
 
             JCheckBox cb = new JCheckBox(busName);
 
-            uiContext.addConfigImageListener(image -> {
-                updateCheckbox(cb, fieldName1, fieldName2, ini, image);
-            });
+            Consumer<ConfigurationImage> listener = image -> updateCheckbox(cb, fieldName1, fieldName2, ini, image);
+            configImageListeners.add(listener);
+            uiContext.addConfigImageListener(listener);
 
             // Initial state
-            BinaryProtocol bp = uiContext.getBinaryProtocol();
-            if (bp != null) {
-                ConfigurationImage image = bp.getBinaryProtocolState().getConfigurationImage();
-                if (image != null) {
-                    updateCheckbox(cb, fieldName1, fieldName2, ini, image);
-                }
+            ConfigurationImage image = uiContext.getCurrentConfigurationImage();
+            if (image != null) {
+                updateCheckbox(cb, fieldName1, fieldName2, ini, image);
             }
 
             cb.addActionListener(e -> {
-                BinaryProtocol bp2 = uiContext.getBinaryProtocol();
-                if (bp2 == null) return;
-                ConfigurationImage image = bp2.getBinaryProtocolState().getConfigurationImage();
-                if (image == null) return;
-
                 int newValue = cb.isSelected() ? 1 : 0;
-                applyValue(image, ini.getIniField(fieldName1), newValue);
-                applyValue(image, ini.getIniField(fieldName2), newValue);
-
-                ConfigurationImage snapshot = image.clone();
-                uiContext.getLinkManager().submit(() -> bp2.uploadChangesWithoutBurn(snapshot));
-                uiContext.fireConfigImageChanged(image);
+                boolean applied = uiContext.getBinaryProtocol() != null && uiContext.applyTuneEdit(edited -> {
+                    applyValue(edited, ini.getIniField(fieldName1), newValue);
+                    applyValue(edited, ini.getIniField(fieldName2), newValue);
+                });
+                if (!applied) {
+                    cb.setSelected(!cb.isSelected());
+                }
             });
 
             busPanel.add(cb);
@@ -332,7 +336,8 @@ public class SlcanTab {
             cb.setBackground(null);
         } else {
             cb.setSelected(true); // show as checked but grayed
-            cb.setBackground(java.awt.Color.LIGHT_GRAY);
+            java.awt.Color mixed = UIManager.getColor("Console.Checkbox.mixedBackground");
+            cb.setBackground(mixed != null ? mixed : java.awt.Color.LIGHT_GRAY);
         }
     }
 

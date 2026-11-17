@@ -26,6 +26,12 @@ public class EnumIniReaderHelper {
         "$adc_channel_e_list",
         "$sent_input_pin_e_list"
     )));
+    private static final Set<String> ALPHABETICAL_ENUM_LISTS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+        "$pin_mode_e_enum",
+        "$pin_input_mode_e_enum",
+        "$spi_device_e_enum",
+        "$gppwm_channel_e_enum"
+    )));
 
     private EnumIniReaderHelper() {
     }
@@ -41,8 +47,10 @@ public class EnumIniReaderHelper {
         int bitSize0 = parseBitRange.getBitSize0();
 
         EnumIniField.EnumKeyValueMap enums = EnumIniField.EnumKeyValueMap.valueOf(line.getRawText(), defines);
-        boolean pinEnum = PIN_ENUM_LISTS.contains(getEnumValuesSection(line.getRawText()));
-        return new EnumIniField(name, offset, type, enums, bitPosition, bitSize0, pinEnum);
+        String valuesSection = getEnumValuesSection(line.getRawText());
+        boolean pinEnum = PIN_ENUM_LISTS.contains(valuesSection);
+        return new EnumIniField(name, offset, type, enums, bitPosition, bitSize0, pinEnum,
+            ALPHABETICAL_ENUM_LISTS.contains(valuesSection));
     }
 
     public static boolean isKeyValueSyntax(String rawText) {

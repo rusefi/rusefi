@@ -25,11 +25,11 @@ public class PortHolder {
     private final Callable<IoStream> ioStreamFactory;
     private final LinkManager linkManager;
 
-    public ConnectionStatusLogic.Listener listener;
     private final Object portLock = new Object();
+    private long generation;
 
     @Nullable
-    private BinaryProtocol bp;
+    private volatile BinaryProtocol bp;
 
     protected PortHolder(LinkManager linkManager, Callable<IoStream> ioStreamFactory) {
         this.linkManager = linkManager;
@@ -37,51 +37,82 @@ public class PortHolder {
         this.ioStreamFactory = ioStreamFactory;
     }
 
-    /**
-     * @return true if OK, false if error
-     */
-    void connectAndReadConfiguration(BinaryProtocol.Arguments arguments) {
+    /** Capture cancellation before the open is queued on the communication executor. */
+    Runnable prepareConnection(BinaryProtocol.Arguments arguments, ConnectionStatusLogic.Listener listener) {
         Objects.requireNonNull(arguments);
+        synchronized (portLock) {
+            close();
+            long attemptGeneration = generation;
+            return () -> connectAndReadConfiguration(arguments, listener, attemptGeneration);
+        }
+    }
+
+    private void connectAndReadConfiguration(BinaryProtocol.Arguments arguments,
+                                             ConnectionStatusLogic.Listener listener, long attemptGeneration) {
+        synchronized (portLock) {
+            if (attemptGeneration != generation) {
+                return;
+            }
+        }
+        // Opening and configuration I/O must not block cancellation on portLock.
         IoStream stream;
         try {
             stream = ioStreamFactory.call();
         } catch (RuntimeException e) {
             log.error("Exception opening port: " + e.getMessage());
-            if (listener != null) {
-                listener.onConnectionFailed("Exception opening port: " + e.getMessage());
-            }
+            completeConnection(attemptGeneration, listener, "Exception opening port: " + e.getMessage());
             return;
         }
         if (stream == null) {
-            if (listener != null) {
-                listener.onConnectionFailed("Failed to open port");
-            }
+            completeConnection(attemptGeneration, listener, "Failed to open port");
             return;
         }
+        BinaryProtocol protocol;
         synchronized (portLock) {
-            bp = new BinaryProtocol(linkManager, stream);
-            portLock.notifyAll();
+            if (attemptGeneration != generation) {
+                stream.close();
+                return;
+            }
+            protocol = new BinaryProtocol(linkManager, stream);
+            bp = protocol;
         }
 
-        String errorMessage = bp.connectAndReadConfiguration(arguments, dataListener);
-        if (listener != null) {
-            if (errorMessage == null) {
-                listener.onConnectionEstablished();
-            } else {
-                listener.onConnectionFailed(errorMessage);
+        String errorMessage = protocol.connectAndReadConfiguration(arguments, dataListener);
+        completeConnection(attemptGeneration, listener, errorMessage);
+    }
+
+    private void completeConnection(long attemptGeneration, ConnectionStatusLogic.Listener listener,
+                                    String errorMessage) {
+        synchronized (portLock) {
+            if (attemptGeneration != generation) {
+                return;
+            }
+            if (errorMessage == null && bp != null && bp.isClosed()) {
+                errorMessage = "Connection closed during startup";
+            }
+            if (errorMessage != null && bp != null) {
+                BinaryProtocol protocol = bp;
+                bp = null;
+                protocol.close();
+            }
+            // Serialize notification with close, including cancellation during cleanup callbacks.
+            if (attemptGeneration == generation && listener != null) {
+                if (errorMessage == null) {
+                    listener.onConnectionEstablished();
+                } else {
+                    listener.onConnectionFailed(errorMessage);
+                }
             }
         }
     }
 
     public void close() {
         synchronized (portLock) {
-            if (bp != null) {
-                try {
-                    bp.close();
-                    bp = null;
-                } finally {
-                    portLock.notifyAll();
-                }
+            generation++;
+            BinaryProtocol protocol = bp;
+            bp = null;
+            if (protocol != null) {
+                protocol.close();
             }
         }
     }
@@ -91,15 +122,13 @@ public class PortHolder {
         return bp;
     }
 
-    /**
-     * this method blocks till a connection is available
-     */
     public void packAndSend(final String command, boolean fireEvent) throws InterruptedException {
-        if (bp == null) {
+        BinaryProtocol protocol = bp;
+        if (protocol == null) {
             log.warn("packAndSend: no active connection, dropping command '" + command + "'");
             throw new InterruptedException("No connectivity");
         }
 
-        bp.doSend(command, fireEvent);
+        protocol.doSend(command, fireEvent);
     }
 }
