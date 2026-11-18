@@ -25,6 +25,9 @@ LDSCRIPT = $(PROJECT_DIR)/hw_layer/ports/stm32/stm32f7/STM32F746xG.ld
 # microSD slot over SDIO (SDMMC1), see mcuconf.h; replaces the SPI MMC driver
 DDEFS += -DEFI_SDC_DEVICE=SDCD1
 
+# ignore fact that this is 1Mb chip in single bank mode
+DDEFS += -DEFI_FLASH_IGNORE_SINGLE_BANK=TRUE
+
 DDEFS += -DEFI_DYNO_VIEW=FALSE
 
 # TODO: Enable ethernet
