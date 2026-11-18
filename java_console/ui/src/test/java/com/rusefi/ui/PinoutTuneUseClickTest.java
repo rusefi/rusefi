@@ -22,23 +22,36 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 class PinoutTuneUseClickTest {
     @Test
-    void aClickThatMovesSlightlyIsLost() throws Exception {
+    void aClickThatMovesSlightlyStillOpensThePicker() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
             List<PinoutPin> assigned = new ArrayList<>();
             PinoutConnectorPage page = page(assigned);
             Point at = tuneUseCell(page, "A3");
 
             // a still click: press, release, then the click AWT adds
-            press(page.table, at);
-            release(page.table, at);
-            clicked(page.table, at);
-            assertEquals(1, assigned.size(), "a still click opens the picker");
+            press(page.table, at, 1);
+            release(page.table, at, 1);
+            clicked(page.table, at, 1);
+            assertEquals(1, assigned.size(), "a still click opens the picker, once");
 
             // the same click with the pointer moved 2 px: AWT sends no MOUSE_CLICKED
             Point moved = new Point(at.x + 2, at.y + 1);
-            press(page.table, at);
-            release(page.table, moved);
-            assertEquals(1, assigned.size(), "BUG: a click that moved slightly does not open the picker");
+            press(page.table, at, 1);
+            release(page.table, moved, 1);
+            assertEquals(2, assigned.size(), "a click that moved slightly opens the picker");
+            assertEquals("A3", assigned.get(1).name);
+
+            // a drag across the table is not a click
+            press(page.table, at, 1);
+            release(page.table, new Point(at.x + 40, at.y), 1);
+            assertEquals(2, assigned.size(), "a drag does not open the picker");
+
+            // the second click of a double-click does not open it again
+            press(page.table, at, 1);
+            release(page.table, at, 1);
+            press(page.table, at, 2);
+            release(page.table, at, 2);
+            assertEquals(3, assigned.size(), "a double-click opens the picker once");
         });
     }
 
@@ -62,22 +75,22 @@ class PinoutTuneUseClickTest {
         return new Point(cell.x + cell.width / 2, cell.y + cell.height / 2);
     }
 
-    private static void press(JTable table, Point at) {
-        send(table, MouseEvent.MOUSE_PRESSED, at);
+    private static void press(JTable table, Point at, int clickCount) {
+        send(table, MouseEvent.MOUSE_PRESSED, at, clickCount);
     }
 
-    private static void release(JTable table, Point at) {
-        send(table, MouseEvent.MOUSE_RELEASED, at);
+    private static void release(JTable table, Point at, int clickCount) {
+        send(table, MouseEvent.MOUSE_RELEASED, at, clickCount);
     }
 
-    private static void clicked(JTable table, Point at) {
-        send(table, MouseEvent.MOUSE_CLICKED, at);
+    private static void clicked(JTable table, Point at, int clickCount) {
+        send(table, MouseEvent.MOUSE_CLICKED, at, clickCount);
     }
 
-    private static void send(JTable table, int id, Point at) {
+    private static void send(JTable table, int id, Point at, int clickCount) {
         MouseEvent event = new MouseEvent(table, id, System.currentTimeMillis(),
                 id == MouseEvent.MOUSE_RELEASED || id == MouseEvent.MOUSE_CLICKED ? 0 : MouseEvent.BUTTON1_DOWN_MASK,
-                at.x, at.y, 1, false, MouseEvent.BUTTON1);
+                at.x, at.y, clickCount, false, MouseEvent.BUTTON1);
         for (MouseListener listener : table.getMouseListeners()) {
             // the page's own listeners only: the look and feel's selection handler throws headless
             if (!listener.getClass().getName().startsWith(PinoutConnectorPage.class.getName())) {
