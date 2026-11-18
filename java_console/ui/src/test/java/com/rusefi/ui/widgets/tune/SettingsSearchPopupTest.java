@@ -1,54 +1,77 @@
 package com.rusefi.ui.widgets.tune;
 
-import com.opensr5.ini.GroupMenuModel;
+import com.opensr5.ConfigurationImage;
+import com.opensr5.ini.IniFileMetaInfo;
 import com.opensr5.ini.IniFileModel;
-import com.opensr5.ini.MenuModel;
 import com.opensr5.ini.SubMenuModel;
+import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.lua.LuaTextEditor;
-import com.rusefi.ui.widgets.tune.SettingsPageIndex.Page;
-import org.junit.jupiter.api.Test;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-
 import com.rusefi.ui.widgets.JoinedButtons;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class SettingsSearchPopupTest {
-    /** An INI whose menu pages are all dialogs, so each one can open as a window. */
-    private static SettingsPageIndex index() {
-        IniFileModel ini = mock(IniFileModel.class);
-        MenuModel idle = new MenuModel("Idle");
-        idle.getItems().add(new SubMenuModel("idleSettings", "Idle settings"));
-        idle.getItems().add(new SubMenuModel("idlePid", "Idle PID"));
-        GroupMenuModel advanced = new GroupMenuModel("Advanced idle");
-        advanced.getItems().add(new SubMenuModel("idleTiming", "Idle timing"));
-        idle.getItems().add(advanced);
-        MenuModel fuel = new MenuModel("Fuel");
-        fuel.getItems().add(new SubMenuModel("injectors", "Injectors"));
-        when(ini.getMenus()).thenReturn(Arrays.asList(idle, fuel));
-        Map<String, com.opensr5.ini.DialogModel> dialogs = new HashMap<>();
-        for (String key : new String[]{"idleSettings", "idlePid", "idleTiming", "injectors"}) {
-            dialogs.put(key, mock(com.opensr5.ini.DialogModel.class));
+    /** Idle (with a separator, a page needing closed loop and a group), Fuel, and a Help menu of std_ pages. */
+    private static IniFileModel ini() throws Throwable {
+        String text = "[Constants]\npage = 1\n"
+            + "idleMode = bits, U08, 0, [0:0], \"Open loop\", \"Closed loop\"\n"
+            + "[Menu]\n"
+            + "menu = \"Idle\"\n"
+            + "subMenu = idleSettings, \"Idle settings\"\n"
+            + "subMenu = std_separator\n"
+            + "subMenu = idlePid, \"Idle PID\", 0, { idleMode }\n"
+            + "groupMenu = \"Advanced idle\"\n"
+            + "groupChildMenu = idleTiming, \"Idle timing\"\n"
+            + "menu = \"Fuel\"\n"
+            + "subMenu = injectors, \"Injectors\"\n"
+            + "subMenu = std_separator\n"
+            + "subMenu = std_ms3Rtc, \"Real-time clock\"\n"
+            + "menu = \"Help\"\n"
+            + "subMenu = std_help, \"About\"\n"
+            + "[UserDefined]\n"
+            + "dialog = idleSettings, \"Idle settings\"\nfield = \"Mode\", idleMode\n"
+            + "dialog = idlePid, \"Idle PID\"\nfield = \"Mode\", idleMode\n"
+            + "dialog = idleTiming, \"Idle timing\"\nfield = \"Mode\", idleMode\n"
+            + "dialog = injectors, \"Injectors\"\nfield = \"Mode\", idleMode\n";
+        IniFileMetaInfo meta = mock(IniFileMetaInfo.class);
+        when(meta.getnPages()).thenReturn(1);
+        when(meta.getPageSize(0)).thenReturn(8);
+        when(meta.getSignature()).thenReturn("popup-test");
+        return IniFileReaderUtil.readIniFile(IniFileReaderUtil.read(
+            new ByteArrayInputStream(text.getBytes(StandardCharsets.US_ASCII))), "popup-test.ini", meta);
+    }
+
+    /** idleMode is open loop: Idle PID is greyed out. */
+    private static SettingsSearchPopup popup(Predicate<String> open, Runnable close) {
+        try {
+            return new SettingsSearchPopup(ini(), new ConfigurationImage(new byte[8]), open, close);
+        } catch (Throwable e) {
+            throw new AssertionError(e);
         }
-        when(ini.getDialogs()).thenReturn(dialogs);
-        return SettingsPageIndex.build(ini, null);
     }
 
     private static void press(JComponent component, int key) {
@@ -69,38 +92,99 @@ class SettingsSearchPopupTest {
         return own;
     }
 
-    private static List<String> shown(SettingsSearchPopup popup) {
+    /** The visible rows, as their text. */
+    private static List<String> rows(SettingsSearchPopup popup) {
+        List<String> rows = new ArrayList<>();
+        for (int i = 0; i < popup.tree.getRowCount(); i++) {
+            rows.add(text(popup.tree.getPathForRow(i)));
+        }
+        return rows;
+    }
+
+    private static String text(TreePath path) {
+        if (path == null) {
+            return null;
+        }
+        Object userObject = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
+        return userObject instanceof SubMenuModel ? ((SubMenuModel) userObject).getName() : userObject.toString();
+    }
+
+    private static String selected(SettingsSearchPopup popup) {
+        return text(popup.tree.getSelectionPath());
+    }
+
+    /** The keys (or texts) of a menu's rows in the full tree. */
+    private static List<String> keys(DefaultMutableTreeNode root, String category) {
         List<String> keys = new ArrayList<>();
-        for (int i = 0; i < popup.results.size(); i++) {
-            keys.add(popup.results.get(i).getKey());
+        for (int i = 0; i < root.getChildCount(); i++) {
+            DefaultMutableTreeNode menu = (DefaultMutableTreeNode) root.getChildAt(i);
+            if (category.equals(menu.getUserObject())) {
+                for (int j = 0; j < menu.getChildCount(); j++) {
+                    Object page = ((DefaultMutableTreeNode) menu.getChildAt(j)).getUserObject();
+                    keys.add(page instanceof SubMenuModel ? ((SubMenuModel) page).getKey() : page.toString());
+                }
+            }
         }
         return keys;
     }
 
     @Test
-    void typingNarrowsTheListAndEnterOpensTheChosenPage() throws Exception {
+    void beforeTypingItShowsTheCategoriesToBrowse() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            List<String> opened = new ArrayList<>();
+            SettingsSearchPopup popup = popup(opened::add, () -> { });
+            assertEquals(Arrays.asList("Idle", "Fuel"), rows(popup),
+                "closed categories; Help has no page that opens as a window");
+            assertEquals("Idle", selected(popup));
+            assertEquals(SettingsSearchPopup.HINT, popup.status.getText());
+
+            press(popup.search, KeyEvent.VK_ENTER);
+            List<String> open = rows(popup);
+            assertEquals("Idle settings", open.get(1), "Enter opens a category");
+            assertEquals(Arrays.asList("Idle PID", "Advanced idle", "Fuel"), open.subList(3, 6),
+                "the separator stays between the pages");
+            press(popup.search, KeyEvent.VK_DOWN);
+            assertEquals("Idle settings", selected(popup));
+            press(popup.search, KeyEvent.VK_DOWN);
+            assertEquals("Advanced idle", selected(popup), "Down skips the separator and the greyed-out page");
+            press(popup.search, KeyEvent.VK_UP);
+            press(popup.search, KeyEvent.VK_UP);
+            assertEquals("Idle", selected(popup));
+            press(popup.search, KeyEvent.VK_ENTER);
+            assertEquals(Arrays.asList("Idle", "Fuel"), rows(popup), "Enter closes it again");
+
+            assertEquals(Collections.singletonList("injectors"), keys(popup.menuTree.getRoot(), "Fuel"),
+                "std_ pages and the separator left at the end are hidden");
+            assertTrue(opened.isEmpty(), "categories do not open anything");
+        });
+    }
+
+    @Test
+    void typingKeepsTheMatchesUnderTheirCategoriesAndEnterOpensTheChosenPage() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
             List<String> opened = new ArrayList<>();
             AtomicInteger closed = new AtomicInteger();
-            SettingsSearchPopup popup = new SettingsSearchPopup(index(), page -> opened.add(page.getKey()),
-                closed::incrementAndGet);
-            assertEquals(Arrays.asList("idleSettings", "idlePid", "idleTiming", "injectors"), shown(popup),
-                "every page before typing");
-            assertEquals(0, popup.list.getSelectedIndex(), "the first one is ready for Enter");
-            assertEquals(SettingsSearchPopup.HINT, popup.status.getText());
+            SettingsSearchPopup popup = popup(opened::add, closed::incrementAndGet);
 
             popup.search.setText("idle t");
-            assertEquals(Arrays.asList("idleTiming", "idleSettings"), shown(popup));
+            assertEquals(Arrays.asList("Idle", "Idle settings", "Advanced idle", "Idle timing"), rows(popup));
+            assertEquals("Idle timing", selected(popup), "a name starting with the query is chosen first");
             press(popup.search, KeyEvent.VK_DOWN);
-            press(popup.search, KeyEvent.VK_DOWN);
-            assertEquals(1, popup.list.getSelectedIndex(), "stops at the last result");
+            assertEquals("Idle timing", selected(popup), "stops at the last row");
             press(popup.search, KeyEvent.VK_UP);
             press(popup.search, KeyEvent.VK_UP);
-            assertEquals(0, popup.list.getSelectedIndex(), "stops at the first result");
-            press(popup.search, KeyEvent.VK_DOWN);
+            assertEquals("Idle settings", selected(popup));
             press(popup.search, KeyEvent.VK_ENTER);
             assertEquals(Collections.singletonList("idleSettings"), opened);
             assertEquals(1, closed.get(), "the search goes away once the page is open");
+
+            popup.search.setText("fuel");
+            assertEquals(Arrays.asList("Fuel", "Injectors"), rows(popup), "a category brings its pages");
+            assertEquals("Injectors", selected(popup));
+
+            popup.search.setText("idle pid");
+            assertEquals(Arrays.asList("Idle", "Idle PID"), rows(popup), "a greyed-out page is still shown");
+            assertEquals("Idle", selected(popup), "but not chosen");
         });
     }
 
@@ -109,10 +193,9 @@ class SettingsSearchPopupTest {
         SwingUtilities.invokeAndWait(() -> {
             AtomicBoolean opened = new AtomicBoolean();
             AtomicInteger closed = new AtomicInteger();
-            SettingsSearchPopup popup = new SettingsSearchPopup(index(), page -> opened.getAndSet(true),
-                closed::incrementAndGet);
+            SettingsSearchPopup popup = popup(page -> opened.getAndSet(true), closed::incrementAndGet);
             popup.search.setText("boost ");
-            assertTrue(popup.results.isEmpty());
+            assertEquals(0, popup.tree.getRowCount());
             assertEquals("No settings page matches “boost”.", popup.status.getText());
             press(popup.search, KeyEvent.VK_ENTER);
             assertFalse(opened.get());
@@ -126,7 +209,7 @@ class SettingsSearchPopupTest {
     void aPageThatCannotOpenSaysWhyAndStays() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
             AtomicInteger closed = new AtomicInteger();
-            SettingsSearchPopup popup = new SettingsSearchPopup(index(), page -> false, closed::incrementAndGet);
+            SettingsSearchPopup popup = popup(page -> false, closed::incrementAndGet);
             popup.search.setText("injectors");
             popup.openSelected();
             assertEquals("“Injectors” cannot open now: no tune is loaded.", popup.status.getText());
@@ -137,9 +220,8 @@ class SettingsSearchPopupTest {
     @Test
     void withoutAnIniItSaysWhatToDo() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
-            SettingsSearchPopup popup = new SettingsSearchPopup(SettingsPageIndex.build(null, null), page -> true,
-                () -> { });
-            assertTrue(popup.results.isEmpty());
+            SettingsSearchPopup popup = new SettingsSearchPopup(null, null, page -> true, () -> { });
+            assertEquals(0, popup.tree.getRowCount());
             assertEquals(SettingsSearchPopup.NO_PAGES, popup.status.getText());
             popup.search.setText("idle");
             assertEquals(SettingsSearchPopup.NO_PAGES, popup.status.getText(), "not \"no match\"");

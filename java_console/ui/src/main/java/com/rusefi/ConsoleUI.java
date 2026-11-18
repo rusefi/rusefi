@@ -43,7 +43,6 @@ import com.rusefi.ui.widgets.StatusPanel;
 import com.rusefi.ui.widgets.TextZoom;
 import com.rusefi.ui.widgets.tune.CalibrationPanelWorkspace;
 import com.rusefi.ui.widgets.tune.PinoutLink;
-import com.rusefi.ui.widgets.tune.SettingsPageIndex;
 import com.rusefi.ui.widgets.tune.SettingsSearchPopup;
 import com.rusefi.ui.wizard.WizardCatalog;
 import com.rusefi.ui.wizard.WizardContainer;
@@ -594,9 +593,9 @@ console live data tab is broken #8402
                     return null;
                 }
                 buildTuning.run();
-                return SettingsPageIndex.build(uiContext.iniFileState.getIniFileModel(),
+                return new SettingsSearchPopup.Source(uiContext.iniFileState.getIniFileModel(),
                     tuningHolder[0].getTuneImage());
-            }, page -> tuningHolder[0].openSettingsWindow(consoleFrame, page.getKey()));
+            }, pageKey -> tuningHolder[0].openSettingsWindow(consoleFrame, pageKey));
             settingsSearchBox.setVisible(true);
 
             // Restore detached calibration windows even when another tab was selected at exit.
