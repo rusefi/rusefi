@@ -22,6 +22,9 @@ LDSCRIPT = $(PROJECT_DIR)/hw_layer/ports/stm32/stm32f7/STM32F746xG.ld
 # USB: OTG HS with external ULPI PHY (CN13), see mcuconf.h. The FS DM/DP pads
 # (EFI_USB_SERIAL_DM/DP) are not used; ULPI pins are claimed in board_configuration.cpp
 
+# microSD slot over SDIO (SDMMC1), see mcuconf.h; replaces the SPI MMC driver
+DDEFS += -DEFI_SDC_DEVICE=SDCD1
+
 DDEFS += -DEFI_DYNO_VIEW=FALSE
 
 # TODO: Enable ethernet

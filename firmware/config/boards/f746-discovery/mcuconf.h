@@ -32,3 +32,17 @@
 #define STM32_USB_USE_OTG1                  FALSE
 #undef STM32_USB_USE_OTG2
 #define STM32_USB_USE_OTG2                  TRUE
+
+/*
+ * SD card: CN3 microSD slot on SDMMC1, 4-bit (PC8..PC11 D0..D3, PC12 CK,
+ * PD2 CMD, PC13 card detect). F74x has no SDMMC2, which the common F7 config
+ * enables. SDMMC1 can use DMA2 stream 3 or 6, both channel 4; stream 3 is
+ * shared with SPI1 TX, stream 6 only with SPI5 TX/SPI6 RX, which are disabled.
+ * The clock is the 48 MHz PLL48CLK (STM32_SDMMCSEL in the common config).
+ */
+#undef STM32_SDC_USE_SDMMC1
+#define STM32_SDC_USE_SDMMC1                TRUE
+#undef STM32_SDC_USE_SDMMC2
+#define STM32_SDC_USE_SDMMC2                FALSE
+#undef STM32_SDC_SDMMC1_DMA_STREAM
+#define STM32_SDC_SDMMC1_DMA_STREAM         STM32_DMA_STREAM_ID(2, 6)
