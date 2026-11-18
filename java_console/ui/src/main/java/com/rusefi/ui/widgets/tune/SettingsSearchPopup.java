@@ -15,6 +15,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.*;
+import java.awt.event.AWTEventListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -75,6 +76,40 @@ public final class SettingsSearchPopup {
         }
     };
     private final List<KeyStroke> boundKeys = new ArrayList<>();
+    /** Pointer movement in pixels that still counts as a click on a row. */
+    private static final int CLICK_SLOP = 5;
+    /**
+     * Opens a page on release near the press: AWT sends no click once the pointer moved at all, which
+     * would drop slightly moving clicks. A click on a category opens or closes it (the tree's own toggle,
+     * on press).
+     */
+    final MouseAdapter rowClick = new MouseAdapter() {
+        private Point pressedAt;
+        private TreePath pressedPath;
+
+        @Override
+        public void mousePressed(MouseEvent event) {
+            pressedAt = event.getPoint();
+            pressedPath = tree.getPathForLocation(event.getX(), event.getY());
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent event) {
+            Point from = pressedAt;
+            TreePath path = pressedPath;
+            pressedAt = null;
+            pressedPath = null;
+            if (from == null || path == null || !SwingUtilities.isLeftMouseButton(event)
+                || from.distance(event.getPoint()) > CLICK_SLOP
+                || !path.equals(tree.getPathForLocation(event.getX(), event.getY()))) {
+                return;
+            }
+            if (pageAt(path) != null && menuTree.isSelectable(path)) {
+                tree.setSelectionPath(path);
+                openSelected();
+            }
+        }
+    };
 
     /**
      * @param box   the field to read the query from and take the keys in; null gives the popup its own field
@@ -109,17 +144,7 @@ public final class SettingsSearchPopup {
         // chosen row in the selection colours
         tree.setFocusable(false);
         tree.putClientProperty(FlatClientProperties.STYLE_CLASS, "tuningMenu tuningSearch");
-        tree.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent event) {
-                // a click on a category opens or closes it (the tree's single-click toggle)
-                TreePath path = tree.getPathForLocation(event.getX(), event.getY());
-                if (pageAt(path) != null && menuTree.isSelectable(path)) {
-                    tree.setSelectionPath(path);
-                    openSelected();
-                }
-            }
-        });
+        tree.addMouseListener(rowClick);
         bind(KeyEvent.VK_DOWN, "nextPage", () -> move("selectNext", 1));
         bind(KeyEvent.VK_UP, "previousPage", () -> move("selectPrevious", 1));
         bind(KeyEvent.VK_PAGE_DOWN, "nextPages", () -> move("selectNext", VISIBLE_ROWS - 1));
@@ -320,6 +345,20 @@ public final class SettingsSearchPopup {
             return popup != null;
         }
 
+        /**
+         * A mouse press anywhere in the application: one outside the box and the tree closes the tree. A
+         * click on a part of the console that takes no focus (a gauge, a label) leaves the box focused, so
+         * losing focus alone would leave the tree up.
+         */
+        void pressed(Component target) {
+            SettingsSearchPopup shown = popup;
+            if (shown == null || target == null || SwingUtilities.isDescendingFrom(target, box)
+                || SwingUtilities.isDescendingFrom(target, shown.getContent())) {
+                return;
+            }
+            close(false);
+        }
+
         @Nullable
         SettingsSearchPopup getPopup() {
             return popup;
@@ -376,6 +415,19 @@ public final class SettingsSearchPopup {
                 new Rectangle(box.getLocationOnScreen(), box.getSize())));
             dropdown.setVisible(true);
         }, () -> dropdown.setVisible(false));
+        AWTEventListener outsideClick = event -> {
+            if (event.getID() == MouseEvent.MOUSE_PRESSED && event.getSource() instanceof Component) {
+                boxSearch.pressed((Component) event.getSource());
+            }
+        };
+        Toolkit.getDefaultToolkit().addAWTEventListener(outsideClick, AWTEvent.MOUSE_EVENT_MASK);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                Toolkit.getDefaultToolkit().removeAWTEventListener(outsideClick);
+                dropdown.dispose();
+            }
+        });
         frame.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentMoved(ComponentEvent e) {

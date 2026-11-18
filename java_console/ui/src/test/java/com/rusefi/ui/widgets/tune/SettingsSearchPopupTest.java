@@ -376,6 +376,52 @@ class SettingsSearchPopupTest {
     }
 
     @Test
+    void aClickOnAPageOpensItEvenIfTheMouseMovesALittle() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            List<String> opened = new ArrayList<>();
+            SettingsSearchPopup popup = popup(opened::add, () -> { });
+            popup.search.setText("injectors");
+            int row = rows(popup).indexOf("Injectors");
+            Rectangle bounds = popup.tree.getRowBounds(row);
+            Point at = new Point(bounds.x + 10, bounds.y + bounds.height / 2);
+
+            release(popup, at, new Point(at.x + 15, at.y));
+            assertTrue(opened.isEmpty(), "a drag across the row is not a click");
+            release(popup, at, new Point(at.x + 3, at.y + 1));
+            assertEquals(Collections.singletonList("injectors"), opened,
+                "AWT sends no click after any movement: the release opens the page");
+        });
+    }
+
+    private static void release(SettingsSearchPopup popup, Point from, Point to) {
+        popup.rowClick.mousePressed(new MouseEvent(popup.tree, MouseEvent.MOUSE_PRESSED, 0,
+            java.awt.event.InputEvent.BUTTON1_DOWN_MASK, from.x, from.y, 1, false, MouseEvent.BUTTON1));
+        popup.rowClick.mouseReleased(new MouseEvent(popup.tree, MouseEvent.MOUSE_RELEASED, 0, 0, to.x, to.y, 1,
+            false, MouseEvent.BUTTON1));
+    }
+
+    @Test
+    void aClickOutsideTheBoxAndTheTreeClosesIt() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            JTextField box = SettingsSearchPopup.createSearchBox();
+            SettingsSearchPopup.BoxSearch boxSearch = new SettingsSearchPopup.BoxSearch(box, closeAction -> {
+                try {
+                    return new SettingsSearchPopup(box, ini(), null, (page, field) -> true, closeAction);
+                } catch (Throwable e) {
+                    throw new AssertionError(e);
+                }
+            }, popup -> { }, () -> { });
+            box.setText("idle");
+            boxSearch.pressed(box);
+            boxSearch.pressed(boxSearch.getPopup().tree);
+            assertTrue(boxSearch.isOpen(), "clicks in the box or the tree keep it");
+            boxSearch.pressed(new JLabel("a gauge, which takes no focus"));
+            assertFalse(boxSearch.isOpen());
+            assertEquals("idle", box.getText(), "what was typed stays");
+        });
+    }
+
+    @Test
     void nothingDropsDownWithoutPagesToSearch() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
             JTextField box = SettingsSearchPopup.createSearchBox();
