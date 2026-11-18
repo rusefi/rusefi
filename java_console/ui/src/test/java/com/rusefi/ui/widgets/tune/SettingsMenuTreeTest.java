@@ -79,6 +79,45 @@ class SettingsMenuTreeTest {
         });
     }
 
+    @Test
+    void settingsWhoseLabelMatchesAreRowsUnderTheirPage() throws Throwable {
+        IniFileModel ini = ini();
+        SwingUtilities.invokeAndWait(() -> {
+            SettingsMenuTree menuTree = new SettingsMenuTree(() -> ini);
+            // idleMode is off: Idle PID is greyed out
+            menuTree.refreshExpressions(ini, new ConfigurationImage(new byte[8]));
+            JTree tree = menuTree.getTree();
+
+            menuTree.filter("MODE");
+            DefaultMutableTreeNode idle = (DefaultMutableTreeNode) ((DefaultMutableTreeNode) tree.getModel().getRoot())
+                .getChildAt(0);
+            assertEquals(2, idle.getChildCount(), "both pages holding the setting, Fuel has none");
+            DefaultMutableTreeNode settingsPage = (DefaultMutableTreeNode) idle.getChildAt(0);
+            DefaultMutableTreeNode pidPage = (DefaultMutableTreeNode) idle.getChildAt(1);
+            SettingsMenuTree.SettingRow mode = (SettingsMenuTree.SettingRow)
+                ((DefaultMutableTreeNode) settingsPage.getChildAt(0)).getUserObject();
+            assertEquals("Mode", mode.getLabel());
+            assertEquals("idleMode", mode.getFieldKey());
+            assertEquals("idleSettings", mode.getPage().getKey());
+
+            TreePath pidMode = new TreePath(((DefaultMutableTreeNode) pidPage.getChildAt(0)).getPath());
+            assertFalse(menuTree.isSelectable(pidMode), "a setting of a greyed-out page cannot be chosen");
+            assertEquals(UIManager.getColor("Label.disabledForeground"), tree.getCellRenderer()
+                .getTreeCellRendererComponent(tree, pidMode.getLastPathComponent(), false, false, true, 0, false)
+                .getForeground());
+            assertSame(mode, ((DefaultMutableTreeNode) menuTree.bestMatch("MODE").getLastPathComponent())
+                .getUserObject());
+            assertTrue(menuTree.getUnlockHint(((SettingsMenuTree.SettingRow) ((DefaultMutableTreeNode)
+                pidMode.getLastPathComponent()).getUserObject()).getPage()) != null, "the hover hint is the page's");
+
+            menuTree.filter("idle settings");
+            assertEquals(0, menuTree.findSubMenuNode("idleSettings").getChildCount(), "the full tree is untouched");
+            DefaultMutableTreeNode shown = (DefaultMutableTreeNode) ((DefaultMutableTreeNode)
+                ((DefaultMutableTreeNode) tree.getModel().getRoot()).getChildAt(0)).getChildAt(0);
+            assertEquals(0, shown.getChildCount(), "a page matched by name lists only settings matching too");
+        });
+    }
+
     /** Pages whose names share words, in two menus and a group; Idle PID needs closed loop. */
     private static IniFileModel searchIni() throws Throwable {
         String text = "[Constants]\npage = 1\n"

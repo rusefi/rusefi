@@ -23,7 +23,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.function.Predicate;
+import java.util.function.BiPredicate;
 import java.util.function.Supplier;
 
 /**
@@ -40,7 +40,7 @@ public final class SettingsSearchPopup {
     private static final int WIDTH = 560;
     private static final int HEIGHT = 380;
 
-    private final Predicate<String> open;
+    private final BiPredicate<String, String> open;
     private final Runnable close;
     private final JPanel content = new JPanel(new BorderLayout(0, 6));
     final JTextField search = new JTextField();
@@ -51,11 +51,11 @@ public final class SettingsSearchPopup {
     /**
      * @param ini   the menus to show; null shows none
      * @param image the tune that greys out pages, as in the Tuning tree; null greys out none
-     * @param open  opens a page by its INI key; false when it cannot open now, which keeps the popup up
-     *              with a message
+     * @param open  opens a page by its INI key, at the setting with the second key when a setting was chosen
+     *              (else null); false when it cannot open now, which keeps the popup up with a message
      * @param close hides the popup after a page opened or on Esc
      */
-    SettingsSearchPopup(@Nullable IniFileModel ini, @Nullable ConfigurationImage image, Predicate<String> open,
+    SettingsSearchPopup(@Nullable IniFileModel ini, @Nullable ConfigurationImage image, BiPredicate<String, String> open,
                         Runnable close) {
         this.open = open;
         this.close = close;
@@ -140,7 +140,7 @@ public final class SettingsSearchPopup {
         }
         DefaultMutableTreeNode shownRoot = (DefaultMutableTreeNode) tree.getModel().getRoot();
         if (shownRoot.getChildCount() == 0) {
-            status.setText("No settings page matches “" + text + "”.");
+            status.setText("No settings page or setting matches “" + text + "”.");
             return;
         }
         status.setText(HINT);
@@ -169,8 +169,7 @@ public final class SettingsSearchPopup {
         if (path == null) {
             return null;
         }
-        Object userObject = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
-        return userObject instanceof SubMenuModel ? (SubMenuModel) userObject : null;
+        return SettingsMenuTree.pageOf(((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject());
     }
 
     void openSelected() {
@@ -187,7 +186,10 @@ public final class SettingsSearchPopup {
             }
             return;
         }
-        if (open.test(page.getKey())) {
+        Object userObject = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
+        String fieldKey = userObject instanceof SettingsMenuTree.SettingRow
+            ? ((SettingsMenuTree.SettingRow) userObject).getFieldKey() : null;
+        if (open.test(page.getKey(), fieldKey)) {
             close.run();
         } else {
             status.setText("“" + page.getName() + "” cannot open now: no tune is loaded.");
@@ -215,9 +217,9 @@ public final class SettingsSearchPopup {
      * tab bar's search box. {@code source} is asked at each opening, so the pages follow the INI and tune
      * of the moment; a null source (firmware being flashed) opens nothing.
      *
-     * @param open opens a page by its INI key, see the constructor
+     * @param open opens a page by its INI key, at a setting when one was chosen; see the constructor
      */
-    public static Launcher install(JFrame frame, Supplier<Source> source, Predicate<String> open) {
+    public static Launcher install(JFrame frame, Supplier<Source> source, BiPredicate<String, String> open) {
         Shown shown = new Shown();
         Launcher launcher = (text, anchor) -> {
             if (shown.dialog != null) {
@@ -286,7 +288,7 @@ public final class SettingsSearchPopup {
         box.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search settings (Ctrl+K)");
         box.putClientProperty(FlatClientProperties.TEXT_FIELD_LEADING_ICON, new FlatSearchIcon());
         box.getAccessibleContext().setAccessibleName("Search settings");
-        box.setToolTipText("Find a Tuning page and open it in its own window over this screen (Ctrl+K)");
+        box.setToolTipText("Find a Tuning page or setting and open it in its own window over this screen (Ctrl+K)");
         Dimension size = new Dimension(box.getPreferredSize().width, JoinedButtons.HEIGHT);
         box.setPreferredSize(size);
         box.setMinimumSize(new Dimension(size.width / 2, size.height));

@@ -157,6 +157,8 @@ public class TuningPane {
             currentKey.set(subMenu.getKey());
             right.update(subMenu.getKey(), uiContext.iniFileState.getIniFileModel(), sessionImage.get());
         });
+        // a setting found by the menu search: its page is shown now, the row is laid out on the next event
+        left.setOnSelectField(fieldKey -> SwingUtilities.invokeLater(() -> right.highlightField(fieldKey)));
 
         // All edit events (dialog fields, table cells, curve drags) flow through onConfigChange.
         // Text fields fire per-keystroke; the toolbar widget coalesces them into one undo point.
@@ -312,11 +314,12 @@ public class TuningPane {
      * Opens a menu page in a floating settings window over whatever tab is shown, without switching
      * to Tuning. Works before the Tuning tab was ever opened.
      *
+     * @param fieldKey a setting to mark in the window, or null
      * @return false while there is no tune to show or the loaded INI has no such page
      */
-    public boolean openSettingsWindow(Window owner, String pageKey) {
+    public boolean openSettingsWindow(Window owner, String pageKey, String fieldKey) {
         workspace.restore(owner);
-        return workspace.openPanel(pageKey);
+        return workspace.openPanel(pageKey, fieldKey);
     }
 
     /** The tune being edited, including unsaved edits; null before one is loaded. */

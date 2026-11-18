@@ -595,7 +595,7 @@ console live data tab is broken #8402
                 buildTuning.run();
                 return new SettingsSearchPopup.Source(uiContext.iniFileState.getIniFileModel(),
                     tuningHolder[0].getTuneImage());
-            }, pageKey -> tuningHolder[0].openSettingsWindow(consoleFrame, pageKey));
+            }, (pageKey, fieldKey) -> tuningHolder[0].openSettingsWindow(consoleFrame, pageKey, fieldKey));
             settingsSearchBox.setVisible(true);
 
             // Restore detached calibration windows even when another tab was selected at exit.
