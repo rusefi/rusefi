@@ -122,6 +122,7 @@ Behavior common to all tools:
 | `data_logging_status` | Recording state, file path, sample count, and errors. |
 | `convert_log_to_csv` | Convert a host-side MLG/MSL log to CSV without connecting to an ECU. |
 | `extract_tune_from_log` | Extract the starting MSQ tune embedded in a host-side MLG log without connecting to an ECU. |
+| `import_ini_to_cache` | Import a host-side `.ini` into the console's local `.ini` cache keyed by the firmware signature hash. |
 | `read_messages` | Pull recent ECU messages (Lua `print` included). |
 | `wait_for_message` | Block until a message matches a regex. |
 | `read_tune` | Save the complete ECU tune as a `.msq` file. |
@@ -191,6 +192,29 @@ java -cp /path/to/mcp_ecu-all.jar com.rusefi.mcp.MslToCsv input.mlg output.csv
 
 The output argument is optional. The existing C++ converter remains available
 for unit-test tooling.
+
+### `import_ini_to_cache`
+
+| Argument | Type | Required | Default | Description |
+|---|---|---|---|---|
+| `path` | string | yes | — | Existing `.ini` file on the MCP server host (not the client). |
+| `signature` | string | no | read from file | Firmware signature override (e.g. `rusEFI master.2026.07.02.uaefi.2367417284`). By default the server extracts the signature from the file's `signature=` line. |
+
+Copies the file into the console's local `.ini` cache at
+`~/.rusEFI/ini_database/<hash>.ini`, where `<hash>` is the last token of the
+firmware signature. Subsequent connects for that signature resolve the `.ini`
+locally without any network download or user prompt — the same path the Swing
+manual-picker uses for custom boards or offline installs
+(`SignatureHelper.importIntoCache`). An existing cached entry for the same hash
+is overwritten. No ECU connection or network access is required.
+
+Returns `success`, absolute `path` (the cached file) and `signature`. Errors
+when the input is missing, unreadable, lacks a `signature=` line (and no
+override is supplied), or has an unparseable signature.
+
+```json
+{"name":"import_ini_to_cache","arguments":{"path":"/tmp/rusefi_my_board.ini"}}
+```
 
 ### `connect`
 
