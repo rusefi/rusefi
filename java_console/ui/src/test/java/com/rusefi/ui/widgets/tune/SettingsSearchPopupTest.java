@@ -21,6 +21,8 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -76,7 +78,7 @@ class SettingsSearchPopupTest {
      */
     private static SettingsSearchPopup popup(Predicate<String> open, Runnable close) {
         try {
-            return new SettingsSearchPopup(ini(), new ConfigurationImage(new byte[8]),
+            return new SettingsSearchPopup(null, ini(), new ConfigurationImage(new byte[8]),
                 (page, field) -> open.test(field == null ? page : page + "@" + field), close);
         } catch (Throwable e) {
             throw new AssertionError(e);
@@ -205,7 +207,7 @@ class SettingsSearchPopupTest {
             ini = IniFileReaderUtil.readIniFile(raw, "26october.ini", new IniFileMetaInfoImpl(raw));
         }
         SwingUtilities.invokeAndWait(() -> {
-            SettingsSearchPopup popup = new SettingsSearchPopup(ini, null, (page, field) -> true, () -> { });
+            SettingsSearchPopup popup = new SettingsSearchPopup(null, ini, null, (page, field) -> true, () -> { });
             List<String> pages = new ArrayList<>();
             Enumeration<?> nodes = popup.menuTree.getRoot().preorderEnumeration();
             while (nodes.hasMoreElements()) {
@@ -290,7 +292,7 @@ class SettingsSearchPopupTest {
     @Test
     void withoutAnIniItSaysWhatToDo() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
-            SettingsSearchPopup popup = new SettingsSearchPopup(null, null, (page, field) -> true, () -> { });
+            SettingsSearchPopup popup = new SettingsSearchPopup(null, null, null, (page, field) -> true, () -> { });
             assertEquals(0, popup.tree.getRowCount());
             assertEquals(SettingsSearchPopup.NO_PAGES, popup.status.getText());
             popup.search.setText("idle");
@@ -312,29 +314,77 @@ class SettingsSearchPopupTest {
     }
 
     @Test
-    void theTabBarBoxOpensTheSearchWithWhatWasTyped() throws Exception {
+    void theTabBarBoxIsTheSearchField() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
-            List<String> shown = new ArrayList<>();
-            List<Component> anchors = new ArrayList<>();
-            JTextField box = SettingsSearchPopup.createSearchBox((text, anchor) -> {
-                shown.add(text);
-                anchors.add(anchor);
-            });
+            JTextField box = SettingsSearchPopup.createSearchBox();
+            List<String> opened = new ArrayList<>();
+            AtomicInteger shown = new AtomicInteger();
+            AtomicInteger hidden = new AtomicInteger();
+            SettingsSearchPopup.BoxSearch boxSearch = new SettingsSearchPopup.BoxSearch(box, closeAction -> {
+                try {
+                    return new SettingsSearchPopup(box, ini(), new ConfigurationImage(new byte[8]),
+                        (page, field) -> opened.add(page), closeAction);
+                } catch (Throwable e) {
+                    throw new AssertionError(e);
+                }
+            }, popup -> shown.incrementAndGet(), hidden::incrementAndGet);
+            assertEquals(JoinedButtons.HEIGHT, box.getPreferredSize().height, "lines up with the tab bar buttons");
+
             // events only reach an undisplayed field's listeners when handed to them directly
             for (MouseListener listener : ownListeners(box.getMouseListeners())) {
                 listener.mousePressed(new MouseEvent(box, MouseEvent.MOUSE_PRESSED, 0, 0, 5, 5, 1, false,
                     MouseEvent.BUTTON1));
             }
-            for (KeyListener listener : ownListeners(box.getKeyListeners())) {
-                listener.keyTyped(new KeyEvent(box, KeyEvent.KEY_TYPED, 0, 0, KeyEvent.VK_UNDEFINED, 'b'));
-                listener.keyPressed(new KeyEvent(box, KeyEvent.KEY_PRESSED, 0, 0, KeyEvent.VK_ENTER,
-                    KeyEvent.CHAR_UNDEFINED));
-                listener.keyTyped(new KeyEvent(box, KeyEvent.KEY_TYPED, 0, 0, KeyEvent.VK_UNDEFINED, (char) 9));
+            assertTrue(boxSearch.isOpen(), "a click drops the tree down");
+            SettingsSearchPopup popup = boxSearch.getPopup();
+            assertSame(box, popup.search, "no second field: the query is typed in the box");
+            assertFalse(Arrays.asList(popup.getContent().getComponents()).contains(box));
+            assertEquals(Arrays.asList("Idle", "Fuel"), rows(popup));
+
+            box.setText("injectors");
+            assertEquals(Arrays.asList("Fuel", "Injectors"), rows(popup), "typing in the box filters the tree");
+            press(box, KeyEvent.VK_ENTER);
+            assertEquals(Collections.singletonList("injectors"), opened);
+            assertFalse(boxSearch.isOpen(), "the tree goes away once the page is open");
+            assertEquals("", box.getText(), "and the box is emptied");
+            assertEquals("notify-field-accept",
+                box.getInputMap(JComponent.WHEN_FOCUSED).get(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)),
+                "the box takes its keys as before");
+
+            box.setText("i");
+            assertTrue(boxSearch.isOpen(), "typing drops the tree down again");
+            assertEquals("i", boxSearch.getPopup().search.getText());
+            press(box, KeyEvent.VK_ESCAPE);
+            assertFalse(boxSearch.isOpen());
+            assertEquals("", box.getText(), "Esc empties the box");
+
+            box.setText("idle");
+            for (FocusListener listener : ownListeners(box.getFocusListeners())) {
+                listener.focusLost(new FocusEvent(box, FocusEvent.FOCUS_LOST));
             }
-            assertEquals(Arrays.asList("", "b", ""), shown, "a click, a letter and Enter; Tab just moves on");
-            assertSame(box, anchors.get(0), "the search opens under the box");
-            assertEquals("", box.getText(), "the letter goes to the search, the box stays empty");
-            assertEquals(JoinedButtons.HEIGHT, box.getPreferredSize().height, "lines up with the tab bar buttons");
+            assertFalse(boxSearch.isOpen(), "a click elsewhere closes the tree");
+            assertEquals("idle", box.getText(), "but keeps what was typed");
+            for (KeyListener listener : ownListeners(box.getKeyListeners())) {
+                listener.keyPressed(new KeyEvent(box, KeyEvent.KEY_PRESSED, 0, 0, KeyEvent.VK_DOWN,
+                    KeyEvent.CHAR_UNDEFINED));
+            }
+            assertTrue(boxSearch.isOpen(), "Down drops it down again");
+            assertEquals("Idle settings", selected(boxSearch.getPopup()), "with the query still applied");
+            assertEquals(4, shown.get());
+            assertEquals(3, hidden.get());
+        });
+    }
+
+    @Test
+    void nothingDropsDownWithoutPagesToSearch() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            JTextField box = SettingsSearchPopup.createSearchBox();
+            AtomicInteger shown = new AtomicInteger();
+            SettingsSearchPopup.BoxSearch boxSearch = new SettingsSearchPopup.BoxSearch(box, closeAction -> null,
+                popup -> shown.incrementAndGet(), () -> { });
+            box.setText("idle");
+            assertFalse(boxSearch.isOpen(), "firmware being flashed");
+            assertEquals(0, shown.get());
         });
     }
 
