@@ -597,10 +597,11 @@ public class SettingsMenuTree {
     }
 
     /**
-     * The page or setting row of the filtered tree answering the query best, the first in menu order among
-     * equals; null when nothing the user can open now matches. A page whose name holds the query wins over
-     * a setting, a setting over a page found only through its menu. Pages shown only for their settings do
-     * not count, their setting rows do. See {@link #rank}.
+     * The row of the filtered tree to choose for the query; null when nothing the user can open now
+     * matches. A page whose name is the query, or starts with it, is clearly what was meant: the best of
+     * those wins wherever it is (an exact name over a start, the first in menu order among equals).
+     * Otherwise no row stands out and the first one from the top is chosen: a setting, or a page found by
+     * its name or menu. Pages shown only to hold their matching settings are passed over. See {@link #rank}.
      */
     public TreePath bestMatch(String query) {
         String[] words = words(query);
@@ -608,30 +609,30 @@ public class SettingsMenuTree {
         if (text.isEmpty()) {
             return null;
         }
-        TreePath best = null;
-        int bestRank = Integer.MAX_VALUE;
+        TreePath named = null;
+        int namedRank = 2;
+        TreePath first = null;
         Enumeration<?> nodes = ((DefaultMutableTreeNode) tree.getModel().getRoot()).preorderEnumeration();
         while (nodes.hasMoreElements()) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) nodes.nextElement();
             TreePath path = new TreePath(node.getPath());
             Object userObject = node.getUserObject();
-            // pages named by the query first (0-2), then settings named by it (3-5), then pages found
-            // through their menu or group (6): finding a setting is the fallback, not a detour
-            int rank;
-            if (userObject instanceof SettingRow) {
-                rank = 3 + rank(((SettingRow) userObject).label, text);
-            } else if (userObject instanceof SubMenuModel && containsAll(pathText(path), words)) {
-                int pageRank = rank(((SubMenuModel) userObject).getName(), text);
-                rank = pageRank == 3 ? 6 : pageRank;
-            } else {
+            boolean page = userObject instanceof SubMenuModel && containsAll(pathText(path), words);
+            if (!(page || userObject instanceof SettingRow) || !isSelectable(path)) {
                 continue;
             }
-            if (rank < bestRank && isSelectable(path)) {
-                best = path;
-                bestRank = rank;
+            if (first == null) {
+                first = path;
+            }
+            if (page) {
+                int rank = rank(((SubMenuModel) userObject).getName(), text);
+                if (rank < namedRank) {
+                    named = path;
+                    namedRank = rank;
+                }
             }
         }
-        return best;
+        return named != null ? named : first;
     }
 
     private static String pathText(TreePath path) {
@@ -645,7 +646,8 @@ public class SettingsMenuTree {
 
     /**
      * How well a page name or setting label answers a query: 0 for the exact name, 1 for a name starting
-     * with the query, 2 for a name containing every word, 3 for a match through the menu or group.
+     * with the query, 2 for a name holding every word, 3 for a match through the menu or group. Words
+     * match at the start of a word of the name only, see {@link #indexOfWord}.
      */
     static int rank(String pageName, String query) {
         String text = String.join(" ", words(query));
@@ -656,12 +658,40 @@ public class SettingsMenuTree {
         if (name.startsWith(text)) {
             return 1;
         }
-        for (String word : words(text)) {
-            if (!name.contains(word)) {
-                return 3;
+        return containsAll(pageName, words(text)) ? 2 : 3;
+    }
+
+    /**
+     * Where {@code word} (lower case) next occurs in {@code text} at or after {@code from}, at the start of
+     * a word of the text; -1 when it does not. A word starts after a space or punctuation, between a
+     * letter and a digit, and at a capital following a small letter ("spiDevice" holds "device", not
+     * "pid"). A word that itself starts with punctuation matches anywhere.
+     */
+    static int indexOfWord(String text, String lower, String word, int from) {
+        if (word.isEmpty()) {
+            return -1;
+        }
+        boolean anywhere = !Character.isLetterOrDigit(word.charAt(0));
+        for (int at = lower.indexOf(word, from); at >= 0; at = lower.indexOf(word, at + 1)) {
+            if (anywhere || isWordStart(text, lower, at)) {
+                return at;
             }
         }
-        return 2;
+        return -1;
+    }
+
+    private static boolean isWordStart(String text, String lower, int at) {
+        if (at == 0) {
+            return true;
+        }
+        char before = lower.charAt(at - 1);
+        char letter = lower.charAt(at);
+        if (!Character.isLetterOrDigit(before) || Character.isDigit(before) != Character.isDigit(letter)) {
+            return true;
+        }
+        // capitals are known only while lower case keeps the positions
+        return text.length() == lower.length()
+            && Character.isLowerCase(text.charAt(at - 1)) && Character.isUpperCase(text.charAt(at));
     }
 
     /**
@@ -676,7 +706,8 @@ public class SettingsMenuTree {
         boolean[] bold = new boolean[name.length()];
         boolean any = false;
         for (String word : words) {
-            for (int at = lower.indexOf(word); at >= 0; at = lower.indexOf(word, at + word.length())) {
+            for (int at = indexOfWord(name, lower, word, 0); at >= 0;
+                 at = indexOfWord(name, lower, word, at + word.length())) {
                 Arrays.fill(bold, at, at + word.length(), true);
                 any = true;
             }
@@ -687,7 +718,7 @@ public class SettingsMenuTree {
     private static boolean containsAll(String text, String[] words) {
         String lower = text.toLowerCase(Locale.ROOT);
         for (String word : words) {
-            if (!lower.contains(word)) {
+            if (indexOfWord(text, lower, word, 0) < 0) {
                 return false;
             }
         }

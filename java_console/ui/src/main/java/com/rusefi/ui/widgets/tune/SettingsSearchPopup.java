@@ -50,6 +50,8 @@ public final class SettingsSearchPopup {
     private static final int VISIBLE_ROWS = 12;
     private static final int WIDTH = 560;
     private static final int HEIGHT = 380;
+    /** How far above the chosen row its category or group may be and still be scrolled into view with it. */
+    private static final int HEADING_ROWS = 3;
 
     private final BiPredicate<String, String> open;
     private final Runnable close;
@@ -59,6 +61,7 @@ public final class SettingsSearchPopup {
     final SettingsMenuTree menuTree;
     final JTree tree;
     final JLabel status = new JLabel();
+    final JScrollPane scroll;
     private final DocumentListener typing = new DocumentListener() {
         @Override
         public void insertUpdate(DocumentEvent e) {
@@ -152,7 +155,7 @@ public final class SettingsSearchPopup {
         bind(KeyEvent.VK_ENTER, "openPage", this::openSelected);
         bind(KeyEvent.VK_ESCAPE, "closeSearch", close);
 
-        JScrollPane scroll = new JScrollPane(tree);
+        scroll = new JScrollPane(tree);
         scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         // a fixed size: the window is packed once and does not follow the number of rows
         scroll.setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -211,7 +214,38 @@ public final class SettingsSearchPopup {
             choice = tree.getPathForRow(0);
         }
         tree.setSelectionPath(choice);
-        tree.scrollPathToVisible(choice);
+        showAtTop(choice);
+    }
+
+    /**
+     * Scrolls the chosen row near the top, under its category and group when they are just above it, so the rows
+     * after it are in view too. JTree's own scrollPathToVisible scrolls only as far as needed, which
+     * leaves a match below the fold as the last visible row.
+     */
+    private void showAtTop(TreePath choice) {
+        Rectangle row = tree.getPathBounds(choice);
+        if (row == null) {
+            return;
+        }
+        // the viewport is not laid out until the window is packed: use the size it is given
+        int height = scroll.getViewport().getExtentSize().height;
+        if (height <= 0) {
+            Insets insets = scroll.getInsets();
+            height = scroll.getPreferredSize().height - insets.top - insets.bottom;
+        }
+        int top = row.y;
+        // the root is hidden: a path of two is a category
+        for (TreePath heading = choice.getParentPath(); heading != null && heading.getPathCount() >= 2;
+             heading = heading.getParentPath()) {
+            Rectangle bounds = tree.getPathBounds(heading);
+            // a heading far above (many matches in between) would push the choice back down
+            if (bounds != null && row.y - bounds.y <= HEADING_ROWS * row.height
+                && row.y + row.height - bounds.y <= height) {
+                top = bounds.y;
+            }
+        }
+        int maxTop = Math.max(0, tree.getPreferredSize().height - height);
+        scroll.getViewport().setViewPosition(new Point(0, Math.max(0, Math.min(top, maxTop))));
     }
 
     /** Runs the tree's own up/down navigation, which skips separators and greyed-out pages. */

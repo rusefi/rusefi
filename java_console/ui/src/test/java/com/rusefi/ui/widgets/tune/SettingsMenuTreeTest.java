@@ -188,14 +188,15 @@ class SettingsMenuTreeTest {
                 shown(menuTree, "IDLE"), "any case; the & mnemonic is not part of the name");
             assertEquals("fuelIdle", best(menuTree, "IDLE"), "the exact name");
             assertEquals("fuelPid", best(menuTree, "pid"), "a name starting with the query before one containing it");
-            assertEquals("fuelPid", best(menuTree, "fuel"),
-                "a name containing the words before pages matched only by their menu");
-            assertEquals(Arrays.asList("idleSettings", "idleTable", "idleTiming"), shown(menuTree, "idle t"),
-                "every word must match: Idle PID has no t");
+            assertEquals("injectors", best(menuTree, "fuel"),
+                "no name is or starts with the query: the first match from the top, not one further down");
+            assertEquals(Arrays.asList("idleTable", "idleTiming"), shown(menuTree, "idle t"),
+                "every word must match at the start of a word: Idle PID has no t, Idle settings none first");
             assertEquals("idleTable", best(menuTree, "idle  t"), "first in menu order among equals");
             assertEquals(Collections.singletonList("idleTable"), shown(menuTree, "table idle"), "words in any order");
             assertEquals(Collections.singletonList("idleTiming"), shown(menuTree, "advanced timing"),
                 "group names count too");
+            assertTrue(shown(menuTree, "dle").isEmpty(), "words match from their start only");
             assertTrue(shown(menuTree, "boost").isEmpty());
             assertNull(best(menuTree, "boost"));
         });
@@ -214,7 +215,13 @@ class SettingsMenuTreeTest {
     @Test
     void matchedLettersAreBold() throws Exception {
         assertEquals("Idle [PID]", marked("Idle PID", "pid"));
-        assertEquals("[I]dle [ti]m[i]ng", marked("Idle timing", " I  T "), "every occurrence of every word");
+        assertEquals("[I]dle [t]iming", marked("Idle timing", " I  T "), "every word, at the start of a word");
+        assertEquals("[PID] min, [pid] max", marked("PID min, pid max", "pid"), "every occurrence");
+        assertEquals("mc33816spiDevice", marked("mc33816spiDevice", "pid"), "not across the words spi and Device");
+        assertEquals("mc33816[spiDevice]", marked("mc33816spiDevice", "spi device"),
+            "a word starts after a digit and at a capital");
+        assertEquals("[A/C] idle", marked("A/C idle", "a/c"));
+        assertEquals("A[/C] idle", marked("A/C idle", "/c"), "punctuation first: anywhere");
         assertEquals("Idle", marked("Idle", "fuel"), "a row shown for its menu keeps its plain name");
         assertEquals("Idle", marked("Idle", ""));
 

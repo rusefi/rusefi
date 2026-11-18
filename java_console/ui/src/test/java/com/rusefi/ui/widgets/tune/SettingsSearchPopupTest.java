@@ -17,6 +17,7 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -178,15 +179,16 @@ class SettingsSearchPopupTest {
             SettingsSearchPopup popup = popup(opened::add, closed::incrementAndGet);
 
             popup.search.setText("idle t");
-            assertEquals(Arrays.asList("Idle", "Idle settings", "Advanced idle", "Idle timing"), rows(popup));
+            assertEquals(Arrays.asList("Idle", "Advanced idle", "Idle timing"), rows(popup),
+                "words match at the start of a word: not the t in Idle settings");
             assertEquals("Idle timing", selected(popup), "a name starting with the query is chosen first");
             press(popup.search, KeyEvent.VK_DOWN);
             assertEquals("Idle timing", selected(popup), "stops at the last row");
             press(popup.search, KeyEvent.VK_UP);
-            press(popup.search, KeyEvent.VK_UP);
-            assertEquals("Idle settings", selected(popup));
+            assertEquals("Advanced idle", selected(popup));
+            press(popup.search, KeyEvent.VK_DOWN);
             press(popup.search, KeyEvent.VK_ENTER);
-            assertEquals(Collections.singletonList("idleSettings"), opened);
+            assertEquals(Collections.singletonList("idleTiming"), opened);
             assertEquals(1, closed.get(), "the search goes away once the page is open");
 
             popup.search.setText("fuel");
@@ -226,7 +228,37 @@ class SettingsSearchPopupTest {
             popup.search.setText("idle");
             assertEquals("Idle settings", selected(popup));
             assertEquals("Idle", text(popup.tree.getSelectionPath().getParentPath()));
+            popup.search.setText("PID");
+            assertEquals("PID Extra for low RPM", selected(popup),
+                "no page is named PID: the first match from the top, not IAC PID multiplier further down");
+            assertFalse(rows(popup).contains("mc33816spiDevice"), "spiDevice holds no word starting with pid");
+
+            // laid out as in the window
+            JComponent content = popup.getContent();
+            content.setSize(content.getPreferredSize());
+            layOut(content);
+            // vvt: the page just under its category; fuel: a page far down a long group of trims
+            for (String query : Arrays.asList("vvt", "fuel", "")) {
+                popup.search.setText(query);
+                layOut(content);
+                TreePath choice = popup.tree.getSelectionPath();
+                Rectangle row = popup.tree.getPathBounds(choice);
+                Rectangle view = popup.scroll.getViewport().getViewRect();
+                assertTrue(view.contains(row), query + ": the chosen row is in view");
+                int rowsAbove = (row.y - view.y) / row.height;
+                assertTrue(rowsAbove <= choice.getPathCount() - 2,
+                    query + ": near the top, under its nearby headings only, not " + rowsAbove + " rows down");
+            }
         });
+    }
+
+    private static void layOut(Container container) {
+        container.doLayout();
+        for (Component child : container.getComponents()) {
+            if (child instanceof Container) {
+                layOut((Container) child);
+            }
+        }
     }
 
     @Test
