@@ -117,12 +117,7 @@ public class ConsoleUI {
     private LogViewerHost logViewer;
     private TuningPane tuningPane;
     /** Set up with the Tuning tab; until then (and in log viewer mode) the tab bar's search box is hidden. */
-    private SettingsSearchPopup.Launcher settingsSearch;
-    private final JTextField settingsSearchBox = SettingsSearchPopup.createSearchBox((text, anchor) -> {
-        if (settingsSearch != null) {
-            settingsSearch.show(text, anchor);
-        }
-    });
+    private final JTextField settingsSearchBox = SettingsSearchPopup.createSearchBox();
     private Component gaugesTab;
     private Component tuningTab;
     private SensorCentral.FullOutputLease unclassifiedTabLease;
@@ -588,7 +583,7 @@ console live data tab is broken #8402
             // Ctrl+K: search the Tuning pages from any tab and open one floating over it, without
             // switching to Tuning (built in the background when needed).
             JFrame consoleFrame = mainFrame.getFrame().getFrame();
-            settingsSearch = SettingsSearchPopup.install(consoleFrame, () -> {
+            SettingsSearchPopup.install(consoleFrame, settingsSearchBox, () -> {
                 if (deviceSessionManager.getState() == SessionState.FLASHING) {
                     return null;
                 }
