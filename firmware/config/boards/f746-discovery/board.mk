@@ -10,8 +10,8 @@ DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::I1
 CHIBIOS_MCU_TYPE = STM32F745xx
 # Stock board.c from ChibiOS
 BOARD_C = $(CHIBIOS)/os/hal/boards/ST_STM32F746G_DISCOVERY/board.c
-# Stock board.h from ChibiOS
-BOARDINC = $(CHIBIOS)/os/hal/boards/ST_STM32F746G_DISCOVERY/
+# Stock board.h from ChibiOS is pulled in by the board.h wrapper in this folder
+# (see the comment there); mcuconf.h here overrides clocks and USB OTG2
 
 # Default F7 linker script is not compatible
 LDSCRIPT = $(PROJECT_DIR)/hw_layer/ports/stm32/stm32f7/STM32F746xG.ld
@@ -19,10 +19,8 @@ LDSCRIPT = $(PROJECT_DIR)/hw_layer/ports/stm32/stm32f7/STM32F746xG.ld
 # Save some RAM until we enable SDRAM: EFI_LUA=FALSE is declared in
 # prepend.txt and lifted into DDEFS by the Makefile - see [tag:ts_page_table]
 
-# USB OTG FS connector:
-DDEFS += -DEFI_USB_SERIAL_DM=Gpio::A11
-DDEFS += -DEFI_USB_SERIAL_DP=Gpio::A12
-DDEFS += -DEFI_USB_AF=10
+# USB: OTG HS with external ULPI PHY (CN13), see mcuconf.h. The FS DM/DP pads
+# (EFI_USB_SERIAL_DM/DP) are not used; ULPI pins are claimed in board_configuration.cpp
 
 DDEFS += -DEFI_DYNO_VIEW=FALSE
 
