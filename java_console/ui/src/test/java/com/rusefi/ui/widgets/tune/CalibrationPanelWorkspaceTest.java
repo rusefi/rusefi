@@ -653,6 +653,31 @@ class CalibrationPanelWorkspaceTest {
         });
     }
 
+    /** A setting found by the settings search: its page opens with that row marked. */
+    @Test
+    void pageOpensAtASetting() throws Throwable {
+        IniFileModel ini = ini();
+        AtomicReference<Fixture> fixture = new AtomicReference<>();
+        SwingUtilities.invokeAndWait(() -> {
+            fixture.set(new Fixture(ini, new Node()));
+            assertTrue(fixture.get().workspace.openPanel("second", "mode"));
+        });
+        SwingUtilities.invokeAndWait(() -> {
+            try (Fixture opened = fixture.get()) {
+                JComponent marked = null;
+                for (Component component : UiUtils.getAllComponents(opened.windows.get(0).content)) {
+                    if (component instanceof JComponent
+                        && "mode".equals(((JComponent) component).getClientProperty("rusefi.fieldKey"))) {
+                        marked = (JComponent) component;
+                    }
+                }
+                assertNotNull(marked, "the page shows the setting");
+                assertTrue(marked.getBorder().getClass().getName().endsWith("FieldHighlight$Mark"),
+                    "and marks its row: " + marked.getBorder());
+            }
+        });
+    }
+
     @Test
     void pageOpensWhereItWasLeftAndNotWithoutATune() throws Throwable {
         IniFileModel ini = ini();

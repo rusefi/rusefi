@@ -34,6 +34,7 @@ public class MainMenuTreeWidget {
     private boolean isUpdatingModel = false;
     private boolean isProcessingSearchSelection = false;
     private Consumer<SubMenuModel> onSelect;
+    private Consumer<String> onSelectField;
 
     private final UIContext uiContext;
 
@@ -129,10 +130,10 @@ public class MainMenuTreeWidget {
         }
 
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-        SubMenuModel selectedSubMenu = null;
-        if (node.getUserObject() instanceof SubMenuModel) {
-            selectedSubMenu = (SubMenuModel) node.getUserObject();
-        }
+        SubMenuModel selectedSubMenu = SettingsMenuTree.pageOf(node.getUserObject());
+        // a setting row (search results only) opens its page at that setting
+        String fieldKey = node.getUserObject() instanceof SettingsMenuTree.SettingRow
+            ? ((SettingsMenuTree.SettingRow) node.getUserObject()).getFieldKey() : null;
 
         if (!searchField.getText().isEmpty()) {
             // When search is active, defer everything to after tree restoration
@@ -161,6 +162,9 @@ public class MainMenuTreeWidget {
                             // call onSelect only if not disabled
                             if (onSelect != null && !menuTree.isDisabled(subMenuToSelect)) {
                                 onSelect.accept(subMenuToSelect);
+                                if (fieldKey != null && onSelectField != null) {
+                                    onSelectField.accept(fieldKey);
+                                }
                             }
 
                             // Defer scroll to after all other events are processed
@@ -228,6 +232,11 @@ public class MainMenuTreeWidget {
 
     public void setOnSelect(Consumer<SubMenuModel> onSelect) {
         this.onSelect = onSelect;
+    }
+
+    /** Called with a setting's key after its search result opened the page holding it. */
+    public void setOnSelectField(Consumer<String> onSelectField) {
+        this.onSelectField = onSelectField;
     }
 
     /** Selects the first available menu page containing a field, following nested panel references. */

@@ -42,6 +42,7 @@ class SettingsSearchPopupTest {
     private static IniFileModel ini() throws Throwable {
         String text = "[Constants]\npage = 1\n"
             + "idleMode = bits, U08, 0, [0:0], \"Open loop\", \"Closed loop\"\n"
+            + "injectorFlow = scalar, U08, 1, \"cc\", 1, 0, 0, 100, 0\n"
             + "[Menu]\n"
             + "menu = \"Idle\"\n"
             + "subMenu = idleSettings, \"Idle settings\"\n"
@@ -59,7 +60,8 @@ class SettingsSearchPopupTest {
             + "dialog = idleSettings, \"Idle settings\"\nfield = \"Mode\", idleMode\n"
             + "dialog = idlePid, \"Idle PID\"\nfield = \"Mode\", idleMode\n"
             + "dialog = idleTiming, \"Idle timing\"\nfield = \"Mode\", idleMode\n"
-            + "dialog = injectors, \"Injectors\"\nfield = \"Mode\", idleMode\n";
+            + "dialog = injectors, \"Injectors\"\nfield = \"Mode\", idleMode\nfield = \"Injector flow\", injectorFlow\n"
+            + "field = \"!Injector flow needs a restart\", flowWarning\nfield = \"#Injector flow notes\", flowHeading\n";
         IniFileMetaInfo meta = mock(IniFileMetaInfo.class);
         when(meta.getnPages()).thenReturn(1);
         when(meta.getPageSize(0)).thenReturn(8);
@@ -68,10 +70,14 @@ class SettingsSearchPopupTest {
             new ByteArrayInputStream(text.getBytes(StandardCharsets.US_ASCII))), "popup-test.ini", meta);
     }
 
-    /** idleMode is open loop: Idle PID is greyed out. */
+    /**
+     * idleMode is open loop: Idle PID is greyed out. {@code open} gets the page key, or "page@setting" for
+     * a setting found.
+     */
     private static SettingsSearchPopup popup(Predicate<String> open, Runnable close) {
         try {
-            return new SettingsSearchPopup(ini(), new ConfigurationImage(new byte[8]), open, close);
+            return new SettingsSearchPopup(ini(), new ConfigurationImage(new byte[8]),
+                (page, field) -> open.test(field == null ? page : page + "@" + field), close);
         } catch (Throwable e) {
             throw new AssertionError(e);
         }
@@ -199,7 +205,7 @@ class SettingsSearchPopupTest {
             ini = IniFileReaderUtil.readIniFile(raw, "26october.ini", new IniFileMetaInfoImpl(raw));
         }
         SwingUtilities.invokeAndWait(() -> {
-            SettingsSearchPopup popup = new SettingsSearchPopup(ini, null, page -> true, () -> { });
+            SettingsSearchPopup popup = new SettingsSearchPopup(ini, null, (page, field) -> true, () -> { });
             List<String> pages = new ArrayList<>();
             Enumeration<?> nodes = popup.menuTree.getRoot().preorderEnumeration();
             while (nodes.hasMoreElements()) {
@@ -229,12 +235,43 @@ class SettingsSearchPopupTest {
             SettingsSearchPopup popup = popup(page -> opened.getAndSet(true), closed::incrementAndGet);
             popup.search.setText("boost ");
             assertEquals(0, popup.tree.getRowCount());
-            assertEquals("No settings page matches “boost”.", popup.status.getText());
+            assertEquals("No settings page or setting matches “boost”.", popup.status.getText());
             press(popup.search, KeyEvent.VK_ENTER);
             assertFalse(opened.get());
             assertEquals(0, closed.get());
             press(popup.search, KeyEvent.VK_ESCAPE);
             assertEquals(1, closed.get());
+        });
+    }
+
+    @Test
+    void aSettingFoundByItsLabelOpensItsPageAtIt() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            List<String> opened = new ArrayList<>();
+            AtomicInteger closed = new AtomicInteger();
+            SettingsSearchPopup popup = popup(opened::add, closed::incrementAndGet);
+
+            popup.search.setText("flow");
+            assertEquals(Arrays.asList("Fuel", "Injectors", "Injector flow"), rows(popup),
+                "the setting under its page, which only it brought; ! and # notes are not settings");
+            assertEquals("Injector flow", selected(popup), "the setting, not the page around it");
+            Component rendered = popup.tree.getCellRenderer().getTreeCellRendererComponent(popup.tree,
+                popup.tree.getSelectionPath().getLastPathComponent(), true, false, true, 2, false);
+            assertNull(((JLabel) rendered).getIcon(), "a setting has no page icon");
+
+            popup.search.setText("inj");
+            assertEquals(Arrays.asList("Fuel", "Injectors", "Injector flow"), rows(popup));
+            assertEquals("Injectors", selected(popup), "a page named by the query comes before a setting");
+            press(popup.search, KeyEvent.VK_DOWN);
+            press(popup.search, KeyEvent.VK_ENTER);
+            assertEquals(Collections.singletonList("injectors@injectorFlow"), opened);
+            assertEquals(1, closed.get());
+
+            popup.search.setText("mode");
+            assertTrue(rows(popup).containsAll(Arrays.asList("Idle settings", "Idle PID", "Injectors")),
+                "every page holding it: " + rows(popup));
+            assertEquals("Idle settings", text(popup.tree.getSelectionPath().getParentPath()),
+                "the first one the user can open");
         });
     }
 
@@ -253,7 +290,7 @@ class SettingsSearchPopupTest {
     @Test
     void withoutAnIniItSaysWhatToDo() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
-            SettingsSearchPopup popup = new SettingsSearchPopup(null, null, page -> true, () -> { });
+            SettingsSearchPopup popup = new SettingsSearchPopup(null, null, (page, field) -> true, () -> { });
             assertEquals(0, popup.tree.getRowCount());
             assertEquals(SettingsSearchPopup.NO_PAGES, popup.status.getText());
             popup.search.setText("idle");

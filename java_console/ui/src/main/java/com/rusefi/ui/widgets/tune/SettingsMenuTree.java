@@ -59,6 +59,9 @@ public class SettingsMenuTree {
     private final Map<String, List<String>> failedConditions = new HashMap<>();
     /** The words of the current search, shown in bold; empty without a search. */
     private String[] queryWords = new String[0];
+    /** Labelled settings per page key, for {@link #settingsIni}. */
+    private final Map<String, List<SettingRow>> settingsByPage = new HashMap<>();
+    private IniFileModel settingsIni;
 
     /** Renders a "std_separator" menu entry as a horizontal line. */
     private static class SeparatorRenderer extends JComponent {
@@ -102,7 +105,8 @@ public class SettingsMenuTree {
                     return null;
                 }
                 Object userObject = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
-                return userObject instanceof SubMenuModel ? getUnlockHint((SubMenuModel) userObject) : null;
+                SubMenuModel page = pageOf(userObject);
+                return page == null ? null : getUnlockHint(page);
             }
 
             @Override
@@ -223,8 +227,11 @@ public class SettingsMenuTree {
                     setText(name);
                     bold = boldLetters(name, queryWords);
 
-                    ImageIcon categoryIcon = categoryIcons.get(name);
-                    if (categoryIcon != null) {
+                    ImageIcon categoryIcon = userObject instanceof SettingRow ? null : categoryIcons.get(name);
+                    if (userObject instanceof SettingRow) {
+                        // a setting is text under its page's icon, not another page
+                        setIcon(null);
+                    } else if (categoryIcon != null) {
                         setIcon(categoryIcon);
                     } else if (userObject instanceof SubMenuModel) {
                         IniFileModel currentModel = iniSupplier.get();
@@ -245,7 +252,8 @@ public class SettingsMenuTree {
                         setIcon(groupIcon);
                     }
 
-                    if (userObject instanceof SubMenuModel && disabledKeys.contains(((SubMenuModel) userObject).getKey())) {
+                    SubMenuModel page = pageOf(userObject);
+                    if (page != null && disabledKeys.contains(page.getKey())) {
                         setForeground(UIManager.getColor("Label.disabledForeground"));
                     }
                 }
@@ -462,7 +470,7 @@ public class SettingsMenuTree {
         return null;
     }
 
-    /** Separators and disabled pages cannot be selected; categories and groups can. */
+    /** Separators, disabled pages and their settings cannot be selected; categories and groups can. */
     public boolean isSelectable(TreePath path) {
         if (path == null) {
             return false;
@@ -471,7 +479,85 @@ public class SettingsMenuTree {
         if (userObject instanceof SeparatorMenuItem) {
             return false;
         }
-        return !(userObject instanceof SubMenuModel) || !isDisabled((SubMenuModel) userObject);
+        SubMenuModel page = pageOf(userObject);
+        return page == null || !isDisabled(page);
+    }
+
+    /** The page a row opens: a page row's own, a setting row's page; null for categories and groups. */
+    public static SubMenuModel pageOf(Object userObject) {
+        if (userObject instanceof SettingRow) {
+            return ((SettingRow) userObject).page;
+        }
+        return userObject instanceof SubMenuModel ? (SubMenuModel) userObject : null;
+    }
+
+    /**
+     * A setting whose label matches the search, shown as a row under its page: choosing it opens the page
+     * at that setting.
+     */
+    public static final class SettingRow {
+        private final SubMenuModel page;
+        private final String fieldKey;
+        private final String label;
+
+        SettingRow(SubMenuModel page, String fieldKey, String label) {
+            this.page = page;
+            this.fieldKey = fieldKey;
+            this.label = label;
+        }
+
+        public SubMenuModel getPage() {
+            return page;
+        }
+
+        public String getFieldKey() {
+            return fieldKey;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        @Override
+        public String toString() {
+            return label;
+        }
+    }
+
+    /** The labelled settings of a page, including those of panels inside it, each once, in page order. */
+    private List<SettingRow> settingsOf(SubMenuModel page) {
+        IniFileModel ini = iniSupplier.get();
+        if (ini == null) {
+            return Collections.emptyList();
+        }
+        if (settingsIni != ini) {
+            // another INI brings other dialogs
+            settingsByPage.clear();
+            settingsIni = ini;
+        }
+        return settingsByPage.computeIfAbsent(page.getKey(), key -> {
+            Map<String, SettingRow> settings = new LinkedHashMap<>();
+            collectSettings(page, ini.getDialogs().get(key), ini, settings, new HashSet<>());
+            return new ArrayList<>(settings.values());
+        });
+    }
+
+    private static void collectSettings(SubMenuModel page, DialogModel dialog, IniFileModel ini,
+                                        Map<String, SettingRow> settings, Set<String> visited) {
+        if (dialog == null || !visited.add(dialog.getKey())) {
+            return;
+        }
+        for (DialogModel.Field field : dialog.getFields()) {
+            String label = field.getUiName() == null ? "" : field.getUiName().trim();
+            // "!red" and "#blue" labels are notes and headings on the page, not settings
+            boolean note = label.startsWith("!") || label.startsWith("#");
+            if (field.getKey() != null && !field.getKey().isEmpty() && !label.isEmpty() && !note) {
+                settings.putIfAbsent(field.getKey(), new SettingRow(page, field.getKey(), label));
+            }
+        }
+        for (PanelModel panel : dialog.getPanels()) {
+            collectSettings(page, panel.resolveDialog(ini), ini, settings, visited);
+        }
     }
 
     public boolean isDisabled(SubMenuModel subMenu) {
@@ -481,8 +567,10 @@ public class SettingsMenuTree {
     /**
      * [search logic], shared by the Tuning tab and the Ctrl+K search: the query is split into words, ignoring
      * case. A row matches when every word appears, in any order, in its path: menu name, group names and its
-     * own name. Matching rows are shown with their parents, all expanded, and the matched letters of each
-     * row's own name in bold. A query without words shows the whole tree.
+     * own name. A setting on a page matches when every word appears in its own label: it is shown as a
+     * {@link SettingRow} under the page, which shows the page too. Matching rows are shown with their
+     * parents, all expanded, and the matched letters of each row's own name in bold. A query without words
+     * shows the whole tree.
      *
      * Replaces the tree model, so hosts that listen to selection changes should ignore the events this fires.
      *
@@ -509,11 +597,14 @@ public class SettingsMenuTree {
     }
 
     /**
-     * The page of the filtered tree answering the query best, the first in menu order among equals; null
-     * when no page the user can open now matches. See {@link #rank}.
+     * The page or setting row of the filtered tree answering the query best, the first in menu order among
+     * equals; null when nothing the user can open now matches. A page whose name holds the query wins over
+     * a setting, a setting over a page found only through its menu. Pages shown only for their settings do
+     * not count, their setting rows do. See {@link #rank}.
      */
     public TreePath bestMatch(String query) {
-        String text = String.join(" ", words(query));
+        String[] words = words(query);
+        String text = String.join(" ", words);
         if (text.isEmpty()) {
             return null;
         }
@@ -523,11 +614,19 @@ public class SettingsMenuTree {
         while (nodes.hasMoreElements()) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) nodes.nextElement();
             TreePath path = new TreePath(node.getPath());
-            if (!(node.getUserObject() instanceof SubMenuModel) || !isSelectable(path)) {
+            Object userObject = node.getUserObject();
+            // pages named by the query first (0-2), then settings named by it (3-5), then pages found
+            // through their menu or group (6): finding a setting is the fallback, not a detour
+            int rank;
+            if (userObject instanceof SettingRow) {
+                rank = 3 + rank(((SettingRow) userObject).label, text);
+            } else if (userObject instanceof SubMenuModel && containsAll(pathText(path), words)) {
+                int pageRank = rank(((SubMenuModel) userObject).getName(), text);
+                rank = pageRank == 3 ? 6 : pageRank;
+            } else {
                 continue;
             }
-            int rank = rank(((SubMenuModel) node.getUserObject()).getName(), text);
-            if (rank < bestRank) {
+            if (rank < bestRank && isSelectable(path)) {
                 best = path;
                 bestRank = rank;
             }
@@ -535,9 +634,18 @@ public class SettingsMenuTree {
         return best;
     }
 
+    private static String pathText(TreePath path) {
+        StringBuilder text = new StringBuilder();
+        // the invisible root is not part of the path
+        for (int i = 1; i < path.getPathCount(); i++) {
+            text.append(nodeText(((DefaultMutableTreeNode) path.getPathComponent(i)).getUserObject())).append(' ');
+        }
+        return text.toString();
+    }
+
     /**
-     * How well a page name answers a query its path already matches: 0 for the exact name, 1 for a name
-     * starting with the query, 2 for a name containing every word, 3 for a match through the menu or group.
+     * How well a page name or setting label answers a query: 0 for the exact name, 1 for a name starting
+     * with the query, 2 for a name containing every word, 3 for a match through the menu or group.
      */
     static int rank(String pageName, String query) {
         String text = String.join(" ", words(query));
@@ -576,6 +684,16 @@ public class SettingsMenuTree {
         return any ? bold : null;
     }
 
+    private static boolean containsAll(String text, String[] words) {
+        String lower = text.toLowerCase(Locale.ROOT);
+        for (String word : words) {
+            if (!lower.contains(word)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private boolean filterNode(DefaultMutableTreeNode originalNode, DefaultMutableTreeNode filteredNode, String[] tokens, String path) {
         Object userObject = originalNode.getUserObject();
         // separators are decoration, they never match a search and would show up as stray lines
@@ -585,20 +703,15 @@ public class SettingsMenuTree {
         String nodeText = nodeText(userObject);
         String currentPath = path.isEmpty() ? nodeText : path + " " + nodeText;
 
-        boolean matchFound = false;
+        boolean matchFound = originalNode != root && containsAll(currentPath, tokens);
 
-        if (originalNode != root) {
-            String currentPathLower = currentPath.toLowerCase(Locale.ROOT);
-            boolean allTokensMatch = true;
-            for (String token : tokens) {
-                if (!currentPathLower.contains(token)) {
-                    allTokensMatch = false;
-                    break;
+        if (userObject instanceof SubMenuModel) {
+            // settings on the page whose own label holds every word, as rows under the page
+            for (SettingRow setting : settingsOf((SubMenuModel) userObject)) {
+                if (containsAll(setting.label, tokens)) {
+                    filteredNode.add(new DefaultMutableTreeNode(setting));
+                    matchFound = true;
                 }
-            }
-
-            if (allTokensMatch) {
-                matchFound = true;
             }
         }
 

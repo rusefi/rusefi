@@ -256,6 +256,31 @@ public final class CalibrationPanelWorkspace {
      * @return false while there is no tune to show or the loaded INI has no such page
      */
     public boolean openPanel(String key) {
+        return openPanel(key, null);
+    }
+
+    /**
+     * {@link #openPanel(String)}, then marks the row of setting {@code fieldKey} in the window, as a search
+     * result for that setting asks; a null field marks nothing.
+     */
+    public boolean openPanel(String key, String fieldKey) {
+        if (!openPanelWindow(key)) {
+            return false;
+        }
+        if (fieldKey != null) {
+            DetachedPanel panel = panels.get(new CalibrationPanelKey(key));
+            CalibrationDialogWidget widget = panel.widget;
+            // the rows are laid out on the next event
+            SwingUtilities.invokeLater(() -> {
+                if (panel.widget == widget && widget != null) {
+                    widget.highlightField(fieldKey);
+                }
+            });
+        }
+        return true;
+    }
+
+    private boolean openPanelWindow(String key) {
         CalibrationPanelKey panelKey = new CalibrationPanelKey(key);
         if (destroyed || image == null || !panelKey.isSupported(ini)) {
             return false;
