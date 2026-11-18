@@ -12,6 +12,11 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -72,5 +77,143 @@ class SettingsMenuTreeTest {
             assertEquals("idleSettings", menuTree.findAvailablePageWithField(ini, "idleMode").getKey(),
                 "a field opens on the first page the user can open");
         });
+    }
+
+    /** Pages whose names share words, in two menus and a group; Idle PID needs closed loop. */
+    private static IniFileModel searchIni() throws Throwable {
+        String text = "[Constants]\npage = 1\n"
+            + "idleMode = bits, U08, 0, [0:0], \"Open loop\", \"Closed loop\"\n"
+            + "[Menu]\n"
+            + "menu = \"&Idle\"\n"
+            + "subMenu = idleSettings, \"Idle settings\"\n"
+            + "subMenu = idlePid, \"Idle PID\", 0, { idleMode }\n"
+            + "subMenu = idleTable, \"Idle target table\"\n"
+            + "groupMenu = \"Advanced idle\"\n"
+            + "groupChildMenu = idleTiming, \"Idle timing\"\n"
+            + "menu = \"Fuel\"\n"
+            + "subMenu = injectors, \"Injectors\"\n"
+            + "subMenu = fuelPid, \"PID fuel trim\"\n"
+            + "subMenu = fuelIdle, \"Idle\"\n";
+        IniFileMetaInfo meta = mock(IniFileMetaInfo.class);
+        when(meta.getnPages()).thenReturn(1);
+        when(meta.getPageSize(0)).thenReturn(8);
+        when(meta.getSignature()).thenReturn("menu-search-test");
+        return IniFileReaderUtil.readIniFile(IniFileReaderUtil.read(
+            new ByteArrayInputStream(text.getBytes(StandardCharsets.US_ASCII))), "menu-search-test.ini", meta);
+    }
+
+    private static SettingsMenuTree searchTree(boolean closedLoop) {
+        try {
+            IniFileModel ini = searchIni();
+            SettingsMenuTree menuTree = new SettingsMenuTree(() -> ini);
+            ConfigurationImage image = new ConfigurationImage(8);
+            image.getContent()[0] = (byte) (closedLoop ? 1 : 0);
+            menuTree.refreshExpressions(ini, image);
+            return menuTree;
+        } catch (Throwable e) {
+            throw new AssertionError(e);
+        }
+    }
+
+    /** The keys of the pages the filtered tree shows, in menu order. */
+    private static List<String> shown(SettingsMenuTree menuTree, String query) {
+        menuTree.filter(query);
+        List<String> keys = new ArrayList<>();
+        Enumeration<?> nodes = ((DefaultMutableTreeNode) menuTree.getTree().getModel().getRoot()).preorderEnumeration();
+        while (nodes.hasMoreElements()) {
+            Object userObject = ((DefaultMutableTreeNode) nodes.nextElement()).getUserObject();
+            if (userObject instanceof SubMenuModel) {
+                keys.add(((SubMenuModel) userObject).getKey());
+            }
+        }
+        return keys;
+    }
+
+    private static String best(SettingsMenuTree menuTree, String query) {
+        menuTree.filter(query);
+        TreePath best = menuTree.bestMatch(query);
+        return best == null ? null : ((SubMenuModel) ((DefaultMutableTreeNode) best.getLastPathComponent())
+            .getUserObject()).getKey();
+    }
+
+    @Test
+    void everyWordMustMatchThePathAndTheBestNameIsChosen() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            SettingsMenuTree menuTree = searchTree(true);
+            List<String> all = shown(menuTree, "");
+            assertEquals(7, all.size(), "no query: the whole tree");
+            assertEquals(all, shown(menuTree, "   "), "spaces are no query");
+            assertNull(best(menuTree, "  "));
+
+            assertEquals(Arrays.asList("idleSettings", "idlePid", "idleTable", "idleTiming", "fuelIdle"),
+                shown(menuTree, "IDLE"), "any case; the & mnemonic is not part of the name");
+            assertEquals("fuelIdle", best(menuTree, "IDLE"), "the exact name");
+            assertEquals("fuelPid", best(menuTree, "pid"), "a name starting with the query before one containing it");
+            assertEquals("fuelPid", best(menuTree, "fuel"),
+                "a name containing the words before pages matched only by their menu");
+            assertEquals(Arrays.asList("idleSettings", "idleTable", "idleTiming"), shown(menuTree, "idle t"),
+                "every word must match: Idle PID has no t");
+            assertEquals("idleTable", best(menuTree, "idle  t"), "first in menu order among equals");
+            assertEquals(Collections.singletonList("idleTable"), shown(menuTree, "table idle"), "words in any order");
+            assertEquals(Collections.singletonList("idleTiming"), shown(menuTree, "advanced timing"),
+                "group names count too");
+            assertTrue(shown(menuTree, "boost").isEmpty());
+            assertNull(best(menuTree, "boost"));
+        });
+    }
+
+    @Test
+    void aGreyedOutPageIsShownButNeverTheBestMatch() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            SettingsMenuTree menuTree = searchTree(false);
+            assertEquals(Collections.singletonList("idlePid"), shown(menuTree, "idle pid"));
+            assertNull(best(menuTree, "idle pid"));
+            assertEquals("fuelPid", best(menuTree, "pid"));
+        });
+    }
+
+    @Test
+    void matchedLettersAreBold() throws Exception {
+        assertEquals("Idle [PID]", marked("Idle PID", "pid"));
+        assertEquals("[I]dle [ti]m[i]ng", marked("Idle timing", " I  T "), "every occurrence of every word");
+        assertEquals("Idle", marked("Idle", "fuel"), "a row shown for its menu keeps its plain name");
+        assertEquals("Idle", marked("Idle", ""));
+
+        SwingUtilities.invokeAndWait(() -> {
+            SettingsMenuTree menuTree = searchTree(true);
+            JTree tree = menuTree.getTree();
+            DefaultMutableTreeNode pid = menuTree.findSubMenuNode("fuelPid");
+            int plainWidth = rendered(tree, pid).getPreferredSize().width;
+            menuTree.filter("pid");
+            JLabel label = rendered(tree, pid);
+            assertEquals("PID fuel trim", label.getText(), "the name stays plain text, the renderer draws the bold");
+            assertTrue(label.getPreferredSize().width > plainWidth, "the row grows by the width of the bold letters");
+            menuTree.filter("");
+            assertEquals(plainWidth, rendered(tree, pid).getPreferredSize().width,
+                "plain again once the search is cleared");
+        });
+    }
+
+    /** The name with its bold letters in brackets. */
+    private static String marked(String name, String query) {
+        boolean[] bold = SettingsMenuTree.boldLetters(name, SettingsMenuTree.words(query));
+        if (bold == null) {
+            return name;
+        }
+        StringBuilder text = new StringBuilder();
+        for (int i = 0; i < name.length(); i++) {
+            if (bold[i] && (i == 0 || !bold[i - 1])) {
+                text.append('[');
+            }
+            text.append(name.charAt(i));
+            if (bold[i] && (i == name.length() - 1 || !bold[i + 1])) {
+                text.append(']');
+            }
+        }
+        return text.toString();
+    }
+
+    private static JLabel rendered(JTree tree, DefaultMutableTreeNode node) {
+        return (JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree, node, false, false, true, 0, false);
     }
 }
