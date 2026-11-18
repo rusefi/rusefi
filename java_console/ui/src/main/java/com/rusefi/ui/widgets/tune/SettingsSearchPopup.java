@@ -2,14 +2,18 @@ package com.rusefi.ui.widgets.tune;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.icons.FlatSearchIcon;
+import com.opensr5.ConfigurationImage;
+import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.SubMenuModel;
 import com.rusefi.ui.widgets.JoinedButtons;
-import com.rusefi.ui.widgets.tune.SettingsPageIndex.Page;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
@@ -19,14 +23,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Collections;
-import java.util.List;
+import java.util.Enumeration;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
- * Ctrl+K from any tab: a small floating search over the Tuning menu pages. Enter or a click opens the
- * chosen page in its own settings window over the current screen; Esc or a click elsewhere closes it.
+ * Ctrl+K from any tab: a small floating search over the Tuning menu, shown as the same tree as the Tuning
+ * tab. With nothing typed it lists the categories to browse; typing keeps the matching pages, expanded under
+ * their categories, with the best match chosen. Enter or a click opens the chosen page in its own settings
+ * window over the current screen (Enter on a category opens or closes it); Esc or a click elsewhere closes it.
  */
 public final class SettingsSearchPopup {
     public static final KeyStroke SHORTCUT = KeyStroke.getKeyStroke(KeyEvent.VK_K, InputEvent.CTRL_DOWN_MASK);
@@ -34,24 +39,31 @@ public final class SettingsSearchPopup {
     static final String NO_PAGES = "Connect to an ECU or open a tune to search its settings.";
     private static final int VISIBLE_ROWS = 12;
     private static final int WIDTH = 560;
+    private static final int HEIGHT = 380;
 
-    private final SettingsPageIndex index;
-    private final Predicate<Page> open;
+    private final Predicate<String> open;
     private final Runnable close;
     private final JPanel content = new JPanel(new BorderLayout(0, 6));
     final JTextField search = new JTextField();
-    final DefaultListModel<Page> results = new DefaultListModel<>();
-    final JList<Page> list = new JList<>(results);
+    final SettingsMenuTree menuTree;
+    final JTree tree;
     final JLabel status = new JLabel();
 
     /**
-     * @param open  opens a page; false when it cannot open now, which keeps the popup up with a message
+     * @param ini   the menus to show; null shows none
+     * @param image the tune that greys out pages, as in the Tuning tree; null greys out none
+     * @param open  opens a page by its INI key; false when it cannot open now, which keeps the popup up
+     *              with a message
      * @param close hides the popup after a page opened or on Esc
      */
-    SettingsSearchPopup(SettingsPageIndex index, Predicate<Page> open, Runnable close) {
-        this.index = index;
+    SettingsSearchPopup(@Nullable IniFileModel ini, @Nullable ConfigurationImage image, Predicate<String> open,
+                        Runnable close) {
         this.open = open;
         this.close = close;
+        // only pages that can open as a window: std_ entries and pages without a panel are left out
+        menuTree = new SettingsMenuTree(() -> ini, page -> new CalibrationPanelKey(page.getKey()).isSupported(ini));
+        menuTree.refreshExpressions(ini, image);
+        tree = menuTree.getTree();
         search.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search settings");
         search.putClientProperty(FlatClientProperties.TEXT_FIELD_LEADING_ICON, new FlatSearchIcon());
         search.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true);
@@ -72,34 +84,32 @@ public final class SettingsSearchPopup {
                 update();
             }
         });
-        // the list never takes focus: typing always goes to the search field
-        list.setFocusable(false);
-        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        list.setVisibleRowCount(VISIBLE_ROWS);
-        // rows are measured from a sample page, not from the empty list
-        list.setPrototypeCellValue(new Page("", "Wg", Collections.singletonList("Wg")));
-        list.setCellRenderer(new PageRenderer());
-        list.addMouseListener(new MouseAdapter() {
+        // the tree never takes focus: typing always goes to the search field; tuningSearch still shows the
+        // chosen row in the selection colours
+        tree.setFocusable(false);
+        tree.putClientProperty(FlatClientProperties.STYLE_CLASS, "tuningMenu tuningSearch");
+        tree.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent event) {
-                int row = list.locationToIndex(event.getPoint());
-                if (row >= 0 && list.getCellBounds(row, row).contains(event.getPoint())) {
-                    list.setSelectedIndex(row);
+                // a click on a category opens or closes it (the tree's single-click toggle)
+                TreePath path = tree.getPathForLocation(event.getX(), event.getY());
+                if (pageAt(path) != null && menuTree.isSelectable(path)) {
+                    tree.setSelectionPath(path);
                     openSelected();
                 }
             }
         });
-        bind(KeyEvent.VK_DOWN, "nextPage", () -> move(1));
-        bind(KeyEvent.VK_UP, "previousPage", () -> move(-1));
-        bind(KeyEvent.VK_PAGE_DOWN, "nextPages", () -> move(VISIBLE_ROWS - 1));
-        bind(KeyEvent.VK_PAGE_UP, "previousPages", () -> move(1 - VISIBLE_ROWS));
+        bind(KeyEvent.VK_DOWN, "nextPage", () -> move("selectNext", 1));
+        bind(KeyEvent.VK_UP, "previousPage", () -> move("selectPrevious", 1));
+        bind(KeyEvent.VK_PAGE_DOWN, "nextPages", () -> move("selectNext", VISIBLE_ROWS - 1));
+        bind(KeyEvent.VK_PAGE_UP, "previousPages", () -> move("selectPrevious", VISIBLE_ROWS - 1));
         bind(KeyEvent.VK_ENTER, "openPage", this::openSelected);
         bind(KeyEvent.VK_ESCAPE, "closeSearch", close);
 
-        JScrollPane scroll = new JScrollPane(list);
+        JScrollPane scroll = new JScrollPane(tree);
         scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        Dimension size = new Dimension(WIDTH, scroll.getPreferredSize().height);
-        scroll.setPreferredSize(size);
+        // a fixed size: the dialog is packed once and does not follow the number of rows
+        scroll.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         status.setForeground(UIManager.getColor("Label.disabledForeground"));
         content.setBorder(BorderFactory.createEmptyBorder(8, 8, 6, 8));
         content.add(search, BorderLayout.NORTH);
@@ -123,42 +133,98 @@ public final class SettingsSearchPopup {
     }
 
     private void update() {
-        results.clear();
-        List<Page> pages = index.search(search.getText());
-        for (Page page : pages) {
-            results.addElement(page);
-        }
-        if (!pages.isEmpty()) {
-            list.setSelectedIndex(0);
-            list.ensureIndexIsVisible(0);
-        }
-        if (index.getPages().isEmpty()) {
+        String text = search.getText().trim();
+        menuTree.filter(text);
+        if (!menuTree.isPopulated()) {
             status.setText(NO_PAGES);
-        } else if (pages.isEmpty()) {
-            status.setText("No settings page matches “" + search.getText().trim() + "”.");
-        } else {
-            status.setText(HINT);
+            return;
+        }
+        DefaultMutableTreeNode shownRoot = (DefaultMutableTreeNode) tree.getModel().getRoot();
+        if (shownRoot.getChildCount() == 0) {
+            status.setText("No settings page matches “" + text + "”.");
+            return;
+        }
+        status.setText(HINT);
+        TreePath choice = text.isEmpty() ? null : bestMatch(shownRoot, text);
+        if (choice == null) {
+            // nothing typed: the categories, closed, to browse
+            choice = tree.getPathForRow(0);
+        }
+        tree.setSelectionPath(choice);
+        tree.scrollPathToVisible(choice);
+    }
+
+    /** The page answering the query best, the first in menu order among equals; null without a page. */
+    @Nullable
+    private TreePath bestMatch(DefaultMutableTreeNode shownRoot, String text) {
+        TreePath best = null;
+        int bestRank = Integer.MAX_VALUE;
+        Enumeration<?> nodes = shownRoot.preorderEnumeration();
+        while (nodes.hasMoreElements()) {
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) nodes.nextElement();
+            TreePath path = new TreePath(node.getPath());
+            SubMenuModel page = pageAt(path);
+            if (page == null || !menuTree.isSelectable(path)) {
+                continue;
+            }
+            int rank = SettingsPageIndex.rank(page.getName(), text);
+            if (rank < bestRank) {
+                best = path;
+                bestRank = rank;
+            }
+        }
+        return best;
+    }
+
+    /** Runs the tree's own up/down navigation, which skips separators and greyed-out pages. */
+    private void move(String treeAction, int steps) {
+        Action action = tree.getActionMap().get(treeAction);
+        if (action == null) {
+            return;
+        }
+        for (int i = 0; i < steps; i++) {
+            action.actionPerformed(new ActionEvent(tree, ActionEvent.ACTION_PERFORMED, treeAction));
         }
     }
 
-    private void move(int delta) {
-        if (results.isEmpty()) {
-            return;
+    @Nullable
+    private static SubMenuModel pageAt(@Nullable TreePath path) {
+        if (path == null) {
+            return null;
         }
-        int row = Math.max(0, Math.min(results.size() - 1, list.getSelectedIndex() + delta));
-        list.setSelectedIndex(row);
-        list.ensureIndexIsVisible(row);
+        Object userObject = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
+        return userObject instanceof SubMenuModel ? (SubMenuModel) userObject : null;
     }
 
     void openSelected() {
-        Page page = list.getSelectedValue();
-        if (page == null) {
+        TreePath path = tree.getSelectionPath();
+        if (path == null) {
             return;
         }
-        if (open.test(page)) {
+        SubMenuModel page = pageAt(path);
+        if (page == null) {
+            if (tree.isExpanded(path)) {
+                tree.collapsePath(path);
+            } else {
+                tree.expandPath(path);
+            }
+            return;
+        }
+        if (open.test(page.getKey())) {
             close.run();
         } else {
             status.setText("“" + page.getName() + "” cannot open now: no tune is loaded.");
+        }
+    }
+
+    /** What the search shows: the INI menus, and the tune that greys out pages. */
+    public static final class Source {
+        final IniFileModel ini;
+        final ConfigurationImage image;
+
+        public Source(@Nullable IniFileModel ini, @Nullable ConfigurationImage image) {
+            this.ini = ini;
+            this.image = image;
         }
     }
 
@@ -169,10 +235,12 @@ public final class SettingsSearchPopup {
 
     /**
      * Binds {@link #SHORTCUT} on {@code frame} and returns the launcher for other ways in, such as the
-     * tab bar's search box. {@code index} is asked at each opening, so the pages follow the INI and tune
-     * of the moment; a null index (firmware being flashed) opens nothing.
+     * tab bar's search box. {@code source} is asked at each opening, so the pages follow the INI and tune
+     * of the moment; a null source (firmware being flashed) opens nothing.
+     *
+     * @param open opens a page by its INI key, see the constructor
      */
-    public static Launcher install(JFrame frame, Supplier<SettingsPageIndex> index, Predicate<Page> open) {
+    public static Launcher install(JFrame frame, Supplier<Source> source, Predicate<String> open) {
         Shown shown = new Shown();
         Launcher launcher = (text, anchor) -> {
             if (shown.dialog != null) {
@@ -181,12 +249,12 @@ public final class SettingsSearchPopup {
                 shown.dialog.toFront();
                 return;
             }
-            SettingsPageIndex pages = index.get();
+            Source pages = source.get();
             if (pages == null) {
                 return;
             }
             JDialog dialog = new JDialog(frame, "Search settings", Dialog.ModalityType.MODELESS);
-            SettingsSearchPopup popup = new SettingsSearchPopup(pages, open, dialog::dispose);
+            SettingsSearchPopup popup = new SettingsSearchPopup(pages.ini, pages.image, open, dialog::dispose);
             shown.dialog = dialog;
             shown.popup = popup;
             popup.search.setText(text);
@@ -275,36 +343,5 @@ public final class SettingsSearchPopup {
     private static final class Shown {
         JDialog dialog;
         SettingsSearchPopup popup;
-    }
-
-    /** The page name, then its menu path in the secondary text colour. */
-    private static final class PageRenderer extends DefaultListCellRenderer {
-        @Override
-        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean selected,
-                                                      boolean focused) {
-            super.getListCellRendererComponent(list, value, index, selected, focused);
-            if (selected) {
-                // the list never has focus; show the choice in the active selection colours anyway
-                setBackground(UIManager.getColor("List.selectionBackground"));
-                setForeground(UIManager.getColor("List.selectionForeground"));
-            }
-            if (value instanceof Page) {
-                Page page = (Page) value;
-                Color secondary = selected ? getForeground() : UIManager.getColor("Label.disabledForeground");
-                String path = String.join(SettingsPageIndex.PATH_SEPARATOR, page.getMenuPath());
-                setText("<html>" + escape(page.getName()) + "&nbsp;&nbsp;<span style='color:"
-                    + hex(secondary != null ? secondary : Color.GRAY) + "'>" + escape(path) + "</span></html>");
-            }
-            setBorder(BorderFactory.createEmptyBorder(3, 6, 3, 6));
-            return this;
-        }
-
-        private static String hex(Color color) {
-            return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
-        }
-
-        private static String escape(String text) {
-            return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
-        }
     }
 }

@@ -59,7 +59,7 @@ public final class SettingsPageIndex {
             SubMenuModel subMenu = (SubMenuModel) item;
             // std_ entries and other pages without a panel cannot open as a window
             if (!new CalibrationPanelKey(subMenu.getKey()).isSupported(ini)
-                    || (image != null && MainMenuTreeWidget.isDisabledByExpressions(subMenu, ini, image))
+                    || (image != null && SettingsMenuTree.isDisabledByExpressions(subMenu, ini, image))
                     || !seen.add(subMenu.getKey())) {
                 return;
             }
@@ -90,15 +90,23 @@ public final class SettingsPageIndex {
             if (!containsAll(page.searchText, words)) {
                 continue;
             }
-            String name = page.name.toLowerCase(Locale.ROOT);
-            int rank = name.equals(text) ? 0 : name.startsWith(text) ? 1 : containsAll(name, words) ? 2 : 3;
-            ranks.get(rank).add(page);
+            ranks.get(rank(page.name, text)).add(page);
         }
         List<Page> result = new ArrayList<>();
         for (List<Page> rank : ranks) {
             result.addAll(rank);
         }
         return result;
+    }
+
+    /**
+     * How well a page name answers a query its menu path already matches: 0 for the exact name, 1 for a
+     * name starting with the query, 2 for a name containing every word, 3 for a match on the menu path only.
+     */
+    static int rank(String pageName, String query) {
+        String text = query.trim().toLowerCase(Locale.ROOT);
+        String name = pageName.toLowerCase(Locale.ROOT);
+        return name.equals(text) ? 0 : name.startsWith(text) ? 1 : containsAll(name, text.split("\\s+")) ? 2 : 3;
     }
 
     private static boolean containsAll(String text, String[] words) {
