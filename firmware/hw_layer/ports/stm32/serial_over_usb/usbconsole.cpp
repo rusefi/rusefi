@@ -26,8 +26,13 @@ void usb_serial_start() {
 	usbPopulateSerialNumber(MCU_SERIAL_NUMBER_LOCATION, MCU_SERIAL_NUMBER_BYTES);
 #endif
 
+#if STM32_USB_USE_OTG2 && defined(BOARD_OTG2_USES_ULPI)
+	// OTG HS with an external ULPI PHY: there are no on-chip DM/DP pads, the
+	// ULPI pins are muxed by board.h and claimed by the board code
+#else
 	efiSetPadMode("USB DM", EFI_USB_SERIAL_DM, PAL_MODE_ALTERNATE(EFI_USB_AF));
 	efiSetPadMode("USB DP", EFI_USB_SERIAL_DP, PAL_MODE_ALTERNATE(EFI_USB_AF));
+#endif
 
 	/*
 	 * Initializes a serial-over-USB CDC driver.
