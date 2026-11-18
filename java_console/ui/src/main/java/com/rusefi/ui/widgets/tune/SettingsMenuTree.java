@@ -22,6 +22,9 @@ import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import java.awt.font.TextAttribute;
+import java.awt.font.TextLayout;
+import java.text.AttributedString;
 import java.util.*;
 import java.util.List;
 import java.util.function.Consumer;
@@ -54,6 +57,8 @@ public class SettingsMenuTree {
     private final Set<String> disabledKeys = new HashSet<>();
     /** For each disabled submenu key, its conditions that are currently false: the unlock hint lists their settings. */
     private final Map<String, List<String>> failedConditions = new HashMap<>();
+    /** The words of the current search, shown in bold; empty without a search. */
+    private String[] queryWords = new String[0];
 
     /** Renders a "std_separator" menu entry as a horizontal line. */
     private static class SeparatorRenderer extends JComponent {
@@ -201,10 +206,13 @@ public class SettingsMenuTree {
 
         return new DefaultTreeCellRenderer() {
             private final SeparatorRenderer separatorRenderer = new SeparatorRenderer();
+            /** Letters of the text to draw in bold, or null for plain text drawn by the label itself. */
+            private boolean[] bold;
 
             @Override
             public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
                 super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
+                bold = null;
                 if (value instanceof DefaultMutableTreeNode) {
                     DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
                     Object userObject = node.getUserObject();
@@ -213,6 +221,7 @@ public class SettingsMenuTree {
                     }
                     String name = nodeText(userObject);
                     setText(name);
+                    bold = boldLetters(name, queryWords);
 
                     ImageIcon categoryIcon = categoryIcons.get(name);
                     if (categoryIcon != null) {
@@ -241,6 +250,71 @@ public class SettingsMenuTree {
                     }
                 }
                 return this;
+            }
+
+            /*
+             * Search matches are drawn here rather than as HTML <b>: Swing's HTML view spaces bold runs in a
+             * tree renderer with a visible gap before each one.
+             */
+            @Override
+            public Dimension getPreferredSize() {
+                Dimension size = super.getPreferredSize();
+                if (bold == null || size == null) {
+                    return size;
+                }
+                String text = getText();
+                FontMetrics metrics = getFontMetrics(getFont());
+                TextLayout layout = new TextLayout(styled(text).getIterator(), metrics.getFontRenderContext());
+                // a pixel to spare: the label measured its plain text with the same metrics
+                return new Dimension(size.width - metrics.stringWidth(text) + (int) Math.ceil(layout.getAdvance()) + 1,
+                    size.height);
+            }
+
+            @Override
+            protected void paintComponent(Graphics g) {
+                if (bold == null) {
+                    super.paintComponent(g);
+                    return;
+                }
+                String text = getText();
+                // the label paints its icon (and the background); the text follows in runs
+                setText("");
+                try {
+                    super.paintComponent(g);
+                } finally {
+                    setText(text);
+                }
+                Insets insets = getInsets();
+                Icon icon = getIcon();
+                int x = insets.left + (icon == null ? 0 : icon.getIconWidth() + getIconTextGap());
+                FontMetrics plain = getFontMetrics(getFont());
+                int height = getHeight() - insets.top - insets.bottom;
+                int baseline = insets.top + (height - plain.getHeight()) / 2 + plain.getAscent();
+                Graphics2D g2 = (Graphics2D) g.create();
+                try {
+                    // the desktop's text anti-aliasing, as the label uses for its own text
+                    Object hints = Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints");
+                    if (hints instanceof Map) {
+                        g2.addRenderingHints((Map<?, ?>) hints);
+                    }
+                    g2.setColor(getForeground());
+                    // one call lays the plain and bold runs out together, so each run starts where the last ends
+                    g2.drawString(styled(text).getIterator(), x, baseline);
+                } finally {
+                    g2.dispose();
+                }
+            }
+
+            private AttributedString styled(String text) {
+                AttributedString styled = new AttributedString(text);
+                styled.addAttribute(TextAttribute.FONT, getFont());
+                Font boldFont = getFont().deriveFont(Font.BOLD);
+                for (int i = 0; i < bold.length; i++) {
+                    if (bold[i]) {
+                        styled.addAttribute(TextAttribute.FONT, boldFont, i, i + 1);
+                    }
+                }
+                return styled;
             }
         };
     }
@@ -405,26 +479,101 @@ public class SettingsMenuTree {
     }
 
     /**
-     * [search logic]: display all elements if text is empty
+     * [search logic], shared by the Tuning tab and the Ctrl+K search: the query is split into words, ignoring
+     * case. A row matches when every word appears, in any order, in its path: menu name, group names and its
+     * own name. Matching rows are shown with their parents, all expanded, and the matched letters of each
+     * row's own name in bold. A query without words shows the whole tree.
      *
-     * if text is not empty, split into tokens by whitespace. match all tokens to concatenation of full
-     * element path as top menu name + potential submenu name + element name
+     * Replaces the tree model, so hosts that listen to selection changes should ignore the events this fires.
      *
-     * display only matching tree elements and their parents, all expanded. Replaces the tree model, so
-     * hosts that listen to selection changes should ignore the events this fires.
+     * @see #bestMatch
      */
     public void filter(String text) {
-        if (text == null || text.isEmpty()) {
+        queryWords = words(text);
+        if (queryWords.length == 0) {
             tree.setModel(new DefaultTreeModel(root));
             return;
         }
 
-        String[] tokens = text.toLowerCase().split("\\s+");
         DefaultMutableTreeNode filteredRoot = new DefaultMutableTreeNode("Menus");
-        filterNode(root, filteredRoot, tokens, "");
+        filterNode(root, filteredRoot, queryWords, "");
 
         tree.setModel(new DefaultTreeModel(filteredRoot));
         expandAll(true);
+    }
+
+    /** The words of a search query, lower case. */
+    static String[] words(String query) {
+        String text = query == null ? "" : query.trim().toLowerCase(Locale.ROOT);
+        return text.isEmpty() ? new String[0] : text.split("\\s+");
+    }
+
+    /**
+     * The page of the filtered tree answering the query best, the first in menu order among equals; null
+     * when no page the user can open now matches. See {@link #rank}.
+     */
+    public TreePath bestMatch(String query) {
+        String text = String.join(" ", words(query));
+        if (text.isEmpty()) {
+            return null;
+        }
+        TreePath best = null;
+        int bestRank = Integer.MAX_VALUE;
+        Enumeration<?> nodes = ((DefaultMutableTreeNode) tree.getModel().getRoot()).preorderEnumeration();
+        while (nodes.hasMoreElements()) {
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) nodes.nextElement();
+            TreePath path = new TreePath(node.getPath());
+            if (!(node.getUserObject() instanceof SubMenuModel) || !isSelectable(path)) {
+                continue;
+            }
+            int rank = rank(((SubMenuModel) node.getUserObject()).getName(), text);
+            if (rank < bestRank) {
+                best = path;
+                bestRank = rank;
+            }
+        }
+        return best;
+    }
+
+    /**
+     * How well a page name answers a query its path already matches: 0 for the exact name, 1 for a name
+     * starting with the query, 2 for a name containing every word, 3 for a match through the menu or group.
+     */
+    static int rank(String pageName, String query) {
+        String text = String.join(" ", words(query));
+        String name = pageName.toLowerCase(Locale.ROOT);
+        if (name.equals(text)) {
+            return 0;
+        }
+        if (name.startsWith(text)) {
+            return 1;
+        }
+        for (String word : words(text)) {
+            if (!name.contains(word)) {
+                return 3;
+            }
+        }
+        return 2;
+    }
+
+    /**
+     * Which letters of the name are an occurrence of one of the words, shown in bold; null when none are.
+     */
+    static boolean[] boldLetters(String name, String[] words) {
+        String lower = name.toLowerCase(Locale.ROOT);
+        // lower case can change the length of a few letters; such a name is shown plain rather than misaligned
+        if (words.length == 0 || lower.length() != name.length()) {
+            return null;
+        }
+        boolean[] bold = new boolean[name.length()];
+        boolean any = false;
+        for (String word : words) {
+            for (int at = lower.indexOf(word); at >= 0; at = lower.indexOf(word, at + word.length())) {
+                Arrays.fill(bold, at, at + word.length(), true);
+                any = true;
+            }
+        }
+        return any ? bold : null;
     }
 
     private boolean filterNode(DefaultMutableTreeNode originalNode, DefaultMutableTreeNode filteredNode, String[] tokens, String path) {
@@ -439,7 +588,7 @@ public class SettingsMenuTree {
         boolean matchFound = false;
 
         if (originalNode != root) {
-            String currentPathLower = currentPath.toLowerCase();
+            String currentPathLower = currentPath.toLowerCase(Locale.ROOT);
             boolean allTokensMatch = true;
             for (String token : tokens) {
                 if (!currentPathLower.contains(token)) {
@@ -515,7 +664,7 @@ public class SettingsMenuTree {
         tree.repaint();
     }
 
-    /** Shared with {@link SettingsPageIndex}, so search offers the pages the tree lets you open. */
+    /** Whether a page's enable or visible condition is false for the given tune. */
     static boolean isDisabledByExpressions(SubMenuModel subMenu, IniFileModel iniFileModel, ConfigurationImage ci) {
         if (subMenu.getEnableExpression() != null) {
             Boolean enabled = ExpressionEvaluator.evaluateBooleanExpression(subMenu.getEnableExpression(), iniFileModel, ci);

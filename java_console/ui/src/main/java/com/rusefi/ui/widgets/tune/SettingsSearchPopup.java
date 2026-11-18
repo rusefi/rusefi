@@ -23,7 +23,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Enumeration;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -145,35 +144,13 @@ public final class SettingsSearchPopup {
             return;
         }
         status.setText(HINT);
-        TreePath choice = text.isEmpty() ? null : bestMatch(shownRoot, text);
+        TreePath choice = menuTree.bestMatch(text);
         if (choice == null) {
             // nothing typed: the categories, closed, to browse
             choice = tree.getPathForRow(0);
         }
         tree.setSelectionPath(choice);
         tree.scrollPathToVisible(choice);
-    }
-
-    /** The page answering the query best, the first in menu order among equals; null without a page. */
-    @Nullable
-    private TreePath bestMatch(DefaultMutableTreeNode shownRoot, String text) {
-        TreePath best = null;
-        int bestRank = Integer.MAX_VALUE;
-        Enumeration<?> nodes = shownRoot.preorderEnumeration();
-        while (nodes.hasMoreElements()) {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) nodes.nextElement();
-            TreePath path = new TreePath(node.getPath());
-            SubMenuModel page = pageAt(path);
-            if (page == null || !menuTree.isSelectable(path)) {
-                continue;
-            }
-            int rank = SettingsPageIndex.rank(page.getName(), text);
-            if (rank < bestRank) {
-                best = path;
-                bestRank = rank;
-            }
-        }
-        return best;
     }
 
     /** Runs the tree's own up/down navigation, which skips separators and greyed-out pages. */

@@ -2,7 +2,9 @@ package com.rusefi.ui.widgets.tune;
 
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileMetaInfo;
+import com.opensr5.ini.IniFileMetaInfoImpl;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.RawIniFile;
 import com.opensr5.ini.SubMenuModel;
 import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.ui.UIContext;
@@ -24,6 +26,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -185,6 +188,36 @@ class SettingsSearchPopupTest {
             popup.search.setText("idle pid");
             assertEquals(Arrays.asList("Idle", "Idle PID"), rows(popup), "a greyed-out page is still shown");
             assertEquals("Idle", selected(popup), "but not chosen");
+        });
+    }
+
+    @Test
+    void realIniFindsTheUsualPages() throws Throwable {
+        IniFileModel ini;
+        try (InputStream input = SettingsSearchPopupTest.class.getResourceAsStream("/26october.ini")) {
+            RawIniFile raw = IniFileReaderUtil.read(input, "26october.ini");
+            ini = IniFileReaderUtil.readIniFile(raw, "26october.ini", new IniFileMetaInfoImpl(raw));
+        }
+        SwingUtilities.invokeAndWait(() -> {
+            SettingsSearchPopup popup = new SettingsSearchPopup(ini, null, page -> true, () -> { });
+            List<String> pages = new ArrayList<>();
+            Enumeration<?> nodes = popup.menuTree.getRoot().preorderEnumeration();
+            while (nodes.hasMoreElements()) {
+                Object userObject = ((DefaultMutableTreeNode) nodes.nextElement()).getUserObject();
+                if (userObject instanceof SubMenuModel) {
+                    pages.add(((SubMenuModel) userObject).getKey());
+                }
+            }
+            assertTrue(pages.size() > 250, "nearly the whole menu: " + pages.size());
+            assertTrue(pages.contains("veTableDialog"));
+            assertFalse(pages.contains("veTableMap"), "a 3D view, not a settings page");
+
+            popup.search.setText("vvt");
+            assertEquals("VVT outputs and PID", selected(popup));
+            assertEquals("Advanced", text(popup.tree.getSelectionPath().getParentPath()));
+            popup.search.setText("idle");
+            assertEquals("Idle settings", selected(popup));
+            assertEquals("Idle", text(popup.tree.getSelectionPath().getParentPath()));
         });
     }
 
