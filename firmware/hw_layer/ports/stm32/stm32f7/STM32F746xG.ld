@@ -23,10 +23,13 @@
  * Notes:
  * BSS is placed in DTCM RAM in order to simplify DMA buffers management.
  */
+
+flash_size = 768k;
+
 MEMORY
 {
-    flash0 (RX) : org = 0x08000000, len = 1M        /* Flash as AXIM (writable) */
-    flash1 (RX) : org = 0x00200000, len = 1M        /* Flash as ITCM */
+    flash0 (RX) : org = 0x08000000, len = flash_size        /* Flash as AXIM (writable) */
+    flash1 (RX) : org = 0x00200000, len = flash_size        /* Flash as ITCM */
     flash2 (RX) : org = 0x00000000, len = 0
     flash3 (RX) : org = 0x00000000, len = 0
     flash4 (RX) : org = 0x00000000, len = 0
