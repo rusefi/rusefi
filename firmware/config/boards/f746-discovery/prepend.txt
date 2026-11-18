@@ -2,3 +2,5 @@
 ! here to drop the Lua TS page (pageIdentifier 0x0400), and firmware/Makefile lifts it
 ! into DDEFS for the firmware build - see [tag:ts_page_table] / issue #9699
 #define EFI_LUA FALSE
+
+#define ts_show_sd_pins false
