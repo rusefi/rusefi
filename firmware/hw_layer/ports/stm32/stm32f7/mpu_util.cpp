@@ -9,6 +9,10 @@
 
 #include "flash_int.h"
 
+#ifndef EFI_FLASH_IGNORE_SINGLE_BANK
+#define EFI_FLASH_IGNORE_SINGLE_BANK FALSE
+#endif
+
 static bool isDualBank() {
 #ifdef FLASH_OPTCR_nDBANK
 	// cleared bit indicates dual bank
@@ -39,7 +43,9 @@ static DeviceType determineDevice() {
 	} else {
 		if (fs == 1024) {
 			// Unsupported scenario! Not enough space for program plus two config copies
+#if !EFI_FLASH_IGNORE_SINGLE_BANK
 			criticalError("1MB single bank MCU detected: please clear nDBANK option bit and reinstall FW.");
+#endif
 			return DeviceType::SingleBank1MB;
 		} else if (fs == 2048) {
 			return DeviceType::SingleBank2MB;
