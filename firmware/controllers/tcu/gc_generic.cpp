@@ -105,13 +105,19 @@ void GenericGearController::update() {
 			shiftTimer.reset();
 			switch (getDesiredGear()) {
 			case GEAR_1 :
-				setDesiredGear(GEAR_2);
+				if (engineConfiguration->totalGearsCount >= 2) setDesiredGear(GEAR_2);
 				break;
 			case GEAR_2 :
-				setDesiredGear(GEAR_3);
+				if (engineConfiguration->totalGearsCount >= 3) setDesiredGear(GEAR_3);
 				break;
 			case GEAR_3 :
-				setDesiredGear(GEAR_4);
+				if (engineConfiguration->totalGearsCount >= 4) setDesiredGear(GEAR_4);
+				break;
+			case GEAR_4 :
+				if (engineConfiguration->transmissionControllerMode == TransmissionControllerMode::SimpleTransmissionController && engineConfiguration->totalGearsCount >= 5) setDesiredGear(GEAR_5);
+				break;
+			case GEAR_5 :
+				if (engineConfiguration->transmissionControllerMode == TransmissionControllerMode::SimpleTransmissionController && engineConfiguration->totalGearsCount >= 6) setDesiredGear(GEAR_6);
 				break;
 			default:
 				break;
@@ -134,13 +140,25 @@ void GenericGearController::update() {
 			case GEAR_4 :
 				setDesiredGear(GEAR_3);
 				break;
+			case GEAR_5 :
+				setDesiredGear(GEAR_4);
+				break;
+			case GEAR_6 :
+				setDesiredGear(GEAR_5);
+				break;
 			default:
 				break;
 			}
 			break;
+		case SelectedGear::Manual:
+			// Moving D -> M latches the current desired forward gear. In M,
+			// automatic shift maps must not change the selected gear.
+			break;
 		case SelectedGear::Drive :
-			// If the gear selector is in drive, let AutomaticGearController,
-			// which this class inherits from, decide what gear the transmission should be in.
+			// M -> D resumes automatic shifts from the current selected gear.
+			// Record Drive BEFORE the early return: otherwise a stale Manual
+			// state can incorrectly authorize a subsequent M+ / M- command.
+			lastRange = SelectedGear::Drive;
 			AutomaticGearController::update();
 			return;
 		default:

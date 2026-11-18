@@ -25,9 +25,16 @@ getTarget ()
 	fi
 }
 
-echo -n '{"include": ['
-find "${SCAN_DIR}" -name "meta-info*.env" -print0 | while IFS= read -r -d '' F; do
-	echo -n $(getTarget "$F" "$FDIR")
-done
-echo "]}"
+# Emit valid JSON even for a single board filter (only:uaefi).
+# The old script appended a comma after the last selected board, making
+# a single-target matrix fail evaluation before firmware jobs could start.
+entries=""
+while IFS= read -r -d '' F; do
+	target="$(getTarget "$F" "$FDIR")"
+	if [[ -n "$target" ]]; then
+		[[ -n "$entries" ]] && entries+=","
+		entries+="${target%,}"
+	fi
+done < <(find "${SCAN_DIR}" -name "meta-info*.env" -print0)
+printf '{"include": [%s]}\n' "$entries"
 
