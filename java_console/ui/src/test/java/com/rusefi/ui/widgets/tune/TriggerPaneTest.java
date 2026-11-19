@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.RawIniFile;
@@ -19,7 +20,7 @@ public class TriggerPaneTest {
         assertNotNull(TriggerPaneTest.class.getResource("/triggers.txt"));
 
         IniFileModel model = createTriggerTypeModel();
-        ConfigurationImage image = new ConfigurationImage(new byte[100]);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[100]);
         TriggerImageHelper helper = new TriggerImageHelper();
 
         image.getContent()[0] = 1; // TT_FORD_ASPIRE has two channels
@@ -76,7 +77,7 @@ public class TriggerPaneTest {
         RawIniFile lines = IniFileReaderUtil.read(new java.io.ByteArrayInputStream(string.getBytes()));
         IniFileModel model = IniFileReaderUtil.readIniFile(lines, "test.ini", new com.opensr5.ini.IniFileMetaInfoImpl(lines));
 
-        ConfigurationImage ci = new ConfigurationImage(new byte[100]);
+        ConfigurationImage ci = ConfigurationImageTestHelper.newLittleEndian(new byte[100]);
         // trigger_type is at offset 0, value 8 is "TT_TOOTHED_WHEEL_60_2"
         ci.getContent()[0] = 8;
 
@@ -174,7 +175,7 @@ public class TriggerPaneTest {
 
         RawIniFile lines = IniFileReaderUtil.read(new java.io.ByteArrayInputStream(string.getBytes()));
         IniFileModel model = IniFileReaderUtil.readIniFile(lines, "test.ini", new com.opensr5.ini.IniFileMetaInfoImpl(lines));
-        ConfigurationImage image = new ConfigurationImage(new byte[100]);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[100]);
         image.getContent()[3] = 1; // TT_FORD_ASPIRE
         image.getContent()[4] = 9; // VVT_NISSAN_VQ
         image.getContent()[5] = 8; // VVT_BARRA_3_PLUS_1

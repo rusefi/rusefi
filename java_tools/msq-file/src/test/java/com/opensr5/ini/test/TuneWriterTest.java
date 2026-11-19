@@ -1,5 +1,6 @@
 package com.opensr5.ini.test;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
 import com.rusefi.tune.ConfigurationImageGetterSetter2;
@@ -15,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TuneWriterTest {
     @Test
     public void testFloatRounding() {
-        ConfigurationImage image = new ConfigurationImage(200);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(200);
         IniField floatField = new ScalarIniField("test", 0, "test", FieldType.FLOAT, 1, "2", 0);
         double value = 0.9;
         ConfigurationImageGetterSetter2.setValue(floatField, image, new Constant("x", "y", Double.toString(value), "2"));

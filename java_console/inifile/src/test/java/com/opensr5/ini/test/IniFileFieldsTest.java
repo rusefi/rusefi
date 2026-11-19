@@ -1,5 +1,6 @@
 package com.opensr5.ini.test;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ini.CurveModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.RawIniFile;
@@ -292,7 +293,7 @@ public class IniFileFieldsTest {
         assertEquals(4, gears.getRows());
         assertEquals("Gear", gears.getUnits());
         assertEquals("-1", gears.getMin());
-        ConfigurationImage image = new ConfigurationImage(4);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(4);
         Double[][] values = ConfigurationImageGetterSetter.getArrayValues(gears, image);
         assertArrayEquals(new Double[]{-1.0, 0.0, 1.0, 2.0},
             new Double[]{values[0][0], values[1][0], values[2][0], values[3][0]});

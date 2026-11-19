@@ -96,7 +96,7 @@ public class Field {
     }
 
     public void setValue(byte[] content, boolean value) {
-        ByteBuffer wrapped = ByteBufferUtil.littleEndianWrap(content, 0, content.length);
+        ByteBuffer wrapped = ByteBufferUtil.wrap(content, 0, content.length, ByteOrder.LITTLE_ENDIAN);
         if (bitOffset != NO_BIT_OFFSET) {
             int packed = wrapped.getInt();
             int thisBit = (value ? 1 : 0) << bitOffset;

@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import org.junit.jupiter.api.Test;
 
@@ -37,10 +38,10 @@ public class TuningToolbarStateLabelTest {
 
     @Test
     void savesCurrentTuneWithoutEdits() {
-        ConfigurationImage working = new ConfigurationImage(1);
-        ConfigurationImage session = new ConfigurationImage(2);
-        ConfigurationImage ecu = new ConfigurationImage(3);
-        ConfigurationImage baseline = new ConfigurationImage(4);
+        ConfigurationImage working = ConfigurationImageTestHelper.newLittleEndian(1);
+        ConfigurationImage session = ConfigurationImageTestHelper.newLittleEndian(2);
+        ConfigurationImage ecu = ConfigurationImageTestHelper.newLittleEndian(3);
+        ConfigurationImage baseline = ConfigurationImageTestHelper.newLittleEndian(4);
 
         assertSame(working, TuningToolbarWidget.imageToSave(working, session, ecu, baseline));
         assertSame(session, TuningToolbarWidget.imageToSave(null, session, ecu, baseline));

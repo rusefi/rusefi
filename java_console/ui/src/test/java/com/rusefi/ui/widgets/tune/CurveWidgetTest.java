@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.IniFileMetaInfo;
@@ -26,7 +27,7 @@ public class CurveWidgetTest {
         // Issue #9191: screenshot values are valid (0..1250 mg), but the INI plot ends at 150.
         // All loaded points must be visible, and edits must respect field limits, not plot bounds.
         IniFileModel ini = readPrimingIni();
-        ConfigurationImage image = new ConfigurationImage(24);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(24);
         ArrayIniField xField = (ArrayIniField) ini.findIniField("primeBins").get();
         ArrayIniField yField = (ArrayIniField) ini.findIniField("primeValues").get();
         Double[] temperatures = {-40.0, -20.0, 0.0, 20.0, 40.0, 60.0, 80.0, 100.0};
@@ -117,7 +118,7 @@ public class CurveWidgetTest {
         when(meta.getSignature()).thenReturn("test");
         IniFileModel ini = IniFileReaderUtil.readIniFile(IniFileReaderUtil.read(
             new ByteArrayInputStream(text.getBytes(StandardCharsets.US_ASCII))), "test", meta);
-        ConfigurationImage image = new ConfigurationImage(16);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(16);
         ArrayIniField yField = (ArrayIniField) ini.findIniField("gearBasedOpenLoopBoostAdder").get();
         ConfigurationImageGetterSetter.setArrayValues(yField, image,
             new Double[]{0.0, 0.0, 5.0, 10.0, 15.0, 20.0, 20.0, 20.0, 20.0, 20.0});
@@ -172,7 +173,7 @@ public class CurveWidgetTest {
         for (int mode = 0; mode < 3; mode++) {
             // A missing image must not turn an unresolved bound into zero or a plot-axis limit.
             // readNumericValue currently requests four bytes even for the U08 flag at offset 12.
-            ConfigurationImage image = mode == 2 ? null : new ConfigurationImage(16);
+            ConfigurationImage image = mode == 2 ? null : ConfigurationImageTestHelper.newLittleEndian(16);
             if (image != null) {
                 image.getContent()[12] = (byte) mode;
                 ConfigurationImageGetterSetter.setArrayValues((ArrayIniField) ini.findIniField("xBins").get(),
@@ -218,7 +219,7 @@ public class CurveWidgetTest {
     @Test
     public void draggingUsesOneScaleUntilRelease() throws Throwable {
         IniFileModel ini = readPrimingIni();
-        ConfigurationImage image = new ConfigurationImage(24);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(24);
         ArrayIniField xField = (ArrayIniField) ini.findIniField("primeBins").get();
         ArrayIniField yField = (ArrayIniField) ini.findIniField("primeValues").get();
         ConfigurationImageGetterSetter.setArrayValues(xField, image,
@@ -291,7 +292,7 @@ public class CurveWidgetTest {
     @Test
     public void coolantLimitEdit() throws Throwable {
         IniFileModel ini = readIni();
-        ConfigurationImage image = new ConfigurationImage(20);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(20);
         image.getContent()[16] = 1; // Metric interface
         ArrayIniField xField = (ArrayIniField) ini.findIniField("cltRevLimitRpmBins").get();
         ArrayIniField yField = (ArrayIniField) ini.findIniField("cltRevLimitRpm").get();
@@ -350,7 +351,7 @@ public class CurveWidgetTest {
 
     private static void checkCoolantLimits(int metric, int maximum) throws Throwable {
         IniFileModel ini = readIni();
-        ConfigurationImage image = new ConfigurationImage(20);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(20);
         image.getContent()[16] = (byte) metric;
         ArrayIniField xField = (ArrayIniField) ini.findIniField("cltRevLimitRpmBins").get();
         ConfigurationImageGetterSetter.setArrayValues(xField, image, new Double[]{-20.0, 0.0, 11.0, 115.0});
@@ -372,7 +373,7 @@ public class CurveWidgetTest {
     @Test
     public void axisExpressionsUseEachTuneWithoutChangingIniMetadata() throws Throwable {
         IniFileModel ini = readIni();
-        ConfigurationImage image = new ConfigurationImage(20);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(20);
         image.getContent()[16] = 1;
         assertEquals(120, ini.getCurves().get("cltRevLimitCurve").getxAxis().resolve(ini, image).getMax());
         image.getContent()[16] = 0;

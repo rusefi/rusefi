@@ -20,7 +20,6 @@ import com.rusefi.core.OutputChannelSnapshot;
 import com.rusefi.core.RusEfiSignature;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.SignatureHelper;
-import com.rusefi.core.io.BoardCompatibility;
 import com.rusefi.core.io.BundleInfo;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.io.UnsupportedEcuInfo;
@@ -618,14 +617,6 @@ public class BinaryProtocol {
 
     public byte @NotNull [] smartPacketPrefix(int page, int offset, int requestSize) {
         return smartPacketPrefix2(page, offset, requestSize, isSinglePageController(), getWireByteOrder());
-    }
-
-    static byte @NotNull [] smartPacketPrefix2(int offset, int requestSize, boolean isSinglePageController) {
-        return smartPacketPrefix2(0, offset, requestSize, isSinglePageController);
-    }
-
-    static byte @NotNull [] smartPacketPrefix2(int page, int offset, int requestSize, boolean isSinglePageController) {
-        return smartPacketPrefix2(page, offset, requestSize, isSinglePageController, ByteOrder.LITTLE_ENDIAN);
     }
 
     static byte @NotNull [] smartPacketPrefix2(int page, int offset, int requestSize, boolean isSinglePageController, ByteOrder order) {

@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileMetaInfoImpl;
@@ -92,7 +93,7 @@ public class EnumCalibrationFieldRuntimeTest {
             byte[] original = new byte[field.getOffset() + 2];
             Arrays.fill(original, (byte) 0xa5);
             original[field.getOffset()] = (byte) 0x83; // Reserved ordinal 3, with the unused high bit set.
-            ConfigurationImage source = new ConfigurationImage(original.clone());
+            ConfigurationImage source = ConfigurationImageTestHelper.newLittleEndian(original.clone());
             ConfigurationImage working = source.clone();
             AtomicInteger changes = new AtomicInteger();
             JComboBox<?> combo = component(createRow(field, source, working, changes), JComboBox.class);
@@ -124,7 +125,7 @@ public class EnumCalibrationFieldRuntimeTest {
             EnumIniField field = new EnumIniField("outputPin", 1, FieldType.UINT16,
                 new EnumIniField.EnumKeyValueMap(values), 0, 7, true);
             byte[] original = {(byte) 0x5a, 33, (byte) 0xa5};
-            ConfigurationImage source = new ConfigurationImage(original.clone());
+            ConfigurationImage source = ConfigurationImageTestHelper.newLittleEndian(original.clone());
             ConfigurationImage working = source.clone();
             AtomicInteger changes = new AtomicInteger();
             JComboBox<?> combo = component(createRow(field, source, working, changes), JComboBox.class);
@@ -151,7 +152,7 @@ public class EnumCalibrationFieldRuntimeTest {
             assertEquals(1, changes.get(), "Attempting a removed unknown choice must not write or notify");
 
             byte[] knownImage = {(byte) 0x5a, 5, (byte) 0xa5};
-            ConfigurationImage knownSource = new ConfigurationImage(knownImage.clone());
+            ConfigurationImage knownSource = ConfigurationImageTestHelper.newLittleEndian(knownImage.clone());
             ConfigurationImage knownWorking = knownSource.clone();
             AtomicInteger knownChanges = new AtomicInteger();
             JComboBox<?> knownCombo = component(
@@ -176,7 +177,7 @@ public class EnumCalibrationFieldRuntimeTest {
                 EnumIniField field = new EnumIniField("enabled", 1, FieldType.UINT8,
                     new EnumIniField.EnumKeyValueMap(values), 2, 0);
                 byte[] original = {(byte) 0x5a, (byte) 0xf3, (byte) 0xa5};
-                ConfigurationImage source = new ConfigurationImage(original.clone());
+                ConfigurationImage source = ConfigurationImageTestHelper.newLittleEndian(original.clone());
                 ConfigurationImage working = source.clone();
                 AtomicInteger changes = new AtomicInteger();
                 JPanel row = createRow(field, source, working, changes);
@@ -216,7 +217,7 @@ public class EnumCalibrationFieldRuntimeTest {
                 byte[] original = new byte[field.getOffset() + 2];
                 Arrays.fill(original, (byte) 0xa5);
                 original[field.getOffset()] = (byte) ((0xa5 & ~mask) | (ordinals[i] << field.getBitPosition()));
-                ConfigurationImage source = new ConfigurationImage(original.clone());
+                ConfigurationImage source = ConfigurationImageTestHelper.newLittleEndian(original.clone());
                 ConfigurationImage working = source.clone();
                 AtomicInteger changes = new AtomicInteger();
                 JComboBox<?> combo = component(createRow(field, source, working, changes), JComboBox.class);

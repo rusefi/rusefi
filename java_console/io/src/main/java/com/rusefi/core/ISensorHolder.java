@@ -26,7 +26,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.core.ByteBufferUtil.littleEndianWrap;
 
 public interface ISensorHolder {
     Logging log = getLogging(ISensorHolder.class);
@@ -289,7 +288,7 @@ public interface ISensorHolder {
         ByteBuffer[] holder = RESPONSE_BB_HOLDER.get();
         ByteBuffer bb = holder[0];
         if (bb == null || bb.array() != response) {
-            bb = littleEndianWrap(response, 0, response.length);
+            bb = ByteBufferUtil.wrap(response, 0, response.length, order);
             holder[0] = bb;
         }
         // the cached buffer may have been wrapped for a different-endian connection

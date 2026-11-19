@@ -1,5 +1,6 @@
 package com.rusefi.ui.wizard;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.DialogModel;
@@ -116,7 +117,7 @@ class CltSensorPanelTest {
         EnumIniField field = new EnumIniField("clt_adcChannel", 0, FieldType.UINT8,
             new EnumIniField.EnumKeyValueMap(values), 0, 7);
 
-        assertNull(AbstractWizardStep.readValue(field, new ConfigurationImage(new byte[]{16})));
+        assertNull(AbstractWizardStep.readValue(field, ConfigurationImageTestHelper.newLittleEndian(new byte[]{16})));
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.DialogModel;
@@ -139,7 +140,7 @@ public class StringCalibrationFieldRuntimeTest {
     }
 
     private static Editor createEditor(IniField field, int imageSize) {
-        ConfigurationImage image = new ConfigurationImage(imageSize);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(imageSize);
         JPanel row = CalibrationFieldFactory.createFieldRow(
             new DialogModel.Field(field.getName(), field.getName()), field, image, image);
         JTextField textField = findTextField(row);

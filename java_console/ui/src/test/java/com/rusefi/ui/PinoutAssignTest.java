@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.IniFileMetaInfoImpl;
@@ -84,7 +85,7 @@ class PinoutAssignTest {
     void swapExchangesEverySettingOfTheTwoPins() throws Throwable {
         IniFileModel ini = readIni();
         // fuel pump on B6, fan on B7, the switch input on D5, and a setting no dialog shows also on B6
-        ConfigurationImage image = new ConfigurationImage(new byte[]{1, 2, 1, 0, 0, 1});
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[]{1, 2, 1, 0, 0, 1});
 
         assertNull(PinAssignments.swapProblem(ini, image, B6, B7));
         assertEquals(Arrays.asList("Fuel Pump output", "unlistedPin"), PinAssignments.userLabels(ini, image, B6));
@@ -412,7 +413,7 @@ class PinoutAssignTest {
 
     /** Fuel pump, fan and a switch input by their ordinals; the hidden output and its feature off. */
     private static ConfigurationImage image(int fuelPump, int fan, int flex) {
-        return new ConfigurationImage(new byte[]{(byte) fuelPump, (byte) fan, (byte) flex, 0, 0, 0});
+        return ConfigurationImageTestHelper.newLittleEndian(new byte[]{(byte) fuelPump, (byte) fan, (byte) flex, 0, 0, 0});
     }
 
     private static String value(IniFileModel ini, ConfigurationImage image, String key) {

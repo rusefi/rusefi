@@ -1,5 +1,6 @@
 package com.rusefi.ui.wizard;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.io.DataListener;
@@ -68,7 +69,7 @@ public class WizardSandbox {
         for (int page = 0; page < model.getMetaInfo().getnPages(); page++) {
             totalSize += model.getMetaInfo().getPageSize(page);
         }
-        ConfigurationImage blankImage = new ConfigurationImage(totalSize);
+        ConfigurationImage blankImage = ConfigurationImageTestHelper.newLittleEndian(totalSize);
 
         AbstractIoStream deadStream = new AbstractIoStream() {
             @Override

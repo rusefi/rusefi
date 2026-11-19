@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileMetaInfoImpl;
@@ -49,7 +50,7 @@ class PinoutAnalogTuneUseTest {
     void analogInputPinShowsItsTuneUseAndItsSelectorHasAPinoutButton() throws Throwable {
         IniFileModel ini = readIni();
         // fuel pump on B6, MAP sensor on D9
-        ConfigurationImage image = new ConfigurationImage(new byte[]{1, 1});
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[]{1, 1});
         EnumIniField map = (EnumIniField) ini.getAllIniFields().get("map_sensor_hwChannel");
         assertTrue(map.isPinEnum(), "the INI marks the MAP input as choosing from a pin list");
         Path archive = writeConnectorArchive();
@@ -88,7 +89,7 @@ class PinoutAnalogTuneUseTest {
     void assignSwapAndFunctionsSeeTheAnalogInput() throws Throwable {
         IniFileModel ini = readIni();
         // fuel pump on B6, MAP sensor on D9
-        ConfigurationImage image = new ConfigurationImage(new byte[]{1, 1});
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[]{1, 1});
 
         assertEquals(Collections.singletonList("map_sensor_hwChannel"), PinAssignments.candidates(ini, image, D9_MAP)
             .stream().map(c -> c.fieldKey).collect(java.util.stream.Collectors.toList()),

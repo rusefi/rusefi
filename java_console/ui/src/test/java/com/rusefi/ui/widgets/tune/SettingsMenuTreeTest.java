@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileMetaInfo;
 import com.opensr5.ini.IniFileModel;
@@ -69,7 +70,7 @@ class SettingsMenuTreeTest {
 
             SubMenuModel pid = (SubMenuModel) menuTree.findSubMenuNode("idlePid").getUserObject();
             assertFalse(menuTree.isDisabled(pid));
-            menuTree.refreshExpressions(ini, new ConfigurationImage(new byte[8]));
+            menuTree.refreshExpressions(ini, ConfigurationImageTestHelper.newLittleEndian(new byte[8]));
             assertTrue(menuTree.isDisabled(pid), "idleMode is off in an empty tune");
             assertEquals("<html>Not available with the current settings. Depends on:"
                 + "<br>&bull; Mode (in Idle settings)</html>", menuTree.getUnlockHint(pid));
@@ -85,7 +86,7 @@ class SettingsMenuTreeTest {
         SwingUtilities.invokeAndWait(() -> {
             SettingsMenuTree menuTree = new SettingsMenuTree(() -> ini);
             // idleMode is off: Idle PID is greyed out
-            menuTree.refreshExpressions(ini, new ConfigurationImage(new byte[8]));
+            menuTree.refreshExpressions(ini, ConfigurationImageTestHelper.newLittleEndian(new byte[8]));
             JTree tree = menuTree.getTree();
 
             menuTree.filter("MODE");
@@ -145,7 +146,7 @@ class SettingsMenuTreeTest {
         try {
             IniFileModel ini = searchIni();
             SettingsMenuTree menuTree = new SettingsMenuTree(() -> ini);
-            ConfigurationImage image = new ConfigurationImage(8);
+            ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(8);
             image.getContent()[0] = (byte) (closedLoop ? 1 : 0);
             menuTree.refreshExpressions(ini, image);
             return menuTree;

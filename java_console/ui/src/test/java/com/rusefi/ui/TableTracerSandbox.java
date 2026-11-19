@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.*;
@@ -68,7 +69,7 @@ public class TableTracerSandbox {
             uiContext.iniFileState.setIniFileModelForTest(realModel);
 
             byte[] initialData = createInitialBuffer(realModel);
-            ConfigurationImage stubImage = new ConfigurationImage(initialData);
+            ConfigurationImage stubImage = ConfigurationImageTestHelper.newLittleEndian(initialData);
 
             AbstractIoStream dummyStream = new AbstractIoStream() {
                 @Override public void setInputListener(DataListener listener) {}

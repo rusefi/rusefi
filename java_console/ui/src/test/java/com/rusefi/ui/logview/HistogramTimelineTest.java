@@ -1,5 +1,6 @@
 package com.rusefi.ui.logview;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.DatalogEntry;
 import com.opensr5.ini.IniFileModel;
@@ -183,7 +184,7 @@ class HistogramTimelineTest {
 
     /** RPM bins 800, 1500, 2500, 4000; load bins 2, 5, 10. */
     private static ConfigurationImage tune() {
-        ConfigurationImage image = new ConfigurationImage(16);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(16);
         int[] values = {800, 1500, 2500, 4000, 2, 5, 10};
         for (int i = 0; i < values.length; i++) {
             FieldType.UINT16.writeRawValue(image.getByteBuffer(i * 2, 2), values[i]);

@@ -5,6 +5,7 @@ import com.rusefi.config.generated.Integration;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
+import java.nio.ByteOrder;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -57,7 +58,7 @@ public class BurnCommandTest {
 
         // the invariant: burn must address pages exactly like read/write chunk commands do
         byte[] readWritePacket = new byte[6];
-        ByteRange.packPageOffsetAndSize(TS_PAGE_LUA, 0, 0, readWritePacket);
+        ByteRange.packPageOffsetAndSize(TS_PAGE_LUA, 0, 0, readWritePacket, ByteOrder.LITTLE_ENDIAN);
         assertArrayEquals(Arrays.copyOf(readWritePacket, 2), payload);
     }
 

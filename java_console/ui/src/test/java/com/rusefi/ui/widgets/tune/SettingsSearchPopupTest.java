@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileMetaInfo;
 import com.opensr5.ini.IniFileMetaInfoImpl;
@@ -79,7 +80,7 @@ class SettingsSearchPopupTest {
      */
     private static SettingsSearchPopup popup(Predicate<String> open, Runnable close) {
         try {
-            return new SettingsSearchPopup(null, ini(), new ConfigurationImage(new byte[8]),
+            return new SettingsSearchPopup(null, ini(), ConfigurationImageTestHelper.newLittleEndian(new byte[8]),
                 (page, field) -> open.test(field == null ? page : page + "@" + field), close);
         } catch (Throwable e) {
             throw new AssertionError(e);
@@ -354,7 +355,7 @@ class SettingsSearchPopupTest {
             AtomicInteger hidden = new AtomicInteger();
             SettingsSearchPopup.BoxSearch boxSearch = new SettingsSearchPopup.BoxSearch(box, closeAction -> {
                 try {
-                    return new SettingsSearchPopup(box, ini(), new ConfigurationImage(new byte[8]),
+                    return new SettingsSearchPopup(box, ini(), ConfigurationImageTestHelper.newLittleEndian(new byte[8]),
                         (page, field) -> opened.add(page), closeAction);
                 } catch (Throwable e) {
                     throw new AssertionError(e);

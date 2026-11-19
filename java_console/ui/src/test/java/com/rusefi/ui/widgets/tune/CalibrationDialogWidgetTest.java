@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.AxisModel;
@@ -255,7 +256,7 @@ public class CalibrationDialogWidgetTest {
         IniFileModel ini = IniFileReaderUtil.readIniFile(IniFileReaderUtil.read(
             new ByteArrayInputStream(text.toString().getBytes(StandardCharsets.US_ASCII))),
             "issue10352.ini", mock(IniFileMetaInfo.class));
-        ConfigurationImage image = new ConfigurationImage(new byte[20]);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[20]);
         for (int i = 0; i < 7; i++) {
             image.getByteBuffer(4 + 2 * i, 2).putShort((short) (500 + 500 * i));
         }
@@ -276,7 +277,7 @@ public class CalibrationDialogWidgetTest {
                 for (int i = 0; i < 7; i++) {
                     JTextField editor = getTextFieldFromRow((JPanel) content.getComponent(i));
                     editor.setText("4.125");
-                    new ConfigurationImage(expected).getByteBuffer(4 + 2 * i, 2).putShort((short) 4125);
+                    ConfigurationImageTestHelper.newLittleEndian(expected).getByteBuffer(4 + 2 * i, 2).putShort((short) 4125);
                     assertArrayEquals(expected, widget.getWorkingImage().getContent());
                 }
                 assertEquals(500, image.getByteBuffer(4, 2).getShort(), "Original image is unchanged");
@@ -413,7 +414,7 @@ public class CalibrationDialogWidgetTest {
             Collections.emptyList(), panels, (String) null, "border");
 
         CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
-        widget.update(mainDialog, iniFileModel, new ConfigurationImage(new byte[2]));
+        widget.update(mainDialog, iniFileModel, ConfigurationImageTestHelper.newLittleEndian(new byte[2]));
 
         JPanel content = widget.getContentPane();
         content.setSize(600, 200);
@@ -507,7 +508,7 @@ public class CalibrationDialogWidgetTest {
         DialogModel mainDialog = new DialogModel("main", "Main", new ArrayList<DialogModel.Field>(), new ArrayList<DialogModel.Command>(), panels, (String) null, (String) null);
 
         CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
-        ConfigurationImage ci = new ConfigurationImage(new byte[1000]);
+        ConfigurationImage ci = ConfigurationImageTestHelper.newLittleEndian(new byte[1000]);
         widget.update(mainDialog, iniFileModel, ci);
 
         JPanel content = widget.getContentPane();
@@ -552,7 +553,7 @@ public class CalibrationDialogWidgetTest {
         when(iniFileModel.findIniField("zBins")).thenReturn(java.util.Optional.of(zBinsField));
 
         CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
-        ConfigurationImage ci = new ConfigurationImage(new byte[1000]);
+        ConfigurationImage ci = ConfigurationImageTestHelper.newLittleEndian(new byte[1000]);
         widget.update("table1", iniFileModel, ci);
 
         JPanel content = widget.getContentPane();
@@ -588,7 +589,7 @@ public class CalibrationDialogWidgetTest {
         CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
         widget.setPageReaderForUnitTest((pageIndex, offset, size, onResult) -> {
             requests.add(new int[]{pageIndex, offset, size});
-            ConfigurationImage trims = new ConfigurationImage(new byte[size]);
+            ConfigurationImage trims = ConfigurationImageTestHelper.newLittleEndian(new byte[size]);
             trims.getByteBuffer(0, 4).putFloat(0.125f);
             onResult.accept(trims.getContent());
         });
@@ -670,7 +671,7 @@ public class CalibrationDialogWidgetTest {
         when(ini.findIniField("blendValues")).thenReturn(java.util.Optional.of(y));
         when(ini.findIniField("blendParameter")).thenReturn(java.util.Optional.of(selector));
         when(ini.findIniField("axisLabels")).thenReturn(java.util.Optional.of(labels));
-        ConfigurationImage main = new ConfigurationImage(620);
+        ConfigurationImage main = ConfigurationImageTestHelper.newLittleEndian(620);
         main.getByteBuffer(580, 2).putShort((short) 16384);
         byte[] before = main.getContent().clone();
         List<int[]> requests = new ArrayList<>();
@@ -680,7 +681,7 @@ public class CalibrationDialogWidgetTest {
             requests.add(new int[]{page, offset, size});
             byte[] secondary = new byte[size];
             secondary[0] = 1;
-            new ConfigurationImage(secondary).getByteBuffer(1, 2).putShort((short) 100);
+            ConfigurationImageTestHelper.newLittleEndian(secondary).getByteBuffer(1, 2).putShort((short) 100);
             onResult.accept(secondary);
         });
         try {
@@ -726,7 +727,7 @@ public class CalibrationDialogWidgetTest {
         CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
         widget.setPageReaderForUnitTest((page, offset, size, onResult) -> onResult.accept(null));
         try {
-            widget.update("remote", ini, new ConfigurationImage(20));
+            widget.update("remote", ini, ConfigurationImageTestHelper.newLittleEndian(20));
             assertNull(findTable(widget.getContentPane()));
             assertNotNull(findLabel(widget.getContentPane(), "Connect to the ECU to view this curve"));
         } finally {
@@ -752,7 +753,7 @@ public class CalibrationDialogWidgetTest {
         DialogModel dialog = new DialogModel("readouts", "Readouts", Collections.emptyList(), Collections.emptyList(),
             Collections.emptyList(), Collections.emptyList(), Arrays.asList(resolved, unresolved), 2,
             Collections.emptyList(), null, null);
-        ConfigurationImage image = new ConfigurationImage(8);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(8);
         image.getContent()[4] = 1;
         CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
         try {
@@ -787,7 +788,7 @@ public class CalibrationDialogWidgetTest {
 
     private static ConfigurationImage ltftMainPage() {
         // main settings page: an unrelated setting happens to occupy the trim's offset
-        ConfigurationImage mainPage = new ConfigurationImage(new byte[200]);
+        ConfigurationImage mainPage = ConfigurationImageTestHelper.newLittleEndian(new byte[200]);
         mainPage.getByteBuffer(0, 4).putFloat(50.0f);
         mainPage.getByteBuffer(100, 4).putFloat(650);
         mainPage.getByteBuffer(104, 4).putFloat(10);
@@ -929,7 +930,7 @@ public class CalibrationDialogWidgetTest {
 
         DialogModel mainDialog = new DialogModel("main", "Main", fields, Collections.emptyList());
 
-        ConfigurationImage ci = new ConfigurationImage(new byte[100]);
+        ConfigurationImage ci = ConfigurationImageTestHelper.newLittleEndian(new byte[100]);
         // Set values in image
         System.arraycopy("#blue".getBytes(), 0, ci.getContent(), 0, 5);
         System.arraycopy("!red".getBytes(), 0, ci.getContent(), 10, 4);
@@ -983,7 +984,7 @@ public class CalibrationDialogWidgetTest {
 
         DialogModel mainDialog = new DialogModel("main", "Main", fields, Collections.emptyList());
 
-        ConfigurationImage ci = new ConfigurationImage(new byte[100]);
+        ConfigurationImage ci = ConfigurationImageTestHelper.newLittleEndian(new byte[100]);
         ci.getContent()[0] = 0; // Select the "!Red Option"
 
         CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
@@ -1019,7 +1020,7 @@ public class CalibrationDialogWidgetTest {
     public void testLongComboIsWidthLimited() {
         String longOption = "B18 VVT2 or Idle or Low Side output 2 or injector 8 with flyback protection";
         EnumIniField field = createEnumField(longOption, "NONE");
-        ConfigurationImage image = new ConfigurationImage(new byte[1]);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[1]);
         JPanel row = CalibrationFieldFactory.createFieldRow(
             new DialogModel.Field("test", "Output"), field, image, image.clone());
 
@@ -1061,7 +1062,7 @@ public class CalibrationDialogWidgetTest {
             new DialogModel.Field("long", "Long")), Collections.emptyList());
 
         CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
-        widget.update(dialog, iniFileModel, new ConfigurationImage(new byte[2]));
+        widget.update(dialog, iniFileModel, ConfigurationImageTestHelper.newLittleEndian(new byte[2]));
 
         JComboBox<?> shortCombo = getComboBoxFromRow((JPanel) widget.getContentPane().getComponent(0));
         JComboBox<?> longCombo = getComboBoxFromRow((JPanel) widget.getContentPane().getComponent(1));
@@ -1093,7 +1094,7 @@ public class CalibrationDialogWidgetTest {
             new DialogModel.Field("value", "Value")), Collections.emptyList());
 
         CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
-        widget.update(dialog, iniFileModel, new ConfigurationImage(new byte[5]));
+        widget.update(dialog, iniFileModel, ConfigurationImageTestHelper.newLittleEndian(new byte[5]));
 
         JComboBox<?> combo = getComboBoxFromRow((JPanel) widget.getContentPane().getComponent(0));
         JTextField text = getTextFieldFromRow((JPanel) widget.getContentPane().getComponent(1));
@@ -1111,7 +1112,7 @@ public class CalibrationDialogWidgetTest {
     @Test
     public void testPinoutButton() {
         EnumIniField field = createEnumField("B16 Low Side output 4", "NONE");
-        ConfigurationImage image = new ConfigurationImage(new byte[1]);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[1]);
         AtomicReference<String> selectedPin = new AtomicReference<>();
         JPanel row = CalibrationFieldFactory.createFieldRow(
             new DialogModel.Field("injectionPins1", "Injection Output 1"),
@@ -1157,7 +1158,7 @@ public class CalibrationDialogWidgetTest {
         String text = "Use absolute fuel pressure for dead time calculation";
         com.opensr5.ini.field.StringIniField field =
             new com.opensr5.ini.field.StringIniField("test", 0, 10);
-        ConfigurationImage image = new ConfigurationImage(new byte[10]);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[10]);
         JPanel row = CalibrationFieldFactory.createFieldRow(
             new DialogModel.Field("test", text), field, image, image.clone(), null, null, 200);
 
@@ -1186,7 +1187,7 @@ public class CalibrationDialogWidgetTest {
             Collections.emptyList());
 
         CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
-        widget.update(dialog, iniFileModel, new ConfigurationImage(new byte[10]));
+        widget.update(dialog, iniFileModel, ConfigurationImageTestHelper.newLittleEndian(new byte[10]));
 
         JButton helpButton = findButtonByName(widget.getContentPane(), "settingHelpButton");
         assertNotNull(helpButton);
@@ -1216,7 +1217,7 @@ public class CalibrationDialogWidgetTest {
             new DialogModel.Field("helped", "Helped"),
             new DialogModel.Field("unhelped", "Unhelped")), Collections.emptyList());
         CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
-        widget.update(dialog, iniFileModel, new ConfigurationImage(new byte[8]));
+        widget.update(dialog, iniFileModel, ConfigurationImageTestHelper.newLittleEndian(new byte[8]));
 
         JPanel helpedRow = (JPanel) widget.getContentPane().getComponent(0);
         JPanel unhelpedRow = (JPanel) widget.getContentPane().getComponent(1);
@@ -1242,7 +1243,7 @@ public class CalibrationDialogWidgetTest {
         SettingHelpCard.setMode(SettingHelpCard.Mode.DESCRIPTIONS);
         try {
             CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
-            widget.update(dialog, iniFileModel, new ConfigurationImage(new byte[8]));
+            widget.update(dialog, iniFileModel, ConfigurationImageTestHelper.newLittleEndian(new byte[8]));
             JPanel helpedRow = (JPanel) widget.getContentPane().getComponent(0);
             JPanel unhelpedRow = (JPanel) widget.getContentPane().getComponent(1);
 
@@ -1288,7 +1289,7 @@ public class CalibrationDialogWidgetTest {
             new DialogModel.Field("helped", "Same width"),
             new DialogModel.Field("unhelped", "Same width")), Collections.emptyList());
         CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
-        widget.update(dialog, iniFileModel, new ConfigurationImage(new byte[8]));
+        widget.update(dialog, iniFileModel, ConfigurationImageTestHelper.newLittleEndian(new byte[8]));
 
         JPanel helpedRow = (JPanel) widget.getContentPane().getComponent(0);
         JPanel unhelpedRow = (JPanel) widget.getContentPane().getComponent(1);
@@ -1326,7 +1327,7 @@ public class CalibrationDialogWidgetTest {
             Collections.singletonList(new PanelModel("nested", "north", null, null)), null);
 
         CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
-        widget.update(mainDialog, iniFileModel, new ConfigurationImage(new byte[27]));
+        widget.update(mainDialog, iniFileModel, ConfigurationImageTestHelper.newLittleEndian(new byte[27]));
 
         JPanel content = widget.getContentPane();
         JPanel firstRow = (JPanel) content.getComponent(0);

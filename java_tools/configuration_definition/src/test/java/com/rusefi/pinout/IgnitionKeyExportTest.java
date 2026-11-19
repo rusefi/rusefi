@@ -1,5 +1,6 @@
 package com.rusefi.pinout;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.ReaderStateImpl;
@@ -56,7 +57,7 @@ class IgnitionKeyExportTest {
                 .replaceAll("\\$\\w+", Matcher.quoteReplacement(options)) + "\n").getBytes(StandardCharsets.UTF_8));
         IniFileModel ini = IniFileReaderUtil.readIniFile(iniFile.toString());
         // L9779_PIN_KEY is stored as little-endian U16 280; never replace it with NONE.
-        ConfigurationImage image = new ConfigurationImage(new byte[]{0x18, 0x01});
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[]{0x18, 0x01});
         Msq tune = MsqFactory.valueOf(image, ini);
         Path msqFile = temporary.resolve("key.msq");
         tune.writeXmlFile(msqFile.toString());

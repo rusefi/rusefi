@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
@@ -44,7 +45,7 @@ class CalibrationPanelWorkspaceTest {
         SwingUtilities.invokeAndWait(() -> {
             Node config = new Node();
             try (Fixture fixture = new Fixture(ini, config)) {
-                fixture.primary.update("softwareKnock", ini, new ConfigurationImage(ini.getMetaInfo().getPageSize(0)));
+                fixture.primary.update("softwareKnock", ini, ConfigurationImageTestHelper.newLittleEndian(ini.getMetaInfo().getPageSize(0)));
                 fixture.workspace.detachCurrentPanel();
                 FakeWindow original = fixture.windows.get(0);
                 assertTrue(original.canSplit);
@@ -76,7 +77,7 @@ class CalibrationPanelWorkspaceTest {
                     ini.findIniField("cylinderBore").get(), fixture.primary.getWorkingImage()));
             }
             try (Fixture restored = new Fixture(ini, roundTrip(config))) {
-                restored.primary.update("softwareKnock", ini, new ConfigurationImage(ini.getMetaInfo().getPageSize(0)));
+                restored.primary.update("softwareKnock", ini, ConfigurationImageTestHelper.newLittleEndian(ini.getMetaInfo().getPageSize(0)));
                 restored.workspace.restoreWindows();
                 assertEquals(3, restored.windows.size());
                 assertTrue(restored.windows.stream().noneMatch(window -> "Software Knock".equals(window.title)));
@@ -158,7 +159,7 @@ class CalibrationPanelWorkspaceTest {
         SwingUtilities.invokeAndWait(() -> {
             try (Fixture fixture = new Fixture(ini, new Node())) {
                 fixture.primary.update("multisparkSettings", ini,
-                    new ConfigurationImage(ini.getMetaInfo().getPageSize(0)));
+                    ConfigurationImageTestHelper.newLittleEndian(ini.getMetaInfo().getPageSize(0)));
                 DetachPanelLayer ui = (DetachPanelLayer) ((JLayer<?>) fixture.workspace.getContent()).getUI();
                 JLayer<JScrollPane> layer = ui.getContent();
                 layer.setSize(1500, 900);
@@ -873,7 +874,7 @@ class CalibrationPanelWorkspaceTest {
     }
 
     private static ConfigurationImage initialImage() {
-        return new ConfigurationImage(new byte[]{10, 0, 0, 20, 1, 10, 2, 10, 1, 2, 3, 4});
+        return ConfigurationImageTestHelper.newLittleEndian(new byte[]{10, 0, 0, 20, 1, 10, 2, 10, 1, 2, 3, 4});
     }
 
     private static IniFileModel exampleIni() throws Throwable {

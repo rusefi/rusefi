@@ -1,5 +1,6 @@
 package com.rusefi.mcp;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.DatalogEntry;
 import com.opensr5.ini.IniFileModel;
@@ -101,7 +102,7 @@ class EcuMcpServerOutputChannelTest {
             polls.countDown();
         });
         BinaryProtocolState ecuState = new BinaryProtocolState();
-        ecuState.setConfigurationImage(new ConfigurationImage(ini.getMetaInfo().getPageSize(0)));
+        ecuState.setConfigurationImage(ConfigurationImageTestHelper.newLittleEndian(ini.getMetaInfo().getPageSize(0)));
         ServerSocketReference fakeEcu = startFakeEcu(ini, ecuState);
         Path shutdownFile = tempDir.resolve("shutdown.mlg");
         try (McpStdioHarness mcp = new McpStdioHarness()) {

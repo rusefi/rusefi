@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.IniFileModel;
@@ -211,7 +212,7 @@ class TuningTablePreviewTest {
         ArrayIniField z = new ArrayIniField("z", 0, FieldType.FLOAT, 3, 2, "", 1, "0", "100", "1");
         ArrayIniField x = new ArrayIniField("x", 24, FieldType.FLOAT, 3, 1, "", 1, "0", "8000", "0");
         ArrayIniField y = new ArrayIniField("y", 36, FieldType.FLOAT, 2, 1, "", 1, "0", "100", "0");
-        ConfigurationImage image = new ConfigurationImage(44);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(44);
         ConfigurationImageGetterSetter.setArrayValues(z, image, new Double[][]{{10.0, 20.0, 30.0}, {40.0, 50.0, 60.0}});
         ConfigurationImageGetterSetter.setArrayValues(x, image, new Double[][]{{1000.0, 1500.0, 6000.0}});
         ConfigurationImageGetterSetter.setArrayValues(y, image, new Double[][]{{20.0, 100.0}});

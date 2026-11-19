@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelMocks;
@@ -30,7 +31,7 @@ class KnockPaneViewSwitchTest {
         IniFileModel ini = IniFileModelMocks.empty();
         when(ini.getIniField("enableKnockSpectrogram")).thenReturn(enabled);
         BinaryProtocol bp = mock(BinaryProtocol.class);
-        when(bp.getControllerConfiguration()).thenReturn(new ConfigurationImage(new byte[16]));
+        when(bp.getControllerConfiguration()).thenReturn(ConfigurationImageTestHelper.newLittleEndian(new byte[16]));
 
         UIContext context = new UIContext();
         context.iniFileState.setIniFileModelForTest(ini);
