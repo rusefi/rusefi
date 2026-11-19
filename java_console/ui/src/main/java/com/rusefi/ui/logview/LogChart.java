@@ -18,6 +18,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.TransferHandler;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -132,6 +133,30 @@ final class LogChart extends JComponent {
     private int selectionTo = -1;
     private int panFromX = -1;
     private double panFromStart;
+    /*
+     * Endless pan-drag (#10669): when the pointer reaches the edge of the plots (or the screen) it is moved to the
+     * opposite side and the pan rebased there, so one drag can cross the whole log. Where the pointer cannot be
+     * moved, holding it at the edge scrolls on a timer instead.
+     */
+    /** Moves the pointer for an endless pan-drag; replaced in tests. */
+    PointerWarp pointerWarp = PointerWarp.ROBOT;
+    /** Pan edges in chart x for this drag: the plot area, limited to the screen the chart is on. */
+    private int panLow;
+    private int panHigh;
+    /** x of the last pan drag event used. */
+    private int lastPanX;
+    /** Where the pointer was moved to and no drag event there has arrived yet, or -1; and where it was. */
+    private int warpTargetX = -1;
+    private int warpFromX;
+    /** The pointer did not move when asked to this drag: use {@link #edgeScroll} instead. */
+    private boolean warpFailed;
+    /** Pointer movement, in signed pixels, that each {@link #edgeScroll} tick stands for; 0 while stopped. */
+    private int edgeScrollPixels;
+    private final Timer edgeScroll = new Timer(EDGE_SCROLL_MS, event -> edgeScrollTick());
+    /** Gives up on a pointer move that produced no drag event at its target. */
+    private final Timer warpCheck = new Timer(WARP_CHECK_MS, event -> warpCheck());
+    /** Tests drive {@link #edgeScroll} by hand, so no timer runs alongside them. */
+    boolean manualEdgeScrollForTests;
     private int hoveredField = -1;
     private int hoveredMenu = -1;
     private final List<Runnable> viewListeners = new ArrayList<>();
@@ -1100,8 +1125,7 @@ final class LogChart extends JComponent {
                     selectionFrom = selectionTo = x;
                 }
             } else if (SwingUtilities.isRightMouseButton(event) || SwingUtilities.isMiddleMouseButton(event)) {
-                panFromX = x;
-                panFromStart = window.start();
+                startPan(x);
                 legendRightPress = SwingUtilities.isRightMouseButton(event) ? legendAt(x, y) : null;
                 rightPressX = x;
             }
@@ -1129,8 +1153,10 @@ final class LogChart extends JComponent {
             if (selectionFrom >= 0) {
                 selectionTo = Math.max(plotLeft, Math.min(plotRight, event.getX()));
             } else if (panFromX >= 0) {
-                double secondsPerPixel = window.span() / Math.max(1, plotRight - plotLeft);
-                window.pan(panFromStart - (event.getX() - panFromX) * secondsPerPixel - window.start());
+                if (!panDragged(event.getX(), event.getY())) {
+                    // an event from before the pointer was moved
+                    return;
+                }
             }
             mouseMoved(event);
         }
@@ -1171,7 +1197,7 @@ final class LogChart extends JComponent {
                 legendPressField = -1;
             }
             selectionFrom = selectionTo = -1;
-            panFromX = -1;
+            endPan();
             resizing = -1;
             dragField = -1;
             repaint();
@@ -1203,6 +1229,128 @@ final class LogChart extends JComponent {
             }
             mouseMoved(event);
         }
+    }
+
+    /** Within this many pixels of a pan edge the pointer counts as at the edge. */
+    static final int EDGE_PIXELS = 3;
+    /** A wrapped pointer lands this far inside the opposite edge. */
+    static final int WRAP_INSET = 40;
+    static final int EDGE_SCROLL_MS = 16;
+    /** Pointer movement one edge-scroll tick stands for: about 500 pixels a second. */
+    static final int EDGE_SCROLL_PIXELS = 8;
+    static final int WARP_CHECK_MS = 250;
+
+    private void startPan(int x) {
+        panFromX = lastPanX = x;
+        panFromStart = window.start();
+        panLow = plotLeft;
+        panHigh = plotRight;
+        if (isShowing() && getGraphicsConfiguration() != null) {
+            Rectangle screen = getGraphicsConfiguration().getBounds();
+            int originX = getLocationOnScreen().x;
+            panLow = Math.max(panLow, screen.x - originX);
+            panHigh = Math.min(panHigh, screen.x + screen.width - 1 - originX);
+        }
+        warpTargetX = -1;
+        warpFailed = false;
+    }
+
+    private void endPan() {
+        panFromX = -1;
+        warpTargetX = -1;
+        stopEdgeScroll();
+        warpCheck.stop();
+    }
+
+    /** Pans to a drag at {@code x}; false for an event still on the far side of a pointer move. */
+    private boolean panDragged(int x, int y) {
+        if (warpTargetX >= 0) {
+            if (Math.abs(x - warpTargetX) > Math.abs(x - warpFromX)) {
+                return false;
+            }
+            warpTargetX = -1;
+            warpCheck.stop();
+        }
+        lastPanX = x;
+        panTo(x);
+        boolean atLow = x <= panLow + EDGE_PIXELS;
+        boolean atHigh = x >= panHigh - EDGE_PIXELS;
+        if (!atLow && !atHigh) {
+            stopEdgeScroll();
+            return true;
+        }
+        // a long pan, not a right-click: no menu on release
+        rightPressX = Integer.MIN_VALUE / 2;
+        if (!warpFailed && panHigh - panLow > 4 * WRAP_INSET) {
+            int target = atHigh ? panLow + WRAP_INSET : panHigh - WRAP_INSET;
+            if (pointerWarp.moveTo(this, target, y)) {
+                warpFromX = x;
+                warpTargetX = target;
+                panFromX = target;
+                panFromStart = window.start();
+                if (!manualEdgeScrollForTests) {
+                    warpCheck.restart();
+                }
+                return true;
+            }
+            warpFailed = true;
+        }
+        startEdgeScroll(atHigh);
+        return true;
+    }
+
+    private void panTo(int x) {
+        double secondsPerPixel = window.span() / Math.max(1, plotRight - plotLeft);
+        window.pan(panFromStart - (x - panFromX) * secondsPerPixel - window.start());
+    }
+
+    private void startEdgeScroll(boolean atHigh) {
+        edgeScrollPixels = atHigh ? EDGE_SCROLL_PIXELS : -EDGE_SCROLL_PIXELS;
+        if (!manualEdgeScrollForTests && !edgeScroll.isRunning()) {
+            edgeScroll.start();
+        }
+    }
+
+    private void stopEdgeScroll() {
+        edgeScrollPixels = 0;
+        edgeScroll.stop();
+    }
+
+    /** Pans on as if the pointer held at the edge kept moving. */
+    private void edgeScrollTick() {
+        if (panFromX < 0) {
+            stopEdgeScroll();
+            return;
+        }
+        panFromX -= edgeScrollPixels;
+        panTo(lastPanX);
+        if (cursorSample >= 0) {
+            cursorSample = log.nearestSample(timeAt(cursorX));
+        }
+        viewChanged();
+    }
+
+    /** The pointer move produced no drag event at its target: the desktop ignored it, so scroll on a timer. */
+    private void warpCheck() {
+        warpCheck.stop();
+        if (panFromX < 0 || warpTargetX < 0) {
+            return;
+        }
+        warpTargetX = -1;
+        warpFailed = true;
+        panFromX = lastPanX;
+        panFromStart = window.start();
+        startEdgeScroll(lastPanX >= panHigh - EDGE_PIXELS);
+    }
+
+    void edgeScrollTickForTests() {
+        if (edgeScrollPixels != 0 && panFromX >= 0) {
+            edgeScrollTick();
+        }
+    }
+
+    void warpCheckForTests() {
+        warpCheck();
     }
 
     /** Moves divider {@link #resizing} by {@code delta} pixels, keeping both neighbouring plots usable. */
