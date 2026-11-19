@@ -136,7 +136,7 @@ public class RealIniFileProviderManualPickerTest {
         });
 
         for (int i = 0; i < 5; i++) {
-            assertThrows(IniNotFoundException.class, () -> provider.provide(MISSING_SIGNATURE));
+            assertThrows(IniNotFoundException.class, () -> provider.provide(UNPARSEABLE_SIGNATURE));
         }
 
         assertEquals(1, downloadCount.get(),

@@ -23,25 +23,219 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
+import java.awt.event.ComponentEvent;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.IdentityHashMap;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class DevicePaneLayoutTest {
+    @Test
+    void startupFirmwareTopPanelHidesEmptySecondarySections() throws Exception {
+        String previousRollbackFlag = System.getProperty("RE_FIRMWARE_ROLLBACK_ENABLED");
+        System.setProperty("RE_FIRMWARE_ROLLBACK_ENABLED", "false");
+        try {
+            AtomicReference<JPanel> panelRef = new AtomicReference<>();
+            SwingUtilities.invokeAndWait(() -> {
+                FakePortScanner scanner = new FakePortScanner();
+                ConnectivityContext connectivity = new ConnectivityContext(scanner);
+                StatusPanelWithProgressBar status = new StatusPanelWithProgressBar();
+                StartupUpdateActions actions = new StartupUpdateActions(connectivity, status,
+                    new SingleAsyncJobExecutor(status), new AtomicReference<>(Optional.empty()),
+                    new SoftwareUpdateCoordinator(new CompletableFuture<>()),
+                    ignored -> { }, () -> { }, () -> null, () -> { });
+                ProgramSelector selector = new ProgramSelector(connectivity, new JComboBox<>(), ignored -> { }, () -> { });
+                actions.configureFirmwareSelector(selector);
+                panelRef.set(StartupFrame.createFirmwareTopPanel(actions, selector));
+            });
+            SwingUtilities.invokeAndWait(() -> {
+                List<Component> components = UiUtils.getAllComponents(panelRef.get());
+                assertFalse(components.stream().anyMatch(component -> component instanceof JLabel
+                    && "Tuner application:".equals(((JLabel) component).getText())));
+                JLabel firmwareOptions = (JLabel) components.stream().filter(component -> component instanceof JLabel
+                    && "Firmware options:".equals(((JLabel) component).getText()))
+                    .findFirst().orElseThrow(AssertionError::new);
+                JButton updateApplication = (JButton) components.stream().filter(component -> component instanceof JButton
+                    && "Update application".equals(((JButton) component).getText()))
+                    .findFirst().orElseThrow(AssertionError::new);
+                assertFalse(updateApplication.isVisible());
+                assertFalse(firmwareOptions.isVisible());
+                assertFalse(firmwareOptions.getParent().isVisible());
+            });
+        } finally {
+            if (previousRollbackFlag == null) {
+                System.clearProperty("RE_FIRMWARE_ROLLBACK_ENABLED");
+            } else {
+                System.setProperty("RE_FIRMWARE_ROLLBACK_ENABLED", previousRollbackFlag);
+            }
+        }
+    }
+
+    @Test
+    void startupApplicationUpdateRowKeepsApplicationAndFirmwareStatusesDistinct() throws Exception {
+        String previousRollbackFlag = System.getProperty("RE_FIRMWARE_ROLLBACK_ENABLED");
+        System.setProperty("RE_FIRMWARE_ROLLBACK_ENABLED", "false");
+        try {
+            AtomicReference<JPanel> panelRef = new AtomicReference<>();
+            AtomicReference<StartupUpdateActions> actionsRef = new AtomicReference<>();
+            SwingUtilities.invokeAndWait(() -> {
+                FakePortScanner scanner = new FakePortScanner();
+                ConnectivityContext connectivity = new ConnectivityContext(scanner);
+                StatusPanelWithProgressBar status = new StatusPanelWithProgressBar();
+                StartupUpdateActions actions = new StartupUpdateActions(connectivity, status,
+                    new SingleAsyncJobExecutor(status), new AtomicReference<>(Optional.empty()),
+                    new SoftwareUpdateCoordinator(new CompletableFuture<>()),
+                    ignored -> { }, () -> { }, () -> null, () -> { });
+                ProgramSelector selector = new ProgramSelector(connectivity, new JComboBox<>(), ignored -> { }, () -> { });
+                actions.configureFirmwareSelector(selector);
+                panelRef.set(StartupFrame.createFirmwareTopPanel(actions, selector));
+                actionsRef.set(actions);
+
+                actions.getUpdateSoftwareStatus().setText("Application update available.");
+                actions.getUpdateSoftwareStatus().setVisible(true);
+                actions.getUpdateSoftwareStatus().dispatchEvent(
+                    new ComponentEvent(actions.getUpdateSoftwareStatus(), ComponentEvent.COMPONENT_SHOWN));
+                actions.getUpdateSoftwareButton().setText("Update now");
+                actions.getUpdateSoftwareButton().setVisible(true);
+                actions.getUpdateSoftwareButton().dispatchEvent(
+                    new ComponentEvent(actions.getUpdateSoftwareButton(), ComponentEvent.COMPONENT_SHOWN));
+                actions.getRollbackFirmwareButton().setVisible(true);
+                actions.getRollbackFirmwareButton().dispatchEvent(
+                    new ComponentEvent(actions.getRollbackFirmwareButton(), ComponentEvent.COMPONENT_SHOWN));
+            });
+            SwingUtilities.invokeAndWait(() -> {
+                List<Component> components = UiUtils.getAllComponents(panelRef.get());
+                JLabel applicationStatus = actionsRef.get().getUpdateSoftwareStatus();
+                JButton updateNow = actionsRef.get().getUpdateSoftwareButton();
+                assertTrue(applicationStatus.isVisible());
+                assertTrue(applicationStatus.getParent().isVisible(),
+                    "showing application status reveals its application-update row");
+                assertTrue(updateNow.isVisible());
+                assertTrue(updateNow.getParent().getParent().isVisible(),
+                    "showing application action reveals its row ancestor");
+                assertEquals("Application update available.", applicationStatus.getText());
+                assertEquals("Update now", updateNow.getText());
+                assertFalse(applicationStatus.getText().contains("firmware"));
+                JTextArea firmwareStatus = (JTextArea) components.stream()
+                    .filter(component -> component instanceof JTextArea)
+                    .map(component -> (JTextArea) component)
+                    .filter(area -> area.getText().startsWith("Disconnected"))
+                    .findFirst().orElseThrow(AssertionError::new);
+                assertFalse(firmwareStatus.getText().contains("Application update"));
+                assertFalse(components.stream().anyMatch(component -> component instanceof JLabel
+                    && "Tuner application:".equals(((JLabel) component).getText())));
+                JLabel firmwareOptions = (JLabel) components.stream().filter(component -> component instanceof JLabel
+                    && "Firmware options:".equals(((JLabel) component).getText()))
+                    .findFirst().orElseThrow(AssertionError::new);
+                assertTrue(firmwareOptions.isVisible());
+                assertTrue(firmwareOptions.getParent().isVisible(),
+                    "showing rollback reveals the firmware-options section");
+            });
+        } finally {
+            if (previousRollbackFlag == null) {
+                System.clearProperty("RE_FIRMWARE_ROLLBACK_ENABLED");
+            } else {
+                System.setProperty("RE_FIRMWARE_ROLLBACK_ENABLED", previousRollbackFlag);
+            }
+        }
+    }
+
+    @Test
+    void disconnectedDevicePaneComparesOldMasterNoIniSignatureWithPublishedLatestDate() throws Exception {
+        String signature = "rusEFI master.2024.01.01.uaefi_pro.1254041395";
+        PortResult port = new PortResult("ECU_NO_INI", SerialPortType.Ecu);
+        AvailableHardware hardware = new AvailableHardware(Collections.singletonList(port), false, false, false);
+        LocalDate latestPublishedDate = LocalDate.now(ZoneOffset.UTC);
+        DevicePane[] pane = new DevicePane[1];
+        AtomicReference<String> metadataBoard = new AtomicReference<>();
+        AtomicReference<String> metadataBranch = new AtomicReference<>();
+        AtomicReference<LinkManager.MissingIniListener> missingIniListener = new AtomicReference<>();
+        AtomicInteger metadataCalls = new AtomicInteger();
+        SwingUtilities.invokeAndWait(() -> {
+            FakePortScanner scanner = new FakePortScanner();
+            ConnectivityContext connectivity = new ConnectivityContext(scanner);
+            scanner.fireHardwareChange(hardware);
+            LinkManager linkManager = mock(LinkManager.class);
+            when(linkManager.getBinaryProtocol()).thenReturn(null);
+            when(linkManager.getLastTriedPort()).thenReturn(null);
+            doAnswer(invocation -> {
+                missingIniListener.set(invocation.getArgument(0));
+                return linkManager;
+            }).when(linkManager).setMissingIniListener(any(LinkManager.MissingIniListener.class));
+            UIContext context = new UIContext() {
+                @Override
+                public LinkManager getLinkManager() { return linkManager; }
+            };
+            StatusPanelWithProgressBar status = new StatusPanelWithProgressBar();
+            DeviceSessionManager sessions = new DeviceSessionManager(connectivity, port, () -> { }, () -> {}) {
+                @Override
+                public SessionState getState() { return SessionState.DISCONNECTED; }
+            };
+            pane[0] = new DevicePane(context, connectivity, sessions, new JTabbedPane(),
+                new SingleAsyncJobExecutor(status), status, ignored -> { }, () -> { });
+            pane[0].setDevMetadataProviderForTests((board, branch) -> {
+                metadataCalls.incrementAndGet();
+                metadataBoard.set(board);
+                metadataBranch.set(branch);
+                return latestPublishedDate.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
+            });
+            pane[0].render(SessionState.DISCONNECTED, hardware);
+        });
+        assertEquals(0, metadataCalls.get(), "discovery has no signature to inspect before evidence arrives");
+        SwingUtilities.invokeAndWait(() ->
+            missingIniListener.get().onMissingIni(signature, port.port));
+
+        AtomicReference<String> releaseStatus = new AtomicReference<>();
+        AtomicReference<String> installedDate = new AtomicReference<>();
+        AtomicReference<String> latestDate = new AtomicReference<>();
+        long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(5);
+        while (System.nanoTime() < deadline && releaseStatus.get() == null) {
+            SwingUtilities.invokeAndWait(() -> {
+                List<Component> components = UiUtils.getAllComponents((JComponent) pane[0].getContent());
+                releaseStatus.set(components.stream().filter(component -> component instanceof JTextArea)
+                    .map(component -> ((JTextArea) component).getText())
+                    .filter(value -> value.contains("Update available"))
+                    .findFirst().orElse(null));
+                installedDate.set(components.stream().filter(component -> component instanceof JLabel)
+                    .map(component -> ((JLabel) component).getText())
+                    .filter("2024.01.01"::equals).findFirst().orElse(null));
+                latestDate.set(components.stream().filter(component -> component instanceof JLabel)
+                    .map(component -> ((JLabel) component).getText())
+                    .filter(DateTimeFormatter.ofPattern("yyyy.MM.dd").format(latestPublishedDate)::equals)
+                    .findFirst().orElse(null));
+            });
+            if (releaseStatus.get() == null) {
+                Thread.sleep(10);
+            }
+        }
+        assertNotNull(releaseStatus.get(), "metadata discovery should finish while DevicePane is disconnected");
+        assertTrue(releaseStatus.get().contains("Update available"));
+        assertTrue(releaseStatus.get().contains("matching INI unavailable"));
+        assertEquals("2024.01.01", installedDate.get());
+        assertEquals(DateTimeFormatter.ofPattern("yyyy.MM.dd").format(latestPublishedDate), latestDate.get());
+        assertEquals("uaefi_pro", metadataBoard.get());
+        assertEquals("development", metadataBranch.get());
+        assertEquals(1, metadataCalls.get(), "late evidence starts one lookup without another hardware scan");
+    }
+
     @Test
     void eligibleLtsActionsFitInsideNarrowDeviceCardAtHighFontSize() throws Throwable {
         String previousRollbackFlag = System.getProperty("RE_FIRMWARE_ROLLBACK_ENABLED");
@@ -694,16 +888,18 @@ class DevicePaneLayoutTest {
             "Startup backup note fits inside the card: note=" + noteBounds + ", card=" + card.getBounds());
 
         List<Component> all = UiUtils.getAllComponents(panel);
-        JLabel tunerLabel = (JLabel) all.stream().filter(c -> c instanceof JLabel
-            && "Tuner application:".equals(((JLabel) c).getText()))
-            .findFirst().orElseThrow(AssertionError::new);
         JButton updateSoftware = (JButton) all.stream().filter(c -> c instanceof JButton
             && "Update application".equals(((JButton) c).getText()))
             .findFirst().orElseThrow(AssertionError::new);
         JLabel firmwareOptions = (JLabel) all.stream().filter(c -> c instanceof JLabel
             && "Firmware options:".equals(((JLabel) c).getText()))
             .findFirst().orElseThrow(AssertionError::new);
-        for (Component control : List.of(tunerLabel, updateSoftware, firmwareOptions)) {
+        List<Component> secondaryControls = new ArrayList<>();
+        secondaryControls.add(updateSoftware);
+        if (firmwareOptions.isVisible()) {
+            secondaryControls.add(firmwareOptions);
+        }
+        for (Component control : secondaryControls) {
             Rectangle bounds = SwingUtilities.convertRectangle(control.getParent(), control.getBounds(), card);
             assertTrue(control.isVisible() && bounds.y >= 0 && bounds.y + bounds.height <= card.getHeight(),
                 control.getClass().getSimpleName() + " remains reachable inside Startup card: "

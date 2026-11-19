@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -190,11 +191,29 @@ public class DfuFlasher {
     }
 
     public static void rebootToDfu(JComponent parent, String port, UpdateOperationCallbacks callbacks, String command) {
-        rebootToDfu(parent, port, callbacks, command, null);
+        rebootToDfu(parent, port, callbacks, command, (FirmwareSelection) null);
     }
 
     public static AtomicBoolean rebootToDfu(JComponent parent, String port, UpdateOperationCallbacks callbacks,
                                              String command, @Nullable FirmwareSelection selection) {
+        return rebootToDfu(parent, port, callbacks, command, selection, null);
+    }
+
+    @Nullable
+    public static AtomicBoolean rebootToDfu(JComponent parent, String port, UpdateOperationCallbacks callbacks,
+                                             String command, @Nullable String expectedSignature) {
+        if (expectedSignature != null && PortDetector.isAutoPort(port)) {
+            callbacks.logLine("A target-specific ECU port is required to verify the no-INI update target.");
+            callbacks.error();
+            return null;
+        }
+        return rebootToDfu(parent, port, callbacks, command, null, expectedSignature);
+    }
+
+    @Nullable
+    public static AtomicBoolean rebootToDfu(JComponent parent, String port, UpdateOperationCallbacks callbacks,
+                                             String command, @Nullable FirmwareSelection selection,
+                                             @Nullable String expectedSignature) {
         AtomicBoolean isSignatureValidated = new AtomicBoolean(true);
         if (!PortDetector.isAutoPort(port)) {
             callbacks.logLine("Using selected " + port + "\n");
@@ -217,10 +236,20 @@ public class DfuFlasher {
                     callbacks.error();
                     return null;
                 }
-                boolean isSignatureValidatedLocal = selection == null
-                    ? BootloaderHelper.sendBootloaderRebootCommand(parent, signature.get(), stream, callbacks, command)
-                    : BootloaderHelper.sendBootloaderRebootCommand(parent, signature.get(), stream, callbacks, command, selection);
-                isSignatureValidated.set(isSignatureValidatedLocal);
+                if (expectedSignature != null) {
+                    AtomicBoolean rebootResult = rebootAfterSignatureCheck(expectedSignature, signature.get(), callbacks,
+                        actualSignature -> BootloaderHelper.sendBootloaderRebootCommand(
+                            parent, actualSignature, stream, callbacks, command));
+                    if (rebootResult == null) {
+                        return null;
+                    }
+                    isSignatureValidated.set(rebootResult.get());
+                } else {
+                    boolean isSignatureValidatedLocal = selection == null
+                        ? BootloaderHelper.sendBootloaderRebootCommand(parent, signature.get(), stream, callbacks, command)
+                        : BootloaderHelper.sendBootloaderRebootCommand(parent, signature.get(), stream, callbacks, command, selection);
+                    isSignatureValidated.set(isSignatureValidatedLocal);
+                }
             }
         } else {
             callbacks.logLine("Auto-detecting port...\n");
@@ -243,6 +272,17 @@ public class DfuFlasher {
             }
         }
         return isSignatureValidated;
+    }
+
+    static AtomicBoolean rebootAfterSignatureCheck(@Nullable String expectedSignature, String actualSignature,
+                                                   UpdateOperationCallbacks callbacks,
+                                                   Function<String, Boolean> rebootCommand) {
+        if (expectedSignature != null && !expectedSignature.equals(actualSignature)) {
+            callbacks.logLine("The ECU signature changed since its matching INI lookup failed. Update cancelled.");
+            callbacks.error();
+            return null;
+        }
+        return new AtomicBoolean(rebootCommand.apply(actualSignature));
     }
 
     public static void runDfuEraseAsync(UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {

@@ -13,6 +13,7 @@ import com.rusefi.ui.util.UiUtils;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -20,11 +21,15 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,6 +37,165 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class StartupUpdateActionsTest {
+    @Test
+    void disconnectedNoIniProbeShowsDetectedIdentityAndPreservesDisabledTunePreference() throws Exception {
+        String signature = "rusEFI noini-10540-20261119.2026.11.19.uaefi_pro.1254041395";
+        PortResult port = new PortResult("ECU_NO_INI", SerialPortType.Ecu);
+        AvailableHardware hardware = new AvailableHardware(List.of(port), false, false, false);
+        PortScanner scanner = mock(PortScanner.class);
+        when(scanner.getCurrentHardware()).thenReturn(hardware);
+        ConnectivityContext connectivity = new ConnectivityContext(scanner);
+        connectivity.getMissingIniRecoveryState().record(port.port, signature);
+
+        AtomicReference<FirmwareStatusSummaryPanel> summaryRef = new AtomicReference<>();
+        AtomicReference<StartupUpdateActions> actionsRef = new AtomicReference<>();
+        AtomicReference<Optional<PortResult>> selectedRef = new AtomicReference<>(Optional.of(port));
+        SwingUtilities.invokeAndWait(() -> {
+            StatusPanelWithProgressBar status = new StatusPanelWithProgressBar();
+            StartupUpdateActions actions = new StartupUpdateActions(connectivity, status,
+                new SingleAsyncJobExecutor(status), selectedRef,
+                new SoftwareUpdateCoordinator(CompletableFuture.completedFuture(Autoupdate.UpdateOutcome.UP_TO_DATE)),
+                ignored -> { }, () -> { }, () -> null, () -> { });
+            actions.setDevMetadataProviderForTests((board, branch) -> {
+                throw new AssertionError("unsupported branch must not request Dev release metadata");
+            });
+            JComboBox<PortResult> ports = new JComboBox<>();
+            ports.addItem(port);
+            ports.setSelectedItem(port);
+            ProgramSelector selector = new ProgramSelector(connectivity, ports, ignored -> { }, () -> { });
+            actions.configureFirmwareSelector(selector);
+            actions.onHardwareUpdated();
+            selector.apply(hardware);
+            summaryRef.set((FirmwareStatusSummaryPanel) actions.getFirmwareSummary());
+            actionsRef.set(actions);
+        });
+
+        SwingUtilities.invokeAndWait(() -> {
+            List<java.awt.Component> components = UiUtils.getAllComponents(summaryRef.get());
+            List<String> text = components.stream()
+                .filter(component -> component instanceof JTextArea)
+                .map(component -> ((JTextArea) component).getText())
+                .collect(java.util.stream.Collectors.toList());
+            assertTrue(text.stream().anyMatch(value -> value.contains("Detected uaefi_pro (ECU_NO_INI)")));
+            assertTrue(text.stream().anyMatch(value -> value.contains("noini-10540-20261119")));
+            assertTrue(text.stream().anyMatch(value -> value.contains("matching INI unavailable")));
+            assertTrue(text.stream().anyMatch(value -> value.contains("defaults")));
+            assertFalse(text.stream().anyMatch(value -> value.toLowerCase().contains("up to date")));
+            List<String> labels = components.stream().filter(component -> component instanceof JLabel)
+                .map(component -> ((JLabel) component).getText())
+                .collect(java.util.stream.Collectors.toList());
+            assertTrue(labels.contains("2026.11.19"));
+            assertTrue(labels.contains("Not available for this firmware branch"));
+            assertFalse(labels.contains("Unknown"));
+            JCheckBox keepTune = components.stream().filter(component -> component instanceof JCheckBox)
+                .map(component -> (JCheckBox) component).findFirst().orElseThrow(AssertionError::new);
+            assertTrue(keepTune.isSelected());
+            assertFalse(keepTune.isEnabled());
+
+            selectedRef.set(Optional.of(new PortResult("ECU_OTHER", SerialPortType.Ecu)));
+            summaryRef.get().refresh();
+            assertFalse(summaryText(summaryRef.get()).contains("Detected uaefi_pro"));
+
+            selectedRef.set(Optional.of(port));
+            connectivity.getMissingIniRecoveryState().clearForPort(port.port);
+            summaryRef.get().refresh();
+            assertFalse(summaryText(summaryRef.get()).contains("matching INI unavailable"));
+
+            BinaryProtocol recoveredProtocol = mock(BinaryProtocol.class);
+            recoveredProtocol.signature = signature;
+            LinkManager recoveredLink = mock(LinkManager.class);
+            when(recoveredLink.getBinaryProtocol()).thenReturn(recoveredProtocol);
+            when(recoveredLink.getLastTriedPort()).thenReturn(port.port);
+            actionsRef.get().setSplashLinkManager(recoveredLink);
+            List<java.awt.Component> recoveredComponents = UiUtils.getAllComponents(summaryRef.get());
+            JCheckBox recoveredKeepTune = recoveredComponents.stream()
+                .filter(component -> component instanceof JCheckBox).map(component -> (JCheckBox) component)
+                .findFirst().orElseThrow(AssertionError::new);
+            assertTrue(recoveredKeepTune.isEnabled());
+            assertTrue(recoveredKeepTune.isSelected());
+            assertFalse(summaryText(summaryRef.get()).contains("matching INI unavailable"));
+            assertTrue(summaryText(summaryRef.get()).contains("uaefi_pro"));
+        });
+    }
+
+    @Test
+    void oldMasterNoIniIdentityComparesAgainstPublishedLatestMetadataWithoutLiveConnection() throws Exception {
+        String signature = "rusEFI master.2024.01.01.uaefi_pro.1254041395";
+        PortResult port = new PortResult("ECU_NO_INI", SerialPortType.Ecu);
+        AvailableHardware hardware = new AvailableHardware(List.of(port), false, false, false);
+        PortScanner scanner = mock(PortScanner.class);
+        when(scanner.getCurrentHardware()).thenReturn(hardware);
+        ConnectivityContext connectivity = new ConnectivityContext(scanner);
+        AtomicReference<FirmwareStatusSummaryPanel> summaryRef = new AtomicReference<>();
+        AtomicReference<String> metadataBoard = new AtomicReference<>();
+        AtomicReference<String> metadataBranch = new AtomicReference<>();
+        AtomicInteger metadataCalls = new AtomicInteger();
+        AtomicReference<LinkManager.MissingIniListener> missingIniListener = new AtomicReference<>();
+        LocalDate latestPublishedDate = LocalDate.now(ZoneOffset.UTC);
+        SwingUtilities.invokeAndWait(() -> {
+            StatusPanelWithProgressBar status = new StatusPanelWithProgressBar();
+            AtomicReference<Optional<PortResult>> selected = new AtomicReference<>(Optional.of(port));
+            StartupUpdateActions actions = new StartupUpdateActions(connectivity, status,
+                new SingleAsyncJobExecutor(status), selected,
+                new SoftwareUpdateCoordinator(CompletableFuture.completedFuture(Autoupdate.UpdateOutcome.UP_TO_DATE)),
+                ignored -> { }, () -> { }, () -> null, () -> { });
+            actions.setDevMetadataProviderForTests((board, branch) -> {
+                metadataCalls.incrementAndGet();
+                metadataBoard.set(board);
+                metadataBranch.set(branch);
+                return latestPublishedDate.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
+            });
+            LinkManager linkManager = mock(LinkManager.class);
+            doAnswer(invocation -> {
+                missingIniListener.set(invocation.getArgument(0));
+                return linkManager;
+            }).when(linkManager).setMissingIniListener(any(LinkManager.MissingIniListener.class));
+            JComboBox<PortResult> ports = new JComboBox<>();
+            ports.addItem(port);
+            ProgramSelector selector = new ProgramSelector(connectivity, ports, ignored -> { }, () -> { });
+            actions.configureFirmwareSelector(selector);
+            selector.setLinkManager(linkManager);
+            actions.setSplashLinkManager(linkManager);
+            actions.onHardwareUpdated();
+            selector.apply(hardware);
+            summaryRef.set((FirmwareStatusSummaryPanel) actions.getFirmwareSummary());
+        });
+
+        assertEquals(0, metadataCalls.get(), "no identity metadata is requested before missing-INI evidence arrives");
+        SwingUtilities.invokeAndWait(() -> missingIniListener.get().onMissingIni(signature, port.port));
+        String expectedLatest = DateTimeFormatter.ofPattern("yyyy.MM.dd").format(latestPublishedDate);
+        AtomicReference<String> actualLatest = new AtomicReference<>();
+        long deadline = System.nanoTime() + java.time.Duration.ofSeconds(5).toNanos();
+        while (System.nanoTime() < deadline) {
+            SwingUtilities.invokeAndWait(() -> actualLatest.set(UiUtils.getAllComponents(summaryRef.get()).stream()
+                .filter(component -> component instanceof JLabel
+                    && expectedLatest
+                        .equals(((JLabel) component).getText()))
+                .map(component -> ((JLabel) component).getText()).findFirst().orElse(null)));
+            if (expectedLatest.equals(actualLatest.get())) {
+                break;
+            }
+            Thread.sleep(10);
+        }
+        assertEquals(expectedLatest, actualLatest.get());
+        assertEquals("uaefi_pro", metadataBoard.get());
+        assertEquals("development", metadataBranch.get());
+        assertEquals(1, metadataCalls.get(), "late evidence starts one lookup without another hardware scan");
+        assertTrue(FirmwareStatusSummaryPanel.isUpdateAvailableReleaseStatus("Update available"));
+        assertFalse(FirmwareStatusSummaryPanel.isUpdateAvailableReleaseStatus(
+            "ECU detected; matching INI unavailable. Update available"));
+        SwingUtilities.invokeAndWait(() -> {
+            List<java.awt.Component> components = UiUtils.getAllComponents(summaryRef.get());
+            assertTrue(components.stream().filter(component -> component instanceof JTextArea)
+                .map(component -> ((JTextArea) component).getText())
+                .anyMatch(value -> value.contains("Update available")
+                    && value.contains("matching INI unavailable")));
+            assertTrue(components.stream().filter(component -> component instanceof JLabel)
+                .map(component -> ((JLabel) component).getText())
+                .anyMatch("2024.01.01"::equals));
+        });
+    }
+
     @Test
     void attachingLiveSplashConnectionRefreshesPreviouslyDisconnectedReleaseIdentity() throws Exception {
         PortResult port = new PortResult("ECU_DEV", SerialPortType.EcuWithOpenblt);
@@ -190,5 +354,12 @@ class StartupUpdateActionsTest {
                 && !((JTextArea) component).getText().equals("Dev"))
             .map(component -> ((JTextArea) component).getText())
             .findFirst().orElseThrow(AssertionError::new);
+    }
+
+    private static String summaryText(FirmwareStatusSummaryPanel summary) {
+        return UiUtils.getAllComponents(summary).stream()
+            .filter(component -> component instanceof JTextArea)
+            .map(component -> ((JTextArea) component).getText())
+            .collect(java.util.stream.Collectors.joining("\n"));
     }
 }
