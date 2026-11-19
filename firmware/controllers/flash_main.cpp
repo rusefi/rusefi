@@ -14,6 +14,20 @@
 #if EFI_CONFIGURATION_STORAGE || defined(EFI_UNIT_TEST)
 #include "storage.h"
 
+#if defined(EFI_FLASH_SERVICE)
+#include "board.h"
+// Own the board's flash service for the entire settings transaction. The
+// lower-level erase/program guards nest under this owner.
+struct SettingsFlashServiceGuard {
+    bool ready = boardFlashServiceBegin();
+    ~SettingsFlashServiceGuard() {
+      if (ready) {
+          boardFlashServiceBegin();
+        }
+      }
+};
+#endif
+
 // A failed settings write stays pending and is retried by the storage manager thread;
 // once it has been failing this long, checkSettingsWriteFailure() escalates to
 // configError so the TS user learns their changes are not persisted
@@ -114,6 +128,17 @@ bool writeToFlashNowImpl() {
 	persistentState.size = sizeof(persistentState);
 	persistentState.version = FLASH_DATA_VERSION;
 	persistentState.crc = persistentState.getCrc();
+
+#if defined(EFI_FLASH_SERVICE)
+	SettingsFlashServiceGuard flashGuard;
+	if (!flashGuard.ready) {
+		// No flash write has started. Returning false leaves this settings request
+		// pending in the storage manager, which retries it on its 100 ms loop.
+		// Repeated failures surface through checkSettingsWriteFailure().
+		trackSettingsWriteResult(false);
+		return false;
+	}
+#endif
 
 	// Do actual write
 	auto result1 = storageWrite(EFI_SETTINGS_RECORD_ID, (uint8_t *)&persistentState, sizeof(persistentState));
