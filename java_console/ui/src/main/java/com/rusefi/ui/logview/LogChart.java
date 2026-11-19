@@ -166,6 +166,8 @@ final class LogChart extends JComponent {
 
     /** Asks for one signal's smoothing window in milliseconds; null when cancelled. Replaced in tests. */
     SmoothingWindowPrompt smoothingWindowPrompt;
+    /** Shows the line dialog; replaced in tests. */
+    TraceLineEditor.Confirm lineConfirm = TraceLineEditor.DIALOG;
     private final List<Runnable> colorListeners = new ArrayList<>();
     /** Asks for a custom colour (signal name, current colour); null when cancelled. Replaced in tests. */
     BiFunction<String, Color, Color> customColorPrompt = (label, initial) ->
@@ -736,8 +738,29 @@ final class LogChart extends JComponent {
         menu.addSeparator();
         menu.add(smoothingSubmenu(field));
         menu.add(colorSubmenu(field));
+        menu.add(lineItem(field));
         menu.add(scaleSubmenu(field));
         return menu;
+    }
+
+    /**
+     * "Line…": the signal's width and line options ({@link TraceLineEditor}) in a dialog centred on the window, as
+     * per-signal smoothing; the same item serves the legend and the signal list.
+     */
+    JMenuItem lineItem(int field) {
+        JMenuItem item = new JMenuItem("Line…");
+        item.setToolTipText("Width, and solid, dashed or dotted line, for this signal");
+        item.addActionListener(e -> editLine(field));
+        return item;
+    }
+
+    /** Opens the line dialog; the plot follows every change and Cancel puts the line back. */
+    boolean editLine(int field) {
+        PlotPalette palette = palette();
+        // an unplotted signal has no automatic colour yet
+        Color shown = shownColor(field);
+        return TraceLineEditor.edit(this, grid, log.name(field), shown != null ? shown : palette.label,
+                grid.defaultLineWidth(palette), this::repaint, lineConfirm);
     }
 
     /** Per-signal display smoothing: inherit the toolbar choice, stay raw, or use a separate time window. */
@@ -1428,7 +1451,8 @@ final class LogChart extends JComponent {
                 }
             }
             g.setColor(colorOf(item.field, palette));
-            g.fillRoundRect(x, barY, 13, LEGEND_BAR_HEIGHT, 4, 4);
+            // dashed or dotted like the trace, so the line can be matched to its name
+            TraceStyle.paintMark(g, grid.getLineStyle(log.name(item.field)), x, barY, 13, LEGEND_BAR_HEIGHT);
             if (item.field == hoveredSwatch) {
                 // the colour mark opens the colour picker
                 g.setColor(palette.accent);
@@ -1507,17 +1531,17 @@ final class LogChart extends JComponent {
         try {
             plot.clipRect(area.x, area.y - 1, area.width + 1, area.height + 3);
             paintHighlights(plot, area, palette);
-            plot.setStroke(new BasicStroke(palette.strokeWidth));
             int focused = focus.focused();
             for (int field : fields) {
                 if (field != focused) {
+                    plot.setStroke(traceStroke(field, palette, false));
                     plot.setColor(traceColor(field, palette));
                     plot.draw(tracePath(field));
                 }
             }
             if (fields.contains(focused)) {
                 // on top of the faded traces, slightly thicker
-                plot.setStroke(new BasicStroke(palette.strokeWidth + 1));
+                plot.setStroke(traceStroke(focused, palette, true));
                 plot.setColor(traceColor(focused, palette));
                 plot.draw(tracePath(focused));
             }
@@ -1567,6 +1591,21 @@ final class LogChart extends JComponent {
             return color;
         }
         return new Color(color.getRed(), color.getGreen(), color.getBlue(), FADED_ALPHA);
+    }
+
+    /** The trace's width in pixels: its own or the default ({@link ChartSettings#lineWidth}), a pixel more when focused. */
+    float traceWidth(int field, PlotPalette palette, boolean focused) {
+        return grid.lineWidth(log.name(field), palette) + (focused ? 1 : 0);
+    }
+
+    /**
+     * The trace's line: its style, dash and gap ({@link ChartSettings#getTraceLine}) at its width. Automatic dashes
+     * follow the width without the focus pixel, so highlighting a trace does not change its pattern.
+     */
+    Stroke traceStroke(int field, PlotPalette palette, boolean focused) {
+        TraceStyle.Spec spec = grid.getTraceLine(log.name(field));
+        float width = traceWidth(field, palette, false);
+        return TraceStyle.stroke(spec.line, width + (focused ? 1 : 0), spec.dash(width), spec.gap(width));
     }
 
     /**

@@ -78,6 +78,12 @@ final class ChartToolbar extends ThemedStrip {
     final JSpinner timeSpacing;
     final JCheckBox horizontalBox = new JCheckBox("Horizontal lines");
     final JSpinner horizontalDivisions;
+    /** Default trace width in pixels; shows the plot's own width until one is chosen. */
+    final JSpinner traceWidthInput = new JSpinner(new SpinnerNumberModel(2.0, TraceStyle.MIN_WIDTH,
+            TraceStyle.MAX_WIDTH, TraceStyle.WIDTH_STEP));
+    final JButton traceWidthPlotDefault = new JButton("Default");
+    final JButton resetLinesButton = new JButton("Reset all lines");
+    private boolean syncingWidth;
 
     private final JPopupMenu gridPopup = new JPopupMenu();
 
@@ -118,8 +124,12 @@ final class ChartToolbar extends ThemedStrip {
         lightPlot.setToolTipText("Plot area with a light background");
         darkPlot.setToolTipText("Plot area with a dark background");
 
-        gridButton.setToolTipText("Grid line options");
-        gridButton.addActionListener(e -> gridPopup.show(gridButton, 0, gridButton.getHeight() + 4));
+        gridButton.setToolTipText("Grid line and trace width options");
+        gridButton.addActionListener(e -> {
+            // signals' own lines change from their menus, so refresh Reset all lines before showing it
+            updateControls();
+            gridPopup.show(gridButton, 0, gridButton.getHeight() + 4);
+        });
 
         smoothingButton.setToolTipText("<html>Display-only smoothing for timeline lines.<br>"
                 + "Cursor values follow the smoothed line; min/max, statistics and exports stay raw.<br>"
@@ -172,6 +182,24 @@ final class ChartToolbar extends ThemedStrip {
         timeSpacing.addChangeListener(e -> apply());
         horizontalBox.addActionListener(e -> apply());
         horizontalDivisions.addChangeListener(e -> apply());
+        // only a change of the width itself sets it, so untouched it keeps following the light or dark plot
+        traceWidthInput.addChangeListener(e -> {
+            if (!syncingWidth) {
+                settings.setDefaultLineWidth(((Number) traceWidthInput.getValue()).doubleValue());
+                updateControls();
+                onChange.run();
+            }
+        });
+        traceWidthPlotDefault.addActionListener(e -> {
+            settings.setDefaultLineWidth(Double.NaN);
+            updateControls();
+            onChange.run();
+        });
+        resetLinesButton.addActionListener(e -> {
+            settings.resetTraceLines();
+            updateControls();
+            onChange.run();
+        });
 
         if (onOpen != null) {
             openButton.addActionListener(e -> onOpen.accept(openButton));
@@ -294,9 +322,29 @@ final class ChartToolbar extends ThemedStrip {
         addRow(muted(new JLabel("Bands")), horizontalDivisions, row++, 24);
         JLabel note = muted(new JLabel("<html>Each trace has its own scale, so horizontal<br>"
                 + "lines mark fractions of each trace's range.</html>"));
-        GridBagConstraints noteConstraints = constraints(0, row, 2, 0);
+        GridBagConstraints noteConstraints = constraints(0, row++, 2, 0);
         noteConstraints.insets = new Insets(8, 0, 0, 0);
         gridPanel.add(note, noteConstraints);
+
+        GridBagConstraints traceSeparator = constraints(0, row++, 2, 0);
+        traceSeparator.fill = GridBagConstraints.HORIZONTAL;
+        traceSeparator.insets = new Insets(10, 0, 8, 0);
+        gridPanel.add(new JSeparator(), traceSeparator);
+        String widthTip = "<html>Width in pixels of every signal line without a width of its own.<br>"
+                + "For one signal (its own width, dashed or dotted): right-click its name, then Line…</html>";
+        JLabel widthLabel = muted(new JLabel("Trace width"));
+        widthLabel.setToolTipText(widthTip);
+        traceWidthInput.setToolTipText(widthTip);
+        ((JSpinner.DefaultEditor) traceWidthInput.getEditor()).getTextField().setColumns(3);
+        traceWidthPlotDefault.setToolTipText("Back to the plot's usual width (2 px light, 1.5 px dark)");
+        JPanel width = withUnit(traceWidthInput, "px");
+        width.add(traceWidthPlotDefault);
+        addRow(widthLabel, width, row++, 0);
+        resetLinesButton.setToolTipText("<html>Every signal back to the default width and a solid line,<br>"
+                + "and the default width back to the plot's usual one</html>");
+        GridBagConstraints resetAt = constraints(0, row, 2, 0);
+        resetAt.insets = new Insets(6, 0, 0, 0);
+        gridPanel.add(resetLinesButton, resetAt);
     }
 
     /** Milliseconds one mouse wheel notch over the smoothing button adds or removes. */
@@ -585,5 +633,14 @@ final class ChartToolbar extends ThemedStrip {
         // Spacing also sets the time labels, so it stays usable while the vertical lines are off.
         timeSpacing.setEnabled(settings.getVerticalMode() == ChartSettings.VerticalMode.TIME_TICKS || !settings.isVertical());
         horizontalDivisions.setEnabled(settings.isHorizontal());
+        syncingWidth = true;
+        try {
+            traceWidthInput.setValue((double) settings.defaultLineWidth(
+                    settings.isDarkPlot() ? PlotPalette.DARK : PlotPalette.LIGHT));
+        } finally {
+            syncingWidth = false;
+        }
+        traceWidthPlotDefault.setEnabled(!Double.isNaN(settings.getDefaultLineWidth()));
+        resetLinesButton.setEnabled(settings.hasCustomLines());
     }
 }
