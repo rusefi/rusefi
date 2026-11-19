@@ -218,7 +218,8 @@ final class TraceStyle {
 
     /** A sample of a line drawn with its real stroke, e.g. under the line options. */
     static final class Sample extends javax.swing.JComponent {
-        private Color color = Color.GRAY;
+        /** The signal's colour, set before the first paint; nothing is drawn without it. */
+        private Color color;
         private Stroke stroke = new BasicStroke(1);
 
         void set(Color color, Stroke stroke) {
@@ -234,6 +235,9 @@ final class TraceStyle {
 
         @Override
         protected void paintComponent(Graphics g) {
+            if (color == null) {
+                return;
+            }
             Graphics2D g2 = (Graphics2D) g.create();
             try {
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
