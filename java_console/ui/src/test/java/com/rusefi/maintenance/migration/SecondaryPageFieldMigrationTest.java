@@ -117,7 +117,7 @@ public class SecondaryPageFieldMigrationTest {
         Path backup = tempDir.resolve("multipage.zip");
         ConfigurationImageFile.saveToFile(result.get().getPages(), backup.toString());
         Map<Integer, ConfigurationImageWithMeta> restoredPages =
-            ConfigurationImageFile.readPagesFromFile(backup.toString());
+            ConfigurationImageFile.readPagesFromFile(backup.toString(), java.nio.ByteOrder.LITTLE_ENDIAN);
         assertArrayEquals(
             result.get().getImage().getConfigurationImage().getContent(),
             restoredPages.get(0).getConfigurationImage().getContent()

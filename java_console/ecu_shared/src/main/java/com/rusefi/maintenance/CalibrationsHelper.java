@@ -970,7 +970,9 @@ public class CalibrationsHelper {
                     pageIdentifier,
                     new ConfigurationImageWithMeta(
                         new ConfigurationImageMetaVersion0_0(secondaryPageSize, signature),
-                        content
+                        content,
+                        // [tag:image_byte_order] same order as the main page
+                        iniFile.getByteOrder()
                     )
                 );
             }
@@ -1338,13 +1340,15 @@ public class CalibrationsHelper {
 
     private static Map<Integer, ConfigurationImageWithMeta> clonePages(CalibrationsInfo calibrations) {
         final Map<Integer, ConfigurationImageWithMeta> result = new TreeMap<>();
-        calibrations.getPages().forEach((page, imageWithMeta) -> result.put(
-            page,
-            new ConfigurationImageWithMeta(
+        // [tag:image_byte_order] migrated values are written into these copies
+        calibrations.getPages().forEach((page, imageWithMeta) -> {
+            final ConfigurationImage copy = imageWithMeta.getConfigurationImage().clone();
+            result.put(page, new ConfigurationImageWithMeta(
                 imageWithMeta.getMeta(),
-                imageWithMeta.getConfigurationImage().getContent().clone()
-            )
-        ));
+                copy.getContent(),
+                copy.getByteOrder()
+            ));
+        });
         return result;
     }
 

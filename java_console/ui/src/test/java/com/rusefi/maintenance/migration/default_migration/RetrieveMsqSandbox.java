@@ -16,7 +16,8 @@ import java.io.IOException;
 public class RetrieveMsqSandbox {
     public static void main(String[] args) throws IOException, JAXBException {
         final ConfigurationImageWithMeta image = ConfigurationImageFile.readFromFile(
-            "src/test/java/com/rusefi/maintenance/migration/sandbox/test_data/prev_calibrations.zip"
+            "src/test/java/com/rusefi/maintenance/migration/sandbox/test_data/prev_calibrations.zip",
+            java.nio.ByteOrder.LITTLE_ENDIAN
         );
         final IniFileModel ini = IniFileReaderUtil.readIniFile(
             "src/test/java/com/rusefi/maintenance/migration/sandbox/test_data/prev_calibrations.ini"
