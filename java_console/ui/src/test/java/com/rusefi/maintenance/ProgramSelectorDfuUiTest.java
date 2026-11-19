@@ -2,6 +2,7 @@ package com.rusefi.maintenance;
 
 import com.rusefi.AvailableHardware;
 import com.rusefi.ConnectivityContext;
+import com.rusefi.MissingIniRecoveryState;
 import com.rusefi.PortResult;
 import com.rusefi.SerialPortType;
 import com.rusefi.UiProperties;
@@ -54,7 +55,7 @@ class ProgramSelectorDfuUiTest {
             PortResult openBlt = new PortResult("BLT", SerialPortType.OpenBlt);
             PortResult ecu = new PortResult("ECU", SerialPortType.Ecu);
             AvailableHardware hardware = new AvailableHardware(Arrays.asList(dfu, openBlt, ecu), true, false, false);
-            ConnectivityContext context = mock(ConnectivityContext.class);
+            ConnectivityContext context = mockConnectivityContext();
             when(context.getCurrentHardware()).thenReturn(hardware);
             when(context.getConnectedEcuTarget()).thenReturn(ConnectedEcuTarget.forManualRecovery("proteus_f7"));
             JComboBox<PortResult> ports = new JComboBox<>(new PortResult[]{dfu, openBlt, ecu});
@@ -96,7 +97,7 @@ class ProgramSelectorDfuUiTest {
         SwingUtilities.invokeAndWait(() -> {
             PortResult ecu = new PortResult("ECU", SerialPortType.Ecu);
             AvailableHardware hardware = new AvailableHardware(Collections.singletonList(ecu), false, false, false);
-            ConnectivityContext context = mock(ConnectivityContext.class);
+            ConnectivityContext context = mockConnectivityContext();
             when(context.getCurrentHardware()).thenReturn(hardware);
             when(context.getConnectedEcuTarget()).thenReturn(ConnectedEcuTarget.forManualRecovery("proteus_f7"));
             ProgramSelector selector = new ProgramSelector(context, new JComboBox<>(new PortResult[]{ecu}),
@@ -133,7 +134,7 @@ class ProgramSelectorDfuUiTest {
             PortResult dfu = new PortResult("DFU", SerialPortType.Dfu);
             PortResult ecu = new PortResult("ECU", SerialPortType.Ecu);
             AvailableHardware hardware = new AvailableHardware(Arrays.asList(dfu, ecu), true, false, false);
-            ConnectivityContext context = mock(ConnectivityContext.class);
+            ConnectivityContext context = mockConnectivityContext();
             when(context.getCurrentHardware()).thenReturn(hardware);
             when(context.getConnectedEcuTarget()).thenReturn(ConnectedEcuTarget.forManualRecovery("proteus_f7"));
             ProgramSelector selector = new ProgramSelector(context, new JComboBox<>(new PortResult[]{dfu, ecu}),
@@ -165,7 +166,7 @@ class ProgramSelectorDfuUiTest {
         SwingUtilities.invokeAndWait(() -> {
             PortResult dfu = new PortResult("DFU", SerialPortType.Dfu);
             AvailableHardware hardware = new AvailableHardware(Collections.singletonList(dfu), true, false, false);
-            ConnectivityContext context = mock(ConnectivityContext.class);
+            ConnectivityContext context = mockConnectivityContext();
             when(context.getCurrentHardware()).thenReturn(hardware);
             when(context.getConnectedEcuTarget()).thenReturn(ConnectedEcuTarget.forManualRecovery("proteus_f7"));
             ProgramSelector selector = new ProgramSelector(context, new JComboBox<>(new PortResult[]{dfu}),
@@ -206,7 +207,7 @@ class ProgramSelectorDfuUiTest {
         SwingUtilities.invokeAndWait(() -> {
             PortResult dfu = new PortResult("DFU", SerialPortType.Dfu);
             AvailableHardware hardware = new AvailableHardware(Collections.singletonList(dfu), true, false, false);
-            ConnectivityContext context = mock(ConnectivityContext.class);
+            ConnectivityContext context = mockConnectivityContext();
             when(context.getCurrentHardware()).thenReturn(hardware);
             when(context.getConnectedEcuTarget()).thenReturn(ConnectedEcuTarget.forManualRecovery("proteus_f7"));
             ProgramSelector selector = new ProgramSelector(context, new JComboBox<>(new PortResult[]{dfu}),
@@ -237,7 +238,7 @@ class ProgramSelectorDfuUiTest {
         SwingUtilities.invokeAndWait(() -> {
             PortResult ecu = new PortResult("ECU", SerialPortType.Ecu);
             AvailableHardware hardware = new AvailableHardware(Collections.singletonList(ecu), false, false, false);
-            ConnectivityContext context = mock(ConnectivityContext.class);
+            ConnectivityContext context = mockConnectivityContext();
             ConnectedEcuTarget target = new ConnectedEcuTarget();
             target.setConnectedTargetForUnitTest("proteus_f7");
             when(context.getCurrentHardware()).thenReturn(hardware);
@@ -283,7 +284,7 @@ class ProgramSelectorDfuUiTest {
         SwingUtilities.invokeAndWait(() -> {
             PortResult ecu = new PortResult("ECU", SerialPortType.Ecu);
             AvailableHardware hardware = new AvailableHardware(Collections.singletonList(ecu), false, false, false);
-            ConnectivityContext context = mock(ConnectivityContext.class);
+            ConnectivityContext context = mockConnectivityContext();
             when(context.getCurrentHardware()).thenReturn(hardware);
             when(context.getConnectedEcuTarget()).thenReturn(ConnectedEcuTarget.forManualRecovery("proteus_f7"));
             ProgramSelector selector = new ProgramSelector(context, new JComboBox<>(new PortResult[]{ecu}),
@@ -322,7 +323,7 @@ class ProgramSelectorDfuUiTest {
             PortResult first = new PortResult("DFU_1", SerialPortType.Dfu);
             PortResult second = new PortResult("DFU_2", SerialPortType.Dfu);
             AvailableHardware multiple = new AvailableHardware(Arrays.asList(first, second), true, false, false);
-            ConnectivityContext context = mock(ConnectivityContext.class);
+            ConnectivityContext context = mockConnectivityContext();
             when(context.getCurrentHardware()).thenReturn(multiple);
             when(context.getConnectedEcuTarget()).thenReturn(ConnectedEcuTarget.forManualRecovery("proteus_f7"));
             JComboBox<PortResult> ports = new JComboBox<>(new PortResult[]{first, second});
@@ -365,7 +366,7 @@ class ProgramSelectorDfuUiTest {
         SwingUtilities.invokeAndWait(() -> {
             PortResult dfu = new PortResult("DFU", SerialPortType.Dfu);
             AvailableHardware hardware = new AvailableHardware(Collections.singletonList(dfu), true, false, false);
-            ConnectivityContext context = mock(ConnectivityContext.class);
+            ConnectivityContext context = mockConnectivityContext();
             when(context.getCurrentHardware()).thenReturn(hardware);
             when(context.getConnectedEcuTarget()).thenReturn(ConnectedEcuTarget.forManualRecovery("proteus_f7"));
             ProgramSelector selector = new ProgramSelector(context, new JComboBox<>(new PortResult[]{dfu}),
@@ -1416,7 +1417,7 @@ class ProgramSelectorDfuUiTest {
     }
 
     private static final class Harness {
-        final ConnectivityContext context = mock(ConnectivityContext.class);
+        final ConnectivityContext context = mockConnectivityContext();
         final AtomicReference<AvailableHardware> hardware;
         final AtomicReference<ProgramSelector.ProgrammingCapabilities> capabilities = new AtomicReference<>(
             capabilities(true, false, "proteus_f7", "proteus_f7"));
@@ -1444,6 +1445,12 @@ class ProgramSelectorDfuUiTest {
             selector.setCapabilityProviderForTests(capabilities::get);
             selector.setNormalUpdateConfirmationForTests(message -> true);
         }
+    }
+
+    private static ConnectivityContext mockConnectivityContext() {
+        ConnectivityContext context = mock(ConnectivityContext.class);
+        when(context.getMissingIniRecoveryState()).thenReturn(new MissingIniRecoveryState());
+        return context;
     }
 
     private static int countFirmwareActionButtons(Container container) {
