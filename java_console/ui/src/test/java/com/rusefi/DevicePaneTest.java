@@ -46,6 +46,14 @@ public class DevicePaneTest {
     }
 
     @Test
+    public void noIniConfirmationIsCancelledWhenTheDeviceSessionChanges() {
+        assertTrue(DevicePane.shouldCancelNoIniConfirmation(SessionState.CONNECTED, SessionState.DISCONNECTED));
+        assertTrue(DevicePane.shouldCancelNoIniConfirmation(SessionState.DISCONNECTED, SessionState.CONNECTED));
+        assertFalse(DevicePane.shouldCancelNoIniConfirmation(SessionState.CONNECTED, SessionState.CONNECTED));
+        assertFalse(DevicePane.shouldCancelNoIniConfirmation(null, SessionState.DISCONNECTED));
+    }
+
+    @Test
     public void bootloaderAllowsOfflineTabsButFlashingBlocksTuning() {
         assertTrue(DevicePane.isOfflineCapableTab("Device"));
         assertTrue(DevicePane.isOfflineCapableTab("Tuning"));

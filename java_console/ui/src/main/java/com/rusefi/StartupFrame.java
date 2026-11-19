@@ -405,6 +405,7 @@ public class StartupFrame {
 
         selector = new ProgramSelector(connectivityContext, portsComboBox.getComboPorts(),
             this::showFullScreenPanel, this::closeFullScreenPanel);
+        selector.setLinkManager(uiContext.getLinkManager());
         selector.setJobExecutor(asyncJobExecutor);
 
         JButton openTunerStudio = new JButton("Open TunerStudio");
@@ -516,8 +517,11 @@ public class StartupFrame {
         startupUpdateActions.configureFirmwareSelector(selector);
 
         JPanel firmwareTabPanel = new JPanel(new BorderLayout());
-        firmwareTabPanel.add(FirmwareUpdateCard.inResponsiveViewport(
-            createFirmwareUpdateCard(startupUpdateActions, selector, firmwareStatusPanel)), BorderLayout.CENTER);
+        JPanel firmwareViews = FirmwareUpdateCard.createFirmwareTabContent(
+            FirmwareUpdateCard.inResponsiveViewport(
+                createFirmwareUpdateCard(startupUpdateActions, selector, firmwareStatusPanel)),
+            selector, outerTabs, firmwareTabPanel);
+        firmwareTabPanel.add(firmwareViews, BorderLayout.CENTER);
         outerTabs.addTab("Update ECU firmware", firmwareTabPanel);
         final TuneManagementTab tuneManagementTab = new TuneManagementTab(
             connectivityContext,
@@ -534,6 +538,8 @@ public class StartupFrame {
         logViewer.setConfigSaver(() -> getConfig().save());
         installLogViewerEntry(outerTabs, logViewer, openLogButton, logViewer::chooseAndOpen);
         addCustomTabs(outerTabs, uiContext);
+        ManualIniFilePicker.registerStartupHost(frame.getRootPane(), outerTabs, connectTabScroll,
+            this::revealControls);
 
         int savedTabIndex = getConfig().getRoot().getIntProperty(STARTUP_TAB_INDEX, 0);
         outerTabs.setSelectedIndex(Math.min(savedTabIndex, outerTabs.getTabCount() - 1));
@@ -610,18 +616,48 @@ public class StartupFrame {
         firmwareSummary.setAlignmentX(Component.LEFT_ALIGNMENT);
         firmwareTopPanel.add(firmwareSummary);
         firmwareTopPanel.add(Box.createVerticalStrut(24));
-        JLabel softwareLabel = new JLabel("Tuner application:");
-        softwareLabel.setToolTipText("Updates the tuner application on this computer, not ECU firmware.");
-        JPanel updateButtons = stackControls(softwareLabel,
-            startupUpdateActions.getUpdateSoftwareButton(), startupUpdateActions.getUpdateSoftwareStatus());
-        updateButtons.setAlignmentX(Component.LEFT_ALIGNMENT);
-        updateButtons.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-        firmwareTopPanel.add(updateButtons);
-        firmwareTopPanel.add(Box.createVerticalStrut(8));
-        JPanel firmwareActions = stackControls(new JLabel("Firmware options:"),
+        JLabel applicationStatus = startupUpdateActions.getUpdateSoftwareStatus();
+        applicationStatus.setToolTipText("Application update status; this does not describe ECU firmware.");
+        JPanel applicationButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 6, 0));
+        applicationButtons.setOpaque(false);
+        applicationButtons.add(startupUpdateActions.getUpdateLaterButton());
+        applicationButtons.add(startupUpdateActions.getUpdateSoftwareButton());
+        JPanel applicationUpdateRow = new JPanel(new BorderLayout(12, 0));
+        applicationUpdateRow.setOpaque(false);
+        applicationUpdateRow.add(applicationStatus, BorderLayout.CENTER);
+        applicationUpdateRow.add(applicationButtons, BorderLayout.EAST);
+        applicationUpdateRow.setAlignmentX(Component.LEFT_ALIGNMENT);
+        applicationUpdateRow.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+        Runnable refreshApplicationRow = () -> applicationUpdateRow.setVisible(
+            applicationStatus.isVisible()
+                || startupUpdateActions.getUpdateLaterButton().isVisible()
+                || startupUpdateActions.getUpdateSoftwareButton().isVisible());
+        for (JComponent component : new JComponent[]{applicationStatus,
+            startupUpdateActions.getUpdateLaterButton(), startupUpdateActions.getUpdateSoftwareButton()}) {
+            addVisibilityListener(component, refreshApplicationRow);
+        }
+        refreshApplicationRow.run();
+        firmwareTopPanel.add(applicationUpdateRow);
+
+        JLabel firmwareOptionsLabel = new JLabel("Firmware options:");
+        JPanel firmwareActions = stackControls(firmwareOptionsLabel,
             startupUpdateActions.getRollbackFirmwareButton());
         firmwareActions.setAlignmentX(Component.LEFT_ALIGNMENT);
         firmwareActions.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+        Runnable refreshFirmwareActions = () -> {
+            boolean visible = startupUpdateActions.getRollbackFirmwareButton().isVisible();
+            firmwareOptionsLabel.setVisible(visible);
+            firmwareActions.setVisible(visible);
+        };
+        refreshFirmwareActions.run();
+        addVisibilityListener(startupUpdateActions.getRollbackFirmwareButton(), refreshFirmwareActions);
+        Component sectionGap = Box.createVerticalStrut(8);
+        Runnable refreshSectionGap = () ->
+            sectionGap.setVisible(applicationUpdateRow.isVisible() && firmwareActions.isVisible());
+        addVisibilityListener(applicationUpdateRow, refreshSectionGap);
+        addVisibilityListener(firmwareActions, refreshSectionGap);
+        refreshSectionGap.run();
+        firmwareTopPanel.add(sectionGap);
         firmwareTopPanel.add(firmwareActions);
         return firmwareTopPanel;
     }
@@ -658,6 +694,20 @@ public class StartupFrame {
             panel.add(component);
         }
         return panel;
+    }
+
+    private static void addVisibilityListener(Component component, Runnable refresh) {
+        component.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent event) {
+                refresh.run();
+            }
+
+            @Override
+            public void componentHidden(ComponentEvent event) {
+                refresh.run();
+            }
+        });
     }
 
     // Package-private so service discovery can be tested without creating a frame or scanning hardware.

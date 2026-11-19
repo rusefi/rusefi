@@ -179,7 +179,11 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
 
     public void configureFirmwareSelector(ProgramSelector selector) {
         firmwareSummary = new FirmwareStatusSummaryPanel(
-            rollbackController, selector, branchSwitchController.getButton(), migrateSettings);
+            rollbackController, selector, branchSwitchController.getButton(), migrateSettings,
+            connectivityContext, () -> ecuPortToUse.get().orElse(null),
+            () -> softwareUpdateInProgress || !singleAsyncJobExecutor.isNotInProgress()
+                || rollbackController.isDownloadInProgress());
+        selector.setMissingIniStateChangedListener(this::refreshFirmwareStatusAfterMissingIniChange);
         selector.setTargetedFirmwareUpdateInterceptor(rollbackController::startLatestUpdate);
         selector.setExternalBusySupplier(() -> rollbackController.isDownloadInProgress() || softwareUpdateInProgress);
         selector.setExternalPrimaryActionBusySupplier(rollbackController::isPrimaryUpdateBlockedByCatalogDiscovery);
@@ -195,6 +199,10 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
 
     public JButton getUpdateSoftwareButton() {
         return updateSoftwareButton;
+    }
+
+    public JButton getUpdateLaterButton() {
+        return updateLaterButton;
     }
 
     public JComponent getFirmwareSummary() {
@@ -436,6 +444,11 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
         } else {
             SwingUtilities.invokeLater(update);
         }
+    }
+
+    private void refreshFirmwareStatusAfterMissingIniChange() {
+        rollbackController.refresh(ecuPortToUse.get().orElse(null));
+        refreshFirmwareSummary();
     }
 
     @Override

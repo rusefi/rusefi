@@ -72,4 +72,23 @@ public class LinkManagerCompatibilityListenerTest {
         assertEquals(java.util.Collections.singletonList(
             "compatible:log viewer:board-b"), events);
     }
+
+    @Test
+    public void newConnectionAttemptClearsMissingIniPairing() {
+        LinkManager linkManager = new LinkManager().setNotifyGlobalStatusOnClose(false);
+        AtomicReference<String> failure = new AtomicReference<>();
+        linkManager.setMissingIniListener((signature, port) -> failure.set(port + ":" + signature));
+        linkManager.start("COM_TEST", ConnectionStatusLogic.Listener.VOID);
+        linkManager.recordMissingIniFailure("signature-a");
+
+        assertEquals("COM_TEST", linkManager.getMissingIniFailure().port);
+        assertEquals("signature-a", linkManager.getMissingIniFailure().signature);
+        assertEquals("COM_TEST:signature-a", failure.get(), "the exact probe target must be propagated");
+
+        linkManager.close();
+        linkManager.start("COM_OTHER", ConnectionStatusLogic.Listener.VOID);
+
+        assertEquals(null, linkManager.getMissingIniFailure());
+        linkManager.close();
+    }
 }

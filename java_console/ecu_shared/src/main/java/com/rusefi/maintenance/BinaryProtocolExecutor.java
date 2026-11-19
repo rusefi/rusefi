@@ -46,7 +46,21 @@ public class BinaryProtocolExecutor {
         boolean isScanningForEcu,
         String msg,
         LinkManager.EcuCompatibilityListener compatibilityListener) {
-        return execute(port, callbacks, bpAction, failureResult, msg, compatibilityListener, true);
+        return execute(port, callbacks, bpAction, failureResult, isScanningForEcu, msg,
+            compatibilityListener, (signature, failedPort) -> {});
+    }
+
+    public static <T> T execute(
+        final String port,
+        final UpdateOperationCallbacks callbacks,
+        final BinaryProtocolAction<T> bpAction,
+        final T failureResult,
+        boolean isScanningForEcu,
+        String msg,
+        LinkManager.EcuCompatibilityListener compatibilityListener,
+        LinkManager.MissingIniListener missingIniListener) {
+        return execute(port, callbacks, bpAction, failureResult, isScanningForEcu, true, msg,
+            compatibilityListener, missingIniListener);
     }
 
     private static <T> T execute(
@@ -54,13 +68,15 @@ public class BinaryProtocolExecutor {
         final UpdateOperationCallbacks callbacks,
         final BinaryProtocolAction<T> bpAction,
         final T failureResult,
-        final String msg,
-        final LinkManager.EcuCompatibilityListener compatibilityListener,
-        final boolean needImage
-    ) {
+        boolean isScanningForEcu,
+        boolean needImage,
+        String msg,
+        LinkManager.EcuCompatibilityListener compatibilityListener,
+        LinkManager.MissingIniListener missingIniListener) {
         final AtomicReference<T> executionResult = new AtomicReference<>(failureResult);
         try (LinkManager linkManager = new LinkManager()
             .setEcuCompatibilityListener(compatibilityListener)
+            .setMissingIniListener(missingIniListener)
             .setNeedPullText(false)
             .setNeedPullLiveData(true)
             .setNotifyGlobalStatusOnClose(false)
@@ -163,8 +179,8 @@ public class BinaryProtocolExecutor {
             } else {
                 waitForPort(port);
             }
-            return execute(port, callbacks, bpAction, failureResult, msg,
-                LinkManager.EcuCompatibilityListener.VOID, needImage);
+            return execute(port, callbacks, bpAction, failureResult, true, needImage, msg,
+                LinkManager.EcuCompatibilityListener.VOID, (signature, failedPort) -> {});
         } finally {
             callbacks.logLine(msg + ": Resuming port scanning...");
             connectivityContext.getPortScanner().resume();

@@ -1093,6 +1093,16 @@ public class CalibrationsHelper {
         final UpdateOperationCallbacks callbacks,
         final LinkManager.EcuCompatibilityListener compatibilityListener
     ) {
+        return readCurrentCalibrationsWithoutSuspendingPortScanner(
+            port, callbacks, compatibilityListener, (signature, failedPort) -> {});
+    }
+
+    public static Optional<CalibrationsInfo> readCurrentCalibrationsWithoutSuspendingPortScanner(
+        final String port,
+        final UpdateOperationCallbacks callbacks,
+        final LinkManager.EcuCompatibilityListener compatibilityListener,
+        final LinkManager.MissingIniListener missingIniListener
+    ) {
         return BinaryProtocolExecutor.execute(
             port,
             callbacks,
@@ -1108,7 +1118,8 @@ public class CalibrationsHelper {
             Optional.empty(),
             true,
             "readCalibrationsInfo",
-            compatibilityListener);
+            compatibilityListener,
+            missingIniListener);
     }
 
     public static Optional<CalibrationsInfo> readAndBackupCurrentCalibrationsWithSuspendedPortScanner(

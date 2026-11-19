@@ -14,9 +14,11 @@ public final class ProductionConnectivity {
     // console's LinkManager (writer: BinaryProtocol records the target at connect time).
     private static final com.rusefi.core.io.ConnectedEcuTarget CONNECTED_ECU_TARGET =
         new com.rusefi.core.io.ConnectedEcuTarget();
+    private static final MissingIniRecoveryState MISSING_INI_RECOVERY = new MissingIniRecoveryState();
 
     public static final ConnectivityContext CONTEXT = new ConnectivityContext(
-        new SerialPortScanner(new EcuHardwareProbes(CONNECTED_ECU_TARGET), true), CONNECTED_ECU_TARGET);
+        new SerialPortScanner(new EcuHardwareProbes(CONNECTED_ECU_TARGET, MISSING_INI_RECOVERY), true),
+        CONNECTED_ECU_TARGET, MISSING_INI_RECOVERY);
 
     private ProductionConnectivity() {
     }

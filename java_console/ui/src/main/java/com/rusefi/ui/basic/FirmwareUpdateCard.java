@@ -5,6 +5,7 @@ import com.formdev.flatlaf.util.UIScale;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 /** One themed, responsive surface for firmware identity, actions, and operation feedback. */
 public final class FirmwareUpdateCard extends JPanel {
@@ -51,6 +52,43 @@ public final class FirmwareUpdateCard extends JPanel {
         scroll.setOpaque(false);
         scroll.getVerticalScrollBar().setUnitIncrement(16);
         return scroll;
+    }
+
+    /** Keeps no-INI consent in the firmware tab and discards it when navigation leaves that tab. */
+    public static JPanel createFirmwareTabContent(
+        JComponent firmwareContent, com.rusefi.maintenance.ProgramSelector selector,
+        JTabbedPane tabs, Component tabContent
+    ) {
+        CardLayout layout = new CardLayout();
+        JPanel views = new JPanel(layout);
+        views.add(firmwareContent, "firmware");
+        AtomicReference<JComponent> activeConfirmation = new AtomicReference<>();
+        selector.setNoIniUpdatePanelHost(panel -> {
+            if (views.getComponentCount() > 1) {
+                views.remove(1);
+            }
+            JPanel confirmationHost = new JPanel(new BorderLayout());
+            confirmationHost.setVisible(false);
+            confirmationHost.setOpaque(false);
+            confirmationHost.add(panel, BorderLayout.CENTER);
+            activeConfirmation.set(panel);
+            views.add(confirmationHost, "no-ini-confirmation");
+            layout.show(views, "no-ini-confirmation");
+        }, () -> {
+            JComponent confirmation = activeConfirmation.getAndSet(null);
+            if (confirmation != null) {
+                confirmation.setVisible(false);
+            }
+            layout.show(views, "firmware");
+        });
+        if (tabs != null) {
+            tabs.addChangeListener(event -> {
+                if (tabs.getSelectedComponent() != tabContent) {
+                    selector.cancelNoIniUpdateConfirmation();
+                }
+            });
+        }
+        return views;
     }
 
     private static Color color(String key, Color fallback) {
