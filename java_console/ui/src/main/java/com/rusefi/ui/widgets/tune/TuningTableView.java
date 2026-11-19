@@ -29,6 +29,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.BiConsumer;
@@ -55,7 +57,22 @@ public class TuningTableView {
             }
             return super.processKeyBinding(stroke, event, condition, pressed);
         }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            paintLiveMarker(g);
+        }
     };
+    private static final int LIVE_DOT_RADIUS = 5;
+    private static final int TRAIL_DOT_RADIUS = 3;
+    /** How long earlier operating points stay on the trail, fading out. */
+    static final long TRAIL_MILLIS = 2000;
+    static final int TRAIL_MAX_POINTS = 40;
+    /** Raw {x value, y value, time} of recent live points, oldest first. */
+    private final java.util.ArrayDeque<double[]> trail = new java.util.ArrayDeque<>();
+    /** Live values of the displayed X and Y axis channels, after the flip option. */
+    private final LiveChannelFeed live = new LiveChannelFeed(table, this::onLiveChange);
     private final Surface3DView surface3DView = new Surface3DView();
     private final Surface3DView mini3DView = new Surface3DView();
     private final JPanel gridPanel = new JPanel(new BorderLayout());
@@ -290,6 +307,177 @@ public class TuningTableView {
         });
     }
 
+    LiveChannelFeed liveFeedForUnitTest() {
+        return live;
+    }
+
+    /**
+     * Records the live values for the trail: a point that moves adds one, a point that stays only
+     * refreshes its time, and points older than {@link #TRAIL_MILLIS} drop off. Values are kept
+     * raw, so the trail follows axis edits; no data, or a new orientation, clears it.
+     */
+    private void onLiveChange() {
+        double x = live.value(0);
+        double y = live.value(1);
+        if (Double.isNaN(x) || Double.isNaN(y)) {
+            trail.clear();
+        } else {
+            long now = live.nowMillis();
+            double[] last = trail.peekLast();
+            if (last != null && last[0] == x && last[1] == y) {
+                last[2] = now;
+            } else {
+                trail.addLast(new double[]{x, y, now});
+            }
+            while (!trail.isEmpty() && (trail.size() > TRAIL_MAX_POINTS || now - trail.peekFirst()[2] > TRAIL_MILLIS)) {
+                trail.pollFirst();
+            }
+        }
+        table.repaint();
+        updateSurfaceLive();
+    }
+
+    /**
+     * The trail, oldest first and ending at the current point, as {x index, y index, opacity}:
+     * fractional data-cell indexes into the displayed axes and an opacity fading with age.
+     */
+    java.util.List<double[]> liveTrail() {
+        java.util.List<double[]> points = new java.util.ArrayList<>();
+        if (!(table.getModel() instanceof TuningTableModel)) {
+            return points;
+        }
+        TuningTableModel model = (TuningTableModel) table.getModel();
+        if (model.data.length == 0 || model.data[0].length == 0) {
+            return points;
+        }
+        long now = live.nowMillis();
+        for (double[] entry : trail) {
+            Double x = LiveOperatingPoint.axisPosition(model.xBins, model.data[0].length, entry[0]);
+            Double y = LiveOperatingPoint.axisPosition(model.yBins, model.data.length, entry[1]);
+            if (x != null && y != null) {
+                points.add(new double[]{x, y, Math.max(0, 1 - (now - entry[2]) / (double) TRAIL_MILLIS)});
+            }
+        }
+        return points;
+    }
+
+    private void updateSurfaceLive() {
+        java.util.List<double[]> points = liveTrail();
+        double[][] surfaceTrail = points.isEmpty() ? null : points.toArray(new double[0][]);
+        surface3DView.setLiveTrail(surfaceTrail);
+        mini3DView.setLiveTrail(surfaceTrail);
+    }
+
+    /** Pixel centre of fractional data-cell indexes; rows show the Y bins bottom-up. */
+    private Point2D.Double cellPixel(double xIndex, double yIndex) {
+        int rows = ((TuningTableModel) table.getModel()).data.length;
+        return new Point2D.Double(
+            interpolateCentre(xIndex, index -> table.getCellRect(0, index + 1, true).getCenterX()),
+            interpolateCentre(yIndex, index -> table.getCellRect(rows - 1 - index, 1, true).getCenterY()));
+    }
+
+    /** Earlier live points as fading dots joined by lines, under the current marker. */
+    private void paintTrail(Graphics2D g2) {
+        java.util.List<double[]> points = liveTrail();
+        Point2D.Double previous = null;
+        for (int i = 0; i < points.size(); i++) {
+            double[] point = points.get(i);
+            Point2D.Double pixel = cellPixel(point[0], point[1]);
+            int alpha = (int) Math.round(255 * point[2]);
+            if (previous != null && alpha > 0) {
+                g2.setStroke(new BasicStroke(3f));
+                g2.setColor(new Color(0, 0, 0, alpha)); // [tag:fixed_color] trail edge over the value gradient
+                g2.drawLine((int) previous.x, (int) previous.y, (int) pixel.x, (int) pixel.y);
+                g2.setStroke(new BasicStroke(1f));
+                g2.setColor(new Color(255, 255, 255, alpha)); // [tag:fixed_color] trail core over the value gradient
+                g2.drawLine((int) previous.x, (int) previous.y, (int) pixel.x, (int) pixel.y);
+            }
+            if (i < points.size() - 1 && alpha > 0) {
+                Ellipse2D dot = new Ellipse2D.Double(pixel.x - TRAIL_DOT_RADIUS, pixel.y - TRAIL_DOT_RADIUS,
+                    2 * TRAIL_DOT_RADIUS, 2 * TRAIL_DOT_RADIUS);
+                g2.setColor(new Color(255, 255, 255, alpha)); // [tag:fixed_color] trail dot over the value gradient
+                g2.fill(dot);
+                g2.setColor(new Color(0, 0, 0, alpha)); // [tag:fixed_color] trail dot edge over the value gradient
+                g2.draw(dot);
+            }
+            previous = pixel;
+        }
+        g2.setStroke(new BasicStroke(1f));
+    }
+
+    /**
+     * The live operating point as fractional data-cell indexes into the displayed axes
+     * (x along xBins, y along yBins), or null when there is nothing to show.
+     */
+    private Point2D.Double livePosition() {
+        if (!(table.getModel() instanceof TuningTableModel)) {
+            return null;
+        }
+        TuningTableModel model = (TuningTableModel) table.getModel();
+        if (model.data.length == 0 || model.data[0].length == 0) {
+            return null;
+        }
+        Double x = LiveOperatingPoint.axisPosition(model.xBins, model.data[0].length, live.value(0));
+        Double y = LiveOperatingPoint.axisPosition(model.yBins, model.data.length, live.value(1));
+        return x == null || y == null ? null : new Point2D.Double(x, y);
+    }
+
+    /** The table cell (row, column) nearest the live operating point, or null when none is shown. */
+    Point liveCell() {
+        Point2D.Double position = livePosition();
+        if (position == null) {
+            return null;
+        }
+        int rows = ((TuningTableModel) table.getModel()).data.length;
+        return new Point(rows - 1 - (int) Math.round(position.y), (int) Math.round(position.x) + 1);
+    }
+
+    /**
+     * Outlines the cell nearest the live operating point and puts a dot where the firmware
+     * interpolates between the surrounding cells. Rows show the Y bins bottom-up.
+     */
+    private void paintLiveMarker(Graphics g) {
+        Point cell = liveCell();
+        if (cell == null) {
+            return;
+        }
+        Point2D.Double position = livePosition();
+        Point2D.Double centre = cellPixel(position.x, position.y);
+        double x = centre.x;
+        double y = centre.y;
+        Rectangle bounds = table.getCellRect(cell.x, cell.y, true);
+        Graphics2D g2 = (Graphics2D) g.create();
+        try {
+            Graphics2D trailGraphics = (Graphics2D) g2.create();
+            trailGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            paintTrail(trailGraphics);
+            trailGraphics.dispose();
+            // The marker sits on the value gradient, which looks the same in every theme, so it does too.
+            // Black-white-black rings stay visible on light and dark cells alike.
+            g2.setColor(Color.BLACK); // [tag:fixed_color] live cell outline over the value gradient
+            g2.drawRect(bounds.x, bounds.y, bounds.width - 1, bounds.height - 1);
+            g2.drawRect(bounds.x + 2, bounds.y + 2, bounds.width - 5, bounds.height - 5);
+            g2.setColor(Color.WHITE); // [tag:fixed_color] middle ring and dot fill of the live marker
+            g2.drawRect(bounds.x + 1, bounds.y + 1, bounds.width - 3, bounds.height - 3);
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            Ellipse2D dot = new Ellipse2D.Double(x - LIVE_DOT_RADIUS, y - LIVE_DOT_RADIUS,
+                2 * LIVE_DOT_RADIUS, 2 * LIVE_DOT_RADIUS);
+            g2.fill(dot);
+            g2.setStroke(new BasicStroke(2f));
+            g2.setColor(Color.BLACK); // [tag:fixed_color] live point dot outline over the value gradient
+            g2.draw(dot);
+        } finally {
+            g2.dispose();
+        }
+    }
+
+    private static double interpolateCentre(double position, java.util.function.IntToDoubleFunction centre) {
+        int from = (int) Math.floor(position);
+        double fraction = position - from;
+        double start = centre.applyAsDouble(from);
+        return fraction == 0 ? start : start + fraction * (centre.applyAsDouble(from + 1) - start);
+    }
+
     JPopupMenu orientationMenuFor(int column) {
         if (column != 0 || orientationNode == null) {
             return null;
@@ -359,6 +547,7 @@ public class TuningTableView {
     private void updateSurfaces(Double[][] data, Double[] xBins, Double[] yBins) {
         surface3DView.setData(data, xBins, yBins, minValue, maxValue);
         mini3DView.setData(data, xBins, yBins, minValue, maxValue);
+        updateSurfaceLive();
         previewEligible = data.length >= 2 && data[0].length >= 2
             && Surface3DView.hasUsableAxis(xBins, data[0].length)
             && Surface3DView.hasUsableAxis(yBins, data.length);
@@ -1324,6 +1513,8 @@ public class TuningTableView {
         flipAxes = orientationNode.getBoolProperty("flip_xy");
         invertX = orientationNode.getBoolProperty("invert_x");
         invertY = orientationNode.getBoolProperty("invert_y");
+        live.setChannels(flipAxes ? iniTable.getYBinsChannel() : iniTable.getXBinsChannel(),
+            flipAxes ? iniTable.getXBinsChannel() : iniTable.getYBinsChannel());
         Double[][] dataValues = orientData(storedValues);
         Double[] xBins = orientAxis(flipAxes ? storedY : storedX, invertX);
         Double[] yBins = orientAxis(flipAxes ? storedX : storedY, invertY);

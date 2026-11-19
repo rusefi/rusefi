@@ -45,6 +45,11 @@ public class CurveWidget {
     private final JPanel content = new JPanel(new BorderLayout());
     private final CurveCanvas canvas = new CurveCanvas();
     private final JTable table = new JTable();
+    /** Live value of the X axis channel, from {@code xBins = bins, channel} (issue #10670). */
+    private final LiveChannelFeed live = new LiveChannelFeed(canvas, () -> {
+        canvas.repaint();
+        table.repaint();
+    });
 
     private CurveModel curveModel;
     private AxisModel xAxis;
@@ -164,8 +169,27 @@ public class CurveWidget {
 
         canvas.setCurve(curveModel, xValues, yValues);
         table.setModel(new CurveTableModel());
+        live.setChannels(curveModel.getXBinsChannel());
         content.revalidate();
         content.repaint();
+    }
+
+    LiveChannelFeed liveFeedForUnitTest() {
+        return live;
+    }
+
+    /** The live X value as a fractional index into the curve points, or null when there is none. */
+    private Double livePosition() {
+        if (xValues == null || yValues == null) {
+            return null;
+        }
+        return LiveOperatingPoint.axisPosition(xValues, Math.min(xValues.length, yValues.length), live.value(0));
+    }
+
+    /** The table row nearest the live X value, or -1. */
+    int liveRow() {
+        Double position = livePosition();
+        return position == null ? -1 : (int) Math.round(position);
     }
 
     private static String resolveCurveLabel(String raw, IniFileModel ini, ConfigurationImage valuesImage,
@@ -497,6 +521,30 @@ public class CurveWidget {
                 Point p = worldToCanvas(x[row], y[row]);
                 g2.fillOval(p.x - 5, p.y - 5, 10, 10);
             }
+            drawLivePoint(g2);
+        }
+
+        /** A vertical line at the live X value and a dot where the firmware interpolates the curve. */
+        private void drawLivePoint(Graphics2D g2) {
+            Double position = livePosition();
+            if (position == null) {
+                return;
+            }
+            int from = (int) Math.floor(position);
+            int to = Math.min(from + 1, Math.min(x.length, y.length) - 1);
+            double fraction = position - from;
+            double liveX = x[from] + fraction * (x[to] - x[from]);
+            double liveY = y[from] + fraction * (y[to] - y[from]);
+            Point p = worldToCanvas(liveX, liveY);
+            Rectangle plot = getPlotBounds();
+            Stroke stroke = g2.getStroke();
+            g2.setColor(Color.CYAN); // [tag:fixed_color] live point on the black scope
+            g2.setStroke(new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10f, new float[]{4f, 4f}, 0f));
+            g2.drawLine(p.x, plot.y, p.x, plot.y + plot.height);
+            g2.setStroke(stroke);
+            g2.fillOval(p.x - 6, p.y - 6, 12, 12);
+            g2.setColor(Color.WHITE); // [tag:fixed_color] live point outline on the black scope
+            g2.drawOval(p.x - 6, p.y - 6, 12, 12);
         }
 
         private Rectangle getPlotBounds() {
@@ -602,6 +650,10 @@ public class CurveWidget {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            if (row == liveRow()) {
+                // The row sits on the theme-independent value gradient, so the outline is fixed too.
+                setBorder(BorderFactory.createLineBorder(Color.BLACK, 2)); // [tag:fixed_color] live row outline
+            }
             if (isSelected) return c;
 
             double doubleValue;
