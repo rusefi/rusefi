@@ -56,6 +56,21 @@ class SensorLoggerTest {
         assertEquals(1234, data.getShort(data.getInt(16) + 4));
     }
 
+    /** [tag:image_byte_order] output channel bytes are in the byte order declared by the controller's ini */
+    @Test
+    void bigEndianOutputChannel() throws Exception {
+        String text = "[MegaTune]\nsignature = test\n[Constants]\nendianness = big\npageSize = 0\n"
+                + "pageReadCommand = R\nochBlockSize = 2\n"
+                + "[OutputChannels]\nRPMValue = scalar, U16, 0, \"RPM\", 1, 0\n"
+                + "[Datalog]\nentry = RPMValue, \"RPM\", int, \"%d\"\n";
+        Path iniPath = tempDir.resolve("bigEndian.ini");
+        Files.writeString(iniPath, text);
+        IniFileModel ini = IniFileReaderUtil.readIniFile(iniPath.toString());
+        assertEquals(ByteOrder.BIG_ENDIAN, ini.getByteOrder());
+        CustomBinaryLogEntry rpm = SensorLogger.getOutputChannels(ini).get(0);
+        assertEquals(1234, rpm.getValue(new byte[]{0, 4, (byte) 0xd2}));
+    }
+
     @Test
     void datalogOrderKeepsLabelsAttachedToValuesAndUnlistedChannels() throws Exception {
         String text = "[MegaTune]\nsignature = test\n[Constants]\npageSize = 0\n"

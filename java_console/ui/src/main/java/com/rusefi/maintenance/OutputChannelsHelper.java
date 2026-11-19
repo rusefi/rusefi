@@ -41,7 +41,7 @@ public class OutputChannelsHelper {
         }
         final AtomicInteger mcuSerial = new AtomicInteger();
         SensorCentral.ResponseListener listener = () -> {
-            mcuSerial.set(PanamaHelper.getMcuSerial(mcuSerialField));
+            mcuSerial.set(PanamaHelper.getMcuSerial(mcuSerialField, binaryProtocol.getWireByteOrder()));
         };
         SensorCentral.getInstance().addListener(listener);
         try {

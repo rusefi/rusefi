@@ -10,14 +10,18 @@ import com.rusefi.core.SensorCategory;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 public class CustomBinaryLogEntry implements BinaryLogEntry {
     private final String name;
     private final IniField field;
+    /** [tag:image_byte_order] byte order of the output channel block, as declared by the ini */
+    private final ByteOrder byteOrder;
 
-    public CustomBinaryLogEntry(String name, IniField field) {
+    public CustomBinaryLogEntry(String name, IniField field, ByteOrder byteOrder) {
         this.name = name;
         this.field = field;
+        this.byteOrder = byteOrder;
     }
 
     @Override
@@ -88,7 +92,7 @@ public class CustomBinaryLogEntry implements BinaryLogEntry {
     }
 
     public double getValue(byte[] response) {
-        ByteBuffer bb = ISensorHolder.getByteBuffer(response, getName(), field.getOffset(), field.getSize());
+        ByteBuffer bb = ISensorHolder.getByteBuffer(response, getName(), field.getOffset(), field.getSize(), byteOrder);
         if (field instanceof ScalarIniField) {
             return ((ScalarIniField) field).getType().readRawValue(bb);
         }

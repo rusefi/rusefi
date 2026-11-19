@@ -77,7 +77,7 @@ public class WriteSimulatorConfiguration {
         log.info("Got " + fileContent.length + " from " + inputBinaryTuneFileName + " while expecting " + pageSize);
         if (fileContent.length != pageSize)
             throw new IllegalStateException("Unexpected image size " + fileContent.length + " while expecting " + pageSize);
-        ConfigurationImage configuration = new ConfigurationImage(fileContent);
+        ConfigurationImage configuration = new ConfigurationImage(fileContent, ini.getByteOrder());
         log.info("Got " + Objects.requireNonNull(configuration, "configuration"));
         Msq m = MsqFactory.valueOf(configuration, ini);
         String name = "KNOCKNOISERPMBINS";

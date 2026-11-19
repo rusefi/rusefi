@@ -8,6 +8,7 @@ import com.rusefi.core.SensorCentral;
 import com.rusefi.io.LinkManager;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 public class PanamaHelper {
     public static final String MCUSERIAL = "MCUSERIAL";
@@ -20,8 +21,9 @@ public class PanamaHelper {
         return getIniField(linkManager.getBinaryProtocol());
     }
 
-    public static int getMcuSerial(IniField mcuSerialField) {
-        ByteBuffer bb = ISensorHolder.getByteBuffer(SensorCentral.getInstance().getResponse(), "error", mcuSerialField.getOffset());
+    /** @param byteOrder [tag:image_byte_order] byte order of the output channel block */
+    public static int getMcuSerial(IniField mcuSerialField, ByteOrder byteOrder) {
+        ByteBuffer bb = ISensorHolder.getByteBuffer(SensorCentral.getInstance().getResponse(), "error", mcuSerialField.getOffset(), 4, byteOrder);
         return bb.getInt();
     }
 }
