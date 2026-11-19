@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Display options of the log chart: grid lines, cursor, values, min/max markers, plot colours and display-only trace
- * smoothing. Kept in the console config, so they carry over from one log to the next and survive a restart.
+ * Display options of the log chart: grid lines, cursor, values, min/max markers, plot colours, trace line width and
+ * style, and display-only trace smoothing. Kept in the console config, so they carry over from one log to the next and survive a restart.
  */
 final class ChartSettings {
     enum VerticalMode {
@@ -58,6 +58,10 @@ final class ChartSettings {
     private double smoothingWindowSeconds;
     /** Per-signal windows by log field name; absent means use {@link #smoothingWindowSeconds}. */
     private final Map<String, Double> smoothingOverrides = new HashMap<>();
+    /** Width in pixels of every trace without one of its own; NaN: the plot's own width (light 2, dark 1.5). */
+    private double defaultLineWidth = Double.NaN;
+    /** Per-signal lines by log field name; absent means {@link TraceStyle.Spec#DEFAULT}. */
+    private final Map<String, TraceStyle.Spec> traceLines = new HashMap<>();
 
     private static final String VERTICAL = "vertical";
     private static final String HORIZONTAL = "horizontal";
@@ -72,6 +76,8 @@ final class ChartSettings {
     private static final String SHOW_RAW_VALUES = "showRawValues";
     private static final String SMOOTHING = "smoothing";
     private static final String SMOOTHING_OVERRIDES = "smoothingSignals";
+    private static final String LINE_WIDTH = "lineWidth";
+    private static final String TRACE_LINES = "traceLines";
 
     private final Node node;
     private final List<Runnable> listeners = new ArrayList<>();
@@ -103,6 +109,15 @@ final class ChartSettings {
                 if (seconds >= 0) {
                     smoothingOverrides.put(entry.getKey(), seconds);
                 }
+            }
+        }
+        double width = node.getDoubleProperty(LINE_WIDTH, Double.NaN);
+        defaultLineWidth = Double.isFinite(width) ? TraceStyle.clampWidth(width) : Double.NaN;
+        for (Map.Entry<String, Object> entry : node.getChild(TRACE_LINES).getConfig().entrySet()) {
+            TraceStyle.Spec spec = entry.getValue() instanceof String
+                    ? TraceStyle.Spec.decode((String) entry.getValue()) : null;
+            if (spec != null && !spec.isDefault()) {
+                traceLines.put(entry.getKey(), spec);
             }
         }
     }
@@ -154,6 +169,17 @@ final class ChartSettings {
         for (Map.Entry<String, Double> entry : smoothingOverrides.entrySet()) {
             overrides.setProperty(entry.getKey(), entry.getValue());
         }
+        // stored only once chosen, so an untouched width keeps following the light or dark plot
+        if (Double.isNaN(defaultLineWidth)) {
+            node.getConfig().remove(LINE_WIDTH);
+        } else {
+            node.setProperty(LINE_WIDTH, defaultLineWidth);
+        }
+        Node lines = node.getChild(TRACE_LINES);
+        lines.getConfig().clear();
+        for (Map.Entry<String, TraceStyle.Spec> entry : traceLines.entrySet()) {
+            lines.setProperty(entry.getKey(), entry.getValue().encode());
+        }
         for (Runnable listener : listeners) {
             listener.run();
         }
@@ -192,6 +218,58 @@ final class ChartSettings {
         if (smoothingWindowSeconds < 0 || !Double.isFinite(smoothingWindowSeconds)) {
             throw new IllegalArgumentException("Smoothing window must be finite and non-negative");
         }
+    }
+
+    /** The chosen default trace width in pixels, or NaN while it follows the plot's own width. */
+    double getDefaultLineWidth() {
+        return defaultLineWidth;
+    }
+
+    /** The default trace width in pixels on a plot palette: the chosen one, else the palette's. */
+    float defaultLineWidth(PlotPalette palette) {
+        return Double.isNaN(defaultLineWidth) ? palette.strokeWidth : (float) defaultLineWidth;
+    }
+
+    /** Sets the width of every trace without its own, in pixels; NaN follows the plot again. */
+    void setDefaultLineWidth(double pixels) {
+        defaultLineWidth = Double.isNaN(pixels) ? Double.NaN : TraceStyle.clampWidth(pixels);
+        changed();
+    }
+
+    /** A signal's line; kept by name, so the next log with the signal draws it alike. */
+    TraceStyle.Spec getTraceLine(String signal) {
+        return traceLines.getOrDefault(signal, TraceStyle.Spec.DEFAULT);
+    }
+
+    /** Sets a signal's line; the default one is forgotten rather than stored. */
+    void setTraceLine(String signal, TraceStyle.Spec spec) {
+        if (spec.isDefault()) {
+            traceLines.remove(signal);
+        } else {
+            traceLines.put(signal, spec);
+        }
+        changed();
+    }
+
+    /** True when a default width is chosen or any signal has a line of its own. */
+    boolean hasCustomLines() {
+        return !Double.isNaN(defaultLineWidth) || !traceLines.isEmpty();
+    }
+
+    /** Every signal back to the default width and a solid line, and the default width back to the plot's own. */
+    void resetTraceLines() {
+        defaultLineWidth = Double.NaN;
+        traceLines.clear();
+        changed();
+    }
+
+    TraceStyle.Line getLineStyle(String signal) {
+        return getTraceLine(signal).line;
+    }
+
+    /** A signal's width in pixels on a plot palette: its own, else the default. */
+    float lineWidth(String signal, PlotPalette palette) {
+        return getTraceLine(signal).width(defaultLineWidth(palette));
     }
 
     CursorValues getCursorValues() {

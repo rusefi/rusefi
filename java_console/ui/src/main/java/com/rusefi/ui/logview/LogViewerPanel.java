@@ -559,6 +559,7 @@ public final class LogViewerPanel extends JPanel {
             menu.add(newPlot);
             menu.addSeparator();
             menu.add(chart.colorSubmenu(field));
+            menu.add(chart.lineItem(field));
             if (plotted) {
                 menu.add(chart.scaleSubmenu(field));
             }
