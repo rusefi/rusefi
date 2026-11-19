@@ -91,6 +91,37 @@ public class IniFileFieldsTest {
         assertEquals(-155, curve.getyAxis().getMin());
         assertEquals(150, curve.getyAxis().getMax());
         assertEquals(12, curve.getyAxis().getStep());
+        assertNull(curve.getXBinsChannel());
+    }
+
+    @Test
+    public void curveKeepsTheLiveChannelOfItsXAxis() {
+        // Issue #10670: "xBins = fan1TempBins, coolantTemperature" names the output channel whose
+        // value the curve editor marks; the bins constant stays the field the curve edits.
+        String string =
+            "[Constants]\n" +
+                "page = 1\n" +
+                "fanBins = array, U08, 0, [8], \"C\", 1, 0, 0, 200, 0\n" +
+                "fanDuty = array, U08, 8, [8], \"%\", 1, 0, 0, 100, 0\n" +
+                "[CurveEditor]\n" +
+                "\tcurve = fanCurve, \"Fan\"\n" +
+                "\t\tcolumnLabel = \"Coolant\", \"Duty\"\n" +
+                "\t\txAxis = 0, 120, 7\n" +
+                "\t\tyAxis = 0, 100, 5\n" +
+                "\t\txBins = fanBins, coolantTemperature\n" +
+                "\t\tyBins = fanDuty\n" +
+                "\tcurve = fixedCurve, \"Fixed\"\n" +
+                "\t\tcolumnLabel = \"Coolant\", \"Duty\"\n" +
+                "\t\txAxis = 0, 120, 7\n" +
+                "\t\tyAxis = 0, 100, 5\n" +
+                "\t\txBins = fanBins, readOnly\n" +
+                "\t\tyBins = fanDuty\n";
+        IniFileModel model = IniFileReaderTest.readLines(
+            IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes(StandardCharsets.US_ASCII))));
+        CurveModel curve = model.getCurves().get("fanCurve");
+        assertEquals("fanBins", curve.getxBins());
+        assertEquals("coolantTemperature", curve.getXBinsChannel());
+        assertNull(model.getCurves().get("fixedCurve").getXBinsChannel(), "readOnly is not a channel");
     }
 
     @Test

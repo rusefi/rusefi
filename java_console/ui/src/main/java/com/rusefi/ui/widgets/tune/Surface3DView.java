@@ -38,6 +38,11 @@ public class Surface3DView extends JPanel {
     static final int LABEL_HALF_HEIGHT = 8;
     private static final Color SELECTION_COLOR = Color.ORANGE; // [tag:fixed_color] lit facets, like the table selection
     static final Color SELECTED_POINT_COLOR = Color.BLACK; // [tag:fixed_color] ringed in white below
+    /** The live point is the selected point's inverse, so the two never look alike. */
+    static final Color LIVE_POINT_COLOR = Color.WHITE; // [tag:fixed_color] ringed in black below
+    private static final int LIVE_POINT_RADIUS = 5;
+    /** Live operating point trail as {x index, y index, opacity}, oldest first; null for none. */
+    private double[][] liveTrail;
 
     public Surface3DView() {
         setBackground(TuningStyle.color("Console.Tuning.surface.background", Color.WHITE));
@@ -87,6 +92,20 @@ public class Surface3DView extends JPanel {
     public void setSelection(boolean[][] selection) {
         this.selection = selection;
         repaint();
+    }
+
+    /**
+     * The live operating point and its recent trail (issue #10670), oldest first and ending at the
+     * current point, as {x index, y index, opacity} with fractional indexes into the data passed to
+     * {@link #setData}; null for none.
+     */
+    public void setLiveTrail(double[][] trail) {
+        this.liveTrail = trail;
+        repaint();
+    }
+
+    double[][] liveTrailForUnitTest() {
+        return liveTrail;
     }
 
     boolean isSelected(int row, int column) {
@@ -180,6 +199,73 @@ public class Surface3DView extends JPanel {
 
         paintAxes(g2d, scale, centerX, centerY);
         paintSelectedPoints(g2d, points);
+        paintLiveTrail(g2d, scale, centerX, centerY);
+    }
+
+    /**
+     * Draws the trail on the surface, at the height the firmware interpolates between the four
+     * surrounding cells, fading with age, and the current point last and largest.
+     */
+    private void paintLiveTrail(Graphics2D g2d, double scale, int centerX, int centerY) {
+        if (liveTrail == null) {
+            return;
+        }
+        Stroke stroke = g2d.getStroke();
+        Point3D previous = null;
+        for (int i = 0; i < liveTrail.length; i++) {
+            double[] point = liveTrail[i];
+            Point3D projected = liveProjection(point[0], point[1], scale, centerX, centerY);
+            if (projected == null) {
+                previous = null;
+                continue;
+            }
+            int alpha = (int) Math.round(255 * Math.max(0, Math.min(1, point[2])));
+            boolean current = i == liveTrail.length - 1;
+            if (previous != null && alpha > 0) {
+                g2d.setStroke(new BasicStroke(3f));
+                g2d.setColor(new Color(0, 0, 0, alpha)); // [tag:fixed_color] trail edge, like the live point ring
+                g2d.drawLine(previous.x, previous.y, projected.x, projected.y);
+                g2d.setStroke(new BasicStroke(1f));
+                g2d.setColor(new Color(255, 255, 255, alpha)); // [tag:fixed_color] trail core, like the live point
+                g2d.drawLine(previous.x, previous.y, projected.x, projected.y);
+            }
+            int radius = current ? LIVE_POINT_RADIUS : 3;
+            if (current || alpha > 0) {
+                g2d.setStroke(new BasicStroke(current ? 2f : 1f));
+                g2d.setColor(current ? LIVE_POINT_COLOR
+                    : new Color(255, 255, 255, alpha)); // [tag:fixed_color] faded trail dot
+                g2d.fillOval(projected.x - radius, projected.y - radius, 2 * radius, 2 * radius);
+                g2d.setColor(current ? Color.BLACK // [tag:fixed_color] ring of the live point
+                    : new Color(0, 0, 0, alpha)); // [tag:fixed_color] ring of a faded trail dot
+                g2d.drawOval(projected.x - radius, projected.y - radius, 2 * radius, 2 * radius);
+            }
+            previous = projected;
+        }
+        g2d.setStroke(stroke);
+    }
+
+    /** Screen position of fractional data indexes, on the bilinearly interpolated surface; null if unknown. */
+    private Point3D liveProjection(double xIndex, double yIndex, double scale, int centerX, int centerY) {
+        int rows = data.length;
+        int cols = data[0].length;
+        if (!(xIndex >= 0 && xIndex <= cols - 1 && yIndex >= 0 && yIndex <= rows - 1)) {
+            return null;
+        }
+        int c0 = (int) Math.floor(xIndex);
+        int r0 = (int) Math.floor(yIndex);
+        int c1 = Math.min(c0 + 1, cols - 1);
+        int r1 = Math.min(r0 + 1, rows - 1);
+        double fx = xIndex - c0;
+        double fy = yIndex - r0;
+        if (data[r0][c0] == null || data[r0][c1] == null || data[r1][c0] == null || data[r1][c1] == null) {
+            return null;
+        }
+        double value = (1 - fy) * ((1 - fx) * data[r0][c0] + fx * data[r0][c1])
+            + fy * ((1 - fx) * data[r1][c0] + fx * data[r1][c1]);
+        double x = xPositions[c0] + fx * (xPositions[c1] - xPositions[c0]);
+        double y = yPositions[r0] + fy * (yPositions[r1] - yPositions[r0]);
+        double z = maxValue > minValue ? (value - minValue) / (maxValue - minValue) - 0.5 : 0;
+        return project(x, y, z, yaw, pitch, scale, centerX, centerY);
     }
 
     /** Marks each selected cell's own point in the middle of its lit facets. */
