@@ -296,7 +296,7 @@ class BinaryProtocolConnectionStatusTest {
     @Test
     void closeBetweenImageReadAndCompletionRejectsImage() {
         doAnswer(invocation -> {
-            ConfigurationImageWithMeta image = new ConfigurationImageWithMeta(invocation.getArgument(0));
+            ConfigurationImageWithMeta image = new ConfigurationImageWithMeta(invocation.getArgument(0), java.nio.ByteOrder.LITTLE_ENDIAN);
             stream.close();
             return image;
         }).when(protocol).readFullImageFromController(any(ConfigurationImageMeta.class));

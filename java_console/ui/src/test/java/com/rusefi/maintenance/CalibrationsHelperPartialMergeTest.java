@@ -81,8 +81,8 @@ public class CalibrationsHelperPartialMergeTest {
         CalibrationsInfo calibrations = new CalibrationsInfo(
             mock(com.opensr5.ini.IniFileModel.class),
             Map.of(
-                0, new ConfigurationImageWithMeta(null, new byte[8]),
-                0x0400, new ConfigurationImageWithMeta(null, luaPage)
+                0, new ConfigurationImageWithMeta(null, new byte[8], java.nio.ByteOrder.LITTLE_ENDIAN),
+                0x0400, new ConfigurationImageWithMeta(null, luaPage, java.nio.ByteOrder.LITTLE_ENDIAN)
             ),
             Set.of(0x0400)
         );

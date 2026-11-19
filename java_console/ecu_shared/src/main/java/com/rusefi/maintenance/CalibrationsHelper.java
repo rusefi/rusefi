@@ -972,7 +972,7 @@ public class CalibrationsHelper {
                         new ConfigurationImageMetaVersion0_0(secondaryPageSize, signature),
                         content,
                         // [tag:image_byte_order] same order as the main page
-                        iniFile.getByteOrder()
+                        image.getConfigurationImage().getByteOrder()
                     )
                 );
             }

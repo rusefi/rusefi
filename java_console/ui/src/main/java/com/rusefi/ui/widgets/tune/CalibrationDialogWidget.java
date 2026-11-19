@@ -186,6 +186,11 @@ public class CalibrationDialogWidget {
 
     private PageReader pageReader = this::readFromEcuPage;
 
+    /** [tag:image_byte_order] a secondary page read from the controller has the byte order of its main page */
+    private static java.nio.ByteOrder pageByteOrder(ConfigurationImage mainPage, IniFileModel ini) {
+        return mainPage != null ? mainPage.getByteOrder() : ini.getByteOrder();
+    }
+
     void setPageReaderForUnitTest(PageReader pageReader) {
         this.pageReader = pageReader;
     }
@@ -232,7 +237,8 @@ public class CalibrationDialogWidget {
             }
             byte[] page = new byte[field.getOffset() + data.length];
             System.arraycopy(data, 0, page, field.getOffset(), data.length);
-            view.displayTable(iniFileModel, table.getTableId(), new ConfigurationImage(page), axisImage);
+            view.displayTable(iniFileModel, table.getTableId(),
+                new ConfigurationImage(page, pageByteOrder(axisImage, iniFileModel)), axisImage);
             panel.remove(status);
             panel.revalidate();
             panel.repaint();
@@ -278,7 +284,8 @@ public class CalibrationDialogWidget {
             }
             byte[] page = new byte[readEnd];
             System.arraycopy(data, 0, page, readOffset, data.length);
-            CurveWidget widget = new CurveWidget(curve, ini, new ConfigurationImage(page), configImage, true);
+            CurveWidget widget = new CurveWidget(curve, ini,
+                new ConfigurationImage(page, pageByteOrder(configImage, ini)), configImage, true);
             panel.remove(status);
             panel.add(widget.getContentPane(), BorderLayout.CENTER);
             panel.revalidate();

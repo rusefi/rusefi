@@ -44,7 +44,7 @@ class CalibrationsHelperLayoutMigrationTest {
         when(bp.readFullImageFromController(any(ConfigurationImageMeta.class))).thenAnswer(call -> {
             byte[] current = reset.get() ? defaults : stored;
             return current[0] != 0 ? ConfigurationImageWithMeta.VOID
-                : new ConfigurationImageWithMeta(call.getArgument(0), current.clone());
+                : new ConfigurationImageWithMeta(call.getArgument(0), current.clone(), java.nio.ByteOrder.LITTLE_ENDIAN);
         });
         IniFileProvider previousProvider = BinaryProtocol.iniFileProvider;
         try {
@@ -58,7 +58,7 @@ class CalibrationsHelperLayoutMigrationTest {
             assertArrayEquals(defaults, destination.get().getImage().getConfigurationImage().getContent());
             assertEquals(42, stored[0]);
             CalibrationsInfo source = new CalibrationsInfo(before,
-                new ConfigurationImageWithMeta(null, stored.clone()));
+                new ConfigurationImageWithMeta(null, stored.clone(), java.nio.ByteOrder.LITTLE_ENDIAN));
             CalibrationsHelper.MergeResult merged = CalibrationsHelper.mergeCalibrationsWithPartialFailure(
                 before, source.generateMsq(), destination.get(), UpdateOperationCallbacks.DUMMY, Collections.emptySet());
             assertTrue(merged.failedFields.isEmpty(), merged.failedFields.toString());

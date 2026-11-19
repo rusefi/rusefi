@@ -48,6 +48,7 @@ class ConsoleTuneFieldsTest {
         when(ini.getAllIniFields()).thenReturn(fields);
         when(ini.getSecondaryIniFields()).thenReturn(secondary);
         when(ini.getBlockingFactor()).thenReturn(4);
+        when(ini.getByteOrder()).thenReturn(ByteOrder.LITTLE_ENDIAN);
         IniFileMetaInfo meta = mock(IniFileMetaInfo.class);
         when(ini.getMetaInfo()).thenReturn(meta);
         when(meta.getnPages()).thenReturn(2);
@@ -101,6 +102,15 @@ class ConsoleTuneFieldsTest {
         verify(protocol).readFromPage(0x400, 12, 4);
         verify(protocol).readFromPage(0x400, 16, 4);
         verify(protocol, times(5)).readFromPage(anyInt(), anyInt(), anyInt());
+    }
+
+    /** [tag:image_byte_order] page bytes are in the byte order declared by the controller's ini */
+    @Test void bigEndianControllerValues() throws Exception {
+        when(ini.getByteOrder()).thenReturn(ByteOrder.BIG_ENDIAN);
+        scalar("word", 10, FieldType.UINT16);
+        main[10] = 0x01;
+        main[11] = 0x02;
+        assertEquals(258.0, item(read("word"), 0).get("value"));
     }
 
     @Test void unavailableUnsupportedAndOutOfBoundsFieldsNeverReadBytes() throws Exception {

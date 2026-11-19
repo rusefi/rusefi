@@ -23,6 +23,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -606,6 +607,32 @@ public class CalibrationDialogWidgetTest {
         }
     }
 
+    /** [tag:image_byte_order] secondary page bytes are in the byte order declared by the controller's ini */
+    @Test
+    public void tableOnSecondaryPageOfBigEndianController() {
+        IniFileModel iniFileModel = ltftTableIni();
+        when(iniFileModel.getByteOrder()).thenReturn(ByteOrder.BIG_ENDIAN);
+        ConfigurationImage mainPage = new ConfigurationImage(new byte[200], ByteOrder.BIG_ENDIAN);
+        mainPage.getByteBuffer(100, 4).putFloat(650);
+        mainPage.getByteBuffer(104, 4).putFloat(10);
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        widget.setPageReaderForUnitTest((pageIndex, offset, size, onResult) -> {
+            ConfigurationImage trims = new ConfigurationImage(new byte[size], ByteOrder.BIG_ENDIAN);
+            trims.getByteBuffer(0, 4).putFloat(0.125f);
+            onResult.accept(trims.getContent());
+        });
+        try {
+            widget.update("ltftBank1Tbl", iniFileModel, mainPage);
+
+            JTable table = findTable(widget.getContentPane());
+            assertNotNull(table, "LTFT table should be rendered");
+            assertEquals("12.5", table.getValueAt(0, 1));
+        } finally {
+            widget.destroy();
+        }
+    }
+
     @Test
     public void tableOnSecondaryPageWithoutEcuShowsNoValues() {
         CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
@@ -668,6 +695,16 @@ public class CalibrationDialogWidgetTest {
             assertEquals(1, requests.size());
             assertArrayEquals(new int[]{0x0300, 579, 25}, requests.get(0));
             assertArrayEquals(before, widget.getWorkingImage().getContent());
+
+            // [tag:image_byte_order] the same page as sent by a big-endian controller: 0x0064 = 100
+            when(ini.getByteOrder()).thenReturn(ByteOrder.BIG_ENDIAN);
+            widget.setPageReaderForUnitTest((page, offset, size, onResult) -> {
+                byte[] secondary = new byte[size];
+                secondary[2] = 100;
+                onResult.accept(secondary);
+            });
+            widget.update("secondVeBias", ini, new ConfigurationImage(620, ByteOrder.BIG_ENDIAN));
+            assertEquals("10.0", findTable(widget.getContentPane()).getValueAt(0, 0));
         } finally {
             widget.destroy();
         }

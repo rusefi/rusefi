@@ -477,7 +477,7 @@ public class TuningToolbarWidget {
                                         baselineImage
                                     );
                                     ConfigurationImage base = currentImage == null
-                                        ? new ConfigurationImage(targetIni.getMetaInfo().getPageSize(0))
+                                        ? new ConfigurationImage(targetIni.getMetaInfo().getPageSize(0), targetIni.getByteOrder())
                                         : currentImage.clone();
                                     ConfigurationImage newImage = bp == null
                                         ? result.image

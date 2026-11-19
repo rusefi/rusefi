@@ -1404,7 +1404,8 @@ public class TuningTableView {
 
     @Deprecated
     public void displayTable(CalibrationsInfo info, byte[] zBinsBuffer, ConfigurationImage image, String tableName) {
-        displayTable(info.getIniFile(), tableName, new ConfigurationImage(zBinsBuffer), image);
+        displayTable(info.getIniFile(), tableName,
+            new ConfigurationImage(zBinsBuffer, info.getIniFile().getByteOrder()), image);
     }
 
     private void calculateMinMax(Double[][] dataValues) {

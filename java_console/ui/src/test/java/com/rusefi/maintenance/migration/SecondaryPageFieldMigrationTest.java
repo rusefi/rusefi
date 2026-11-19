@@ -83,9 +83,9 @@ public class SecondaryPageFieldMigrationTest {
             updatedIni,
             Map.of(
                 0, new ConfigurationImageWithMeta(
-                    new ConfigurationImageMetaVersion0_0(8000, "updated"), mainContent),
+                    new ConfigurationImageMetaVersion0_0(8000, "updated"), mainContent, java.nio.ByteOrder.LITTLE_ENDIAN),
                 0x0400, new ConfigurationImageWithMeta(
-                    new ConfigurationImageMetaVersion0_0(8000, "updated"), new byte[8000])
+                    new ConfigurationImageMetaVersion0_0(8000, "updated"), new byte[8000], java.nio.ByteOrder.LITTLE_ENDIAN)
             ),
             Collections.emptySet()
         );
