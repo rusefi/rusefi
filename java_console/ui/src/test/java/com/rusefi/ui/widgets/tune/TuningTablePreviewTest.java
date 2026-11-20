@@ -118,12 +118,20 @@ class TuningTablePreviewTest {
             grid.doLayout();
             assertEquals(300, preview.getHeight() - shortHeight,
                 "All additional height should go to the surface");
-            JCheckBox toggle = findToggle(view.getContent());
-            assertNotNull(toggle);
-            toggle.doClick();
+            JToggleButton surface = findSegment(view.getContent(), "3D");
+            JToggleButton tableSegment = findSegment(view.getContent(), "Table");
+            assertNotNull(surface);
+            assertNotNull(tableSegment);
+            assertTrue(tableSegment.isSelected(), "Tables open on the grid");
+            surface.doClick();
+            assertTrue(view.is3DShown());
+            assertFalse(tableSegment.isSelected(), "Only one view is selected");
             assertFalse(preview.isVisible());
-            toggle.doClick();
+            assertFalse(findButton(view.getContent(), "Up").isEnabled(), "Grid editing is off while the grid is hidden");
+            tableSegment.doClick();
+            assertFalse(view.is3DShown());
             assertTrue(preview.isVisible());
+            assertTrue(findButton(view.getContent(), "Up").isEnabled());
             resize(cards, 600, 180);
             assertFalse(preview.isVisible());
             resize(cards, 600, 400);
@@ -191,13 +199,22 @@ class TuningTablePreviewTest {
         container.invalidate();
     }
 
-    private static JCheckBox findToggle(Container container) {
+    private static JToggleButton findSegment(Container container, String text) {
+        AbstractButton button = findButtonOfType(container, text, JToggleButton.class);
+        return (JToggleButton) button;
+    }
+
+    private static AbstractButton findButton(Container container, String text) {
+        return findButtonOfType(container, text, JButton.class);
+    }
+
+    private static AbstractButton findButtonOfType(Container container, String text, Class<? extends AbstractButton> type) {
         for (Component component : container.getComponents()) {
-            if (component instanceof JCheckBox) {
-                return (JCheckBox) component;
+            if (type.isInstance(component) && text.equals(((AbstractButton) component).getText())) {
+                return (AbstractButton) component;
             }
             if (component instanceof Container) {
-                JCheckBox found = findToggle((Container) component);
+                AbstractButton found = findButtonOfType((Container) component, text, type);
                 if (found != null) {
                     return found;
                 }

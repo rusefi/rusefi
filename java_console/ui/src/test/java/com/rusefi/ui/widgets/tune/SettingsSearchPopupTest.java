@@ -221,7 +221,7 @@ class SettingsSearchPopupTest {
             }
             assertTrue(pages.size() > 250, "nearly the whole menu: " + pages.size());
             assertTrue(pages.contains("veTableDialog"));
-            assertFalse(pages.contains("veTableMap"), "a 3D view, not a settings page");
+            assertTrue(pages.contains("veTableMap"), "the VE table's 3D view [tag:table_map3d_pages]");
 
             popup.search.setText("vvt");
             assertEquals("VVT outputs and PID", selected(popup));

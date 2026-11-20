@@ -263,7 +263,7 @@ public class SettingsMenuTree {
                         } else if (currentModel != null) {
                             if (currentModel.getDialogs().containsKey(key)) {
                                 setIcon(dialogIcon);
-                            } else if (currentModel.getTable(key) != null) {
+                            } else if (TablePages.find(currentModel, key) != null) {
                                 setIcon(tableIcon);
                             } else if (currentModel.getCurves().containsKey(key)) {
                                 setIcon(curveIcon);
@@ -490,7 +490,7 @@ public class SettingsMenuTree {
             }
             return;
         }
-        com.opensr5.ini.TableModel table = ini.getTable(key);
+        com.opensr5.ini.TableModel table = TablePages.find(ini, key);
         if (table != null) {
             for (String constant : Arrays.asList(table.getZBinsConstant(), table.getXBinsConstant(), table.getYBinsConstant())) {
                 if (constant != null) {

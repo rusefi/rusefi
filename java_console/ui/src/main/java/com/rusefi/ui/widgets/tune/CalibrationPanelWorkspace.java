@@ -4,6 +4,7 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.PanelModel;
+import com.opensr5.ini.TableModel;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.UIContext;
 
@@ -394,7 +395,8 @@ public final class CalibrationPanelWorkspace {
             }
             return "Settings";
         }
-        return ini.getTable(key) != null ? ini.getTable(key).getTitle() : ini.getCurves().get(key).getTitle();
+        TableModel table = TablePages.find(ini, key);
+        return table != null ? table.getTitle() : ini.getCurves().get(key).getTitle();
     }
 
     private static String placementLabel(String placement) {
