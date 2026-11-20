@@ -37,6 +37,7 @@ public final class CalibrationPanelWorkspace {
     private final WindowFactory windowFactory;
     private final Supplier<List<Rectangle>> screens;
     private Consumer<ConfigurationImage> onConfigChange = image -> { };
+    private Supplier<ConfigurationImage> burnedImage = () -> null;
     private PinoutLink onShowInPinout = value -> { };
     /** Passes show and preview on to whichever link is set when the button is used. */
     private final PinoutLink pinoutLink = PinoutLink.forwarding(() -> onShowInPinout);
@@ -112,6 +113,27 @@ public final class CalibrationPanelWorkspace {
 
     public void setOnConfigChange(Consumer<ConfigurationImage> listener) {
         onConfigChange = listener;
+    }
+
+    /** [tag:unburned_marks] The last burned tune, for the main page and every detached panel. */
+    public void setBurnedImage(Supplier<ConfigurationImage> burned) {
+        burnedImage = burned;
+        primary.setBurnedImage(burned);
+        for (DetachedPanel panel : panels.values()) {
+            if (panel.widget != null) {
+                panel.widget.setBurnedImage(burned);
+            }
+        }
+    }
+
+    /** Re-marks the main page and every detached panel, e.g. after a burn. */
+    public void refreshUnburnedMarks() {
+        primary.refreshUnburnedMarks();
+        for (DetachedPanel panel : panels.values()) {
+            if (panel.widget != null) {
+                panel.widget.refreshUnburnedMarks();
+            }
+        }
     }
 
     public void setOnShowInPinout(PinoutLink listener) {
@@ -330,6 +352,7 @@ public final class CalibrationPanelWorkspace {
         CalibrationDialogWidget widget = panel.widget;
         panel.widget.setOnTableOrientationChange(() -> orientationChanged(widget));
         panel.widget.setOnShowInPinout(pinoutLink);
+        panel.widget.setBurnedImage(burnedImage);
         refresh(panel.widget, panel.scroll, panel.key);
         panel.window = windowFactory.create(owner, title(panel.key), panel.scroll,
             () -> closePanel(panel.key), () -> splitPanel(panel.key), !panel.key.splitParts(ini).isEmpty(), bounds -> {

@@ -134,6 +134,8 @@ public class CalibrationFieldFactory {
         row.add(Box.createHorizontalStrut(16));
 
         Supplier<String> value;
+        // [tag:unburned_marks] shows a stored value (as getStringValue gives it) in the editor
+        Consumer<String> showStoredValue;
         if (iniField instanceof EnumIniField) {
             EnumIniField enumField = (EnumIniField) iniField;
             String currentValue = ci == null ? "" : ConfigurationImageGetterSetter.getStringValue(iniField, ci);
@@ -142,11 +144,13 @@ public class CalibrationFieldFactory {
                 JCheckBox checkBox = createCheckBox(enumField, iniField, currentValue, workingImage, onChange);
                 row.add(checkBox);
                 value = () -> checkBox.isSelected() ? "enabled" : "disabled";
+                showStoredValue = stored -> checkBox.setSelected(isCheckboxOn(stored));
             } else {
                 JComboBox<Object> comboBox = createComboBox(
                     enumField, iniField, currentValue, workingImage, onChange, fieldEditorWidth, !hasHelp);
                 row.add(comboBox);
                 value = () -> String.valueOf(comboBox.getSelectedItem());
+                showStoredValue = stored -> comboBox.setSelectedItem(stored.replace("\"", ""));
                 JButton pinoutButton = createPinoutButton(comboBox, field.getKey(), enumField, onShowInPinout);
                 if (pinoutButton != null) {
                     row.add(Box.createHorizontalStrut(4));
@@ -159,13 +163,18 @@ public class CalibrationFieldFactory {
                 iniField, currentValue, workingImage, onChange, fieldEditorWidth);
             row.add(textField);
             value = textField::getText;
+            showStoredValue = textField::setText;
         }
+        JPanel unburnedSlot = UnburnedRowMark.createSlot();
+        row.add(unburnedSlot);
         installCopyListener(label, labelText, value, !hasHelp);
         fixRowHeight(row);
         String description = SettingHelpCard.isShowDescriptions() ? SettingHelpCard.descriptionWithHint(helpText) : null;
         if (description != null) {
             row = withDescription(row, description);
         }
+        row.putClientProperty(UnburnedRowMark.SLOT, unburnedSlot);
+        row.putClientProperty(UnburnedRowMark.EDITOR, showStoredValue);
         SettingHelpCard.attach(row, labelText, iniField.getUnits(), helpText);
         return row;
     }
@@ -365,7 +374,7 @@ public class CalibrationFieldFactory {
     private static JCheckBox createCheckBox(EnumIniField enumField, IniField iniField, String currentValue, ConfigurationImage workingImage, Runnable onChange) {
         JCheckBox checkBox = new JCheckBox();
         applyStyle(checkBox);
-        checkBox.setSelected(currentValue.equalsIgnoreCase("\"Enabled\"") || currentValue.equalsIgnoreCase("\"Yes\""));
+        checkBox.setSelected(isCheckboxOn(currentValue));
         checkBox.addItemListener(e -> {
             if (workingImage == null) return;
             List<String> values = new ArrayList<>(enumField.getEnums().values());
@@ -378,6 +387,11 @@ public class CalibrationFieldFactory {
             if (onChange != null) onChange.run();
         });
         return checkBox;
+    }
+
+    /** @param storedValue a check-box setting's value as {@code getStringValue} gives it, quoted */
+    static boolean isCheckboxOn(String storedValue) {
+        return storedValue.equalsIgnoreCase("\"Enabled\"") || storedValue.equalsIgnoreCase("\"Yes\"");
     }
 
     private static JComboBox<Object> createComboBox(EnumIniField enumField, IniField iniField, String currentValue,

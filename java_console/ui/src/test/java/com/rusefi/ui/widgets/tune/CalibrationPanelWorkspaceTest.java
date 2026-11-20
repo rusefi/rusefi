@@ -85,6 +85,45 @@ class CalibrationPanelWorkspaceTest {
         });
     }
 
+    /** [tag:unburned_marks] #10671: a detached panel marks an edit made elsewhere and clears after a burn. */
+    @Test
+    void detachedPanelsShowAndClearUnburnedMarks() throws Throwable {
+        IniFileModel ini = ini();
+        SwingUtilities.invokeAndWait(() -> {
+            try (Fixture fixture = new Fixture(ini, new Node())) {
+                ConfigurationImage[] burned = {fixture.primary.getWorkingImage().clone()};
+                fixture.workspace.setBurnedImage(() -> burned[0]);
+                fixture.select("first");
+                fixture.workspace.detachCurrentPanel();
+                FakeWindow first = fixture.windows.get(0);
+                assertFalse(hasVisibleUnburnedMark(first.content));
+
+                fixture.select("second");
+                find(fixture.primary.getContentPane(), JTextField.class).setText("44");
+                assertEquals("44", find(first.content, JTextField.class).getText());
+                assertTrue(hasVisibleUnburnedMark(first.content), "the detached copy of the setting is marked");
+                assertTrue(hasVisibleUnburnedMark(fixture.primary.getContentPane()));
+
+                burned[0] = fixture.primary.getWorkingImage().clone(); // as after a burn
+                fixture.workspace.refreshUnburnedMarks();
+                assertFalse(hasVisibleUnburnedMark(first.content));
+                assertFalse(hasVisibleUnburnedMark(fixture.primary.getContentPane()));
+            }
+        });
+    }
+
+    private static boolean hasVisibleUnburnedMark(Container parent) {
+        for (Component child : parent.getComponents()) {
+            if ("unburnedSlot".equals(child.getName()) && child.isVisible()) {
+                return true;
+            }
+            if (child instanceof Container && hasVisibleUnburnedMark((Container) child)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Test
     void splitPreservesParentControlsReusesOpenChildrenAndRestoresGeneralWindow() throws Throwable {
         IniFileModel ini = ini();

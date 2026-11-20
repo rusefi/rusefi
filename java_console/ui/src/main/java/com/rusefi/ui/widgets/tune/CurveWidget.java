@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.EventObject;
+import java.util.function.Supplier;
 
 /**
  * curve panel consists of two parts
@@ -75,6 +76,10 @@ public class CurveWidget {
     private boolean xBinsFixed;
     private ArrayIniField yBinsField;
     private Runnable onEdit;
+    /** [tag:unburned_marks] The last burned tune; null marks nothing. */
+    private Supplier<ConfigurationImage> burnedImage = () -> null;
+    private Supplier<UnburnedWording> unburnedWording = () -> UnburnedWording.BURNED;
+    private final JLabel unburnedCountLabel = UnburnedCellMark.createCountLabel();
 
     public CurveWidget(CurveModel curveModel, IniFileModel iniFileModel, ConfigurationImage ci) {
         this(curveModel, iniFileModel, ci, ci, false);
@@ -118,6 +123,8 @@ public class CurveWidget {
         // The table header is reparented into the JScrollPane's column header by configureEnclosingScrollPane(),
         // so it does not need (and must not get) a separate NORTH slot here.
         rightPanel.add(new JScrollPane(table), BorderLayout.CENTER);
+        unburnedCountLabel.setBorder(BorderFactory.createEmptyBorder(4, 0, 0, 0));
+        rightPanel.add(unburnedCountLabel, BorderLayout.SOUTH);
 
         content.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -170,8 +177,49 @@ public class CurveWidget {
         canvas.setCurve(curveModel, xValues, yValues);
         table.setModel(new CurveTableModel());
         live.setChannels(curveModel.getXBinsChannel());
+        refreshUnburnedMarks();
         content.revalidate();
         content.repaint();
+    }
+
+    /** [tag:unburned_marks] Supplies the last burned tune, so changed points are marked in the table. */
+    public void setBurnedImage(Supplier<ConfigurationImage> burnedImage) {
+        this.burnedImage = burnedImage == null ? () -> null : burnedImage;
+        refreshUnburnedMarks();
+    }
+
+    /** Names the reference tune in the cell tooltips: burned, or loaded while offline. */
+    public void setUnburnedWording(Supplier<UnburnedWording> wording) {
+        unburnedWording = wording == null ? () -> UnburnedWording.BURNED : wording;
+    }
+
+    /** Re-marks the table and recounts, after an edit or when the burned tune changes. */
+    public void refreshUnburnedMarks() {
+        UnburnedChanges changes = UnburnedChanges.of(imageTarget, burnedImage.get());
+        UnburnedCellMark.updateCountLabel(unburnedCountLabel,
+            changes.countChangedCells(xBinsField) + changes.countChangedCells(yBinsField));
+        table.repaint();
+    }
+
+    JLabel getUnburnedCountLabelForTests() {
+        return unburnedCountLabel;
+    }
+
+    /** The burned value shown in table cell ({@code row}, {@code column}) when it differs, else null. */
+    String burnedCellText(int row, int column) {
+        ConfigurationImage burned = burnedImage.get();
+        ArrayIniField field = column == 0 ? xBinsField : yBinsField;
+        if (burned == null || field == null || field.getCols() <= 0) {
+            return null;
+        }
+        // curve points are the field's cells in row-major order, as readArray reads them
+        int storedRow = row / field.getCols();
+        int storedColumn = row % field.getCols();
+        if (!UnburnedChanges.of(imageTarget, burned).isCellChanged(field, storedRow, storedColumn)) {
+            return null;
+        }
+        return StringFormatter.niceToString(UnburnedCellMark.burnedValue(field, storedRow, storedColumn, burned),
+            column == 0 ? xDigits : yDigits);
     }
 
     LiveChannelFeed liveFeedForUnitTest() {
@@ -649,6 +697,13 @@ public class CurveWidget {
     private class GradientRenderer extends DefaultTableCellRenderer {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            Component c = renderCell(table, value, isSelected, hasFocus, row, column);
+            // [tag:unburned_marks] after the live-row outline, which replaces the border
+            UnburnedCellMark.apply(c, String.valueOf(value), burnedCellText(row, column), unburnedWording.get());
+            return c;
+        }
+
+        private Component renderCell(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             if (row == liveRow()) {
                 // The row sits on the theme-independent value gradient, so the outline is fixed too.

@@ -50,6 +50,7 @@ import java.util.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -93,6 +94,11 @@ public class CalibrationDialogWidget {
     /** Client property holding a setting row's field key, for {@link #highlightField}. */
     private static final String FIELD_KEY = "rusefi.fieldKey";
     private final FieldHighlight fieldHighlight = new FieldHighlight();
+    /** [tag:unburned_marks] The last burned tune; null (no marks) unless the Tuning tab supplies it. */
+    private Supplier<ConfigurationImage> burnedImage = () -> null;
+    private final List<UnburnedRowMark> unburnedMarks = new ArrayList<>();
+    /** Tables and curves on the page shown, re-marked with the rows. */
+    private final List<Runnable> unburnedViewRefreshers = new ArrayList<>();
 
     /** Also reports replacements from navigation, undo, discard, and loading another tune. */
     public void setOnViewChanged(Runnable listener) {
@@ -117,6 +123,47 @@ public class CalibrationDialogWidget {
 
     public void setOnShowInPinout(PinoutLink onShowInPinout) {
         this.onShowInPinout = onShowInPinout;
+    }
+
+    /**
+     * [tag:unburned_marks] Supplies the last burned tune, so settings that differ from it are marked.
+     * Call {@link #refreshUnburnedMarks()} when it changes (burn, load).
+     */
+    public void setBurnedImage(Supplier<ConfigurationImage> burnedImage) {
+        this.burnedImage = burnedImage == null ? () -> null : burnedImage;
+        refreshUnburnedMarks();
+    }
+
+    /** Re-evaluates the unburned marks of the page shown against the working image and the burned tune. */
+    public void refreshUnburnedMarks() {
+        ConfigurationImage burned = burnedImage.get();
+        UnburnedChanges changes = UnburnedChanges.of(workingImage, burned);
+        UnburnedWording wording = unburnedWording();
+        for (UnburnedRowMark mark : unburnedMarks) {
+            mark.refresh(changes, burned, wording);
+        }
+        for (Runnable view : unburnedViewRefreshers) {
+            view.run();
+        }
+    }
+
+    /** Offline the reference tune is the one loaded from a file, see {@link UnburnedWording}. */
+    private UnburnedWording unburnedWording() {
+        return UnburnedWording.of(uiContext != null && uiContext.isOfflineMode());
+    }
+
+    /** The setting rows of the page shown that are marked as not burned, by field key. */
+    public List<String> getUnburnedFieldKeysForTests() {
+        List<String> keys = new ArrayList<>();
+        for (Component component : UiUtils.getAllComponents(contentPane)) {
+            if (component instanceof JComponent && ((JComponent) component).getClientProperty(FIELD_KEY) != null) {
+                Object slot = ((JComponent) component).getClientProperty(UnburnedRowMark.SLOT);
+                if (slot instanceof JComponent && ((JComponent) slot).isVisible()) {
+                    keys.add((String) ((JComponent) component).getClientProperty(FIELD_KEY));
+                }
+            }
+        }
+        return keys;
     }
 
     public void setFieldRowVerticalMargin(int margin) {
@@ -217,7 +264,14 @@ public class CalibrationDialogWidget {
         if (!valuesField.isPresent() || valuesField.get().getPageIndex() == 0) {
             TuningTableView view = new TuningTableView(table.getTitle(), false, tableOrientationConfig);
             view.displayTable(iniFileModel, table.getTableId(), workingImage);
-            view.setOnEdit(notifyEdit);
+            // [tag:unburned_marks]
+            view.setUnburnedWording(this::unburnedWording);
+            view.setBurnedImage(() -> burnedImage.get());
+            unburnedViewRefreshers.add(view::refreshUnburnedMarks);
+            view.setOnEdit(() -> {
+                notifyEdit.run();
+                refreshUnburnedMarks();
+            });
             view.setOnOrientationChange(onTableOrientationChange);
             return view.getContent();
         }
@@ -252,7 +306,14 @@ public class CalibrationDialogWidget {
         IniField yField = ini.findIniField(curve.getyBins()).orElse(null);
         if (xField == null || yField == null || xField.getPageIndex() == 0 && yField.getPageIndex() == 0) {
             CurveWidget widget = new CurveWidget(curve, ini, workingImage);
-            widget.setOnEdit(notifyEdit);
+            // [tag:unburned_marks]
+            widget.setUnburnedWording(this::unburnedWording);
+            widget.setBurnedImage(() -> burnedImage.get());
+            unburnedViewRefreshers.add(widget::refreshUnburnedMarks);
+            widget.setOnEdit(() -> {
+                notifyEdit.run();
+                refreshUnburnedMarks();
+            });
             return widget.getContentPane();
         }
         if (xField.getPageIndex() != yField.getPageIndex()) {
@@ -363,6 +424,8 @@ public class CalibrationDialogWidget {
         workingImage = null;
         currentKey = null;
         currentIniFileModel = null;
+        unburnedMarks.clear();
+        unburnedViewRefreshers.clear();
         CalibrationFieldFactory.closeHelpPopup();
         clearLiveComponents();
         contentPane.removeAll();
@@ -383,6 +446,8 @@ public class CalibrationDialogWidget {
         currentIniFileModel = iniFileModel;
         clearLiveComponents();
         expressionRows.clear();
+        unburnedMarks.clear();
+        unburnedViewRefreshers.clear();
         triggerImageUpdaters.clear();
         contentPane.removeAll();
         if (dialogModel != null) {
@@ -403,6 +468,7 @@ public class CalibrationDialogWidget {
                 addTriggerImage(body, dialogModel.getKey(), uiName);
             }
         }
+        refreshUnburnedMarks();
         updateLiveDemand();
         contentPane.revalidate();
         contentPane.repaint();
@@ -436,6 +502,8 @@ public class CalibrationDialogWidget {
         currentViewRestorer = () -> update(capturedKey, capturedIniForRestore, workingImage);
         clearLiveComponents();
         expressionRows.clear();
+        unburnedMarks.clear();
+        unburnedViewRefreshers.clear();
         triggerImageUpdaters.clear();
         contentPane.removeAll();
         workingImage = ci != null ? ci.clone() : null;
@@ -595,6 +663,7 @@ public class CalibrationDialogWidget {
     private void renderField(JPanel container, DialogModel.Field field, IniFileModel iniFileModel,
                               ConfigurationImage ci, int fieldLabelWidth, int fieldEditorWidth) {
         Runnable onChange = () -> {
+            refreshUnburnedMarks();
             refreshExpressions();
             if ("trigger_type".equalsIgnoreCase(field.getKey()) ||
                 "vvtMode1".equalsIgnoreCase(field.getKey()) ||
@@ -621,6 +690,13 @@ public class CalibrationDialogWidget {
             CalibrationFieldFactory.fixRowHeight(row);
         }
 
+        if (iniField.isPresent()) {
+            UnburnedRowMark mark = UnburnedRowMark.install(row, iniField.get(),
+                () -> workingImage, () -> burnedImage.get(), onChange);
+            if (mark != null) {
+                unburnedMarks.add(mark);
+            }
+        }
         registerFieldExpressions(row, field, iniFileModel, ci);
         row.putClientProperty(FIELD_KEY, field.getKey());
         container.add(row);
