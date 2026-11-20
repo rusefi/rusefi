@@ -40,6 +40,9 @@ import javax.swing.Action;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -86,7 +89,11 @@ public class MainFrame {
         private static final int CARD_MARGIN = 56;
         private static final int CARD_PADDING = 32;
         private static final int CARD_MESSAGE_GAP = 24;
-        private final JTextArea message = new JTextArea();
+        /**
+         * Centred, wrapping message: the action buttons below are centred, so a left-aligned
+         * message would start at the window edge while the buttons sit in the middle.
+         */
+        private final JTextPane message = new JTextPane();
         private final JButton[] buttons;
         private final JPanel actionPanel;
         private final JPanel content;
@@ -101,9 +108,6 @@ public class MainFrame {
             message.setEditable(false);
             message.setOpaque(false);
             message.setFont(message.getFont().deriveFont(Font.BOLD, 32f));
-            message.setLineWrap(true);
-            message.setWrapStyleWord(true);
-            message.setColumns(50);
             setMessage(text, color);
 
             buttons = new JButton[actions.length];
@@ -162,7 +166,8 @@ public class MainFrame {
                 int cardWidth = Math.min(CARD_MAX_WIDTH, Math.max(0, getWidth() - 2 * margin));
                 // Reserve scrollbar width when measuring wrapped text, even if no scrollbar is needed.
                 int textWidth = Math.max(1, cardWidth - 2 * CARD_PADDING - 18);
-                message.setSize(textWidth, 0);
+                // A text component measures its wrapped height only when given a non-zero height.
+                message.setSize(textWidth, Short.MAX_VALUE);
                 int messageHeight = message.getPreferredSize().height;
                 int naturalHeight = 2 * CARD_PADDING + CARD_MESSAGE_GAP
                     + actionPanel.getPreferredSize().height + messageHeight;
@@ -212,6 +217,10 @@ public class MainFrame {
 
         void setMessage(String text, Color color) {
             message.setText(text);
+            StyledDocument document = message.getStyledDocument();
+            SimpleAttributeSet centered = new SimpleAttributeSet();
+            StyleConstants.setAlignment(centered, StyleConstants.ALIGN_CENTER);
+            document.setParagraphAttributes(0, document.getLength(), centered, false);
             message.setForeground(color);
             message.getAccessibleContext().setAccessibleName(text);
         }
