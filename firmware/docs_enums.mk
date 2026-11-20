@@ -134,7 +134,21 @@ endif
 # other concurrent makes (firmware/simulator/unit_tests) on the shared $(FLOCK) lock.
 # [tag:live_data_board_prepend] TGT_SENTINEL (firmware builds only) changes when the board changes,
 # so live data is regenerated with the new board's prepend even if no input file was edited.
-.docsenums-sentinel: $(DOCS_ENUMS_INPUTS) $(CONFIG_DEFINITION_BASE_JAR) $(ENUM_TO_STRING_JAR) $(TGT_SENTINEL)
+#
+# The sentinel runs on every build via the .docsenums-force
+# phony prereq. A git checkout/reset can stamp tracked generated outputs with a
+# fresh mtime without updating this sentinel, which would otherwise fool make
+# into skipping regeneration and building against stale outputs. Every Java
+# generator writes through LazyFile, which does not touch a file whose content
+# is unchanged — so when inputs haven't really changed, the per-file mtimes
+# stay stable even though the generator ran. The $(OBJS) prerequisite below is
+# order-only (|) so a sentinel mtime bump from a no-op regeneration does not
+# force a full recompile; .o files rebuild only when a specific generated .h
+# they include was actually rewritten by LazyFile.
+.PHONY: .docsenums-force
+.docsenums-force:
+
+.docsenums-sentinel: .docsenums-force $(DOCS_ENUMS_INPUTS) $(CONFIG_DEFINITION_BASE_JAR) $(ENUM_TO_STRING_JAR) $(TGT_SENTINEL)
 	bash $(PROJECT_DIR)/bin/detect_github.sh
 	$(FLOCK) bash $(PROJECT_DIR)/gen_live_documentation.sh
 	@touch $@
@@ -143,10 +157,9 @@ endif
 
 docs-enums: .docsenums-sentinel
 
-$(DOCS_ENUMS): .docsenums-sentinel
+$(DOCS_ENUMS): | .docsenums-sentinel
 
-# This is necessary because the ChibiOS makefile builds a .o file and generates
-#  the deps for that .o file in the same GCC call, so if the .deps aren't already
-#  in the correct state, things can fail to build because Make doesn't know it needs
-#  to build the prerequisites (in this case the generated live docs and enums) for those files ahead of time.
-$(OBJS): .docsenums-sentinel
+# Order-only so the generator runs before any .o compile (first build's .dep
+# files don't yet know about generated .h paths), but a sentinel mtime bump
+# from a no-op regeneration does not cascade a full recompile.
+$(OBJS): | .docsenums-sentinel
