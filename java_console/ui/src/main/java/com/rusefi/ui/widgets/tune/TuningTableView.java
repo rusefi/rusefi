@@ -10,6 +10,7 @@ import com.opensr5.ini.field.PcVariableArrayIniField;
 import com.rusefi.config.StringFormatter;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.maintenance.CalibrationsInfo;
+import com.rusefi.ui.widgets.SegmentedControl;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -107,6 +108,10 @@ public class TuningTableView {
     private Supplier<ConfigurationImage> burnedImage = () -> null;
     private Supplier<UnburnedWording> unburnedWording = () -> UnburnedWording.BURNED;
     private final JLabel unburnedCountLabel = UnburnedCellMark.createCountLabel();
+    private final JToggleButton tableSegment = SegmentedControl.segment("Table");
+    private final JToggleButton surfaceSegment = SegmentedControl.segment("3D");
+    /** Grid editing buttons; disabled while the 3D view replaces the grid. */
+    private final JPanel editControls = new JPanel(new FlowLayout(FlowLayout.LEFT, TOOLBAR_GAP, 0));
 
     public TuningTableView(String title) {
         this(title, false);
@@ -195,19 +200,24 @@ public class TuningTableView {
         });
 
         mini3DView.setPreferredSize(new Dimension(320, 160));
-        mini3DView.setToolTipText("3D preview - drag to rotate; select 3D view for a larger view");
+        mini3DView.setToolTipText("3D preview - drag to rotate; click 3D above for a larger view");
         mini3DView.setVisible(false);
         gridPanel.add(tableScrollPane, BorderLayout.CENTER);
         gridPanel.add(mini3DView, BorderLayout.SOUTH);
         tableContainer.add(gridPanel, "table");
         tableContainer.add(surface3DView, "3d");
 
-        JCheckBox view3d = new JCheckBox("3D view");
-        view3d.addActionListener(e -> {
-            full3D = view3d.isSelected();
-            cardLayout.show(tableContainer, view3d.isSelected() ? "3d" : "table");
-            updatePreviewVisibility();
-        });
+        // The 3D view replaces the grid, so the switch shows both choices rather than a checkbox
+        tableSegment.setToolTipText("Edit the values in a grid");
+        surfaceSegment.setToolTipText("Show the table as a 3D surface - drag to rotate");
+        ButtonGroup viewGroup = new ButtonGroup();
+        viewGroup.add(tableSegment);
+        viewGroup.add(surfaceSegment);
+        tableSegment.setSelected(true);
+        tableSegment.addActionListener(e -> show3D(false));
+        surfaceSegment.addActionListener(e -> show3D(true));
+        SegmentedControl viewSwitch = new SegmentedControl(tableSegment, surfaceSegment);
+        viewSwitch.setMaximumSize(viewSwitch.getPreferredSize());
 
         JTextField deltaField = new JTextField("0.5", 5);
         deltaField.setToolTipText("Amount added or subtracted by the Up and Down buttons");
@@ -255,7 +265,6 @@ public class TuningTableView {
         interpolateButton.setToolTipText("Interpolate selected cells - Key: /");
         smoothButton.setToolTipText("Smooth selected cells - Key: S");
 
-        JPanel editControls = new JPanel(new FlowLayout(FlowLayout.LEFT, TOOLBAR_GAP, 0));
         editControls.add(new JLabel("delta:"));
         editControls.add(deltaField);
         editControls.add(upButton);
@@ -272,7 +281,7 @@ public class TuningTableView {
         topPanel.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
         topPanel.add(new JLabel(title));
         topPanel.add(Box.createHorizontalStrut(10));
-        topPanel.add(view3d);
+        topPanel.add(viewSwitch);
         topPanel.add(Box.createHorizontalStrut(10));
         topPanel.add(unburnedCountLabel);
 
@@ -1022,11 +1031,29 @@ public class TuningTableView {
         component.getActionMap().put(name, action);
     }
 
+    /**
+     * Shows the large 3D surface in place of the grid, or the grid again. The grid's editing
+     * buttons and shortcuts are off while the grid is hidden.
+     */
+    public void show3D(boolean show) {
+        full3D = show;
+        (show ? surfaceSegment : tableSegment).setSelected(true);
+        cardLayout.show(tableContainer, show ? "3d" : "table");
+        for (Component control : editControls.getComponents()) {
+            control.setEnabled(!show);
+        }
+        updatePreviewVisibility();
+    }
+
+    boolean is3DShown() {
+        return full3D;
+    }
+
     private Action tableShortcut(Action action) {
         return new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!table.isEditing() && xAxisEditingColumn < 0) {
+                if (!full3D && !table.isEditing() && xAxisEditingColumn < 0) {
                     selectionInput = "";
                     action.actionPerformed(e);
                 }

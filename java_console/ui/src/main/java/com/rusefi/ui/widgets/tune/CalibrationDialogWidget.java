@@ -259,7 +259,7 @@ public class CalibrationDialogWidget {
      * TS page (LTFT trims on 0x0200) are read from the ECU and shown read-only: drawing them from
      * the working image would show, and on edit overwrite, main-page settings at the same offsets.
      */
-    private JComponent createTableView(IniFileModel iniFileModel, TableModel table, Runnable notifyEdit) {
+    private JComponent createTableView(IniFileModel iniFileModel, TableModel table, Runnable notifyEdit, boolean show3D) {
         Optional<IniField> valuesField = iniFileModel.findIniField(table.getZBinsConstant());
         if (!valuesField.isPresent() || valuesField.get().getPageIndex() == 0) {
             TuningTableView view = new TuningTableView(table.getTitle(), false, tableOrientationConfig);
@@ -273,12 +273,14 @@ public class CalibrationDialogWidget {
                 refreshUnburnedMarks();
             });
             view.setOnOrientationChange(onTableOrientationChange);
+            view.show3D(show3D);
             return view.getContent();
         }
 
         IniField field = valuesField.get();
         TuningTableView view = new TuningTableView(table.getTitle(), true, tableOrientationConfig);
         view.setOnOrientationChange(onTableOrientationChange);
+        view.show3D(show3D);
         JLabel status = new JLabel("Reading from ECU...");
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(status, BorderLayout.NORTH);
@@ -515,7 +517,8 @@ public class CalibrationDialogWidget {
             }
             Runnable notifyEdit = () -> { if (onConfigChange != null) onConfigChange.accept(workingImage); };
 
-            TableModel table = iniFileModel.getTable(key);
+            // [tag:table_map3d_pages] a 3D map id opens its table with the 3D view showing
+            TableModel table = TablePages.find(iniFileModel, key);
             if (table != null) {
                 viewportPane.fillWidth = true;
                 JPanel body = prepareTopicHelp(contentPane, table.getTopicHelp(), iniFileModel);
@@ -529,7 +532,7 @@ public class CalibrationDialogWidget {
                     veToolbar.add(genVeBtn);
                     body.add(veToolbar);
                 }
-                body.add(createTableView(iniFileModel, table, notifyEdit));
+                body.add(createTableView(iniFileModel, table, notifyEdit, TablePages.isMap3d(iniFileModel, key)));
             } else {
                 CurveModel curve = iniFileModel.getCurves().get(key);
                 if (curve != null) {
@@ -903,10 +906,11 @@ public class CalibrationDialogWidget {
             return;
         }
 
-        TableModel table = iniFileModel.getTable(panel.getPanelName());
+        TableModel table = TablePages.find(iniFileModel, panel.getPanelName());
         if (table != null) {
             viewportPane.fillWidth = true;
-            JComponent content = createTableView(iniFileModel, table, notifyEdit);
+            JComponent content = createTableView(iniFileModel, table, notifyEdit,
+                TablePages.isMap3d(iniFileModel, panel.getPanelName()));
             if ("veTableTbl".equals(table.getTableId())) {
                 final IniFileModel capturedIni = iniFileModel;
                 JButton genVeBtn = new JButton("Generate base VE...");

@@ -575,6 +575,56 @@ public class CalibrationDialogWidgetTest {
         assertTrue(foundLabel, "Should find table title label when updating by key");
     }
 
+    /** [tag:table_map3d_pages] "VE 3D view" is subMenu = veTableMap: the table's 3D map id. */
+    @Test
+    public void map3dIdOpensTheTableOnItsThreeDView() {
+        IniFileModel iniFileModel = mock(IniFileModel.class);
+        when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
+        TableModel tableModel = new TableModel("table1", "map1", "Table Title",
+                null, "X", "Y", "xBins", null, false, "yBins", null, false, "zBins",
+                null, null, null, null);
+        when(iniFileModel.getTables()).thenReturn(Collections.singletonMap("table1", tableModel));
+        when(iniFileModel.getTable("table1")).thenReturn(tableModel);
+        when(iniFileModel.findIniField("xBins")).thenReturn(java.util.Optional.of(
+            new ArrayIniField("xBins", 0, FieldType.FLOAT, 1, 1, "unit", 1, "0", "100", "1")));
+        when(iniFileModel.findIniField("yBins")).thenReturn(java.util.Optional.of(
+            new ArrayIniField("yBins", 4, FieldType.FLOAT, 1, 1, "unit", 1, "0", "100", "1")));
+        when(iniFileModel.findIniField("zBins")).thenReturn(java.util.Optional.of(
+            new ArrayIniField("zBins", 8, FieldType.FLOAT, 1, 1, "unit", 1, "0", "100", "1")));
+        List<PanelModel> panels = new ArrayList<>();
+        panels.add(new PanelModel("map1", "South", null, null));
+        DialogModel dialog3d = new DialogModel("dialog3d", "Table 3D", new ArrayList<DialogModel.Field>(),
+            new ArrayList<DialogModel.Command>(), panels, (String) null, (String) null);
+        when(iniFileModel.getDialogs()).thenReturn(Collections.singletonMap("dialog3d", dialog3d));
+        ConfigurationImage ci = ConfigurationImageTestHelper.newLittleEndian(new byte[1000]);
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        widget.update("map1", iniFileModel, ci);
+        assertTrue(segment(widget.getContentPane(), "3D").isSelected(), "the menu's 3D view opens on 3D");
+        assertTrue(new CalibrationPanelKey("map1").isSupported(iniFileModel));
+
+        widget.update("table1", iniFileModel, ci);
+        assertTrue(segment(widget.getContentPane(), "Table").isSelected(), "the table itself opens on the grid");
+
+        widget.update(dialog3d, iniFileModel, ci);
+        assertTrue(segment(widget.getContentPane(), "3D").isSelected(), "panel = map1 shows the 3D view");
+    }
+
+    private static JToggleButton segment(Container container, String text) {
+        for (Component component : container.getComponents()) {
+            if (component instanceof JToggleButton && text.equals(((JToggleButton) component).getText())) {
+                return (JToggleButton) component;
+            }
+            if (component instanceof Container) {
+                JToggleButton found = segment((Container) component, text);
+                if (found != null) {
+                    return found;
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * LTFT trims live on TS page 0x0200, outside the main settings image: the table must show
      * the values read from that page, read-only, not main-page bytes at the trim offsets.
