@@ -212,6 +212,33 @@ class TuningTablePreviewTest {
         });
     }
 
+    @Test
+    void narrowDialogWrapsTheToolbarInsteadOfCuttingOffButtons() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            TuningTableView view = new TuningTableView("VE Table");
+            loadTable(view, true);
+            ScrollablePanel dialog = new ScrollablePanel();
+            dialog.setLayout(new BoxLayout(dialog, BoxLayout.Y_AXIS));
+            dialog.add(view.getContent());
+            JScrollPane scroll = new JScrollPane(dialog);
+            scroll.setSize(300, 700);
+            for (int pass = 0; pass < 2; pass++) {
+                // The second pass sees the toolbar's wrapped height for the actual width.
+                invalidateTree(scroll);
+                layoutTree(scroll);
+            }
+            JPanel toolbar = (JPanel) view.getContent().getComponent(0);
+            for (String text : new String[]{"Table", "3D", "Up", "Down", "=", "H", "V", "Interpolate", "Smooth"}) {
+                AbstractButton button = findButtonOfType(toolbar, text, AbstractButton.class);
+                assertNotNull(button, text);
+                Rectangle bounds = SwingUtilities.convertRectangle(button.getParent(), button.getBounds(), toolbar);
+                assertTrue(bounds.x >= 0 && bounds.getMaxX() <= toolbar.getWidth(), text + " must be inside the toolbar: " + bounds);
+                assertTrue(bounds.getMaxY() <= toolbar.getHeight(), text + " must not be cut off below: " + bounds);
+                assertEquals(button.getPreferredSize().width, button.getWidth(), text + " keeps its full width");
+            }
+        });
+    }
+
     private static void resize(JPanel cards, int width, int height) {
         cards.setSize(width, height);
         cards.doLayout();
