@@ -63,6 +63,14 @@ public class TuningPane {
     private final AtomicReference<ConfigurationImage> sessionImage = new AtomicReference<>();
     /** Single-element holder for the currently displayed menu key. Field so the connect handler can access it. */
     private final AtomicReference<String> currentKey = new AtomicReference<>();
+    /** [tag:unburned_marks] Re-marks the menu pages whenever the tune being edited is replaced. */
+    private final Consumer<ConfigurationImage> unburnedTreeListener = image -> {
+        if (SwingUtilities.isEventDispatchThread()) {
+            refreshUnburnedTree();
+        } else {
+            SwingUtilities.invokeLater(this::refreshUnburnedTree);
+        }
+    };
     /** [tag:offline_tune] The .ini the offline tune was loaded with — used to migrate edits if a different-signature ECU connects. */
     private IniFileModel offlineIni;
     private volatile boolean firmwareUpdateInProgress;
@@ -166,12 +174,29 @@ public class TuningPane {
             toolbar.onEdit(sessionImage.get());
             // Clone because workingImage is mutated in-place by further edits.
             sessionImage.set(image.clone());
+            // onEdit refreshed the label before the edit was stored; count this edit too
+            toolbar.refreshState();
             left.refreshExpressions(image);
             uiContext.fireConfigImageChanged(image);
         });
 
         // The "Show on connector" button on a pin-enum combo fires the current value upward.
         workspace.setOnShowInPinout(PinoutLink.forwarding(() -> navigateToPinout));
+
+        // [tag:unburned_marks] settings that differ from the last burned (or loaded) tune are marked
+        workspace.setBurnedImage(toolbar::getBaselineImage);
+        toolbar.setOnBaselineChanged(() -> {
+            workspace.refreshUnburnedMarks();
+            refreshUnburnedTree();
+        });
+        // every edit, undo, redo, discard and Pinout assignment announces the replaced tune here
+        uiContext.addConfigImageListener(unburnedTreeListener);
+        // offline the reference is the loaded tune: "Loaded: 440" instead of "Burned: 440"
+        uiContext.addOfflineModeListener(offline -> SwingUtilities.invokeLater(() -> {
+            if (!destroyed) {
+                workspace.refreshUnburnedMarks();
+            }
+        }));
 
         // Per-trigger edge-detection state: maps trigger index → previous boolean value.
         // ConcurrentHashMap because onSensorUpdate runs on the protocol thread while
@@ -345,6 +370,18 @@ public class TuningPane {
         updateEventTriggerDemand();
     }
 
+    /** [tag:unburned_marks] Dots the menu pages whose settings differ from the last burned tune. */
+    private void refreshUnburnedTree() {
+        if (!destroyed) {
+            left.refreshUnburned(sessionImage.get(), toolbar.getBaselineImage());
+        }
+    }
+
+    /** Keys of the menu pages marked as not burned. */
+    Set<String> getUnburnedPageKeysForTests() {
+        return left.getUnburnedPageKeys();
+    }
+
     public void destroy() {
         if (destroyed) {
             return;
@@ -355,6 +392,7 @@ public class TuningPane {
             gaugeStrip.destroy();
         }
         workspace.destroy();
+        uiContext.removeConfigImageListener(unburnedTreeListener);
         indicatorStrip.destroy();
         eventTriggerToken.remove();
         ConnectionStatusLogic.INSTANCE.removeListener(connectionStatusListener);

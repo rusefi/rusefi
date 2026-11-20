@@ -84,6 +84,7 @@ public class TuningToolbarWidget {
     private final Timer uploadTimer;
     private volatile boolean firmwareUpdateInProgress;
     private boolean burnInProgress;
+    private Runnable onBaselineChanged = () -> { };
     private long editGeneration;
     private volatile long connectionGeneration;
     private Consumer<String> errorHandler = message -> JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
@@ -175,6 +176,8 @@ public class TuningToolbarWidget {
             right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
             publishReplacement();
             updateButtons.run();
+            // the replaced tune can be clean again, or differ in another number of values
+            refreshState();
         });
 
         redoButton.addActionListener(e -> {
@@ -192,6 +195,7 @@ public class TuningToolbarWidget {
             right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
             publishReplacement();
             updateButtons.run();
+            refreshState();
         });
 
         panel = new JPanel(new FlowLayout(FlowLayout.LEFT, JoinedButtons.ROW_GAP, 6));
@@ -217,18 +221,43 @@ public class TuningToolbarWidget {
      * Empty (invisible) when connected with no pending edits.
      */
     public void refreshState() {
-        boolean dirty = hasUnsavedChanges(sessionImage.get());
-        stateLabel.setText(stateLabelText(uiContext.isOfflineMode(), dirty));
+        ConfigurationImage current = sessionImage.get();
+        boolean dirty = hasUnsavedChanges(current);
+        IniFileModel ini = uiContext.iniFileState == null ? null : uiContext.iniFileState.getIniFileModel();
+        int changedValues = dirty ? changedValueCount(ini, current, baselineImage) : 0;
+        stateLabel.setText(stateLabelText(uiContext.isOfflineMode(), dirty, changedValues));
         stateLabel.setForeground(dirty ? TuningStyle.dirty() : TuningStyle.muted());
+    }
+
+    /**
+     * [tag:unburned_marks] How many settings and table/curve cells of {@code current} differ from the
+     * last burned tune; 0 without an .ini or a burned tune.
+     */
+    static int changedValueCount(IniFileModel ini, ConfigurationImage current, ConfigurationImage burned) {
+        if (ini == null) {
+            return 0;
+        }
+        return UnburnedChanges.of(current, burned).countChanged(ini.getAllIniFields().values());
+    }
+
+    static String stateLabelText(boolean offline, boolean dirty) {
+        return stateLabelText(offline, dirty, 0);
     }
 
     /**
      * Pure label-text logic for the offline/dirty toolbar indicator. Package-private and static so it
      * can be unit-tested without Swing (see {@code TuningToolbarStateLabelTest}).
+     *
+     * @param changedValues settings and cells changed since the last burn; 0 shows no count, e.g. when
+     *                      only bytes no setting covers differ
      */
-    static String stateLabelText(boolean offline, boolean dirty) {
+    static String stateLabelText(boolean offline, boolean dirty, int changedValues) {
         if (dirty) {
-            return offline ? "Local changes not burned to ECU" : "Pending changes not burned";
+            String text = offline ? "Local changes not burned to ECU" : "Pending changes not burned";
+            if (changedValues > 0) {
+                text += " (" + changedValues + (changedValues == 1 ? " value)" : " values)");
+            }
+            return text;
         }
         return offline ? "Offline tune" : "";
     }
@@ -882,6 +911,12 @@ public class TuningToolbarWidget {
         this.baselineImage = image == null ? null : image.clone();
         discardButton.setEnabled(!burnInProgress && image != null);
         refreshState();
+        onBaselineChanged.run();
+    }
+
+    /** [tag:unburned_marks] Called after every burn, load or reconnect replaces the baseline. */
+    public void setOnBaselineChanged(Runnable listener) {
+        onBaselineChanged = listener == null ? () -> { } : listener;
     }
 
     private static @NotNull JFileChooser createMsqFileChooser() {

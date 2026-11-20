@@ -225,6 +225,16 @@ public class MainMenuTreeWidget {
         menuTree.refreshExpressions(uiContext.iniFileState.getIniFileModel(), ci);
     }
 
+    /** [tag:unburned_marks] @see SettingsMenuTree#refreshUnburned */
+    public void refreshUnburned(ConfigurationImage current, ConfigurationImage burned) {
+        menuTree.refreshUnburned(uiContext.iniFileState.getIniFileModel(), current, burned);
+    }
+
+    /** Keys of the pages the tree marks as not burned. */
+    public java.util.Set<String> getUnburnedPageKeys() {
+        return menuTree.getUnburnedPageKeys();
+    }
+
     /** @see SettingsMenuTree#getUnlockHint */
     public String getUnlockHint(SubMenuModel subMenu) {
         return menuTree.getUnlockHint(subMenu);

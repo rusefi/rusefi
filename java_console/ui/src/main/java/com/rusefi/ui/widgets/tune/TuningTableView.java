@@ -34,6 +34,7 @@ import java.awt.geom.Point2D;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 public class TuningTableView {
     private static final int TOOLBAR_GAP = 6;
@@ -102,6 +103,10 @@ public class TuningTableView {
     private boolean flipAxes;
     private boolean invertX;
     private boolean invertY;
+    /** [tag:unburned_marks] The last burned tune; null marks nothing. */
+    private Supplier<ConfigurationImage> burnedImage = () -> null;
+    private Supplier<UnburnedWording> unburnedWording = () -> UnburnedWording.BURNED;
+    private final JLabel unburnedCountLabel = UnburnedCellMark.createCountLabel();
 
     public TuningTableView(String title) {
         this(title, false);
@@ -268,6 +273,8 @@ public class TuningTableView {
         topPanel.add(new JLabel(title));
         topPanel.add(Box.createHorizontalStrut(10));
         topPanel.add(view3d);
+        topPanel.add(Box.createHorizontalStrut(10));
+        topPanel.add(unburnedCountLabel);
 
         if (!viewMode) {
             topPanel.add(Box.createHorizontalStrut(10));
@@ -561,6 +568,7 @@ public class TuningTableView {
             Color background = table.getTableHeader().getBackground();
             renderer.setBackground(isActiveValueCell() && column == activeColumn()
                 ? axisHighlight(background) : background);
+            UnburnedCellMark.apply(renderer, String.valueOf(value), burnedXAxisText(column), unburnedWording.get());
             return renderer;
         });
         table.getSelectionModel().addListSelectionListener(e -> repaintAxes());
@@ -1546,6 +1554,105 @@ public class TuningTableView {
         table.clearSelection();
         updateSurfaceSelection();
         updateSurfaces(dataValues, xBins, yBins);
+        refreshUnburnedMarks();
+    }
+
+    /** [tag:unburned_marks] Supplies the last burned tune, so changed cells and axis values are marked. */
+    public void setBurnedImage(Supplier<ConfigurationImage> burnedImage) {
+        this.burnedImage = burnedImage == null ? () -> null : burnedImage;
+        refreshUnburnedMarks();
+    }
+
+    /** Names the reference tune in the cell tooltips: burned, or loaded while offline. */
+    public void setUnburnedWording(Supplier<UnburnedWording> wording) {
+        unburnedWording = wording == null ? () -> UnburnedWording.BURNED : wording;
+    }
+
+    /** Re-marks the cells and recounts them, after an edit or when the burned tune changes. */
+    public void refreshUnburnedMarks() {
+        UnburnedCellMark.updateCountLabel(unburnedCountLabel, unburnedCellCount());
+        table.repaint();
+        table.getTableHeader().repaint();
+    }
+
+    /** Changed values cells plus changed axis values. */
+    int unburnedCellCount() {
+        ConfigurationImage burned = burnedImage.get();
+        UnburnedChanges values = UnburnedChanges.of(imageTarget, burned);
+        UnburnedChanges axes = UnburnedChanges.of(axisImageTarget, burned);
+        return values.countChangedCells(zBinsField) + axes.countChangedCells(xBinsField)
+            + axes.countChangedCells(yBinsField);
+    }
+
+    JLabel getUnburnedCountLabelForTests() {
+        return unburnedCountLabel;
+    }
+
+    /**
+     * The stored [row, column] of {@link #zBinsField} shown in table cell ({@code row}, {@code column} >= 1):
+     * rows are shown bottom-up, then {@link #orientData} applies the invert and flip options.
+     */
+    int[] storedValuesCell(int row, int column) {
+        TuningTableModel model = (TuningTableModel) table.getModel();
+        int rows = model.data.length;
+        int columns = model.data[0].length;
+        int dataRow = rows - 1 - row;
+        int dataColumn = column - 1;
+        int y = invertY ? rows - 1 - dataRow : dataRow;
+        int x = invertX ? columns - 1 - dataColumn : dataColumn;
+        return flipAxes ? new int[]{x, y} : new int[]{y, x};
+    }
+
+    /** The stored [row, column] of a one-dimensional axis field for shown bin {@code index}. */
+    private static int[] storedAxisCell(ArrayIniField field, int binCount, boolean inverted, int index) {
+        int storedIndex = inverted ? binCount - 1 - index : index;
+        return field.getRows() == 1 ? new int[]{0, storedIndex} : new int[]{storedIndex, 0};
+    }
+
+    /** The burned value of table cell ({@code row}, {@code column}) when it differs, else null. */
+    String burnedCellText(int row, int column) {
+        ConfigurationImage burned = burnedImage.get();
+        if (burned == null || !(table.getModel() instanceof TuningTableModel)) {
+            return null;
+        }
+        TuningTableModel model = (TuningTableModel) table.getModel();
+        if (column == 0) {
+            int index = model.data.length - 1 - row;
+            if (yBinsField == null || model.yBins == null || index < 0 || index >= model.yBins.length) {
+                return null;
+            }
+            int[] cell = storedAxisCell(yBinsField, model.yBins.length, invertY, index);
+            if (!UnburnedChanges.of(axisImageTarget, burned).isCellChanged(yBinsField, cell[0], cell[1])) {
+                return null;
+            }
+            return model.formatNumber(UnburnedCellMark.burnedValue(yBinsField, cell[0], cell[1], burned), model.yPrecision);
+        }
+        if (zBinsField == null || row < 0 || row >= model.data.length || column > model.data[0].length) {
+            return null;
+        }
+        int[] cell = storedValuesCell(row, column);
+        if (!UnburnedChanges.of(imageTarget, burned).isCellChanged(zBinsField, cell[0], cell[1])) {
+            return null;
+        }
+        return model.formatNumber(UnburnedCellMark.burnedValue(zBinsField, cell[0], cell[1], burned));
+    }
+
+    /** The burned value of X axis header {@code column} when it differs, else null. */
+    String burnedXAxisText(int column) {
+        ConfigurationImage burned = burnedImage.get();
+        if (burned == null || column < 1 || xBinsField == null || !(table.getModel() instanceof TuningTableModel)) {
+            return null;
+        }
+        TuningTableModel model = (TuningTableModel) table.getModel();
+        int index = column - 1;
+        if (model.xBins == null || index >= model.xBins.length) {
+            return null;
+        }
+        int[] cell = storedAxisCell(xBinsField, model.xBins.length, invertX, index);
+        if (!UnburnedChanges.of(axisImageTarget, burned).isCellChanged(xBinsField, cell[0], cell[1])) {
+            return null;
+        }
+        return model.formatNumber(UnburnedCellMark.burnedValue(xBinsField, cell[0], cell[1], burned), model.xPrecision);
     }
 
     public void displayTable(IniFileModel iniFile, String tableName, ConfigurationImage image) {
@@ -1760,6 +1867,13 @@ public class TuningTableView {
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            Component c = renderCell(table, value, isSelected, hasFocus, row, column);
+            // [tag:unburned_marks] after the renderer set its own border for this cell
+            UnburnedCellMark.apply(c, String.valueOf(value), burnedCellText(row, column), unburnedWording.get());
+            return c;
+        }
+
+        private Component renderCell(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             if (column == 0) {
                 c.setBackground(isActiveValueCell() && row == activeRow()

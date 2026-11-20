@@ -10,6 +10,7 @@ import com.opensr5.ini.MenuModel;
 import com.opensr5.ini.PanelModel;
 import com.opensr5.ini.SeparatorMenuItem;
 import com.opensr5.ini.SubMenuModel;
+import com.opensr5.ini.field.IniField;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.rusefi.ui.widgets.TuningIcons;
 
@@ -63,6 +64,21 @@ public class SettingsMenuTree {
     private final Map<String, List<SettingRow>> settingsByPage = new HashMap<>();
     private IniFileModel settingsIni;
 
+    /**
+     * [tag:unburned_marks] Keys of pages with a setting or cell that differs from the last burned tune.
+     * Keyed by page, like {@link #disabledKeys}, so search results built from copied nodes show it too.
+     */
+    private final Set<String> unburnedKeys = new HashSet<>();
+    /** The settings, tables and curves each page shows, for {@link #unburnedIni}. */
+    private final Map<String, List<IniField>> fieldsByPage = new HashMap<>();
+    private IniFileModel fieldsIni;
+    private IniFileModel unburnedIni;
+    private ConfigurationImage unburnedCurrent;
+    private ConfigurationImage unburnedBurned;
+    static final String UNBURNED_TOOLTIP = "Has changes not burned to the ECU";
+    private static final int DOT_SIZE = 7;
+    private static final int DOT_GAP = 8;
+
     /** Renders a "std_separator" menu entry as a horizontal line. */
     private static class SeparatorRenderer extends JComponent {
         SeparatorRenderer() {
@@ -104,9 +120,10 @@ public class SettingsMenuTree {
                 if (path == null) {
                     return null;
                 }
-                Object userObject = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
-                SubMenuModel page = pageOf(userObject);
-                return page == null ? null : getUnlockHint(page);
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+                SubMenuModel page = pageOf(node.getUserObject());
+                String hint = page == null ? null : getUnlockHint(page);
+                return hint == null && hasUnburned(node) ? UNBURNED_TOOLTIP : hint;
             }
 
             @Override
@@ -212,13 +229,17 @@ public class SettingsMenuTree {
             private final SeparatorRenderer separatorRenderer = new SeparatorRenderer();
             /** Letters of the text to draw in bold, or null for plain text drawn by the label itself. */
             private boolean[] bold;
+            /** [tag:unburned_marks] Draw the dot after the text: the page, or a page under the group, is changed. */
+            private boolean unburnedDot;
 
             @Override
             public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
                 super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
                 bold = null;
+                unburnedDot = false;
                 if (value instanceof DefaultMutableTreeNode) {
                     DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+                    unburnedDot = hasUnburned(node);
                     Object userObject = node.getUserObject();
                     if (userObject instanceof SeparatorMenuItem) {
                         return separatorRenderer;
@@ -266,6 +287,30 @@ public class SettingsMenuTree {
              */
             @Override
             public Dimension getPreferredSize() {
+                Dimension size = textPreferredSize();
+                if (unburnedDot && size != null) {
+                    return new Dimension(size.width + DOT_GAP + DOT_SIZE, size.height);
+                }
+                return size;
+            }
+
+            @Override
+            public void paint(Graphics g) {
+                super.paint(g);
+                if (!unburnedDot) {
+                    return;
+                }
+                Graphics2D g2 = (Graphics2D) g.create();
+                try {
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    g2.setColor(UnburnedRowMark.bar());
+                    g2.fillOval(getWidth() - DOT_SIZE - 2, (getHeight() - DOT_SIZE) / 2, DOT_SIZE, DOT_SIZE);
+                } finally {
+                    g2.dispose();
+                }
+            }
+
+            private Dimension textPreferredSize() {
                 Dimension size = super.getPreferredSize();
                 if (bold == null || size == null) {
                     return size;
@@ -351,6 +396,117 @@ public class SettingsMenuTree {
         }
         populate(model);
         ((DefaultTreeModel) tree.getModel()).nodeStructureChanged(root);
+        if (unburnedIni != null) {
+            refreshUnburned(unburnedIni, unburnedCurrent, unburnedBurned);
+        }
+    }
+
+    /**
+     * [tag:unburned_marks] Marks the pages (and the groups above them) that show a setting, table or curve
+     * differing from the last burned tune (#10671).
+     *
+     * @param burned the last burned tune; null marks nothing
+     */
+    public void refreshUnburned(IniFileModel ini, ConfigurationImage current, ConfigurationImage burned) {
+        unburnedIni = ini;
+        unburnedCurrent = current;
+        unburnedBurned = burned;
+        if (ini != fieldsIni) {
+            fieldsByPage.clear();
+            fieldsIni = ini;
+        }
+        Set<String> changed = new HashSet<>();
+        UnburnedChanges changes = UnburnedChanges.of(current, burned);
+        if (ini != null && burned != null) {
+            for (SubMenuModel page : pagesInMenuOrder()) {
+                List<IniField> fields = fieldsByPage.computeIfAbsent(page.getKey(), key -> pageFields(ini, key));
+                for (IniField field : fields) {
+                    if (changes.isChanged(field)) {
+                        changed.add(page.getKey());
+                        break;
+                    }
+                }
+            }
+        }
+        if (!changed.equals(unburnedKeys)) {
+            unburnedKeys.clear();
+            unburnedKeys.addAll(changed);
+            // the dot changes row widths, which the tree caches per node: re-measure every shown row
+            DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+            Enumeration<?> nodes = ((DefaultMutableTreeNode) model.getRoot()).preorderEnumeration();
+            while (nodes.hasMoreElements()) {
+                model.nodeChanged((DefaultMutableTreeNode) nodes.nextElement());
+            }
+            tree.repaint();
+        }
+    }
+
+    /** Keys of the pages marked as not burned. */
+    public Set<String> getUnburnedPageKeys() {
+        return Collections.unmodifiableSet(unburnedKeys);
+    }
+
+    /** Whether the row shows the dot: its page, or for a group or category any page under it, is changed. */
+    boolean hasUnburned(DefaultMutableTreeNode node) {
+        if (unburnedKeys.isEmpty() || node == null) {
+            return false;
+        }
+        Object userObject = node.getUserObject();
+        if (userObject instanceof SubMenuModel) {
+            return unburnedKeys.contains(((SubMenuModel) userObject).getKey());
+        }
+        if (userObject instanceof SettingRow) {
+            return false;
+        }
+        for (int i = 0; i < node.getChildCount(); i++) {
+            if (hasUnburned((DefaultMutableTreeNode) node.getChildAt(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** The settings, table and curve arrays a page shows, following nested panels. */
+    static List<IniField> pageFields(IniFileModel ini, String pageKey) {
+        List<IniField> fields = new ArrayList<>();
+        collectPageFields(ini, pageKey, fields, new HashSet<>());
+        return fields;
+    }
+
+    private static void collectPageFields(IniFileModel ini, String key, List<IniField> fields, Set<String> visited) {
+        if (key == null || !visited.add(key)) {
+            return;
+        }
+        DialogModel dialog = ini.getDialogs().get(key);
+        if (dialog != null) {
+            for (DialogModel.Field field : dialog.getFields()) {
+                if (field.getKey() != null) {
+                    ini.findIniField(field.getKey()).ifPresent(fields::add);
+                }
+            }
+            for (PanelModel panel : dialog.getPanels()) {
+                DialogModel inner = panel.resolveDialog(ini);
+                collectPageFields(ini, inner != null ? inner.getKey() : panel.getPanelName(), fields, visited);
+            }
+            return;
+        }
+        com.opensr5.ini.TableModel table = ini.getTable(key);
+        if (table != null) {
+            for (String constant : Arrays.asList(table.getZBinsConstant(), table.getXBinsConstant(), table.getYBinsConstant())) {
+                if (constant != null) {
+                    ini.findIniField(constant).ifPresent(fields::add);
+                }
+            }
+            return;
+        }
+        com.opensr5.ini.CurveModel curve = ini.getCurves().get(key);
+        if (curve != null) {
+            for (String constant : Arrays.asList(curve.getxBins(), curve.getyBins())) {
+                if (constant != null) {
+                    ini.findIniField(constant).ifPresent(fields::add);
+                }
+            }
+        }
     }
 
     private void populate(IniFileModel model) {
