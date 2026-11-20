@@ -10,6 +10,7 @@ import com.opensr5.ini.field.PcVariableArrayIniField;
 import com.rusefi.config.StringFormatter;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.maintenance.CalibrationsInfo;
+import com.rusefi.ui.util.WrapLayout;
 import com.rusefi.ui.widgets.SegmentedControl;
 
 import javax.swing.*;
@@ -126,7 +127,7 @@ public class TuningTableView {
     private final JToggleButton tableSegment = SegmentedControl.segment("Table");
     private final JToggleButton surfaceSegment = SegmentedControl.segment("3D");
     /** Grid editing buttons; disabled while the 3D view replaces the grid. */
-    private final JPanel editControls = new JPanel(new FlowLayout(FlowLayout.LEFT, TOOLBAR_GAP, 0));
+    private final java.util.List<Component> editControls = new java.util.ArrayList<>();
 
     public TuningTableView(String title) {
         this(title, false);
@@ -270,7 +271,8 @@ public class TuningTableView {
         interpolateButton.setToolTipText("Interpolate selected cells - Key: /");
         smoothButton.setToolTipText("Smooth selected cells - Key: S");
 
-        editControls.add(new JLabel("delta:"));
+        JLabel deltaLabel = new JLabel("delta:");
+        editControls.add(deltaLabel);
         editControls.add(deltaField);
         editControls.add(upButton);
         editControls.add(downButton);
@@ -280,19 +282,23 @@ public class TuningTableView {
         editControls.add(interpolateButton);
         editControls.add(smoothButton);
 
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+        // Wraps onto further lines in a narrow window rather than squeezing or cutting off controls.
+        JPanel topPanel = new JPanel(new WrapLayout(FlowLayout.LEFT, TOOLBAR_GAP, 4));
         topPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        topPanel.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+        topPanel.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));
         topPanel.add(new JLabel(title));
-        topPanel.add(Box.createHorizontalStrut(10));
         topPanel.add(viewSwitch);
-        topPanel.add(Box.createHorizontalStrut(10));
         topPanel.add(unburnedCountLabel);
 
         if (!viewMode) {
-            topPanel.add(Box.createHorizontalStrut(10));
-            topPanel.add(editControls);
+            // The label and its field wrap together.
+            JPanel delta = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
+            delta.add(deltaLabel);
+            delta.add(deltaField);
+            topPanel.add(delta);
+            for (Component control : editControls.subList(2, editControls.size())) {
+                topPanel.add(control);
+            }
 
             InputMap inputMap = content.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
             inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_H, 0), "interpolateHorizontal");
@@ -1046,7 +1052,7 @@ public class TuningTableView {
         full3D = show;
         (show ? surfaceSegment : tableSegment).setSelected(true);
         cardLayout.show(tableContainer, show ? "3d" : "table");
-        for (Component control : editControls.getComponents()) {
+        for (Component control : editControls) {
             control.setEnabled(!show);
         }
         updatePreviewVisibility();

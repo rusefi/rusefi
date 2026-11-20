@@ -618,6 +618,16 @@ public class CalibrationDialogWidget {
         }
     }
 
+    private static boolean isTitled(DialogModel dialog) {
+        return dialog.getUiName() != null && !dialog.getUiName().trim().isEmpty();
+    }
+
+    private static int titledPanelInset() {
+        JPanel probe = new JPanel();
+        GradientTitleBorder.installBorder("x", probe);
+        return probe.getInsets().left;
+    }
+
     private static int getFieldLabelWidth(DialogModel dialog, IniFileModel iniFileModel, Set<String> visited) {
         if (dialog == null || !visited.add(dialog.getKey())) {
             return 0;
@@ -632,7 +642,14 @@ public class CalibrationDialogWidget {
             width = Math.max(width, label.getPreferredSize().width);
         }
         for (PanelModel panel : dialog.getPanels()) {
-            width = Math.max(width, getFieldLabelWidth(panel.resolveDialog(iniFileModel), iniFileModel, visited));
+            DialogModel subDialog = panel.resolveDialog(iniFileModel);
+            int nested = getFieldLabelWidth(subDialog, iniFileModel, visited);
+            if (nested > 0 && isTitled(subDialog)) {
+                // A titled panel's labels get this width less its border inset (see the panel
+                // rendering), so its widest label needs the inset added back to stay whole.
+                nested += titledPanelInset();
+            }
+            width = Math.max(width, nested);
         }
         return Math.min(width, CalibrationFieldFactory.MAX_LABEL_WIDTH);
     }
@@ -942,7 +959,7 @@ public class CalibrationDialogWidget {
             panelWidget.setName(uiName == null || uiName.isEmpty() ? subDialog.getKey() : uiName);
             // Empty INI titles intentionally group controls without a visible heading/frame.
             // Indicator and readout panels use this too; their keys are only internal IDs.
-            if (uiName != null && !uiName.trim().isEmpty()) {
+            if (isTitled(subDialog)) {
                 GradientTitleBorder.installBorder(uiName, panelWidget);
             }
             fillPanel(body, subDialog, iniFileModel, ci,
