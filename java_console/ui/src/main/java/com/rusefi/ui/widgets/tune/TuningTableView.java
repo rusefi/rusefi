@@ -97,6 +97,8 @@ public class TuningTableView {
     private Runnable onEdit;
     private Runnable onOrientationChange = () -> { };
     private String selectionInput = "";
+    /** Whether the wheel edits the grid rather than scrolling the page; see {@link TableMouse}. */
+    private boolean wheelEditing;
     private boolean applyingSelectionInput;
     private IniFileModel currentIni;
     private String currentTableName;
@@ -176,28 +178,18 @@ public class TuningTableView {
             }
         });
         table.addMouseWheelListener(this::handleTableWheel);
-
-        table.addMouseListener(new MouseAdapter() {
+        table.addFocusListener(new FocusAdapter() {
             @Override
-            public void mousePressed(MouseEvent e) {
-                selectionInput = "";
-                int row = table.rowAtPoint(e.getPoint());
-                int col = table.columnAtPoint(e.getPoint());
-                if (row != -1 && col != -1) {
-                    if (table.isCellSelected(row, col)) {
-                        // If cell is already selected, we want to keep selection as is
-                        // Standard JTable would clear other selections on click.
-                        // However, we must be careful not to break standard selection (Shift/Ctrl)
-                        if (!e.isControlDown() && !e.isShiftDown()) {
-                            // If we click an already selected cell without modifiers,
-                            // we usually expect it to become the ONLY selected cell in standard JTable.
-                            // But the user said "keep selection selected until click on a cell outside of selection"
-                            e.consume();
-                        }
-                    }
+            public void focusLost(FocusEvent e) {
+                // The cell editor is part of the table; focus anywhere else ends wheel editing.
+                Component opposite = e.getOppositeComponent();
+                if (!e.isTemporary() && (opposite == null || !SwingUtilities.isDescendingFrom(opposite, table))) {
+                    wheelEditing = false;
                 }
             }
         });
+
+        table.addMouseListener(new TableMouse());
 
         mini3DView.setPreferredSize(new Dimension(320, 160));
         mini3DView.setToolTipText("3D preview - drag to rotate; click 3D above for a larger view");
@@ -1079,7 +1071,47 @@ public class TuningTableView {
         table.requestFocusInWindow();
     }
 
+    /**
+     * Mouse handling on the grid. A click also turns on wheel editing, which lasts until the
+     * pointer leaves the table or focus moves elsewhere, so scrolling the page across the table
+     * doesn't change values.
+     */
+    class TableMouse extends MouseAdapter {
+        @Override
+        public void mouseExited(MouseEvent e) {
+            // Moving onto the cell editor also exits the table, but stays inside its bounds.
+            if (!table.contains(e.getPoint())) {
+                wheelEditing = false;
+            }
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            wheelEditing = true;
+            selectionInput = "";
+            int row = table.rowAtPoint(e.getPoint());
+            int col = table.columnAtPoint(e.getPoint());
+            if (row != -1 && col != -1) {
+                if (table.isCellSelected(row, col)) {
+                    // If cell is already selected, we want to keep selection as is
+                    // Standard JTable would clear other selections on click.
+                    // However, we must be careful not to break standard selection (Shift/Ctrl)
+                    if (!e.isControlDown() && !e.isShiftDown()) {
+                        // If we click an already selected cell without modifiers,
+                        // we usually expect it to become the ONLY selected cell in standard JTable.
+                        // But the user said "keep selection selected until click on a cell outside of selection"
+                        e.consume();
+                    }
+                }
+            }
+        }
+    }
+
     private void handleTableWheel(MouseWheelEvent event) {
+        if (!wheelEditing) {
+            scrollEnclosingPane(event);
+            return;
+        }
         // Handle the wheel here so the scroll pane doesn't also scroll independently.
         event.consume();
         if (table.isEditing() || xAxisEditingColumn >= 0 || event.getWheelRotation() == 0) {
@@ -1097,6 +1129,32 @@ public class TuningTableView {
         if (row != activeRow()) {
             // changeSelection also scrolls the selected cell into view.
             table.changeSelection(row, activeColumn(), false, false);
+        }
+    }
+
+    /**
+     * Hands the wheel to the nearest enclosing scroll pane that scrolls in the wheel's direction
+     * (vertical, or horizontal with Shift): the table's own when the grid is clipped, otherwise the
+     * page around it. AWT does not pass a wheel event on from a scroll pane that ignores it, and a
+     * grid that only scrolls sideways would take a plain wheel turn meant for the page, so this
+     * picks the pane itself.
+     */
+    private void scrollEnclosingPane(MouseWheelEvent event) {
+        Component source = event.getComponent();
+        for (Container parent = source.getParent(); parent != null; parent = parent.getParent()) {
+            if (!(parent instanceof JScrollPane)) {
+                continue;
+            }
+            JScrollPane pane = (JScrollPane) parent;
+            JScrollBar bar = event.isShiftDown() ? pane.getHorizontalScrollBar() : pane.getVerticalScrollBar();
+            if (pane.isWheelScrollingEnabled() && bar != null && bar.isVisible()) {
+                MouseWheelEvent converted = (MouseWheelEvent) SwingUtilities.convertMouseEvent(source, event, parent);
+                parent.dispatchEvent(converted);
+                if (converted.isConsumed()) {
+                    event.consume();
+                    return;
+                }
+            }
         }
     }
 
