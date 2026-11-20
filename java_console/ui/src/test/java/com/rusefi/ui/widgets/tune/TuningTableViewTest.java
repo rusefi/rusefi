@@ -803,6 +803,8 @@ public class TuningTableViewTest {
             // A grid wider than the window scrolls sideways; a plain wheel turn still moves the page.
             JScrollPane grid = (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class, table);
             grid.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+            // As a shown window would revalidate: the grid then grows by its scroll bar.
+            com.rusefi.ui.util.SwingUtil.invalidateTree(page);
             layOut(page);
             assertTrue(grid.getHorizontalScrollBar().isVisible());
             table.dispatchEvent(wheelEvent(table, 1, 0));
@@ -1500,7 +1502,8 @@ public class TuningTableViewTest {
         JPanel page = new com.rusefi.ui.util.ScrollablePanel();
         page.setLayout(new BoxLayout(page, BoxLayout.Y_AXIS));
         JPanel settings = new JPanel();
-        settings.setPreferredSize(new Dimension(300, 400));
+        // Tall enough to scroll several wheel steps: the grid itself is only as tall as its rows.
+        settings.setPreferredSize(new Dimension(300, 1000));
         page.add(settings);
         page.add(tableContent);
         JScrollPane scroll = new JScrollPane(page);

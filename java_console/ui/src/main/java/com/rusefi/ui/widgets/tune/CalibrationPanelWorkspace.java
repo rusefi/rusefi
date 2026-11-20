@@ -4,6 +4,7 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.PanelModel;
+import com.opensr5.ini.SubMenuModel;
 import com.opensr5.ini.TableModel;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.UIContext;
@@ -22,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -42,6 +44,23 @@ public final class CalibrationPanelWorkspace {
     private PinoutLink onShowInPinout = value -> { };
     /** Passes show and preview on to whichever link is set when the button is used. */
     private final PinoutLink pinoutLink = PinoutLink.forwarding(() -> onShowInPinout);
+    private BiFunction<String, String, SubMenuModel> settingPageFinder = (field, from) -> null;
+    /** Asks whichever finder is set when a page is built or a link is used. */
+    private final SettingsSummaryLine.SettingOpener settingOpener = new SettingsSummaryLine.SettingOpener() {
+        @Override
+        public String pageName(String fieldKey, String fromPageKey) {
+            SubMenuModel page = settingPageFinder.apply(fieldKey, fromPageKey);
+            return page == null ? null : page.getName();
+        }
+
+        @Override
+        public void open(String fieldKey, String fromPageKey) {
+            SubMenuModel page = settingPageFinder.apply(fieldKey, fromPageKey);
+            if (page != null) {
+                openPanel(page.getKey(), fieldKey);
+            }
+        }
+    };
     private IniFileModel ini;
     private ConfigurationImage image;
     private String primaryKey;
@@ -86,6 +105,7 @@ public final class CalibrationPanelWorkspace {
         primary.setOnTableOrientationChange(() -> orientationChanged(primary));
         primary.setOnConfigChange(changed -> edited(primary, changed));
         primary.setOnShowInPinout(pinoutLink);
+        primary.setSettingOpener(settingOpener);
         for (int i = 0; i < this.config.getIntProperty("count", 0); i++) {
             Node saved = this.config.getChild("panel" + i);
             String key = saved.getProperty("key");
@@ -139,6 +159,14 @@ public final class CalibrationPanelWorkspace {
 
     public void setOnShowInPinout(PinoutLink listener) {
         onShowInPinout = listener;
+    }
+
+    /**
+     * [tag:settings_summary_line] Finds the menu page, other than the one given, where a setting is
+     * edited; a setting named in a page's summary line opens that page in a window, marked.
+     */
+    public void setSettingPageFinder(BiFunction<String, String, SubMenuModel> finder) {
+        settingPageFinder = finder == null ? (field, from) -> null : finder;
     }
 
     /** Can be called before the owner opens, including when the Tuning tab is not selected. */
@@ -225,7 +253,45 @@ public final class CalibrationPanelWorkspace {
             } finally {
                 synchronizing = false;
             }
+            fitWindowsToContent(source);
         });
+    }
+
+    /**
+     * [tag:table_window_fit] A detached window is no taller than its content, so it does not hide the
+     * gauges behind empty space. The table's 3D preview is the only content that stretches to fill
+     * the height it is given; while it is on, windows keep their size, except that the window where it
+     * was switched on grows enough to show it. With it off, every window shrinks to its content.
+     */
+    private void fitWindowsToContent(CalibrationDialogWidget source) {
+        boolean preview = previewOn();
+        for (DetachedPanel panel : panels.values()) {
+            if (panel.window == null) {
+                continue;
+            }
+            if (!preview) {
+                panel.window.fitHeight(false);
+            } else if (panel.widget == source) {
+                panel.window.fitHeight(true);
+            }
+        }
+    }
+
+    private boolean previewOn() {
+        return tableOrientationConfig.getBoolProperty(TuningTableView.PREVIEW_PROPERTY);
+    }
+
+    /**
+     * The window height for content wanting {@code wanted} px: shorter when the window is taller,
+     * longer only when {@code grow} is set, and never past the screen.
+     */
+    static Rectangle fitHeight(Rectangle bounds, int wanted, boolean grow, List<Rectangle> screens) {
+        if (wanted >= bounds.height && !grow) {
+            return bounds;
+        }
+        Rectangle fitted = new Rectangle(bounds);
+        fitted.height = wanted;
+        return fitBounds(fitted, screens);
     }
 
     /**
@@ -353,6 +419,7 @@ public final class CalibrationPanelWorkspace {
         CalibrationDialogWidget widget = panel.widget;
         panel.widget.setOnTableOrientationChange(() -> orientationChanged(widget));
         panel.widget.setOnShowInPinout(pinoutLink);
+        panel.widget.setSettingOpener(settingOpener);
         panel.widget.setBurnedImage(burnedImage);
         refresh(panel.widget, panel.scroll, panel.key);
         panel.window = windowFactory.create(owner, title(panel.key), panel.scroll,
@@ -370,6 +437,11 @@ public final class CalibrationPanelWorkspace {
         panel.window.setBounds(panel.bounds);
         panel.widget.setActive(true);
         panel.window.show(fresh);
+        if (!fresh && !previewOn()) {
+            // [tag:table_window_fit] A fresh window is packed; a restored one keeps its saved size
+            // unless that is taller than its content.
+            panel.window.fitHeight(false);
+        }
     }
 
     private String title(CalibrationPanelKey key) {
@@ -581,6 +653,8 @@ public final class CalibrationPanelWorkspace {
         Rectangle getBounds();
         void setBounds(Rectangle bounds);
         void setCanSplit(boolean canSplit);
+        /** Shortens the window to its content's height, or with {@code grow} also lengthens it. */
+        void fitHeight(boolean grow);
         void dispose();
     }
 
@@ -661,6 +735,21 @@ public final class CalibrationPanelWorkspace {
         @Override
         public void setCanSplit(boolean canSplit) {
             setCanSplit.accept(canSplit);
+        }
+
+        @Override
+        public void fitHeight(boolean grow) {
+            if (disposed) {
+                return;
+            }
+            // Wrapped toolbars and rows report their height for the width they were laid out at.
+            dialog.validate();
+            Rectangle bounds = dialog.getBounds();
+            Rectangle fitted = CalibrationPanelWorkspace.fitHeight(bounds,
+                dialog.getPreferredSize().height, grow, usableScreens());
+            if (!fitted.equals(bounds)) {
+                dialog.setBounds(fitted);
+            }
         }
 
         @Override

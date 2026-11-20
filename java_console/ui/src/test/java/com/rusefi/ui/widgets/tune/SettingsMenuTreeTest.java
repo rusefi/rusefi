@@ -70,6 +70,8 @@ class SettingsMenuTreeTest {
 
             SubMenuModel pid = (SubMenuModel) menuTree.findSubMenuNode("idlePid").getUserObject();
             assertFalse(menuTree.isDisabled(pid));
+            assertEquals("idlePid", menuTree.findAvailablePageWithField(ini, "idleMode", "idleSettings").getKey(),
+                "[tag:settings_summary_line] a page can look for another page showing its setting");
             menuTree.refreshExpressions(ini, ConfigurationImageTestHelper.newLittleEndian(new byte[8]));
             assertTrue(menuTree.isDisabled(pid), "idleMode is off in an empty tune");
             assertEquals("<html>Not available with the current settings. Depends on:"

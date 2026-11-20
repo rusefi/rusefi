@@ -182,6 +182,8 @@ public class TuningPane {
 
         // The "Show on connector" button on a pin-enum combo fires the current value upward.
         workspace.setOnShowInPinout(PinoutLink.forwarding(() -> navigateToPinout));
+        // [tag:settings_summary_line] a setting named in a page's summary line opens where it is edited
+        workspace.setSettingPageFinder(left::findPageWithField);
 
         // [tag:unburned_marks] settings that differ from the last burned (or loaded) tune are marked
         workspace.setBurnedImage(toolbar::getBaselineImage);
