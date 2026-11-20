@@ -126,6 +126,12 @@ public class TuningTableView {
     private final JLabel unburnedCountLabel = UnburnedCellMark.createCountLabel();
     private final JToggleButton tableSegment = SegmentedControl.segment("Table");
     private final JToggleButton surfaceSegment = SegmentedControl.segment("3D");
+    /**
+     * Shows the small 3D preview below the grid. Off by default: the preview made table windows tall
+     * enough to hide the gauges. One choice for every table, kept with the orientation settings.
+     */
+    private final JToggleButton previewToggle = new JToggleButton("Preview");
+    static final String PREVIEW_PROPERTY = "mini_3d_preview";
     /** Grid editing buttons; disabled while the 3D view replaces the grid. */
     private final java.util.List<Component> editControls = new java.util.ArrayList<>();
 
@@ -225,6 +231,15 @@ public class TuningTableView {
         SegmentedControl viewSwitch = new SegmentedControl(tableSegment, surfaceSegment);
         viewSwitch.setMaximumSize(viewSwitch.getPreferredSize());
 
+        previewToggle.setToolTipText("Show a small 3D preview below the grid");
+        previewToggle.setSelected(orientationConfig.getBoolProperty(PREVIEW_PROPERTY));
+        previewToggle.addActionListener(e -> {
+            orientationConfig.setBoolProperty(PREVIEW_PROPERTY, previewToggle.isSelected());
+            updatePreviewVisibility();
+            // Other open tables follow the same choice.
+            onOrientationChange.run();
+        });
+
         JTextField deltaField = new JTextField("0.5", 5);
         deltaField.setToolTipText("Amount added or subtracted by the Up and Down buttons");
         deltaField.setMaximumSize(new Dimension(100, 30));
@@ -288,6 +303,7 @@ public class TuningTableView {
         topPanel.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));
         topPanel.add(new JLabel(title));
         topPanel.add(viewSwitch);
+        topPanel.add(previewToggle);
         topPanel.add(unburnedCountLabel);
 
         if (!viewMode) {
@@ -548,7 +564,8 @@ public class TuningTableView {
         // A scrollable dialog keeps a short preview and scrolls to it; elsewhere it hides when it
         // does not fit below the table.
         boolean fits = viewport != null || availableHeight >= gridHeight + MIN_PREVIEW_HEIGHT;
-        boolean visible = previewEligible && !full3D && tableContainer.getWidth() >= 320 && fits;
+        boolean visible = previewToggle.isSelected() && previewEligible && !full3D
+            && tableContainer.getWidth() >= 320 && fits;
         boolean sizeChanged = false;
         if (visible) {
             int previewHeight = Math.max(MIN_PREVIEW_HEIGHT, availableHeight - gridHeight);
@@ -1055,6 +1072,8 @@ public class TuningTableView {
         for (Component control : editControls) {
             control.setEnabled(!show);
         }
+        // The preview belongs to the grid view.
+        previewToggle.setEnabled(!show);
         updatePreviewVisibility();
     }
 
