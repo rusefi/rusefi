@@ -21,10 +21,10 @@
 struct SettingsFlashServiceGuard {
     bool ready = boardFlashServiceBegin();
     ~SettingsFlashServiceGuard() {
-      if (ready) {
-          boardFlashServiceBegin();
+        if (ready) {
+            boardFlashServiceEnd();
         }
-      }
+    }
 };
 #endif
 
