@@ -42,6 +42,12 @@ import java.util.regex.Pattern;
 public class CalibrationFieldFactory {
     static final int MAX_FIELD_EDITOR_WIDTH = 360;
     static final int MAX_LABEL_WIDTH = 360;
+    /**
+     * Room added to the measured width of the label column. Labels are measured before they are
+     * shown; on screen (display scaling, text antialiasing) the text can be a pixel or two wider,
+     * and a label even 1 px short is cut to "..." several letters early.
+     */
+    static final int LABEL_TEXT_SLACK = 6;
     private static final int HELP_ICON_SIZE = 18;
     private static final int HELP_COLUMN_WIDTH = 24;
     private static final Icon SETTING_HELP_ICON = loadHelpIcon();
@@ -106,6 +112,7 @@ public class CalibrationFieldFactory {
                                  PinoutLink onShowInPinout, int labelWidth, int fieldEditorWidth,
                                  String helpText) {
         JPanel row = createRowPanel();
+        row.setLayout(new SettingRowLayout(row));
         // a row with help shows its help card; tooltips that only repeat the row would compete with it
         helpText = SettingHelpCard.usefulHelp(helpText);
         boolean hasHelp = helpText != null;
@@ -131,6 +138,7 @@ public class CalibrationFieldFactory {
             label.setMaximumSize(size);
         }
         row.add(label);
+        SettingRowLayout.markWrapAfter(label);
         row.add(Box.createHorizontalStrut(16));
 
         Supplier<String> value;
@@ -697,8 +705,73 @@ public class CalibrationFieldFactory {
         timer.start();
     }
 
+    /** Lets a row grow in width only; its height follows its current preferred height, which changes when it wraps. */
     static void fixRowHeight(JPanel row) {
-        row.setMaximumSize(new Dimension(Integer.MAX_VALUE, row.getPreferredSize().height + 5));
+        if (!(row.getLayout() instanceof RowHeightCap)) {
+            row.setLayout(new RowHeightCap(row.getLayout()));
+        }
+    }
+
+    private static final class RowHeightCap implements LayoutManager2 {
+        private final LayoutManager delegate;
+
+        RowHeightCap(LayoutManager delegate) {
+            this.delegate = delegate;
+        }
+
+        @Override
+        public Dimension maximumLayoutSize(Container target) {
+            return new Dimension(Integer.MAX_VALUE, delegate.preferredLayoutSize(target).height + 5);
+        }
+
+        @Override
+        public Dimension preferredLayoutSize(Container target) {
+            return delegate.preferredLayoutSize(target);
+        }
+
+        @Override
+        public Dimension minimumLayoutSize(Container target) {
+            return delegate.minimumLayoutSize(target);
+        }
+
+        @Override
+        public void layoutContainer(Container target) {
+            delegate.layoutContainer(target);
+        }
+
+        @Override
+        public void addLayoutComponent(Component comp, Object constraints) {
+            if (delegate instanceof LayoutManager2) {
+                ((LayoutManager2) delegate).addLayoutComponent(comp, constraints);
+            }
+        }
+
+        @Override
+        public void addLayoutComponent(String name, Component comp) {
+            delegate.addLayoutComponent(name, comp);
+        }
+
+        @Override
+        public void removeLayoutComponent(Component comp) {
+            delegate.removeLayoutComponent(comp);
+        }
+
+        @Override
+        public float getLayoutAlignmentX(Container target) {
+            return delegate instanceof LayoutManager2 ? ((LayoutManager2) delegate).getLayoutAlignmentX(target) : 0.5f;
+        }
+
+        @Override
+        public float getLayoutAlignmentY(Container target) {
+            return delegate instanceof LayoutManager2 ? ((LayoutManager2) delegate).getLayoutAlignmentY(target) : 0.5f;
+        }
+
+        @Override
+        public void invalidateLayout(Container target) {
+            if (delegate instanceof LayoutManager2) {
+                ((LayoutManager2) delegate).invalidateLayout(target);
+            }
+        }
     }
 
     /** Background of the setting help popup [tag:console_theme]. */
