@@ -64,16 +64,47 @@ public class TabbedPanel {
                 }
             }
             FontMetrics fm = g.getFontMetrics();
-            int labelWidth = fm.stringWidth(text);
-            int x = (d.width - labelWidth) / 2;
-            int y = d.height / 2;
             int padding = 12;
+            // a long critical error is wrapped and every line centred, instead of one line
+            // running off both sides of the window
+            java.util.List<String> lines = wrapLines(fm, text, Math.max(1, d.width - 4 * padding));
+            int labelWidth = 0;
+            for (String line : lines) {
+                labelWidth = Math.max(labelWidth, fm.stringWidth(line));
+            }
+            int blockHeight = fm.getHeight() * lines.size();
+            int top = (d.height - blockHeight) / 2;
+            int x = (d.width - labelWidth) / 2;
             g.setColor(new Color(0, 0, 0, 180)); // [tag:fixed_color] the black card
-            g.fillRoundRect(x - padding, y - fm.getAscent() - padding, labelWidth + padding * 2, fm.getHeight() + padding * 2, 16, 16);
+            g.fillRoundRect(x - padding, top - padding, labelWidth + padding * 2, blockHeight + padding * 2, 16, 16);
             g.setColor(textColor);
-            g.drawString(text, x, y);
+            for (int i = 0; i < lines.size(); i++) {
+                String line = lines.get(i);
+                g.drawString(line, (d.width - fm.stringWidth(line)) / 2, top + i * fm.getHeight() + fm.getAscent());
+            }
         }
     };
+
+    /** Word-wraps {@code text} to lines no wider than {@code maxWidth}; a single over-long word keeps its own line. */
+    static java.util.List<String> wrapLines(FontMetrics fm, String text, int maxWidth) {
+        java.util.List<String> lines = new java.util.ArrayList<>();
+        StringBuilder line = new StringBuilder();
+        for (String word : text.trim().split("\\s+")) {
+            String candidate = line.length() == 0 ? word : line + " " + word;
+            if (line.length() > 0 && fm.stringWidth(candidate) > maxWidth) {
+                lines.add(line.toString());
+                line.setLength(0);
+                line.append(word);
+            } else {
+                line.setLength(0);
+                line.append(candidate);
+            }
+        }
+        if (line.length() > 0 || lines.isEmpty()) {
+            lines.add(line.toString());
+        }
+        return lines;
+    }
 
     public final JTabbedPane tabbedPane = new JTabbedPane() {
         @Override

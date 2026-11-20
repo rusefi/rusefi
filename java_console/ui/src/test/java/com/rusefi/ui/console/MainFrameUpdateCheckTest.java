@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.swing.Icon;
 import javax.swing.JMenuItem;
-import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 import java.awt.Color;
 import java.awt.Component;
@@ -220,7 +220,7 @@ public class MainFrameUpdateCheckTest {
             overlay.setActionVisible(0, false);
             overlay.setMessage("Unable to check ECU firmware", Color.RED);
             Container content = (Container) overlay.getComponent(0);
-            JTextArea message = (JTextArea) content.getComponent(0);
+            JTextPane message = (JTextPane) content.getComponent(0);
             for (int width : new int[]{800, 1280, 1916}) {
                 overlay.setSize(width, 600);
                 layoutRecursively(overlay);
