@@ -34,7 +34,7 @@ class TuningTablePreviewTest {
         ConfigurationImage image = Msq.readTune(new java.io.File(
             getClass().getResource("/january_tune.msq").toURI()).getAbsolutePath()).asImage(ini);
         SwingUtilities.invokeAndWait(() -> {
-            TuningTableView view = new TuningTableView("Ignition advance");
+            TuningTableView view = previewOn("Ignition advance");
             view.displayTable(ini, "ignitionTableTbl", image);
             ScrollablePanel dialog = new ScrollablePanel();
             dialog.setLayout(new BoxLayout(dialog, BoxLayout.Y_AXIS));
@@ -73,7 +73,7 @@ class TuningTablePreviewTest {
     @Test
     void scrollableDialogHasSpaceBeyondTablesPreferredHeight() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
-            TuningTableView view = new TuningTableView("Ignition advance");
+            TuningTableView view = previewOn("Ignition advance");
             loadTable(view, true);
             ScrollablePanel dialog = new ScrollablePanel();
             dialog.setLayout(new BoxLayout(dialog, BoxLayout.Y_AXIS));
@@ -103,9 +103,44 @@ class TuningTablePreviewTest {
     }
 
     @Test
+    void previewIsOffByDefaultAndTheChoiceIsRemembered() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            com.rusefi.core.preferences.storage.Node settings = new com.rusefi.core.preferences.storage.Node();
+            TuningTableView view = new TuningTableView("VE", false, settings);
+            JPanel cards = (JPanel) view.getContent().getComponent(1);
+            Surface3DView preview = (Surface3DView) ((JPanel) cards.getComponent(0)).getComponent(1);
+            int[] notified = {0};
+            view.setOnOrientationChange(() -> notified[0]++);
+            loadTable(view, true);
+            resize(cards, 600, 700);
+            JToggleButton toggle = findSegment(view.getContent(), "Preview");
+            assertNotNull(toggle);
+            assertFalse(toggle.isSelected(), "Tables open without the preview");
+            assertFalse(preview.isVisible(), "Room below the grid does not show the preview by itself");
+
+            toggle.doClick();
+            assertTrue(preview.isVisible());
+            assertTrue(settings.getBoolProperty(TuningTableView.PREVIEW_PROPERTY), "The choice is saved");
+            assertEquals(1, notified[0], "Other open tables are told to follow");
+
+            TuningTableView reopened = new TuningTableView("VE", false, settings);
+            assertTrue(findSegment(reopened.getContent(), "Preview").isSelected(), "Another table keeps the choice");
+
+            findSegment(view.getContent(), "3D").doClick();
+            assertFalse(toggle.isEnabled(), "The preview belongs to the grid view");
+            findSegment(view.getContent(), "Table").doClick();
+            assertTrue(toggle.isEnabled());
+
+            toggle.doClick();
+            assertFalse(preview.isVisible());
+            assertFalse(settings.getBoolProperty(TuningTableView.PREVIEW_PROPERTY));
+        });
+    }
+
+    @Test
     void previewFollowsAvailableSpaceAndViewMode() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
-            TuningTableView view = new TuningTableView("VE");
+            TuningTableView view = previewOn("VE");
             JPanel cards = (JPanel) view.getContent().getComponent(1);
             JPanel grid = (JPanel) cards.getComponent(0);
             Surface3DView preview = (Surface3DView) grid.getComponent(1);
@@ -228,7 +263,7 @@ class TuningTablePreviewTest {
                 layoutTree(scroll);
             }
             JPanel toolbar = (JPanel) view.getContent().getComponent(0);
-            for (String text : new String[]{"Table", "3D", "Up", "Down", "=", "H", "V", "Interpolate", "Smooth"}) {
+            for (String text : new String[]{"Table", "3D", "Preview", "Up", "Down", "=", "H", "V", "Interpolate", "Smooth"}) {
                 AbstractButton button = findButtonOfType(toolbar, text, AbstractButton.class);
                 assertNotNull(button, text);
                 Rectangle bounds = SwingUtilities.convertRectangle(button.getParent(), button.getBounds(), toolbar);
@@ -237,6 +272,12 @@ class TuningTablePreviewTest {
                 assertEquals(button.getPreferredSize().width, button.getWidth(), text + " keeps its full width");
             }
         });
+    }
+
+    private static TuningTableView previewOn(String title) {
+        com.rusefi.core.preferences.storage.Node settings = new com.rusefi.core.preferences.storage.Node();
+        settings.setBoolProperty(TuningTableView.PREVIEW_PROPERTY, true);
+        return new TuningTableView(title, false, settings);
     }
 
     private static void resize(JPanel cards, int width, int height) {
