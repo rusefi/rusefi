@@ -97,6 +97,8 @@ class TuningTablePreviewTest {
             assertTrue(grid.getComponent(1).isVisible(), "A short viewport keeps the preview");
             assertEquals(240, grid.getComponent(1).getPreferredSize().height,
                 "A short viewport keeps the preview at its minimum height");
+            // Without a window, invalidation does not reach BoxLayout's cached sizes; a shown dialog's does.
+            invalidateTree(scroll);
             assertTrue(dialog.getPreferredSize().height > scroll.getViewport().getExtentSize().height,
                 "The dialog grows past the short viewport, so it scrolls to the preview");
         });
@@ -113,27 +115,55 @@ class TuningTablePreviewTest {
             view.setOnOrientationChange(() -> notified[0]++);
             loadTable(view, true);
             resize(cards, 600, 700);
-            JToggleButton toggle = findSegment(view.getContent(), "Preview");
-            assertNotNull(toggle);
-            assertFalse(toggle.isSelected(), "Tables open without the preview");
+            JToggleButton table = findSegment(view.getContent(), "Table");
+            JToggleButton both = findSegment(view.getContent(), "Both");
+            JToggleButton surface = findSegment(view.getContent(), "3D");
+            assertNotNull(both);
+            assertTrue(table.isSelected(), "Tables open on the grid alone");
             assertFalse(preview.isVisible(), "Room below the grid does not show the preview by itself");
 
-            toggle.doClick();
+            both.doClick();
             assertTrue(preview.isVisible());
+            assertFalse(view.is3DShown());
             assertTrue(settings.getBoolProperty(TuningTableView.PREVIEW_PROPERTY), "The choice is saved");
             assertEquals(1, notified[0], "Other open tables are told to follow");
+            both.doClick();
+            assertEquals(1, notified[0], "Choosing the same view again changes nothing");
 
             TuningTableView reopened = new TuningTableView("VE", false, settings);
-            assertTrue(findSegment(reopened.getContent(), "Preview").isSelected(), "Another table keeps the choice");
+            assertTrue(findSegment(reopened.getContent(), "Both").isSelected(), "Another table keeps the choice");
 
-            findSegment(view.getContent(), "3D").doClick();
-            assertFalse(toggle.isEnabled(), "The preview belongs to the grid view");
-            findSegment(view.getContent(), "Table").doClick();
-            assertTrue(toggle.isEnabled());
+            surface.doClick();
+            assertTrue(view.is3DShown());
+            assertFalse(preview.isVisible());
+            assertTrue(settings.getBoolProperty(TuningTableView.PREVIEW_PROPERTY), "3D is a look, not remembered");
+            view.show3D(false);
+            assertTrue(both.isSelected(), "Leaving 3D returns to the remembered grid view");
 
-            toggle.doClick();
+            table.doClick();
             assertFalse(preview.isVisible());
             assertFalse(settings.getBoolProperty(TuningTableView.PREVIEW_PROPERTY));
+            assertEquals(2, notified[0]);
+        });
+    }
+
+    /** [tag:table_window_fit] Without the preview the grid asks for its rows' height, not more. */
+    @Test
+    void gridAsksForItsRowsHeightNotTheDefaultOrThe3DView() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            TuningTableView view = new TuningTableView("VE");
+            loadTable(view, true);
+            JTable table = view.getTableForTests();
+            JScrollPane grid = (JScrollPane) table.getParent().getParent();
+            JPanel cards = (JPanel) view.getContent().getComponent(1);
+            assertEquals(2 * table.getRowHeight(), table.getPreferredScrollableViewportSize().height,
+                "Two rows, not JTable's default 400 px");
+            Insets insets = cards.getInsets();
+            assertEquals(grid.getParent().getPreferredSize().height + insets.top + insets.bottom,
+                cards.getPreferredSize().height, "The grid card sets the height, not the larger 3D view");
+            assertTrue(cards.getPreferredSize().height < 200);
+            findSegment(view.getContent(), "3D").doClick();
+            assertTrue(cards.getPreferredSize().height >= 400, "The 3D view keeps its own size");
         });
     }
 
@@ -154,10 +184,10 @@ class TuningTablePreviewTest {
             assertEquals(300, preview.getHeight() - shortHeight,
                 "All additional height should go to the surface");
             JToggleButton surface = findSegment(view.getContent(), "3D");
-            JToggleButton tableSegment = findSegment(view.getContent(), "Table");
+            JToggleButton tableSegment = findSegment(view.getContent(), "Both");
             assertNotNull(surface);
             assertNotNull(tableSegment);
-            assertTrue(tableSegment.isSelected(), "Tables open on the grid");
+            assertTrue(tableSegment.isSelected(), "Tables open on the remembered grid view");
             surface.doClick();
             assertTrue(view.is3DShown());
             assertFalse(tableSegment.isSelected(), "Only one view is selected");
@@ -263,7 +293,7 @@ class TuningTablePreviewTest {
                 layoutTree(scroll);
             }
             JPanel toolbar = (JPanel) view.getContent().getComponent(0);
-            for (String text : new String[]{"Table", "3D", "Preview", "Up", "Down", "=", "H", "V", "Interpolate", "Smooth"}) {
+            for (String text : new String[]{"Table", "Both", "3D", "Up", "Down", "=", "H", "V", "Interpolate", "Smooth"}) {
                 AbstractButton button = findButtonOfType(toolbar, text, AbstractButton.class);
                 assertNotNull(button, text);
                 Rectangle bounds = SwingUtilities.convertRectangle(button.getParent(), button.getBounds(), toolbar);

@@ -1051,10 +1051,15 @@ public class SettingsMenuTree {
 
     /** First page the user can open now that shows the field, following nested panel references. */
     public SubMenuModel findAvailablePageWithField(IniFileModel ini, String fieldKey) {
+        return findAvailablePageWithField(ini, fieldKey, null);
+    }
+
+    /** {@link #findAvailablePageWithField(IniFileModel, String)}, skipping page {@code excludedPageKey}. */
+    public SubMenuModel findAvailablePageWithField(IniFileModel ini, String fieldKey, String excludedPageKey) {
         // Search in menu order, not dialog declaration order: inner dialogs and unused
         // pin summaries may be declared before the page that actually exposes the field.
         for (SubMenuModel subMenu : pagesInMenuOrder()) {
-            if (!isDisabled(subMenu)
+            if (!isDisabled(subMenu) && !subMenu.getKey().equals(excludedPageKey)
                 && containsField(ini.getDialogs().get(subMenu.getKey()), ini, fieldKey, new HashSet<>())) {
                 return subMenu;
             }

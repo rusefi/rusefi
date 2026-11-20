@@ -372,7 +372,7 @@ public final class SettingHelpCard {
         return card;
     }
 
-    private static JButton linkButton(String text, String name, Runnable action) {
+    static JButton linkButton(String text, String name, Runnable action) {
         JButton button = new JButton(text);
         button.setName(name);
         button.setFocusable(false);

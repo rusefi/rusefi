@@ -46,7 +46,7 @@ final class ShortcutsDialog extends JDialog {
             "TUNING TABLES",
             "Focus the table with Tab or click a cell. Editing shortcuts operate on the selected data cells "
                     + "in an editable table, not on the axis column or a read-only comparison. "
-                    + "They are off while the table's 3D view is shown; switch back to Table to edit.",
+                    + "They are off while the table's 3D view is shown; switch to Table or Both to edit.",
             "H  Interpolate horizontally between the selected endpoints in each row.",
             "V  Interpolate vertically between the selected endpoints in each column.",
             "/  Interpolate the selection: horizontal for one row, vertical for one column,",

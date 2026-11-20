@@ -15,7 +15,10 @@ import java.awt.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CalibrationDialogLabelWidthTest {
-    /** The widest label sits in a titled panel, whose border inset narrows its label column. */
+    /** Too narrow for label and editor side by side on Vehicle Information, wide enough for its editors. */
+    private static final int NARROW = 460;
+
+    /** A label in a titled panel, whose border inset narrows its label column. */
     @Test
     void labelInTitledPanelIsNotCutOff() throws Exception, com.rusefi.ini.reader.IniParsingException {
         IniFileModel ini;
@@ -27,8 +30,9 @@ class CalibrationDialogLabelWidthTest {
             getClass().getResource("/january_tune.msq").toURI()).getAbsolutePath()).asImage(ini);
         SwingUtilities.invokeAndWait(() -> {
             CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
-            widget.update("veTableDialog", ini, image);
-            JLabel label = findLabel(widget.getContentPane(), "Override VE table load axis");
+            // [tag:settings_summary_line] the VE page shows this panel as a line; Vehicle Information keeps it
+            widget.update("engineChars", ini, image);
+            JLabel label = findLabel(widget.getContentPane(), "Fuel strategy");
             assertNotNull(label, "The label is shown whole, not wrapped into a one-line row");
             JLabel natural = new JLabel(label.getText());
             CalibrationFieldFactory.applyStyle(natural);
@@ -45,9 +49,9 @@ class CalibrationDialogLabelWidthTest {
             getClass().getResource("/january_tune.msq").toURI()).getAbsolutePath()).asImage(ini);
         SwingUtilities.invokeAndWait(() -> {
             CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
-            widget.update("veTableDialog", ini, image);
+            widget.update("engineChars", ini, image);
             JScrollPane scroll = new JScrollPane(widget.getViewportPane());
-            for (int width : new int[]{1200, 280}) {
+            for (int width : new int[]{1200, NARROW}) {
                 scroll.setSize(width, 800);
                 for (int pass = 0; pass < 2; pass++) {
                     // the second pass sees the rows' heights at their new widths
@@ -61,7 +65,7 @@ class CalibrationDialogLabelWidthTest {
                 assertEquals(combo.getPreferredSize().width, combo.getWidth(), width + ": the editor keeps its width");
                 assertTrue(combo.getX() + combo.getWidth() <= row.getWidth(), width + ": the editor is inside its row");
                 assertTrue(combo.getY() + combo.getHeight() <= row.getHeight(), width + ": the row is tall enough");
-                if (width == 280) {
+                if (width == NARROW) {
                     assertTrue(combo.getY() >= label.getY() + label.getHeight(), "A narrow row puts the editor under the label");
                     assertEquals(label.getX(), combo.getX(), "The editor lines up with its label");
                 } else {

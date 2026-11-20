@@ -67,6 +67,10 @@ public class CalibrationDialogWidget {
     private final DialogViewport viewportPane = new DialogViewport(contentPane);
     private final UIContext uiContext;
     private final Node tableOrientationConfig;
+    /** The current page's Help row, or null when it has none; see {@link #withVeGenerator}. */
+    private JPanel pageToolbar;
+    /** [tag:settings_summary_line] Opens the page where a summarized setting is edited. */
+    private SettingsSummaryLine.SettingOpener settingOpener = SettingsSummaryLine.SettingOpener.NONE;
     private final List<Runnable> triggerImageUpdaters = new ArrayList<>();
     private ConfigurationImage workingImage;
     private IniFileModel currentIniFileModel;
@@ -123,6 +127,11 @@ public class CalibrationDialogWidget {
 
     public void setOnShowInPinout(PinoutLink onShowInPinout) {
         this.onShowInPinout = onShowInPinout;
+    }
+
+    /** [tag:settings_summary_line] Used when the next page is built. */
+    void setSettingOpener(SettingsSummaryLine.SettingOpener settingOpener) {
+        this.settingOpener = settingOpener == null ? SettingsSummaryLine.SettingOpener.NONE : settingOpener;
     }
 
     /**
@@ -402,6 +411,38 @@ public class CalibrationDialogWidget {
         return body;
     }
 
+    /** Like {@link #prepareTopicHelp}, for the page itself: tool buttons join its Help row. */
+    private JPanel preparePageHelp(JPanel container, String reference, IniFileModel ini) {
+        JPanel body = prepareTopicHelp(container, reference, ini);
+        pageToolbar = body == container ? null
+            : (JPanel) ((BorderLayout) container.getLayout()).getLayoutComponent(BorderLayout.NORTH);
+        return body;
+    }
+
+    /**
+     * Adds "Generate base VE..." for the VE table: in the page's Help row when it has one, saving a
+     * row above the table, otherwise in a row of its own.
+     */
+    private JComponent withVeGenerator(JComponent tableContent, TableModel table, IniFileModel ini) {
+        //TODO: nicer injection of this button? maybe a comment on the .ini and then hook this?
+        if (!"veTableTbl".equals(table.getTableId())) {
+            return tableContent;
+        }
+        JButton button = new JButton("Generate base VE...");
+        button.addActionListener(e -> showVeGeneratorPanel(ini));
+        if (pageToolbar != null) {
+            pageToolbar.add(button);
+            return tableContent;
+        }
+        JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
+        row.add(button);
+        JPanel wrapper = new JPanel(new BorderLayout());
+        wrapper.setAlignmentX(Component.LEFT_ALIGNMENT);
+        wrapper.add(row, BorderLayout.NORTH);
+        wrapper.add(tableContent, BorderLayout.CENTER);
+        return wrapper;
+    }
+
     private static JComponent withTopicHelp(JComponent content, String reference, IniFileModel ini) {
         JPanel wrapper = new JPanel();
         JPanel body = prepareTopicHelp(wrapper, reference, ini);
@@ -452,6 +493,7 @@ public class CalibrationDialogWidget {
         unburnedViewRefreshers.clear();
         triggerImageUpdaters.clear();
         contentPane.removeAll();
+        pageToolbar = null;
         if (dialogModel != null) {
             String uiName = dialogModel.getUiName();
             if (uiName == null || uiName.isEmpty()) {
@@ -459,7 +501,7 @@ public class CalibrationDialogWidget {
             }
             contentPane.setName(uiName);
 
-            JPanel body = prepareTopicHelp(contentPane, dialogModel.getTopicHelp(), iniFileModel);
+            JPanel body = preparePageHelp(contentPane, dialogModel.getTopicHelp(), iniFileModel);
             applyLayout(body, dialogModel.getLayoutHint());
             contentPane.setAlignmentX(Component.LEFT_ALIGNMENT);
             fillPanel(body, dialogModel, iniFileModel, ci,
@@ -508,6 +550,7 @@ public class CalibrationDialogWidget {
         unburnedViewRefreshers.clear();
         triggerImageUpdaters.clear();
         contentPane.removeAll();
+        pageToolbar = null;
         workingImage = ci != null ? ci.clone() : null;
         if (key != null) {
             DialogModel dialog = iniFileModel.getDialogs().get(key);
@@ -521,18 +564,11 @@ public class CalibrationDialogWidget {
             TableModel table = TablePages.find(iniFileModel, key);
             if (table != null) {
                 viewportPane.fillWidth = true;
-                JPanel body = prepareTopicHelp(contentPane, table.getTopicHelp(), iniFileModel);
+                JPanel body = preparePageHelp(contentPane, table.getTopicHelp(), iniFileModel);
                 body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
-                //TODO: nicer injection of this button? maybe a comment on the .ini and then hook this?
-                if ("veTableTbl".equals(table.getTableId())) {
-                    final IniFileModel capturedIni = iniFileModel;
-                    JButton genVeBtn = new JButton("Generate base VE...");
-                    genVeBtn.addActionListener(e -> showVeGeneratorPanel(capturedIni));
-                    JPanel veToolbar = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
-                    veToolbar.add(genVeBtn);
-                    body.add(veToolbar);
-                }
-                body.add(createTableView(iniFileModel, table, notifyEdit, TablePages.isMap3d(iniFileModel, key)));
+                body.add(withVeGenerator(
+                    createTableView(iniFileModel, table, notifyEdit, TablePages.isMap3d(iniFileModel, key)),
+                    table, iniFileModel));
             } else {
                 CurveModel curve = iniFileModel.getCurves().get(key);
                 if (curve != null) {
@@ -564,6 +600,7 @@ public class CalibrationDialogWidget {
         }
 
         boolean isBorderLayout = container.getLayout() instanceof BorderLayout;
+        boolean summaryShown = false;
         JPanel[] horizontalPanelRef = {null};
         List<IndicatorModel> pendingIndicators = new ArrayList<>();
         List<String> pendingGauges = new ArrayList<>();
@@ -603,6 +640,23 @@ public class CalibrationDialogWidget {
                     pendingGauges.add(entry.getAs(String.class));
                     break;
                 case PANEL:
+                    // [tag:settings_summary_line] panels repeated from other pages become one line
+                    if (SettingsSummaryLine.isSummarized(dialogModel.getKey(), entry.getAs(PanelModel.class))) {
+                        if (!summaryShown && ci != null) {
+                            summaryShown = true;
+                            List<SettingsSummaryLine.Item> items =
+                                SettingsSummaryLine.items(dialogModel.getKey(), iniFileModel, ci);
+                            if (!items.isEmpty()) {
+                                JComponent line = SettingsSummaryLine.create(dialogModel.getKey(), items, settingOpener);
+                                if (isBorderLayout) {
+                                    container.add(line, BorderLayout.NORTH);
+                                } else {
+                                    container.add(line);
+                                }
+                            }
+                        }
+                        break;
+                    }
                     renderPanelEntry(container, entry.getAs(PanelModel.class), iniFileModel, ci,
                             isBorderLayout, horizontalPanelRef, notifyEdit, fieldLabelWidth, fieldEditorWidth);
                     break;
@@ -926,19 +980,8 @@ public class CalibrationDialogWidget {
         TableModel table = TablePages.find(iniFileModel, panel.getPanelName());
         if (table != null) {
             viewportPane.fillWidth = true;
-            JComponent content = createTableView(iniFileModel, table, notifyEdit,
-                TablePages.isMap3d(iniFileModel, panel.getPanelName()));
-            if ("veTableTbl".equals(table.getTableId())) {
-                final IniFileModel capturedIni = iniFileModel;
-                JButton genVeBtn = new JButton("Generate base VE...");
-                genVeBtn.addActionListener(e -> showVeGeneratorPanel(capturedIni));
-                JPanel veToolbar = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
-                veToolbar.add(genVeBtn);
-                JPanel wrapper = new JPanel(new BorderLayout());
-                wrapper.add(veToolbar, BorderLayout.NORTH);
-                wrapper.add(content, BorderLayout.CENTER);
-                content = wrapper;
-            }
+            JComponent content = withVeGenerator(createTableView(iniFileModel, table, notifyEdit,
+                TablePages.isMap3d(iniFileModel, panel.getPanelName())), table, iniFileModel);
             content = withTopicHelp(content, table.getTopicHelp(), iniFileModel);
             CalibrationFieldFactory.applyStyle(content);
             content.setAlignmentX(Component.LEFT_ALIGNMENT);

@@ -389,6 +389,7 @@ class CalibrationPanelWorkspaceTest {
         CalibrationPanelWorkspace[] workspace = new CalibrationPanelWorkspace[1];
         LookAndFeel previous = UIManager.getLookAndFeel();
         Rectangle savedBounds = new Rectangle(330, 160, 640, 400);
+        int[] packedHeight = new int[1];
         try {
             SwingUtilities.invokeAndWait(() -> {
                 if (flatLaf) {
@@ -432,6 +433,7 @@ class CalibrationPanelWorkspaceTest {
                     "Pack around the form, with native window decorations outside the preferred content size");
                 find(detached, JTextField.class).setText("58");
                 assertEquals("58", find(workspace[0].getPrimary().getContentPane(), JTextField.class).getText());
+                packedHeight[0] = detached.getHeight();
                 detached.setBounds(savedBounds);
             });
             robot.waitForIdle();
@@ -452,7 +454,10 @@ class CalibrationPanelWorkspaceTest {
             robot.waitForIdle();
             SwingUtilities.invokeAndWait(() -> {
                 Window detached = Arrays.stream(owner[0].getOwnedWindows()).filter(Window::isShowing).findFirst().get();
-                assertEquals(savedBounds, detached.getBounds());
+                // [tag:table_window_fit] The saved size was taller than the form: the restored window
+                // keeps its place and width and shrinks to the height it was packed at.
+                assertEquals(new Rectangle(savedBounds.x, savedBounds.y, savedBounds.width, packedHeight[0]),
+                    detached.getBounds());
                 detached.dispatchEvent(new WindowEvent(detached, WindowEvent.WINDOW_CLOSING));
                 assertFalse(detached.isDisplayable());
             });
@@ -791,6 +796,103 @@ class CalibrationPanelWorkspaceTest {
         });
     }
 
+    /** [tag:table_window_fit] */
+    @Test
+    void windowsFitTheirContentUnlessThePreviewIsOn() throws Throwable {
+        IniFileModel ini = ini();
+        Node tableSettings = new Node();
+        Fixture[] fixture = new Fixture[1];
+        FakeWindow[] windows = new FakeWindow[2];
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                fixture[0] = new Fixture(ini, new Node(), tableSettings,
+                    Collections.singletonList(new Rectangle(0, 0, 1280, 960)));
+                fixture[0].select("table");
+                fixture[0].workspace.detachCurrentPanel();
+                fixture[0].select("curve");
+                fixture[0].workspace.detachCurrentPanel();
+                windows[0] = fixture[0].windows.get(0);
+                windows[1] = fixture[0].windows.get(1);
+                assertTrue(windows[0].fits.isEmpty(), "A fresh window is packed instead");
+                viewSegment(windows[0], "Both").doClick();
+            });
+            // The workspace reacts to the change on a later event.
+            SwingUtilities.invokeAndWait(() -> {
+                assertEquals(Collections.singletonList(true), windows[0].fits,
+                    "The window where the preview was switched on may grow to show it");
+                assertTrue(windows[1].fits.isEmpty(), "Other windows keep their size while the preview is on");
+                assertTrue(viewSegment(fixture[0].windows.get(0), "Both").isSelected());
+                viewSegment(windows[0], "Table").doClick();
+            });
+            SwingUtilities.invokeAndWait(() -> {
+                assertEquals(Arrays.asList(true, false), windows[0].fits, "Without the preview it shrinks");
+                assertEquals(Collections.singletonList(false), windows[1].fits, "Every window shrinks to its content");
+            });
+        } finally {
+            SwingUtilities.invokeAndWait(() -> fixture[0].close());
+        }
+    }
+
+    @Test
+    void restoredWindowsAreNoTallerThanTheirContentUnlessThePreviewIsOn() throws Throwable {
+        IniFileModel ini = ini();
+        SwingUtilities.invokeAndWait(() -> {
+            Node config = new Node();
+            Node tableSettings = new Node();
+            List<Rectangle> screens = Collections.singletonList(new Rectangle(0, 0, 1280, 960));
+            try (Fixture first = new Fixture(ini, config, tableSettings, screens)) {
+                first.workspace.openPanel("table");
+                first.windows.get(0).move(new Rectangle(210, 130, 640, 900));
+            }
+            try (Fixture second = new Fixture(ini, config, tableSettings, screens)) {
+                second.workspace.openPanel("table");
+                assertEquals(Collections.singletonList(false), second.windows.get(0).fits,
+                    "A restored window shrinks to its content but never grows past its saved size");
+            }
+            tableSettings.setBoolProperty(TuningTableView.PREVIEW_PROPERTY, true);
+            try (Fixture third = new Fixture(ini, config, tableSettings, screens)) {
+                third.workspace.openPanel("table");
+                assertTrue(third.windows.get(0).fits.isEmpty(), "The preview fills the saved size");
+            }
+        });
+    }
+
+    @Test
+    void heightFitsContentShrinkingAlwaysAndGrowingOnlyWhenAsked() {
+        List<Rectangle> screens = Collections.singletonList(new Rectangle(0, 0, 1280, 960));
+        Rectangle tall = new Rectangle(100, 50, 700, 800);
+        assertEquals(new Rectangle(100, 50, 700, 450), CalibrationPanelWorkspace.fitHeight(tall, 450, false, screens));
+        assertEquals(new Rectangle(100, 50, 700, 450), CalibrationPanelWorkspace.fitHeight(tall, 450, true, screens));
+        Rectangle shortWindow = new Rectangle(100, 50, 700, 300);
+        assertEquals(shortWindow, CalibrationPanelWorkspace.fitHeight(shortWindow, 450, false, screens),
+            "A window the user made shorter keeps its size");
+        assertEquals(new Rectangle(100, 50, 700, 450), CalibrationPanelWorkspace.fitHeight(shortWindow, 450, true, screens));
+        assertEquals(new Rectangle(100, 0, 700, 960), CalibrationPanelWorkspace.fitHeight(shortWindow, 2000, true, screens),
+            "Growing stops at the screen");
+    }
+
+    /** "Table", "Both" or "3D" on the table's view switch. */
+    private static JToggleButton viewSegment(FakeWindow window, String text) {
+        JToggleButton toggle = findToggle(window.content, text);
+        assertNotNull(toggle, "no " + text + " segment");
+        return toggle;
+    }
+
+    private static JToggleButton findToggle(Container container, String text) {
+        for (Component component : container.getComponents()) {
+            if (component instanceof JToggleButton && text.equals(((JToggleButton) component).getText())) {
+                return (JToggleButton) component;
+            }
+            if (component instanceof Container) {
+                JToggleButton found = findToggle((Container) component, text);
+                if (found != null) {
+                    return found;
+                }
+            }
+        }
+        return null;
+    }
+
     @Test
     void restoredBoundsFitAvailableMonitorsIncludingNegativeOrigins() {
         List<Rectangle> screens = Arrays.asList(new Rectangle(0, 0, 1920, 1040), new Rectangle(-1280, 0, 1280, 984));
@@ -814,9 +916,13 @@ class CalibrationPanelWorkspaceTest {
         }
 
         Fixture(IniFileModel ini, Node config, List<Rectangle> screens) {
+            this(ini, config, null, screens);
+        }
+
+        Fixture(IniFileModel ini, Node config, Node tableSettings, List<Rectangle> screens) {
             this.ini = ini;
             context.iniFileState.setIniFileModelForTest(ini);
-            workspace = new CalibrationPanelWorkspace(context, config,
+            workspace = new CalibrationPanelWorkspace(context, config, tableSettings,
                 (owner, title, content, close, split, canSplit, moved) -> {
                     FakeWindow window = new FakeWindow(title, content, close, split, canSplit, moved);
                     windows.add(window);
@@ -849,6 +955,8 @@ class CalibrationPanelWorkspaceTest {
         boolean canSplit;
         boolean packToContent;
         int raised;
+        /** Each fitHeight call: whether it could grow the window. */
+        final java.util.List<Boolean> fits = new java.util.ArrayList<>();
 
         FakeWindow(String title, JScrollPane content, Runnable close, Runnable split, boolean canSplit,
                    Consumer<Rectangle> moved) {
@@ -871,6 +979,7 @@ class CalibrationPanelWorkspaceTest {
         public Rectangle getBounds() { return new Rectangle(bounds); }
         public void setBounds(Rectangle bounds) { this.bounds = new Rectangle(bounds); }
         public void setCanSplit(boolean canSplit) { this.canSplit = canSplit; }
+        public void fitHeight(boolean grow) { fits.add(grow); }
         public void dispose() { disposed = true; }
     }
 

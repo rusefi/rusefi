@@ -263,6 +263,13 @@ public class MainMenuTreeWidget {
         return true;
     }
 
+    /** First page the user can open now that shows the field, other than {@code excludedPageKey}; or null. */
+    public SubMenuModel findPageWithField(String fieldKey, String excludedPageKey) {
+        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+        return ini == null || fieldKey == null ? null
+            : menuTree.findAvailablePageWithField(ini, fieldKey, excludedPageKey);
+    }
+
     public void selectSubMenu(String subMenuKey) {
         DefaultMutableTreeNode node = menuTree.findSubMenuNode(subMenuKey);
         if (node != null) {

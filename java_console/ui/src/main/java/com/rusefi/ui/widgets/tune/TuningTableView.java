@@ -75,6 +75,13 @@ public class TuningTableView {
             return getAutoResizeMode() != AUTO_RESIZE_OFF
                 && (!(getParent() instanceof JViewport) || getParent().getWidth() >= minimumGridWidth());
         }
+
+        @Override
+        public Dimension getPreferredScrollableViewportSize() {
+            // [tag:table_window_fit] As tall as the rows: JTable asks for 400 px whatever its row
+            // count, which left an empty band inside the grid's frame once windows fit their content.
+            return new Dimension(super.getPreferredScrollableViewportSize().width, getRowCount() * getRowHeight());
+        }
     };
     /** Space around a cell's text, so values do not touch the grid lines. */
     private static final int CELL_TEXT_PADDING = 8;
@@ -96,7 +103,24 @@ public class TuningTableView {
     private boolean full3D;
     private boolean previewEligible;
     private final CardLayout cardLayout = new CardLayout();
-    private final JPanel tableContainer = new JPanel(cardLayout);
+    private final JPanel tableContainer = new JPanel(cardLayout) {
+        @Override
+        public Dimension getPreferredSize() {
+            // [tag:table_window_fit] The size of the view shown: CardLayout asks for the largest
+            // card, so the grid would get the full 3D view's height.
+            if (isPreferredSizeSet()) {
+                return super.getPreferredSize();
+            }
+            for (Component card : getComponents()) {
+                if (card.isVisible()) {
+                    Dimension size = card.getPreferredSize();
+                    Insets insets = getInsets();
+                    return new Dimension(size.width + insets.left + insets.right, size.height + insets.top + insets.bottom);
+                }
+            }
+            return super.getPreferredSize();
+        }
+    };
     private final JPanel content = new JPanel();
     private final String title;
     private double minValue = Double.MAX_VALUE;
@@ -127,11 +151,14 @@ public class TuningTableView {
     private final JToggleButton tableSegment = SegmentedControl.segment("Table");
     private final JToggleButton surfaceSegment = SegmentedControl.segment("3D");
     /**
-     * Shows the small 3D preview below the grid. Off by default: the preview made table windows tall
-     * enough to hide the gauges. One choice for every table, kept with the orientation settings.
+     * The grid with a small 3D preview below it. Tables open on "Table": the preview made table
+     * windows tall enough to hide the gauges. Choosing "Table" or "Both" is one choice for every
+     * table, kept with the orientation settings; "3D" is a look and is not remembered.
+     * [tag:table_window_fit] Detached windows fit their height to the content without the preview.
      */
-    private final JToggleButton previewToggle = new JToggleButton("Preview");
+    private final JToggleButton bothSegment = SegmentedControl.segment("Both");
     static final String PREVIEW_PROPERTY = "mini_3d_preview";
+    private boolean previewOn;
     /** Grid editing buttons; disabled while the 3D view replaces the grid. */
     private final java.util.List<Component> editControls = new java.util.ArrayList<>();
 
@@ -219,26 +246,21 @@ public class TuningTableView {
         tableContainer.add(gridPanel, "table");
         tableContainer.add(surface3DView, "3d");
 
-        // The 3D view replaces the grid, so the switch shows both choices rather than a checkbox
+        // One switch for the three views rather than a checkbox per view
         tableSegment.setToolTipText("Edit the values in a grid");
-        surfaceSegment.setToolTipText("Show the table as a 3D surface - drag to rotate");
+        bothSegment.setToolTipText("Edit the values in a grid, with a small 3D preview below it");
+        surfaceSegment.setToolTipText("Show the table as a large 3D surface - drag to rotate");
         ButtonGroup viewGroup = new ButtonGroup();
         viewGroup.add(tableSegment);
+        viewGroup.add(bothSegment);
         viewGroup.add(surfaceSegment);
-        tableSegment.setSelected(true);
-        tableSegment.addActionListener(e -> show3D(false));
+        previewOn = orientationConfig.getBoolProperty(PREVIEW_PROPERTY);
+        (previewOn ? bothSegment : tableSegment).setSelected(true);
+        tableSegment.addActionListener(e -> showGrid(false));
+        bothSegment.addActionListener(e -> showGrid(true));
         surfaceSegment.addActionListener(e -> show3D(true));
-        SegmentedControl viewSwitch = new SegmentedControl(tableSegment, surfaceSegment);
+        SegmentedControl viewSwitch = new SegmentedControl(tableSegment, bothSegment, surfaceSegment);
         viewSwitch.setMaximumSize(viewSwitch.getPreferredSize());
-
-        previewToggle.setToolTipText("Show a small 3D preview below the grid");
-        previewToggle.setSelected(orientationConfig.getBoolProperty(PREVIEW_PROPERTY));
-        previewToggle.addActionListener(e -> {
-            orientationConfig.setBoolProperty(PREVIEW_PROPERTY, previewToggle.isSelected());
-            updatePreviewVisibility();
-            // Other open tables follow the same choice.
-            onOrientationChange.run();
-        });
 
         JTextField deltaField = new JTextField("0.5", 5);
         deltaField.setToolTipText("Amount added or subtracted by the Up and Down buttons");
@@ -303,7 +325,6 @@ public class TuningTableView {
         topPanel.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));
         topPanel.add(new JLabel(title));
         topPanel.add(viewSwitch);
-        topPanel.add(previewToggle);
         topPanel.add(unburnedCountLabel);
 
         if (!viewMode) {
@@ -564,7 +585,7 @@ public class TuningTableView {
         // A scrollable dialog keeps a short preview and scrolls to it; elsewhere it hides when it
         // does not fit below the table.
         boolean fits = viewport != null || availableHeight >= gridHeight + MIN_PREVIEW_HEIGHT;
-        boolean visible = previewToggle.isSelected() && previewEligible && !full3D
+        boolean visible = previewOn && previewEligible && !full3D
             && tableContainer.getWidth() >= 320 && fits;
         boolean sizeChanged = false;
         if (visible) {
@@ -1067,14 +1088,24 @@ public class TuningTableView {
      */
     public void show3D(boolean show) {
         full3D = show;
-        (show ? surfaceSegment : tableSegment).setSelected(true);
+        (show ? surfaceSegment : previewOn ? bothSegment : tableSegment).setSelected(true);
         cardLayout.show(tableContainer, show ? "3d" : "table");
         for (Component control : editControls) {
             control.setEnabled(!show);
         }
-        // The preview belongs to the grid view.
-        previewToggle.setEnabled(!show);
         updatePreviewVisibility();
+    }
+
+    /** "Table" or "Both": the grid, without or with the preview; the choice is remembered. */
+    private void showGrid(boolean preview) {
+        boolean changed = preview != previewOn;
+        previewOn = preview;
+        show3D(false);
+        if (changed) {
+            orientationConfig.setBoolProperty(PREVIEW_PROPERTY, preview);
+            // Other open tables follow, and the window fits the new height.
+            onOrientationChange.run();
+        }
     }
 
     boolean is3DShown() {
