@@ -220,7 +220,7 @@ Packed channels already unpack in C++; only the remaining offset is applied.
 |------------------------------|-------|
 | `getEngineState()` | 0=stopped, 1=cranking/spinning-up, 2=running |
 | `getAirmass([mode])` | Cylinder airmass from configured (or explicitly given) airmass model |
-| `getTorque()` | Interpolates the page-4 torque table at current RPM/TPS (not on F4) |
+| `getTorque()` | Looks up page-4 torque via `getIndicatedTorque()` using current TPS (%) and RPM. Preserves the Lua TPS input even though the calculator and table generator assume MAP (kPa); this axis mismatch remains (not on F4) |
 | `getTimeSinceTriggerEventMs()` | Staleness of last trigger event |
 | `isFirmwareError()` | `hasFirmwareError()` |
 | `getConsumedGrams()` / `getConsumedGramsRemainder()` / `getConsumptionGramPerSecond()` / `resetOdometer()` | TripOdometer fuel-consumption tracking (EFI_VEHICLE_SPEED + MODULE_ODOMETER) |

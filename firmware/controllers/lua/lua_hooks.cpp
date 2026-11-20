@@ -12,7 +12,7 @@
 #include "rusefi_lua.h"
 #include "lua_hooks.h"
 #include "lua_hooks_registry.h"
-#include "second_tables.h"
+#include "torque_estimator.h"
 
 #include "fuel_math.h"
 #include "airmass.h"
@@ -1000,14 +1000,10 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 #if !defined(STM32F4)
 	hooks.add( "getTorque", [](lua_State* l) {
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
+		// Keep the Lua hook's historical TPS input. The torque table generator
+		// and getIndicatedTorque assume MAP in kPa; this TPS/MAP mismatch remains.
 		auto tps = Sensor::getOrZero(SensorType::Tps1);
-
- 	  // here we assume load is TPS
-		auto result = interpolate3d(
-                  		secondTablesGetState()->torqueTable,
-                  		secondTablesGetState()->torqueLoadBins, tps,
-                  		secondTablesGetState()->torqueRpmBins, rpm
-                  	);
+		auto result = getIndicatedTorque(tps, rpm);
 		lua_pushnumber(l, result);
 		return 1;
 	});

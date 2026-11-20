@@ -8,6 +8,15 @@
 
 #include "pch.h"
 #include "second_tables.h"
+#include "torque_estimator.h"
+
+float getIndicatedTorque(float map, float rpm) {
+  const page4_s* page4 = secondTablesGetState();
+  return interpolate3d(
+      page4->torqueTable,
+      page4->torqueLoadBins, map,
+      page4->torqueRpmBins, rpm);
+}
 
 void estimateTorqueTable() {
   page4_s* page4 = secondTablesGetState();
