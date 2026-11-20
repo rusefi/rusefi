@@ -639,7 +639,7 @@ public class CalibrationDialogWidget {
             }
             JLabel label = new JLabel(field.getUiName());
             CalibrationFieldFactory.applyStyle(label);
-            width = Math.max(width, label.getPreferredSize().width);
+            width = Math.max(width, label.getPreferredSize().width + CalibrationFieldFactory.LABEL_TEXT_SLACK);
         }
         for (PanelModel panel : dialog.getPanels()) {
             DialogModel subDialog = panel.resolveDialog(iniFileModel);

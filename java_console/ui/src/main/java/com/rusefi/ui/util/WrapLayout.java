@@ -11,9 +11,27 @@ public class WrapLayout extends FlowLayout {
         super(align, hgap, vgap);
     }
 
+    /** The height last reported to each container's parent, which sized the container from it. */
+    private final java.util.Map<Container, Integer> reportedHeights = new java.util.WeakHashMap<>();
+
     @Override
     public Dimension preferredLayoutSize(Container target) {
-        return computeSize(target, true);
+        Dimension size = computeSize(target, true);
+        reportedHeights.put(target, size.height);
+        return size;
+    }
+
+    @Override
+    public void layoutContainer(Container target) {
+        super.layoutContainer(target);
+        // The parent asks for the preferred size before it gives the container a new width, so
+        // a change in the number of lines is only seen here; the parent must ask again.
+        Integer reported = reportedHeights.get(target);
+        int height = computeSize(target, true).height;
+        if (reported != null && reported != height) {
+            reportedHeights.put(target, height);
+            javax.swing.SwingUtilities.invokeLater(target::revalidate);
+        }
     }
 
     @Override
