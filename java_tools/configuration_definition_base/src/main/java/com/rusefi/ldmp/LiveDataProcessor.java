@@ -125,7 +125,7 @@ public class LiveDataProcessor {
 
     private void end(int sensorTsPosition) throws IOException {
         log.info("TS_TOTAL_OUTPUT_SIZE=" + sensorTsPosition);
-        try (FileWriter fw = new FileWriter(getTsOutputsDestination() + "total_live_data_generated.h")) {
+        try (LazyFile fw = fileFactory.create(getTsOutputsDestination() + "total_live_data_generated.h")) {
             fw.write(header);
             fw.write("#define TS_TOTAL_OUTPUT_SIZE " + sensorTsPosition);
         }

@@ -2,11 +2,10 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.enum_reader.Value;
+import com.rusefi.util.LazyFile;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -47,9 +46,9 @@ public class ToJavaEnum {
             String java = generate(sb.toString(), registry, e.getKey(), e.getValue());
 
             String fullFileName = outputPath + File.separator + e.getKey() + ".java";
-            BufferedWriter br = new BufferedWriter(new FileWriter(fullFileName));
-            br.write(java);
-            br.close();
+            try (LazyFile br = LazyFile.REAL.create(fullFileName)) {
+                br.write(java);
+            }
         }
     }
 
