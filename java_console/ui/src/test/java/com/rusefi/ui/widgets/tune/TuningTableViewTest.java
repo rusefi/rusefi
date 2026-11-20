@@ -758,6 +758,7 @@ public class TuningTableViewTest {
             AtomicInteger edits = new AtomicInteger();
             view.setOnEdit(edits::incrementAndGet);
             JTable table = findTable(view.getContent());
+            clickInto(table);
             table.setRowSelectionInterval(0, 0);
             table.setColumnSelectionInterval(1, 2);
             MouseWheelEvent event = new MouseWheelEvent(table, MouseEvent.MOUSE_WHEEL,
@@ -785,6 +786,71 @@ public class TuningTableViewTest {
     }
 
     @Test
+    public void testWheelOverAnUnclickedTableScrollsThePage() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(4);
+            TuningTableView view = editableView(false, image);
+            JTable table = findTable(view.getContent());
+            JScrollPane page = pageAbove(view.getContent());
+            table.changeSelection(0, 1, false, false);
+            MouseWheelEvent event = wheelEvent(table, 1, 0);
+            table.dispatchEvent(event);
+            assertTrue(event.isConsumed(), "The page took the wheel");
+            assertArrayEquals(new byte[]{1, 2, 3, 4}, image.getContent(), "Scrolling past the table keeps its values");
+            int scrolled = page.getViewport().getViewPosition().y;
+            assertTrue(scrolled > 0, "The page scrolled");
+
+            // A grid wider than the window scrolls sideways; a plain wheel turn still moves the page.
+            JScrollPane grid = (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class, table);
+            grid.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+            layOut(page);
+            assertTrue(grid.getHorizontalScrollBar().isVisible());
+            table.dispatchEvent(wheelEvent(table, 1, 0));
+            assertTrue(page.getViewport().getViewPosition().y > scrolled, "The page scrolled further");
+            scrolled = page.getViewport().getViewPosition().y;
+
+            clickInto(table);
+            wheel(table, 1, 0);
+            assertArrayEquals(new byte[]{1, 2, 2, 4}, image.getContent(), "After a click the wheel edits");
+            assertEquals(scrolled, page.getViewport().getViewPosition().y, "Editing does not scroll the page");
+
+            tableMouse(table).mouseExited(mouseAt(table, MouseEvent.MOUSE_EXITED, -5, -5));
+            table.dispatchEvent(wheelEvent(table, -1, 0));
+            assertArrayEquals(new byte[]{1, 2, 2, 4}, image.getContent(), "Leaving the table ends wheel editing");
+            assertTrue(page.getViewport().getViewPosition().y < scrolled, "The page scrolled back up");
+
+            clickInto(table);
+            tableMouse(table).mouseExited(mouseAt(table, MouseEvent.MOUSE_EXITED, 10, 10));
+            wheel(table, -1, 0);
+            assertArrayEquals(new byte[]{1, 2, 3, 4}, image.getContent(), "Moving onto the cell editor keeps wheel editing");
+
+            for (java.awt.event.FocusListener listener : table.getFocusListeners()) {
+                listener.focusLost(new FocusEvent(table, FocusEvent.FOCUS_LOST, false, new JButton()));
+            }
+            table.dispatchEvent(wheelEvent(table, 1, 0));
+            assertArrayEquals(new byte[]{1, 2, 3, 4}, image.getContent(), "Focus elsewhere ends wheel editing");
+        });
+    }
+
+    private static TuningTableView.TableMouse tableMouse(JTable table) {
+        for (java.awt.event.MouseListener listener : table.getMouseListeners()) {
+            if (listener instanceof TuningTableView.TableMouse) {
+                return (TuningTableView.TableMouse) listener;
+            }
+        }
+        throw new AssertionError("No table mouse handler");
+    }
+
+    private static MouseEvent mouseAt(JTable table, int id, int x, int y) {
+        return new MouseEvent(table, id, System.currentTimeMillis(), 0, x, y, 1, false, MouseEvent.BUTTON1);
+    }
+
+    /** What a click in the grid does to wheel handling; Swing doesn't deliver mouse events to undisplayed tables. */
+    private static void clickInto(JTable table) {
+        tableMouse(table).mousePressed(mouseAt(table, MouseEvent.MOUSE_PRESSED, 10, 10));
+    }
+
+    @Test
     public void testWheelUsesPrecisionAndShiftThreeSteps() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
             ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(16);
@@ -793,6 +859,7 @@ public class TuningTableViewTest {
             AtomicInteger edits = new AtomicInteger();
             view.setOnEdit(edits::incrementAndGet);
             JTable table = findTable(view.getContent());
+            clickInto(table);
             table.setRowSelectionInterval(0, 0);
             table.setColumnSelectionInterval(0, 2);
             wheel(table, -3, 0);
@@ -1343,6 +1410,8 @@ public class TuningTableViewTest {
                 AtomicInteger edits = new AtomicInteger();
                 view.setOnEdit(edits::incrementAndGet);
                 JTable table = findTable(view.getContent());
+                clickInto(table);
+                table.clearSelection();
                 wheel(table, 1);
                 assertEquals(-1, table.getSelectedRow());
 
@@ -1396,6 +1465,7 @@ public class TuningTableViewTest {
             JViewport viewport = (JViewport) table.getParent();
             viewport.setSize(300, table.getRowHeight() * 3);
             table.setSize(300, table.getRowHeight() * 30);
+            clickInto(table);
             table.changeSelection(0, 2, false, false);
             wheel(table, 10);
             assertTrue(table.isCellSelected(10, 2));
@@ -1411,11 +1481,45 @@ public class TuningTableViewTest {
     }
 
     private void wheel(JTable table, int rotation, int modifiers) {
-        MouseWheelEvent event = new MouseWheelEvent(table, MouseEvent.MOUSE_WHEEL,
-            System.currentTimeMillis(), modifiers, 10, 10, 0, false,
-            MouseWheelEvent.WHEEL_UNIT_SCROLL, 3, rotation);
+        MouseWheelEvent event = wheelEvent(table, rotation, modifiers);
         table.dispatchEvent(event);
         assertTrue(event.isConsumed());
+    }
+
+    private static MouseWheelEvent wheelEvent(JTable table, int rotation, int modifiers) {
+        return new MouseWheelEvent(table, MouseEvent.MOUSE_WHEEL,
+            System.currentTimeMillis(), modifiers, 10, 10, 0, false,
+            MouseWheelEvent.WHEEL_UNIT_SCROLL, 3, rotation);
+    }
+
+    /**
+     * Lays the table out below other settings in a scrolling page, as a calibration dialog does,
+     * with the page taller than its window.
+     */
+    private JScrollPane pageAbove(JComponent tableContent) {
+        JPanel page = new com.rusefi.ui.util.ScrollablePanel();
+        page.setLayout(new BoxLayout(page, BoxLayout.Y_AXIS));
+        JPanel settings = new JPanel();
+        settings.setPreferredSize(new Dimension(300, 400));
+        page.add(settings);
+        page.add(tableContent);
+        JScrollPane scroll = new JScrollPane(page);
+        scroll.setSize(300, 200);
+        layOut(scroll);
+        assertTrue(scroll.getVerticalScrollBar().isVisible(), "The page needs to scroll");
+        JScrollPane grid = (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class, findTable(tableContent));
+        assertFalse(grid.getVerticalScrollBar().isVisible(), "The whole grid shows, as in a calibration dialog");
+        return scroll;
+    }
+
+    /** validate() does nothing without a displayed window, so lay the hierarchy out directly. */
+    private static void layOut(Component component) {
+        component.doLayout();
+        if (component instanceof Container) {
+            for (Component child : ((Container) component).getComponents()) {
+                layOut(child);
+            }
+        }
     }
 
     private TuningTableView editableView(boolean viewMode, ConfigurationImage image) {
