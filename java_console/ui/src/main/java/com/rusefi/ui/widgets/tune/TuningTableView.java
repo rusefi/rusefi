@@ -65,7 +65,20 @@ public class TuningTableView {
             super.paintComponent(g);
             paintLiveMarker(g);
         }
+
+        @Override
+        public boolean getScrollableTracksViewportWidth() {
+            // Columns stretch to fill a wide window, but never below their minimum widths
+            // (fitColumnWidths): a narrower window scrolls the grid sideways instead of
+            // squeezing every value to "...".
+            return getAutoResizeMode() != AUTO_RESIZE_OFF
+                && (!(getParent() instanceof JViewport) || getParent().getWidth() >= minimumGridWidth());
+        }
     };
+    /** Space around a cell's text, so values do not touch the grid lines. */
+    private static final int CELL_TEXT_PADDING = 8;
+    /** A column never needs more room than this to stay readable. */
+    private static final int MAX_COLUMN_MIN_WIDTH = 90;
     private static final int LIVE_DOT_RADIUS = 5;
     private static final int TRAIL_DOT_RADIUS = 3;
     /** How long earlier operating points stay on the trail, fading out. */
@@ -515,7 +528,9 @@ public class TuningTableView {
         // Keep the grid usable in small dialogs. Large tables can scroll above the preview.
         Insets border = tableScrollPane.getInsets();
         int gridHeight = Math.min(320, table.getRowCount() * table.getRowHeight())
-            + table.getTableHeader().getPreferredSize().height + border.top + border.bottom;
+            + table.getTableHeader().getPreferredSize().height + border.top + border.bottom
+            + (table.getScrollableTracksViewportWidth() ? 0
+                : tableScrollPane.getHorizontalScrollBar().getPreferredSize().height);
         int availableHeight = tableContainer.getHeight();
         JViewport viewport = (JViewport) SwingUtilities.getAncestorOfClass(JViewport.class, tableContainer);
         if (viewport != null) {
@@ -1299,6 +1314,7 @@ public class TuningTableView {
         bins[index] = encoded;
         if (xAxis) {
             table.getColumnModel().getColumn(index + 1).setHeaderValue(model.getColumnName(index + 1));
+            fitColumnWidths();
             table.getTableHeader().repaint();
         } else {
             model.fireTableCellUpdated(model.data.length - 1 - index, 0);
@@ -1636,6 +1652,8 @@ public class TuningTableView {
         surface3DView.setAxisTitles(xLabel, yLabel, zLabel);
         mini3DView.setAxisTitles(xLabel, yLabel, zLabel);
         table.setModel(model);
+        model.addTableModelListener(e -> fitColumnWidths());
+        fitColumnWidths();
         table.clearSelection();
         updateSurfaceSelection();
         updateSurfaces(dataValues, xBins, yBins);
@@ -1667,6 +1685,44 @@ public class TuningTableView {
         UnburnedChanges axes = UnburnedChanges.of(axisImageTarget, burned);
         return values.countChangedCells(zBinsField) + axes.countChangedCells(xBinsField)
             + axes.countChangedCells(yBinsField);
+    }
+
+    /**
+     * Gives every column the width of its widest value or axis label as a minimum. The grid
+     * stretches beyond that in wide windows and scrolls sideways in narrow ones.
+     */
+    private void fitColumnWidths() {
+        FontMetrics values = table.getFontMetrics(table.getFont());
+        JTableHeader header = table.getTableHeader();
+        FontMetrics labels = header.getFontMetrics(header.getFont());
+        javax.swing.table.TableColumnModel columns = table.getColumnModel();
+        for (int column = 0; column < columns.getColumnCount(); column++) {
+            javax.swing.table.TableColumn tableColumn = columns.getColumn(column);
+            int textWidth = labels.stringWidth(String.valueOf(tableColumn.getHeaderValue()));
+            for (int row = 0; row < table.getRowCount(); row++) {
+                textWidth = Math.max(textWidth, values.stringWidth(String.valueOf(table.getValueAt(row, column))));
+            }
+            int width = Math.min(MAX_COLUMN_MIN_WIDTH, textWidth + CELL_TEXT_PADDING);
+            if (tableColumn.getMinWidth() != width || tableColumn.getPreferredWidth() != width) {
+                tableColumn.setMinWidth(width);
+                // Without stretching, the grid is exactly as wide as its minimum.
+                tableColumn.setPreferredWidth(width);
+            }
+        }
+        table.revalidate();
+    }
+
+    private int minimumGridWidth() {
+        int width = 0;
+        javax.swing.table.TableColumnModel columns = table.getColumnModel();
+        for (int column = 0; column < columns.getColumnCount(); column++) {
+            width += columns.getColumn(column).getMinWidth();
+        }
+        return width;
+    }
+
+    JTable getTableForTests() {
+        return table;
     }
 
     JLabel getUnburnedCountLabelForTests() {

@@ -173,6 +173,45 @@ class TuningTablePreviewTest {
         });
     }
 
+    @Test
+    void narrowDialogScrollsTheGridSidewaysInsteadOfSqueezingValues() throws Exception, com.rusefi.ini.reader.IniParsingException {
+        IniFileModel ini;
+        try (java.io.InputStream stream = getClass().getResourceAsStream("/january.ini")) {
+            RawIniFile raw = IniFileReaderUtil.read(stream, "january.ini");
+            ini = IniFileReaderUtil.readIniFile(raw, "january.ini", new IniFileMetaInfoImpl(raw));
+        }
+        ConfigurationImage image = Msq.readTune(new java.io.File(
+            getClass().getResource("/january_tune.msq").toURI()).getAbsolutePath()).asImage(ini);
+        SwingUtilities.invokeAndWait(() -> {
+            TuningTableView view = new TuningTableView("Ignition advance");
+            view.displayTable(ini, "ignitionTableTbl", image);
+            JTable table = view.getTableForTests();
+            ScrollablePanel dialog = new ScrollablePanel();
+            dialog.setLayout(new BoxLayout(dialog, BoxLayout.Y_AXIS));
+            dialog.add(view.getContent());
+            JScrollPane scroll = new JScrollPane(dialog);
+
+            scroll.setSize(280, 700);
+            invalidateTree(scroll);
+            layoutTree(scroll);
+            FontMetrics metrics = table.getFontMetrics(table.getFont());
+            for (int column = 1; column < table.getColumnCount(); column++) {
+                int width = table.getColumnModel().getColumn(column).getWidth();
+                for (int row = 0; row < table.getRowCount(); row++) {
+                    String text = String.valueOf(table.getValueAt(row, column));
+                    assertTrue(metrics.stringWidth(text) < width, text + " must fit its " + width + " px column");
+                }
+            }
+            JViewport gridViewport = (JViewport) table.getParent();
+            assertTrue(table.getWidth() > gridViewport.getWidth(), "The narrow grid scrolls sideways");
+
+            scroll.setSize(1600, 700);
+            invalidateTree(scroll);
+            layoutTree(scroll);
+            assertEquals(gridViewport.getWidth(), table.getWidth(), "A wide grid stretches to fill the window");
+        });
+    }
+
     private static void resize(JPanel cards, int width, int height) {
         cards.setSize(width, height);
         cards.doLayout();
