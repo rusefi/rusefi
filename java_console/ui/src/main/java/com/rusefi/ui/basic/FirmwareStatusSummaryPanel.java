@@ -8,6 +8,7 @@ import com.rusefi.PortResult;
 import com.rusefi.SerialPortType;
 import com.rusefi.io.LinkManager;
 import com.rusefi.maintenance.ProgramSelector;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -137,19 +138,40 @@ public final class FirmwareStatusSummaryPanel extends JPanel {
         BundleInfo firmware = rollbackController.getConnectedFirmware();
         FirmwareRollbackController.ReleaseDisplay release = rollbackController.getReleaseDisplay();
         MissingIniIdentity missingIni = firmware == null ? missingIniIdentity() : null;
+        PortResult bootloader = selectedBootloader();
+        status.setToolTipText(RELEASE_STATUS_HINT);
         String ecu;
         String branch;
         String statusText;
-        LocalDate installedDate;
+        String installedText;
         String latestText;
-        if (missingIni != null) {
+        if (bootloader != null) {
+            com.rusefi.updater.OpenbltDetectorStrategy.OpenbltInfo info = bootloader.bootloaderInfo;
+            String version = info == null || info.version == null || info.version.trim().isEmpty()
+                ? "version unavailable" : "v" + info.version;
+            String board = info == null || info.board == null || info.board.trim().isEmpty()
+                ? "board unavailable" : info.board;
+            ecu = "OpenBLT bootloader " + version + " — " + board + " (" + displayPort(bootloader.port) + ")";
+            branch = "Unavailable in bootloader mode";
+            statusText = "OpenBLT bootloader detected. Manual OpenBLT Update is available; application branch and "
+                + "firmware dates are unavailable until the ECU is running application firmware.";
+            status.setToolTipText("Application release status is unavailable while the ECU is in OpenBLT.");
+            installedText = "Not available in bootloader mode";
+            latestText = "Not available in bootloader mode";
+            keepTune.setEnabled(false);
+            keepTune.setToolTipText("Your preference is preserved for normal updates. A manual OpenBLT update may "
+                + "restore a tune backed up earlier in this session, independently of this option. A fresh tune "
+                + "backup is unavailable in bootloader mode.");
+            backupNote.setText("A fresh tune backup is unavailable in bootloader mode. Manual updates may restore "
+                + "a tune backed up earlier in this session, independently of this option.");
+        } else if (missingIni != null) {
             RusEfiSignature signature = missingIni.signature;
             ecu = "Detected " + signature.getBundleTarget() + " (" + displayPort(missingIni.port.port)
                 + ") — matching INI unavailable";
             branch = FirmwareBranchSwitchController.label(signature.getBranch());
             statusText = "ECU detected; matching INI unavailable, so tune backup and restore are disabled. "
                 + release.status;
-            installedDate = FirmwareRollbackController.parseSignatureDate(signature);
+            installedText = format(FirmwareRollbackController.parseSignatureDate(signature));
             BundleInfo fallbackFirmware = signature.asBundleInfo();
             latestText = release.latestDate != null ? format(release.latestDate)
                 : FirmwareRollbackController.isLtsBundle(fallbackFirmware)
@@ -168,7 +190,7 @@ public final class FirmwareStatusSummaryPanel extends JPanel {
             }
             branch = firmware == null ? "—" : FirmwareBranchSwitchController.label(firmware.getBranchName());
             statusText = release.status;
-            installedDate = release.installedDate;
+            installedText = format(release.installedDate);
             latestText = format(release.latestDate);
             keepTune.setEnabled(isTunePreservationAvailable());
             keepTune.setToolTipText("A tune backup is attempted before updating, but can fail. "
@@ -177,23 +199,24 @@ public final class FirmwareStatusSummaryPanel extends JPanel {
         }
         ecuValue.setText(ecu);
 
-        boolean isLts = FirmwareRollbackController.isLtsBundle(
+        boolean isLts = bootloader == null && FirmwareRollbackController.isLtsBundle(
             firmware != null ? firmware : missingIni == null ? null : missingIni.signature.asBundleInfo());
         branchValue.setText(branch + (isLts ? " (LTS)" : ""));
-        branchValue.setToolTipText(missingIni != null ? missingIni.signature.getBranch()
-            : firmware == null ? null : firmware.getBranchName());
+        branchValue.setToolTipText(bootloader != null ? null : missingIni != null
+            ? missingIni.signature.getBranch() : firmware == null ? null : firmware.getBranchName());
         selector.setPrimaryActionBranch(firmware == null ? null : branch);
         selector.setPrimaryActionStatus(isUpToDateReleaseStatus(release.status),
             isUpdateAvailableReleaseStatus(release.status));
 
         status.setText(statusText);
-        installedValue.setText(format(installedDate));
+        installedValue.setText(installedText);
         latestValue.setText(latestText);
         statusGap.setVisible(!statusText.isEmpty());
     }
 
     public boolean isTunePreservationAvailable() {
         return !tunePreservationBusy.getAsBoolean()
+            && selectedBootloader() == null
             && (rollbackController.getConnectedFirmware() != null || missingIniIdentity() == null);
     }
 
@@ -225,6 +248,19 @@ public final class FirmwareStatusSummaryPanel extends JPanel {
         }
         RusEfiSignature signature = SignatureHelper.parse(failure.signature);
         return signature == null ? null : new MissingIniIdentity(selected, signature);
+    }
+
+    private @Nullable PortResult selectedBootloader() {
+        PortResult selected = selectedPort.get();
+        if (selected == null || selected.type != SerialPortType.OpenBlt) {
+            return null;
+        }
+        com.rusefi.AvailableHardware hardware = connectivityContext.getCurrentHardware();
+        if (hardware == null) {
+            return null;
+        }
+        return hardware.getKnownPorts().stream().filter(port ->
+            port.type == SerialPortType.OpenBlt && port.port.equals(selected.port)).findFirst().orElse(null);
     }
 
     private static String displayPort(String port) {

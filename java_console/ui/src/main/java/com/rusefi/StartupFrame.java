@@ -5,6 +5,7 @@ import com.rusefi.core.OsUtil;
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.IniLocator;
 import com.opensr5.ini.PrimeTunerStudioCache;
 import com.rusefi.autoupdate.Autoupdate;
 import com.rusefi.binaryprotocol.BinaryProtocol;
@@ -73,6 +74,7 @@ import java.util.Date;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.concurrent.atomic.AtomicReference;
@@ -115,6 +117,7 @@ public class StartupFrame {
     // instead of holding on the large scanning animation forever (#9715). Generous enough to cover a
     // typical scan -> auto-connect on a slow machine so the controls never flash before auto-connect.
     private static final int REVEAL_CONTROLS_DELAY_MS = 4000;
+    private static final int INI_LOOKUP_INDICATOR_DELAY_MS = 175;
 
     private final JFrame frame;
     /**
@@ -166,6 +169,7 @@ public class StartupFrame {
     private final JLabel dfuErrorMessage = new JLabel(
         "Failed to check for DFU devices. Try 'Run as Administrator'");
     private boolean hasSeenEcuOrSimulator = false;
+    private boolean iniSearchPending;
     private final StatusAnimation status;
     private final JButton connectButton = new JButton("Connect");
     private final JButton openLogButton = new JButton("Open data log…");
@@ -192,11 +196,16 @@ public class StartupFrame {
     // The large "scanning" card shown first (#9715); its status line is updated to "Connecting to X…"
     // if a single-ECU auto-connect fires before the controls are revealed.
     private JLabel scanningStatusLabel;
+    private JLabel iniSearchStatusLabel;
+    private JPanel iniSearchProgressArea;
+    private JProgressBar iniSearchProgressBar;
+    private IniLookupProgressDisplay iniLookupProgressDisplay;
     private Timer revealControlsTimer;
     private boolean controlsRevealed = false;
     private WizardContainer wizardContainer;
     private PortResult autoConnectedPort;
     private Thread autoConnectThread;
+    private long splashConnectAttemptGeneration;
     // [tag:offline_tune] True once an offline-tune console has been opened on the shared uiContext. The
     // splash window is gone but the port scanner stays alive so a plugged-in ECU still auto-connects —
     // and the splash must NOT open a second console when that happens (the offline console transitions
@@ -234,7 +243,9 @@ public class StartupFrame {
         status = new StatusAnimation(new StatusAnimation.StatusConsumer() {
             @Override
             public void onStatus(String niceStatus) {
-                noPortsMessage.setText(niceStatus);
+                if (!iniSearchPending) {
+                    noPortsMessage.setText(niceStatus);
+                }
             }
         }, SCANNING_PORTS);
 
@@ -417,6 +428,9 @@ public class StartupFrame {
         });
 
         connectivityContext.getPortScanner().addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
+            if (currentHardware == connectivityContext.getCurrentHardware()) {
+                ManualIniFilePicker.hardwareUpdated(currentHardware);
+            }
             // [tag:better_ux_for_flashing]: after a normal handoff the live console (DeviceSessionManager) owns device state —
             // the scanner stays alive but this splash listener must stop mutating the repurposed splash
             // widgets. The offline-tune path (isProceeding && offlineConsoleOpen) still needs the branch below.
@@ -538,8 +552,9 @@ public class StartupFrame {
         logViewer.setConfigSaver(() -> getConfig().save());
         installLogViewerEntry(outerTabs, logViewer, openLogButton, logViewer::chooseAndOpen);
         addCustomTabs(outerTabs, uiContext);
-        ManualIniFilePicker.registerStartupHost(frame.getRootPane(), outerTabs, connectTabScroll,
-            this::revealControls);
+        ManualIniFilePicker.registerStartupHostWithLookupProgress(frame.getRootPane(), outerTabs, connectTabScroll,
+            this::revealControls, this::updateIniLookupProgress, this::ownsIniRecoveryPort,
+            connectivityContext::getCurrentHardware);
 
         int savedTabIndex = getConfig().getRoot().getIntProperty(STARTUP_TAB_INDEX, 0);
         outerTabs.setSelectedIndex(Math.min(savedTabIndex, outerTabs.getTabCount() - 1));
@@ -561,7 +576,10 @@ public class StartupFrame {
         JPanel startupContent = new JPanel(new BorderLayout());
         JPanel applicationUpdateOffer = startupUpdateActions.getSoftwareUpdateOffer();
         startupContent.add(applicationUpdateOffer, BorderLayout.NORTH);
-        startupContent.add(outerTabs, BorderLayout.CENTER);
+        JPanel startupTabs = new JPanel(new BorderLayout());
+        startupTabs.add(iniSearchProgressArea, BorderLayout.NORTH);
+        startupTabs.add(outerTabs, BorderLayout.CENTER);
+        startupContent.add(startupTabs, BorderLayout.CENTER);
         rootContent.add(startupContent, CARD_STARTUP);
         rootContent.add(wizardContainer, CARD_WIZARD);
         rootContent.add(rollbackPicker, CARD_ROLLBACK);
@@ -852,6 +870,18 @@ public class StartupFrame {
         JPanel statusArea = new JPanel(new BorderLayout());
         statusArea.setOpaque(false);
         statusArea.add(noPortsMessage, BorderLayout.NORTH);
+        iniSearchStatusLabel = new JLabel("", SwingConstants.CENTER);
+        iniSearchProgressBar = new JProgressBar();
+        iniSearchProgressBar.setIndeterminate(true);
+        iniSearchProgressBar.setPreferredSize(new Dimension(240, 16));
+        iniSearchProgressArea = new JPanel(new BorderLayout(0, 4));
+        iniSearchProgressArea.setOpaque(false);
+        iniSearchProgressArea.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        iniSearchProgressArea.add(iniSearchStatusLabel, BorderLayout.NORTH);
+        iniSearchProgressArea.add(iniSearchProgressBar, BorderLayout.SOUTH);
+        iniSearchProgressArea.setVisible(false);
+        iniLookupProgressDisplay = new IniLookupProgressDisplay(
+            iniSearchProgressArea, iniSearchStatusLabel, this::revealControls);
         JPanel dfuArea = new JPanel(new BorderLayout());
         dfuArea.setOpaque(false);
         dfuArea.setBorder(BorderFactory.createEmptyBorder(12, 0, 0, 0));
@@ -1078,6 +1108,7 @@ public class StartupFrame {
         if (!asyncJobExecutor.isNotInProgress() || unsupportedEcuHost.isBlocking()) {
             return;
         }
+        ManualIniFilePicker.targetReplaced(selectedPort.port);
         if (selectedPort.isEcu()) {
             connectivityContext.getPortScanner().cachePort(selectedPort);
         }
@@ -1168,7 +1199,9 @@ public class StartupFrame {
     }
 
     private void autoConnect(PortResult target) {
+        ManualIniFilePicker.targetReplaced(target.port);
         autoConnectedPort = target;
+        long attemptGeneration = ++splashConnectAttemptGeneration;
         // A single-ECU auto-connect is starting: cancel the reveal timer and reflect status on the
         // scanning card so the connect controls never flash before the console opens (#9715).
         if (revealControlsTimer != null) {
@@ -1191,10 +1224,13 @@ public class StartupFrame {
             @Override
             public void onConnectionStatus(boolean isConnected) {
                 if (!isConnected) {
-                    SwingUtilities.invokeLater(() -> onSplashDisconnected());
+                    SwingUtilities.invokeLater(() -> onSplashDisconnected(attemptGeneration));
                     return;
                 }
                 SwingUtilities.invokeLater(() -> {
+                    if (attemptGeneration != splashConnectAttemptGeneration) {
+                        return;
+                    }
                     if (!ConnectionStatusLogic.INSTANCE.isConnected()) {
                         return;
                     }
@@ -1204,13 +1240,13 @@ public class StartupFrame {
                     if (uiContext.getBinaryProtocol().getControllerConfiguration() == null) {
                         return;
                     }
-                    onSplashConnected(target);
+                    onSplashConnected(target, attemptGeneration);
                 });
             }
 
             @Override
             public void onConnectionFailed(String msg) {
-                SwingUtilities.invokeLater(() -> onSplashConnectFailed(msg));
+                SwingUtilities.invokeLater(() -> onSplashConnectFailed(msg, attemptGeneration));
             }
         };
         ConnectionStatusLogic.INSTANCE.addListener(splashListener);
@@ -1266,7 +1302,11 @@ public class StartupFrame {
         revealControlsTimer = new Timer(REVEAL_CONTROLS_DELAY_MS, e -> {
             // Only reveal if we are not mid auto-connect and not already handing off to the console.
             if (autoConnectedPort == null && !isProceeding) {
-                revealControls();
+                if (iniSearchPending) {
+                    startRevealControlsTimer();
+                } else {
+                    revealControls();
+                }
             }
         });
         revealControlsTimer.setRepeats(false);
@@ -1285,6 +1325,121 @@ public class StartupFrame {
             revealControlsTimer.stop();
         }
         showCard(CARD_STARTUP);
+    }
+
+    private void updateIniLookupProgress(IniLocator.LookupProgress progress) {
+        if (progress.stage == IniLocator.LookupStage.COMPLETE) {
+            iniSearchPending = false;
+        } else {
+            iniSearchPending = true;
+        }
+        iniLookupProgressDisplay.accept(progress);
+    }
+
+    static final class IniLookupProgressDisplay {
+        private final JPanel area;
+        private final JLabel label;
+        private final Runnable revealControls;
+        private Timer timer;
+        private IniLocator.LookupProgress latest;
+
+        IniLookupProgressDisplay(JPanel area, JLabel label, Runnable revealControls) {
+            this.area = area;
+            this.label = label;
+            this.revealControls = revealControls;
+        }
+
+        void accept(IniLocator.LookupProgress progress) {
+            if (progress.stage == IniLocator.LookupStage.COMPLETE) {
+                latest = null;
+                if (timer != null) {
+                    timer.stop();
+                    timer = null;
+                }
+                label.setText("");
+                setVisible(false);
+                return;
+            }
+
+            latest = progress;
+            if (area.isVisible()) {
+                render(progress);
+            } else if (timer == null) {
+                timer = new Timer(INI_LOOKUP_INDICATOR_DELAY_MS, event -> {
+                    timer.stop();
+                    timer = null;
+                    IniLocator.LookupProgress buffered = latest;
+                    if (buffered == null) {
+                        return;
+                    }
+                    revealControls.run();
+                    render(buffered);
+                    setVisible(true);
+                });
+                timer.setRepeats(false);
+                timer.start();
+            }
+        }
+
+        boolean isTimerRunningForTests() {
+            return timer != null && timer.isRunning();
+        }
+
+        private void setVisible(boolean visible) {
+            area.setVisible(visible);
+            Container parent = area.getParent();
+            if (parent != null) {
+                parent.revalidate();
+                parent.repaint();
+            }
+        }
+
+        private void render(IniLocator.LookupProgress progress) {
+            switch (progress.stage) {
+                case BUNDLED_INI:
+                    label.setText("Checking bundled INI…");
+                    break;
+                case CURRENT_DIRECTORY:
+                    label.setText("Checking current directory…");
+                    break;
+                case DRIVE_ROOTS:
+                    label.setText(progress.totalRoots <= 0
+                        ? "Searching drive roots…"
+                        : "Searching drive roots… — " + progress.completedRoots + " of " + progress.totalRoots
+                            + " completed (" + progress.activeWorkers + " active)");
+                    break;
+                case CONSOLE_CACHE_DOWNLOAD:
+                    label.setText("Checking console cache / downloading INI…");
+                    break;
+                case TUNERSTUDIO_CACHE:
+                    label.setText("Checking TunerStudio cache…");
+                    break;
+                case COMPLETE:
+                    break;
+                default:
+                    throw new IllegalStateException("Unhandled INI lookup stage: " + progress.stage);
+            }
+        }
+    }
+
+    private boolean ownsIniRecoveryPort(String port) {
+        PortResult selected = (PortResult) portsComboBox.getComboPorts().getSelectedItem();
+        String selectedPort = selected != null
+            && (selected.type == SerialPortType.Ecu || selected.type == EcuWithOpenblt)
+            ? selected.port : null;
+        boolean selectedPortIsPresent = selectedPort != null
+            && connectivityContext.getPortScanner().getCurrentHardware().getKnownPorts().stream()
+                .anyMatch(knownPort -> selectedPort.equals(knownPort.port)
+                    && (knownPort.type == SerialPortType.Ecu || knownPort.type == EcuWithOpenblt));
+        boolean initialScanIntent = autoConnectedPort == null && !isProceeding && !selectedPortIsPresent;
+        return ManualIniFilePicker.ownsRecoveryPort(port,
+            autoConnectedPort == null ? null : autoConnectedPort.port,
+            selectedPort, initialScanIntent);
+    }
+
+    private boolean isExpectedMissingIniClose(String port) {
+        LinkManager.MissingIniFailure failure = uiContext.getLinkManager().getMissingIniFailure();
+        return failure != null && Objects.equals(failure.port, port);
     }
 
     /**
@@ -1516,6 +1671,12 @@ public class StartupFrame {
         });
     }
 
+    private void onSplashConnected(PortResult target, long attemptGeneration) {
+        if (attemptGeneration == splashConnectAttemptGeneration) {
+            onSplashConnected(target);
+        }
+    }
+
     /**
      * Restores the selector LinkManager after a tune import/export job finishes.
      */
@@ -1546,6 +1707,7 @@ public class StartupFrame {
      * on the next scanner tick and the user can manually pick a port or wait for ECU B.
      */
     private void onSplashDisconnected() {
+        splashConnectAttemptGeneration++;
         // A status event may already be queued when the wizard hands off the frame.
         if (isProceeding && !offlineConsoleOpen) {
             return;
@@ -1558,6 +1720,8 @@ public class StartupFrame {
         // Sets isStarted=false so the next connect() can create a new LinkManager connector.
         uiContext.getLinkManager().close();
         if (autoConnectedPort != null) {
+            ManualIniFilePicker.targetLost(autoConnectedPort.port,
+                isExpectedMissingIniClose(autoConnectedPort.port));
             connectivityContext.getPortScanner().invalidatePort(autoConnectedPort.port);
         }
         if (offlineConsoleOpen && autoConnectedPort != null) {
@@ -1575,7 +1739,14 @@ public class StartupFrame {
         revealControls();
     }
 
+    private void onSplashDisconnected(long attemptGeneration) {
+        if (attemptGeneration == splashConnectAttemptGeneration) {
+            onSplashDisconnected();
+        }
+    }
+
     private void onSplashConnectFailed(String msg) {
+        splashConnectAttemptGeneration++;
         log.warn("Splash auto-connect failed: " + msg);
         // Remove the listener before calling close() so the NOT_CONNECTED event it emits does
         // not re-trigger onSplashDisconnected() and overwrite the failure message below.
@@ -1586,6 +1757,8 @@ public class StartupFrame {
         // Per design: keep auto-connect gate closed for the rest of the session.
         uiContext.getLinkManager().close();
         if (autoConnectedPort != null) {
+            ManualIniFilePicker.targetLost(autoConnectedPort.port,
+                isExpectedMissingIniClose(autoConnectedPort.port));
             connectivityContext.getPortScanner().invalidatePort(autoConnectedPort.port);
         }
         autoConnectedPort = null;
@@ -1598,6 +1771,12 @@ public class StartupFrame {
         noPortsMessage.setVisible(true);
         // Reveal the connect controls so the user can retry/pick a port (#9715).
         revealControls();
+    }
+
+    private void onSplashConnectFailed(String msg, long attemptGeneration) {
+        if (attemptGeneration == splashConnectAttemptGeneration) {
+            onSplashConnectFailed(msg);
+        }
     }
 
     /**

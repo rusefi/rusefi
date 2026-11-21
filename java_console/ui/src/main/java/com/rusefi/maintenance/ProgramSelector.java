@@ -280,7 +280,8 @@ public class ProgramSelector {
         final UpdateMode mode = mainButtonModeFor(
             resolveFlashPort(), isLiveConnection(), capabilityProvider.get().canUseDfu(),
             isMatchingNoIniFailure(resolveFlashPort()));
-        splitButton.setText(recoveryDefault ? "Recover ECU" : mode == OPENBLT_NO_INI ? OPENBLT_NO_INI.displayText
+        splitButton.setText(recoveryDefault ? "Recover ECU" : mode == OPENBLT_MANUAL ? OPENBLT_MANUAL.displayText
+            : mode == OPENBLT_NO_INI ? OPENBLT_NO_INI.displayText
             : confirmedUpToDate ? "Reflash anyway"
             : confirmedNewerBuild ? "Update firmware" : primaryActionBranch == null
                 ? "Update ECU firmware" : "Update ECU · " + primaryActionBranch);
@@ -342,6 +343,12 @@ public class ProgramSelector {
         final PortResult selected = (PortResult) comboPorts.getSelectedItem();
         final AvailableHardware hardware = connectivityContext.getCurrentHardware();
         return currentPort(hardware.getKnownPorts(), selected);
+    }
+
+    /** Current selection as reported by the latest scan; does not choose a fallback target. */
+    @Nullable
+    public PortResult getSelectedDetectedPort() {
+        return resolveFlashPort();
     }
 
     /**

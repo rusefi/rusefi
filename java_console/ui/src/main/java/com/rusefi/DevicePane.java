@@ -105,7 +105,7 @@ public class DevicePane {
         selector.addFirmwareControl(rollbackController.getRollbackButton());
         firmwareSummary = new FirmwareStatusSummaryPanel(
             rollbackController, selector, branchSwitchController.getButton(), migrateSettings,
-            connectivityContext, () -> (PortResult) comboPorts.getSelectedItem(),
+            connectivityContext, selector::getSelectedDetectedPort,
             () -> sessionManager.getState() == SessionState.FLASHING
                 || !jobExecutor.isNotInProgress() || rollbackController.isDownloadInProgress());
         selector.setMissingIniStateChangedListener(this::refreshFirmwareStatusAfterMissingIniChange);
@@ -276,7 +276,7 @@ public class DevicePane {
                 ? "Your ECU is in recovery mode. Use Recover ECU to choose its board and firmware."
                 : "Your ECU is in recovery mode. Recovery is not supported on this platform.";
         }
-        return "Bootloader detected — click Update ECU firmware to continue.";
+        return "OpenBLT bootloader detected — click Manual OpenBLT Update to continue.";
     }
 
     static boolean isBootloaderState(final SessionState state) {

@@ -91,4 +91,26 @@ public class LinkManagerCompatibilityListenerTest {
         assertEquals(null, linkManager.getMissingIniFailure());
         linkManager.close();
     }
+
+    @Test
+    public void iniResolutionStartUsesTheExistingProbeListener() {
+        List<String> events = new ArrayList<>();
+        LinkManager linkManager = new LinkManager()
+            .setNotifyGlobalStatusOnClose(false)
+            .setMissingIniListener(new LinkManager.MissingIniListener() {
+                @Override
+                public void onMissingIni(String signature, String port) {
+                }
+
+                @Override
+                public void onIniResolutionStarted(String port) {
+                    events.add("started:" + port);
+                }
+
+            });
+        linkManager.onIniResolutionStarted("COM_TEST");
+
+        assertEquals(java.util.Collections.singletonList("started:COM_TEST"), events);
+        linkManager.close();
+    }
 }

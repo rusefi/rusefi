@@ -5,6 +5,12 @@ import com.devexperts.logging.Logging;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.Locale;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.core.FileUtil.RUSEFI_SETTINGS_FOLDER;
@@ -13,6 +19,7 @@ public class SignatureHelper {
     private static final Logging log = getLogging(SignatureHelper.class);
     private final static String LOCAL_INI_CACHE_FOLDER = RUSEFI_SETTINGS_FOLDER + "ini_database";
     private static final int HTTP_TIMEOUT_MILLIS = 10_000;
+    private static final int MAX_INI_ENTRY_BYTES = 4 * 1024 * 1024;
 
     // todo: find a way to reference Fields.PROTOCOL_SIGNATURE_PREFIX
     private static final String PREFIX = "rusEFI ";
@@ -43,6 +50,21 @@ public class SignatureHelper {
     }
 
     static String downloadIfNotAvailable(Pair<String, String> p, boolean allowDownload, String cacheFolder) {
+        return downloadIfNotAvailable(p, allowDownload, cacheFolder, null);
+    }
+
+    public static String downloadMatchingIniIfNotAvailable(
+            Pair<String, String> location, boolean allowDownload, String expectedSignature) {
+        return downloadIfNotAvailable(location, allowDownload, LOCAL_INI_CACHE_FOLDER, expectedSignature);
+    }
+
+    static String downloadMatchingIniIfNotAvailableForTests(
+            Pair<String, String> location, boolean allowDownload, String cacheFolder, String expectedSignature) {
+        return downloadIfNotAvailable(location, allowDownload, cacheFolder, expectedSignature);
+    }
+
+    private static String downloadIfNotAvailable(Pair<String, String> p, boolean allowDownload,
+                                                 String cacheFolder, String expectedSignature) {
         if (p == null) {
             return null;
         }
@@ -50,18 +72,24 @@ public class SignatureHelper {
         String localIniFile = cacheFolder + File.separator + p.second;
         File file = new File(localIniFile);
         if (file.exists() && file.length() > 10000) {
-            log.info("Found cached at " + cacheFolder);
-            return localIniFile;
+            if (expectedSignature == null || hasSignature(file, expectedSignature)) {
+                log.info("Found cached at " + cacheFolder);
+                return localIniFile;
+            }
+            log.info("Ignoring cached INI with a different signature at " + localIniFile);
         }
         if (EXTRA_INI_SOURCE != null) {
-            return EXTRA_INI_SOURCE;
+            if (expectedSignature == null
+                    || hasSignature(new File(EXTRA_INI_SOURCE), expectedSignature)) {
+                return EXTRA_INI_SOURCE;
+            }
         }
         if (!allowDownload) {
             return null;
         }
         log.info(".ini not found in " + cacheFolder + "(" + localIniFile + "), trying to download " + p.first);
 
-        // atomic download via .tmp + rename — prevents corrupted partial files from becoming the cache (#10030)
+        // Validate in a temporary file before replacing a mismatched cache candidate.
         File tempFile = new File(localIniFile + ".tmp");
         HttpURLConnection httpURLConnection = null;
         try {
@@ -82,7 +110,16 @@ public class SignatureHelper {
                     fileOutputStream.write(dataBuffer, 0, bytesRead);
                 }
             }
-            tempFile.renameTo(file);
+            if (expectedSignature != null && !hasSignature(tempFile, expectedSignature)) {
+                tempFile.delete();
+                return null;
+            }
+            try {
+                Files.move(tempFile.toPath(), file.toPath(),
+                    StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+            } catch (AtomicMoveNotSupportedException e) {
+                Files.move(tempFile.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            }
             return localIniFile;
         } catch (IOException e) {
             System.err.println(e.getMessage());
@@ -95,26 +132,202 @@ public class SignatureHelper {
         }
     }
 
+    private static boolean hasSignature(File file, String expectedSignature) {
+        try {
+            return expectedSignature.equals(readIniSignature(file));
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
     /**
-     * Copies a user-selected .ini into the local cache keyed by the signature hash,
-     * so subsequent connects resolve it without any download or prompt.
+     * Imports a matching user-selected INI or 7z archive into the local signature-keyed cache.
+     * Archive paths are never extracted; the cache is replaced only after exact validation.
      * @return cached file path, or null if the signature cannot be parsed
      */
     public static String importIntoCache(String signature, File source) throws IOException {
         return importIntoCache(signature, source, LOCAL_INI_CACHE_FOLDER);
     }
 
-    // package-private for tests
-    static String importIntoCache(String signature, File source, String cacheFolder) throws IOException {
-        Pair<String, String> p = getUrl(signature);
-        if (p == null)
+    /**
+     * Imports a matching INI or 7z archive into an explicitly selected cache directory.
+     */
+    public static String importIntoCache(String signature, File source, String cacheFolder) throws IOException {
+        Pair<String, String> location = getUrl(signature);
+        if (location == null) {
             return null;
-        new File(cacheFolder).mkdirs();
-        String cachedIniFile = cacheFolder + File.separator + p.second;
-        java.nio.file.Files.copy(source.toPath(), new File(cachedIniFile).toPath(),
-                java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-        log.info("Imported " + source + " into cache as " + cachedIniFile);
+        }
+        byte[] ini = readMatchingIni(signature, source);
+        checkInterrupted();
+        return publishIni(signature, location, ini, cacheFolder);
+    }
+
+    public static String importIntoCache(String signature, byte[] source) throws IOException {
+        return importIntoCache(signature, source, LOCAL_INI_CACHE_FOLDER);
+    }
+
+    /** Imports a validated, already-read INI snapshot into an explicit cache directory. */
+    public static String importIntoCache(String signature, byte[] source, String cacheFolder) throws IOException {
+        Pair<String, String> location = getUrl(signature);
+        if (location == null) {
+            return null;
+        }
+        if (source.length > MAX_INI_ENTRY_BYTES) {
+            throw new IOException("INI exceeds the " + MAX_INI_ENTRY_BYTES + " byte limit");
+        }
+        byte[] snapshot = java.util.Arrays.copyOf(source, source.length);
+        if (isOpaqueBinary(snapshot)) {
+            throw new IOException("Expected plain INI contents, received binary data");
+        }
+        if (!signature.equals(readIniSignature(snapshot))) {
+            throw new IOException("INI signature does not match " + signature);
+        }
+        checkInterrupted();
+        return publishIni(signature, location, snapshot, cacheFolder);
+    }
+
+    static String importIntoCacheForTests(String signature, File source, String cacheFolder,
+                                          Runnable afterSnapshotRead) throws IOException {
+        Pair<String, String> location = getUrl(signature);
+        if (location == null) {
+            return null;
+        }
+        byte[] ini = readMatchingIni(signature, source);
+        checkInterrupted();
+        afterSnapshotRead.run();
+        checkInterrupted();
+        return publishIni(signature, location, ini, cacheFolder);
+    }
+
+    private static String publishIni(String signature, Pair<String, String> location, byte[] contents,
+                                     String cacheFolder) throws IOException {
+        Path cache = new File(cacheFolder).toPath();
+        Files.createDirectories(cache);
+        Path target = cache.resolve(location.second);
+        Path temporary = Files.createTempFile(cache, location.second, ".tmp");
+        try {
+            Files.write(temporary, contents);
+            checkInterrupted();
+            try {
+                Files.move(temporary, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+            } catch (AtomicMoveNotSupportedException e) {
+                Files.move(temporary, target, StandardCopyOption.REPLACE_EXISTING);
+            }
+        } finally {
+            Files.deleteIfExists(temporary);
+        }
+        String cachedIniFile = target.toString();
+        log.info("Imported matching INI for " + signature + " into cache as " + cachedIniFile);
         return cachedIniFile;
+    }
+
+    /**
+     * Reads a bounded INI snapshot and requires the exact signature. 7z entry paths are never
+     * extracted or resolved against the filesystem.
+     */
+    public static byte[] readMatchingIni(String signature, File source) throws IOException {
+        if (getUrl(signature) == null) {
+            throw new IOException("Unparseable firmware signature: " + signature);
+        }
+        byte[] contents;
+        String name = source.getName().toLowerCase(Locale.ROOT);
+        if (name.endsWith(".7z")) {
+            contents = CompressedIniArchive.readMatchingIni(signature, source);
+        } else if (name.endsWith(".ini")) {
+            contents = readPlainIni(source);
+        } else {
+            throw new IOException("Expected a plain .ini or .7z archive");
+        }
+        if (!signature.equals(readIniSignature(contents))) {
+            throw new IOException("INI signature does not match " + signature);
+        }
+        return contents;
+    }
+
+    public static String readIniSignature(File source) throws IOException {
+        return readIniSignature(readPlainIni(source));
+    }
+
+    private static byte[] readBounded(InputStream input, int maximumBytes) throws IOException {
+        ByteArrayOutputStream output = new ByteArrayOutputStream(Math.min(maximumBytes, 32 * 1024));
+        byte[] buffer = new byte[8192];
+        int total = 0;
+        while (true) {
+            checkInterrupted();
+            int read = input.read(buffer);
+            if (read == -1) {
+                break;
+            }
+            total += read;
+            if (total > maximumBytes) {
+                throw new IOException("INI contents exceed the " + maximumBytes + " byte limit");
+            }
+            output.write(buffer, 0, read);
+        }
+        return output.toByteArray();
+    }
+
+    /**
+     * Extracts the first exact, case-insensitive {@code signature} key, matching RawIniFile's key
+     * token semantics without depending on the INI model module.
+     */
+    public static String readIniSignature(byte[] contents) {
+        if (isOpaqueBinary(contents)) {
+            return null;
+        }
+        String text = new String(contents, StandardCharsets.UTF_8);
+        try (BufferedReader reader = new BufferedReader(new StringReader(text))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] tokens = IniTokenUtil.splitTokens(line);
+                if (tokens.length > 1 && "signature".equalsIgnoreCase(tokens[0])) {
+                    return tokens[1];
+                }
+            }
+        } catch (IllegalArgumentException malformedCandidate) {
+            return null;
+        } catch (IOException impossible) {
+            throw new IllegalStateException(impossible);
+        }
+        return null;
+    }
+
+    private static byte[] readBoundedFile(File source, int maximumBytes) throws IOException {
+        if (source.length() > maximumBytes) {
+            throw new IOException("INI exceeds the " + maximumBytes + " byte limit");
+        }
+        try (InputStream input = new BufferedInputStream(new FileInputStream(source))) {
+            return readBounded(input, maximumBytes);
+        }
+    }
+
+    private static byte[] readPlainIni(File source) throws IOException {
+        byte[] contents = readBoundedFile(source, MAX_INI_ENTRY_BYTES);
+        if (isOpaqueBinary(contents)) {
+            throw new IOException("Expected plain INI contents, received binary data");
+        }
+        return contents;
+    }
+
+    private static boolean isOpaqueBinary(byte[] contents) {
+        if (contents.length >= 6
+                && contents[0] == 0x37 && contents[1] == 0x7a && (contents[2] & 0xff) == 0xbc
+                && (contents[3] & 0xff) == 0xaf && contents[4] == 0x27 && contents[5] == 0x1c) {
+            return true;
+        }
+        for (byte value : contents) {
+            int unsigned = value & 0xff;
+            if (unsigned < 0x09 || unsigned > 0x0d && unsigned < 0x20) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static void checkInterrupted() throws InterruptedIOException {
+        if (Thread.currentThread().isInterrupted()) {
+            throw new InterruptedIOException("INI lookup was cancelled");
+        }
     }
 
     public static RusEfiSignature parseSrec(String srecName) {

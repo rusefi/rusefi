@@ -77,6 +77,11 @@ jre_args=(--cache-dir "${WINDOWS_JRE_CACHE:-${XDG_CACHE_HOME:-$HOME/.cache}/ruse
 [ -z "${WINDOWS_JRE_MANIFEST:-}" ] || jre_args+=(--manifest "$WINDOWS_JRE_MANIFEST")
 python3 "$SCRIPT_DIR/prepare_windows_jre.py" "$folder/jre" "${jre_args[@]}"
 
+# Stage the hash-pinned standalone Windows tool; the host 7z is build-only.
+seven_za_args=(--cache-dir "${WINDOWS_7ZA_CACHE:-${XDG_CACHE_HOME:-$HOME/.cache}/rusefi/7za}")
+[ -z "${WINDOWS_7ZA_ARCHIVE:-}" ] || seven_za_args+=(--archive "$WINDOWS_7ZA_ARCHIVE")
+bash "$SCRIPT_DIR/prepare_windows_7za.sh" "$folder/console" "${seven_za_args[@]}"
+
 mkdir -p "$OUT_DIR"
 OUT_ABS="$(cd "$OUT_DIR" && pwd)"
 
@@ -90,6 +95,7 @@ mkdir -p "$au/console"
 cp "$folder/console/rusefi_console.jar" "$au/console/"
 [ -f "$folder/console/rusefi_ts_plugin_launcher.jar" ] && cp "$folder/console/rusefi_ts_plugin_launcher.jar" "$au/console/"
 cp "$folder/console/PCANBasic_JNI.dll" "$folder/console/PCANBasic.dll" "$au/console/"
+cp "$folder/console/7za.exe" "$folder/console/7za-LICENSE.txt" "$folder/console/7za-readme.txt" "$au/console/"
 cp "$folder/console/release.txt" "$au/console/"
 [ -f "$folder/readme.html" ] && cp "$folder/readme.html" "$au/"
 ( cd "$au" && zip -qr "$work/autoupdate.zip" . )

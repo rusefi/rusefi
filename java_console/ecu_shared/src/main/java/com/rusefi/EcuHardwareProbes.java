@@ -88,6 +88,12 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
         return EcuHardwareProbes.inspect(serialPort, REAL_PROBE, missingIniRecoveryState);
     }
 
+    @Override
+    public boolean shouldWaitForIniResolution(String serialPort) {
+        return missingIniRecoveryState != null
+            && missingIniRecoveryState.shouldWaitForResolution(serialPort);
+    }
+
     static PortResult inspectCanPort(String port, Callable<IoStream> opener) {
         try (IoStream stream = opener.call()) {
             if (stream == null) {
@@ -299,7 +305,17 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
         if (missingIniRecoveryState != null) {
             missingIniRecoveryState.clearForPort(serialPort);
         }
+        try {
+            return inspectAfterStart(serialPort, probe, missingIniRecoveryState);
+        } finally {
+            if (missingIniRecoveryState != null) {
+                missingIniRecoveryState.resolutionFinished(serialPort);
+            }
+        }
+    }
 
+    private static PortResult inspectAfterStart(String serialPort, PortProbe probe,
+                                                MissingIniRecoveryState missingIniRecoveryState) {
         OpenbltInfo openbltInfo;
         try {
             openbltInfo = probe.getOpenbltInfo(serialPort);
@@ -317,13 +333,24 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
             final PortResult ecuResult;
             AtomicReference<String> missingIniSignature = new AtomicReference<>();
             try {
-                ecuResult = probe.inspectRunningEcu(serialPort, (signature, failedPort) -> {
-                    if (serialPort.equals(failedPort) && SignatureHelper.parse(signature) != null) {
-                        missingIniSignature.set(signature);
-                        if (missingIniRecoveryState != null) {
-                            missingIniRecoveryState.record(failedPort, signature);
+                ecuResult = probe.inspectRunningEcu(serialPort, new LinkManager.MissingIniListener() {
+                    @Override
+                    public void onMissingIni(String signature, String failedPort) {
+                        if (serialPort.equals(failedPort) && SignatureHelper.parse(signature) != null) {
+                            missingIniSignature.set(signature);
+                            if (missingIniRecoveryState != null) {
+                                missingIniRecoveryState.record(failedPort, signature);
+                            }
                         }
                     }
+
+                    @Override
+                    public void onIniResolutionStarted(String port) {
+                        if (serialPort.equals(port) && missingIniRecoveryState != null) {
+                            missingIniRecoveryState.resolutionStarted(port);
+                        }
+                    }
+
                 });
             } catch (com.fazecast.jSerialComm.SerialPortInvalidPortException e) {
                 log.info("Port " + serialPort + " vanished during ECU detection: " + e.getMessage());
