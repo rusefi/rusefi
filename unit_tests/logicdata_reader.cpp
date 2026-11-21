@@ -884,9 +884,11 @@ static void skipEdgeBytesAndCollect(uint64_t numEdges, bool useLongDeltas,
 // var-encoded value 0x16, which on the wire is the two bytes 0x01 0x16).
 // To avoid matching false positives inside post-edge record qwords, we
 // additionally require the bytes that follow the marker to look like a
-// plausible channel header: `01 <expectedCh+1> 00 03 ...` (ch+1 var-encoded
-// as a 1-byte value, then a 0 var, then a 3-byte length prefix introducing
-// realDurationInSamples).
+// plausible channel header: `01 <expectedCh+1> 00 <len> ...` (ch+1 var-encoded
+// as a 1-byte value, then a 0 var, then the length prefix introducing
+// realDurationInSamples). That prefix follows the capture duration: the writers
+// emit 1, 2, 3 or 4 bytes, or 8 for a value outside 32 bits, so all of those
+// are accepted (see logicDataToCsv.readsCapturesOfAnyDurationWidth).
 //
 // Returns true if found; leaves g_fp positioned right before the matched
 // 0x01 0x16 pair. If we hit EOF first, returns false.
@@ -897,18 +899,17 @@ static bool scanForNextChannelBlock(int expectedChPlus1) {
 		int c = fgetc(g_fp);
 		if (c == EOF) return false;
 		if (prev == 0x01 && c == 0x16) {
-			// Peek next bytes; require: 01 <expectedChPlus1> 00 03
+			// Peek next bytes; require: 01 <expectedChPlus1> 00 <len>
 			unsigned char peek[4];
 			size_t got = fread(peek, 1, 4, g_fp);
-			fseek(g_fp, here + 1 - (long)got, SEEK_CUR);
-			// Actually simpler: just fseek back to (here + 1) which is the
-			// byte right after the 0x16 byte we just consumed.
+			// Back to the byte right after the 0x16 we just consumed.
 			fseek(g_fp, here + 1, SEEK_SET);
-			if (got == 4
+			const bool isDurationLength = got == 4
+				&& ((peek[3] >= 0x01 && peek[3] <= 0x04) || peek[3] == 0x08);
+			if (isDurationLength
 				&& peek[0] == 0x01
 				&& peek[1] == (unsigned char)expectedChPlus1
-				&& peek[2] == 0x00
-				&& (peek[3] == 0x03 || peek[3] == 0x04)) {
+				&& peek[2] == 0x00) {
 				// Rewind to just before 0x01 0x16 so caller's readVar() sees it.
 				fseek(g_fp, here - 1, SEEK_SET);
 				return true;

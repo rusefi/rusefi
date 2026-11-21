@@ -304,3 +304,37 @@ TEST(logicDataToCsv, convertAllMay25Files) {
 	}
 	EXPECT_EQ(converted, (int)(sizeof(files)/sizeof(files[0])));
 }
+
+// The capture duration is var-length encoded, so its length prefix in each
+// channel block depends on how long the capture is: 1 byte below 256 samples,
+// 2 bytes below 65536, then 3 and 4. readLogicDataFull() has to find the next
+// channel block for every one of those widths.
+static void roundTripCaptureOfDuration(const char* baseName, uint32_t stepInSamples) {
+	std::vector<CompositeEvent> events;
+	for (int i = 0; i < 10; i++) {
+		CompositeEvent e{};
+		e.timestamp = (uint32_t)i * stepInSamples;
+		e.primaryTrigger = (i & 1) != 0;
+		e.secondaryTrigger = ((i >> 1) & 1) != 0;
+		events.push_back(e);
+	}
+
+	std::error_code ec;
+	std::filesystem::create_directories(TEST_RESULTS_DIR, ec);
+	const std::string path = std::string(TEST_RESULTS_DIR) + "/" + baseName;
+	writeLogicDataFile(path.c_str(), events);
+
+	LogicDataFull data;
+	ASSERT_NO_THROW({ data = readLogicDataFull(path.c_str()); }) << baseName;
+	ASSERT_GE(data.channels.size(), 2u) << baseName;
+	EXPECT_EQ(data.channels[0].timestamps.size(), 9u) << baseName;
+	EXPECT_EQ(data.channels[1].timestamps.size(), 4u) << baseName;
+	EXPECT_EQ(data.channels[0].timestamps.back(), 9 * stepInSamples) << baseName;
+}
+
+TEST(logicDataToCsv, readsCapturesOfAnyDurationWidth) {
+	roundTripCaptureOfDuration("duration-1-byte.logicdata", 20);
+	roundTripCaptureOfDuration("duration-2-bytes.logicdata", 100);
+	roundTripCaptureOfDuration("duration-3-bytes.logicdata", 10000);
+	roundTripCaptureOfDuration("duration-4-bytes.logicdata", 2000000);
+}
