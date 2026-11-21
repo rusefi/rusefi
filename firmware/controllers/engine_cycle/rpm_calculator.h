@@ -194,4 +194,6 @@ operation_mode_e lookupOperationMode();
 /**
   * @return tick time of scheduled action
   */
+// When the crank will have turned by this angle, at the current speed
+efitick_t getTimeAfterAngle(efitick_t nowNt, angle_t angle);
 efitick_t scheduleByAngle(scheduling_s *timer, efitick_t nowNt, angle_t angle, action_s const& action);

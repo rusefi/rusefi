@@ -35,6 +35,9 @@ public:
 	 * O(size) - linear search in sorted linked list
 	 */
 	InsertResult insertTask(scheduling_s *scheduling, efitick_t timeX, action_s const& action);
+
+	// Insert several events with storage from the pool: all of them, or none if there isn't room
+	InsertResult insertTogether(const TimedAction *actions, size_t count);
 	void remove(scheduling_s* scheduling);
 
 	int executeAll(efitick_t now);

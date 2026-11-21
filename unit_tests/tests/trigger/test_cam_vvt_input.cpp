@@ -29,6 +29,10 @@ TEST(trigger, testNoStartUpWarnings) {
 	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL);
 	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "testNoStartUpWarnings RPM";
 
+	// This test moves time without running scheduled events. Left queued, injection events would
+	// use up the scheduling pool, which is reported as a warning [tag:scheduling_pool_exhaustion]
+	engineConfiguration->isInjectionEnabled = false;
+
 	for (int i = 0;i < 10;i++) {
 		eth.fireRise(50);
 		eth.fireFall(50);

@@ -151,6 +151,33 @@ EventQueue::InsertResult EventQueue::insertTask(scheduling_s *scheduling, efitic
 	}
 }
 
+// [tag:scheduling_pool_exhaustion] see Scheduler::scheduleTogether
+EventQueue::InsertResult EventQueue::insertTogether(const TimedAction *actions, size_t count) {
+	if (getAvailablePoolSlots() < static_cast<int>(count)) {
+		// unlike a single dropped event, nothing is left half done: the caller skips the whole group
+		warning(ObdCode::CUSTOM_ERR_SCHEDULING_ERROR, "Scheduler pool empty, event dropped");
+		return InsertResult::Failed;
+	}
+
+	InsertResult result = InsertResult::Inserted;
+
+	for (size_t i = 0; i < count; i++) {
+		switch (insertTask(nullptr, actions[i].time, actions[i].action)) {
+			case InsertResult::InsertedAtHead:
+				result = InsertResult::InsertedAtHead;
+				break;
+			case InsertResult::Inserted:
+				break;
+			case InsertResult::Failed:
+				// Can't happen: there was room for all of them, and pool storage is never already scheduled
+				firmwareError(ObdCode::CUSTOM_ERR_SCHEDULING_ERROR, "insertTogether failed part way");
+				return InsertResult::Failed;
+		}
+	}
+
+	return result;
+}
+
 void EventQueue::remove(scheduling_s* scheduling) {
 	assertListIsSorted();
 

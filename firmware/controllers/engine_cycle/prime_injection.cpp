@@ -134,7 +134,11 @@ void PrimeController::onPrimeStart() {
 	m_isPriming = true;
 	m_primeOutputsMask = (1u << engineConfiguration->cylindersCount) - 1;
 	startInjection(InjectorContext(m_primeOutputsMask, 0xF, false).raw);
-	getScheduler()->schedule("onPrimeStart", nullptr, endTime, action_s::make<onPrimeEndAdapter>( this ));
+
+	if (!getScheduler()->schedule("onPrimeStart", nullptr, endTime, action_s::make<onPrimeEndAdapter>( this ))) {
+		// Nothing will close the injectors, so don't leave them open
+		onPrimeEnd();
+	}
 #endif // EFI_ENGINE_CONTROL
 }
 

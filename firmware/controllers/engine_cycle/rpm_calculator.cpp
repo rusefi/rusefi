@@ -431,6 +431,12 @@ void tdcMarkCallback(
 #endif // EFI_ENGINE_CONTROL
 }
 
+efitick_t getTimeAfterAngle(efitick_t nowNt, angle_t angle) {
+	float delayUs = engine->rpmCalculator.oneDegreeUs * angle;
+
+	return sumTickAndFloat(nowNt, USF2NT(delayUs));
+}
+
 /**
  * Schedules a callback 'angle' degree of crankshaft from now.
  * The callback would be executed once after the duration of time which
@@ -439,9 +445,7 @@ void tdcMarkCallback(
  * @return tick time of scheduled action
  */
 efitick_t scheduleByAngle(scheduling_s *timer, efitick_t nowNt, angle_t angle, action_s const& action) {
-	float delayUs = engine->rpmCalculator.oneDegreeUs * angle;
-
-	efitick_t actionTimeNt = sumTickAndFloat(nowNt, USF2NT(delayUs));
+	efitick_t actionTimeNt = getTimeAfterAngle(nowNt, angle);
 
 	engine->scheduler.schedule("angle", timer, actionTimeNt, action);
 
