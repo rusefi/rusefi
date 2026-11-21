@@ -3,6 +3,9 @@ package com.rusefi.ui.widgets.tune;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.DialogModel;
+import com.opensr5.ini.GroupMenuModel;
+import com.opensr5.ini.MenuItem;
+import com.opensr5.ini.MenuModel;
 import com.opensr5.ini.PanelModel;
 import com.opensr5.ini.SubMenuModel;
 import com.opensr5.ini.TableModel;
@@ -450,18 +453,19 @@ public final class CalibrationPanelWorkspace {
 
     private String panelTitle(String key) {
         if (ini.getDialogs().containsKey(key)) {
-            String title = ini.getDialogs().get(key).getUiName();
-            if (title != null && !title.trim().isEmpty()) {
+            String title = namedTitle(key);
+            if (title != null) {
                 return title;
             }
             // Anonymous layout groups still need a useful window title after splitting.
             for (DialogModel parent : ini.getDialogs().values()) {
-                if (parent.getUiName() == null || parent.getUiName().trim().isEmpty()) {
+                String parentTitle = namedTitle(parent.getKey());
+                if (parentTitle == null) {
                     continue;
                 }
                 for (PanelModel panel : parent.getPanels()) {
                     if (key.equals(panel.getPanelName())) {
-                        return parent.getUiName() + " — " + placementLabel(panel.getPlacement());
+                        return parentTitle + " — " + placementLabel(panel.getPlacement());
                     }
                 }
             }
@@ -469,6 +473,42 @@ public final class CalibrationPanelWorkspace {
         }
         TableModel table = TablePages.find(ini, key);
         return table != null ? table.getTitle() : ini.getCurves().get(key).getTitle();
+    }
+
+    /**
+     * A dialog's own title, or else the label of the menu entry that opens it: layout dialogs such as
+     * {@code triggerConfiguration} are declared with an empty title and named only by their menu entry.
+     */
+    private String namedTitle(String dialogKey) {
+        DialogModel dialog = ini.getDialogs().get(dialogKey);
+        String title = dialog == null ? null : dialog.getUiName();
+        if (title != null && !title.trim().isEmpty()) {
+            return title;
+        }
+        for (MenuModel menu : ini.getMenus()) {
+            String label = menuLabel(menu.getItems(), dialogKey);
+            if (label != null) {
+                return label;
+            }
+        }
+        return null;
+    }
+
+    private static String menuLabel(List<MenuItem> items, String key) {
+        for (MenuItem item : items) {
+            if (item instanceof SubMenuModel && key.equals(((SubMenuModel) item).getKey())) {
+                String name = ((SubMenuModel) item).getName();
+                if (name != null && !name.trim().isEmpty()) {
+                    return name;
+                }
+            } else if (item instanceof GroupMenuModel) {
+                String nested = menuLabel(((GroupMenuModel) item).getItems(), key);
+                if (nested != null) {
+                    return nested;
+                }
+            }
+        }
+        return null;
     }
 
     private static String placementLabel(String placement) {
