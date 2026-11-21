@@ -15,6 +15,7 @@
 #include "rusefi/efistring.h"
 #include "board_overrides.h"
 #include "flash_main.h"
+#include "engine_controller.h"
 
 #if EFI_USE_OPENBLT
 /* communication with OpenBLT that is plain C, not to modify external file */
@@ -774,7 +775,11 @@ void refreshConfigErrorState() {
 	// the condition holds and returns true; it must be cheap, this runs on every slow callback.
 	// Showing a message is all this does. A condition which must also stop the engine needs
 	// its own cut in LimpManager::updateState(), reading the same state.
-	bool active = checkSettingsWriteFailure();
+	// [tag:table_axis_order] first: this one keeps the engine from running
+	bool active = checkBrokenTableAxis();
+	if (!active) {
+		active = checkSettingsWriteFailure();
+	}
 	if (!active) {
 		active = get_board_override_result(custom_board_updateConfigError, false);
 	}
@@ -800,6 +805,7 @@ void resetConfigErrorStateForUnitTest() {
 	refreshRaisedSeq = 0;
 	configErrorSeq = 0;
 	trackSettingsWriteResult(true);
+	resetBrokenTableAxisForUnitTest();
 	clearConfigErrorMessage();
 }
 #endif

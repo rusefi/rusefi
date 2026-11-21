@@ -532,6 +532,86 @@ static bool validateGdi() {
 	return true;
 }
 
+// [tag:table_axis_order] A table axis which is not ascending (see findBrokenAxisIndex()) is a
+// problem with the tune, which the user fixes in TunerStudio: it is reported as a config error,
+// not as a critical error. A critical error stays until reboot and leaves the ECU without
+// hardware set up on the next start, which is a poor place to fix a tune from.
+// Reporting it as a config error takes these pieces, which have to stay together:
+//  - this state, set or cleared by every validation, on start-up and on each burn
+//  - checkBrokenTableAxis(), the producer in refreshConfigErrorState() which shows the message
+//    for as long as the state is set: the burn which fixes the axis removes it, no reboot
+//  - LimpManager: a message stops nothing, so updateState() cuts fuel and spark with
+//    ClearReason::Settings and allowElectronicThrottle() refuses the throttle. The other
+//    consumers of tables (boost, VVT, idle) are left alone: they act on a running engine only.
+struct BrokenTableAxis {
+	// nullptr: all axes are fine. Otherwise a string literal, the pointer is kept.
+	const char* name;
+	float cur;
+	float next;
+	int index;
+};
+
+// what the rest of the firmware sees: read from other threads, written at the end of a validation
+static BrokenTableAxis brokenTableAxis{};
+// result of the validation in progress. Kept apart so that a burn which leaves an axis broken
+// does not lift the engine cut while validation runs.
+static BrokenTableAxis foundBrokenTableAxis{};
+
+bool hasBrokenTableAxis() {
+	return brokenTableAxis.name != nullptr;
+}
+
+bool checkBrokenTableAxis() {
+	// a copy: validation on the TunerStudio thread can replace the state at any time
+	BrokenTableAxis axis = brokenTableAxis;
+	if (axis.name == nullptr) {
+		return false;
+	}
+	configError("Broken axis (must be ascending!): %s %.3f should be below next value %.3f at index %d",
+		axis.name, axis.cur, axis.next, axis.index);
+	return true;
+}
+
+#if EFI_UNIT_TEST
+void resetBrokenTableAxisForUnitTest() {
+	brokenTableAxis = {};
+}
+#endif
+
+/**
+ * [tag:table_axis_order] Validation of one axis in use. Validation carries on after a broken
+ * axis and its result stays true; the first broken axis found is reported, the next one shows
+ * up once that is fixed.
+ * @param msg names the axis in the user-facing message, see [tag:user_facing_ini_labels].
+ * Has to be a string literal.
+ */
+template<typename TValue, int TSize>
+static void ensureArrayIsAscending(const char* msg, const TValue (&values)[TSize]) {
+	if (foundBrokenTableAxis.name != nullptr) {
+		return;
+	}
+	int index = findBrokenAxisIndex(values);
+	if (index >= 0) {
+		foundBrokenTableAxis = { msg, (float)values[index], (float)values[index + 1], index };
+	}
+}
+
+/**
+ * [tag:table_axis_order] For axes of optional features: an axis which was never filled in
+ * (all zeros, recognized by its second element) is accepted, since the feature is not in use.
+ * This is also what lets a tune made before the table existed pass validation. Use the strict
+ * ensureArrayIsAscending() for an axis the engine reads regardless of optional settings.
+ */
+template<typename TValue, int TSize>
+static void ensureArrayIsAscendingOrDefault(const char* msg, const TValue (&values)[TSize]) {
+	if (values[1] == 0) {
+		return; // looks like default empty array, do not check
+	}
+	ensureArrayIsAscending(msg, values);
+}
+
+static bool validateConfigImpl(const engine_configuration_s* previousConfiguration);
+
 /**
  * Read-only check of the tune, on start-up and on every burn. It never changes the
  * configuration: repairs belong in applyDefaultsOrFixAfterBurn().
@@ -542,18 +622,23 @@ static bool validateGdi() {
  * which must stop the engine has to raise an error which does that itself.
  *
  * Two kinds of checks live here, and they report differently:
- *  - scalar settings: criticalError() and return false, the remaining checks do not run
- *  - table axes, [tag:table_axis_order]: ensureArrayIsAscending() raises the critical error
- *    itself and validation carries on, so the result stays true with a broken axis. Guard each
- *    axis by the setting which puts its table in use (see the MAF curve), so that leftovers
- *    of an unused feature do not stop the ECU.
- *
- * Every problem found here today is a critical error, latched until reboot: a burn which fixes
- * the tune does not clear it. Nothing here is level-triggered; a check which should come and go
- * with the tune needs a producer in refreshConfigErrorState() which this function sets and
- * clears on every run.
+ *  - scalar settings: criticalError() and return false, the remaining checks do not run.
+ *    Latched until reboot: a burn which fixes the tune does not clear it.
+ *  - table axes, [tag:table_axis_order]: ensureArrayIsAscending() records the broken axis and
+ *    validation carries on, so the result stays true. Level-triggered: the config error and the
+ *    engine cut last until the validation which finds all axes in order. Guard each axis by
+ *    the setting which puts its table in use (see the MAF curve), so that leftovers of an
+ *    unused feature do not stop the engine.
  */
 static bool validateConfig(const engine_configuration_s* previousConfiguration) {
+	foundBrokenTableAxis = {};
+	bool result = validateConfigImpl(previousConfiguration);
+	// the message follows on the next refreshConfigErrorState(), within one slow callback
+	brokenTableAxis = foundBrokenTableAxis;
+	return result;
+}
+
+static bool validateConfigImpl(const engine_configuration_s* previousConfiguration) {
   if (!get_board_override_result(custom_board_validateConfig, true, previousConfiguration)) {
     return false;
   }

@@ -23,6 +23,20 @@ not produce a `LimpManager` cut code.
 - **Permanent Cuts**: Managed via `m_allowInjection`, etc. These usually trigger a fatal error or a state that requires a power cycle or specific recovery.
 - **Transient Cuts**: Managed via `m_transientAllowInjection`, etc. These are evaluated every `onFastCallback` (e.g., RPM limit, Boost cut).
 
+### Recoverable tune problems
+
+`configError()` only shows a message; it does not stop the engine. A tune
+problem which must stop the engine without becoming a critical error (latched
+until reboot) keeps level state which both a `refreshConfigErrorState()`
+producer and `LimpManager` read. The worked example is `[tag:table_axis_order]`:
+a table axis which is not strictly ascending is found by `validateConfig()` on
+start-up and on every burn. While it is present, `checkBrokenTableAxis()` shows
+"Broken axis (must be ascending!): ..." naming the first broken axis,
+`updateState()` cuts fuel and spark with `ClearReason::Settings`
+(code 2, "setting disabled") and `allowElectronicThrottle()` returns false.
+The burn which fixes the axis removes all three; no reboot is needed. Boost,
+VVT and idle outputs are not gated: they act on a running engine only.
+
 ## RPM limiting
 
 [Rev limiters](rev_limiters.md) documents the constant/coolant-based hard cut,

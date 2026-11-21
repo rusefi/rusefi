@@ -24,17 +24,20 @@ TEST(MafConfiguration, InvalidCurveWithoutAnalogInputs) {
 	}
 }
 
-// [tag:table_axis_order] A broken axis of a table in use is a critical error today: in unit
-// tests firmwareError() throws, so validation does not return at all. These two tests pin the
-// guard (either analog MAF input puts the curve in use) and that severity, see
-// ensureArrayIsAscending().
+// [tag:table_axis_order] A broken axis of a table in use is a recoverable config error and
+// validation still returns true. These two tests pin the guard: either analog MAF input puts
+// the curve in use.
 TEST(MafConfiguration, InvalidCurveWithPrimaryInput) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->mafAdcChannel = EFI_ADC_0;
 	engineConfiguration->maf2AdcChannel = EFI_ADC_NONE;
 	setArrayValues(config->mafDecodingBins, 0.0f);
 
-	EXPECT_FATAL_ERROR(validateConfigOnStartUpOrBurn());
+	EXPECT_TRUE(validateConfigOnStartUpOrBurn());
+	refreshConfigErrorState();
+	EXPECT_TRUE(hasConfigError());
+	EXPECT_STREQ("Broken axis (must be ascending!): MAF transfer function 0.000 should be below next value 0.000 at index 0",
+		getConfigErrorMessage());
 }
 
 TEST(MafConfiguration, InvalidCurveWithSecondaryInput) {
@@ -43,7 +46,11 @@ TEST(MafConfiguration, InvalidCurveWithSecondaryInput) {
 	engineConfiguration->maf2AdcChannel = EFI_ADC_0;
 	setArrayValues(config->mafDecodingBins, 0.0f);
 
-	EXPECT_FATAL_ERROR(validateConfigOnStartUpOrBurn());
+	EXPECT_TRUE(validateConfigOnStartUpOrBurn());
+	refreshConfigErrorState();
+	EXPECT_TRUE(hasConfigError());
+	EXPECT_STREQ("Broken axis (must be ascending!): MAF transfer function 0.000 should be below next value 0.000 at index 0",
+		getConfigErrorMessage());
 }
 
 TEST(MafConfiguration, ValidCurveWithBothInputs) {
@@ -52,6 +59,81 @@ TEST(MafConfiguration, ValidCurveWithBothInputs) {
 	engineConfiguration->maf2AdcChannel = EFI_ADC_1;
 
 	EXPECT_TRUE(validateConfigOnStartUpOrBurn());
+}
+
+// [tag:table_axis_order] A tune prepared for another firmware version can arrive with an axis
+// of zeros. The ECU has to stay usable so that the user can fix the tune: the problem is shown
+// as a config error naming the table, the engine is not allowed to run on that table, and both
+// go away with the burn which fixes the axis - no reboot needed.
+TEST(TableAxisOrder, BrokenAxisIsRecoverableConfigError) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	LimpManager& limp = *getLimpManager();
+
+	ASSERT_TRUE(validateConfigOnStartUpOrBurn(true));
+	ASSERT_FALSE(hasConfigError());
+	limp.updateState(1000, getTimeNowNt());
+	ASSERT_TRUE(limp.allowInjection().value);
+	ASSERT_TRUE(limp.allowIgnition().value);
+
+	uint16_t goodBins[IGN_LOAD_COUNT];
+	copyArray(goodBins, config->ignitionLoadBins);
+	setArrayValues(config->ignitionLoadBins, 0);
+
+	// burn the broken tune: the engine cut is there at once, the message on the next slow callback
+	EXPECT_TRUE(validateConfigOnStartUpOrBurn(true));
+	EXPECT_TRUE(hasBrokenTableAxis());
+	refreshConfigErrorState();
+	EXPECT_TRUE(hasConfigError());
+	EXPECT_STREQ("Broken axis (must be ascending!): Ignition load 0.000 should be below next value 0.000 at index 0",
+		getConfigErrorMessage());
+
+	limp.updateState(1000, getTimeNowNt());
+	EXPECT_FALSE(limp.allowInjection().value);
+	EXPECT_EQ(ClearReason::Settings, limp.allowInjection().reason);
+	EXPECT_FALSE(limp.allowIgnition().value);
+	EXPECT_EQ(ClearReason::Settings, limp.allowIgnition().reason);
+	// the pedal map could be the broken table
+	EXPECT_FALSE(limp.allowElectronicThrottle());
+
+	// the message stays while the axis is broken, and wins over a failing settings write
+	trackSettingsWriteResult(false);
+	advanceTimeUs(120 * US_PER_SECOND);
+	refreshConfigErrorState();
+	EXPECT_TRUE(hasConfigError());
+	EXPECT_STREQ("Broken axis (must be ascending!): Ignition load 0.000 should be below next value 0.000 at index 0",
+		getConfigErrorMessage());
+	trackSettingsWriteResult(true);
+
+	// a second broken axis: the first one found is still the one reported
+	uint16_t goodRpmBins[IGN_RPM_COUNT];
+	copyArray(goodRpmBins, config->ignitionRpmBins);
+	config->ignitionRpmBins[3] = config->ignitionRpmBins[2] - 1;
+	EXPECT_TRUE(validateConfigOnStartUpOrBurn(true));
+	refreshConfigErrorState();
+	EXPECT_STREQ("Broken axis (must be ascending!): Ignition load 0.000 should be below next value 0.000 at index 0",
+		getConfigErrorMessage());
+
+	// fix that one and burn again: the other axis surfaces, with the engine still cut
+	copyArray(config->ignitionLoadBins, goodBins);
+	EXPECT_TRUE(validateConfigOnStartUpOrBurn(true));
+	refreshConfigErrorState();
+	EXPECT_TRUE(hasConfigError());
+	EXPECT_NE(nullptr, strstr(getConfigErrorMessage(), "Ignition RPM"));
+	EXPECT_NE(nullptr, strstr(getConfigErrorMessage(), "at index 2"));
+	limp.updateState(1000, getTimeNowNt());
+	EXPECT_FALSE(limp.allowInjection().value);
+
+	// fix the last one and burn again
+	copyArray(config->ignitionRpmBins, goodRpmBins);
+	EXPECT_TRUE(validateConfigOnStartUpOrBurn(true));
+	EXPECT_FALSE(hasBrokenTableAxis());
+	refreshConfigErrorState();
+	EXPECT_FALSE(hasConfigError());
+
+	limp.updateState(1000, getTimeNowNt());
+	EXPECT_TRUE(limp.allowInjection().value);
+	EXPECT_TRUE(limp.allowIgnition().value);
+	EXPECT_TRUE(limp.allowElectronicThrottle());
 }
 
 static int pinDefaultsApplyCount;

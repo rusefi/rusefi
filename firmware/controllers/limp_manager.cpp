@@ -93,10 +93,9 @@ bool LimpManager::shouldReportCutWarning(efitick_t nowNt) {
 // Level-triggered: the fuel and spark permissions are rebuilt from scratch on every call, so a
 // cut added below lasts exactly as long as its condition. Only the m_allow* members cleared
 // outside of this function (fatalError(), ETB jam) are latched until reboot.
-// Config errors are not consulted here: configError() only shows a message, and a bad tune stops
-// the engine today only through a critical error, see fatalError(). A recoverable condition which
-// must stop the engine adds its own clear() below with its own ClearReason, so that the
-// "Fuel cut"/"Ign cut" indicators (fuelIgnCutCodeList) tell the user why.
+// Config errors are not consulted here: configError() only shows a message. A bad tune stops
+// the engine through a critical error, see fatalError(), or, for a recoverable condition, through
+// its own clear() below which reads the state of that condition, see [tag:table_axis_order].
 void LimpManager::updateState(float rpm, efitick_t nowNt) {
 	// ClearReason::Settings: the user disabled injection or ignition in the tune, see Clearable
 	Clearable allowFuel = engineConfiguration->isInjectionEnabled;
@@ -121,6 +120,13 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
             allowFuel.clear(ClearReason::GdiComms);
         }
     }
+
+	// [tag:table_axis_order] no running on a table whose axis is broken. The config error only
+	// shows the message; this lasts until the burn which fixes the axis.
+	if (hasBrokenTableAxis()) {
+		allowFuel.clear(ClearReason::Settings);
+		allowSpark.clear(ClearReason::Settings);
+	}
 
 	if (engine->engineState.lua.luaIgnCut) {
 		allowSpark.clear(ClearReason::Lua);
@@ -385,6 +391,10 @@ void LimpManager::setFaultRevLimit(int limit, ClearReason rpmLimitReason) {
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 bool LimpManager::allowElectronicThrottle() const {
+	// [tag:table_axis_order] the pedal map could be the broken table. Not latched, unlike m_allowEtb.
+	if (hasBrokenTableAxis()) {
+		return false;
+	}
 	return m_allowEtb || engine->etbIgnoreJamProtection;
 }
 #endif // EFI_ELECTRONIC_THROTTLE_BODY
