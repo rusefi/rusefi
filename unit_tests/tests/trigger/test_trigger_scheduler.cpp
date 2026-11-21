@@ -50,7 +50,7 @@ public:
 
 	std::vector<scheduling_s*> scheduled;
 
-	void schedule(const char* /*msg*/, scheduling_s* scheduling, efitick_t /*timeNt*/, action_s const& /*action*/) override {
+	bool schedule(const char* /*msg*/, scheduling_s* scheduling, efitick_t /*timeNt*/, action_s const& /*action*/) override {
 		scheduled.push_back(scheduling);
 
 		if (scheduling == promotionMarker && !overdwellFired) {
@@ -59,6 +59,8 @@ public:
 			// "kill pending fire"
 			triggerScheduler->cancel(overdwellVictim);
 		}
+
+		return true;
 	}
 
 	void cancel(scheduling_s* /*scheduling*/) override {

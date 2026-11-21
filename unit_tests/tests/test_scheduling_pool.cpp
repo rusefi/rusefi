@@ -83,7 +83,7 @@ static int countOpenInjectors() {
 
 // [tag:scheduling_pool_exhaustion] Injection opening and closing each take their own pool slot
 // (InjectionEvent::onTriggerTooth, main_trigger_callback.cpp), with no all-or-nothing reservation
-// and no result from Scheduler::schedule(). When only one slot is free the opening takes it and
+// and the result of Scheduler::schedule() is ignored. When only one slot is free the opening takes it and
 // the closing is dropped, so nothing ever closes that injector.
 // Production builds additionally raise criticalError from EventQueue::insertTask, which turns
 // the pins off; host tests have no such net, and the expectations below pin the unprotected

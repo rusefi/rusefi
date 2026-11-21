@@ -39,16 +39,15 @@ scheduling_s* TestExecutor::getForUnitTest(int index) {
 	return schedulingQueue.getElementAtIndexForUnitText(index);
 }
 
-void TestExecutor::schedule(const char *msg, scheduling_s* scheduling, efitick_t timeNt, action_s const& action) {
+bool TestExecutor::schedule(const char *msg, scheduling_s* scheduling, efitick_t timeNt, action_s const& action) {
 	if (m_mockExecutor) {
-		m_mockExecutor->schedule(msg, scheduling, timeNt, action);
-		return;
+		return m_mockExecutor->schedule(msg, scheduling, timeNt, action);
 	}
 	// technical debt: NT -> US -> NT in unit test scheduler #7245
   // by the way we have loss of precision while converting NT to integer US
   // technical debt: looks like our unit tests were all created with us precision?
 	efitimeus_t scheduleTime = timeNt;
-	schedulingQueue.insertTask(scheduling, scheduleTime, action);
+	return schedulingQueue.insertTask(scheduling, scheduleTime, action) != EventQueue::InsertResult::Failed;
 }
 
 void TestExecutor::cancel(scheduling_s* s) {
