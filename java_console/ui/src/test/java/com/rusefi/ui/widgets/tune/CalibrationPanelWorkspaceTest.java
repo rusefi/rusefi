@@ -125,6 +125,22 @@ class CalibrationPanelWorkspaceTest {
     }
 
     @Test
+    void untitledLayoutDialogTakesItsMenuLabel() throws Throwable {
+        IniFileModel ini = ini();
+        SwingUtilities.invokeAndWait(() -> {
+            try (Fixture fixture = new Fixture(ini, new Node())) {
+                fixture.select("untitled");
+                fixture.workspace.detachCurrentPanel();
+                FakeWindow window = fixture.windows.get(0);
+                assertEquals("Trigger", window.title, "named by the menu entry, not \"Settings\"");
+                window.split.run();
+                assertEquals("Trigger — Left", fixture.windows.get(1).title);
+                assertEquals("Second", fixture.windows.get(2).title);
+            }
+        });
+    }
+
+    @Test
     void splitPreservesParentControlsReusesOpenChildrenAndRestoresGeneralWindow() throws Throwable {
         IniFileModel ini = ini();
         SwingUtilities.invokeAndWait(() -> {
@@ -1049,6 +1065,9 @@ class CalibrationPanelWorkspaceTest {
             + "dialog = charts, \"Charts\"\npanel = table\npanel = curve\n"
             + "dialog = incomplete, \"Incomplete\"\npanel = first\npanel = missing\n"
             + "dialog = recursive, \"Recursive\"\npanel = first\npanel = recursive\n"
+            + "dialog = untitledLeft, \"\"\nfield = \"Value\", value\n"
+            + "dialog = untitled, \"\", xAxis\npanel = untitledLeft, West\npanel = second, East\n"
+            + "[Menu]\nmenuDialog = main\nmenu = \"Setup\"\nsubMenu = untitled, \"Trigger\"\n"
             + "[TableEditor]\ntable = table, tableMap, \"Table\", 1\nxBins = x\nyBins = y\nzBins = z\n"
             + "[CurveEditor]\ncurve = curve, \"Curve\"\ncolumnLabel = \"X\", \"Y\"\n"
             + "xAxis = 0, 10, 5\nyAxis = 0, 10, 5\nxBins = x\nyBins = y\n";
