@@ -183,9 +183,15 @@ public class LiveDataProcessor {
                     javaSensorsConsumers.add(javaSensorsConsumer);
                 }
 
+                // [tag:live_data_single_write] These two consumers accumulate content across all
+                // entries into one file each. Only handleEndStruct is registered, so the per-entry
+                // endFile() of ReaderStateImpl does not reach them: a partial write differs from the
+                // complete file on disk, LazyFile then rewrites it on every run and the fresh mtime
+                // makes 'make' regenerate the configuration and recompile the firmware although
+                // nothing changed. Both files are written once after the last entry, below.
                 state.addDestination(
-                    outputsSections,
-                    dataLogConsumer
+                    outputsSections::handleEndStruct,
+                    dataLogConsumer::handleEndStruct
                 );
 
                 List<FragmentDialogConsumer> fragmentConsumers = new ArrayList<>();
@@ -348,6 +354,8 @@ public class LiveDataProcessor {
         SdCardFieldsContent.wrapContent(lazyFile, sdCardFieldsConsumer.getBody(), additionalHeadersStr.toString());
         lazyFile.close();
 
+        // [tag:live_data_single_write]
+        outputsSections.endFile();
         dataLogConsumer.endFile();
         outputValueConsumer.endFile();
         try (LazyFile fw = fileFactory.create("console/binary/generated/sensors.java")) {

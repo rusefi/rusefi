@@ -47,14 +47,19 @@ public class OutputsSectionConsumer implements ConfigurationConsumer {
 
 
             sensorTsPosition = tsOutput.run(readerState, structure, sensorTsPosition, temporaryLineComment, variableNamePrefix);
+        }
+    }
 
-            if (readerState.isStackEmpty()) {
-                if (tsOutputsSectionFileName != null) {
-                    LazyFile fos = fileFactory.create(tsOutputsSectionFileName);
-                    fos.write(tsOutput.getContent());
-                    fos.close();
-                }
-            }
+    /**
+     * [tag:live_data_single_write] content accumulates across all LiveData.yaml entries,
+     * see LiveDataProcessor#handleYaml for who invokes this and why only once.
+     */
+    @Override
+    public void endFile() throws IOException {
+        if (tsOutputsSectionFileName != null) {
+            LazyFile fos = fileFactory.create(tsOutputsSectionFileName);
+            fos.write(tsOutput.getContent());
+            fos.close();
         }
     }
 }

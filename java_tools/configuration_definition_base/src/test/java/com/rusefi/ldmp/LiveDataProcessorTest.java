@@ -40,6 +40,33 @@ public class LiveDataProcessorTest {
     }
 
     @Test
+    public void accumulatedIniFilesAreWrittenOnce() throws IOException {
+        // [tag:live_data_single_write] see LiveDataProcessor#handleYaml
+        String yaml = "Usages:\n"
+                + "  - name: first\n"
+                + "    java: First.java\n"
+                + "    folder: test\n"
+                + "  - name: second\n"
+                + "    java: Second.java\n"
+                + "    folder: test\n";
+        TestFileCaptor captor = new TestFileCaptor();
+        LiveDataProcessor processor = new LiveDataProcessor("test", fileName -> {
+            String name = fileName.contains("first") ? "first" : "second";
+            return new StringReader("struct_no_prefix " + name + "_s\n"
+                    + "float " + name + "Value;" + name + " value;\"mg\", 1, 0, 0, 100, 3\n"
+                    + "end_struct\n");
+        }, captor, "");
+        processor.handleYaml(LiveDataProcessor.getStringObjectMap(new StringReader(yaml)));
+
+        for (String fileName : new String[] {processor.getOutputsSectionFileName(), processor.getDataLogFileName()}) {
+            String content = captor.fileCapture.get(fileName).sb.toString();
+            assertTrue(content.contains("firstValue"), content);
+            assertTrue(content.contains("secondValue"), content);
+            assertEquals(fileName, 1, (int) captor.createCount.get(fileName));
+        }
+    }
+
+    @Test
     public void everyFragmentUsesIniConversion() throws IOException {
         // [tag:live_data_output_scale] Every fragment uses the same INI conversion without YAML flags.
         String yaml = "Usages:\n"
