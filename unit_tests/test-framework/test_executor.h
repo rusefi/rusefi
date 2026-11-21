@@ -16,6 +16,7 @@ public:
 	~TestExecutor();
 
 	bool schedule(const char *msg, scheduling_s *scheduling, efitick_t timeNt, action_s const& action) override;
+	bool scheduleTogether(const char *msg, const TimedAction *actions, size_t count) override;
 	void cancel(scheduling_s* scheduling) override;
 
 	void clear();

@@ -50,6 +50,15 @@ bool TestExecutor::schedule(const char *msg, scheduling_s* scheduling, efitick_t
 	return schedulingQueue.insertTask(scheduling, scheduleTime, action) != EventQueue::InsertResult::Failed;
 }
 
+bool TestExecutor::scheduleTogether(const char *msg, const TimedAction *actions, size_t count) {
+	if (m_mockExecutor) {
+		// One at a time, so that tests can expect each one
+		return Scheduler::scheduleTogether(msg, actions, count);
+	}
+
+	return schedulingQueue.insertTogether(actions, count) != EventQueue::InsertResult::Failed;
+}
+
 void TestExecutor::cancel(scheduling_s* s) {
 	if (m_mockExecutor) {
 		m_mockExecutor->cancel(s);

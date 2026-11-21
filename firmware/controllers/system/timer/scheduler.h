@@ -302,6 +302,12 @@ private:
 };
 #pragma pack(pop)
 
+// One action and when to run it, for Scheduler::scheduleTogether
+struct TimedAction {
+	efitick_t time;
+	action_s action;
+};
+
 struct Scheduler {
 	/**
 	 * @brief Schedule an action to be executed in the future.
@@ -316,6 +322,27 @@ struct Scheduler {
 	 * @return false if it could not be scheduled, for example because the pool is empty
 	 */
 	virtual bool schedule(const char *msg, scheduling_s *scheduling, efitick_t targetTime, action_s const& action) = 0;
+
+	/**
+	 * @brief Schedule several actions, each with storage from the pool, all or none of them.
+	 *
+	 * For actions that only make sense together, like turning an output on and then off again: if
+	 * only the first got scheduled, the output would be left on. [tag:scheduling_pool_exhaustion]
+	 *
+	 * List an output's "on" before its "off". The main executor doesn't run any of them until all are
+	 * scheduled, but an implementation that runs due actions immediately (the simulator's) runs them in
+	 * list order.
+	 *
+	 * @return true if all were scheduled, false if none were
+	 */
+	virtual bool scheduleTogether(const char *msg, const TimedAction *actions, size_t count) {
+		// Implementations that never run out of storage can schedule them one at a time
+		bool result = true;
+		for (size_t i = 0; i < count; i++) {
+			result &= schedule(msg, nullptr, actions[i].time, actions[i].action);
+		}
+		return result;
+	}
 
 	/**
 	 * @brief Cancel the specified scheduling_s so that, if currently scheduled, it does not execute.

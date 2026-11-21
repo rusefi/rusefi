@@ -82,13 +82,11 @@ static int countOpenInjectors() {
 }
 
 // [tag:scheduling_pool_exhaustion] Injection opening and closing each take their own pool slot
-// (InjectionEvent::onTriggerTooth, main_trigger_callback.cpp), with no all-or-nothing reservation
-// and the result of Scheduler::schedule() is ignored. When only one slot is free the opening takes it and
-// the closing is dropped, so nothing ever closes that injector.
-// Production builds additionally raise criticalError from EventQueue::insertTask, which turns
-// the pins off; host tests have no such net, and the expectations below pin the unprotected
-// behaviour: injectors are left open. A fix must skip the whole pulse instead.
-TEST(scheduler, poolExhaustionLeavesInjectorsOpen) {
+// (InjectionEvent::onTriggerTooth, main_trigger_callback.cpp). They are scheduled with
+// Scheduler::scheduleTogether: if there is no room for both, the whole pulse is skipped and a
+// warning raised. An opening that took the last slot without its closing would leave the
+// injector open with nothing to close it.
+TEST(scheduler, poolExhaustionSkipsInjectionPulse) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engine->tdcMarkEnabled = false;
 	EXPECT_CALL(*eth.mockAirmass, getAirmass(::testing::_, ::testing::_))
@@ -117,23 +115,18 @@ TEST(scheduler, poolExhaustionLeavesInjectorsOpen) {
 	ASSERT_EQ(schedulingPoolSize - 1, eth.engine.scheduler.getUsedPoolSlots());
 
 	eth.smartFireTriggerEvents2(/* count */ 12, edgeMs);
+	EXPECT_NE(nullptr, eth.recentWarnings()->find(ObdCode::CUSTOM_ERR_SCHEDULING_ERROR)) << "skipped pulses are reported";
 
 	// far longer than any pulse: a scheduled closing would have run by now
 	eth.moveTimeForwardAndInvokeEventsUs(MS2US(100));
 
-	// only the placeholders are still queued: nothing is left to close the injectors
+	// only the placeholders are still queued, and the one free slot was never taken
 	EXPECT_EQ(schedulingPoolSize - 1, eth.engine.scheduler.size());
+	EXPECT_EQ(1, eth.engine.scheduler.getAvailablePoolSlots());
 
-	// Current defective behaviour, should be 0 open injectors.
-	// Two cylinders are scheduled on each trigger edge. The first takes the free slot for its
-	// opening and loses its closing: stuck open, with every later opening counted on top.
-	EXPECT_EQ(2, countOpenInjectors());
-	for (int i : {0, 2}) {
-		EXPECT_TRUE(enginePins.injectors[i].getLogicValue()) << "injector " << i;
-		EXPECT_GT(enginePins.injectors[i].getOverlappingCounter(), 1) << "injector " << i;
-	}
-	// The second finds no slot for either event: silently no fuel at all.
-	for (int i : {1, 3}) {
+	// every pulse was skipped whole: no fuel, and no injector left open
+	EXPECT_EQ(0, countOpenInjectors());
+	for (int i = 0; i < 4; i++) {
 		EXPECT_FALSE(enginePins.injectors[i].getLogicValue()) << "injector " << i;
 		EXPECT_EQ(0, enginePins.injectors[i].getOverlappingCounter()) << "injector " << i;
 	}
@@ -145,7 +138,7 @@ TEST(scheduler, poolExhaustionLeavesInjectorsOpen) {
 }
 
 // [tag:scheduling_pool_exhaustion] InjectorOutputPin merges overlapping pulses by counting
-// openings and closings. If a closing is lost (see poolExhaustionLeavesInjectorsOpen) the
+// openings and closings. If a closing is lost (injection pulses can no longer lose one, see poolExhaustionSkipsInjectionPulse) the
 // stopped-engine safety, EnginePins::stopPins(), drives the pin low through
 // NamedOutputPin::stop() but keeps the count. Each later opening then only moves the count
 // from one to two, so that injector stays shut until reboot.
