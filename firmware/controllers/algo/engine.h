@@ -74,6 +74,7 @@
 #ifndef EFI_BOOTLOADER
 #include "engine_modules_generated.h"
 #include "burst_knock.h"
+#include "transient_timing.h"
 #include "engine_state_machine.h"
 #include "wot_enrichment.h"
 #endif
@@ -220,6 +221,7 @@ public:
 
 #include "modules_list_generated.h"
 		BurstKnock,
+		TransientTiming,
         EngineStateMachine,
         WotEnrichment,
 

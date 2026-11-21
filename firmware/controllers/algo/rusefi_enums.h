@@ -865,6 +865,13 @@ typedef enum __attribute__ ((__packed__)) {
 	AE_MODE_LUA = 3,
 } accel_enrichment_mode_e;
 
+// IMPORTANT: This enum must be kept in sync with transient_timing_mode_e in transient_timing_tables.txt
+typedef enum __attribute__ ((__packed__)) {
+	TRANSIENT_TIMING_OFF = 0,
+	TRANSIENT_TIMING_LOG_ONLY = 1,
+	TRANSIENT_TIMING_APPLY = 2,
+} transient_timing_mode_e;
+
 #if __cplusplus
 #include <cstdint>
 

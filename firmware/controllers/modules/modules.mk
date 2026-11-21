@@ -20,6 +20,7 @@ include $(PROJECT_DIR)/controllers/modules/fuel_pump/fuel_pump.mk
 include $(PROJECT_DIR)/controllers/modules/gear_detector/gear_detector.mk
 include $(PROJECT_DIR)/controllers/modules/rolling_launch/rolling_launch.mk
 include $(PROJECT_DIR)/controllers/modules/burst_knock/burst_knock.mk
+include $(PROJECT_DIR)/controllers/modules/transient_timing/transient_timing.mk
 include $(PROJECT_DIR)/controllers/modules/engine_state_machine/engine_state_machine.mk
 include $(PROJECT_DIR)/controllers/modules/wot_enrichment/wot_enrichment.mk
 include $(PROJECT_DIR)/controllers/modules/trip_odometer/trip_odometer.mk

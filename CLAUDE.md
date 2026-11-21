@@ -47,6 +47,13 @@ Firmware and unit-test builds keep dependency files in `firmware/.dep/` and `uni
 
 After ChibiOS build-rule changes, validate generated-header dependencies with an empty `DEPDIR` (a fresh directory under `/tmp` is sufficient). Existing compiler-generated `.dep` files can hide missing explicit Makefile prerequisites: an incremental build generates the RAM disk correctly while a clean CI build compiles against its checked-in placeholder header.
 
+Every board build also packs the compressed TunerStudio `.ini` (`rusefi.ini.7z`) into a FAT
+image of `INI_IMAGE_SIZE` KB (default 152, `firmware/bin/gen_image_board.sh`) for the USB mass
+storage drive. When the archive no longer fits, `create_ini_image.sh` prints `Disk full` and
+the build stops at `.ramdisk-sentinel` (`create_ini_image.sh failed with 152`); the 2 KB
+clusters put the limit near 143.3 KB of compressed `.ini`. Trim `.ini` text (help, tooltips,
+field captions) before raising the image size, which costs flash on every board.
+
 On STM32F4, a linker error at `.heap_ccm` saying `cannot move location counter
 backwards` from an address above `0x10010000` means static data exceeds the
 64 KiB CCM RAM region, not flash. Inspect both SRAM and CCM before removing
@@ -159,6 +166,12 @@ enables ASan. From `unit_tests/`, use `make clean`, `make -j12 SANITIZE=no`, the
 old objects, so running it alone after an ASan build can reuse incompatible objects.
 
 `EngineTestHelper::applyTriggerWaveform()` also increments the global configuration version and notifies hardware controllers. Static ETB controllers can retain PID pointers into an earlier test's destroyed configuration when the next test skips throttle initialization (for example, without TPS sensors). A later configuration notification then reads the stale pointer in `Pid::isSame()`, detectable under Valgrind. For tests that only need trigger/cylinder geometry refreshed, use `engine->updateTriggerConfiguration()` directly; tests of global configuration changes still require ETB lifetime isolation. See the MAP sampling tests and the 2026-09-29 report.
+
+`EngineTestHelper::spin60_2UntilDeg()` spins `(targetDegree - spinInfo.currentDegree) / 6`
+teeth but never advances `spinInfo.currentDegree`, so repeated calls with growing targets each
+spin from zero again (tens of cycles instead of the intended step). Set
+`spinInfo.currentDegree` to the previous target before each call when a test needs short,
+timed steps (see `TransientTimingIntegration.ReachesEachCylinderAtItsNextSpark`).
 
 Starter tests must explicitly clear `enginePins.starterControl` in setup and cleanup. `EngineTestHelper` resets injector/coil outputs and pin registrations, but an unassigned starter retains its logical output across tests; the next `doStartCranking()` then sees an already-engaged starter and skips new-engagement behavior.
 
@@ -273,7 +286,7 @@ For detailed technical documentation intended for AI assistants, see:
 - [Fueling System](docs/AI/fueling_system.md) - Mass-based fueling pipeline (17 stages).
 - [Cold-start Logic](docs/AI/cold_start.md) - Priming, cranking-state hysteresis, mass tables, ASE/WUE overlap, cycle counters and sensor fallbacks.
 - [Acceleration Enrichment](docs/AI/acceleration_enrichment.md) - Four selectable AE modes including Lua mass injection, independent wall wetting, TPS sampling, correction units, flex compensation and diagnostics.
-- [Ignition System](docs/AI/ignition_system.md) - Timing calculation and spark scheduling.
+- [Ignition System](docs/AI/ignition_system.md) - Timing calculation and spark scheduling, burst knock and transient timing corrections, and the one-cycle latch of each cylinder's spark angle.
 - [Launch Control](docs/AI/launch_control.md) - Activation modes, RPM arming latch, pre-launch timing/skip ramps, full cuts, shared-clutch flat shift, fuel-trim learning and diagnostic limitations.
 - [Rev Limiters](docs/AI/rev_limiters.md) - Constant/CLT hard limits, strict hysteresis, timing/fuel ramps, independent ETB taper, fault ceilings, cut priority and diagnostics.
 - [Engine State Machine](docs/AI/engine_state_machine.md) - Operating-state classification, shift recognition and optional STFT region selection.
