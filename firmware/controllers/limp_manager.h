@@ -13,7 +13,7 @@
 enum class ClearReason : uint8_t {
 	None, // 0
 	Fatal, // 1
-	Settings, // 2
+	Settings, // 2 - "setting disabled": the user turned injection or ignition off in the tune, not "the tune is bad"
 	HardLimit, // 3
 	EtbJammedRevLimit, // 4 means 1500 RPM limit in ETB jam was detected
 	BoostCut, // 5

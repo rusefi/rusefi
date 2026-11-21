@@ -768,7 +768,12 @@ static bool refreshRaisedConfigError = false;
 static uint32_t refreshRaisedSeq = 0;
 
 void refreshConfigErrorState() {
-	// core producers go here, worst first, before the board hook
+	// Core producers go here, worst first, before the board hook: one function per condition,
+	// chained with the same "if (!active)" pattern as the board hook below. A producer only
+	// reads state which its owner keeps up to date, calls configError() with its message while
+	// the condition holds and returns true; it must be cheap, this runs on every slow callback.
+	// Showing a message is all this does. A condition which must also stop the engine needs
+	// its own cut in LimpManager::updateState(), reading the same state.
 	bool active = checkSettingsWriteFailure();
 	if (!active) {
 		active = get_board_override_result(custom_board_updateConfigError, false);

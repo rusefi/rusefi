@@ -532,8 +532,27 @@ static bool validateGdi() {
 	return true;
 }
 
-// Returns false if there's an obvious problem with the loaded configuration
-// previousConfiguration: nullptr on start-up, the currently running configuration on burn
+/**
+ * Read-only check of the tune, on start-up and on every burn. It never changes the
+ * configuration: repairs belong in applyDefaultsOrFixAfterBurn().
+ * @param previousConfiguration nullptr on start-up, the currently running configuration on burn
+ * @return false if there's an obvious problem with the loaded configuration. Only start-up
+ * (runRusEfi()) uses the result, to skip initRealHardwareEngineController(). The burn path
+ * ignores it: the tune is already live in RAM and is written to flash regardless, so a check
+ * which must stop the engine has to raise an error which does that itself.
+ *
+ * Two kinds of checks live here, and they report differently:
+ *  - scalar settings: criticalError() and return false, the remaining checks do not run
+ *  - table axes, [tag:table_axis_order]: ensureArrayIsAscending() raises the critical error
+ *    itself and validation carries on, so the result stays true with a broken axis. Guard each
+ *    axis by the setting which puts its table in use (see the MAF curve), so that leftovers
+ *    of an unused feature do not stop the ECU.
+ *
+ * Every problem found here today is a critical error, latched until reboot: a burn which fixes
+ * the tune does not clear it. Nothing here is level-triggered; a check which should come and go
+ * with the tune needs a producer in refreshConfigErrorState() which this function sets and
+ * clears on every run.
+ */
 static bool validateConfig(const engine_configuration_s* previousConfiguration) {
   if (!get_board_override_result(custom_board_validateConfig, true, previousConfiguration)) {
     return false;

@@ -25,9 +25,41 @@ float interpolateClampedWithValidation(float x1, float y1, float x2, float y2, f
 float interpolateClamped(float x1, float y1, float x2, float y2, float x);
 float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, float x);
 
-// _technically_ and _theoretically_ we can support flat line for both bins and values but I am not sure if
-// such a rare case is something we want to support
-// see also: setLinearCurve
+/**
+ * [tag:table_axis_order] Table and curve axes ("bins") must be strictly ascending.
+ *
+ * Why: lookups (findIndexMsg(), priv::getBin(), interpolate2d/3d) search the bins assuming
+ * that order and divide by the distance between neighbours. Equal neighbours (a "flat line",
+ * for example an axis of zeros from a tune made for another firmware version) or a descending
+ * pair give a zero or negative interval, so the looked-up fuel/timing value is not usable.
+ * _technically_ and _theoretically_ we can support flat line for both bins and values but
+ * I am not sure if such a rare case is something we want to support.
+ *
+ * This is the validation half of that rule; it does not repair anything. It is called for each
+ * axis in use from validateConfig() in engine_controller.cpp, on start-up and on every burn.
+ * @param msg names the axis in the user-facing message, see [tag:user_facing_ini_labels]
+ *
+ * Severity: a broken axis is reported with firmwareError(), the critical kind described in
+ * error_handling.h, although its cause is a tune the user could fix in TunerStudio, which is
+ * what configError() is for. Critical is used because it is the one report which also stops
+ * the engine: LimpManager::fatalError() cuts fuel, spark and ETB, and nothing consults
+ * hasConfigError() before firing outputs. The price is that the error stays latched until
+ * reboot, so fixing the axis and burning is not enough.
+ * Reporting this as a config error needs all of the following, not just a different call:
+ *  - a level-triggered producer in refreshConfigErrorState(), set and cleared by each validation
+ *  - an engine cut in LimpManager::updateState() for as long as the axis is broken
+ *  - a decision for the tables which are read outside of fuel and spark (ETB pedal map,
+ *    boost, VVT, idle), which a fuel/spark cut does not stop
+ *
+ * Reporting: the function has no return value and callers do not stop at the first broken
+ * axis. In firmware firmwareError() returns and keeps only the first message, so the user
+ * sees one axis at a time. In unit tests and the simulator firmwareError() throws, see
+ * EXPECT_FATAL_ERROR.
+ * This header is in util/ and must not depend on controllers/: the report goes through
+ * error_handling.h, state about the tune belongs to the caller.
+ *
+ * see also: setLinearCurve
+ */
 template<typename TValue, int TSize>
 void ensureArrayIsAscending(const char* msg, const TValue (&values)[TSize]) {
 	for (size_t i = 0; i < TSize - 1; i++) {
@@ -39,6 +71,12 @@ void ensureArrayIsAscending(const char* msg, const TValue (&values)[TSize]) {
 	}
 }
 
+/**
+ * [tag:table_axis_order] For axes of optional features: an axis which was never filled in
+ * (all zeros, recognized by its second element) is accepted, since the feature is not in use.
+ * This is also what lets a tune made before the table existed pass validation. Use the strict
+ * ensureArrayIsAscending() for an axis the engine reads regardless of optional settings.
+ */
 template<typename TValue, int TSize>
 void ensureArrayIsAscendingOrDefault(const char* msg, const TValue (&values)[TSize]) {
 	if (values[1] == 0) {

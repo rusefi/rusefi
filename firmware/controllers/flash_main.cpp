@@ -46,7 +46,11 @@ void trackSettingsWriteResult(bool success) {
 }
 
 // level-triggered producer evaluated from refreshConfigErrorState(); the auto-clear
-// once the condition goes away (e.g. a later retry succeeded) happens there
+// once the condition goes away (e.g. a later retry succeeded) happens there.
+// Scope: persistence only, that is "the tune in RAM did not reach flash". A problem with the
+// content of the tune is a different condition with its own state and its own producer in
+// refreshConfigErrorState(); it does not belong here. Without settings storage there is
+// nothing to fail, hence the stub below.
 bool checkSettingsWriteFailure() {
 	if (settingsWriteFailing && settingsWriteFailTimer.hasElapsedSec(SETTINGS_WRITE_FAIL_ALERT_SEC)) {
 		configError("Settings write keeps failing - your changes are NOT saved to flash");

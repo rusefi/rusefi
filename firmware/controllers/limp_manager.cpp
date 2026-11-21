@@ -90,7 +90,15 @@ bool LimpManager::shouldReportCutWarning(efitick_t nowNt) {
 	return true;
 }
 
+// Level-triggered: the fuel and spark permissions are rebuilt from scratch on every call, so a
+// cut added below lasts exactly as long as its condition. Only the m_allow* members cleared
+// outside of this function (fatalError(), ETB jam) are latched until reboot.
+// Config errors are not consulted here: configError() only shows a message, and a bad tune stops
+// the engine today only through a critical error, see fatalError(). A recoverable condition which
+// must stop the engine adds its own clear() below with its own ClearReason, so that the
+// "Fuel cut"/"Ign cut" indicators (fuelIgnCutCodeList) tell the user why.
 void LimpManager::updateState(float rpm, efitick_t nowNt) {
+	// ClearReason::Settings: the user disabled injection or ignition in the tune, see Clearable
 	Clearable allowFuel = engineConfiguration->isInjectionEnabled;
 	Clearable allowSpark = engineConfiguration->isIgnitionEnabled;
 

@@ -24,6 +24,10 @@ TEST(MafConfiguration, InvalidCurveWithoutAnalogInputs) {
 	}
 }
 
+// [tag:table_axis_order] A broken axis of a table in use is a critical error today: in unit
+// tests firmwareError() throws, so validation does not return at all. These two tests pin the
+// guard (either analog MAF input puts the curve in use) and that severity, see
+// ensureArrayIsAscending().
 TEST(MafConfiguration, InvalidCurveWithPrimaryInput) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->mafAdcChannel = EFI_ADC_0;
