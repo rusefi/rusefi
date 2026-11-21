@@ -3,6 +3,8 @@ package com.rusefi.ui.laf;
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 import java.awt.*;
+import java.awt.event.AWTEventListener;
+import java.awt.event.HierarchyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -29,20 +31,60 @@ public class GradientTitleBorder extends AbstractBorder {
         border.installMouseListener(panelWidget);
     }
 
+    /**
+     * Keeps the outline highlighted while the pointer is anywhere inside the group, including over
+     * its fields. Moving onto a child sends the group a mouseExited, so the group's own events alone
+     * would make the outline flicker; while highlighted, a toolkit-wide listener watches every mouse
+     * event and turns the highlight off once the pointer is outside the group's bounds.
+     */
     public void installMouseListener(Component c) {
+        AWTEventListener watcher = new AWTEventListener() {
+            @Override
+            public void eventDispatched(AWTEvent event) {
+                if (!(event instanceof MouseEvent)) {
+                    return;
+                }
+                MouseEvent e = (MouseEvent) event;
+                Component source = e.getComponent();
+                boolean inside = source != null && c.isShowing() && source.isShowing()
+                    && c.contains(SwingUtilities.convertPoint(source, e.getPoint(), c));
+                if (!inside) {
+                    setMouseOver(c, false, this);
+                }
+            }
+        };
         c.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                mouseOver = true;
-                c.repaint();
+                setMouseOver(c, true, watcher);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                mouseOver = false;
-                c.repaint();
+                if (!c.contains(e.getPoint())) {
+                    setMouseOver(c, false, watcher);
+                }
             }
         });
+        c.addHierarchyListener(e -> {
+            if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0 && !c.isShowing()) {
+                setMouseOver(c, false, watcher);
+            }
+        });
+    }
+
+    private void setMouseOver(Component c, boolean over, AWTEventListener watcher) {
+        if (mouseOver == over) {
+            return;
+        }
+        mouseOver = over;
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        if (over) {
+            toolkit.addAWTEventListener(watcher, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
+        } else {
+            toolkit.removeAWTEventListener(watcher);
+        }
+        c.repaint();
     }
 
     public String getTitle() {
