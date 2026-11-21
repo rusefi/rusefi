@@ -10,6 +10,7 @@
  * 4) Lua: script-supplied extra cycle fuel mass, with a freshness timeout.
  *
  * This file implements the shared TPS detector and the two adders.
+ * getTemperatureMult() is the coolant/flex multiplier shared with MAP Prediction.
  * Wall wetting in wall_fuel.cpp is independent and can operate with any mode.
  *
  * http://rusefi.com/wiki/index.php?title=Manual:Software:Fuel_Control
@@ -93,11 +94,36 @@ float TpsAccelEnrichment::getTpsEnrichment() {
 		mult = 1;
 	}
 
-	// Flex fuel transient compensation (CLT x ethanol). Neutral (1.0) without a flex sensor.
-	// Predictive MAP and Lua return earlier, so this only applies to legacy adders.
-	float flexMult = getFlexTransientMult(config->flexAeMult);
-	engine->outputChannels.flexAeMultiplier = flexMult;
-	return extraFuel * mult * flexMult;
+	// Coolant (or flex CLT x ethanol) compensation. Lua returns earlier; MAP Prediction
+	// applies the same multiplier to its predicted MAP excess instead.
+	return extraFuel * mult * getTemperatureMult();
+}
+
+// [tag:ae_temperature_mult] One temperature multiplier for every native AE strategy.
+// MS/Percent Adder scale their TPS enrichment with it (getTpsEnrichment above);
+// MAP Prediction scales only the predicted MAP excess used for physical air mass
+// (SpeedDensityAirmass::getAirmass), so the VE/load axis still sees the plain
+// prediction. With active flex compensation the CLT x ethanol table replaces the
+// coolant curve rather than multiplying it, so coolant is not applied twice.
+// Interpolated values at or below 0.01 are neutral: tunes that predate the curve
+// (all zero) and an all-zero flex table keep their previous enrichment.
+float TpsAccelEnrichment::getTemperatureMult() {
+	float result;
+	if (isFlexTransientCompActive()) {
+		result = getFlexTransientMult(config->flexAeMult);
+		engine->outputChannels.flexAeMultiplier = result;
+	} else {
+		engine->outputChannels.flexAeMultiplier = 1;
+		// Same fallback as the flex tables: normal operating temperature on CLT failure
+		float clt = Sensor::get(SensorType::Clt).value_or(90);
+		result = interpolate2d(clt, config->aeCltCorrBins, config->aeCltCorrValues);
+		if (!(result > 0.01f)) {
+			result = 1;
+		}
+	}
+
+	aeTemperatureMult = result;
+	return result;
 }
 
 bool TpsAccelEnrichment::setLuaEnrichment(mass_t grams) {
