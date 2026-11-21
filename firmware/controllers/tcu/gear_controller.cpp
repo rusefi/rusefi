@@ -4,6 +4,11 @@
 
 #if EFI_TCU
 void GearControllerBase::init() {
+#if EFI_UNIT_TEST
+	// The controllers are file-scope instances which outlive a test: without this the gear
+	// reached by one test is where the next one starts.
+	desiredGear = NEUTRAL;
+#endif
 	initTransmissionController();
 }
 

@@ -332,6 +332,8 @@ TEST_F(DualCanWithDisconnectedSecondaryTest, MailboxDeadlineHandlesMillisecondCl
 
 TEST_F(DualCanWithDisconnectedSecondaryTest, FullQueueDropsNewestAndResetDiscardsTraffic) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	// the drop count is a lifetime diagnostic that no reset clears: compare with where it started
+	int dropsBefore = CanTxMessage::getQueueDropCount(1);
 	for (int i = 0; i < CAN_TX_QUEUE_CAPACITY; i++) {
 		CanTxMessage message(CanCategory::SERIAL, i, 8, 1);
 		ASSERT_TRUE(message.submit());
@@ -340,7 +342,7 @@ TEST_F(DualCanWithDisconnectedSecondaryTest, FullQueueDropsNewestAndResetDiscard
 		CanTxMessage newest(CanCategory::SERIAL, 0x7ff, 8, 1);
 		EXPECT_FALSE(newest.submit());
 	}
-	EXPECT_EQ(1, CanTxMessage::getQueueDropCount(1));
+	EXPECT_EQ(dropsBefore + 1, CanTxMessage::getQueueDropCount(1));
 
 	CanTxMessage::stopBus(1);
 	EXPECT_FALSE(CanTxMessage::serviceOne(1));

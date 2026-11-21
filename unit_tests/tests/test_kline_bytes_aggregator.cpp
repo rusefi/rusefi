@@ -1,9 +1,11 @@
 #include "gtest/gtest.h"
 #include "kline.h"
 
-static int sourceTotal = 11;
+static int sourceTotal;
 
 TEST(kline, source) {
+    // set here, not in the initializer: the lambda counts it down, and a repeated run starts again
+    sourceTotal = 11;
     ByteSource source = [] (uint8_t * buffer, int maxSize) {
         if (sourceTotal == 0)
             return (size_t)0;

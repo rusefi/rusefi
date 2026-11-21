@@ -28,6 +28,12 @@ void ButtonDebounce::init (efitimems_t threshold, brain_pin_e &pin, pin_input_mo
         nextDebounce = s_firstDebounce;
         s_firstDebounce = this;
     }
+#if EFI_UNIT_TEST
+    // File-scope instances outlive a test while the test clock rewinds to zero: a press time
+    // kept from the previous test looks recent and swallows the next test's first press.
+    timeLast.init();
+    storedValue = false;
+#endif
     m_threshold = MS2NT(threshold);
     m_pin = &pin;
     m_mode = &mode;

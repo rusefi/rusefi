@@ -99,7 +99,9 @@ static int sentTest_feedWithFile(sent_channel &channel, const char *file)
 }
 
 TEST(sent, testFordIdle) {
-	static sent_channel channel;
+	// a fresh, zeroed decoder each run ({} matters: the statistics have no initializers);
+	// a static one keeps its state and statistics when the test is repeated
+	sent_channel channel{};
 	int lineCount = sentTest_feedWithFile(channel, "tests/sent/resources/ford-sent-idle.csv");
 	ASSERT_TRUE(lineCount > 100);
 	#if SENT_STATISTIC_COUNTERS
@@ -109,7 +111,9 @@ TEST(sent, testFordIdle) {
 }
 
 TEST(sent, testFordClosed) {
-	static sent_channel channel;
+	// a fresh, zeroed decoder each run ({} matters: the statistics have no initializers);
+	// a static one keeps its state and statistics when the test is repeated
+	sent_channel channel{};
 	int lineCount = sentTest_feedWithFile(channel, "tests/sent/resources/ford-sent-closed.csv");
 	ASSERT_TRUE(lineCount > 100);
    	bool isError = channel.GetMsg(nullptr) != 0;
@@ -122,7 +126,9 @@ TEST(sent, testFordClosed) {
 }
 
 TEST(sent, testOpelIdle) {
-	static sent_channel channel;
+	// a fresh, zeroed decoder each run ({} matters: the statistics have no initializers);
+	// a static one keeps its state and statistics when the test is repeated
+	sent_channel channel{};
 	int lineCount = sentTest_feedWithFile(channel, "tests/sent/resources/opel-throttle-idle.csv");
 	ASSERT_TRUE(lineCount > 100);
 	bool isError = channel.GetMsg(nullptr) != 0;
@@ -135,7 +141,9 @@ TEST(sent, testOpelIdle) {
 }
 
 TEST(sent, testOpelMove) {
-	static sent_channel channel;
+	// a fresh, zeroed decoder each run ({} matters: the statistics have no initializers);
+	// a static one keeps its state and statistics when the test is repeated
+	sent_channel channel{};
 	int lineCount = sentTest_feedWithFile(channel, "tests/sent/resources/opel-throttle-move.csv");
 	ASSERT_TRUE(lineCount > 100);
 	bool isError = channel.GetMsg(nullptr) != 0;
@@ -148,7 +156,9 @@ TEST(sent, testOpelMove) {
 }
 
 TEST(sent, testFuelPressure) {
-	static sent_channel channel;
+	// a fresh, zeroed decoder each run ({} matters: the statistics have no initializers);
+	// a static one keeps its state and statistics when the test is repeated
+	sent_channel channel{};
 	int lineCount = sentTest_feedWithFile(channel, "tests/sent/resources/SENT-fuel-pressure.csv");
 	ASSERT_TRUE(lineCount > 100);
    	bool isError = channel.GetMsg(nullptr) != 0;
@@ -161,7 +171,9 @@ TEST(sent, testFuelPressure) {
 }
 
 TEST(sent, testVagMap) {
-	static sent_channel channel;
+	// a fresh, zeroed decoder each run ({} matters: the statistics have no initializers);
+	// a static one keeps its state and statistics when the test is repeated
+	sent_channel channel{};
 	int lineCount = sentTest_feedWithFile(channel, "tests/sent/resources/vag_04e.906.051.csv");
 	ASSERT_TRUE(lineCount > 100);
 	bool isError = channel.GetMsg(nullptr) != 0;
@@ -175,7 +187,9 @@ TEST(sent, testVagMap) {
 
 // Mercedes A 000 905 31 01 EGT sensor
 TEST(sent, testMbEgt) {
-	static sent_channel channel;
+	// a fresh, zeroed decoder each run ({} matters: the statistics have no initializers);
+	// a static one keeps its state and statistics when the test is repeated
+	sent_channel channel{};
 	int lineCount = sentTest_feedWithFile(channel, "tests/sent/resources/mb_A_000_905_31_01-ambient.csv");
 	ASSERT_TRUE(lineCount > 100);
 	bool isError = channel.GetMsg(nullptr) != 0;
@@ -188,7 +202,9 @@ TEST(sent, testMbEgt) {
 }
 
 TEST(sent, testMbEgtCold) {
-	static sent_channel channel;
+	// a fresh, zeroed decoder each run ({} matters: the statistics have no initializers);
+	// a static one keeps its state and statistics when the test is repeated
+	sent_channel channel{};
 	int lineCount = sentTest_feedWithFile(channel, "tests/sent/resources/mb_A_000_905_31_01-water-ice.csv");
 	ASSERT_TRUE(lineCount > 100);
 	bool isError = channel.GetMsg(nullptr) != 0;
@@ -201,7 +217,9 @@ TEST(sent, testMbEgtCold) {
 }
 
 TEST(sent, testMbEgtHot) {
-	static sent_channel channel;
+	// a fresh, zeroed decoder each run ({} matters: the statistics have no initializers);
+	// a static one keeps its state and statistics when the test is repeated
+	sent_channel channel{};
 	int lineCount = sentTest_feedWithFile(channel, "tests/sent/resources/mb_A_000_905_31_01-boiling-water.csv");
 	ASSERT_TRUE(lineCount > 100);
 	bool isError = channel.GetMsg(nullptr) != 0;
@@ -214,7 +232,7 @@ TEST(sent, testMbEgtHot) {
 }
 
 TEST(sent, testNoMessages) {
-    static sent_channel channel;
+    sent_channel channel{};
    	bool isError = channel.GetMsg(nullptr) != 0;
    	ASSERT_TRUE(isError);
 }

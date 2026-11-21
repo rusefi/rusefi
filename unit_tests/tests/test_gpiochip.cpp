@@ -64,6 +64,12 @@ TEST(gpioext, testGpioExt) {
 
 	printf("====================================================================================== testGpioExt\r\n");
 
+	// the chip registry and these counters are file-static: start clean when the test is repeated
+	resetGpioPwmForUnitTest();
+	io_state = 0;
+	initcalls = 0;
+	calls_to_failed_chip = 0;
+
 	/* should fail to register chip with zero gpios */
 	EXPECT_FALSE(gpiochip_register((brain_pin_e)(BRAIN_PIN_ONCHIP_LAST + 1), "invalid", testchip1, 0) > 0);
 
@@ -117,4 +123,6 @@ TEST(gpioext, testGpioExt) {
   EXPECT_TRUE(gpiochips_readPad((Gpio)(chip3_base + 16)) < 0);
 	EXPECT_ANY_THROW(gpiochips_writePad((Gpio)(chip3_base + 16), 1));
 
+	// do not leave the test chips registered for later tests
+	resetGpioPwmForUnitTest();
 }

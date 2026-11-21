@@ -74,6 +74,8 @@ static void orderCallback(uintptr_t a) {
 }
 
 TEST(EventQueue, simple) {
+	// orderCallback leaves the last value behind, start over for a repeated run
+	prevValue = 0;
 	EventQueue eq;
 
 	scheduling_s s1;
