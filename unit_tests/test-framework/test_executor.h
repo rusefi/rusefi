@@ -25,6 +25,7 @@ public:
 	scheduling_s * getHead();
 	scheduling_s * getForUnitTest(int index);
 	int getMaxUsedPoolSlots() const { return schedulingQueue.getMaxUsedPoolSlots(); }
+	int getUsedPoolSlots() const { return schedulingQueue.getUsedPoolSlots(); }
 
 	void setMockExecutor(Scheduler* exec);
 private:

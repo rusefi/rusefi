@@ -65,3 +65,115 @@ TEST(scheduler, poolHeadroomMinimalPinsRpmStep) {
 	EXPECT_GT(maxUsed, 0) << "expected injection events to draw from the pool";
 	EXPECT_LT(maxUsed, 48) << "scheduling pool dangerously close to exhaustion";
 }
+
+static void poolPlaceholder() {
+}
+
+static constexpr int schedulingPoolSize = 64;
+
+static int countOpenInjectors() {
+	int result = 0;
+	for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
+		if (enginePins.injectors[i].getLogicValue()) {
+			result++;
+		}
+	}
+	return result;
+}
+
+// [tag:scheduling_pool_exhaustion] Injection opening and closing each take their own pool slot
+// (InjectionEvent::onTriggerTooth, main_trigger_callback.cpp), with no all-or-nothing reservation
+// and no result from Scheduler::schedule(). When only one slot is free the opening takes it and
+// the closing is dropped, so nothing ever closes that injector.
+// Production builds additionally raise criticalError from EventQueue::insertTask, which turns
+// the pins off; host tests have no such net, and the expectations below pin the unprotected
+// behaviour: injectors are left open. A fix must skip the whole pulse instead.
+TEST(scheduler, poolExhaustionLeavesInjectorsOpen) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engine->tdcMarkEnabled = false;
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(::testing::_, ::testing::_))
+		.WillRepeatedly(::testing::Return(AirmassResult{0.1008f, 50.0f}));
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth, IM_SEQUENTIAL);
+
+	// 3000 rpm: the half moon wheel is on the cam, one 40 ms engine cycle is two edges 20 ms apart
+	constexpr float edgeMs = 20;
+	eth.smartFireTriggerEvents2(/* count */ 20, edgeMs);
+	ASSERT_NEAR(3000, Sensor::getOrZero(SensorType::Rpm), 20) << "RPM";
+	ASSERT_GT(engine->engineState.injectionDuration, 1) << "pulses long enough to schedule";
+	ASSERT_GT(engine->engineState.fuelInjectionCounter, 0u) << "injecting before the pool fills up";
+
+	// wait for a moment between pulses: all slots are free and all injectors closed
+	for (int i = 0; i < 1000 && (eth.engine.scheduler.getUsedPoolSlots() != 0 || countOpenInjectors() != 0); i++) {
+		eth.moveTimeForwardAndInvokeEventsUs(100);
+	}
+	ASSERT_EQ(0, eth.engine.scheduler.getUsedPoolSlots());
+	ASSERT_EQ(0, countOpenInjectors());
+
+	// something else holds all but one slot for longer than this test runs
+	efitick_t farFuture = getTimeNowNt() + US2NT(MS2US(10000));
+	for (int i = 0; i < schedulingPoolSize - 1; i++) {
+		engine->scheduler.schedule("placeholder", nullptr, farFuture, action_s::make<poolPlaceholder>());
+	}
+	ASSERT_EQ(schedulingPoolSize - 1, eth.engine.scheduler.getUsedPoolSlots());
+
+	eth.smartFireTriggerEvents2(/* count */ 12, edgeMs);
+
+	// far longer than any pulse: a scheduled closing would have run by now
+	eth.moveTimeForwardAndInvokeEventsUs(MS2US(100));
+
+	// only the placeholders are still queued: nothing is left to close the injectors
+	EXPECT_EQ(schedulingPoolSize - 1, eth.engine.scheduler.size());
+
+	// Current defective behaviour, should be 0 open injectors.
+	// Two cylinders are scheduled on each trigger edge. The first takes the free slot for its
+	// opening and loses its closing: stuck open, with every later opening counted on top.
+	EXPECT_EQ(2, countOpenInjectors());
+	for (int i : {0, 2}) {
+		EXPECT_TRUE(enginePins.injectors[i].getLogicValue()) << "injector " << i;
+		EXPECT_GT(enginePins.injectors[i].getOverlappingCounter(), 1) << "injector " << i;
+	}
+	// The second finds no slot for either event: silently no fuel at all.
+	for (int i : {1, 3}) {
+		EXPECT_FALSE(enginePins.injectors[i].getLogicValue()) << "injector " << i;
+		EXPECT_EQ(0, enginePins.injectors[i].getOverlappingCounter()) << "injector " << i;
+	}
+
+	// leave the shared pins clean for the next test
+	for (int i = 0; i < 4; i++) {
+		enginePins.injectors[i].reset();
+	}
+}
+
+// [tag:scheduling_pool_exhaustion] InjectorOutputPin merges overlapping pulses by counting
+// openings and closings. If a closing is lost (see poolExhaustionLeavesInjectorsOpen) the
+// stopped-engine safety, EnginePins::stopPins(), drives the pin low through
+// NamedOutputPin::stop() but keeps the count. Each later opening then only moves the count
+// from one to two, so that injector stays shut until reboot.
+TEST(scheduler, injectorDeadAfterStopFollowingLostClose) {
+	EngineTestHelper eth(engine_type_e::MINIMAL_PINS);
+
+	InjectorOutputPin& injector = enginePins.injectors[0];
+	ASSERT_EQ(0, injector.getOverlappingCounter());
+
+	// an opening whose closing never comes
+	injector.open(getTimeNowNt());
+	ASSERT_TRUE(injector.getLogicValue());
+
+	// engine stops, the safety turns the stuck injector off
+	EXPECT_TRUE(enginePins.stopPins());
+	EXPECT_FALSE(injector.getLogicValue());
+
+	// current defective behaviour, should be 0
+	EXPECT_EQ(1, injector.getOverlappingCounter());
+
+	// next start: a normal pulse
+	injector.open(getTimeNowNt());
+	// current defective behaviour, should be open
+	EXPECT_FALSE(injector.getLogicValue());
+	injector.close(getTimeNowNt());
+	EXPECT_FALSE(injector.getLogicValue());
+	EXPECT_EQ(1, injector.getOverlappingCounter());
+
+	// leave the shared pin clean for the next test
+	injector.reset();
+}
