@@ -313,8 +313,9 @@ struct Scheduler {
 	 * @param targetTime When to execute the specified action. If this time is in the past or
 	 *                   very near future, it may execute immediately.
 	 * @param action An action to execute at the specified time.
+	 * @return false if it could not be scheduled, for example because the pool is empty
 	 */
-	virtual void schedule(const char *msg, scheduling_s *scheduling, efitick_t targetTime, action_s const& action) = 0;
+	virtual bool schedule(const char *msg, scheduling_s *scheduling, efitick_t targetTime, action_s const& action) = 0;
 
 	/**
 	 * @brief Cancel the specified scheduling_s so that, if currently scheduled, it does not execute.

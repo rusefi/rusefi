@@ -11,6 +11,6 @@
 
 class SleepExecutor : public Scheduler {
 public:
-	void schedule(const char *msg, scheduling_s *scheduling, efitick_t timeNt, action_s const& action) override;
+	bool schedule(const char *msg, scheduling_s *scheduling, efitick_t timeNt, action_s const& action) override;
 	void cancel(scheduling_s* s) override;
 };

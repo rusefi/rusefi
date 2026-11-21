@@ -23,10 +23,18 @@ public:
 	// event in a group of events near one another.
 	explicit EventQueue(efidur_t lateDelay = 0);
 
+	enum class InsertResult {
+		// nothing was queued: no free pool slot, or this scheduling_s is already scheduled
+		Failed,
+		Inserted,
+		// the new event is the next one due, so the timer needs setting again
+		InsertedAtHead,
+	};
+
 	/**
 	 * O(size) - linear search in sorted linked list
 	 */
-	bool insertTask(scheduling_s *scheduling, efitick_t timeX, action_s const& action);
+	InsertResult insertTask(scheduling_s *scheduling, efitick_t timeX, action_s const& action);
 	void remove(scheduling_s* scheduling);
 
 	int executeAll(efitick_t now);
@@ -45,6 +53,7 @@ public:
 	// currently handed out, and the worst case seen since construction.
 	int getUsedPoolSlots() const { return m_usedPoolSlots; }
 	int getMaxUsedPoolSlots() const { return m_maxUsedPoolSlots; }
+	int getAvailablePoolSlots() const { return static_cast<int>(efi::size(m_pool)) - m_usedPoolSlots; }
 private:
 	void assertListIsSorted() const;
 	/**

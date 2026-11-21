@@ -45,7 +45,7 @@ SingleTimerExecutor::SingleTimerExecutor()
 {
 }
 
-void SingleTimerExecutor::schedule(const char *msg, scheduling_s* scheduling, efitick_t nt, action_s const& action) {
+bool SingleTimerExecutor::schedule(const char *msg, scheduling_s* scheduling, efitick_t nt, action_s const& action) {
 	ScopePerf perf(PE::SingleTimerExecutorScheduleByTimestamp);
 
 #if EFI_ENABLE_ASSERTS
@@ -55,7 +55,7 @@ void SingleTimerExecutor::schedule(const char *msg, scheduling_s* scheduling, ef
 		// we are trying to set callback for too far into the future. This does not look right at all
 		int32_t intDeltaTimeNt = (int32_t)deltaTimeNt;
 		firmwareError(ObdCode::RUNTIME_CRITICAL_TASK_TIMER_OVERFLOW, "schedule() too far: %ld %s", intDeltaTimeNt, msg);
-		return;
+		return false;
 	}
 #endif
 
@@ -64,13 +64,15 @@ void SingleTimerExecutor::schedule(const char *msg, scheduling_s* scheduling, ef
 	// Lock for queue insertion - we may already be locked, but that's ok
 	chibios_rt::CriticalSectionLocker csl;
 
-	bool needToResetTimer = queue.insertTask(scheduling, nt, action);
+	auto result = queue.insertTask(scheduling, nt, action);
 	if (!reentrantFlag) {
 		executeAllPendingActions();
-		if (needToResetTimer) {
+		if (result == EventQueue::InsertResult::InsertedAtHead) {
 			scheduleTimerCallback();
 		}
 	}
+
+	return result != EventQueue::InsertResult::Failed;
 }
 
 void SingleTimerExecutor::cancel(scheduling_s* scheduling) {
