@@ -11,7 +11,7 @@
 
 #include "tunerstudio_io.h"
 
-#define DOT_MLG ".mlg"
+#include "sd_log_file_extension.h"
 
 // see also SD_STATUS
 typedef enum __attribute__ ((__packed__)) {

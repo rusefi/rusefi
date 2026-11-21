@@ -50,7 +50,7 @@
 // sdLoggerCreateFile()/sdLoggerCloseFile(). While writes stay inside the pre-allocated
 // area they never modify FAT/allocation structures, so a sudden power loss can lose
 // buffered data but should not corrupt the filesystem itself.
-// .mlg logs also roll over to a new file at this size (see sdLoggerMlg()); .teeth files
+// .mlg logs also roll over to a new file at this size (see sdLoggerMlg()); trigger tooth logs
 // have no such cap and just degrade to normal allocation past this point.
 // See docs/AI/sd_card_logging.md for the full overview.
 #define LOGGER_MAX_FILE_SIZE	(32 * 1024 * 1024)
@@ -434,12 +434,7 @@ static void prepareLogFileName() {
 		ptr = itoa10(&logName[PREFIX_LEN], logFileIndex);
 	}
 
-	if ((sdLoggerMode == SDLoggerMode::ToothBin) ||
-		(sdLoggerMode == SDLoggerMode::ToothCsv)) {
-		strcat(ptr, ".teeth");
-	} else {
-		strcat(ptr, DOT_MLG);
-	}
+	strcat(ptr, getSdLogFileExtension(sdLoggerMode));
 }
 
 /**
@@ -824,7 +819,7 @@ bool mountMmc() {
 #if EFI_TOOTH_LOGGER
 static bool toothLoggerStarted = false;
 /**
- * One iteration of trigger tooth logging: lazily creates a .teeth file once tooth
+ * One iteration of trigger tooth logging: lazily creates a .teeth/.teethbin file once tooth
  * data shows up, appends whatever the tooth logger has buffered, and closes the file
  * when the data stream ends so the next burst starts a fresh file.
  *

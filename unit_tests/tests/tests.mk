@@ -74,6 +74,7 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_injection_scheduling.cpp \
 	tests/trigger/test_instant_rpm.cpp \
 	tests/trigger/test_teeth_to_logicdata.cpp \
+	tests/test_sd_log_file_extension.cpp \
 	tests/trigger/test_logicdata_to_csv.cpp \
 	tests/sent/test_sent.cpp \
 	tests/ignition_injection/injection_mode_transition.cpp \

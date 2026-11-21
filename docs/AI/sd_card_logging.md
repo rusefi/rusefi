@@ -1,7 +1,7 @@
 # SD Card Logging
 
 How rusEFI writes engine logs to the SD card: the SD thread and its mode state
-machine, the two log formats (.mlg and .teeth), the write/buffering path, and the
+machine, the log formats (.mlg, .teeth and .teethbin), the write/buffering path, and the
 f_expand pre-allocation strategy that protects the filesystem from power loss.
 
 Everything below is gated by `EFI_FILE_LOGGING`.
@@ -14,7 +14,7 @@ Everything below is gated by `EFI_FILE_LOGGING`.
 | `firmware/hw_layer/mmc_card_util.cpp` | Persistent log file index (`rusefi.ind`), `incLogFileName()` |
 | `firmware/hw_layer/past_codes_storage.cpp` | Load and persist the eight-entry diagnostic history (`past-codes.csv`) |
 | `firmware/console/binary_mlg_log/binary_mlg_logging.cpp` | MLG binary format writer (header + data records) |
-| `firmware/console/binary/tooth_logger.cpp` | Trigger tooth ("composite") logger: RAM buffers + .teeth/CSV file output |
+| `firmware/console/binary/tooth_logger.cpp` | Trigger tooth ("composite") logger: RAM buffers + .teeth (CSV) / .teethbin (binary) file output |
 | `firmware/controllers/system/file_writer.h` | `FileBufferedWriter`: 512-byte buffered writer on top of FatFS `f_write` |
 | `firmware/controllers/modules/sd_log_trigger/` | Conditional logging: start/stop based on RPM/TPS/MAP/VSS or a button |
 | `firmware/ext/FatFS/` | FatFS library, project config in `ffconf.h` (`FF_USE_EXPAND 1`) |
@@ -152,20 +152,23 @@ wall-clock start from it. `MslToCsv` in `:mcp_ecu` validates descriptor lengths 
 checksums and preserves logged fields; it skips the prefix counter/timestamp and
 does not validate their continuity.
 
-### Trigger tooth .teeth log (`sdLoggerTooth`)
+### Trigger tooth log (`sdLoggerTooth`)
 
 Used when `sdTriggerLog` is enabled; records every trigger/cam edge, coil,
 injector, sync, TDC event as a packed `composite_logger_s`. The tooth logger
 double-buffers in the shared BigBuffer region between interrupt-context producers
 and the SD thread. `ToothLoggerWriter()` waits up to 3 seconds for a filled
 buffer; on timeout it flushes and closes the file, and the next tooth event opens
-a fresh file. Format is raw binary records, or CSV when `sdTriggerLogCsv` is set
-(format is latched at file creation, no on-the-fly switch). No 32MB rollover
-check applies to .teeth files.
+a fresh file. `sdLoggerMode` selects the format, latched at file creation (no
+on-the-fly switch): `Trigger CSV` writes a `.teeth` file, `Trigger bin` writes
+raw binary records to a `.teethbin` file for `misc/tooth_log_converter`. The
+extensions differ so a file identifies its format (`[tag:tooth_log_extension]`,
+`getSdLogFileExtension()` in `firmware/hw_layer/sd_log_file_extension.h`). No
+32MB rollover check applies to trigger tooth files.
 
 ### File naming
 
-`prepareLogFileName()`: `re_<date-time>.mlg`/`.teeth` when the RTC has a valid
+`prepareLogFileName()`: `re_<date-time>` plus the mode's extension when the RTC has a valid
 date, otherwise `re_<index>` where the index is persisted in `rusefi.ind` on the
 card (`incLogFileName()` in `mmc_card_util.cpp`).
 
@@ -197,7 +200,7 @@ The important power-loss defense is in `sdLoggerCreateFile()` /
   checksum. Use counter/time continuity and the recorded fields as additional
   evidence; an all-zero payload by itself is not proof of end-of-log.
 - Both loggers pre-allocate (they share `sdLoggerCreateFile()`), but only the
-  .mlg logger enforces the 32MB size cap/rollover; a .teeth file that outgrows
+  .mlg logger enforces the 32MB size cap/rollover; a trigger tooth file that outgrows
   the pre-allocation silently degrades to normal allocation.
 
 ## Status reporting and console commands
