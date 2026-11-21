@@ -101,6 +101,10 @@ public class LinkManager implements Closeable {
 
         default void onConnectionAttempt(String port) {
         }
+
+        default void onIniResolutionStarted(String port) {
+        }
+
     }
 
     private volatile MissingIniListener missingIniListener = (signature, port) -> {};
@@ -124,6 +128,10 @@ public class LinkManager implements Closeable {
     public void clearMissingIniFailure() {
         missingIniFailure = null;
         missingIniListener.onMissingIniCleared(lastTriedPort);
+    }
+
+    public void onIniResolutionStarted(String port) {
+        missingIniListener.onIniResolutionStarted(port);
     }
 
     // The board identity this link records at connect time. Defaults to a private instance (probe/tool

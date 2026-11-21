@@ -1,6 +1,108 @@
+import java.nio.file.Files
+import javax.inject.Inject
+import org.gradle.api.DefaultTask
+import org.gradle.api.GradleException
+import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.OutputFile
+import org.gradle.api.tasks.PathSensitive
+import org.gradle.api.tasks.PathSensitivity
+import org.gradle.api.tasks.TaskAction
+import org.gradle.process.ExecOperations
+
+
+abstract class StageTest7za extends DefaultTask {
+  @Input
+  abstract Property<Boolean> getWindowsHost()
+
+  @Inject
+  abstract ExecOperations getExecOperations()
+
+  @InputFile
+  @PathSensitive(PathSensitivity.RELATIVE)
+  abstract RegularFileProperty getPreparationScript()
+
+  @InputFile
+  @PathSensitive(PathSensitivity.RELATIVE)
+  abstract RegularFileProperty getProductionJar()
+
+  @OutputFile
+  abstract RegularFileProperty getJarOutput()
+
+  @OutputFile
+  abstract RegularFileProperty getExecutableOutput()
+
+  @TaskAction
+  void stage() {
+    File stagedJar = jarOutput.get().asFile
+    Files.createDirectories(stagedJar.parentFile.toPath())
+    Files.copy(productionJar.get().asFile.toPath(), stagedJar.toPath(),
+      java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+
+    def stagingRoot = new File(temporaryDir, UUID.randomUUID().toString())
+    def consoleDir = new File(stagingRoot, 'console')
+    Files.createDirectories(consoleDir.toPath())
+    try {
+      execOperations.exec { spec ->
+        spec.commandLine('bash', preparationScript.get().asFile.absolutePath, consoleDir.absolutePath)
+      }
+      def stagedExecutable = new File(consoleDir, '7za.exe')
+      if (!stagedExecutable.isFile()) {
+        throw new GradleException("Pinned 7-Zip preparation did not create ${stagedExecutable}")
+      }
+      Files.copy(stagedExecutable.toPath(), executableOutput.get().asFile.toPath(),
+        java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+    } catch (Exception e) {
+      throw new GradleException(
+        'Unable to stage test 7za.exe; Windows tests require Git Bash and the pinned 7-Zip archive '
+          + 'plus a host 7z/7zz build utility (configure WINDOWS_7ZA_ARCHIVE or WINDOWS_7ZA_CACHE '
+          + 'to select the archive source/cache).', e)
+    } finally {
+      ['7za.exe', '7za-LICENSE.txt', '7za-readme.txt'].each {
+        Files.deleteIfExists(new File(consoleDir, it).toPath())
+      }
+      Files.deleteIfExists(consoleDir.toPath())
+      Files.deleteIfExists(stagingRoot.toPath())
+    }
+  }
+}
 
 
 apply from: '../../android/dependencies.gradle'
+
+def isWindowsHost = System.getProperty('os.name', '').toLowerCase(Locale.ROOT).contains('windows')
+def isolatedTestRuntime = layout.buildDirectory.dir('iniArchiveTestRuntime')
+def test7za = isolatedTestRuntime.map { it.file('7za.exe') }
+def testJar = isolatedTestRuntime.map { it.file('shared_io.jar') }
+def prepareWindows7za = rootProject.file('firmware/bin/prepare_windows_7za.sh')
+def productionJarProvider = tasks.named('jar').flatMap { it.archiveFile }
+
+tasks.register('stageTest7za', StageTest7za) {
+  group = 'verification'
+  description = 'Stage the pinned 7-Zip executable beside an isolated shared_io test JAR'
+  windowsHost.set(isWindowsHost)
+  onlyIf { task -> task.windowsHost.get() }
+  dependsOn tasks.named('jar')
+  preparationScript.set(prepareWindows7za)
+  productionJar.set(productionJarProvider)
+  jarOutput.set(testJar)
+  executableOutput.set(test7za)
+}
+
+tasks.named('jar') {
+  exclude '**/7za.exe', '**/7za-LICENSE.txt', '**/7za-readme.txt'
+}
+
+if (isWindowsHost) {
+  tasks.named('test') {
+    dependsOn tasks.named('stageTest7za')
+    def ordinaryClasspath = classpath
+    classpath = files(testJar, ordinaryClasspath.minus(sourceSets.main.output))
+    systemProperty 'rusefi.test.7z', test7za.get().asFile.absolutePath
+  }
+}
 
 dependencies {
   api project(':logging-api')

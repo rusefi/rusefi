@@ -9,6 +9,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.LinkManager;
 import com.rusefi.PortScanner;
 import com.rusefi.maintenance.ProgramSelector;
+import com.rusefi.updater.OpenbltDetectorStrategy.OpenbltInfo;
 import com.rusefi.ui.util.UiUtils;
 import org.junit.jupiter.api.Test;
 
@@ -34,6 +35,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class StartupUpdateActionsTest {
@@ -41,7 +43,8 @@ class StartupUpdateActionsTest {
     void disconnectedNoIniProbeShowsDetectedIdentityAndPreservesDisabledTunePreference() throws Exception {
         String signature = "rusEFI noini-10540-20261119.2026.11.19.uaefi_pro.1254041395";
         PortResult port = new PortResult("ECU_NO_INI", SerialPortType.Ecu);
-        AvailableHardware hardware = new AvailableHardware(List.of(port), false, false, false);
+        PortResult otherPort = new PortResult("ECU_OTHER", SerialPortType.Ecu);
+        AvailableHardware hardware = new AvailableHardware(List.of(port, otherPort), false, false, false);
         PortScanner scanner = mock(PortScanner.class);
         when(scanner.getCurrentHardware()).thenReturn(hardware);
         ConnectivityContext connectivity = new ConnectivityContext(scanner);
@@ -50,6 +53,7 @@ class StartupUpdateActionsTest {
         AtomicReference<FirmwareStatusSummaryPanel> summaryRef = new AtomicReference<>();
         AtomicReference<StartupUpdateActions> actionsRef = new AtomicReference<>();
         AtomicReference<Optional<PortResult>> selectedRef = new AtomicReference<>(Optional.of(port));
+        AtomicReference<JComboBox<PortResult>> portsRef = new AtomicReference<>();
         SwingUtilities.invokeAndWait(() -> {
             StatusPanelWithProgressBar status = new StatusPanelWithProgressBar();
             StartupUpdateActions actions = new StartupUpdateActions(connectivity, status,
@@ -61,6 +65,7 @@ class StartupUpdateActionsTest {
             });
             JComboBox<PortResult> ports = new JComboBox<>();
             ports.addItem(port);
+            ports.addItem(otherPort);
             ports.setSelectedItem(port);
             ProgramSelector selector = new ProgramSelector(connectivity, ports, ignored -> { }, () -> { });
             actions.configureFirmwareSelector(selector);
@@ -68,6 +73,7 @@ class StartupUpdateActionsTest {
             selector.apply(hardware);
             summaryRef.set((FirmwareStatusSummaryPanel) actions.getFirmwareSummary());
             actionsRef.set(actions);
+            portsRef.set(ports);
         });
 
         SwingUtilities.invokeAndWait(() -> {
@@ -92,11 +98,14 @@ class StartupUpdateActionsTest {
             assertTrue(keepTune.isSelected());
             assertFalse(keepTune.isEnabled());
 
-            selectedRef.set(Optional.of(new PortResult("ECU_OTHER", SerialPortType.Ecu)));
+            // Change the actual program selection; ecuPortToUse is intentionally independent of this UI selection.
+            portsRef.get().setSelectedItem(otherPort);
             summaryRef.get().refresh();
             assertFalse(summaryText(summaryRef.get()).contains("Detected uaefi_pro"));
 
-            selectedRef.set(Optional.of(port));
+            portsRef.get().setSelectedItem(port);
+            summaryRef.get().refresh();
+            assertTrue(summaryText(summaryRef.get()).contains("Detected uaefi_pro"));
             connectivity.getMissingIniRecoveryState().clearForPort(port.port);
             summaryRef.get().refresh();
             assertFalse(summaryText(summaryRef.get()).contains("matching INI unavailable"));
@@ -115,6 +124,137 @@ class StartupUpdateActionsTest {
             assertTrue(recoveredKeepTune.isSelected());
             assertFalse(summaryText(summaryRef.get()).contains("matching INI unavailable"));
             assertTrue(summaryText(summaryRef.get()).contains("uaefi_pro"));
+        });
+    }
+
+    @Test
+    void selectedOpenBltBootloaderShowsBootloaderOnlySummaryAndRecoversOnApplicationReconnect() throws Exception {
+        PortResult bootloader = new PortResult("COM8", SerialPortType.OpenBlt, null,
+            new OpenbltInfo(true, "rusefi.uaefi_pro", "1.16.0", List.of()));
+        AvailableHardware hardware = new AvailableHardware(List.of(bootloader), false, false, false);
+        PortScanner scanner = mock(PortScanner.class);
+        AtomicReference<AvailableHardware> currentHardware = new AtomicReference<>(hardware);
+        when(scanner.getCurrentHardware()).thenAnswer(ignored -> currentHardware.get());
+        ConnectivityContext connectivity = new ConnectivityContext(scanner);
+        AtomicReference<FirmwareStatusSummaryPanel> summaryRef = new AtomicReference<>();
+        AtomicReference<StartupUpdateActions> actionsRef = new AtomicReference<>();
+        AtomicReference<Optional<PortResult>> ecuPort = new AtomicReference<>(Optional.empty());
+        AtomicReference<JComboBox<PortResult>> portsRef = new AtomicReference<>();
+        AtomicReference<ProgramSelector> selectorRef = new AtomicReference<>();
+        SwingUtilities.invokeAndWait(() -> {
+            StatusPanelWithProgressBar status = new StatusPanelWithProgressBar();
+            StartupUpdateActions actions = new StartupUpdateActions(connectivity, status,
+                new SingleAsyncJobExecutor(status), ecuPort,
+                new SoftwareUpdateCoordinator(CompletableFuture.completedFuture(Autoupdate.UpdateOutcome.UP_TO_DATE)),
+                ignored -> { }, () -> { }, () -> null, () -> { });
+            JComboBox<PortResult> ports = new JComboBox<>();
+            ports.addItem(bootloader);
+            ports.setSelectedItem(bootloader);
+            ProgramSelector selector = new ProgramSelector(connectivity, ports, ignored -> { }, () -> { });
+            actions.configureFirmwareSelector(selector);
+
+            // Match startup's independent live-ECU provider: OpenBLT is selected for programming,
+            // but is not a connected ECU port.
+            actions.onHardwareUpdated();
+            selector.apply(hardware);
+            summaryRef.set((FirmwareStatusSummaryPanel) actions.getFirmwareSummary());
+            actionsRef.set(actions);
+            portsRef.set(ports);
+            selectorRef.set(selector);
+        });
+
+        SwingUtilities.invokeAndWait(() -> {
+            FirmwareStatusSummaryPanel summary = summaryRef.get();
+            String rendered = summaryText(summary);
+            assertTrue(rendered.contains("OpenBLT bootloader v1.16.0 — uaefi_pro (COM8)"), rendered);
+            assertTrue(rendered.contains("Unavailable in bootloader mode"), rendered);
+            assertTrue(rendered.contains("application branch and firmware dates are unavailable"), rendered);
+            assertTrue(rendered.contains("A fresh tune backup is unavailable in bootloader mode"), rendered);
+            assertTrue(rendered.contains("Manual updates may restore a tune backed up earlier in this session"), rendered);
+            List<String> labels = UiUtils.getAllComponents(summary).stream()
+                .filter(component -> component instanceof JLabel)
+                .map(component -> ((JLabel) component).getText())
+                .collect(java.util.stream.Collectors.toList());
+            assertEquals(2, labels.stream().filter("Not available in bootloader mode"::equals).count(),
+                "application firmware dates are unavailable in bootloader mode");
+            JCheckBox keepTune = UiUtils.getAllComponents(summary).stream()
+                .filter(component -> component instanceof JCheckBox).map(component -> (JCheckBox) component)
+                .findFirst().orElseThrow(AssertionError::new);
+            assertTrue(keepTune.isSelected());
+            assertFalse(keepTune.isEnabled());
+            assertTrue(keepTune.getToolTipText().contains("independently of this option"));
+            assertEquals(Optional.empty(), ecuPort.get());
+            assertEquals("COM8 (OpenBLT Bootloader v1.16.0: rusefi.uaefi_pro)", bootloader.toString());
+            assertTrue(UiUtils.getAllComponents(selectorRef.get().getControl()).stream()
+                .anyMatch(component -> component instanceof JButton
+                    && "Manual OpenBLT Update".equals(((JButton) component).getText())),
+                "the existing guarded primary action is explicitly labeled for OpenBLT");
+        });
+
+        SwingUtilities.invokeAndWait(() -> {
+            BinaryProtocol liveEcuA = mock(BinaryProtocol.class);
+            liveEcuA.signature = "rusEFI lts-26lima.2026.11.10.live_ecu_a.123";
+            LinkManager liveLink = mock(LinkManager.class);
+            when(liveLink.getBinaryProtocol()).thenReturn(liveEcuA);
+            when(liveLink.getLastTriedPort()).thenReturn("ECU_A");
+            actionsRef.get().setSplashLinkManager(liveLink);
+            summaryRef.get().refresh();
+
+            String rendered = summaryText(summaryRef.get());
+            assertTrue(rendered.contains("OpenBLT bootloader v1.16.0 — uaefi_pro (COM8)"), rendered);
+            assertFalse(rendered.contains("live_ecu_a"), rendered);
+            JTextArea branch = UiUtils.getAllComponents(summaryRef.get()).stream()
+                .filter(component -> component instanceof JTextArea
+                    && "Unavailable in bootloader mode".equals(((JTextArea) component).getText()))
+                .map(component -> (JTextArea) component).findFirst().orElseThrow(AssertionError::new);
+            assertNull(branch.getToolTipText(), "a live ECU on another port must not leak its branch into BLT status");
+        });
+
+        SwingUtilities.invokeAndWait(() -> {
+            PortResult replacement = new PortResult("COM8", SerialPortType.OpenBlt, null,
+                new OpenbltInfo(true, "rusefi.replacement_board", "1.15.0", List.of()));
+            AvailableHardware replacementHardware = new AvailableHardware(List.of(replacement), false, false, false);
+            currentHardware.set(replacementHardware);
+            JComboBox<PortResult> ports = portsRef.get();
+            ports.removeAllItems();
+            ports.addItem(replacement);
+            ports.setSelectedItem(replacement);
+            selectorRef.get().apply(replacementHardware);
+            summaryRef.get().refresh();
+            String rendered = summaryText(summaryRef.get());
+            assertTrue(rendered.contains("OpenBLT bootloader v1.15.0 — replacement_board (COM8)"), rendered);
+            assertFalse(rendered.contains("uaefi_pro"), rendered);
+        });
+
+        SwingUtilities.invokeAndWait(() -> {
+            PortResult application = new PortResult("COM8", SerialPortType.EcuWithOpenblt);
+            AvailableHardware applicationHardware =
+                new AvailableHardware(List.of(application), false, false, false);
+            currentHardware.set(applicationHardware);
+            JComboBox<PortResult> ports = portsRef.get();
+            ports.removeAllItems();
+            ports.addItem(application);
+            ports.setSelectedItem(application);
+            selectorRef.get().apply(applicationHardware);
+
+            BinaryProtocol protocol = mock(BinaryProtocol.class);
+            protocol.signature = "rusEFI noini-10540-20261119.2026.11.19.uaefi_pro.1254041395";
+            LinkManager linkManager = mock(LinkManager.class);
+            when(linkManager.getBinaryProtocol()).thenReturn(protocol);
+            when(linkManager.getLastTriedPort()).thenReturn(application.port);
+            actionsRef.get().setSplashLinkManager(linkManager);
+            actionsRef.get().onHardwareUpdated();
+            summaryRef.get().refresh();
+
+            String rendered = summaryText(summaryRef.get());
+            assertTrue(rendered.contains("uaefi_pro (COM8)"), rendered);
+            assertFalse(rendered.contains("OpenBLT bootloader"), rendered);
+            assertFalse(rendered.contains("Unavailable in bootloader mode"), rendered);
+            JCheckBox keepTune = UiUtils.getAllComponents(summaryRef.get()).stream()
+                .filter(component -> component instanceof JCheckBox).map(component -> (JCheckBox) component)
+                .findFirst().orElseThrow(AssertionError::new);
+            assertTrue(keepTune.isSelected());
+            assertTrue(keepTune.isEnabled(), "the tune option returns when application firmware reconnects");
         });
     }
 

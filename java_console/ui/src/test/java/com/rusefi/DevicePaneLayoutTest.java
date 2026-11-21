@@ -14,6 +14,7 @@ import com.rusefi.ui.widgets.JSplitButton;
 import com.rusefi.ui.widgets.JoinedButtons;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.LinkManager;
+import com.rusefi.updater.OpenbltDetectorStrategy.OpenbltInfo;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -1386,6 +1387,49 @@ class DevicePaneLayoutTest {
         protocol.signature = null;
         SwingUtilities.invokeAndWait(() -> pane[0].render(SessionState.DISCONNECTED, null));
         assertSummaryAndAction("Not connected", "—", "Update ECU firmware", pane[0]);
+    }
+
+    @Test
+    void offlineOpenBltSummaryShowsBootloaderIdentityAndManualAction() throws Throwable {
+        PortResult bootloader = new PortResult("COM8", SerialPortType.OpenBlt, null,
+            new OpenbltInfo(true, "rusefi.uaefi_pro", "1.16.0", List.of()));
+        AvailableHardware hardware = new AvailableHardware(List.of(bootloader), false, false, false);
+        DevicePane[] pane = new DevicePane[1];
+        boolean previousMigrationSetting = com.rusefi.ui.basic.MigrateSettingsCheckboxState.isMigrationNeeded;
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                pane[0] = createPane(new UIContext(), List.of(bootloader));
+                pane[0].render(SessionState.DEVICE_IN_BLT, hardware);
+            });
+
+            SwingUtilities.invokeAndWait(() -> {
+                List<Component> all = UiUtils.getAllComponents((JComponent) pane[0].getContent());
+                assertTrue(all.stream().anyMatch(component -> component instanceof JTextArea
+                    && "OpenBLT bootloader v1.16.0 — uaefi_pro (COM8)"
+                        .equals(((JTextArea) component).getText())));
+                assertTrue(all.stream().filter(component -> component instanceof JTextArea)
+                    .map(component -> ((JTextArea) component).getText())
+                    .anyMatch(text -> text.contains("Manual OpenBLT Update is available")));
+                assertTrue(all.stream().filter(component -> component instanceof JTextArea)
+                    .map(component -> ((JTextArea) component).getText())
+                    .anyMatch(text -> text.contains("Manual updates may restore a tune backed up earlier in this session")));
+                assertEquals(2, all.stream().filter(component -> component instanceof JLabel
+                    && "Not available in bootloader mode".equals(((JLabel) component).getText())).count());
+                JCheckBox keepTune = (JCheckBox) all.stream().filter(component -> component instanceof JCheckBox
+                    && "Keep my current tune".equals(((JCheckBox) component).getText()))
+                    .findFirst().orElseThrow(AssertionError::new);
+                assertTrue(keepTune.isSelected());
+                assertFalse(keepTune.isEnabled());
+                assertTrue(keepTune.getToolTipText().contains("independently of this option"));
+                JSplitButton update = (JSplitButton) all.stream().filter(component -> component instanceof JSplitButton)
+                    .findFirst().orElseThrow(AssertionError::new);
+                assertEquals("Manual OpenBLT Update", ((JButton) update.getComponent(0)).getText());
+                assertTrue(((JButton) update.getComponent(0)).isEnabled());
+            });
+        } finally {
+            SwingUtilities.invokeAndWait(() ->
+                com.rusefi.ui.basic.MigrateSettingsCheckboxState.isMigrationNeeded = previousMigrationSetting);
+        }
     }
 
     private static void assertSummaryAndAction(String summary, String branch, String action, DevicePane pane) throws Throwable {

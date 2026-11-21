@@ -72,16 +72,21 @@ class ProgramSelectorDfuUiTest {
             assertEquals(1, countFirmwareActionButtons(selector.getControl()));
             ports.setSelectedItem(openBlt);
             assertTrue(mainButton.isEnabled(), "a currently detected OpenBLT device remains a normal update target");
-            assertEquals("Update ECU firmware", findButton(selector.getControl(), "Update ECU firmware").getText());
+            assertEquals(UpdateMode.OPENBLT_MANUAL.displayText,
+                findButton(selector.getControl(), UpdateMode.OPENBLT_MANUAL.displayText).getText());
             selector.setPrimaryActionBranch("lts-26lima");
-            assertEquals("Update ECU · lts-26lima", findButton(selector.getControl(), "Update ECU · lts-26lima").getText());
+            assertEquals(UpdateMode.OPENBLT_MANUAL.displayText,
+                findButton(selector.getControl(), UpdateMode.OPENBLT_MANUAL.displayText).getText());
             selector.setPrimaryActionStatus(true, false);
-            assertEquals("Reflash anyway", findButton(selector.getControl(), "Reflash anyway").getText());
+            assertEquals(UpdateMode.OPENBLT_MANUAL.displayText,
+                findButton(selector.getControl(), UpdateMode.OPENBLT_MANUAL.displayText).getText());
             selector.setPrimaryActionStatus(false, true);
-            assertEquals("Update firmware", findButton(selector.getControl(), "Update firmware").getText());
+            assertEquals(UpdateMode.OPENBLT_MANUAL.displayText,
+                findButton(selector.getControl(), UpdateMode.OPENBLT_MANUAL.displayText).getText());
             selector.setPrimaryActionStatus(false, false);
-            assertEquals("Update ECU · lts-26lima", findButton(selector.getControl(), "Update ECU · lts-26lima").getText(),
-                "unknown status must not claim the ECU is current or newer");
+            assertEquals(UpdateMode.OPENBLT_MANUAL.displayText,
+                findButton(selector.getControl(), UpdateMode.OPENBLT_MANUAL.displayText).getText(),
+                "bootloader mode must keep the explicit manual action label");
             assertNull(findButton(selector.getControl(), "Recover ECU"), "there is no separate recovery control");
             ports.setSelectedItem(dfu);
             assertEquals("Recover ECU", findButton(selector.getControl(), "Recover ECU").getText(),
@@ -414,7 +419,9 @@ class ProgramSelectorDfuUiTest {
             for (SerialPortType type : Arrays.asList(SerialPortType.Ecu, SerialPortType.OpenBlt)) {
                 Harness h = new Harness(new PortResult("ECU", type), new PortResult("DFU", SerialPortType.Dfu));
                 JPopupMenu menu = h.selector.apply(h.hardware.get(), true, false, "proteus_f7", "proteus_f7");
-                JButton primary = findButton(h.selector.getControl(), "Update ECU firmware");
+                String primaryText = type == SerialPortType.OpenBlt
+                    ? UpdateMode.OPENBLT_MANUAL.displayText : "Update ECU firmware";
+                JButton primary = findButton(h.selector.getControl(), primaryText);
                 assertNotNull(primary);
                 assertTrue(primary.isEnabled());
                 assertNull(findButton(h.selector.getControl(), "Recover ECU"));
@@ -483,7 +490,7 @@ class ProgramSelectorDfuUiTest {
 
             primary.doClick();
 
-            assertEquals("Update ECU firmware", primary.getText());
+            assertEquals(UpdateMode.OPENBLT_MANUAL.displayText, primary.getText());
             verify(h.executor, never()).startJob(any(), any());
         });
     }
@@ -1349,7 +1356,10 @@ class ProgramSelectorDfuUiTest {
     private static void openNormalPrimary(Harness h) {
         h.selector.setNormalUpdateConfirmationForTests(null);
         h.selector.apply(h.hardware.get());
-        JButton primary = findButton(h.selector.getControl(), "Update ECU firmware");
+        PortResult selected = (PortResult) h.ports.getSelectedItem();
+        String primaryText = selected != null && selected.type == SerialPortType.OpenBlt
+            ? UpdateMode.OPENBLT_MANUAL.displayText : "Update ECU firmware";
+        JButton primary = findButton(h.selector.getControl(), primaryText);
         assertNotNull(primary);
         assertTrue(primary.isEnabled());
         primary.doClick();
@@ -1457,6 +1467,7 @@ class ProgramSelectorDfuUiTest {
         int count = 0;
         for (Component component : container.getComponents()) {
             if (component instanceof JButton && ("Update ECU firmware".equals(((JButton) component).getText())
+                || UpdateMode.OPENBLT_MANUAL.displayText.equals(((JButton) component).getText())
                 || ((JButton) component).getText().startsWith("Update ECU · ")
                 || "Recover ECU".equals(((JButton) component).getText()))) {
                 count++;

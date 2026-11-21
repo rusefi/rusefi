@@ -41,6 +41,7 @@ import java.util.BitSet;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.LongSupplier;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -64,8 +65,14 @@ public class BinaryProtocol {
     private static final ThreadFactory THREAD_FACTORY = new NamedThreadFactory("ECU text pull", true);
     // Intended for high-latency TCP links to firmware built with CUSTOM_TS_BUFFER_SIZE.
     private static final Integer BLOCKING_FACTOR_OVERRIDE = Integer.getInteger("blockingFactorOverride");
+    private static final AtomicLong NEXT_CONNECTION_GENERATION = new AtomicLong();
+
+    static long nextConnectionGeneration() {
+        return NEXT_CONNECTION_GENERATION.incrementAndGet();
+    }
 
     private final LinkManager linkManager;
+    private final long connectionGeneration = nextConnectionGeneration();
     private final IoStream stream;
     // Serialize response publication with disconnect cleanup. Never hold this during device I/O:
     // close must be able to clear the UI while a command is waiting for a response.
@@ -284,7 +291,12 @@ public class BinaryProtocol {
         }
 
         try {
-            iniFile = Objects.requireNonNull(iniFileProvider.provide(signature));
+            String port = linkManager.getLastTriedPort();
+            linkManager.onIniResolutionStarted(port);
+            iniFile = Objects.requireNonNull(
+                iniFileProvider.provide(signature, port, connectionGeneration,
+                    () -> !isClosed()
+                        && Objects.equals(port, linkManager.getLastTriedPort())));
             linkManager.clearMissingIniFailure();
             // SensorLogger is in the UI module, we can't easily access it from the IO module if it's not on the classpath
             // However, BinaryProtocol is often used in the context where UI is also present.

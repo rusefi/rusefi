@@ -180,7 +180,7 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
     public void configureFirmwareSelector(ProgramSelector selector) {
         firmwareSummary = new FirmwareStatusSummaryPanel(
             rollbackController, selector, branchSwitchController.getButton(), migrateSettings,
-            connectivityContext, () -> ecuPortToUse.get().orElse(null),
+            connectivityContext, selector::getSelectedDetectedPort,
             () -> softwareUpdateInProgress || !singleAsyncJobExecutor.isNotInProgress()
                 || rollbackController.isDownloadInProgress());
         selector.setMissingIniStateChangedListener(this::refreshFirmwareStatusAfterMissingIniChange);
