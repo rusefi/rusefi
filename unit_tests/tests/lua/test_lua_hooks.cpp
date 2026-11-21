@@ -451,6 +451,9 @@ TEST(LuaHooks, TestGetSensorByIndex) {
 	// Now test with a value, returns value
 	Sensor::setMockValue(static_cast<SensorType>(10), 33);
 	EXPECT_EQ(testLuaReturnsNumberOrNil(getSensorTestByIndex).value_or(0), 33);
+
+	// no EngineTestHelper here to reset the registry: do not leak the mock into later tests
+	Sensor::resetMockValue(static_cast<SensorType>(10));
 }
 
 
@@ -470,6 +473,10 @@ TEST(LuaHooks, TestGetSensorByName) {
 	// Now test with a value, returns value
 	Sensor::setMockValue(SensorType::Clt, 33);
 	EXPECT_EQ(testLuaReturnsNumberOrNil(getSensorTestByName).value_or(0), 33);
+
+	// no EngineTestHelper here to reset the registry: a leaked mock counts as an existing
+	// sensor and makes LuaSensor's Sensor.new("CLT") fail when it runs later
+	Sensor::resetMockValue(SensorType::Clt);
 }
 
 TEST(LuaHooks, Table3d) {
@@ -587,6 +594,9 @@ end
 )";
 
 TEST(LuaHooks, LuaSensor) {
+	// Sensor.new refuses a type that already has a sensor or a mock value
+	Sensor::resetRegistry();
+
 	EXPECT_EQ(testLuaReturnsNumber(sensorTest), 0);
 
 	// Ensure that the sensor got unregistered on teardown of the Lua interpreter
