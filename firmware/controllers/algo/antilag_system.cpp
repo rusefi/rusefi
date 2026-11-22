@@ -73,31 +73,40 @@ bool AntilagSystemBase::isInsideALSTimerCondition() {
 }
 
 bool AntilagSystemBase::isAntilagConditionMet(float rpm) {
-
-
 	ALSMinRPMCondition = isALSMinRPMCondition(rpm);
 	ALSMaxRPMCondition = isALSMaxRPMCondition(rpm);
 	ALSMinCLTCondition = isALSMinCLTCondition();
 	ALSMaxCLTCondition = isALSMaxCLTCondition();
 	ALSMaxThrottleIntentCondition = isALSMaxThrottleIntentCondition();
 	ALSSwitchCondition = isInsideALSSwitchCondition();
-	ALSTimerCondition = isInsideALSTimerCondition();
 
-	return ALSMinRPMCondition &&
+	bool isRequested = ALSMinRPMCondition &&
 	    ALSMaxRPMCondition &&
 	    ALSMinCLTCondition &&
 	    ALSMaxCLTCondition &&
 	    ALSMaxThrottleIntentCondition &&
-	    ALSSwitchCondition &&
-		ALSTimerCondition;
+	    ALSSwitchCondition;
+
+	// "ALS timeout" limits one activation: it counts from the moment all other
+	// conditions become true, and re-arms once any of them drops out. See #10701
+	if (isRequested && !m_wasRequested) {
+		ALStimer.reset();
+	}
+	m_wasRequested = isRequested;
+
+	// Not requested means not timed out: the timeout is not what holds anti-lag off.
+	ALSTimerCondition = !isRequested || isInsideALSTimerCondition();
+
+	return isRequested && ALSTimerCondition;
 }
 
 void AntilagSystemBase::update() {
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
-    isAntilagCondition = engineConfiguration->antiLagEnabled && isAntilagConditionMet(rpm);
-
-	if (!ALSMaxRPMCondition) {
-	    ALStimer.reset();
+	if (engineConfiguration->antiLagEnabled) {
+		isAntilagCondition = isAntilagConditionMet(rpm);
+	} else {
+		isAntilagCondition = false;
+		m_wasRequested = false;
 	}
 
 #if EFI_ANTILAG_SYSTEM

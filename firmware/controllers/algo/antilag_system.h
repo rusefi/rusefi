@@ -27,5 +27,7 @@ public:
 	bool isAntilagConditionMet(float rpm);
 
 private:
+	// runs since anti-lag was last requested, see isAntilagConditionMet()
 	Timer ALStimer;
+	bool m_wasRequested = false;
 };

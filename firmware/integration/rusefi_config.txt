@@ -1716,7 +1716,7 @@ fuel_pressure_sensor_mode_e fuelPressureSensorMode;Absolute: Sensor reads ~100 k
 switch_input_pin_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPins;
 	int16_t ALSMinRPM;;"rpm", 1, 0, 0, 20000, 0
 	int16_t ALSMaxRPM;;"rpm", 1, 0, 0, 20000, 0
-int16_t ALSMaxDuration;;"sec", 1, 0, 0, 10, 0
+int16_t ALSMaxDuration;Longest single anti-lag activation, counted from the moment all activation conditions are met. Releasing any condition re-arms it. 0 = no limit;"sec", 1, 0, 0, 10, 0
 	int8_t ALSMinCLT;;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? 0 : 32}, {useMetricOnInterface ? 90 : 194}, 0
 	int8_t ALSMaxCLT;;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? 0 : 32}, {useMetricOnInterface ? 105 : 221}, 0
 uint8_t alsMinTimeBetween;;"", 1, 0, 0, 250, 0

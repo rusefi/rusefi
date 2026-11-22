@@ -51,7 +51,6 @@ TEST(Actuators, AntilagStopsAfterConfiguredTimeout) {
 	Sensor::setMockValue(SensorType::Clt, 70);
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 1);
 
-	// Exceeding the activation range resets the existing duration timer.
 	Sensor::setMockValue(SensorType::Rpm, 4000);
 	engine->antilagController.update();
 	ASSERT_FALSE(engine->antilagController.isAntilagCondition);
@@ -103,7 +102,15 @@ TEST(Actuators, AntilagTimeoutStartsWhenAntilagIsRequested) {
 
 	engine->antilagController.luaAntilagState = true;
 	engine->antilagController.update();
-	// todo: fix #10701, the timeout should be counted from this request
+	EXPECT_TRUE(engine->antilagController.isAntilagCondition);
+	EXPECT_TRUE(engine->antilagController.ALSTimerCondition);
+
+	advanceTimeUs(2900000);
+	engine->antilagController.update();
+	EXPECT_TRUE(engine->antilagController.isAntilagCondition);
+
+	advanceTimeUs(200000);
+	engine->antilagController.update();
 	EXPECT_FALSE(engine->antilagController.isAntilagCondition);
 	EXPECT_FALSE(engine->antilagController.ALSTimerCondition);
 }
@@ -113,10 +120,6 @@ TEST(Actuators, AntilagTimeoutRearmsAfterRequestIsReleased) {
 	setupAntilagWithTimeout(3);
 	engine->antilagController.luaAntilagState = true;
 
-	// Passing "Max RPM" is the only event which starts the timeout today.
-	Sensor::setMockValue(SensorType::Rpm, 7500);
-	engine->antilagController.update();
-	Sensor::setMockValue(SensorType::Rpm, 3000);
 	engine->antilagController.update();
 	ASSERT_TRUE(engine->antilagController.isAntilagCondition);
 
@@ -130,6 +133,5 @@ TEST(Actuators, AntilagTimeoutRearmsAfterRequestIsReleased) {
 	ASSERT_FALSE(engine->antilagController.isAntilagCondition);
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 1);
 	engine->antilagController.update();
-	// todo: fix #10701, a new request should get a new timeout
-	EXPECT_FALSE(engine->antilagController.isAntilagCondition);
+	EXPECT_TRUE(engine->antilagController.isAntilagCondition);
 }
