@@ -74,3 +74,62 @@ TEST(Actuators, AntilagStopsAfterConfiguredTimeout) {
 	engine->antilagController.update();
 	EXPECT_TRUE(engine->antilagController.isAntilagCondition);
 }
+
+static void setupAntilagWithTimeout(int timeoutSeconds) {
+	engineConfiguration->antiLagEnabled = true;
+	engineConfiguration->antiLagActivationMode = LUA_ANTILAG;
+	engineConfiguration->ALSMinRPM = 400;
+	engineConfiguration->ALSMaxRPM = 7000;
+	engineConfiguration->ALSMinCLT = 0;
+	engineConfiguration->ALSMaxCLT = 105;
+	engineConfiguration->ALSMaxTPS = 5;
+	engineConfiguration->ALSMaxDuration = timeoutSeconds;
+	Sensor::setMockValue(SensorType::Clt, 70);
+	Sensor::setMockValue(SensorType::Rpm, 3000);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 1);
+}
+
+// https://github.com/rusefi/rusefi/issues/10701
+// The engine never exceeds "Max RPM" here, as with a Max RPM set near the rev limit.
+TEST(Actuators, AntilagTimeoutStartsWhenAntilagIsRequested) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupAntilagWithTimeout(3);
+
+	// Long after start-up, with anti-lag not requested.
+	engine->antilagController.luaAntilagState = false;
+	advanceTimeUs(60 * 1000000);
+	engine->antilagController.update();
+	ASSERT_FALSE(engine->antilagController.isAntilagCondition);
+
+	engine->antilagController.luaAntilagState = true;
+	engine->antilagController.update();
+	// todo: fix #10701, the timeout should be counted from this request
+	EXPECT_FALSE(engine->antilagController.isAntilagCondition);
+	EXPECT_FALSE(engine->antilagController.ALSTimerCondition);
+}
+
+TEST(Actuators, AntilagTimeoutRearmsAfterRequestIsReleased) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupAntilagWithTimeout(3);
+	engine->antilagController.luaAntilagState = true;
+
+	// Passing "Max RPM" is the only event which starts the timeout today.
+	Sensor::setMockValue(SensorType::Rpm, 7500);
+	engine->antilagController.update();
+	Sensor::setMockValue(SensorType::Rpm, 3000);
+	engine->antilagController.update();
+	ASSERT_TRUE(engine->antilagController.isAntilagCondition);
+
+	advanceTimeUs(3100000);
+	engine->antilagController.update();
+	ASSERT_FALSE(engine->antilagController.isAntilagCondition);
+
+	// The driver gets back on the throttle and lifts again.
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 50);
+	engine->antilagController.update();
+	ASSERT_FALSE(engine->antilagController.isAntilagCondition);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 1);
+	engine->antilagController.update();
+	// todo: fix #10701, a new request should get a new timeout
+	EXPECT_FALSE(engine->antilagController.isAntilagCondition);
+}
