@@ -101,9 +101,9 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | 240 | luaO_str2num | ext/lua/lobject.c:308:8 |
 | firmware | 200 | luaD_rawrunprotected | ext/lua/ldo.c:135:5 |
 | firmware | 192 | f_parser | ext/lua/ldo.c:999:13 |
+| firmware | 192 | handleShaftSignal(int, bool, long long) | controllers/trigger/trigger_central.cpp:570:6 |
 | firmware | 192 | luaH_newkey | ext/lua/ltable.c:665:13 |
 | firmware | 176 | i2cScan(int) | hw_layer/drivers/i2c/i2c.cpp:281:13 |
-| firmware | 152 | TunerstudioThread::ThreadTask() | console/binary/tunerstudio.cpp:910:6 |
 | bootloader | 256 | XcpPacketReceivedHook | ../hw_layer/openblt/hooks.c:366:32 |
 | bootloader | 128 | HardFault_Handler_C | ../hw_layer/main_hardfault.c:49:6 |
 | bootloader | 128 | MemManage_Handler_C | ../hw_layer/main_hardfault.c:120:6 |
