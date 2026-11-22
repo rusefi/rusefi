@@ -11,9 +11,9 @@ import java.util.List;
 import static com.rusefi.config.generated.VariableRegistryValues.GAUGE_NAME_TIME;
 
 /**
- * Reader for version 2 binary operating logs. ECU-written logs (firmware binary_mlg_logging.cpp) carry a
- * Time field; console-recorded logs (BinarySensorLog) do not, so their time comes from the data blocks'
- * 16-bit timestamps, as MegaLogViewer reads it.
+ * Reader for version 2 binary operating logs. ECU-written logs (firmware binary_mlg_logging.cpp) and
+ * console-recorded ones (BinarySensorLog) carry a Time field. [tag:mlg_time_field] Console logs recorded
+ * before that field existed do not, so their time comes from the data blocks' 16-bit timestamps.
  */
 public final class BinaryLogReader {
     private static final int HEADER_SIZE = 24;

@@ -290,6 +290,15 @@ and strings are excluded from this raw recorder. It acquires a full-output
 lease and writes a row only from a complete output snapshot of the current
 poll generation. Stop closes the file and releases the lease.
 
+`BinarySensorLog` puts a float `Time` field (seconds since the first row)
+ahead of the recorded channels in every profile (`[tag:mlg_time_field]`).
+rusEFI Online (msqur, `src/mlg.format.php`) finds fields by normalized
+name and refuses a log lacking any of `time`, `rpm`, `clt`, `tps`,
+`throttle_pedal_position`, `air_fuel_ratio`, `fuel_target_afr`, `fuel_ve`,
+`vehicle_speed`, `etb_duty` or a trigger error counter. The block
+timestamps do not count as time there. The Full profile records all of
+them; a reduced logging profile is accepted only if it keeps those channels.
+
 The [`LogViewerHost`](../../java_console/ui/src/main/java/com/rusefi/ui/logview/LogViewerHost.java)
 opens `.mlg` and `.msl` files through its button, Ctrl+O, file drop, or
 View Last Log. Loading runs in the background. If opening a replacement

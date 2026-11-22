@@ -51,9 +51,10 @@ class SensorLoggerTest {
         log.writeSensorLogLineChecked();
         log.close();
         ByteBuffer data = ByteBuffer.wrap(output.toByteArray()).order(ByteOrder.BIG_ENDIAN);
-        assertEquals(1, data.getShort(22));
-        assertEquals("RPM", readFieldName(data, 0));
-        assertEquals(1234, data.getShort(data.getInt(16) + 4));
+        assertEquals(2, data.getShort(22));
+        assertEquals("Time", readFieldName(data, 0));
+        assertEquals("RPM", readFieldName(data, 1));
+        assertEquals(1234, data.getShort(data.getInt(16) + ROW_HEADER));
     }
 
     /** [tag:image_byte_order] output channel bytes are in the byte order declared by the controller's ini */
@@ -95,14 +96,15 @@ class SensorLoggerTest {
         log.writeSensorLogLineChecked();
         log.close();
         ByteBuffer data = ByteBuffer.wrap(output.toByteArray()).order(ByteOrder.BIG_ENDIAN);
-        assertEquals(4, data.getShort(22), "No duplicate MAP alias or unsupported computed channels");
-        assertEquals("CLT", readFieldName(data, 0));
-        assertEquals("Error: CLT", readFieldName(data, 1));
-        assertEquals("MAP", readFieldName(data, 2));
-        assertEquals("rawClt", readFieldName(data, 3), "Unlisted channels retain their original case");
-        assertEquals(0.01f, data.getFloat(24 + 46));
-        assertEquals(0.1f, data.getFloat(24 + 2 * 89 + 46));
-        data.position(data.getInt(16) + 4);
+        assertEquals(5, data.getShort(22), "No duplicate MAP alias or unsupported computed channels");
+        assertEquals("Time", readFieldName(data, 0), "the writer's own, not the .ini's host-only channel");
+        assertEquals("CLT", readFieldName(data, 1));
+        assertEquals("Error: CLT", readFieldName(data, 2));
+        assertEquals("MAP", readFieldName(data, 3));
+        assertEquals("rawClt", readFieldName(data, 4), "Unlisted channels retain their original case");
+        assertEquals(0.01f, data.getFloat(24 + 89 + 46));
+        assertEquals(0.1f, data.getFloat(24 + 3 * 89 + 46));
+        data.position(data.getInt(16) + ROW_HEADER);
         assertEquals(-123, data.getShort());
         assertEquals(1, data.get());
         assertEquals(1000, data.getShort());
@@ -164,9 +166,10 @@ class SensorLoggerTest {
         assertArrayEquals(tune, MlgTune.read(file));
 
         ByteBuffer data = ByteBuffer.wrap(Files.readAllBytes(file)).order(ByteOrder.BIG_ENDIAN);
-        assertEquals(5, data.getShort(22));
-        assertEquals("MAP", readFieldName(data, 4));
-        data.position(data.getInt(16) + 4);
+        assertEquals(6, data.getShort(22));
+        assertEquals("Time", readFieldName(data, 0));
+        assertEquals("MAP", readFieldName(data, 5));
+        data.position(data.getInt(16) + ROW_HEADER);
         assertEquals(42, data.getShort());
         assertEquals(7, data.get());
         assertEquals(1, data.get());
@@ -246,14 +249,18 @@ class SensorLoggerTest {
         }
 
         ByteBuffer data = ByteBuffer.wrap(Files.readAllBytes(file)).order(ByteOrder.BIG_ENDIAN);
-        assertEquals(2, data.getShort(22));
-        assertEquals("RPMValue", readFieldName(data, 0));
-        assertEquals("coolant", readFieldName(data, 1));
-        data.position(data.getInt(16) + 4);
+        assertEquals(3, data.getShort(22));
+        assertEquals("Time", readFieldName(data, 0), "in every profile");
+        assertEquals("RPMValue", readFieldName(data, 1));
+        assertEquals("coolant", readFieldName(data, 2));
+        data.position(data.getInt(16) + ROW_HEADER);
         assertEquals(1000, data.getShort());
         assertEquals(85, data.getShort());
         assertEquals(1, data.remaining(), "only the checksum follows");
     }
+
+    /** [tag:mlg_time_field] block type, counter and timestamp, then the float Time every row starts with */
+    private static final int ROW_HEADER = 4 + 4;
 
     private static String readFieldName(ByteBuffer data, int index) {
         byte[] name = new byte[34];

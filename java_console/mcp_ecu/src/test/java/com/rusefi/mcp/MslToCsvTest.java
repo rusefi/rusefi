@@ -72,7 +72,7 @@ class MslToCsvTest {
         assertEquals(0, bytes.toByteArray()[data.getInt(16) - 1]);
         Path output = directory.resolve("java.csv");
         MslToCsv.convert(input, output);
-        assertEquals("RPM (rpm)\n1234.00\n", new String(Files.readAllBytes(output), StandardCharsets.UTF_8));
+        assertEquals("Time (s),RPM (rpm)\n0.000,1234.00\n", new String(Files.readAllBytes(output), StandardCharsets.UTF_8));
     }
 
     @Test

@@ -246,16 +246,19 @@ class EcuMcpServerOutputChannelTest {
         byte[] bytes = Files.readAllBytes(file);
         assertEquals("MLVLG\0", new String(bytes, 0, 6, StandardCharsets.US_ASCII));
         ByteBuffer data = ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN);
-        assertEquals(3, data.getShort(22));
-        assertEquals("Seconds", readFieldName(bytes, 0));
-        assertEquals("RPM", readFieldName(bytes, 1));
-        assertEquals("CLT", readFieldName(bytes, 2));
+        assertEquals(4, data.getShort(22));
+        // [tag:mlg_time_field]
+        assertEquals("Time", readFieldName(bytes, 0));
+        assertEquals("Seconds", readFieldName(bytes, 1));
+        assertEquals("RPM", readFieldName(bytes, 2));
+        assertEquals("CLT", readFieldName(bytes, 3));
         int dataStart = data.getInt(16);
         int rowSize = data.getShort(20) + 5;
         assertEquals(dataStart + samples * rowSize, bytes.length);
         assertTrue(samples >= 2);
         for (int i = 0; i < samples; i++) {
             data.position(dataStart + i * rowSize + 4);
+            assertTrue(data.getFloat() >= 0, "Time");
             assertEquals(7, data.getInt());
             assertEquals(RPM, data.getShort());
             assertEquals(CLT_RAW, data.getShort());

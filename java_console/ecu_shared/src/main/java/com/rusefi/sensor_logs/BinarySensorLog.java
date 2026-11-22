@@ -8,8 +8,14 @@ import java.io.*;
 import java.util.*;
 import java.util.function.Function;
 
+import static com.rusefi.config.generated.VariableRegistryValues.GAUGE_NAME_TIME;
+
 /**
  * MLV .mlg binary log file
+ * <p>
+ * [tag:mlg_time_field] The first field is always "Time", seconds since the first row, as in TunerStudio
+ * and SD card logs. The block timestamps alone are not enough: rusEFI Online (msqur) and other MLG
+ * readers look the time up by field name and refuse a log without it.
  * </p>
  * Andrey Belomutskiy, (c) 2013-2020
  */
@@ -19,11 +25,16 @@ public class BinarySensorLog<T extends BinaryLogEntry> {
     private final TimeProvider timeProvider;
     private final String requestedFileName;
     private final byte[] tune;
+    private static final int MLG_TYPE_FLOAT = 7;
+    private static final int TIME_DATA_SIZE = 4;
     private DataOutputStream stream;
 
     private String fileName;
 
     private int counter;
+    /** false when the caller's own entries already include a Time field */
+    private final boolean writeTime;
+    private long firstRowTimestamp = -1;
 
     public BinarySensorLog(Function<T, Double> valueProvider, Collection<T> sensors) {
         this(valueProvider, sensors, System::currentTimeMillis, null);
@@ -44,6 +55,11 @@ public class BinarySensorLog<T extends BinaryLogEntry> {
         this.timeProvider = timeProvider;
         this.requestedFileName = fileName;
         this.tune = tune == null ? null : tune.clone();
+        boolean hasTime = false;
+        for (T entry : sensors) {
+            hasTime |= GAUGE_NAME_TIME.equalsIgnoreCase(entry.getName());
+        }
+        writeTime = !hasTime;
     }
 
     /** Eager writer for callers that own the stream and need to report I/O failures. */
@@ -95,10 +111,17 @@ public class BinarySensorLog<T extends BinaryLogEntry> {
         }
         stream.write(0);
         stream.write(counter++);
-        stream.writeShort((int) (timeProvider.currentTimestamp() * 100));
+        long now = timeProvider.currentTimestamp();
+        stream.writeShort((int) (now * 100));
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(baos);
+        if (writeTime) {
+            if (firstRowTimestamp < 0) {
+                firstRowTimestamp = now;
+            }
+            dos.writeFloat((now - firstRowTimestamp) / 1000f);
+        }
 
         for (T sensor : entries) {
             Double value = valueProvider.apply(sensor);
@@ -131,7 +154,8 @@ public class BinarySensorLog<T extends BinaryLogEntry> {
             stream.write(c);
         }
 
-        int fieldsDataSize = 0;
+        int fieldCount = entries.size() + (writeTime ? 1 : 0);
+        int fieldsDataSize = writeTime ? TIME_DATA_SIZE : 0;
         for (BinaryLogEntry entry : entries) {
             fieldsDataSize += entry.getDataSize();
         }
@@ -143,7 +167,7 @@ public class BinarySensorLog<T extends BinaryLogEntry> {
         // 0008h Timestamp
         stream.writeInt((int) (System.currentTimeMillis() / 1000));
 
-        int headerSize = Integration.MLQ_HEADER_SIZE + Integration.MLQ_FIELD_HEADER_SIZE * entries.size();
+        int headerSize = Integration.MLQ_HEADER_SIZE + Integration.MLQ_FIELD_HEADER_SIZE * fieldCount;
         // 000ch Info data start - immediately after header
         stream.writeInt(headerSize);
 
@@ -155,33 +179,38 @@ public class BinarySensorLog<T extends BinaryLogEntry> {
         stream.writeShort(fieldsDataSize);
 
         // 0016h Number of fields
-        stream.writeShort(entries.size());
+        stream.writeShort(fieldCount);
 
+        if (writeTime) {
+            writeField(MLG_TYPE_FLOAT, GAUGE_NAME_TIME, "s", 1, 3, "");
+        }
         for (BinaryLogEntry sensor : entries) {
-            String name = sensor.getName();
-            String unit = sensor.getUnit();
-            String category = sensor.getCategory().getName();
-
-            // 0000h
-            stream.write(sensor.getByteSize());
-            // 0001h
-            writeLine(stream, name, 34);
-            // 0023h
-            writeLine(stream, unit, 11);
-            // 002Eh scale
-            stream.writeFloat(sensor.getScale());
-            // 0032h zeroes
-            stream.writeInt(0);
-            // 0036h precision
-            stream.write(2);
-            // 0037h category string
-            writeLine(stream, category, 34);
+            writeField(sensor.getByteSize(), sensor.getName(), sensor.getUnit(), sensor.getScale(), 2,
+                    sensor.getCategory().getName());
         }
 
         if (stream.size() != headerSize) {
             throw new IllegalStateException("We are doing something wrong :( stream.size=" + stream.size() + " vs " + headerSize);
         }
         stream.write(info);
+    }
+
+    private void writeField(int type, String name, String unit, float scale, int precision, String category)
+            throws IOException {
+        // 0000h
+        stream.write(type);
+        // 0001h
+        writeLine(stream, name, 34);
+        // 0023h
+        writeLine(stream, unit, 11);
+        // 002Eh scale
+        stream.writeFloat(scale);
+        // 0032h zeroes
+        stream.writeInt(0);
+        // 0036h precision
+        stream.write(precision);
+        // 0037h category string
+        writeLine(stream, category, 34);
     }
 
     public void close() {
