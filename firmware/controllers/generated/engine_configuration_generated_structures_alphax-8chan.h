@@ -5654,6 +5654,7 @@ struct engine_configuration_s {
 	 */
 	int16_t ALSMaxRPM;
 	/**
+	 * Longest single anti-lag activation, counted from the moment all activation conditions are met. Releasing any condition re-arms it. 0 = no limit
 	 * units: sec
 	 * offset 3040
 	 */

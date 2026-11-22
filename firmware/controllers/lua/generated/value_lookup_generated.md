@@ -1679,7 +1679,7 @@ Set a minimum allowed target position to avoid slamming/driving against the hard
 
 
 ### ALSMaxDuration
-
+Longest single anti-lag activation, counted from the moment all activation conditions are met. Releasing any condition re-arms it. 0 = no limit
 
 ### ALSMinCLT
 
