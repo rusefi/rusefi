@@ -14,6 +14,7 @@ import com.rusefi.ui.widgets.GaugeMenuSearch;
 import com.rusefi.ui.widgets.SensorGauge;
 import com.rusefi.ui.widgets.tune.IndicatorStrip;
 import com.rusefi.ui.widgets.tune.IndicatorStripSettings;
+import com.rusefi.ui.widgets.tune.TuningToolbarWidget;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -84,6 +85,7 @@ public class GaugesPanel {
     private final JButton redoButton = new JButton(REDO);
     private final JButton resetArrangeButton = new JButton(RESET_ARRANGE);
     private final JLabel layoutModeLabel = new JLabel();
+    private final JPanel tuneControls = new JPanel(new BorderLayout());
     private final Node config;
     private final UIContext uiContext;
     /** Tracked so we can call destroy() before replacing on grid resize. */
@@ -130,7 +132,8 @@ public class GaugesPanel {
         toolbar.setLayout(new BoxLayout(toolbar, BoxLayout.Y_AXIS));
         // same right inset as the tab row above, so Edit dashboard stacks under Launch Wizard
         int rightInset = JoinedButtons.ROW_END_INSET - JoinedButtons.ROW_GAP;
-        toolbar.setBorder(BorderFactory.createEmptyBorder(8, 0, 5, rightInset));
+        // [tag:tune_controls_position] Burn sits where it does on the Tuning tab
+        toolbar.setBorder(BorderFactory.createEmptyBorder(TuningToolbarWidget.CONTROLS_TOP, 0, 7, rightInset));
 
         JPanel commandRow = new JPanel(new BorderLayout());
         commandRow.setOpaque(false);
@@ -139,6 +142,13 @@ public class GaugesPanel {
         JPanel right = createRightTopPanel();
         left.setOpaque(false);
         right.setOpaque(false);
+        // Burn / Discard / Undo / Redo for settings windows opened from here (Ctrl+K); first and never
+        // hidden so they keep the Tuning tab's position. The row's own gap supplies the rest of CONTROLS_LEFT.
+        tuneControls.setOpaque(false);
+        tuneControls.setBorder(BorderFactory.createEmptyBorder(0,
+            TuningToolbarWidget.CONTROLS_LEFT - JoinedButtons.ROW_GAP, 0, 0));
+        tuneControls.add(TuningToolbarWidget.createPlaceholderControls(), BorderLayout.CENTER);
+        commandRow.add(tuneControls, BorderLayout.WEST);
         commandRow.add(left, BorderLayout.CENTER);
         commandRow.add(right, BorderLayout.EAST);
         toolbar.add(commandRow);
@@ -504,6 +514,22 @@ public class GaugesPanel {
     private void saveConfig(int rows, int columns) {
         config.setProperty(GaugeLayout.ROWS, rows);
         config.setProperty(GaugeLayout.COLUMNS, columns);
+    }
+
+    /**
+     * Shows the tune's Burn / Discard / Undo / Redo in the toolbar, since settings windows opened here
+     * (Ctrl+K) edit the tune. Disabled stand-ins hold the place until the Tuning pane is built, as no
+     * tune edit can happen before.
+     */
+    public void setTuneControls(JComponent controls) {
+        tuneControls.removeAll();
+        tuneControls.add(controls, BorderLayout.CENTER);
+        tuneControls.revalidate();
+        tuneControls.repaint();
+    }
+
+    JComponent getTuneControlsForTests() {
+        return tuneControls;
     }
 
     public JComponent getContent() {

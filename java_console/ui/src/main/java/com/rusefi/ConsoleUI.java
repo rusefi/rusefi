@@ -543,6 +543,9 @@ console live data tab is broken #8402
                         tp.requestExit(mainFrame, exit,
                             deviceSessionManager.getState() == SessionState.FLASHING));
                 mainFrame.setTuneActions(tp.getLoadTuneAction(), tp.getSaveTuneAction(), tp.getSaveTuneAsAction());
+                if (gaugesPanel != null) {
+                    gaugesPanel.setTuneControls(tp.createMirrorTuneControls());
+                }
                 if (UiProperties.isPinoutEnabled()) {
                     tp.setNavigateToPinout(new PinoutLink() {
                         @Override
