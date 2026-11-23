@@ -235,6 +235,11 @@ public class MainMenuTreeWidget {
         return menuTree.getUnburnedPageKeys();
     }
 
+    /** Whether the page's enable/visible condition greys it out in the tree. */
+    public boolean isPageDisabled(String subMenuKey) {
+        return menuTree.isDisabled(new SubMenuModel(subMenuKey, subMenuKey));
+    }
+
     /** @see SettingsMenuTree#getUnlockHint */
     public String getUnlockHint(SubMenuModel subMenu) {
         return menuTree.getUnlockHint(subMenu);
