@@ -89,6 +89,14 @@ bool storageIsIdAvailableForId(StorageItemId id);
 bool storageRequestWriteID(StorageItemId id, bool forced);
 bool storageReqestReadID(StorageItemId id);
 
+#if EFI_CONFIGURATION_STORAGE && !EFI_UNIT_TEST
+// Serialize protocol tune edits with the flash write. Hold this lock when
+// enqueueing a validated tune or invalidating it before a protocol edit.
+extern chibios_rt::Mutex tuneSaveMutex;
+bool storageRequestValidatedTuneWrite(StorageItemId id);
+void storageInvalidateValidatedTuneWrite(StorageItemId id);
+#endif
+
 bool storageRegisterStorage(StorageType type, SettingStorageBase *storage);
 bool storageUnregisterStorage(StorageType type);
 

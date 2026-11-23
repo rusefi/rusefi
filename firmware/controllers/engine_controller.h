@@ -11,6 +11,7 @@
 
 bool validateConfigOnStartUpOrBurn();
 bool validateConfigOnStartUpOrBurn(bool isRunningOnBurn);
+bool validateConfigForSave();
 char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer, size_t bufferSize);
 void initPeriodicEvents();
 // see also applyNewHardwareSettings

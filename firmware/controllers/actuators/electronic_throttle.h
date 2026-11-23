@@ -24,7 +24,7 @@ void setEtbLuaAdjustment(percent_t adjustment);
 void setEwgLuaAdjustment(percent_t pos);
 void setHitachiEtbCalibration();
 
-void pickEtbOrStepper();
+bool pickEtbOrStepper();
 
 void blinkEtbErrorCodes(bool blinkPhase);
 
