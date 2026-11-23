@@ -277,6 +277,74 @@ class HistogramViewTest {
     }
 
     @Test
+    void roundStepsReplaceTheNumberOfBins() throws IOException {
+        HistogramSettings settings = new HistogramSettings();
+        settings.setColumns(2);
+        settings.setRows(2);
+        HistogramView view = histogramPanel(settings).histogram();
+
+        view.xStepBox.setSelectedItem("500");
+        assertEquals(500, settings.step('x'), 1e-9, "the step is remembered");
+        HistogramAxis x = view.table.histogram().xAxis;
+        assertEquals(5, x.size(), "1000 to 3000 rpm every 500");
+        assertEquals(1000, x.center(0), 1e-9);
+        assertEquals(1500, x.center(1), 1e-9);
+        assertEquals(2, view.table.histogram().yAxis.size(), "Y keeps its number of bins");
+        assertEquals("Bins: every 500 × 2  ▾", view.binsButton.getText());
+        assertFalse(view.columnsSpinner.isEnabled(), "the step replaces the number of columns");
+        assertTrue(view.rowsSpinner.isEnabled());
+
+        view.xStepBox.setSelectedItem("1");
+        assertEquals(2, view.table.histogram().xAxis.size(), "2001 bins would be too many: the 2 columns instead");
+        assertEquals("Bins: every 1 × 2 (step too fine)  ▾", view.binsButton.getText());
+
+        view.xStepBox.setSelectedItem("abc");
+        assertEquals(0, settings.step('x'), 1e-9, "not a number: Auto");
+        assertEquals(HistogramView.STEP_AUTO, view.xStepBox.getSelectedItem());
+        assertEquals("Bins: 2 × 2  ▾", view.binsButton.getText());
+        assertTrue(view.columnsSpinner.isEnabled());
+    }
+
+    @Test
+    void steppedAxisSitsOnRoundMultiples() {
+        HistogramAxis axis = HistogramAxis.stepped(830, 2270, 250);
+        assertEquals(7, axis.size(), "750 to 2250");
+        assertEquals(750, axis.center(0), 1e-9);
+        assertEquals(2250, axis.center(6), 1e-9);
+        assertEquals(1, HistogramAxis.stepped(1000, 1000, 500).size());
+        assertEquals(null, HistogramAxis.stepped(0, 1000, 1), "more than " + HistogramAxis.MAX_BINS + " bins");
+        assertEquals(null, HistogramAxis.stepped(0, 1000, 0));
+        assertFalse(HistogramView.isStepTooFine(axis, 250));
+        assertTrue(HistogramView.isStepTooFine(HistogramAxis.even(830, 2270, 4), 250));
+    }
+
+    @Test
+    void thinDataCanBeJudgedByRecords() throws IOException {
+        HistogramSettings settings = new HistogramSettings();
+        settings.setColumns(2);
+        settings.setRows(2);
+        HistogramView view = histogramPanel(settings).histogram();
+        HistogramTable table = view.table;
+        assertTrue(view.minTimeSpinner.isVisible());
+        assertFalse(view.minRecordsSpinner.isVisible(), "seconds by default");
+
+        view.thinUnitBox.setSelectedItem(HistogramView.THIN_RECORDS);
+        assertTrue(settings.thinByRecords(), "the unit is remembered");
+        assertTrue(view.minRecordsSpinner.isVisible());
+        assertFalse(view.minTimeSpinner.isVisible());
+        assertFalse(table.isThin(table.histogram().cell(0, 0)), "200 records are over the default 10");
+
+        view.minRecordsSpinner.setValue(250);
+        assertEquals(250, settings.minRecords());
+        assertTrue(table.isThin(table.histogram().cell(0, 0)), "200 records are under 250");
+        assertEquals("250 records", settings.thinLimit().describe());
+        paint(table);
+
+        view.thinUnitBox.setSelectedItem(HistogramView.THIN_SECONDS);
+        assertFalse(table.isThin(table.histogram().cell(0, 0)), "back to seconds: 20 s is over 1 s");
+    }
+
+    @Test
     void betweenCursorsBinsOnlyTheTimeBetweenAAndB() throws IOException {
         HistogramSettings settings = new HistogramSettings();
         settings.setColumns(2);

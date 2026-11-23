@@ -97,10 +97,42 @@ class HistogramTimelineTest {
         bar.backButton.doClick();
         assertTrue(panel.isHistogramView());
         assertEquals(2, chart.highlights().size(), "the shading stays until cleared");
+        assertFalse(bar.goBack(), "Esc does nothing more once the histogram is shown");
         panel.setHistogramView(false);
         bar.closeButton.doClick();
         assertTrue(chart.highlights().isEmpty());
         assertFalse(bar.isVisible());
+    }
+
+    @Test
+    void escapeOnTheTimelineGoesBackToTheHistogram() throws IOException {
+        LogViewerPanel panel = panel(twoByTwo(), null);
+        HistogramView view = panel.histogram();
+        view.table.select(1, 1);
+        view.showSelectedOnTimeline();
+        LogChart chart = panel.chart();
+        chart.cursors().set(MeasureCursors.Which.A, 12);
+
+        pressEscape(chart);
+        assertTrue(panel.isHistogramView(), "Esc goes back before it clears anything");
+        assertFalse(chart.cursors().isEmpty(), "A–B may set the histogram's range, so it stays");
+
+        panel.setHistogramView(false);
+        pressEscape(chart);
+        assertTrue(panel.isHistogramView(), "while the stays are shown, Esc keeps going back");
+
+        panel.setHistogramView(false);
+        panel.visitsBar().closeButton.doClick();
+        pressEscape(chart);
+        assertFalse(panel.isHistogramView(), "without the stays bar Esc stays on the timeline");
+        assertTrue(chart.cursors().isEmpty(), "and clears A and B as before");
+    }
+
+    private static void pressEscape(LogChart chart) {
+        Object key = chart.getInputMap(javax.swing.JComponent.WHEN_FOCUSED)
+                .get(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0));
+        chart.getActionMap().get(key).actionPerformed(
+                new java.awt.event.ActionEvent(chart, java.awt.event.ActionEvent.ACTION_PERFORMED, "escape"));
     }
 
     @Test

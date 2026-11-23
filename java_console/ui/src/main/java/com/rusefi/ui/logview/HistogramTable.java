@@ -55,7 +55,7 @@ final class HistogramTable extends JComponent implements ColourScale {
     private Histogram histogram;
     private HistogramSettings.Mode mode = HistogramSettings.Mode.MEAN;
     private Mixture mixture = Mixture.NONE;
-    private double minTime = HistogramSettings.DEFAULT_MIN_TIME;
+    private HistogramSettings.ThinLimit thinLimit = HistogramSettings.ThinLimit.seconds(HistogramSettings.DEFAULT_MIN_TIME);
     private boolean hideThin;
     private HistogramColors colors = new HistogramColors(new Node());
     /** The selected cell (the block's moving corner), or -1. */
@@ -304,12 +304,12 @@ final class HistogramTable extends JComponent implements ColourScale {
         }
     }
 
-    void set(Histogram histogram, HistogramSettings.Mode mode, Mixture mixture, double minTime, boolean hideThin,
+    void set(Histogram histogram, HistogramSettings.Mode mode, Mixture mixture, HistogramSettings.ThinLimit thinLimit, boolean hideThin,
              HistogramColors colors) {
         this.histogram = histogram;
         this.mode = mode;
         this.mixture = mixture;
-        this.minTime = minTime;
+        this.thinLimit = thinLimit;
         this.hideThin = hideThin;
         this.colors = colors;
         updateScale();
@@ -382,9 +382,9 @@ final class HistogramTable extends JComponent implements ColourScale {
         return selectedY;
     }
 
-    /** A cell's records span less time than the thin-data limit. */
+    /** A cell has less time, or fewer records, than the thin-data limit. */
     boolean isThin(Histogram.Cell cell) {
-        return cell.time < minTime;
+        return thinLimit.isThin(cell);
     }
 
     /** False for a thin cell while thin cells are hidden. */
@@ -838,7 +838,7 @@ final class HistogramTable extends JComponent implements ColourScale {
             paintHatch(g, swatch, themed("Console.LogViewer.histogram.hatch", new Color(88, 98, 115, 58)));
             x += swatch.width + 6;
             g.setColor(muted);
-            String thin = String.format(Locale.ROOT, "under %s s of data", HistogramFilter.number(minTime));
+            String thin = "under " + thinLimit.describe();
             g.drawString(thin, x, baseline);
             x += metrics.stringWidth(thin) + 24;
         }

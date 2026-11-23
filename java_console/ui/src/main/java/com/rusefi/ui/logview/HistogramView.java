@@ -14,6 +14,7 @@ import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -78,7 +79,13 @@ final class HistogramView extends JPanel {
     final JToggleButton cellButton = new JToggleButton("Cell");
     final JSpinner columnsSpinner;
     final JSpinner rowsSpinner;
+    /** Round step of the X and Y bins (500, 250…), or Auto for the number of bins; editable. */
+    final JComboBox<String> xStepBox;
+    final JComboBox<String> yStepBox;
     final JSpinner minTimeSpinner;
+    final JSpinner minRecordsSpinner;
+    /** The thin-data limit's unit: seconds of data or records; only that unit's spinner is shown. */
+    final JComboBox<String> thinUnitBox = new JComboBox<>(new String[]{THIN_SECONDS, THIN_RECORDS});
     final JCheckBox hideThinBox = new JCheckBox("Hide them");
     private final JPopupMenu binsPopup = new JPopupMenu();
 
@@ -104,7 +111,13 @@ final class HistogramView extends JPanel {
     private BiConsumer<String, List<double[]>> timelineAction = (cell, stays) -> {
     };
 
-    static final String MIXTURE_MISSING = "No lambda or AFR signal in this log: pick a Z signal";
+    static final String STEP_AUTO = "Auto";
+    /** Round steps offered for X and Y; any other number can be typed. */
+    static final String[] STEP_CHOICES = {STEP_AUTO, "1000", "500", "250", "100", "50", "20", "10", "5", "1",
+            "0.5", "0.1", "0.05", "0.01"};
+    static final String THIN_SECONDS = "s";
+    static final String THIN_RECORDS = "records";
+    static final String MIXTURE_MISSING ="No lambda or AFR signal in this log: pick a Z signal";
     private final Supplier<IniFileModel> iniSource;
     private final Supplier<ConfigurationImage> tuneSource;
     /** Why the bins table is not used, or null. */
@@ -150,6 +163,10 @@ final class HistogramView extends JPanel {
         rowsSpinner = new JSpinner(new SpinnerNumberModel(settings.rows(), HistogramAxis.MIN_BINS,
                 HistogramAxis.MAX_BINS, 1));
         minTimeSpinner = new JSpinner(new SpinnerNumberModel(settings.minTime(), 0.0, HistogramSettings.MAX_MIN_TIME, 0.5));
+        xStepBox = stepBox(settings.step('x'));
+        yStepBox = stepBox(settings.step('y'));
+        minRecordsSpinner = new JSpinner(new SpinnerNumberModel(settings.minRecords(), 0,
+                HistogramSettings.MAX_MIN_RECORDS, 5));
         cellPanel = new HistogramCellPanel(() -> setCellPanelVisible(false));
 
         add(toolbar(viewSwitch, onOpen), BorderLayout.NORTH);
@@ -328,14 +345,14 @@ final class HistogramView extends JPanel {
         Histogram histogram = tableBins != null
                 ? Histogram.compute(log, field('x'), field('y'), field('z'), tableBins.x, tableBins.y, hidden, start, end)
                 : Histogram.compute(log, field('x'), field('y'), field('z'), settings.columns(), settings.rows(),
-                hidden, start, end);
+                settings.step('x'), settings.step('y'), hidden, start, end);
         updateBinsNotice(tableBins);
         boolean mixture = HistogramTable.Mixture.of(log, field('z'), false) != HistogramTable.Mixture.NONE;
         lambdaButton.setEnabled(mixture);
         afrButton.setEnabled(mixture);
         HistogramColors colors = colors();
         table.set(histogram, settings.mode(), HistogramTable.Mixture.of(log, field('z'), settings.showAfr()),
-                settings.minTime(), settings.hideThin(), colors);
+                settings.thinLimit(), settings.hideThin(), colors);
         colorsButton.setText("Colours  ▾");
         strip.setZNotice(isMixtureMissing() ? MIXTURE_MISSING : null);
         strip.refresh();
@@ -344,13 +361,19 @@ final class HistogramView extends JPanel {
         timeLabel.setText(duration(histogram.totalTime) + " of data"
                 + (isBetweenCursors() ? String.format(Locale.ROOT, "  ·  between A and B, %.2f–%.2f s",
                 cursors.start(), cursors.end()) : ""));
+        boolean tooFine = tableBins == null && (isStepTooFine(histogram.xAxis, settings.step('x'))
+                || isStepTooFine(histogram.yAxis, settings.step('y')));
         binsButton.setText(tableBins != null ? "Bins: " + TuneTables.describe(tableBins) + "  ▾"
-                : String.format(Locale.ROOT, "Bins: %d × %d%s  ▾", settings.columns(), settings.rows(),
-                binsProblem != null ? " (no tune)" : ""));
+                : String.format(Locale.ROOT, "Bins: %s × %s%s  ▾", evenDescription('x'), evenDescription('y'),
+                binsProblem != null ? " (no tune)" : tooFine ? " (step too fine)" : ""));
         binsButton.setToolTipText(binsProblem != null ? binsProblem
-                : "Even bins or a tune table's axes, and the thin-data limit");
-        columnsSpinner.setEnabled(tableBins == null);
-        rowsSpinner.setEnabled(tableBins == null);
+                : tooFine ? "A step gives more than " + HistogramAxis.MAX_BINS + " bins over this log: "
+                + "that axis uses its number of bins instead"
+                : "Even bins, round steps or a tune table's axes, and the thin-data limit");
+        columnsSpinner.setEnabled(tableBins == null && settings.step('x') == 0);
+        rowsSpinner.setEnabled(tableBins == null && settings.step('y') == 0);
+        xStepBox.setEnabled(tableBins == null);
+        yStepBox.setEnabled(tableBins == null);
         cellPanel.show(table);
         updateSelectedLabel();
         revalidate();
@@ -625,12 +648,85 @@ final class HistogramView extends JPanel {
         return bar;
     }
 
+    /** "16" bins, or "every 500" with a step. */
+    private String evenDescription(char axis) {
+        double step = settings.step(axis);
+        return step > 0 ? "every " + HistogramFilter.number(step)
+                : String.valueOf(axis == 'x' ? settings.columns() : settings.rows());
+    }
+
+    /** A step was asked for but the axis has even bins: the step would have given too many. */
+    static boolean isStepTooFine(HistogramAxis axis, double step) {
+        if (step <= 0 || axis.size() < 2) {
+            return false;
+        }
+        double spacing = axis.center(1) - axis.center(0);
+        double first = axis.center(0) / step;
+        return Math.abs(spacing - step) > step * 1e-9 || Math.abs(first - Math.rint(first)) > 1e-9;
+    }
+
+    /** The step typed or picked: a positive number, or 0 for Auto (and anything that is not a number). */
+    static double parseStep(Object item) {
+        try {
+            double step = Double.parseDouble(String.valueOf(item).trim());
+            return Double.isFinite(step) && step > 0 ? step : 0;
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    private static JComboBox<String> stepBox(double step) {
+        JComboBox<String> box = new JComboBox<>(STEP_CHOICES);
+        box.setEditable(true);
+        box.setSelectedItem(step > 0 ? HistogramFilter.number(step) : STEP_AUTO);
+        box.setPrototypeDisplayValue("00000");
+        return box;
+    }
+
+    private void onStepChosen(char axis, JComboBox<String> box) {
+        double step = parseStep(box.getSelectedItem());
+        if (step == settings.step(axis)) {
+            return;
+        }
+        settings.setStep(axis, step);
+        if (step == 0 && !STEP_AUTO.equals(box.getSelectedItem())) {
+            box.setSelectedItem(STEP_AUTO);
+        }
+        table.clearSelection();
+        recompute();
+        rebuildBinsPopup();
+    }
+
+    /** "[16] or every [Auto]": the number of bins, or a round step that replaces it. */
+    private static JPanel withStep(JSpinner count, JComboBox<String> step) {
+        JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 0));
+        row.setOpaque(false);
+        row.add(count);
+        row.add(ChartToolbar.muted(new JLabel("or every")));
+        row.add(step);
+        return row;
+    }
+
+    /** Shows the spinner of the chosen unit; the popup is resized when open. */
+    private void updateThinUnit() {
+        boolean byRecords = settings.thinByRecords();
+        minTimeSpinner.setVisible(!byRecords);
+        minRecordsSpinner.setVisible(byRecords);
+        if (binsPopup.isVisible()) {
+            binsPopup.pack();
+        }
+    }
+
     private void buildBinsPopup() {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBorder(BorderFactory.createEmptyBorder(10, 12, 10, 12));
         columnsSpinner.setToolTipText("Bins along X (" + HistogramAxis.MIN_BINS + "–" + HistogramAxis.MAX_BINS + ")");
         rowsSpinner.setToolTipText("Bins along Y (" + HistogramAxis.MIN_BINS + "–" + HistogramAxis.MAX_BINS + ")");
         minTimeSpinner.setToolTipText("Cells with less time than this are hatched: too little data to trust");
+        minRecordsSpinner.setToolTipText("Cells with fewer records than this are hatched: too little data to trust");
+        thinUnitBox.setToolTipText("Judge thin data by the time spent in a cell, or by its number of records");
+        thinUnitBox.setSelectedItem(settings.thinByRecords() ? THIN_RECORDS : THIN_SECONDS);
+        updateThinUnit();
         hideThinBox.setSelected(settings.hideThin());
         hideThinBox.setToolTipText("Leave cells under the limit empty instead of hatching them");
         columnsSpinner.addChangeListener(e -> {
@@ -647,13 +743,26 @@ final class HistogramView extends JPanel {
             settings.setMinTime((Double) minTimeSpinner.getValue());
             recompute();
         });
+        minRecordsSpinner.addChangeListener(e -> {
+            settings.setMinRecords((Integer) minRecordsSpinner.getValue());
+            recompute();
+        });
+        thinUnitBox.addActionListener(e -> {
+            settings.setThinByRecords(THIN_RECORDS.equals(thinUnitBox.getSelectedItem()));
+            updateThinUnit();
+            recompute();
+        });
         hideThinBox.addActionListener(e -> {
             settings.setHideThin(hideThinBox.isSelected());
             recompute();
         });
+        xStepBox.setToolTipText("X bins on round values, e.g. every 500 rpm; Auto: the number of columns");
+        yStepBox.setToolTipText("Y bins on round values, e.g. every 10 kPa; Auto: the number of rows");
+        xStepBox.addActionListener(e -> onStepChosen('x', xStepBox));
+        yStepBox.addActionListener(e -> onStepChosen('y', yStepBox));
         int row = 0;
-        addRow(panel, ChartToolbar.muted(new JLabel("Columns (X)")), columnsSpinner, row++);
-        addRow(panel, ChartToolbar.muted(new JLabel("Rows (Y)")), rowsSpinner, row++);
+        addRow(panel, ChartToolbar.muted(new JLabel("Columns (X)")), withStep(columnsSpinner, xStepBox), row++);
+        addRow(panel, ChartToolbar.muted(new JLabel("Rows (Y)")), withStep(rowsSpinner, yStepBox), row++);
         GridBagConstraints separator = new GridBagConstraints();
         separator.gridy = row++;
         separator.gridwidth = 2;
@@ -663,7 +772,8 @@ final class HistogramView extends JPanel {
         JPanel minTime = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 0));
         minTime.setOpaque(false);
         minTime.add(minTimeSpinner);
-        minTime.add(ChartToolbar.muted(new JLabel("s")));
+        minTime.add(minRecordsSpinner);
+        minTime.add(thinUnitBox);
         addRow(panel, ChartToolbar.muted(new JLabel("Thin data under")), minTime, row++);
         addRow(panel, hideThinBox, null, row++);
         binsPanel = panel;
@@ -683,8 +793,8 @@ final class HistogramView extends JPanel {
         binsPopup.add(heading);
         String current = settings.binsTable();
         JRadioButtonMenuItem even = new JRadioButtonMenuItem(String.format(Locale.ROOT,
-                "Even over the log (%d × %d)", settings.columns(), settings.rows()), current == null);
-        even.setToolTipText("Columns and rows evenly spaced over the range of the X and Y signals");
+                "Over the log (%s × %s)", evenDescription('x'), evenDescription('y')), current == null);
+        even.setToolTipText("Columns and rows evenly spaced, or on round steps, over the range of the X and Y signals");
         even.addActionListener(e -> setBinsTable(null));
         binsPopup.add(even);
         IniFileModel model = ini();

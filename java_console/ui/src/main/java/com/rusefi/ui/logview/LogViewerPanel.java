@@ -285,6 +285,8 @@ public final class LogViewerPanel extends JPanel {
         statsSplit.setDividerSize(5);
         statsSplit.setBorder(BorderFactory.createEmptyBorder());
         visitsBar = new VisitsBar(chart, () -> setView(returnView));
+        visitsBar.setOnTimeline(() -> TIMELINE.equals(shownView));
+        chart.setEscapeHandler(visitsBar::goBack);
         JPanel top = new JPanel(new BorderLayout());
         top.add(toolbar, BorderLayout.NORTH);
         top.add(visitsBar, BorderLayout.SOUTH);

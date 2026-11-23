@@ -41,6 +41,26 @@ final class HistogramAxis {
         return new HistogramAxis(centers);
     }
 
+    /**
+     * Bins centred on round values, every {@code step} from the multiple nearest {@code min} to the one nearest
+     * {@code max}, like a tune table's axis (500, 1000, 1500 rpm…); null when that is more than {@link #MAX_BINS}.
+     */
+    static HistogramAxis stepped(double min, double max, double step) {
+        if (!(step > 0) || !Double.isFinite(min) || !Double.isFinite(max)) {
+            return null;
+        }
+        long first = Math.round(min / step);
+        long last = Math.max(first, Math.round(max / step));
+        if (last - first + 1 > MAX_BINS) {
+            return null;
+        }
+        double[] centers = new double[(int) (last - first + 1)];
+        for (int i = 0; i < centers.length; i++) {
+            centers[i] = (first + i) * step;
+        }
+        return new HistogramAxis(centers);
+    }
+
     int size() {
         return centers.length;
     }
