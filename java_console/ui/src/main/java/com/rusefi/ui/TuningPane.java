@@ -384,6 +384,10 @@ public class TuningPane {
         return left.getUnburnedPageKeys();
     }
 
+    boolean isMenuPageDisabledForTests(String subMenuKey) {
+        return left.isPageDisabled(subMenuKey);
+    }
+
     public void destroy() {
         if (destroyed) {
             return;
@@ -645,6 +649,8 @@ public class TuningPane {
         toolbar.setBaselineImage(image.clone());
         // Remember which .ini these edits belong to so a different-signature ECU can migrate them.
         offlineIni = uiContext.iniFileState.getIniFileModel();
+        // Grey out the pages the loaded tune's INI menu conditions disable, as a connect does.
+        left.refreshExpressions(sessionImage.get());
         right.update(currentKey.get(), offlineIni, sessionImage.get());
         // Select the first dialog if none is selected yet
         if (dialogKey != null) {
