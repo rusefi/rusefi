@@ -24,6 +24,7 @@ import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.tune.xml.MsqFactory;
 import com.rusefi.tune.xml.Page;
+import com.rusefi.util.RestorePointStore;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.basic.LoadTuneHelper;
 import com.rusefi.ui.widgets.JoinedButtons;
@@ -34,6 +35,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.Map;
@@ -53,6 +55,9 @@ public class TuningToolbarWidget {
     private static final int MAX_UNDO = 15;
     private static final int IDLE_TIMEOUT_MS = 300;
     private static final int UPLOAD_DELAY_MS = 100;
+    static final String BURN_NOTE = "Burned. Previous tune kept as a restore point";
+    /** Long enough to read the Burn note and click its link. */
+    private static final int NOTE_MS = 8000;
 
     private final JPanel panel;
     private Window dialogOwner;
@@ -76,8 +81,27 @@ public class TuningToolbarWidget {
     private final JButton redoButton = new JButton("Redo");
 
     private AbstractAction loadTuneAction;
+    /** Where the tune is kept before each Burn and Load tune. */
+    private volatile RestorePointStore restorePoints = RestorePointStore.shared();
     private AbstractAction saveTuneAction;
     private AbstractAction saveTuneAsAction;
+    private AbstractAction createRestorePointAction;
+    /** Writes restore points made by hand off the EDT. */
+    private java.util.concurrent.Executor fileWork = work -> new Thread(work, "restore-point").start();
+    /** Ends a {@link #showNote} message: the toolbar state comes back. */
+    private final Timer noteTimer = new Timer(NOTE_MS, e -> refreshState());
+    /** The link of the note shown, null for none. */
+    private Runnable noteAction;
+    private Runnable showRestorePoints = () -> { };
+    private final java.awt.event.MouseAdapter noteClick = new java.awt.event.MouseAdapter() {
+        @Override
+        public void mouseClicked(java.awt.event.MouseEvent e) {
+            Runnable action = noteAction;
+            if (action != null && SwingUtilities.isLeftMouseButton(e)) {
+                action.run();
+            }
+        }
+    };
     private final JFileChooser saveTuneChooser = createMsqFileChooser();
 
     private final Timer undoCommitTimer;
@@ -121,6 +145,8 @@ public class TuningToolbarWidget {
         this.submit = submit;
         this.sessionImage = sessionImage;
         this.baselineImage = baselineImage;
+        noteTimer.setRepeats(false);
+        stateLabel.addMouseListener(noteClick);
         undoButton.setEnabled(false);
         redoButton.setEnabled(false);
         undoButton.setToolTipText("Undo the last tune change");
@@ -251,7 +277,11 @@ public class TuningToolbarWidget {
      */
     public JComponent createMirrorControls() {
         JLabel label = new JLabel();
+        // a note's link works here too
+        label.addMouseListener(noteClick);
         Runnable syncLabel = () -> {
+            label.setCursor(stateLabel.getCursor());
+            label.setToolTipText(stateLabel.getToolTipText());
             label.setText(stateLabel.getText());
             label.setForeground(stateLabel.getForeground());
         };
@@ -288,6 +318,10 @@ public class TuningToolbarWidget {
         boolean dirty = hasUnsavedChanges(current);
         IniFileModel ini = uiContext.iniFileState == null ? null : uiContext.iniFileState.getIniFileModel();
         int changedValues = dirty ? changedValueCount(ini, current, baselineImage) : 0;
+        // the state replaces any note, and its link
+        noteAction = null;
+        stateLabel.setCursor(Cursor.getDefaultCursor());
+        stateLabel.setToolTipText(null);
         stateLabel.setText(stateLabelText(uiContext.isOfflineMode(), dirty, changedValues));
         stateLabel.setForeground(dirty ? TuningStyle.dirty() : TuningStyle.muted());
     }
@@ -349,6 +383,8 @@ public class TuningToolbarWidget {
         }
         uploadTimer.stop();
         final ConfigurationImage image = toBurn.clone();
+        final IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+        final RestorePointStore store = restorePoints;
         final long savedEditGeneration = editGeneration;
         final long savedConnectionGeneration = connectionGeneration;
         burnInProgress = true;
@@ -357,6 +393,9 @@ public class TuningToolbarWidget {
         loadTuneAction.setEnabled(false);
         try {
             submit.accept(() -> {
+                // the ECU's tune as it is before this Burn replaces it
+                boolean previousKept = saveRestorePoint(store, bp.getControllerConfiguration(), ini,
+                    RestorePointStore.Reason.BEFORE_BURN);
                 RuntimeException failure = null;
                 try {
                     bp.uploadChangesWithoutBurn(image);
@@ -387,6 +426,9 @@ public class TuningToolbarWidget {
                     }
                     setBaselineImage(image.clone());
                     refreshState();
+                    if (previousKept) {
+                        showNote(BURN_NOTE, "Restore points", showRestorePoints);
+                    }
                     if (noNewEdits && onSuccess != null) {
                         onSuccess.run();
                     }
@@ -568,6 +610,9 @@ public class TuningToolbarWidget {
                                         bp == null ? null : bp.getControllerConfiguration(),
                                         baselineImage
                                     );
+                                    // the tune open now, unburned changes too: loading replaces it (and the ECU's)
+                                    saveRestorePoint(restorePoints, currentImage,
+                                        uiContext.iniFileState.getIniFileModel(), RestorePointStore.Reason.BEFORE_LOAD);
                                     ConfigurationImage base = currentImage == null
                                         ? new ConfigurationImage(targetIni.getMetaInfo().getPageSize(0), targetIni.getByteOrder())
                                         : currentImage.clone();
@@ -835,6 +880,115 @@ public class TuningToolbarWidget {
                 saveTuneAsAndThen(right, null);
             }
         };
+        createRestorePointAction = new AbstractAction(LoadTuneHelper.CREATE_RESTORE_POINT_TEXT) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (firmwareUpdateInProgress) {
+                    return;
+                }
+                String note = askRestorePointNote();
+                if (note != null) {
+                    createRestorePoint(right, note);
+                }
+            }
+        };
+        createRestorePointAction.putValue(Action.SHORT_DESCRIPTION,
+            "Keep the tune open now, unburned changes too, to come back to later");
+    }
+
+    /** The note for a restore point made by hand: "" for none, null when cancelled. */
+    private String askRestorePointNote() {
+        JTextField note = new JTextField(28);
+        JLabel noteLabel = new JLabel("Note (optional)");
+        noteLabel.setLabelFor(note);
+        JLabel hint = new JLabel("Saves the tune open now, including unburned changes.");
+        hint.setForeground(TuningStyle.muted());
+        JPanel form = new JPanel(new GridLayout(0, 1, 0, 6));
+        form.add(noteLabel);
+        form.add(note);
+        form.add(hint);
+        int choice = JOptionPane.showOptionDialog(getDialogParent(), form, "Create restore point",
+            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, new Object[]{"Create", "Cancel"}, "Create");
+        return choice == 0 ? note.getText() : null;
+    }
+
+    /**
+     * [tag:restore_points] Keeps the tune open now, unburned changes included, as a restore point with a note. Made
+     * by hand, it is saved even when the newest point holds the same tune. Says so in the toolbar when done.
+     */
+    void createRestorePoint(CalibrationDialogWidget right, String note) {
+        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+        BinaryProtocol bp = uiContext.getBinaryProtocol();
+        ConfigurationImage image = imageToSave(
+            right.getWorkingImage(),
+            sessionImage.get(),
+            bp == null ? null : bp.getControllerConfiguration(),
+            baselineImage
+        );
+        if (ini == null || image == null) {
+            errorHandler.accept("No tune open to keep as a restore point");
+            return;
+        }
+        ConfigurationImage copy = image.clone();
+        RestorePointStore store = restorePoints;
+        fileWork.execute(() -> {
+            try {
+                RestorePointStore.RestorePoint point = store.saveAlways(MsqFactory.valueOf(copy, ini),
+                    RestorePointStore.Reason.MANUAL, note);
+                log.info("Restore point " + point.file);
+                SwingUtilities.invokeLater(() -> showNote("Restore point created"));
+            } catch (IOException | RuntimeException ex) {
+                log.error("Failed to create restore point", ex);
+                SwingUtilities.invokeLater(() -> errorHandler.accept("Failed to create restore point: " + ex.getMessage()));
+            }
+        });
+    }
+
+    /** A short message in place of the toolbar state for a few seconds, e.g. "Restore point created". */
+    public void showNote(String text) {
+        showNote(text, null, null);
+    }
+
+    /**
+     * A note with a link after it, e.g. "Burned. Previous tune kept as a restore point · Restore points": a click
+     * on the label (here or on its Gauges mirror) runs {@code action} while the note shows.
+     */
+    public void showNote(String text, String linkText, Runnable action) {
+        noteAction = action;
+        stateLabel.setCursor(action == null ? Cursor.getDefaultCursor() : Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        stateLabel.setToolTipText(action == null ? null : "Open " + linkText);
+        stateLabel.setForeground(TuningStyle.muted());
+        stateLabel.setText(action == null ? text : noteHtml(text, linkText));
+        noteTimer.restart();
+    }
+
+    static String noteHtml(String text, String linkText) {
+        Color link = UIManager.getColor("Component.linkColor");
+        String color = link == null ? "#1d4ed8" : String.format("#%06x", link.getRGB() & 0xffffff);
+        return "<html>" + escapeHtml(text) + " · <u><font color=\"" + color + "\">" + escapeHtml(linkText)
+            + "</font></u></html>";
+    }
+
+    private static String escapeHtml(String text) {
+        return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+    }
+
+    /** What the Burn note's link opens: the Restore Points window. */
+    public void setShowRestorePoints(Runnable showRestorePoints) {
+        this.showRestorePoints = showRestorePoints;
+    }
+
+    /** The note's link for tests: what a click on the label would run, or null. */
+    Runnable getNoteActionForTests() {
+        return noteAction;
+    }
+
+    public Action getCreateRestorePointAction() {
+        return createRestorePointAction;
+    }
+
+    void setFileWorkForTests(java.util.concurrent.Executor fileWork) {
+        this.fileWork = fileWork;
     }
 
     /** Saves to the current tune file without asking; asks for a file when there is none yet. */
@@ -919,6 +1073,34 @@ public class TuningToolbarWidget {
                 SwingUtilities.invokeLater(() -> errorHandler.accept("Failed to save tune: " + ex.getMessage()));
             }
         }, "save-tune").start();
+    }
+
+    /**
+     * [tag:restore_points] Keeps the tune about to be replaced as a restore point. Never throws: a point that cannot
+     * be made is logged and the Burn or Load goes on.
+     */
+    static boolean saveRestorePoint(RestorePointStore store, ConfigurationImage image, IniFileModel ini,
+                                    RestorePointStore.Reason reason) {
+        if (store == null || image == null || ini == null) {
+            return false;
+        }
+        try {
+            // empty when the newest point already holds this tune: it is kept all the same
+            store.save(MsqFactory.valueOf(image, ini), reason, null)
+                .ifPresent(point -> log.info("Restore point " + point.file));
+            return true;
+        } catch (IOException | RuntimeException e) {
+            log.error("Failed to make a restore point (" + reason.label + "): " + e, e);
+            return false;
+        }
+    }
+
+    public RestorePointStore getRestorePointStore() {
+        return restorePoints;
+    }
+
+    public void setRestorePointStoreForTests(RestorePointStore store) {
+        restorePoints = store;
     }
 
     static ConfigurationImage imageToSave(ConfigurationImage workingImage,

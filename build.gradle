@@ -43,6 +43,9 @@ allprojects {
       test {
         // Enable JUnit 5
         useJUnitPlatform()
+        // [tag:restore_points_dir] tests that Burn or Load a tune write their restore points here, never to ~/.rusEFI
+        systemProperty 'rusefi.restore_points.dir',
+            layout.buildDirectory.dir('test-restore-points').get().asFile.absolutePath
       }
     }
 

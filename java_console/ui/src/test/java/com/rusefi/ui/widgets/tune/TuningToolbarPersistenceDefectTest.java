@@ -54,6 +54,164 @@ class TuningToolbarPersistenceDefectTest {
         }
     }
 
+    private static final String RESTORE_SIGNATURE = "rusEFI master.2026.11.20.uaefi.123";
+
+    /** 8 bytes like the fixture's images; "fuel" is byte 1 (2 in a, 42 in b). */
+    private static IniFileModel realIni() {
+        String text = "[Constants]\n"
+            + "signature = \"" + RESTORE_SIGNATURE + "\"\n"
+            + "blockingFactor = 64\nnPages = 1\npageSize = 8\npageReadCommand = \"r\"\nochBlockSize = 0\npage = 1\n"
+            + "fuel = scalar, U08, 1, \"ms\", 1, 0, 0, 255, 0\n";
+        try {
+            com.opensr5.ini.RawIniFile raw = com.rusefi.ini.reader.IniFileReaderUtil.read(
+                new java.io.ByteArrayInputStream(text.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+            return com.rusefi.ini.reader.IniFileReaderUtil.readIniFile(raw, "restore-test.ini",
+                new com.opensr5.ini.IniFileMetaInfoImpl(raw));
+        } catch (Throwable e) {
+            throw new AssertionError("test .ini", e);
+        }
+    }
+
+    /** [tag:restore_points] */
+    @Test
+    void burnKeepsTheEcuTuneItReplacesAsARestorePoint(@org.junit.jupiter.api.io.TempDir java.nio.file.Path dir)
+        throws Exception {
+        com.rusefi.util.RestorePointStore store =
+            new com.rusefi.util.RestorePointStore(dir, 50, java.time.Clock.systemUTC());
+        IniFileModel ini = realIni();
+        Fixture[] fixture = new Fixture[1];
+        java.util.concurrent.atomic.AtomicInteger opened = new java.util.concurrent.atomic.AtomicInteger();
+        JComponent[] mirror = new JComponent[1];
+        try {
+            runOnEdt(() -> {
+                fixture[0] = new Fixture(ini, Runnable::run);
+                fixture[0].toolbar.setRestorePointStoreForTests(store);
+                fixture[0].toolbar.setShowRestorePoints(opened::incrementAndGet);
+                mirror[0] = fixture[0].toolbar.createMirrorControls();
+                fixture[0].editToB();
+                button(fixture[0].toolbar, "Burn to ECU").doClick();
+                fixture[0].toolbar.flushUploadTimerForUnitTest();
+            });
+            runOnEdt(() -> {
+                // step 5: the note says the previous tune is kept, its link opens the restore points
+                JLabel note = noteLabel(fixture[0].toolbar);
+                assertTrue(note.getText().contains(TuningToolbarWidget.BURN_NOTE), note.getText());
+                assertTrue(note.getText().contains("Restore points"));
+                click(note);
+                assertEquals(1, opened.get());
+                JLabel onGauges = com.rusefi.ui.util.UiUtils.getAllComponents(mirror[0]).stream()
+                    .filter(c -> c instanceof JLabel).map(c -> (JLabel) c).findFirst()
+                    .orElseThrow(AssertionError::new);
+                assertEquals(note.getText(), onGauges.getText(), "the Gauges toolbar repeats the note");
+                click(onGauges);
+                assertEquals(2, opened.get(), "and its link");
+                fixture[0].toolbar.refreshState();
+                assertNull(fixture[0].toolbar.getNoteActionForTests(), "the state replaces the note and its link");
+                click(note);
+                assertEquals(2, opened.get());
+            });
+            assertArrayEquals(fixture[0].b, fixture[0].protocol.flash);
+            List<com.rusefi.util.RestorePointStore.RestorePoint> points = store.list(RESTORE_SIGNATURE);
+            assertEquals(1, points.size());
+            assertEquals(com.rusefi.util.RestorePointStore.Reason.BEFORE_BURN, points.get(0).reason);
+            assertEquals("2", points.get(0).readTune().getConstantsAsMap().get("fuel").getValue(),
+                "the ECU's tune before the Burn, not the burned one (42)");
+        } finally {
+            if (fixture[0] != null) {
+                runOnEdt(fixture[0]::close);
+            }
+        }
+    }
+
+    @Test
+    void createRestorePointKeepsTheOpenTuneWithItsNote(@org.junit.jupiter.api.io.TempDir java.nio.file.Path dir)
+        throws Exception {
+        com.rusefi.util.RestorePointStore store =
+            new com.rusefi.util.RestorePointStore(dir, 50, java.time.Clock.systemUTC());
+        IniFileModel ini = realIni();
+        Fixture[] fixture = new Fixture[1];
+        try {
+            runOnEdt(() -> {
+                fixture[0] = new Fixture(ini, Runnable::run);
+                fixture[0].toolbar.setRestorePointStoreForTests(store);
+                fixture[0].toolbar.setFileWorkForTests(Runnable::run);
+                fixture[0].editToB();
+                fixture[0].toolbar.createRestorePoint(fixture[0].calibration, "before idle work");
+            });
+            // the confirmation is posted to the EDT
+            runOnEdt(() -> assertTrue(toolbarTexts(fixture[0].toolbar).contains("Restore point created")));
+            List<com.rusefi.util.RestorePointStore.RestorePoint> points = store.list(RESTORE_SIGNATURE);
+            assertEquals(1, points.size());
+            assertEquals(com.rusefi.util.RestorePointStore.Reason.MANUAL, points.get(0).reason);
+            assertEquals("before idle work", points.get(0).readNote());
+            assertEquals("42", points.get(0).readTune().getConstantsAsMap().get("fuel").getValue(),
+                "the open tune, its unburned change too");
+            assertArrayEquals(fixture[0].a, fixture[0].protocol.flash, "nothing is burned");
+        } finally {
+            if (fixture[0] != null) {
+                runOnEdt(fixture[0]::close);
+            }
+        }
+    }
+
+    private static JLabel noteLabel(TuningToolbarWidget toolbar) {
+        for (Component c : com.rusefi.ui.util.UiUtils.getAllComponents(toolbar.getPanel())) {
+            if (c instanceof JLabel && ((JLabel) c).getText() != null
+                && ((JLabel) c).getText().contains(TuningToolbarWidget.BURN_NOTE)) {
+                return (JLabel) c;
+            }
+        }
+        throw new AssertionError("no Burn note in " + toolbarTexts(toolbar));
+    }
+
+    private static void click(JLabel label) {
+        java.awt.event.MouseEvent click = new java.awt.event.MouseEvent(label, java.awt.event.MouseEvent.MOUSE_CLICKED,
+            System.currentTimeMillis(), java.awt.event.InputEvent.BUTTON1_DOWN_MASK, 5, 5, 1, false,
+            java.awt.event.MouseEvent.BUTTON1);
+        for (java.awt.event.MouseListener listener : label.getMouseListeners()) {
+            listener.mouseClicked(click);
+        }
+    }
+
+    private static List<String> toolbarTexts(TuningToolbarWidget toolbar) {
+        List<String> texts = new ArrayList<>();
+        for (Component c : com.rusefi.ui.util.UiUtils.getAllComponents(toolbar.getPanel())) {
+            if (c instanceof JLabel) {
+                texts.add(((JLabel) c).getText());
+            }
+        }
+        return texts;
+    }
+
+    @Test
+    void aRestorePointThatCannotBeMadeDoesNotStopTheBurn(@org.junit.jupiter.api.io.TempDir java.nio.file.Path dir)
+        throws Exception {
+        com.rusefi.util.RestorePointStore store =
+            new com.rusefi.util.RestorePointStore(dir, 50, java.time.Clock.systemUTC());
+        Fixture[] fixture = new Fixture[1];
+        try {
+            runOnEdt(() -> {
+                // the mocked .ini cannot make an .msq
+                fixture[0] = new Fixture();
+                fixture[0].toolbar.setRestorePointStoreForTests(store);
+                fixture[0].editToB();
+                button(fixture[0].toolbar, "Burn to ECU").doClick();
+                fixture[0].toolbar.flushUploadTimerForUnitTest();
+            });
+            runOnEdt(() -> assertFalse(toolbarTexts(fixture[0].toolbar).stream()
+                .anyMatch(text -> text != null && text.contains(TuningToolbarWidget.BURN_NOTE)),
+                "no restore point was made: the note would be wrong"));
+            assertArrayEquals(fixture[0].b, fixture[0].protocol.flash, "burned anyway");
+            try (java.util.stream.Stream<java.nio.file.Path> files = java.nio.file.Files.list(dir)) {
+                assertEquals(0, files.count());
+            }
+        } finally {
+            if (fixture[0] != null) {
+                runOnEdt(fixture[0]::close);
+            }
+        }
+    }
+
     @Test
     void burnUsesAnImmutableSnapshotAndDoesNotCompleteOverNewerEdits() throws Exception {
         Fixture[] fixture = new Fixture[1];
@@ -526,7 +684,7 @@ class TuningToolbarPersistenceDefectTest {
         private final byte[] b = {1, 42, 3, 4, 5, 6, 7, 8};
         private final byte[] c = {1, 42, 3, 4, 55, 6, 7, 8};
         private final UIContext context = new UIContext();
-        private final IniFileModel ini = IniFileModelMocks.withGauges();
+        private final IniFileModel ini;
         private final FakeProtocol protocol;
         private final AtomicReference<ConfigurationImage> session =
             new AtomicReference<>(ConfigurationImageTestHelper.newLittleEndian(a));
@@ -538,7 +696,14 @@ class TuningToolbarPersistenceDefectTest {
         }
 
         private Fixture(java.util.function.Consumer<Runnable> submit) {
-            when(ini.getBlockingFactor()).thenReturn(64);
+            this(IniFileModelMocks.withGauges(), submit);
+        }
+
+        private Fixture(IniFileModel ini, java.util.function.Consumer<Runnable> submit) {
+            this.ini = ini;
+            if (org.mockito.Mockito.mockingDetails(ini).isMock()) {
+                when(ini.getBlockingFactor()).thenReturn(64);
+            }
             context.iniFileState.setIniFileModelForTest(ini);
             context.getLinkManager().setNotifyGlobalStatusOnClose(false);
             protocol = new FakeProtocol(context.getLinkManager(), a);

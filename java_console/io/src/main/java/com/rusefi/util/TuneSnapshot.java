@@ -83,7 +83,11 @@ public final class TuneSnapshot {
         }
     }
 
-    private static boolean matches(Path path, Msq tune) {
+    /**
+     * Whether the file holds the same calibration as {@code tune}: signature and every page's constants.
+     * Comments and console metadata do not count; an unreadable file never matches.
+     */
+    static boolean matches(Path path, Msq tune) {
         try {
             Msq existing = Msq.readTune(path.toString());
             if (!Objects.equals(existing.versionInfo.getSignature(), tune.versionInfo.getSignature())
