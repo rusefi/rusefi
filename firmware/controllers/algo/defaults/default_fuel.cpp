@@ -263,7 +263,9 @@ static void setMazdaMiataNbTpsTps() {
 static void setDefaultLambdaTable() {
 	setRpmTableBin(config->lambdaRpmBins);
 
-#if (FUEL_LOAD_COUNT == 16) && (FUEL_RPM_COUNT == 16)
+	// rows depend on the load axis only: boards with a custom FUEL_RPM_COUNT still need
+	// a valid default, an all-zero lambda table means division by zero in getCycleFuel()
+#if FUEL_LOAD_COUNT == 16
 	copyArray(config->lambdaLoadBins, engine_configuration_defaults::DEFAULT_LAMBDA_LOAD_BINS);
 
 	// Set each row to the corresponding value from rowValues
