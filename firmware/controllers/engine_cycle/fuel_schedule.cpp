@@ -6,6 +6,8 @@
 
 #include "pch.h"
 
+// A fatal cut blocks new scheduling, not an already queued pulse. Its open
+// and close times were scheduled together; this callback doesn't use the tune.
 void startInjection(scheduler_arg_t arg) {
 	const InjectorContext ctx(arg);
 	const auto nowNt = getTimeNowNt();

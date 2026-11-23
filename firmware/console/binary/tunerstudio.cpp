@@ -84,6 +84,7 @@
 #include "main_trigger_callback.h"
 #include "flash_main.h"
 #include "extra_flash_pages.h"
+#include "storage.h"
 
 #include "tunerstudio_io.h"
 #include "malfunction_central.h"
@@ -380,6 +381,9 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 
 	onCalibrationWrite(page, offset, count);
 
+#if EFI_CONFIGURATION_STORAGE && !EFI_UNIT_TEST
+	chibios_rt::MutexLocker lock(tuneSaveMutex);
+#endif
 	// Special case
 	if (page == TS_PAGE_SETTINGS) {
 		if (isLockedFromUser()) {
@@ -390,6 +394,11 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 		// Skip the write if a preset was just loaded - we don't want to overwrite it
 		// [tag:popular_vehicle]
 		if (!needToTriggerTsRefresh()) {
+#if EFI_CONFIGURATION_STORAGE && !EFI_UNIT_TEST
+			if (memcmp(addr, content, count) != 0) {
+				storageInvalidateValidatedTuneWrite(EFI_SETTINGS_RECORD_ID);
+			}
+#endif
 			memcpy(addr, content, count);
 		} else {
 			efiPrintf("Ignoring TS -> Page %d write chunk offset %d count %d (output_count=%d)",
@@ -403,6 +412,11 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 		// huh, why is this NOT within above 'needToTriggerTsRefresh()' condition?
 		call_board_override(custom_board_ConfigOverrides);
 	} else {
+#if EFI_CONFIGURATION_STORAGE && !EFI_UNIT_TEST
+		if ((page == TS_PAGE_SECOND_TABLES || page == TS_PAGE_LUA) && memcmp(addr, content, count) != 0) {
+			storageInvalidateValidatedTuneWrite(page == TS_PAGE_SECOND_TABLES ? EFI_SECOND_TABLES_RECORD_ID : EFI_LUA_PAGE_RECORD_ID);
+		}
+#endif
 		memcpy(addr, content, count);
 	}
 
@@ -447,6 +461,9 @@ void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint32_t page, uint
 		finishPendingBurn(tsChannel);
 	}
 	if (!tsChannel->settingsBurnPending) {
+#if EFI_CONFIGURATION_STORAGE && !EFI_UNIT_TEST
+		chibios_rt::MutexLocker lock(tuneSaveMutex);
+#endif
 		// todo: rename to onConfigCrc?
 		ConfigurationWizard::onConfigOnStartUpOrBurn(false);
 	}
@@ -566,7 +583,6 @@ void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint32_t page,
 void requestBurn() {
 #if !EFI_UNIT_TEST
 	onBurnRequest();
-
 #if EFI_CONFIGURATION_STORAGE
 	setNeedToWriteConfiguration();
 #endif /* EFI_CONFIGURATION_STORAGE */
@@ -577,27 +593,52 @@ void requestBurn() {
 // TS normally waits 500ms; 2s keeps clients without a CRC check from blocking forever the write.
 static constexpr float SETTINGS_BURN_TIMEOUT_MS = 2000;
 
+static bool queueValidatedSettingsBurn() {
+#if EFI_UNIT_TEST
+	setNeedToWriteConfiguration();
+#elif EFI_CONFIGURATION_STORAGE
+	return storageRequestValidatedTuneWrite(EFI_SETTINGS_RECORD_ID);
+#endif
+	return true;
+}
+
 void TunerStudio::finishPendingBurn(TsChannelBase* tsChannel) {
 	if (!tsChannel->settingsBurnPending) {
 		return;
 	}
 
 	tsChannel->settingsBurnPending = false;
+#if EFI_CONFIGURATION_STORAGE && !EFI_UNIT_TEST
+	chibios_rt::MutexLocker lock(tuneSaveMutex);
+#endif
 	const uint32_t crcBefore = crc32(engineConfiguration, sizeof(persistent_config_s));
 	Timer t;
 	t.reset();
 
 	efiPrintf("Finishing pending TS burn");
-	validateConfigOnStartUpOrBurn(true);
+	const bool valid = validateConfigOnStartUpOrBurn(true);
 
 		// problem: 'popular vehicles' dialog has 'Burn' which is very NOT helpful on that dialog
 		// since users often click both buttons producing a conflict between ECU desire to change settings
 		// and TS desire to send TS calibration snapshot into ECU
 		// Skip the burn if a preset was just loaded - we don't want to overwrite it
 		// [tag:popular_vehicle]
-  if (!needToTriggerTsRefresh()) {
-    efiPrintf("TS -> Burn, we are allowed to burn");
-		requestBurn();
+	if (valid && !needToTriggerTsRefresh()) {
+		// The tune can be repaired over USB after a critical fault, but do not
+		// reconfigure partially initialized or shut-down hardware. Reboot to apply.
+#if !EFI_UNIT_TEST
+		if (!hasFirmwareError() && hasRememberedConfiguration) {
+			onBurnRequest();
+			if (hasFirmwareError()) {
+				return;
+			}
+		}
+#endif
+		if (!queueValidatedSettingsBurn()) {
+			efiPrintf("TS -> Burn not queued: storage mailbox full");
+		}
+	} else if (!valid) {
+		efiPrintf("TS -> Burn rejected by tune validation");
 	}
 
 	if (crcBefore != crc32(engineConfiguration, sizeof(persistent_config_s))) {
@@ -620,20 +661,32 @@ void TunerStudio::handlePendingBurnTimeout(TsChannelBase* tsChannel) {
 void TunerStudio::handleBurnCommand(TsChannelBase* tsChannel, uint16_t page) {
 	if (page == TS_PAGE_SETTINGS) {
 		tsState.burnCommandCounter++;
-		// Only page 0 needs deferral (see #9938)
-		// Extra-page and lua are wrote normally
+		// Page 0 fixes must wait until after the client's CRC check (see #9938).
 		efiPrintf("TS -> Burn, waiting for CRC");
 		tsChannel->settingsBurnPending = true;
 	} else if (page == TS_PAGE_SCATTER_OFFSETS) {
 		/* do nothing */
-	} else if (page == TS_PAGE_SECOND_TABLES) {
-#if !EFI_UNIT_TEST
-		burnExtraFlashPage(EFI_SECOND_TABLES_RECORD_ID);
+	} else if (page == TS_PAGE_SECOND_TABLES || page == TS_PAGE_LUA) {
+#if EFI_CONFIGURATION_STORAGE && !EFI_UNIT_TEST
+		chibios_rt::MutexLocker lock(tuneSaveMutex);
 #endif
-	} else if (page == TS_PAGE_LUA) {
-#if !EFI_UNIT_TEST
-		burnExtraFlashPage(EFI_LUA_PAGE_RECORD_ID);
+		const auto id = page == TS_PAGE_SECOND_TABLES ? EFI_SECOND_TABLES_RECORD_ID : EFI_LUA_PAGE_RECORD_ID;
+		if (getExtraPageSize(id) == 0 || !validateConfigForSave()) {
+			sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "Burn rejected by tune validation");
+			return;
+		}
+#if (EFI_STORAGE_INT_FLASH == TRUE) && (EFI_STORAGE_MFS != TRUE) && !EFI_SIMULATOR
+		// These pages share the settings erase sector. Queue a normal full save.
+		const bool queued = queueValidatedSettingsBurn();
+#elif EFI_CONFIGURATION_STORAGE && !EFI_UNIT_TEST
+		const bool queued = storageRequestValidatedTuneWrite(id);
+#else
+		const bool queued = true;
 #endif
+		if (!queued) {
+			sendErrorCode(tsChannel, TS_RESPONSE_OVERRUN, "Burn not queued: storage mailbox full");
+			return;
+		}
 	} else {
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "ERROR: Burn invalid page");
 		return;
@@ -1108,6 +1161,19 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 			uint16_t subsystem = wireBe16(data16[0]);
 			uint16_t index = wireBe16(data16[1]);
 
+#if EFI_CONFIGURATION_STORAGE
+			const bool editsSettings = (subsystem == TS_BENCH_CATEGORY && index == LTFT_APPLY_TO_VE)
+				|| (subsystem == TS_X14 && (index == TS_SET_STEPPER_IDLE || index == TS_GRAB_PEDAL_UP
+					|| index == TS_GRAB_PEDAL_WOT || index == TS_GRAB_TPS_CLOSED || index == TS_GRAB_TPS_OPEN
+					|| index == TS_ESTIMATE_TORQUE_TABLE));
+			if (editsSettings) {
+				chibios_rt::MutexLocker lock(tuneSaveMutex);
+				storageInvalidateValidatedTuneWrite(EFI_SETTINGS_RECORD_ID);
+				executeTSCommand(subsystem, index);
+				sendOkResponse(tsChannel);
+				break;
+			}
+#endif
 			executeTSCommand(subsystem, index);
 		}
 #endif /* EFI_SIMULATOR || EFI_PROD_CODE */

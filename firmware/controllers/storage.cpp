@@ -107,7 +107,22 @@ chibios_rt::Mailbox<msg_t, 16> storageManagerMb;
 #define MSG_CMD_REG			(4)
 #define MSG_CMD_UNREG		(5)
 
+#define MSG_CMD_WRITE_VALIDATED_TUNE (6)
 #define MSG_ID_MASK		0x1f
+
+chibios_rt::Mutex tuneSaveMutex;
+// Protected by tuneSaveMutex. A record ID in the mailbox carries no tune bytes.
+static uint32_t validatedTuneWrites = 0;
+
+static uint32_t getTuneWriteMask(StorageItemId id) {
+#if EFI_STORAGE_INT_FLASH == TRUE
+	// A full internal-flash write piggybacks both extra pages.
+	if (id == EFI_SETTINGS_RECORD_ID) {
+		return BIT(id) | BIT(EFI_SECOND_TABLES_RECORD_ID) | BIT(EFI_LUA_PAGE_RECORD_ID);
+	}
+#endif
+	return BIT(id);
+}
 
 static bool storageWriteID(uint32_t id) {
 	// Do the actual flash write operation for given ID
@@ -244,6 +259,18 @@ bool storageRequestWriteID(StorageItemId id, bool forced) {
 	return storageManagerSendCmd(forced ? MSG_CMD_WRITE_NOW : MSG_CMD_WRITE, (uint32_t)id);
 }
 
+bool storageRequestValidatedTuneWrite(StorageItemId id) {
+	if (!storageManagerSendCmd(MSG_CMD_WRITE_VALIDATED_TUNE, (uint32_t)id)) {
+		return false;
+	}
+	validatedTuneWrites |= getTuneWriteMask(id);
+	return true;
+}
+
+void storageInvalidateValidatedTuneWrite(StorageItemId id) {
+	validatedTuneWrites &= ~BIT(id);
+}
+
 bool storageReqestReadID(StorageItemId id) {
 	return storageManagerSendCmd(MSG_CMD_READ, (uint32_t)id);
 }
@@ -305,6 +332,7 @@ bool storagRequestUnregisterStorage(StorageType id)
 // bitmap of flags per pageId. Reminder that page numbers start from 1, see StorageItemId
 static uint32_t pendingWrites = 0;
 static uint32_t pendingReads = 0;
+static uint32_t pendingTuneValidation = 0;
 
 // A failed LTFT write stays pending and is retried, but not on every poll: a card or flash that
 // keeps failing would otherwise be hammered every STORAGE_MANAGER_POLL_INTERVAL_MS and flood the log.
@@ -346,6 +374,17 @@ static bool storageWriteBackoffActive(StorageItemId id) {
 	return (id == EFI_LTFT_RECORD_ID) && (writeFailCount[id] != 0) && (!writeRetryTimer[id].hasElapsedMs(STORAGE_WRITE_RETRY_MS));
 }
 
+static bool tryWriteValidatedTune(StorageItemId id) {
+	chibios_rt::MutexLocker lock(tuneSaveMutex);
+	const auto mask = getTuneWriteMask(id);
+	if ((validatedTuneWrites & mask) != mask) {
+		efiPrintf("Tune edited after Burn; not saved. Burn again to save the new tune.");
+		return true; // The next Burn must validate the edited tune.
+	}
+	// Recheck after waiting for the mutex: the engine could have started.
+	return storageAllowWriteID(id) && storageTryWriteID(id);
+}
+
 /* in case of MFS or SD card we need more stack */
 static constexpr int storageManagerThreadStackSize = STORAGE_MANAGER_THREAD_STACK_SIZE;
 static THD_WORKING_AREA(storageManagerThreadStack, storageManagerThreadStackSize);
@@ -368,10 +407,17 @@ static void storageManagerThread(void*) {
 				pendingReads |= BIT(id);
 				break;
 			case MSG_CMD_WRITE:
+				// Latest request wins when legacy and validated requests share an ID.
+				pendingTuneValidation &= ~BIT(id);
+				pendingWrites |= BIT(id);
+				break;
+			case MSG_CMD_WRITE_VALIDATED_TUNE:
+				pendingTuneValidation |= BIT(id);
 				pendingWrites |= BIT(id);
 				break;
 			case MSG_CMD_WRITE_NOW:
 				pendingWrites |= BIT(id);
+				pendingTuneValidation &= ~BIT(id);
 				// skip storageAllowWriteID() check
 				if (storageTryWriteID((StorageItemId)id)) {
 					pendingWrites &= ~BIT(id);
@@ -443,8 +489,10 @@ static void storageManagerThread(void*) {
 				continue;
 			}
 
-			if (storageTryWriteID(id)) {
+			const bool finished = (pendingTuneValidation & BIT(id)) ? tryWriteValidatedTune(id) : storageTryWriteID(id);
+			if (finished) {
 				pendingWrites &= ~BIT(id);
+				pendingTuneValidation &= ~BIT(id);
 			}
 		}
 	}
@@ -454,7 +502,7 @@ RUSEFI_STACK_ROOT_EXPLICIT(storageManagerThread, storageManagerThreadStackSize);
 
 /* misc helpers */
 bool getNeedToWriteConfiguration() {
-	return (pendingWrites & BIT(EFI_SETTINGS_RECORD_ID)) != 0;
+	return (pendingWrites & (BIT(EFI_SETTINGS_RECORD_ID) | BIT(EFI_SECOND_TABLES_RECORD_ID) | BIT(EFI_LUA_PAGE_RECORD_ID))) != 0;
 }
 
 bool storageIsBusy() {

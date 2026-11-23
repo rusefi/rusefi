@@ -51,24 +51,24 @@ float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, fl
  *  - a decision for the tables which are read outside of fuel and spark (ETB pedal map,
  *    boost, VVT, idle), which a fuel/spark cut does not stop
  *
- * Reporting: the function has no return value and callers do not stop at the first broken
- * axis. In firmware firmwareError() returns and keeps only the first message, so the user
- * sees one axis at a time. In unit tests and the simulator firmwareError() throws, see
- * EXPECT_FATAL_ERROR.
+ * Returns false after reporting the first broken pair. In unit tests and the simulator
+ * firmwareError() throws (see EXPECT_FATAL_ERROR).
  * This header is in util/ and must not depend on controllers/: the report goes through
  * error_handling.h, state about the tune belongs to the caller.
  *
  * see also: setLinearCurve
  */
 template<typename TValue, int TSize>
-void ensureArrayIsAscending(const char* msg, const TValue (&values)[TSize]) {
-	for (size_t i = 0; i < TSize - 1; i++) {
+bool ensureArrayIsAscending(const char* msg, const TValue (&values)[TSize]) {
+	for (int i = 0; i < TSize - 1; i++) {
 		float cur = values[i];
 		float next = values[i + 1];
-		if (next <= cur) {
+		if (!(cur < next) || !std::isfinite(cur) || !std::isfinite(next)) {
 			firmwareError(ObdCode::CUSTOM_ERR_AXIS_ORDER, "Broken axis (must be ascending!): %s %.3f should be below next value %.3f at index %d", msg, cur, next, i);
+			return false;
 		}
 	}
+	return true;
 }
 
 /**
@@ -78,11 +78,11 @@ void ensureArrayIsAscending(const char* msg, const TValue (&values)[TSize]) {
  * ensureArrayIsAscending() for an axis the engine reads regardless of optional settings.
  */
 template<typename TValue, int TSize>
-void ensureArrayIsAscendingOrDefault(const char* msg, const TValue (&values)[TSize]) {
+bool ensureArrayIsAscendingOrDefault(const char* msg, const TValue (&values)[TSize]) {
 	if (values[1] == 0) {
-		return; // looks like default empty array, do not check
+		return true; // looks like default empty array, do not check
 	}
-	ensureArrayIsAscending(msg, values);
+	return ensureArrayIsAscending(msg, values);
 }
 
 /** @brief	Binary search

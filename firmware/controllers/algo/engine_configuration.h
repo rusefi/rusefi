@@ -34,6 +34,7 @@ void setDefaultBasePins();
 void setDefaultSdCardParameters();
 
 void onBurnRequest();
+extern bool hasRememberedConfiguration;
 void incrementGlobalConfigurationVersion(const char * msg = "undef");
 
 void commonFrankensoAnalogInputs();

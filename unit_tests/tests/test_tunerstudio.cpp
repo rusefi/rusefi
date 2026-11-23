@@ -5,7 +5,9 @@
 #include "binary_mlg_logging.h"
 #include "mlg_field.h"
 #include "basic_configuration.h"
+#include "board_overrides.h"
 #include "flash_main.h"
+#include "second_tables.h"
 
 TEST(TunerStudioState, EngineStateLogField) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
@@ -281,6 +283,50 @@ TEST(TunerstudioCommands, burnFixRunsAfterCrc) {
 	EXPECT_EQ(actualCrc, expectedCrc);
 	EXPECT_FALSE(channel.settingsBurnPending);
 	EXPECT_EQ(engineConfiguration->mapExpAverageAlpha, 1);
+}
+
+TEST(TunerstudioCommands, SettingsBurnWithRejectedConfiguration) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	BufferTsChannel channel;
+	TunerStudio ts;
+	resetConfigurationWriteRequestCountForUnitTest();
+
+	// A false result must stop Burn even when the board validator does not throw.
+	const auto savedValidator = custom_board_validateConfig;
+	custom_board_validateConfig = +[](const engine_configuration_s*) { return false; };
+	ts.handleBurnCommand(&channel, TS_PAGE_SETTINGS);
+	EXPECT_TRUE(channel.settingsBurnPending);
+	EXPECT_EQ(0, getConfigurationWriteRequestCountForUnitTest());
+	ts.handleCrc32Check(&channel, TS_PAGE_SETTINGS, 0, sizeof(persistent_config_s));
+	custom_board_validateConfig = savedValidator;
+
+	EXPECT_FALSE(channel.settingsBurnPending);
+	EXPECT_EQ(0, getConfigurationWriteRequestCountForUnitTest());
+}
+
+TEST(TunerstudioCommands, ValidSettingsBurnQueuesWhileRunning) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	BufferTsChannel channel;
+	TunerStudio ts;
+	resetConfigurationWriteRequestCountForUnitTest();
+	engine->rpmCalculator.setRpmValue(1000);
+
+	ts.handleBurnCommand(&channel, TS_PAGE_SETTINGS);
+	EXPECT_EQ(0, getConfigurationWriteRequestCountForUnitTest());
+	ts.handleCrc32Check(&channel, TS_PAGE_SETTINGS, 0, sizeof(persistent_config_s));
+
+	EXPECT_TRUE(engine->rpmCalculator.isRunning());
+	EXPECT_EQ(1, getConfigurationWriteRequestCountForUnitTest());
+}
+
+TEST(TunerstudioCommands, SecondTablesBurnWithBrokenAxis) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	BufferTsChannel channel;
+	TunerStudio ts;
+	setArrayValues(secondTablesGetState()->secondIgnitionLoadBins, 0);
+
+	EXPECT_FATAL_ERROR(ts.handleBurnCommand(&channel, TS_PAGE_SECOND_TABLES));
+	EXPECT_EQ(0u, channel.writeIdx);
 }
 
 TEST(TunerstudioCommands, UnassignOutputsImmediateBurnPersistenceBehavior) {

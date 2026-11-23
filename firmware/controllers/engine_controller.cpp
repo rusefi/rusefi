@@ -532,34 +532,50 @@ static bool validateGdi() {
 	return true;
 }
 
+struct AxisOrderValidation {
+	bool valid = true;
+
+	template<typename T, int N>
+	void check(const char* name, const T (&axis)[N]) {
+		valid = valid && ensureArrayIsAscending(name, axis);
+	}
+
+	template<typename T, int N>
+	void checkOrDefault(const char* name, const T (&axis)[N]) {
+		valid = valid && ensureArrayIsAscendingOrDefault(name, axis);
+	}
+};
+
 /**
- * Read-only check of the tune, on start-up and on every burn. It never changes the
- * configuration: repairs belong in applyDefaultsOrFixAfterBurn().
- * @param previousConfiguration nullptr on start-up, the currently running configuration on burn
- * @return false if there's an obvious problem with the loaded configuration. Only start-up
- * (runRusEfi()) uses the result, to skip initRealHardwareEngineController(). The burn path
- * ignores it: the tune is already live in RAM and is written to flash regardless, so a check
- * which must stop the engine has to raise an error which does that itself.
+ * Validate the current tune at start-up and before a TunerStudio Burn. The
+ * checks do not modify the tune; repairs belong in applyDefaultsOrFixAfterBurn().
  *
- * Two kinds of checks live here, and they report differently:
- *  - scalar settings: criticalError() and return false, the remaining checks do not run
- *  - table axes, [tag:table_axis_order]: ensureArrayIsAscending() raises the critical error
- *    itself and validation carries on, so the result stays true with a broken axis. Guard each
- *    axis by the setting which puts its table in use (see the MAF curve), so that leftovers
- *    of an unused feature do not stop the ECU.
+ * @param previousConfiguration nullptr at start-up, otherwise the last applied configuration.
+ * @param applyFixes Run the defaults/repair step. Extra-page Burn only validates, so it
+ * does not change the main settings page before the client's CRC check.
+ * @return false if any check rejects the tune. Start-up then skips engine-controller
+ * initialization; Burn neither applies hardware changes nor queues the save.
  *
- * Every problem found here today is a critical error, latched until reboot: a burn which fixes
- * the tune does not clear it. Nothing here is level-triggered; a check which should come and go
- * with the tune needs a producer in refreshConfigErrorState() which this function sets and
- * clears on every run.
+ * Invalid scalar settings report a critical error and return immediately. Table
+ * checks report the first broken axis and also reject the tune [tag:table_axis_order].
+ * When a table is only used with a specific setting, guard its checks with that
+ * setting (see the MAF curve) so unused data does not block the ECU.
+ *
+ * The result describes the current tune, not the latched fault state. A corrected
+ * tune can pass and be saved; after a critical fault, reboot to resume engine control.
  */
-static bool validateConfig(const engine_configuration_s* previousConfiguration) {
+static bool validateConfig(const engine_configuration_s* previousConfiguration, bool applyFixes = true) {
+#if !EFI_ENGINE_CONTROL
+  UNUSED(applyFixes);
+#endif
   if (!get_board_override_result(custom_board_validateConfig, true, previousConfiguration)) {
     return false;
   }
 #if defined(HW_HELLEN_UAEFI)
   // todo: make this board-specific validation callback!
-  pickEtbOrStepper();
+  if (!pickEtbOrStepper()) {
+    return false;
+  }
 #endif
   if (!validateGdi()) {
     return false;
@@ -588,8 +604,9 @@ static bool validateConfig(const engine_configuration_s* previousConfiguration) 
 #endif // EFI_SOFTWARE_KNOCK
 
 #if EFI_ENGINE_CONTROL
-  // the only step which is allowed to modify configuration - everything else in this method is read-only validation
-  applyDefaultsOrFixAfterBurn(previousConfiguration);
+  if (applyFixes) {
+    applyDefaultsOrFixAfterBurn(previousConfiguration);
+  }
 	if (!(engineConfiguration->injector.flow > 0) || !std::isfinite(engineConfiguration->injector.flow)) {
 		criticalError("Primary injector flow must be positive");
 		return false;
@@ -618,6 +635,7 @@ static bool validateConfig(const engine_configuration_s* previousConfiguration) 
     int maxAllowedDwell = getMc33810maxDwellTimer(engineConfiguration->mc33810maxDwellTimer);
         if (maxConfiguredCorr * maxConfiguredDwell > maxAllowedDwell) {
             criticalError("Dwell=%.2f/corr=%.2f while 33810 limit %d", maxConfiguredDwell, maxConfiguredCorr, maxAllowedDwell);
+            return false;
         }
 
 #endif // EFI_PROD_CODE && (BOARD_MC33810_COUNT > 0)
@@ -627,103 +645,105 @@ static bool validateConfig(const engine_configuration_s* previousConfiguration) 
 		return false;
 	}
 
+	// [tag:table_axis_order] Report the first problem and refuse the tune on boot or Burn.
+	AxisOrderValidation axes;
 #if EFI_ENGINE_CONTROL
-	ensureArrayIsAscending("Injector deadtime vBATT", engineConfiguration->injector.battLagCorrBattBins);
-	ensureArrayIsAscending("Injector deadtime Pressure", engineConfiguration->injector.battLagCorrPressBins);
+	axes.check("Injector deadtime vBATT", engineConfiguration->injector.battLagCorrBattBins);
+	axes.check("Injector deadtime Pressure", engineConfiguration->injector.battLagCorrPressBins);
 
 	// Fueling
 	{
-		ensureArrayIsAscending("VE load", config->veLoadBins);
-		ensureArrayIsAscending("VE RPM", config->veRpmBins);
+		axes.check("VE load", config->veLoadBins);
+		axes.check("VE RPM", config->veRpmBins);
 
-  		ensureArrayIsAscending("Second VE load", secondTablesGetState()->secondVeLoadBins);
-  		ensureArrayIsAscending("Second VE RPM", secondTablesGetState()->secondVeRpmBins);
+		axes.check("Second VE load", secondTablesGetState()->secondVeLoadBins);
+		axes.check("Second VE RPM", secondTablesGetState()->secondVeRpmBins);
 
-		ensureArrayIsAscending("Lambda/AFR load", config->lambdaLoadBins);
-		ensureArrayIsAscending("Lambda/AFR RPM", config->lambdaRpmBins);
+		axes.check("Lambda/AFR load", config->lambdaLoadBins);
+		axes.check("Lambda/AFR RPM", config->lambdaRpmBins);
 
-		ensureArrayIsAscending("Fuel CLT mult", config->cltFuelCorrBins);
-		ensureArrayIsAscending("Fuel IAT mult", config->iatFuelCorrBins);
+		axes.check("Fuel CLT mult", config->cltFuelCorrBins);
+		axes.check("Fuel IAT mult", config->iatFuelCorrBins);
 
-		ensureArrayIsAscendingOrDefault("Boost CLT mult", config->cltBoostCorrBins);
-		ensureArrayIsAscendingOrDefault("Boost IAT mult", config->iatBoostCorrBins);
+		axes.checkOrDefault("Boost CLT mult", config->cltBoostCorrBins);
+		axes.checkOrDefault("Boost IAT mult", config->iatBoostCorrBins);
 
-		ensureArrayIsAscending("Injection phase load", config->injPhaseLoadBins);
-		ensureArrayIsAscending("Injection phase RPM", config->injPhaseRpmBins);
+		axes.check("Injection phase load", config->injPhaseLoadBins);
+		axes.check("Injection phase RPM", config->injPhaseRpmBins);
 
-		ensureArrayIsAscendingOrDefault("Fuel Level Sensor", config->fuelLevelBins);
+		axes.checkOrDefault("Fuel Level Sensor", config->fuelLevelBins);
 
-		ensureArrayIsAscendingOrDefault("STFT Rpm", config->fuelTrimRpmBins);
-		ensureArrayIsAscendingOrDefault("STFT Load", config->fuelTrimLoadBins);
+		axes.checkOrDefault("STFT Rpm", config->fuelTrimRpmBins);
+		axes.checkOrDefault("STFT Load", config->fuelTrimLoadBins);
 
-		ensureArrayIsAscendingOrDefault("knock rpm", config->maxKnockRetardRpmBins);
-		ensureArrayIsAscendingOrDefault("knock tps", config->maxKnockRetardLoadBins);
+		axes.checkOrDefault("knock rpm", config->maxKnockRetardRpmBins);
+		axes.checkOrDefault("knock tps", config->maxKnockRetardLoadBins);
 
-		ensureArrayIsAscendingOrDefault("TC slip", engineConfiguration->tractionControlSlipBins);
-		ensureArrayIsAscendingOrDefault("TC speed", engineConfiguration->tractionControlSpeedBins);
+		axes.checkOrDefault("TC slip", engineConfiguration->tractionControlSlipBins);
+		axes.checkOrDefault("TC speed", engineConfiguration->tractionControlSpeedBins);
 
-		ensureArrayIsAscending("TPS/TPS AE from", config->tpsTpsAccelFromRpmBins);
-		ensureArrayIsAscending("TPS/TPS AE to", config->tpsTpsAccelToRpmBins);
+		axes.check("TPS/TPS AE from", config->tpsTpsAccelFromRpmBins);
+		axes.check("TPS/TPS AE to", config->tpsTpsAccelToRpmBins);
 
-		ensureArrayIsAscendingOrDefault("TPS TPS RPM correction", config->tpsTspCorrValuesBins);
+		axes.checkOrDefault("TPS TPS RPM correction", config->tpsTspCorrValuesBins);
 
-		ensureArrayIsAscendingOrDefault("Staging Load", config->injectorStagingLoadBins);
-		ensureArrayIsAscendingOrDefault("Staging RPM", config->injectorStagingRpmBins);
+		axes.checkOrDefault("Staging Load", config->injectorStagingLoadBins);
+		axes.checkOrDefault("Staging RPM", config->injectorStagingRpmBins);
 	}
 
 	// Ignition
 	{
-		ensureArrayIsAscending("Dwell RPM", config->sparkDwellRpmBins);
+		axes.check("Dwell RPM", config->sparkDwellRpmBins);
 
-		ensureArrayIsAscending("Ignition load", config->ignitionLoadBins);
-		ensureArrayIsAscending("Ignition RPM", config->ignitionRpmBins);
+		axes.check("Ignition load", config->ignitionLoadBins);
+		axes.check("Ignition RPM", config->ignitionRpmBins);
 
-		ensureArrayIsAscending("Second Ignition load", secondTablesGetState()->secondIgnitionLoadBins);
-		ensureArrayIsAscending("Second Ignition RPM", secondTablesGetState()->secondIgnitionRpmBins);
-		ensureArrayIsAscendingOrDefault("Ign Trim Rpm", config->ignTrimRpmBins);
-   		ensureArrayIsAscendingOrDefault("Ign Trim Load", config->ignTrimLoadBins);
+		axes.check("Second Ignition load", secondTablesGetState()->secondIgnitionLoadBins);
+		axes.check("Second Ignition RPM", secondTablesGetState()->secondIgnitionRpmBins);
+		axes.checkOrDefault("Ign Trim Rpm", config->ignTrimRpmBins);
+		axes.checkOrDefault("Ign Trim Load", config->ignTrimLoadBins);
 
-		ensureArrayIsAscending("Ignition CLT corr CLT", config->ignitionCltCorrTempBins);
-  		ensureArrayIsAscending("Ignition CLT corr Load", config->ignitionCltCorrLoadBins);
+		axes.check("Ignition CLT corr CLT", config->ignitionCltCorrTempBins);
+		axes.check("Ignition CLT corr Load", config->ignitionCltCorrLoadBins);
 
-		ensureArrayIsAscending("Ignition IAT corr IAT", config->ignitionIatCorrTempBins);
-		ensureArrayIsAscending("Ignition IAT corr Load", config->ignitionIatCorrLoadBins);
+		axes.check("Ignition IAT corr IAT", config->ignitionIatCorrTempBins);
+		axes.check("Ignition IAT corr Load", config->ignitionIatCorrLoadBins);
 	}
 
-	ensureArrayIsAscendingOrDefault("Map estimate TPS", config->mapEstimateTpsBins);
-	ensureArrayIsAscendingOrDefault("Map estimate RPM", config->mapEstimateRpmBins);
+	axes.checkOrDefault("Map estimate TPS", config->mapEstimateTpsBins);
+	axes.checkOrDefault("Map estimate RPM", config->mapEstimateRpmBins);
 #endif // EFI_ENGINE_CONTROL
 
-	ensureArrayIsAscendingOrDefault("Script Curve 1", config->scriptCurve1Bins);
-	ensureArrayIsAscendingOrDefault("Script Curve 2", config->scriptCurve2Bins);
-	ensureArrayIsAscendingOrDefault("Script Curve 3", config->scriptCurve3Bins);
-	ensureArrayIsAscendingOrDefault("Script Curve 4", config->scriptCurve4Bins);
-	ensureArrayIsAscendingOrDefault("Script Curve 5", config->scriptCurve5Bins);
-	ensureArrayIsAscendingOrDefault("Script Curve 6", config->scriptCurve6Bins);
+	axes.checkOrDefault("Script Curve 1", config->scriptCurve1Bins);
+	axes.checkOrDefault("Script Curve 2", config->scriptCurve2Bins);
+	axes.checkOrDefault("Script Curve 3", config->scriptCurve3Bins);
+	axes.checkOrDefault("Script Curve 4", config->scriptCurve4Bins);
+	axes.checkOrDefault("Script Curve 5", config->scriptCurve5Bins);
+	axes.checkOrDefault("Script Curve 6", config->scriptCurve6Bins);
 
-// todo: huh? why does this not work on CI?	ensureArrayIsAscendingOrDefault("Dwell Correction Voltage", engineConfiguration->dwellVoltageCorrVoltBins);
+// todo: huh? why does this not work on CI?	axes.checkOrDefault("Dwell Correction Voltage", engineConfiguration->dwellVoltageCorrVoltBins);
 
 #if EFI_ENGINE_CONTROL
 	// Both analog MAF inputs use this curve, regardless of the fuel algorithm.
 	if (isAdcChannelValid(engineConfiguration->mafAdcChannel) || isAdcChannelValid(engineConfiguration->maf2AdcChannel)) {
-		ensureArrayIsAscending("MAF transfer function", config->mafDecodingBins);
+		axes.check("MAF transfer function", config->mafDecodingBins);
 	}
 
 	// Cranking tables
-	ensureArrayIsAscending("Cranking fuel mult", config->crankingFuelBins);
-	ensureArrayIsAscending("Cranking duration", config->crankingCycleBins);
-	ensureArrayIsAscending("Cranking Fuel CLT", config->crankingCycleFuelCltBins);
-	ensureArrayIsAscending("Cranking TPS", config->crankingTpsBins);
+	axes.check("Cranking fuel mult", config->crankingFuelBins);
+	axes.check("Cranking duration", config->crankingCycleBins);
+	axes.check("Cranking Fuel CLT", config->crankingCycleFuelCltBins);
+	axes.check("Cranking TPS", config->crankingTpsBins);
 
 	// Idle tables
-	ensureArrayIsAscending("Idle target RPM", config->cltIdleRpmBins);
-	ensureArrayIsAscending("Idle warmup mult CLT", config->cltIdleCorrBins);
-	ensureArrayIsAscending("Idle warmup mult RPM", config->rpmIdleCorrBins);
+	axes.check("Idle target RPM", config->cltIdleRpmBins);
+	axes.check("Idle warmup mult CLT", config->cltIdleCorrBins);
+	axes.check("Idle warmup mult RPM", config->rpmIdleCorrBins);
 #endif // EFI_ENGINE_CONTROL
-	ensureArrayIsAscendingOrDefault("Idle coasting RPM", config->iacCoastingRpmBins);
-	ensureArrayIsAscendingOrDefault("Idle VE RPM", config->idleVeRpmBins);
-	ensureArrayIsAscendingOrDefault("Idle VE Load", config->idleVeLoadBins);
-	ensureArrayIsAscendingOrDefault("Idle timing", config->idleAdvanceBins);
+	axes.checkOrDefault("Idle coasting RPM", config->iacCoastingRpmBins);
+	axes.checkOrDefault("Idle VE RPM", config->idleVeRpmBins);
+	axes.checkOrDefault("Idle VE Load", config->idleVeLoadBins);
+	axes.checkOrDefault("Idle timing", config->idleAdvanceBins);
 
 	for (size_t index = 0; index < efi::size(engineConfiguration->vrThreshold); index++) {
 		auto& cfg = engineConfiguration->vrThreshold[index];
@@ -731,61 +751,61 @@ static bool validateConfig(const engine_configuration_s* previousConfiguration) 
 		if (cfg.pin == Gpio::Unassigned) {
 			continue;
 		}
-		ensureArrayIsAscending("VR threshold", cfg.rpmBins);
+		axes.check("VR threshold", cfg.rpmBins);
 	}
 
 #if EFI_BOOST_CONTROL
 	// Boost
-	ensureArrayIsAscending("Boost control Load [open loop]", config->boostOpenLoopLoadBins);
-	ensureArrayIsAscending("Boost control Load [closed loop]", config->boostClosedLoopLoadBins);
-	ensureArrayIsAscending("Boost control RPM [open+closed loop]", config->boostRpmBins);
+	axes.check("Boost control Load [open loop]", config->boostOpenLoopLoadBins);
+	axes.check("Boost control Load [closed loop]", config->boostClosedLoopLoadBins);
+	axes.check("Boost control RPM [open+closed loop]", config->boostRpmBins);
 #endif // EFI_BOOST_CONTROL
 
 #if EFI_ANTILAG_SYSTEM
 	// ALS
-	ensureArrayIsAscendingOrDefault("ign ALS TPS", config->alsIgnRetardLoadBins);
-	ensureArrayIsAscendingOrDefault("ign ALS RPM", config->alsIgnRetardrpmBins);
-	ensureArrayIsAscendingOrDefault("fuel ALS TPS", config->alsFuelAdjustmentLoadBins);
-	ensureArrayIsAscendingOrDefault("fuel ALS RPM", config->alsFuelAdjustmentrpmBins);
+	axes.checkOrDefault("ign ALS TPS", config->alsIgnRetardLoadBins);
+	axes.checkOrDefault("ign ALS RPM", config->alsIgnRetardrpmBins);
+	axes.checkOrDefault("fuel ALS TPS", config->alsFuelAdjustmentLoadBins);
+	axes.checkOrDefault("fuel ALS RPM", config->alsFuelAdjustmentrpmBins);
 #endif // EFI_ANTILAG_SYSTEM
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	// ETB
-	ensureArrayIsAscending("Pedal map pedal", config->pedalToTpsPedalBins);
-	ensureArrayIsAscending("Pedal map RPM", config->pedalToTpsRpmBins);
+	axes.check("Pedal map pedal", config->pedalToTpsPedalBins);
+	axes.check("Pedal map RPM", config->pedalToTpsRpmBins);
 #endif // EFI_ELECTRONIC_THROTTLE_BODY
 
 	if (isGdiEngine()) {
-		ensureArrayIsAscending("HPFP compensation", config->hpfpCompensationRpmBins);
-		ensureArrayIsAscending("HPFP deadtime", config->hpfpDeadtimeVoltsBins);
-		ensureArrayIsAscending("HPFP lobe profile", config->hpfpLobeProfileQuantityBins);
-		ensureArrayIsAscending("HPFP target rpm", config->hpfpTargetRpmBins);
-		ensureArrayIsAscending("HPFP target load", config->hpfpTargetLoadBins);
+		axes.check("HPFP compensation", config->hpfpCompensationRpmBins);
+		axes.check("HPFP deadtime", config->hpfpDeadtimeVoltsBins);
+		axes.check("HPFP lobe profile", config->hpfpLobeProfileQuantityBins);
+		axes.check("HPFP target rpm", config->hpfpTargetRpmBins);
+		axes.check("HPFP target load", config->hpfpTargetLoadBins);
 
-		ensureArrayIsAscending("HPFP fuel mass compensation fuel pressure", config->hpfpFuelMassCompensationFuelPressure);
-		ensureArrayIsAscending("HPFP fuel mass compensation fuel mass", config->hpfpFuelMassCompensationFuelMass);
+		axes.check("HPFP fuel mass compensation fuel pressure", config->hpfpFuelMassCompensationFuelPressure);
+		axes.check("HPFP fuel mass compensation fuel mass", config->hpfpFuelMassCompensationFuelMass);
 
 	}
 
 	// VVT
 	if (isBrainPinValid(engineConfiguration->camInputs[0])) {
-		ensureArrayIsAscending("VVT intake load", config->vvtTable1LoadBins);
-		ensureArrayIsAscending("VVT intake RPM", config->vvtTable1RpmBins);
+		axes.check("VVT intake load", config->vvtTable1LoadBins);
+		axes.check("VVT intake RPM", config->vvtTable1RpmBins);
 	}
 
 #if CAM_INPUTS_COUNT != 1
 	if (isBrainPinValid(engineConfiguration->camInputs[1])) {
-		ensureArrayIsAscending("VVT exhaust load", config->vvtTable2LoadBins);
-		ensureArrayIsAscending("VVT exhaust RPM", config->vvtTable2RpmBins);
+		axes.check("VVT exhaust load", config->vvtTable2LoadBins);
+		axes.check("VVT exhaust RPM", config->vvtTable2RpmBins);
 	}
 #endif
 
 	if (engineConfiguration->enableOilPressureProtect) {
-		ensureArrayIsAscending("Oil pressure protection", config->minimumOilPressureBins);
+		axes.check("Oil pressure protection", config->minimumOilPressureBins);
 	}
 
 
-	return true;
+	return axes.valid;
 }
 
 bool validateConfigOnStartUpOrBurn() {
@@ -797,6 +817,10 @@ bool validateConfigOnStartUpOrBurn(bool isRunningOnBurn) {
 	ConfigurationWizard::onConfigOnStartUpOrBurn(isRunningOnBurn);
 	// burn: activeConfiguration still holds the configuration the ECU is currently running on
 	return validateConfig(&activeConfiguration);
+}
+
+bool validateConfigForSave() {
+	return validateConfig(&activeConfiguration, false);
 }
 
 #if !EFI_UNIT_TEST
