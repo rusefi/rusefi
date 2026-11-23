@@ -173,7 +173,7 @@ class HistogramTest {
         assertEquals(histogram.cell(0, 0).mean(), detail.mean, 1e-12);
 
         HistogramTable table = new HistogramTable();
-        table.set(histogram, HistogramSettings.Mode.MEAN, HistogramTable.Mixture.LAMBDA, 0, false,
+        table.set(histogram, HistogramSettings.Mode.MEAN, HistogramTable.Mixture.LAMBDA, HistogramSettings.ThinLimit.seconds(0), false,
                 new HistogramColors(new com.rusefi.core.preferences.storage.Node()));
         String spread = HistogramCellPanel.spread(detail, 1, table);
         assertTrue(spread.startsWith("<html>90% of readings between 0.91 and 1.00<br>"), spread);

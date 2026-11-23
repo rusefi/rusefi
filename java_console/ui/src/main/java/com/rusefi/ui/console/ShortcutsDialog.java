@@ -120,6 +120,7 @@ final class ShortcutsDialog extends JDialog {
             "0                  Whole log.",
             "A / B              Put measurement cursor A or B at the cursor (turns Measure on).",
             "Esc                Clear A and B; pressed again, release the highlighted trace.",
+            "                   After Show on timeline: back to the histogram or scatter plot first.",
             "The cursor set by keys stays until the mouse moves over the plots.",
             "Drag a signal or legend item onto a plot or onto + Add plot; drag a legend item back "
                     + "onto the list to remove it. Drag the gap between plots to resize them; "
@@ -133,6 +134,7 @@ final class ShortcutsDialog extends JDialog {
             "Shift+arrows       Extend the selection to a block; Shift+click does the same.",
             "Enter              Show the selected cell on the timeline (as does a double-click):",
             "                   its stays are shaded and Previous / Next step through them.",
+            "                   On the timeline, Esc goes back to the histogram (or scatter plot).",
             "Ctrl+C             Copy the selected cells (or the whole table), tab-separated, for a",
             "                   TunerStudio table; Ctrl+Shift+C copies them with their axis values.",
             "Ctrl+A             Select all cells.",
