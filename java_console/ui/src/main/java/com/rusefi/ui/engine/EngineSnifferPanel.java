@@ -28,6 +28,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import javax.swing.text.JTextComponent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -101,6 +103,8 @@ public class EngineSnifferPanel {
     private final UpDownImage crank = createImage(Integration.PROTOCOL_CRANK1);
     private final ChartScrollControl scrollControl;
     private AnyCommand command;
+
+    static final String PAUSE_ACTION = "snifferPause";
 
     private boolean isPaused;
     private final Node config;
@@ -226,6 +230,35 @@ public class EngineSnifferPanel {
         });
 
         mainPanel.add(chartPanel, BorderLayout.CENTER);
+        bindSpaceToPause(pauseButton);
+    }
+
+    /**
+     * Space pauses and resumes while this tab is showing: one key is easy to hit with one hand while
+     * cranking. Alt+P still works. Listed in ShortcutsDialog.
+     */
+    private void bindSpaceToPause(JButton pauseButton) {
+        KeyStroke space = KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0);
+        mainPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(space, PAUSE_ACTION);
+        mainPanel.getActionMap().put(PAUSE_ACTION, new AbstractAction() {
+            @Override
+            public boolean isEnabled() {
+                // the command box types the space
+                return !(KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner() instanceof JTextComponent);
+            }
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pauseButton.doClick();
+            }
+        });
+        // a focused button would take Space itself, e.g. Clear wiping the capture
+        for (Component c : UiUtils.getAllComponents(mainPanel)) {
+            if (c instanceof AbstractButton) {
+                ((AbstractButton) c).getInputMap(JComponent.WHEN_FOCUSED).put(space, "none");
+            }
+        }
+        pauseButton.setToolTipText("Pause / resume (Space or Alt+P)");
     }
 
     private void setPaused(JButton pauseButton, boolean isPaused) {

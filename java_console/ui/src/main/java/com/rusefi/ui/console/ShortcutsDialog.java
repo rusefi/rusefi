@@ -203,6 +203,7 @@ final class ShortcutsDialog extends JDialog {
             "Left / Right  Previous / next captured chart page where paging is available.",
             "Focused controls such as tables or text fields can use these keys themselves.",
             "Alt+P pauses Engine Sniffer or message panels.",
+            "Space    Pause / resume Engine Sniffer while its tab is shown (not while typing a command).",
             "On panels with the corresponding buttons: Alt+C clears "
                     + "and Alt+S saves an image. These actions depend on the active panel.",
             "",
