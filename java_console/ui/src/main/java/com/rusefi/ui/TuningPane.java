@@ -313,6 +313,7 @@ public class TuningPane {
         northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
         TuningStyle.styleBar(northPanel);
         northPanel.setBorder(BorderFactory.createCompoundBorder(northPanel.getBorder(),
+            // [tag:tune_controls_position] the 4 px left inset is part of TuningToolbarWidget.CONTROLS_LEFT
             BorderFactory.createEmptyBorder(0, 4, 6, 4)));
         northPanel.add(withHelpChoices(toolbar.getPanel(), config, workspace::rebuildViews));
         indicatorStrip = new IndicatorStrip(() -> uiContext.iniFileState.getIniFileModel(),
@@ -561,6 +562,11 @@ public class TuningPane {
 
     public Action getSaveTuneAsAction() {
         return toolbar.getSaveTuneAsAction();
+    }
+
+    /** Burn / Discard / Undo / Redo bound to this tune, for screens that open its settings windows. */
+    public JComponent createMirrorTuneControls() {
+        return toolbar.createMirrorControls();
     }
 
     public void setErrorHandler(Consumer<String> errorHandler) {
