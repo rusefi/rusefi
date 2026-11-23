@@ -543,6 +543,7 @@ console live data tab is broken #8402
                         tp.requestExit(mainFrame, exit,
                             deviceSessionManager.getState() == SessionState.FLASHING));
                 mainFrame.setTuneActions(tp.getLoadTuneAction(), tp.getSaveTuneAction(), tp.getSaveTuneAsAction());
+                mainFrame.setRestorePointActions(tp.getCreateRestorePointAction(), tp.getRestorePointsAction());
                 if (gaugesPanel != null) {
                     gaugesPanel.setTuneControls(tp.createMirrorTuneControls());
                 }
@@ -582,6 +583,11 @@ console live data tab is broken #8402
                 lazyTuneAction(LoadTuneHelper.LOAD_TUNE_TEXT, buildTuning, () -> tuningHolder[0].getLoadTuneAction()),
                 lazyTuneAction(LoadTuneHelper.SAVE_TUNE_TEXT, buildTuning, () -> tuningHolder[0].getSaveTuneAction()),
                 lazyTuneAction(LoadTuneHelper.SAVE_TUNE_AS_TEXT, buildTuning, () -> tuningHolder[0].getSaveTuneAsAction()));
+            mainFrame.setRestorePointActions(
+                lazyTuneAction(LoadTuneHelper.CREATE_RESTORE_POINT_TEXT, buildTuning,
+                    () -> tuningHolder[0].getCreateRestorePointAction()),
+                lazyTuneAction(LoadTuneHelper.RESTORE_POINTS_TEXT, buildTuning,
+                    () -> tuningHolder[0].getRestorePointsAction()));
 
             // Ctrl+K: search the Tuning pages from any tab and open one floating over it, without
             // switching to Tuning (built in the background when needed).

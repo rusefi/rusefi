@@ -38,6 +38,8 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import com.rusefi.util.RestorePointStore;
+
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
@@ -58,6 +60,20 @@ public class CalibrationsHelper {
      *  tune after a manual OpenBLT flash, where the board is already in the bootloader before flashing
      *  (no live ECU to read pre-flash like the auto path does). [tag:better_ux_for_flashing] */
     private static volatile Optional<CalibrationsInfo> lastEcuCalibrations = Optional.empty();
+
+    /**
+     * [tag:restore_points] The tune read before a firmware update, every page, kept as a restore point alongside the
+     * update's own backup. A failure is logged and the update goes on.
+     */
+    static void saveRestorePoint(CalibrationsInfo calibrations, UpdateOperationCallbacks callbacks) {
+        try {
+            RestorePointStore.shared()
+                .saveQuietly(calibrations.generateMsq(), RestorePointStore.Reason.BEFORE_FIRMWARE_UPDATE, null)
+                .ifPresent(point -> callbacks.logLine("Restore point saved: " + point.file.getFileName()));
+        } catch (RuntimeException e) {
+            log.error("Failed to make a restore point before the update: " + e, e);
+        }
+    }
 
     public static void discardLastEcuCalibrations() {
         lastEcuCalibrations = Optional.empty();
@@ -290,6 +306,7 @@ public class CalibrationsHelper {
             }
 
             if (calibrations.isPresent()) {
+                saveRestorePoint(calibrations.get(), callbacks);
                 break;
             }
 

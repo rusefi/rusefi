@@ -274,6 +274,8 @@ public class MainFrame {
     private JMenuItem loadTuneItem;
     private JMenuItem saveTuneItem;
     private JMenuItem saveTuneAsItem;
+    private JMenuItem createRestorePointItem;
+    private JMenuItem restorePointsItem;
     private JMenuItem openLogItem;
     /**
      * user experience overview at Autoupdate.java
@@ -409,6 +411,18 @@ public class MainFrame {
         saveTuneAsItem.setMnemonic(KeyEvent.VK_A);
         saveTuneAsItem.setEnabled(false);
         fileMenu.add(saveTuneAsItem);
+
+        fileMenu.addSeparator();
+
+        // [tag:restore_points]
+        createRestorePointItem = new JMenuItem(LoadTuneHelper.CREATE_RESTORE_POINT_TEXT);
+        createRestorePointItem.setMnemonic(KeyEvent.VK_C);
+        createRestorePointItem.setEnabled(false);
+        fileMenu.add(createRestorePointItem);
+        restorePointsItem = new JMenuItem(LoadTuneHelper.RESTORE_POINTS_TEXT);
+        restorePointsItem.setMnemonic(KeyEvent.VK_R);
+        restorePointsItem.setEnabled(false);
+        fileMenu.add(restorePointsItem);
 
         fileMenu.addSeparator();
 
@@ -1242,6 +1256,23 @@ public class MainFrame {
         refreshFirmwareUpdateExclusion();
     }
 
+    /**
+     * File › Create Restore Point… and Restore Points…; disabled like the tune actions while firmware is being
+     * updated. [tag:restore_points]
+     */
+    public void setRestorePointActions(Action createAction, Action listAction) {
+        createRestorePointItem.setAction(createAction);
+        createRestorePointItem.setText(LoadTuneHelper.CREATE_RESTORE_POINT_TEXT);
+        createRestorePointItem.setMnemonic(KeyEvent.VK_C);
+        restorePointsItem.setAction(listAction);
+        restorePointsItem.setText(LoadTuneHelper.RESTORE_POINTS_TEXT);
+        restorePointsItem.setMnemonic(KeyEvent.VK_R);
+        restorePointsItem.setToolTipText("Go back to a tune kept before a Burn, Load Tune or firmware update");
+        createAction.addPropertyChangeListener(e -> refreshActionsAfterActionStateChange(e.getPropertyName()));
+        listAction.addPropertyChangeListener(e -> refreshActionsAfterActionStateChange(e.getPropertyName()));
+        refreshFirmwareUpdateExclusion();
+    }
+
     static Icon loadMenuIcon(String name) {
         ImageIcon icon = TuningIcons.load(name);
         if (icon == null) {
@@ -1283,6 +1314,12 @@ public class MainFrame {
         loadTuneItem.setEnabled(applicationActionsAllowed && loadAction != null && loadAction.isEnabled());
         saveTuneItem.setEnabled(applicationActionsAllowed && saveAction != null && saveAction.isEnabled());
         saveTuneAsItem.setEnabled(applicationActionsAllowed && saveAsAction != null && saveAsAction.isEnabled());
+        Action restorePointAction = createRestorePointItem.getAction();
+        createRestorePointItem.setEnabled(applicationActionsAllowed && restorePointAction != null
+            && restorePointAction.isEnabled());
+        Action restorePointsAction = restorePointsItem.getAction();
+        restorePointsItem.setEnabled(applicationActionsAllowed && restorePointsAction != null
+            && restorePointsAction.isEnabled());
         updateSoftwareItem.setEnabled(applicationActionsAllowed && updateSoftwareAvailable);
         // DevicePane disables these tabs while flashing; a tab opened now would miss that
         toolsMenu.setEnabled(applicationActionsAllowed);

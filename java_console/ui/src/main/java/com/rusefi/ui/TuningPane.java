@@ -19,6 +19,8 @@ import com.rusefi.ui.widgets.tune.CalibrationDialogWidget;
 import com.rusefi.ui.widgets.tune.CalibrationPanelWorkspace;
 import com.rusefi.ui.widgets.tune.IndicatorStrip;
 import com.rusefi.ui.widgets.tune.PinoutLink;
+import com.rusefi.ui.widgets.tune.RestorePointsWindow;
+import com.rusefi.ui.basic.LoadTuneHelper;
 import com.rusefi.ui.widgets.tune.MainMenuTreeWidget;
 import com.rusefi.ui.widgets.tune.SettingHelpCard;
 import com.rusefi.ui.widgets.tune.TuningStyle;
@@ -55,6 +57,13 @@ public class TuningPane {
     private final UIContext uiContext;
     private final MainMenuTreeWidget left;
     private final TuningToolbarWidget toolbar;
+    private RestorePointsWindow restorePointsWindow;
+    private final Action restorePointsAction = new AbstractAction(LoadTuneHelper.RESTORE_POINTS_TEXT) {
+        @Override
+        public void actionPerformed(java.awt.event.ActionEvent e) {
+            openRestorePoints();
+        }
+    };
     private final TuneOperationStatusPanel loadStatusCard;
     private final CalibrationDialogWidget right;
     private final CalibrationPanelWorkspace workspace;
@@ -130,6 +139,9 @@ public class TuningPane {
                 showLoadResult(failed);
             }
         );
+
+        // [tag:restore_points] the Burn note's link
+        toolbar.setShowRestorePoints(this::openRestorePoints);
 
         if (config != null) {
             gaugeStrip = new TextGaugeStrip(uiContext, config.getChild("gauge_strip"));
@@ -562,6 +574,59 @@ public class TuningPane {
 
     public Action getSaveTuneAsAction() {
         return toolbar.getSaveTuneAsAction();
+    }
+
+    public Action getCreateRestorePointAction() {
+        return toolbar.getCreateRestorePointAction();
+    }
+
+    /** File › Restore Points… [tag:restore_points] */
+    public Action getRestorePointsAction() {
+        return restorePointsAction;
+    }
+
+    /** Opens the Restore Points window, or brings the open one to the front. */
+    void openRestorePoints() {
+        if (restorePointsWindow != null && restorePointsWindow.isShowing()) {
+            restorePointsWindow.show();
+            return;
+        }
+        Window owner = SwingUtilities.getWindowAncestor(content);
+        if (owner == null) {
+            owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+        }
+        restorePointsWindow = new RestorePointsWindow(owner, toolbar.getRestorePointStore(),
+            () -> uiContext.iniFileState.getIniFileModel(), this::tuneToEdit, this::restoreTune,
+            toolbar.getCreateRestorePointAction());
+        restorePointsWindow.show();
+    }
+
+    /** The tune an edit applies to, as {@link #applyEdit} picks it. */
+    private ConfigurationImage tuneToEdit() {
+        ConfigurationImage current = sessionImage.get();
+        if (current == null) {
+            BinaryProtocol bp = uiContext.getBinaryProtocol();
+            current = bp != null ? bp.getControllerConfiguration() : null;
+        }
+        return current;
+    }
+
+    /** Puts a restore point's tune in place as one edit: undoable, unburned. */
+    boolean restoreTune(ConfigurationImage restored) {
+        boolean applied = applyEdit(image -> System.arraycopy(restored.getContent(), 0, image.getContent(), 0,
+            Math.min(restored.getSize(), image.getSize())));
+        if (applied) {
+            toolbar.showNote("Restore point put back as unburned changes");
+        }
+        return applied;
+    }
+
+    RestorePointsWindow getRestorePointsWindowForTests() {
+        return restorePointsWindow;
+    }
+
+    void setRestorePointStoreForTests(com.rusefi.util.RestorePointStore store) {
+        toolbar.setRestorePointStoreForTests(store);
     }
 
     /** Burn / Discard / Undo / Redo bound to this tune, for screens that open its settings windows. */
