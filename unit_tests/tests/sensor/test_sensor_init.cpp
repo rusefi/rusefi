@@ -133,10 +133,10 @@ TEST(SensorInit, TpsValuesTooClose) {
 	EXPECT_NO_FATAL_ERROR(initTps());
 }
 
-// Coverage of a present defect, asserting current behavior: with open/closed calibration
-// voltages too close together the TPS is neither subscribed to the ADC nor registered, so its
-// raw voltage reads 0 and the user cannot see the voltages needed to repair the calibration.
-TEST(SensorInit, TpsRawVoltageUnavailableWithInvalidCalibration) {
+// With open/closed calibration voltages too close together the TPS is still subscribed to the
+// ADC and registered, so the user can see the raw voltage needed to repair the calibration.
+// The resolved throttle position stays unavailable.
+TEST(SensorInit, TpsRawVoltageAvailableWithInvalidCalibration) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	const adc_channel_e channel = engineConfiguration->tps1_1AdcChannel;
 	ASSERT_TRUE(isAdcChannelValid(channel));
@@ -163,9 +163,18 @@ TEST(SensorInit, TpsRawVoltageUnavailableWithInvalidCalibration) {
 	EXPECT_FATAL_ERROR(initTps());
 	AdcSubscription::UpdateSubscribers(getTimeNowNt());
 
-	// Expected after the fix: registered, raw voltage 2.5
-	EXPECT_EQ(nullptr, Sensor::getSensorOfType(SensorType::Tps1Primary));
-	EXPECT_FLOAT_EQ(0, Sensor::getRaw(SensorType::Tps1Primary));
+	EXPECT_NE(nullptr, Sensor::getSensorOfType(SensorType::Tps1Primary));
+	EXPECT_NEAR(2.5f, Sensor::getRaw(SensorType::Tps1Primary), EPS2D);
+	EXPECT_FALSE(Sensor::hasSensor(SensorType::Tps1));
+	EXPECT_FALSE(Sensor::get(SensorType::Tps1).Valid);
+
+	// repairing the calibration brings the position back
+	deinitTps();
+	engineConfiguration->tpsMin = 200;	// 1 volt
+	engineConfiguration->tpsMax = 800;	// 4 volts
+	EXPECT_NO_FATAL_ERROR(initTps());
+	AdcSubscription::UpdateSubscribers(getTimeNowNt());
+	EXPECT_NEAR(50, Sensor::get(SensorType::Tps1).value_or(-1), 0.5);
 }
 
 TEST(SensorInit, Pedal) {

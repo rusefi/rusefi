@@ -45,18 +45,26 @@ public:
 	}
 
 	bool init(const TpsConfig& cfg) {
-		// If the configuration was invalid, don't continue to configure the sensor
-		if (!configure(cfg)) {
+		// Only configure if we have a channel
+		if (!isAdcChannelValid(cfg.channel)) {
+#if EFI_UNIT_TEST
+			printf("Configured NO hardware %s\n", name());
+#endif
 			return false;
 		}
 
+		// Subscribe and register even with an unusable calibration: the raw voltage is what
+		// the user needs to see in order to repair that calibration
 		adc = AdcSubscription::SubscribeSensor(m_sens, cfg.channel, /*lowpassCutoffHz*/ 200);
+		m_sens.Register();
 
-		return m_sens.Register();
+		// may fail for a bad calibration
+		return configure(cfg);
 	}
 
 	void deinit() {
 		AdcSubscription::UnsubscribeSensor(m_sens);
+		m_sens.unregister();
 	}
 
 	SensorType type() const {
@@ -69,14 +77,6 @@ public:
 
 private:
 	bool configure(const TpsConfig& cfg) {
-		// Only configure if we have a channel
-		if (!isAdcChannelValid(cfg.channel)) {
-#if EFI_UNIT_TEST
-			printf("Configured NO hardware %s\n", name());
-#endif
-			return false;
-		}
-
 		float scaledClosed = cfg.closed / m_func.getDivideInput();
 		float scaledOpen = cfg.open / m_func.getDivideInput();
 
