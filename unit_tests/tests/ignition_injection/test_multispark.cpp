@@ -143,3 +143,56 @@ TEST(Multispark, IntegratedCoilRestrikes) {
 	eth.executeActions();
 	EXPECT_EQ(enginePins.coils[0].getLogicValue(), false);
 }
+
+// Coverage of a present defect, asserting current behavior: every multispark restrike is compared
+// with the main spark's dwell, so the short restrike dwells are counted as undercharged sparks and
+// overwrite the dwell accuracy ratio. FOME commit 45a04dc865.
+TEST(Multispark, RestrikesCountedAsUnderchargedSparks) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->isFasterEngineSpinUpEnabled = false;
+
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
+		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
+
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
+	engineConfiguration->cylindersCount = 1;
+	engineConfiguration->firingOrder = FO_1;
+	engineConfiguration->isInjectionEnabled = false;
+	engineConfiguration->isIgnitionEnabled = true;
+
+	setWholeTimingTable(0);
+
+	engineConfiguration->multisparkEnable = true;
+	engineConfiguration->multisparkMaxSparkingAngle = 60;
+	engineConfiguration->multisparkMaxRpm = 3000;
+	engineConfiguration->multisparkSparkDuration = 0.5f;
+	engineConfiguration->multisparkDwell = 1;
+	engineConfiguration->multisparkMaxExtraSparkCount = 3;
+
+	eth.fireTriggerEventsWithDuration(100);
+	eth.fireTriggerEventsWithDuration(100);
+	ASSERT_EQ(600, Sensor::getOrZero(SensorType::Rpm)) << "RPM";
+	eth.smartFireTriggerEvents2(1, 100);
+	engine->periodicFastCallback();
+	ASSERT_EQ(3u, engine->engineState.multispark.count);
+	// the restrike dwell is well under 80% of the main dwell
+	ASSERT_GT(engine->ignitionState.getDwell(), 1.0f / 0.8f);
+
+	eth.smartFireRise(100);
+	eth.executeActions();
+	// main spark just fired, with the dwell it was asked for
+	ASSERT_EQ(enginePins.coils[0].getLogicValue(), false);
+	const auto underChargedBefore = engine->engineState.dwellUnderChargeCounter;
+	EXPECT_NEAR(1, engine->engineState.dwellActualRatio, 0.2);
+
+	for (int i = 0; i < 3; i++) {
+		eth.moveTimeForwardMs(0.6f);
+		eth.executeActions();
+		eth.moveTimeForwardMs(1.0f);
+		eth.executeActions();
+	}
+
+	// Expected after the fix: no change, and the ratio still describes the main spark
+	EXPECT_EQ(underChargedBefore + 3, engine->engineState.dwellUnderChargeCounter);
+	EXPECT_LT(engine->engineState.dwellActualRatio, 0.8);
+}

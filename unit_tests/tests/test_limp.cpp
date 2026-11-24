@@ -864,3 +864,31 @@ TEST(limp, recoveredCutDoesNotReportAgain) {
 	EXPECT_EQ(getTimeNowNt(), warning->LastTriggered.get());
 	EXPECT_EQ(1, eth.getWarningCounter());
 }
+
+// Coverage of a present defect, asserting current behavior (the expectation to move to with the
+// fix is noted at the assertion).
+// "Minimum oil pressure after start" cuts fuel five seconds after start when the oil pressure
+// sensor has failed, although the code comment says it requires a working sensor.
+// FOME commit 45a04dc865.
+TEST(limp, failedOilPressureSensorCutsFuelAfterStart) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->minOilPressureAfterStart = 100;
+	engineConfiguration->enableOilPressureProtect = false;
+	engine->rpmCalculator.setRpmValue(1000);
+	ASSERT_TRUE(engine->rpmCalculator.isRunning());
+
+	// broken wire: the sensor exists but has no valid reading
+	Sensor::setInvalidMockValue(SensorType::OilPressure);
+	ASSERT_TRUE(Sensor::hasSensor(SensorType::OilPressure));
+	ASSERT_FALSE(Sensor::get(SensorType::OilPressure).Valid);
+
+	LimpManager dut;
+	dut.updateState(1000, getTimeNowNt());
+	EXPECT_TRUE(dut.allowInjection());
+
+	advanceTimeUs(6'000'000);
+	ASSERT_GT(engine->rpmCalculator.getSecondsSinceEngineStart(getTimeNowNt()), 5);
+	dut.updateState(1000, getTimeNowNt());
+	// Expected after the fix: EXPECT_TRUE(dut.allowInjection())
+	EXPECT_EQ(ClearReason::OilPressure, dut.allowInjection().reason);
+}

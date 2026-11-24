@@ -7,6 +7,7 @@
 
 #include "pch.h"
 #include "fuel_math.h"
+#include "spark_logic.h"
 #include "injector_model.h"
 
 using ::testing::_;
@@ -248,4 +249,24 @@ TEST(fuelControl, StagedBatchPulseClosesWhileCranking) {
 
 TEST(fuelControl, CrankingToRunningAfterStagedBatchPulseClosesSecondaryInjector) {
 	checkStagedBatchTransition(StagedBatchTransition::AfterPulse);
+}
+
+// Coverage of a present defect, asserting current behavior (the expectation to move to with the
+// fix is noted at the assertion).
+// Injection has no fallback while the engine phase is not known: sequential injection runs on a
+// guessed phase, which is 360 degrees out half the time. Ignition does fall back to wasted spark.
+// FOME commit 43e8288ea4 extends the batch fallback to cranking.
+TEST(fuelControl, sequentialInjectionWithoutPhaseSync) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
+	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
+	engine->rpmCalculator.setRpmValue(1000);
+
+	engine->triggerCentral.triggerState.setNeedsDisambiguation(true);
+	ASSERT_FALSE(engine->triggerCentral.triggerState.hasSynchronizedPhase());
+
+	EXPECT_EQ(IM_WASTED_SPARK, getCurrentIgnitionMode());
+	// Expected after the fix: IM_BATCH
+	EXPECT_EQ(IM_SEQUENTIAL, getCurrentInjectionMode());
 }

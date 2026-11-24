@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "spark_logic.h"
+#include "fuel_schedule.h"
 #include "harley.h"
 #include "fuel_math.h"
 #include "defaults.h"
@@ -86,3 +87,58 @@ TEST(OddFireRunningMode, hd) {
 	ASSERT_EQ(2, engine->getBailedOnDwellCount()) << "Please check if our dwell algorithm have really got better.";
 }
 #endif //FUEL_RPM_COUNT == 16
+
+// Coverage of a present defect, asserting current behavior (the expectation to move to with the
+// fix is noted at the assertion).
+// With one coil (distributor) every spark is given the odd-fire offset of the first cylinder
+// instead of the offset of the cylinder which is firing. FOME commit e516fdeb82.
+TEST(OddFire, oddFireOffsetIgnoredWithSingleCoil) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->cylindersCount = 4;
+	engineConfiguration->firingOrder = FO_1_3_4_2;
+	engineConfiguration->ignitionMode = IM_ONE_COIL;
+	// cylinder 3 fires second, ten degrees late
+	engineConfiguration->timing_offset_cylinder[2] = 10;
+
+	constexpr float rpm = 1000;
+	engine->rpmCalculator.setRpmValue(rpm);
+	engine->ignitionState.updateDwell(rpm, false);
+	setArrayValues(engine->engineState.timingAdvance, 0.0f);
+	initializeIgnitionActions();
+	ASSERT_TRUE(engine->ignitionEvents.isReady);
+
+	auto& first = engine->ignitionEvents.elements[0];
+	auto& second = engine->ignitionEvents.elements[1];
+	// Expected after the fix: 190
+	EXPECT_NEAR(180, second.sparkAngle - first.sparkAngle, 0.01);
+}
+
+// Coverage of a present defect, asserting current behavior (the expectation to move to with the
+// fix is noted at the assertion).
+// An injection event computes its angle before it knows which cylinder it belongs to, so the
+// first schedule built after start uses the first cylinder's odd-fire offset for every event.
+// FOME commit dc8b8c3b3f.
+TEST(OddFire, firstInjectionScheduleUsesFirstCylinderOddFireOffset) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
+		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth, IM_SEQUENTIAL);
+	engineConfiguration->firingOrder = FO_1_3_4_2;
+	// cylinder 3 is second in the firing order
+	engineConfiguration->timing_offset_cylinder[2] = 10;
+
+	engine->rpmCalculator.setRpmValue(2000);
+	engine->periodicFastCallback();
+	ASSERT_EQ(IM_SEQUENTIAL, getCurrentInjectionMode());
+
+	FuelSchedule dut;
+	dut.addFuelEvents();
+	ASSERT_TRUE(dut.isReady);
+	float firstBuild = dut.elements[1].injectionStartAngle;
+
+	// nothing changed, yet rebuilding the schedule moves the event
+	dut.addFuelEvents();
+	float secondBuild = dut.elements[1].injectionStartAngle;
+	// Expected after the fix: 0
+	EXPECT_NEAR(10, secondBuild - firstBuild, 0.01);
+}

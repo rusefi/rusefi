@@ -35,6 +35,16 @@ static void postToFuncSensor(Sensor* s, float value) {
 	static_cast<FunctionalSensor*>(s)->postRawValue(value, getTimeNowNt());
 }
 
+static SensorResult convertRaw(SensorType type, float volts) {
+	auto sensor = const_cast<Sensor*>(Sensor::getSensorOfType(type));
+	EXPECT_NE(nullptr, sensor);
+	if (!sensor) {
+		return UnexpectedCode::Configuration;
+	}
+	postToFuncSensor(sensor, volts);
+	return sensor->get();
+}
+
 #define EXPECT_POINT_VALID(s, raw, expect) \
 	{\
 		postToFuncSensor(s, raw); \
@@ -121,6 +131,42 @@ TEST(SensorInit, TpsValuesTooClose) {
 	// de-init and re-init should also work without error
 	EXPECT_NO_FATAL_ERROR(deinitTps());
 	EXPECT_NO_FATAL_ERROR(initTps());
+}
+
+// Coverage of a present defect, asserting current behavior: with open/closed calibration
+// voltages too close together the TPS is neither subscribed to the ADC nor registered, so its
+// raw voltage reads 0 and the user cannot see the voltages needed to repair the calibration.
+// FOME always subscribes and registers: see FOME commit 24ddeb6de7 "fix #710".
+TEST(SensorInit, TpsRawVoltageUnavailableWithInvalidCalibration) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	const adc_channel_e channel = engineConfiguration->tps1_1AdcChannel;
+	ASSERT_TRUE(isAdcChannelValid(channel));
+	setMockAdcVoltage(channel, 2.5f);
+	// EngineTestHelper already subscribed the TPS, with the fixture's zero input divider:
+	// resubscribe with a real one so samples carry a voltage
+	deinitTps();
+	Sensor::resetRegistry();
+	engineConfiguration->analogInputDividerCoefficient = 1;
+
+	// control: a usable calibration shows the raw voltage
+	engineConfiguration->tpsMin = 200;	// 1 volt
+	engineConfiguration->tpsMax = 800;	// 4 volts
+	initTps();
+	AdcSubscription::UpdateSubscribers(getTimeNowNt());
+	EXPECT_NEAR(2.5f, Sensor::getRaw(SensorType::Tps1Primary), EPS2D);
+
+	deinitTps();
+	Sensor::resetRegistry();
+
+	// 0.49 volts apart: rejected
+	engineConfiguration->tpsMin = 200;	// 1.00 volt
+	engineConfiguration->tpsMax = 298;	// 1.49 volts
+	EXPECT_FATAL_ERROR(initTps());
+	AdcSubscription::UpdateSubscribers(getTimeNowNt());
+
+	// Expected after the fix: registered, raw voltage 2.5
+	EXPECT_EQ(nullptr, Sensor::getSensorOfType(SensorType::Tps1Primary));
+	EXPECT_FLOAT_EQ(0, Sensor::getRaw(SensorType::Tps1Primary));
 }
 
 TEST(SensorInit, Pedal) {
@@ -514,3 +560,107 @@ TEST_F(MapSensorReconfiguration, CalibrationBurnUpdatesConversion) {
 }
 
 } // namespace
+
+// Coverage of a present defect, asserting current behavior (the expectation to move to with the
+// fix is noted at the assertion).
+// Oil temperature and aux temperature 2 share one conversion object (faux2), so configuring
+// aux 2 replaces the oil temperature calibration. FOME commit 8b7167ca7f.
+TEST(SensorInit, auxTemp2OverwritesOilTemperatureCalibration) {
+	// 2.7k pull-up, 5V: 2100 ohm reads 2.1875 V
+	constexpr float volts = 5.0f * 2100 / (2100 + 2700);
+	const thermistor_conf_s oilCalibration = {0, 30, 100, 9500, 2100, 180, 2700};
+	// ten times the resistance at every point
+	const thermistor_conf_s aux2Calibration = {0, 30, 100, 95000, 21000, 1800, 2700};
+
+	{
+		// control: oil temperature alone uses its own calibration
+		EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+		engineConfiguration->oilTempSensor.config = oilCalibration;
+		engineConfiguration->oilTempSensor.adcChannel = EFI_ADC_6;
+		initThermistors();
+		EXPECT_NEAR(30, convertRaw(SensorType::OilTemperature, volts).value_or(-1), 0.1);
+	}
+
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->oilTempSensor.config = oilCalibration;
+	engineConfiguration->oilTempSensor.adcChannel = EFI_ADC_6;
+	engineConfiguration->auxTempSensor2.config = aux2Calibration;
+	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_7;
+	initThermistors();
+
+	float aux2 = convertRaw(SensorType::AuxTemp2, volts).value_or(-1);
+	float oil = convertRaw(SensorType::OilTemperature, volts).value_or(-1);
+	// 2100 ohm is close to the hot end of the aux 2 curve
+	EXPECT_GT(aux2, 90);
+	// Expected after the fix: 30
+	EXPECT_FLOAT_EQ(aux2, oil);
+}
+
+// Coverage of a present defect, asserting current behavior (the expectation to move to with the
+// fix is noted at the assertion).
+// A baro sensor of type "custom" is converted with the MAP sensor's kPa range; its own
+// baroSensor.lowValue/highValue are never used. FOME commit 2afe90cab8 (#806).
+TEST(SensorInit, customBaroSensorUsesMapCalibration) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
+	engineConfiguration->maf2AdcChannel = EFI_ADC_NONE;
+
+	engineConfiguration->mapLowValueVoltage = 0;
+	engineConfiguration->mapHighValueVoltage = 5;
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
+	engineConfiguration->map.sensor.type = MT_CUSTOM;
+	engineConfiguration->map.sensor.lowValue = 0;
+	engineConfiguration->map.sensor.highValue = 300;
+
+	engineConfiguration->baroSensor.hwChannel = EFI_ADC_5;
+	engineConfiguration->baroSensor.type = MT_CUSTOM;
+	engineConfiguration->baroSensor.lowValue = 0;
+	engineConfiguration->baroSensor.highValue = 150;
+
+	initMap();
+
+	// 2.5 V is half scale: 75 kPa on the baro calibration, 150 kPa on the MAP one
+	// Expected after the fix: 75
+	EXPECT_NEAR(150, convertRaw(SensorType::BarometricPressure, 2.5f).value_or(-1), 0.1);
+
+	deinitMap();
+}
+
+// Coverage of a present defect, asserting current behavior (the expectation to move to with the
+// fix is noted at the assertion).
+// Changing or clearing the fuel level input and burning leaves the sensor subscribed to its
+// old pin until reboot. FOME commit 46f921021d.
+TEST(SensorInit, fuelLevelInputChangeNeedsReboot) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
+	engineConfiguration->maf2AdcChannel = EFI_ADC_NONE;
+	engineConfiguration->analogInputDividerCoefficient = 1;
+	stopSensors();
+	Sensor::resetRegistry();
+
+	engineConfiguration->fuelLevelSensor = EFI_ADC_6;
+	initNewSensors();
+	rememberCurrentConfiguration();
+
+	setMockAdcVoltage(EFI_ADC_6, 1.0f);
+	setMockAdcVoltage(EFI_ADC_7, 3.0f);
+	AdcSubscription::UpdateSubscribers(getTimeNowNt());
+	EXPECT_NEAR(1.0f, Sensor::getRaw(SensorType::FuelLevel), 0.01);
+
+	// move the input and burn
+	engineConfiguration->fuelLevelSensor = EFI_ADC_7;
+	stopSensors();
+	reconfigureSensors();
+	rememberCurrentConfiguration();
+	AdcSubscription::UpdateSubscribers(getTimeNowNt());
+	// Expected after the fix: 3.0
+	EXPECT_NEAR(1.0f, Sensor::getRaw(SensorType::FuelLevel), 0.01);
+
+	// remove the input and burn
+	engineConfiguration->fuelLevelSensor = EFI_ADC_NONE;
+	stopSensors();
+	reconfigureSensors();
+	rememberCurrentConfiguration();
+	// Expected after the fix: EXPECT_FALSE
+	EXPECT_TRUE(Sensor::hasSensor(SensorType::FuelLevel));
+}

@@ -70,7 +70,12 @@ when testing a shared ADC entry point. Host tests run the shared ADC subscriptio
 and filtering code with per-channel voltages supplied by `setMockAdcVoltage()`.
 Call `AdcSubscription::UpdateSubscribers()` explicitly to deliver samples;
 posting directly to a sensor cannot establish that it remains subscribed.
-`EngineTestHelper` clears subscriptions and mock voltages between tests. These
+`EngineTestHelper` clears subscriptions and mock voltages between tests. A sensor
+subscribed during `EngineTestHelper` construction can carry a zero input divider, so
+its samples read 0 V whatever the mock voltage; `SubscribeSensor` keeps an existing
+entry for an unchanged channel, so deinit the sensor, set
+`analogInputDividerCoefficient`, then init it again (see
+`TpsRawVoltageUnavailableWithInvalidCalibration`). These
 host tests do not establish hardware DMA acquisition or pin configuration.
 
 `TEST_ENGINE` enables MAF by default. In host tests, `init_maf.cpp`'s static
@@ -139,7 +144,9 @@ a learned trim is held (see `ShortTermFuelTrimBehavior`).
 For suspected test-order leaks, run the built binary directly from `unit_tests/`:
 `build/rusefi_test --gtest_shuffle --gtest_random_seed=31337 --gtest_repeat=3`.
 Record the failing iteration's seed and keep the same test selection when replaying;
-changing `--gtest_filter` changes the shuffled order. `test.sh` accepts a name filter,
+changing `--gtest_filter` changes the shuffled order. A full shuffled run rewrites the
+tracked `unit_tests/triggers.txt` in shuffled order; rerun the suite in normal order
+afterwards to restore it. `test.sh` accepts a name filter,
 not arbitrary GoogleTest flags. `EngineTestHelperBase` rewinds simulated time to zero,
 while `Sensor::resetRegistry()` only clears registry entries: a file-static
 `StoredValueSensor` can retain a previous value/timestamp and appear fresh after the

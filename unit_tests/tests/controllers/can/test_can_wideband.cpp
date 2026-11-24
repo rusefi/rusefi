@@ -330,3 +330,12 @@ TEST(CanWideband, DecodeRusefiStandardWrongVersion)
 
 	EXPECT_FATAL_ERROR(dut.processFrame(0, frame, getTimeNowNt()));
 }
+
+// Coverage of a present defect, asserting current behavior (the expectation to move to with the
+// fix is noted at the assertion).
+// The wideband firmware mismatch error shares its number with "PPS secondary high", so the
+// two faults are reported as the same code. FOME commit 160c8b9ac0.
+TEST(CanWideband, widebandFirmwareMismatchSharesCodeWithPedalFault) {
+	// Expected after the fix: EXPECT_NE
+	EXPECT_EQ(static_cast<int>(ObdCode::OBD_PPS_Secondary_High), static_cast<int>(ObdCode::OBD_WB_FW_Mismatch));
+}

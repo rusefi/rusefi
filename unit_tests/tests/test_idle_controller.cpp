@@ -821,3 +821,44 @@ TEST(idle_v2, IntegrationClamping) {
 	// Result would be 75 + 75 = 150, but it should clamp to 100
 	EXPECT_EQ(100, dut.getIdlePosition(950));
 }
+
+// Coverage of a present defect, asserting current behavior (the expectation to move to with the
+// fix is noted at the assertion).
+// With "Ramp target on return to idle" the target jumps to normal target + "RPM upper limit"
+// on entering idle, even when the engine arrives at idle already close to the normal target.
+// FOME commit bb8f26b4c7 starts the ramp from the RPM at idle entry.
+TEST(idle_v2, idleReturnRampStartsAboveActualRpm) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	IdleController dut;
+
+	setArrayValues(config->cltIdleRpm, 1000);
+	engineConfiguration->idlePidRpmUpperLimit = 300;
+	engineConfiguration->idlePidDeactivationTpsThreshold = 2;
+	engineConfiguration->idleReturnTargetRamp = true;
+	engineConfiguration->idleReturnTargetRampDuration = 3;
+	dut.init();
+
+	Sensor::setMockValue(SensorType::Clt, 80);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 0);
+	engine->rpmCalculator.setRpmValue(1050);
+	// well past the after-cranking taper
+	setArrayValues(config->afterCrankingIACtaperDuration, 10);
+	for (int i = 0; i < 20; i++) {
+		engine->rpmCalculator.onNewEngineCycle();
+	}
+	advanceTimeUs(10'000'000);
+
+	// driving
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 30);
+	dut.getIdlePosition(1050);
+	ASSERT_FALSE(dut.isIdling);
+
+	// throttle released with the engine 50 RPM above the idle target
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
+	dut.getIdlePosition(1050);
+	ASSERT_TRUE(dut.isIdlingOrTaper());
+	ASSERT_TRUE(dut.isIdling);
+
+	// Expected after the fix: no more than 1050
+	EXPECT_NEAR(1300, dut.getTargetRpm(80).ClosedLoopTarget, 1);
+}

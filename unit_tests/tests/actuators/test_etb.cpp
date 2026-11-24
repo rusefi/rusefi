@@ -451,6 +451,44 @@ TEST(etb, setpointRevLimit) {
 	EXPECT_NEAR(1, etb.getSetpoint().value_or(-1), 1e-4);
 }
 
+// Coverage of a present defect, asserting current behavior: the "ETB RPM Limit" indicator
+// is only written while the limiter is configured, so it stays latched once the limiter is
+// turned off. FOME clears it: see FOME commit 7cae2fb109 "revamp ETB live data".
+TEST(etb, revLimitIndicatorStaysOnAfterLimiterDisabled) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	engineConfiguration->etbRevLimitStart = 5000;
+	engineConfiguration->etbRevLimitRange = 750;
+
+	Sensor::setMockValue(SensorType::Tps1Primary, 0);
+	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
+
+	EtbController etb;
+
+	StrictMock<MockVp3d> pedalMap;
+	EXPECT_CALL(pedalMap, getValue(_, _))
+		.WillRepeatedly([](float, float) {
+			return 80;
+		});
+	etb.init(DC_Throttle1, nullptr, nullptr, &pedalMap);
+
+	Sensor::setMockValue(SensorType::Rpm, 1000);
+	EXPECT_NEAR(80, etb.getSetpoint().value_or(-1), 1e-4);
+	EXPECT_FALSE(etb.etbRevLimitActive);
+
+	// limiter pulls the throttle back
+	Sensor::setMockValue(SensorType::Rpm, 5375);
+	EXPECT_NEAR(40, etb.getSetpoint().value_or(-1), 1e-4);
+	EXPECT_TRUE(etb.etbRevLimitActive);
+
+	// limiter turned off in the tune: the throttle is no longer limited...
+	engineConfiguration->etbRevLimitStart = 0;
+	EXPECT_NEAR(80, etb.getSetpoint().value_or(-1), 1e-4);
+	// ...but the indicator still claims it is. Expected after the fix: EXPECT_FALSE
+	EXPECT_TRUE(etb.etbRevLimitActive);
+}
+
 TEST(etb, setpointNoPedalMap) {
 	EtbController etb;
 
@@ -732,6 +770,38 @@ TEST(etb, setOutputLimpHome) {
 	etb.setOutput(25.0f);
 }
 
+// Coverage of a present defect, asserting current behavior: the ETB duty channel reports the
+// requested duty even though the motor is disabled and nothing is driven. FOME reports 0:
+// see FOME commit 7cae2fb109 "revamp ETB live data".
+TEST(etb, dutyChannelReportsRequestedDutyWhileMotorDisabled) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	StrictMock<MockMotor> motor;
+
+	Sensor::setMockValue(SensorType::Tps1Primary, 0);
+	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
+
+	EtbController etb;
+	etb.init(DC_Throttle1, &motor, nullptr, nullptr);
+
+	// paused: the motor is disabled and never given a duty
+	engineConfiguration->pauseEtbControl = true;
+	EXPECT_CALL(motor, disable(_)).Times(2);
+
+	etb.setOutput(25.0f);
+	EXPECT_EQ((uint8_t)EtbState::Paused, etb.state);
+	// Expected after the fix: 0
+	EXPECT_FLOAT_EQ(25, engine->outputChannels.etb1DutyCycle);
+
+	// same in limp mode
+	engineConfiguration->pauseEtbControl = false;
+	getLimpManager()->fatalError();
+	etb.setOutput(40.0f);
+	EXPECT_EQ((uint8_t)EtbState::LimpProhibited, etb.state);
+	// Expected after the fix: 0
+	EXPECT_FLOAT_EQ(40, engine->outputChannels.etb1DutyCycle);
+}
+
 TEST(etb, closedLoopPid) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
@@ -802,6 +872,66 @@ TEST(etb, jamDetection) {
 	// Above the time limit, jam detected!
 	setTimeNowUs(1.1e6);
 	etb.checkJam(10, 16);
+	EXPECT_TRUE(etb.jamDetected);
+}
+
+// Coverage of a present defect, asserting current behavior: a DC motor used for something other
+// than a throttle (wastegate, idle valve) is enabled and given a duty even when there is no valid
+// output, for example with position feedback lost; the duty is then whatever the invalid result
+// happens to hold. FOME disables the bridge: see FOME commit ab331c3ad7.
+TEST(etb, dcWastegateDrivenWithInvalidOutput) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	StrictMock<MockMotor> motor;
+
+	Sensor::setMockValue(SensorType::Tps1Primary, 0);
+	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
+
+	EtbController etb;
+	etb.init(DC_Wastegate, &motor, nullptr, nullptr);
+
+	// Expected after the fix: only disable(_) is called
+	EXPECT_CALL(motor, enable());
+	EXPECT_CALL(motor, set(_));
+
+	etb.setOutput(unexpected);
+	EXPECT_EQ((uint8_t)EtbState::NotEbt, etb.state);
+}
+
+// Coverage of a present defect, asserting current behavior: the jam timer only runs down inside
+// checkJam(), which is not called while the throttle is not being commanded (paused, disabled
+// with the engine stopped, autotune). The time spent not commanded then counts as jam time and
+// the first position error afterwards is reported as a jam at once, latching the throttle off.
+// FOME resets the timer while not commanded: see FOME commit 5d957abb08.
+TEST(etb, jamReportedAtOnceAfterThrottleWasNotCommanded) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	MockIgnitionController ignController;
+	EXPECT_CALL(ignController, getIgnState).WillRepeatedly(Return(true));
+	engine->module<IgnitionController>().set(&ignController);
+
+	Sensor::setMockValue(SensorType::Tps1Primary, 0);
+	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
+
+	// Limit of 5%, 1 second
+	engineConfiguration->etbJamDetectThreshold = 5;
+	engineConfiguration->etbJamTimeout = 1;
+
+	EtbController etb;
+	etb.init(DC_Throttle1, nullptr, nullptr, nullptr);
+
+	setTimeNowUs(0);
+	// commanded and on target
+	etb.checkJam(10, 10);
+	EXPECT_FALSE(etb.jamDetected);
+
+	// ten seconds without control, so without checkJam(): the plate rests at its default position
+	setTimeNowUs(10e6);
+
+	// control resumes: the very first sample with an error is a "jam"
+	etb.checkJam(10, 16);
+	// Expected after the fix: EXPECT_FALSE, a jam needs the error to last for the timeout
 	EXPECT_TRUE(etb.jamDetected);
 }
 

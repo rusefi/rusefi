@@ -8,6 +8,8 @@
 #include "pch.h"
 
 #include "event_queue.h"
+#include "fuel_schedule.h"
+#include "dfco.h"
 #include "engine_state_machine.h"
 #include "tunerstudio.h"
 
@@ -566,3 +568,85 @@ TEST(fuelCut, requiresGear) {
 }
 
 #endif
+
+// Coverage of a present defect, asserting current behavior (the expectation to move to with the
+// fix is noted at the assertion).
+// After fuel is restored, timing is always ramped back over 0.5 s whatever "After cut timing
+// ramp-in time" says: the setting only chooses where the ramp is chopped off.
+// FOME commit f949dab60e (#819).
+TEST(fuelCut, dfcoTimingRampIgnoresConfiguredTime) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
+		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
+
+	engineConfiguration->coastingFuelCutEnabled = true;
+	engineConfiguration->coastingFuelCutRpmLow = 1300;
+	engineConfiguration->coastingFuelCutRpmHigh = 1500;
+	engineConfiguration->coastingFuelCutTps = 2;
+	engineConfiguration->coastingFuelCutClt = 30;
+	engineConfiguration->coastingFuelCutMap = 100;
+	engineConfiguration->cranking.rpm = 999;
+	engineConfiguration->dfcoRetardDeg = 10;
+	engineConfiguration->dfcoRetardRampInTime = 1;
+
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
+	Sensor::setMockValue(SensorType::Map, 0);
+	Sensor::setMockValue(SensorType::Clt, 80);
+	Sensor::setMockValue(SensorType::Rpm, 2000);
+	auto& dfco = engine->module<DfcoController>().unmock();
+
+	// lift off: fuel cut, full retard
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
+	eth.moveTimeForwardUs(1000);
+	engine->periodicFastCallback();
+	ASSERT_TRUE(dfco.cutFuel());
+	EXPECT_FLOAT_EQ(10, dfco.getTimingRetard());
+
+	// back on the throttle
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 60);
+	engine->periodicFastCallback();
+	ASSERT_FALSE(dfco.cutFuel());
+
+	// a quarter of the configured second later. Expected after the fix: 7.5
+	eth.moveTimeForwardUs(250'000);
+	EXPECT_NEAR(5, dfco.getTimingRetard(), 0.05);
+
+	// half way. Expected after the fix: 5
+	eth.moveTimeForwardUs(250'000);
+	EXPECT_NEAR(0, dfco.getTimingRetard(), 0.05);
+}
+
+// Coverage of a present defect, asserting current behavior (the expectation to move to with the
+// fix is noted at the assertion).
+// In End (or Center) of injection timing the start angle is the table angle minus the pulse
+// length. With no fuel commanded, as during decel fuel cut, an event which refreshes its angle
+// stores the uncorrected angle, so the first pulse after the cut starts and ends a whole pulse
+// late. FOME commit 3b772a890a keeps the last angle while there is no fuel.
+TEST(fuelCut, injectionAngleLosesDurationCorrectionDuringFuelCut) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
+		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth, IM_SEQUENTIAL);
+	engineConfiguration->injectionTimingMode = InjectionTimingMode::End;
+
+	engine->rpmCalculator.setRpmValue(2000);
+	engine->periodicFastCallback();
+
+	FuelSchedule dut;
+	// 5 ms at 2000 RPM is 60 degrees
+	engine->engineState.injectionDuration = 5;
+	dut.addFuelEvents();
+	dut.addFuelEvents();
+	ASSERT_TRUE(dut.isReady);
+	float fuelingAngle = dut.elements[0].injectionStartAngle;
+
+	// fuel cut
+	engine->engineState.injectionDuration = 0;
+	dut.addFuelEvents();
+	float cutAngle = dut.elements[0].injectionStartAngle;
+
+	float moved = cutAngle - fuelingAngle;
+	wrapAngle(moved, "test", ObdCode::CUSTOM_ERR_6555);
+	// Expected after the fix: 0
+	EXPECT_NEAR(60, moved, 0.1);
+}

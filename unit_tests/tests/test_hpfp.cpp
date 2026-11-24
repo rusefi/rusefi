@@ -330,3 +330,20 @@ TEST(HPFP, Schedule) {
 	// The off event goes directly to scheduleByAngle and is tested by the last EXPECT_CALL
 	// above.
 }
+
+// Coverage of a present defect, asserting current behavior (the expectation to move to with the
+// fix is noted at the assertion).
+// The pump lobe angle is computed with integer division, losing the fraction when 720 is not
+// divisible by the lobe count. FOME commit 6bbd855649.
+TEST(HPFP, LobeAngleTruncated) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->hpfpCam = HPFP_CAM_NONE;
+	engineConfiguration->hpfpPeakPos = 0;
+	engineConfiguration->hpfpCamLobes = 7;
+
+	HpfpLobe lobe;
+	// second lobe: 720 / 7 = 102.857 degrees. Expected after the fix: EXPECT_NEAR(102.857, ..., 0.001)
+	EXPECT_FLOAT_EQ(102, lobe.findNextLobe());
+	// third lobe: 205.714 degrees
+	EXPECT_FLOAT_EQ(205, lobe.findNextLobe());
+}

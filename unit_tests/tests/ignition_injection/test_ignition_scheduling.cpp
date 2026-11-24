@@ -434,3 +434,43 @@ TEST(ignition, hardwareLatencyCorrection) {
 	eth.engine.periodicFastCallback();
 	ASSERT_NEAR(16.8, engine->engineState.timingAdvance[0], EPS4D);
 }
+
+// Coverage of a present defect, asserting current behavior (the expectation to move to with the
+// fix is noted at the assertion).
+// A trigger error drops phase sync, and new ignition events are then prepared as wasted spark.
+// Events prepared before the error are not invalidated, so each cylinder fires once more on its
+// single sequential coil, on a phase which may be wrong. FOME commit 8bbe9297de.
+TEST(ignition, triggerErrorKeepsSequentialIgnitionEvents) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->cylindersCount = 4;
+	engineConfiguration->firingOrder = FO_1_3_4_2;
+	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
+
+	constexpr float rpm = 1000;
+	engine->rpmCalculator.setRpmValue(rpm);
+	engine->ignitionState.updateDwell(rpm, false);
+	setArrayValues(engine->engineState.timingAdvance, 0.0f);
+
+	auto& decoder = engine->triggerCentral.triggerState;
+	decoder.setNeedsDisambiguation(true);
+	decoder.syncEnginePhase(/*divider*/ 2, /*remainder*/ 0, /*engineCycle*/ 720);
+	ASSERT_TRUE(decoder.hasSynchronizedPhase());
+	ASSERT_EQ(IM_INDIVIDUAL_COILS, getCurrentIgnitionMode());
+
+	initializeIgnitionActions();
+	ASSERT_TRUE(engine->ignitionEvents.isReady);
+	auto& event = engine->ignitionEvents.elements[0];
+	ASSERT_EQ(nullptr, event.outputs[1]);
+
+	decoder.onTriggerError();
+	ASSERT_FALSE(decoder.hasSynchronizedPhase());
+	ASSERT_EQ(IM_WASTED_SPARK, getCurrentIgnitionMode());
+
+	// Expected after the fix: EXPECT_FALSE(isReady), so the next tooth prepares wasted spark events
+	EXPECT_TRUE(engine->ignitionEvents.isReady);
+	EXPECT_EQ(nullptr, event.outputs[1]);
+
+	// control: an event prepared now does fire both coils of the pair
+	initializeIgnitionActions();
+	EXPECT_NE(nullptr, event.outputs[1]);
+}
