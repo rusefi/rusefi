@@ -143,7 +143,7 @@ float DfcoController::getTimingRetard() const {
 			// Normal operation, no retard
 			return 0;
 		} else {
-			return interpolateClamped(0, cutTiming, 0.5, 0, timeSinceCut);
+			return interpolateClamped(0, cutTiming, rampInTime, 0, timeSinceCut);
 		}
 	}
 }

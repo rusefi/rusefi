@@ -569,12 +569,9 @@ TEST(fuelCut, requiresGear) {
 
 #endif
 
-// Coverage of a present defect, asserting current behavior (the expectation to move to with the
-// fix is noted at the assertion).
-// After fuel is restored, timing is always ramped back over 0.5 s whatever "After cut timing
-// ramp-in time" says: the setting only chooses where the ramp is chopped off.
-// FOME commit f949dab60e (#819).
-TEST(fuelCut, dfcoTimingRampIgnoresConfiguredTime) {
+// After fuel is restored, timing is ramped back over "After cut timing ramp-in time". The ramp
+// used to be a fixed 0.5 s, with the setting only choosing where it was chopped off.
+static void checkDfcoTimingRamp(float rampInTime) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
@@ -587,7 +584,7 @@ TEST(fuelCut, dfcoTimingRampIgnoresConfiguredTime) {
 	engineConfiguration->coastingFuelCutMap = 100;
 	engineConfiguration->cranking.rpm = 999;
 	engineConfiguration->dfcoRetardDeg = 10;
-	engineConfiguration->dfcoRetardRampInTime = 1;
+	engineConfiguration->dfcoRetardRampInTime = rampInTime;
 
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 	Sensor::setMockValue(SensorType::Map, 0);
@@ -607,13 +604,28 @@ TEST(fuelCut, dfcoTimingRampIgnoresConfiguredTime) {
 	engine->periodicFastCallback();
 	ASSERT_FALSE(dfco.cutFuel());
 
-	// a quarter of the configured second later. Expected after the fix: 7.5
-	eth.moveTimeForwardUs(250'000);
+	const int quarterUs = static_cast<int>(rampInTime * 250'000);
+
+	eth.moveTimeForwardUs(quarterUs);
+	EXPECT_NEAR(7.5, dfco.getTimingRetard(), 0.05);
+
+	eth.moveTimeForwardUs(quarterUs);
 	EXPECT_NEAR(5, dfco.getTimingRetard(), 0.05);
 
-	// half way. Expected after the fix: 5
-	eth.moveTimeForwardUs(250'000);
-	EXPECT_NEAR(0, dfco.getTimingRetard(), 0.05);
+	eth.moveTimeForwardUs(quarterUs);
+	EXPECT_NEAR(2.5, dfco.getTimingRetard(), 0.05);
+
+	// ramp complete
+	eth.moveTimeForwardUs(quarterUs + 1000);
+	EXPECT_FLOAT_EQ(0, dfco.getTimingRetard());
+}
+
+TEST(fuelCut, dfcoTimingRampLongerThanHalfSecond) {
+	checkDfcoTimingRamp(1.0f);
+}
+
+TEST(fuelCut, dfcoTimingRampShorterThanHalfSecond) {
+	checkDfcoTimingRamp(0.2f);
 }
 
 // Coverage of a present defect, asserting current behavior (the expectation to move to with the
