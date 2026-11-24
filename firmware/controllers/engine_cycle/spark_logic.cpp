@@ -127,8 +127,10 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	angle_t sparkAngle =
 		// Negate because timing *before* TDC, and we schedule *after* TDC
 		- finalIgnitionTiming
-		// Offset by this cylinder's position in the cycle
-		+ getPerCylinderFiringOrderOffset(event->cylinderIndex, coilIndex);
+		// Offset by this cylinder's position in the cycle. The odd-fire adjustment belongs to the
+		// cylinder which is firing, not to the coil: with one or two coils, or wasted spark, a coil
+		// serves several cylinders
+		+ getPerCylinderFiringOrderOffset(event->cylinderIndex, getCylinderNumberAtIndex(event->cylinderIndex));
 
 	efiAssertVoid(ObdCode::CUSTOM_SPARK_ANGLE_1, !std::isnan(sparkAngle), "sparkAngle#1");
 	wrapAngle(sparkAngle, "findAngle#2", ObdCode::CUSTOM_ERR_6550);
