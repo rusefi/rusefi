@@ -320,6 +320,13 @@ void PrimaryTriggerDecoder::onTriggerError() {
 			// Instant RPM data is now also probably trash, discard it
 			engine->triggerCentral.instantRpm.resetInstantRpm();
 			engine->rpmCalculator.lastTdcTimer.init();
+
+			// Each ignition and injection event keeps the mode it chose when it was last
+			// prepared, and only chooses again after it next fires. Engine phase is no longer
+			// known, so make them all choose again now, otherwise each one fires once more in
+			// sequential mode on a phase that is now a guess. [tag:injection_phase_sync]
+			engine->ignitionEvents.isReady = false;
+			engine->injectionEvents.invalidate();
 		}
 	#pragma GCC diagnostic pop
 }

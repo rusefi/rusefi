@@ -253,12 +253,10 @@ TEST(trigger, DoubledToothWithoutStopRequest) {
 	checkToothTimingAfterStop(false, 0.001f, ObdCode::CUSTOM_PRIMARY_DOUBLED_EDGE);
 }
 
-// Coverage of a present defect, asserting current behavior (the expectation to move to with the
-// fix is noted at the assertion).
-// Cam edges are dropped before the cam decoder while the crank is not synchronized (cranking, or
-// resynchronizing after a crank trigger error), so the cam decoder sees a hole in its pattern and
-// has to find its own sync again afterwards. FOME commit 8bbe9297de keeps the cam decoder fed.
-TEST(trigger, camDecoderStarvedWhileCrankNotSynchronized) {
+// The cam decoder is fed every cam edge, also while the crank is not synchronized (cranking, or
+// resynchronizing after a crank trigger error). Dropping those edges left a hole in its pattern,
+// so it had to find its own sync again afterwards, or found a false one.
+TEST(trigger, camDecoderFedWhileCrankNotSynchronized) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
 	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
@@ -266,17 +264,18 @@ TEST(trigger, camDecoderStarvedWhileCrankNotSynchronized) {
 	auto& tc = engine->triggerCentral;
 	ASSERT_FALSE(tc.triggerState.getShaftSynchronized());
 	auto& camDecoder = tc.vvtState[0][0];
+	const auto camCounterBefore = tc.vvtCamCounter;
 
 	for (int i = 0; i < 12; i++) {
 		eth.moveTimeForwardUs(MS2US(10));
 		handleVvtCamSignal(i % 2 == 0 ? TriggerValue::RISE : TriggerValue::FALL, getTimeNowNt(), 0);
 	}
 
-	// the edges arrived...
 	EXPECT_EQ(6u, tc.vvtEventRiseCounter[0]);
 	EXPECT_EQ(6u, tc.vvtEventFallCounter[0]);
-	// ...but the cam decoder was given none of them. Expected after the fix: a tooth duration
-	// of 10 ms recorded by the decoder
-	EXPECT_EQ(0u, camDecoder.vvtToothDurations0);
-	EXPECT_EQ(0u, camDecoder.toothDurations[0]);
+	// the cam decoder has seen the edges: it uses the rising ones, 20 ms apart
+	EXPECT_EQ(20000u, camDecoder.vvtToothDurations0);
+	// nothing which compares the cam against crank position has run
+	EXPECT_EQ(camCounterBefore, tc.vvtCamCounter);
+	EXPECT_FALSE(tc.triggerState.hasSynchronizedPhase() && tc.triggerState.getShaftSynchronized());
 }

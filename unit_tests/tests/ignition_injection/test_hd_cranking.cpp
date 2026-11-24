@@ -45,7 +45,9 @@ TEST(harley, hdCrankingWithCam3) {
 		reader.assertFirstRpm(184, 60);
 
 		if (!reader.gotSync && engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
-			EXPECT_EQ(reader.lineIndex(), 269);
+			// the cam decoder is fed while the crank is not synchronized yet, so phase sync
+			// arrives as soon as the crank syncs rather than a cam revolution later
+			EXPECT_EQ(reader.lineIndex(), 141);
 			reader.gotSync = true;
 		}
 

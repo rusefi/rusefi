@@ -32,9 +32,10 @@ TEST(realCrankingNB2, normalCranking) {
 	// noticeably larger than in no-plugs recordings (see test_real_k24a2.cpp)
 	EXPECT_NEAR(12.09f, engine->triggerCentral.instantRpm.getInstantRpmRange(), 0.1);
 
-	EXPECT_EQ(3u, eth.recentWarnings()->getCount());
+	// The cam decoder is fed while the crank is still finding sync, so it no longer starts from a
+	// partial pattern and reports no CUSTOM_CAM_TOO_MANY_TEETH here
+	EXPECT_EQ(2u, eth.recentWarnings()->getCount());
 	EXPECT_EQ(ObdCode::CUSTOM_PRIMARY_NOT_ENOUGH_TEETH, eth.recentWarnings()->get(1).Code);
-	EXPECT_EQ(ObdCode::CUSTOM_CAM_TOO_MANY_TEETH, eth.recentWarnings()->get(2).Code);
 }
 
 TEST(realCrankingNB2, crankingMissingInjector) {

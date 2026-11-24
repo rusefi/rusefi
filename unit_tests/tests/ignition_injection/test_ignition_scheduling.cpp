@@ -435,12 +435,11 @@ TEST(ignition, hardwareLatencyCorrection) {
 	ASSERT_NEAR(16.8, engine->engineState.timingAdvance[0], EPS4D);
 }
 
-// Coverage of a present defect, asserting current behavior (the expectation to move to with the
-// fix is noted at the assertion).
-// A trigger error drops phase sync, and new ignition events are then prepared as wasted spark.
-// Events prepared before the error are not invalidated, so each cylinder fires once more on its
-// single sequential coil, on a phase which may be wrong. FOME commit 8bbe9297de.
-TEST(ignition, triggerErrorKeepsSequentialIgnitionEvents) {
+// A trigger error drops phase sync, and ignition events prepared from then on are wasted spark.
+// The error also invalidates the events prepared before it (and the injection schedule), so they
+// are prepared again before they next fire: otherwise each cylinder fired once more on its single
+// sequential coil, on a phase which is now a guess. Same fix as FOME commit 8bbe9297de.
+TEST(ignition, triggerErrorInvalidatesSequentialEvents) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->cylindersCount = 4;
 	engineConfiguration->firingOrder = FO_1_3_4_2;
@@ -461,16 +460,17 @@ TEST(ignition, triggerErrorKeepsSequentialIgnitionEvents) {
 	ASSERT_TRUE(engine->ignitionEvents.isReady);
 	auto& event = engine->ignitionEvents.elements[0];
 	ASSERT_EQ(nullptr, event.outputs[1]);
+	engine->injectionEvents.isReady = true;
 
 	decoder.onTriggerError();
 	ASSERT_FALSE(decoder.hasSynchronizedPhase());
 	ASSERT_EQ(IM_WASTED_SPARK, getCurrentIgnitionMode());
 
-	// Expected after the fix: EXPECT_FALSE(isReady), so the next tooth prepares wasted spark events
-	EXPECT_TRUE(engine->ignitionEvents.isReady);
-	EXPECT_EQ(nullptr, event.outputs[1]);
+	EXPECT_FALSE(engine->ignitionEvents.isReady);
+	EXPECT_FALSE(engine->injectionEvents.isReady);
 
-	// control: an event prepared now does fire both coils of the pair
+	// the next tooth prepares the events again, now firing both coils of the pair
 	initializeIgnitionActions();
+	EXPECT_TRUE(engine->ignitionEvents.isReady);
 	EXPECT_NE(nullptr, event.outputs[1]);
 }
