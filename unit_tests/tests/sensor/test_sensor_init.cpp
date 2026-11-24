@@ -592,11 +592,9 @@ TEST(SensorInit, auxTemp2KeepsOilTemperatureCalibration) {
 	EXPECT_NEAR(30, oil, 0.1);
 }
 
-// Coverage of a present defect, asserting current behavior (the expectation to move to with the
-// fix is noted at the assertion).
-// A baro sensor of type "custom" is converted with the MAP sensor's kPa range; its own
-// baroSensor.lowValue/highValue are never used.
-TEST(SensorInit, customBaroSensorUsesMapCalibration) {
+// A baro sensor of type "custom" is converted with its own baroSensor.lowValue/highValue kPa
+// range, not the MAP sensor's; both share the mapLowValueVoltage/mapHighValueVoltage range.
+TEST(SensorInit, customBaroSensorUsesBaroCalibration) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
 	engineConfiguration->maf2AdcChannel = EFI_ADC_NONE;
@@ -616,8 +614,8 @@ TEST(SensorInit, customBaroSensorUsesMapCalibration) {
 	initMap();
 
 	// 2.5 V is half scale: 75 kPa on the baro calibration, 150 kPa on the MAP one
-	// Expected after the fix: 75
-	EXPECT_NEAR(150, convertRaw(SensorType::BarometricPressure, 2.5f).value_or(-1), 0.1);
+	EXPECT_NEAR(75, convertRaw(SensorType::BarometricPressure, 2.5f).value_or(-1), 0.1);
+	EXPECT_NEAR(150, convertRaw(SensorType::MapSlow, 2.5f).value_or(-1), 0.1);
 
 	deinitMap();
 }
