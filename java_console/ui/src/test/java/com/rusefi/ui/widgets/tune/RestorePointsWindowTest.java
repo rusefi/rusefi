@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import javax.swing.*;
+import java.awt.GraphicsEnvironment;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -20,6 +21,7 @@ import java.time.Clock;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /** [tag:restore_points] The Restore Points window and what restoring a point would change. */
 class RestorePointsWindowTest {
@@ -92,6 +94,7 @@ class RestorePointsWindowTest {
 
     @Test
     void listsPointsWithWhyAndDifferencesAndRestoresTheSelectedOne() throws Exception {
+        assumeFalse(GraphicsEnvironment.isHeadless(), "The window is a JDialog: requires a desktop or Xvfb");
         IniFileModel ini = ini();
         RestorePointStore store = new RestorePointStore(dir, 50, Clock.systemUTC());
         store.saveAlways(MsqFactory.valueOf(olderTune(), ini), RestorePointStore.Reason.MANUAL, "before idle work");
@@ -127,6 +130,7 @@ class RestorePointsWindowTest {
 
     @Test
     void theListFollowsTheStore() throws Exception {
+        assumeFalse(GraphicsEnvironment.isHeadless(), "The window is a JDialog: requires a desktop or Xvfb");
         IniFileModel ini = ini();
         RestorePointStore store = new RestorePointStore(dir, 50, Clock.systemUTC());
         SwingUtilities.invokeAndWait(() -> {
@@ -156,6 +160,7 @@ class RestorePointsWindowTest {
 
     @Test
     void aPointLikeTheOpenTuneHasNothingToRestore() throws Exception {
+        assumeFalse(GraphicsEnvironment.isHeadless(), "The window is a JDialog: requires a desktop or Xvfb");
         IniFileModel ini = ini();
         RestorePointStore store = new RestorePointStore(dir, 50, Clock.systemUTC());
         store.save(MsqFactory.valueOf(openTune(), ini), RestorePointStore.Reason.BEFORE_LOAD, null);
