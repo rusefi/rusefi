@@ -100,7 +100,8 @@ float processNissan(const CANRxFrame& frame) {
 }
 
 float processBMW_e90(const CANRxFrame& frame) {
-	return 0.1f * getTwoBytesLsb(frame, 0);
+	// speed is the low 12 bits; the upper nibble of byte 1 carries status flags
+	return 0.1f * (getTwoBytesLsb(frame, 0) & 0x0FFF);
 }
 
 float processW202(const CANRxFrame& frame) {

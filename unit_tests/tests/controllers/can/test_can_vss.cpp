@@ -8,11 +8,9 @@
 
 #include "can_vss.h"
 
-// Coverage of a present defect, asserting current behavior (the expectation to move to with the
-// fix is noted at the assertion).
 // BMW E90 0x1A0: speed is the low 12 bits, the upper nibble of byte 1 carries direction/brake
-// flags which are decoded as part of the speed. FOME commit 13e334493d.
-TEST(CanVss, bmwE90SpeedIncludesStatusBits) {
+// flags which are not part of the speed.
+TEST(CanVss, bmwE90SpeedIgnoresStatusBits) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->enableCanVss = true;
 	engineConfiguration->canVssNbcType = BMW_e90;
@@ -32,6 +30,11 @@ TEST(CanVss, bmwE90SpeedIncludesStatusBits) {
 	// same speed, with bit 12 (moving forward) set
 	frame.data8[1] = 0x11;
 	processCanRxVss(frame, getTimeNowNt());
-	// Expected after the fix: 50
-	EXPECT_NEAR(50 + 409.6, Sensor::getOrZero(SensorType::VehicleSpeed), 0.01);
+	EXPECT_NEAR(50, Sensor::getOrZero(SensorType::VehicleSpeed), 0.01);
+
+	// all flags set, top of the 12-bit range: 409.5 km/h
+	frame.data8[0] = 0xFF;
+	frame.data8[1] = 0xFF;
+	processCanRxVss(frame, getTimeNowNt());
+	EXPECT_NEAR(409.5, Sensor::getOrZero(SensorType::VehicleSpeed), 0.01);
 }
