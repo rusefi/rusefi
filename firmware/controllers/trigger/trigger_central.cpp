@@ -1370,6 +1370,11 @@ void TriggerCentral::applyShapesConfiguration() {
 
   applyCamGapOverride();
 
+	bool primaryNeedsDisambiguation = engine->triggerCentral.triggerShape.needsDisambiguation();
+
+	// If we already don't need disambiguation, we can expect it (immediately)
+	bool expectDisambiguation = !primaryNeedsDisambiguation;
+
 	for (int camIndex = 0; camIndex < CAMS_PER_BANK; camIndex++) {
 		// todo: should 'vvtWithRealDecoder' be used here?
 		if (engineConfiguration->vvtMode[camIndex] != VVT_INACTIVE) {
@@ -1379,11 +1384,21 @@ void TriggerCentral::applyShapesConfiguration() {
 				vvtTriggerConfiguration[camIndex],
 				initState
 			);
+
+			for (int bankIndex = 0; bankIndex < BANKS_COUNT; bankIndex++) {
+				int inputIndex = bankIndex * CAMS_PER_BANK + camIndex;
+
+				// [tag:injection_phase_sync] With a cam input, engine phase will be known once
+				// the cam decodes. With none we run crank-only and must not wait for it.
+				if (isBrainPinValid(engineConfiguration->camInputs[inputIndex])) {
+					expectDisambiguation = true;
+				}
+			}
 		}
 	}
 
 	// This is not the right place for this, but further refactoring has to happen before it can get moved.
-	triggerState.setNeedsDisambiguation(engine->triggerCentral.triggerShape.needsDisambiguation());
+	triggerState.setNeedsDisambiguation(primaryNeedsDisambiguation, expectDisambiguation);
 
 }
 

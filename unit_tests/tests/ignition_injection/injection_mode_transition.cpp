@@ -251,22 +251,96 @@ TEST(fuelControl, CrankingToRunningAfterStagedBatchPulseClosesSecondaryInjector)
 	checkStagedBatchTransition(StagedBatchTransition::AfterPulse);
 }
 
-// Coverage of a present defect, asserting current behavior (the expectation to move to with the
-// fix is noted at the assertion).
-// Injection has no fallback while the engine phase is not known: sequential injection runs on a
-// guessed phase, which is 360 degrees out half the time. Ignition does fall back to wasted spark.
-// FOME commit 43e8288ea4 extends the batch fallback to cranking.
-TEST(fuelControl, sequentialInjectionWithoutPhaseSync) {
+// [tag:injection_phase_sync] While engine phase is not known but a cam input will provide it,
+// sequential injection falls back to batch, cranking and running: pulses timed off a guessed
+// phase are 360 degrees out half the time. Ignition has the matching wasted spark fallback.
+static void checkSequentialWaitsForPhaseSync(bool cranking) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
+	engineConfiguration->cranking.rpm = 500;
+	engine->rpmCalculator.setRpmValue(cranking ? 200 : 1000);
+	ASSERT_EQ(cranking, engine->rpmCalculator.isCranking());
+
+	auto& decoder = engine->triggerCentral.triggerState;
+	decoder.setNeedsDisambiguation(true, /*expectDisambiguation*/ true);
+	ASSERT_FALSE(decoder.hasSynchronizedPhase());
+
+	EXPECT_EQ(IM_BATCH, getCurrentInjectionMode());
+
+	// other modes do not depend on phase
+	for (auto mode : {IM_SIMULTANEOUS, IM_BATCH, IM_SINGLE_POINT}) {
+		engineConfiguration->injectionMode = mode;
+		engineConfiguration->crankingInjectionMode = mode;
+		EXPECT_EQ(mode, getCurrentInjectionMode());
+	}
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
+
+	// cam syncs: sequential right away
+	decoder.syncEnginePhase(/*divider*/ 2, /*remainder*/ 0, /*engineCycle*/ 720);
+	ASSERT_TRUE(decoder.hasSynchronizedPhase());
+	EXPECT_EQ(IM_SEQUENTIAL, getCurrentInjectionMode());
+
+	// phase lost on a trigger error: back to batch until the cam syncs again
+	decoder.onTriggerError();
+	EXPECT_EQ(IM_BATCH, getCurrentInjectionMode());
+}
+
+TEST(fuelControl, sequentialCrankingUsesBatchUntilPhaseSync) {
+	checkSequentialWaitsForPhaseSync(/*cranking*/ true);
+}
+
+TEST(fuelControl, sequentialRunningUsesBatchUntilPhaseSync) {
+	checkSequentialWaitsForPhaseSync(/*cranking*/ false);
+}
+
+// With no cam input, phase never arrives: waiting for it would mean batch forever, so sequential
+// is honored as configured.
+TEST(fuelControl, sequentialWithoutCamInputStaysSequential) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 	engine->rpmCalculator.setRpmValue(1000);
 
-	engine->triggerCentral.triggerState.setNeedsDisambiguation(true);
-	ASSERT_FALSE(engine->triggerCentral.triggerState.hasSynchronizedPhase());
+	auto& decoder = engine->triggerCentral.triggerState;
+	decoder.setNeedsDisambiguation(true, /*expectDisambiguation*/ false);
+	ASSERT_FALSE(decoder.hasSynchronizedPhase());
 
-	EXPECT_EQ(IM_WASTED_SPARK, getCurrentIgnitionMode());
-	// Expected after the fix: IM_BATCH
 	EXPECT_EQ(IM_SEQUENTIAL, getCurrentInjectionMode());
+}
+
+// Phase is expected only when the crank pattern needs it and a cam input is assigned for an
+// active cam mode.
+TEST(fuelControl, phaseSyncExpectedOnlyWithCamInput) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	auto& decoder = engine->triggerCentral.triggerState;
+
+	// crank wheel which repeats every revolution, no cam
+	setCrankOperationMode();
+	engineConfiguration->vvtMode[0] = VVT_INACTIVE;
+	engineConfiguration->camInputs[0] = Gpio::Unassigned;
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+	ASSERT_FALSE(decoder.hasSynchronizedPhase());
+	EXPECT_FALSE(decoder.expectDisambiguation());
+
+	// cam mode selected but no input pin
+	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
+	engine->updateTriggerConfiguration();
+	EXPECT_FALSE(decoder.expectDisambiguation());
+
+	// cam input assigned
+	engineConfiguration->camInputs[0] = Gpio::A0;
+	engine->updateTriggerConfiguration();
+	EXPECT_TRUE(decoder.expectDisambiguation());
+	ASSERT_FALSE(decoder.hasSynchronizedPhase());
+
+	// a pattern which is unique over the whole cycle has phase from the start
+	engineConfiguration->vvtMode[0] = VVT_INACTIVE;
+	engineConfiguration->camInputs[0] = Gpio::Unassigned;
+	setCamOperationMode();
+	eth.setTriggerType(trigger_type_e::TT_HALF_MOON);
+	EXPECT_TRUE(decoder.hasSynchronizedPhase());
+	EXPECT_TRUE(decoder.expectDisambiguation());
 }

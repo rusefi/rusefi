@@ -602,7 +602,26 @@ bool Engine::isInShutdownMode() const {
 }
 
 injection_mode_e getCurrentInjectionMode() {
-	return getEngineRotationState()->isCranking() ? engineConfiguration->crankingInjectionMode : engineConfiguration->injectionMode;
+	auto mode = getEngineRotationState()->isCranking() ? engineConfiguration->crankingInjectionMode : engineConfiguration->injectionMode;
+
+#if EFI_SHAFT_POSITION_INPUT
+	if (mode == IM_SEQUENTIAL) {
+		auto& decoder = engine->triggerCentral.triggerState;
+
+		// [tag:injection_phase_sync] While engine phase is not known yet but a cam input will
+		// provide it, inject in batch, cranking or running. Sequential pulses timed off a guessed
+		// phase land 360 degrees away from where they were intended about half the time, then
+		// get skipped or doubled when the phase corrects. Batch fires each 360 degree pair
+		// together, so every cylinder gets its fuel whichever way the guess went. Without a cam
+		// input phase never arrives: honor sequential as configured rather than batch forever.
+		// Ignition has the matching fallback in getCurrentIgnitionMode().
+		if (!decoder.hasSynchronizedPhase() && decoder.expectDisambiguation()) {
+			return IM_BATCH;
+		}
+	}
+#endif /* EFI_SHAFT_POSITION_INPUT */
+
+	return mode;
 }
 
 /**

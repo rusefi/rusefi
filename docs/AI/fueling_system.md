@@ -51,6 +51,16 @@ has the same phase as `-320`. Exhaust/intake TDC is at `360` (or `-360`).
 Per-cylinder phasing assumes synchronized sequential operation; batch and
 simultaneous operation group or repeat pulses.
 
+`getCurrentInjectionMode()` (`engine.cpp`) returns the cranking or running mode
+from the tune, with one override: Sequential becomes Batch while the primary
+decoder has no synchronized phase and phase is expected to arrive
+(`PrimaryTriggerDecoder::expectDisambiguation()`: the crank pattern needs
+disambiguation and a cam input is assigned for an active cam mode). Without a
+cam input Sequential is used as configured. The override ends at
+`syncEnginePhase()` and returns after `onTriggerError()`. Each injection event
+adopts the new mode at its next `update()`, so events switch one by one.
+See `[tag:injection_phase_sync]`.
+
 Source: `fuel_math.cpp::getInjectionOffset()`, `fuel_schedule.cpp`,
 `engine2.cpp` and `engine_math.cpp::getPerCylinderFiringOrderOffset()`.
 User explanation: wiki `Injection-Modes#injection-timing-reference`.

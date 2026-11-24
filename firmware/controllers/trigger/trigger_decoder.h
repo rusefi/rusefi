@@ -291,10 +291,17 @@ public:
 		return m_hasSynchronizedPhase;
 	}
 
-	void setNeedsDisambiguation(bool needsDisambiguation) {
+	void setNeedsDisambiguation(bool needsDisambiguation, bool expectDisambiguation = false) {
 		m_needsDisambiguation = needsDisambiguation;
+		m_expectDisambiguation = expectDisambiguation;
 
 		resetHasFullSync();
+	}
+
+	// [tag:injection_phase_sync] Whether engine phase is either known already or expected to
+	// become known (a cam input is configured), see getCurrentInjectionMode()
+	bool expectDisambiguation() const {
+		return m_expectDisambiguation;
 	}
 
 	void onTriggerError() override;
@@ -323,6 +330,13 @@ private:
 	 * crank sync point is found - see resetHasFullSync().
 	 */
 	bool m_needsDisambiguation = false;
+
+	/**
+	 * True when phase information is expected to arrive: a cam input is configured, so
+	 * syncEnginePhase() will be called once the cam decodes. False for crank-only setups,
+	 * and for phase sources without a cam input, where waiting for phase could last forever.
+	 */
+	bool m_expectDisambiguation = false;
 };
 
 class VvtTriggerDecoder : public TriggerDecoderBase {
