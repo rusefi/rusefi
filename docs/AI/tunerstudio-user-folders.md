@@ -68,6 +68,12 @@ for that firmware without downloading or importing the definition. It:
 - does nothing if the `ecuDef` folder does not exist (TunerStudio never ran);
 - never overwrites an existing file with that name.
 
+The `rusefi.ts.ecudef.dir` system property replaces the folder for both priming
+and the lookup in section 4 (`[tag:ts_ecudef_dir]`). The Gradle test tasks set it
+to a build folder that does not exist, so tests neither write test `.ini` files
+into the user's TunerStudio cache nor find files left there. A test started
+outside Gradle uses the real folder unless it sets the property.
+
 Callers:
 
 - `StartupFrame` constructor starts the `ecuDef primer` thread with

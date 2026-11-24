@@ -16,22 +16,40 @@ public class PrimeTunerStudioCache {
      * symmetrically, read from it when the rusefi.com download fails - a custom/unpublished build
      * that TunerStudio has already talked to is still available locally.
      */
-    static final String ECU_DEF_FOLDER = TsHelper.TS_ROOT +
+    private static final String DEFAULT_ECU_DEF_FOLDER = TsHelper.TS_ROOT +
         "TunerStudio" +
         File.separator + "config" +
         File.separator + "ecuDef" +
         File.separator;
 
+    /**
+     * [tag:ts_ecudef_dir] Replaces the ecuDef folder. The Gradle test tasks point it at a build
+     * folder: every .ini that {@code RealIniFileProvider} resolves is primed into this cache and
+     * read back from it as a fallback, so tests sharing the user's real folder leave their .ini
+     * files there and a later "no .ini anywhere" test finds one.
+     */
+    static final String ECU_DEF_DIR_PROPERTY = "rusefi.ts.ecudef.dir";
+
+    /** @return the ecuDef folder with a trailing separator */
+    static String ecuDefFolder() {
+        String override = System.getProperty(ECU_DEF_DIR_PROPERTY);
+        if (override == null || override.trim().isEmpty()) {
+            return DEFAULT_ECU_DEF_FOLDER;
+        }
+        return override.endsWith(File.separator) ? override : override + File.separator;
+    }
+
     private static final Logging log = Logging.getLogging(PrimeTunerStudioCache.class);
 
     public static void prime(IniFileModel iniFileModel, String localIniFile) {
-        if (new File(ECU_DEF_FOLDER).isDirectory()) {
-            log.info("Trying to prime " + ECU_DEF_FOLDER);
+        String ecuDefFolder = ecuDefFolder();
+        if (new File(ecuDefFolder).isDirectory()) {
+            log.info("Trying to prime " + ecuDefFolder);
         } else {
-            log.warn("Not found " + ECU_DEF_FOLDER);
+            log.warn("Not found " + ecuDefFolder);
             return;
         }
-        String fullEcuDefFileName = ECU_DEF_FOLDER + ecuDefFileName(iniFileModel.getSignature());
+        String fullEcuDefFileName = ecuDefFolder + ecuDefFileName(iniFileModel.getSignature());
         if (new File(fullEcuDefFileName).exists()) {
             log.info(fullEcuDefFileName + " already present");
             return;
@@ -50,7 +68,7 @@ public class PrimeTunerStudioCache {
      */
     @Nullable
     public static String findInTunerStudioCache(String signature) {
-        return findInTunerStudioCache(signature, ECU_DEF_FOLDER);
+        return findInTunerStudioCache(signature, ecuDefFolder());
     }
 
     // package-private for tests

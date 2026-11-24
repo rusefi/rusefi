@@ -46,6 +46,9 @@ allprojects {
         // [tag:restore_points_dir] tests that Burn or Load a tune write their restore points here, never to ~/.rusEFI
         systemProperty 'rusefi.restore_points.dir',
             layout.buildDirectory.dir('test-restore-points').get().asFile.absolutePath
+        // [tag:ts_ecudef_dir] tests never read or prime the real ~/.efiAnalytics ecuDef cache
+        systemProperty 'rusefi.ts.ecudef.dir',
+            layout.buildDirectory.dir('test-ts-ecudef').get().asFile.absolutePath
       }
     }
 

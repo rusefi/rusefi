@@ -43,7 +43,13 @@ public class RealIniFileProviderManualPickerTest {
             + "\"\n[Constants]\nnPages = 1\npageSize = 8\npageReadCommand = \"R\"\n"
             + "page = 1\nvalue = scalar, U08, 0, \"\", 1, 0, 0, 255, 0\n"
             + "[OutputChannels]\nochBlockSize = 8\n");
-        RealIniFileProvider provider = new RealIniFileProvider((signature, location, download) -> cached.toString());
+        RealIniFileProvider provider = new RealIniFileProvider(
+            (signature, location, download) -> cached.toString(), true,
+            (signature, progress) -> IniLocator.RootSearchResult.unavailable(),
+            (signature, source) -> {
+                throw new AssertionError("no drive-root snapshot should be imported");
+            },
+            signature -> null);
 
         RecordingPicker picker = new RecordingPicker();
         AtomicInteger prompts = new AtomicInteger();
@@ -411,7 +417,8 @@ public class RealIniFileProviderManualPickerTest {
             },
             (signature, source) -> {
                 throw new AssertionError("no matching root snapshot should be imported");
-            });
+            },
+            signature -> null);
 
         try {
             FutureTask<Void> lookup = new FutureTask<>(() -> {

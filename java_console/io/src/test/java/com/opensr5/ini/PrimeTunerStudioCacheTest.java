@@ -28,6 +28,28 @@ public class PrimeTunerStudioCacheTest {
         return file;
     }
 
+    /** [tag:ts_ecudef_dir] */
+    @Test
+    public void ecuDefFolderFollowsTheOverrideProperty(@TempDir Path ecuDef) throws IOException {
+        String previous = System.getProperty(PrimeTunerStudioCache.ECU_DEF_DIR_PROPERTY);
+        try {
+            System.setProperty(PrimeTunerStudioCache.ECU_DEF_DIR_PROPERTY, ecuDef.toString());
+            assertEquals(folder(ecuDef), PrimeTunerStudioCache.ecuDefFolder());
+            File expected = writeIni(ecuDef, "rusEFImaster.2026.08.29.purple-gateway.1662610921.ini", SIGNATURE);
+            assertEquals(expected.getAbsolutePath(), PrimeTunerStudioCache.findInTunerStudioCache(SIGNATURE));
+
+            System.clearProperty(PrimeTunerStudioCache.ECU_DEF_DIR_PROPERTY);
+            assertTrue(PrimeTunerStudioCache.ecuDefFolder().startsWith(System.getProperty("user.home")),
+                PrimeTunerStudioCache.ecuDefFolder());
+        } finally {
+            if (previous == null) {
+                System.clearProperty(PrimeTunerStudioCache.ECU_DEF_DIR_PROPERTY);
+            } else {
+                System.setProperty(PrimeTunerStudioCache.ECU_DEF_DIR_PROPERTY, previous);
+            }
+        }
+    }
+
     @Test
     public void findsIniNamedAfterSignatureWithoutSpaces(@TempDir Path ecuDef) throws IOException {
         File expected = writeIni(ecuDef, "rusEFImaster.2026.08.29.purple-gateway.1662610921.ini", SIGNATURE);
