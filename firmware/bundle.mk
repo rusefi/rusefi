@@ -198,7 +198,8 @@ UPDATE_CONSOLE_FOLDER_TARGETS = $(addprefix $(CONSOLE_FOLDER)/,$(notdir $(UPDATE
 
 MOST_COMMON_BUNDLE_FILES = \
   $(UPDATE_FOLDER_TARGETS) \
-  $(UPDATE_CONSOLE_FOLDER_TARGETS)
+  $(UPDATE_CONSOLE_FOLDER_TARGETS) \
+  $(BUNDLE_7ZA_FILES)
 
 UPDATE_BUNDLE_FILES = \
   $(FIRMWARE_OUTPUTS) \
@@ -234,6 +235,19 @@ $(BUNDLE_JRE): .FORCE | $(FOLDER)
 	$(PYTHON) bin/prepare_windows_jre.py $@ --cache-dir "$(WINDOWS_JRE_CACHE)" \
 	  $(if $(WINDOWS_JRE_ARCHIVE),--archive "$(WINDOWS_JRE_ARCHIVE)") \
 	  $(if $(WINDOWS_JRE_MANIFEST),--manifest "$(WINDOWS_JRE_MANIFEST)")
+
+# Compressed INI lookup requires the pinned Windows tool beside the Console JAR.
+BUNDLE_7ZA_FILES = $(addprefix $(CONSOLE_FOLDER)/,7za.exe 7za-LICENSE.txt 7za-readme.txt)
+WINDOWS_7ZA_CACHE ?= $(if $(XDG_CACHE_HOME),$(XDG_CACHE_HOME)/rusefi/7za,$(HOME)/.cache/rusefi/7za)
+WINDOWS_7ZA_ARCHIVE ?=
+$(BUNDLE_7ZA_FILES): $(CONSOLE_FOLDER)/.7za-sentinel ;
+$(CONSOLE_FOLDER)/.7za-sentinel: bin/prepare_windows_7za.sh .FORCE | $(CONSOLE_FOLDER)
+	@set -e; stage=$$(mktemp -d "$(CONSOLE_FOLDER)/.7za.XXXXXX"); \
+	  trap 'rm -rf "$$stage"' EXIT; \
+	  bash bin/prepare_windows_7za.sh "$$stage" --cache-dir "$(WINDOWS_7ZA_CACHE)" \
+	    $(if $(WINDOWS_7ZA_ARCHIVE),--archive "$(WINDOWS_7ZA_ARCHIVE)"); \
+	  mv "$$stage/"* "$(CONSOLE_FOLDER)/"; \
+	  touch "$@"
 
 BUNDLE_FILES = \
   $(UPDATE_BUNDLE_FILES) \
