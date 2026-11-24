@@ -104,7 +104,11 @@ public class DevicePane {
         selector.setExternalPrimaryActionBusySupplier(rollbackController::isPrimaryUpdateBlockedByCatalogDiscovery);
         selector.addFirmwareControl(rollbackController.getRollbackButton());
         firmwareSummary = new FirmwareStatusSummaryPanel(
-            rollbackController, selector, branchSwitchController.getButton(), migrateSettings);
+            rollbackController, selector, branchSwitchController.getButton(), migrateSettings,
+            connectivityContext, selector::getSelectedDetectedPort,
+            () -> sessionManager.getState() == SessionState.FLASHING
+                || !jobExecutor.isNotInProgress() || rollbackController.isDownloadInProgress());
+        selector.setMissingIniStateChangedListener(this::refreshFirmwareStatusAfterMissingIniChange);
         rollbackController.addStateChangedListener(() -> SwingUtilities.invokeLater(this::refreshFirmwareControls));
 
         // No connect/disconnect here — the auto-connect watchdog owns the connection. comboPorts is
@@ -173,12 +177,17 @@ public class DevicePane {
         });
         logPanel.setVisible(statusPanel.isActivityVisible());
         card.add(logPanel);
-        content.add(FirmwareUpdateCard.inResponsiveViewport(card), BorderLayout.CENTER);
+        JPanel firmwareViews = FirmwareUpdateCard.createFirmwareTabContent(
+            FirmwareUpdateCard.inResponsiveViewport(card), selector, tabbedPane, content);
+        content.add(firmwareViews, BorderLayout.CENTER);
 
         sessionManager.addListener((state, hardware) -> SwingUtilities.invokeLater(() -> render(state, hardware)));
     }
 
     void render(final SessionState state, final AvailableHardware hardware) {
+        if (shouldCancelNoIniConfirmation(lastRenderedState, state)) {
+            selector.cancelNoIniUpdateConfirmation();
+        }
         final AvailableHardware effectiveHardware = (hardware != null)
             ? hardware
             : connectivityContext.getCurrentHardware();
@@ -201,7 +210,7 @@ public class DevicePane {
         firmwareSummary.refresh();
         final boolean flashing = state == SessionState.FLASHING;
         autoUpdateBundle.setEnabled(!flashing);
-        migrateSettings.setEnabled(!flashing);
+        migrateSettings.setEnabled(!flashing && firmwareSummary.isTunePreservationAvailable());
         comboPorts.setEnabled(!flashing);
 
         // The board is a usable live ECU only in CONNECTED. While it is being flashed or sits in a
@@ -221,6 +230,11 @@ public class DevicePane {
         firmwareSummary.refresh();
         content.revalidate();
         content.repaint();
+    }
+
+    private void refreshFirmwareStatusAfterMissingIniChange() {
+        rollbackController.refresh((PortResult) comboPorts.getSelectedItem());
+        refreshFirmwareControls();
     }
 
     private void lockConsoleForState(final SessionState state) {
@@ -262,11 +276,15 @@ public class DevicePane {
                 ? "Your ECU is in recovery mode. Use Recover ECU to choose its board and firmware."
                 : "Your ECU is in recovery mode. Recovery is not supported on this platform.";
         }
-        return "Bootloader detected — click Update ECU firmware to continue.";
+        return "OpenBLT bootloader detected — click Manual OpenBLT Update to continue.";
     }
 
     static boolean isBootloaderState(final SessionState state) {
         return state == SessionState.DEVICE_IN_DFU || state == SessionState.DEVICE_IN_BLT;
+    }
+
+    static boolean shouldCancelNoIniConfirmation(SessionState previous, SessionState current) {
+        return previous != null && previous != current;
     }
 
     private void selectDeviceTab() {

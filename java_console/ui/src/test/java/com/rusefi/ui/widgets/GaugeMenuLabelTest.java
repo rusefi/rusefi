@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileMetaInfo;
 import com.opensr5.ini.IniFileModel;
@@ -117,6 +118,6 @@ class GaugeMenuLabelTest {
         byte[] content = new byte[16];
         byte[] bytes = note.getBytes(StandardCharsets.US_ASCII);
         System.arraycopy(bytes, 0, content, 0, bytes.length);
-        return new ConfigurationImage(content);
+        return ConfigurationImageTestHelper.newLittleEndian(content);
     }
 }

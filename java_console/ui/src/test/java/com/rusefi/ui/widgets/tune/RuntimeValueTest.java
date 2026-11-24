@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileMetaInfo;
 import com.opensr5.ini.IniFileModel;
@@ -39,7 +40,7 @@ class RuntimeValueTest {
             SwingUtilities.invokeAndWait(() -> {
                 CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
                 ref.set(widget);
-                widget.update("calibration", ini, new ConfigurationImage(4));
+                widget.update("calibration", ini, ConfigurationImageTestHelper.newLittleEndian(4));
                 assertEquals(Arrays.asList("Gear sensor voltage", "---", "Gear detected", "---"),
                     labels(widget.getContentPane()));
                 assertFalse(hasDemand(VOLTAGE));
@@ -93,7 +94,7 @@ class RuntimeValueTest {
         SwingUtilities.invokeAndWait(() -> {
             CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
             try {
-                widget.update("mixed", ini, new ConfigurationImage(4));
+                widget.update("mixed", ini, ConfigurationImageTestHelper.newLittleEndian(4));
                 JPanel panel = widget.getContentPane();
                 assertEquals(4, panel.getComponentCount());
                 JPanel voltage = (JPanel) panel.getComponent(1);

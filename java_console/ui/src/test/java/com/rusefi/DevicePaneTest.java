@@ -39,10 +39,18 @@ public class DevicePaneTest {
     }
 
     @Test
-    public void detectedBootloaderGuidanceUsesNormalProtocolNeutralUpdate() {
+    public void detectedOpenBltGuidanceNamesTheManualUpdateAction() {
         String guidance = DevicePane.bootloaderGuidance(SessionState.DEVICE_IN_BLT);
-        assertFalse(guidance.contains("OpenBLT"), guidance);
-        assertTrue(guidance.contains("Update ECU firmware"), guidance);
+        assertTrue(guidance.contains("OpenBLT bootloader detected"), guidance);
+        assertTrue(guidance.contains("Manual OpenBLT Update"), guidance);
+    }
+
+    @Test
+    public void noIniConfirmationIsCancelledWhenTheDeviceSessionChanges() {
+        assertTrue(DevicePane.shouldCancelNoIniConfirmation(SessionState.CONNECTED, SessionState.DISCONNECTED));
+        assertTrue(DevicePane.shouldCancelNoIniConfirmation(SessionState.DISCONNECTED, SessionState.CONNECTED));
+        assertFalse(DevicePane.shouldCancelNoIniConfirmation(SessionState.CONNECTED, SessionState.CONNECTED));
+        assertFalse(DevicePane.shouldCancelNoIniConfirmation(null, SessionState.DISCONNECTED));
     }
 
     @Test

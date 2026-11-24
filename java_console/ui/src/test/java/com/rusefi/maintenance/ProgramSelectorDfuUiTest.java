@@ -2,6 +2,7 @@ package com.rusefi.maintenance;
 
 import com.rusefi.AvailableHardware;
 import com.rusefi.ConnectivityContext;
+import com.rusefi.MissingIniRecoveryState;
 import com.rusefi.PortResult;
 import com.rusefi.SerialPortType;
 import com.rusefi.UiProperties;
@@ -54,7 +55,7 @@ class ProgramSelectorDfuUiTest {
             PortResult openBlt = new PortResult("BLT", SerialPortType.OpenBlt);
             PortResult ecu = new PortResult("ECU", SerialPortType.Ecu);
             AvailableHardware hardware = new AvailableHardware(Arrays.asList(dfu, openBlt, ecu), true, false, false);
-            ConnectivityContext context = mock(ConnectivityContext.class);
+            ConnectivityContext context = mockConnectivityContext();
             when(context.getCurrentHardware()).thenReturn(hardware);
             when(context.getConnectedEcuTarget()).thenReturn(ConnectedEcuTarget.forManualRecovery("proteus_f7"));
             JComboBox<PortResult> ports = new JComboBox<>(new PortResult[]{dfu, openBlt, ecu});
@@ -71,16 +72,21 @@ class ProgramSelectorDfuUiTest {
             assertEquals(1, countFirmwareActionButtons(selector.getControl()));
             ports.setSelectedItem(openBlt);
             assertTrue(mainButton.isEnabled(), "a currently detected OpenBLT device remains a normal update target");
-            assertEquals("Update ECU firmware", findButton(selector.getControl(), "Update ECU firmware").getText());
+            assertEquals(UpdateMode.OPENBLT_MANUAL.displayText,
+                findButton(selector.getControl(), UpdateMode.OPENBLT_MANUAL.displayText).getText());
             selector.setPrimaryActionBranch("lts-26lima");
-            assertEquals("Update ECU · lts-26lima", findButton(selector.getControl(), "Update ECU · lts-26lima").getText());
+            assertEquals(UpdateMode.OPENBLT_MANUAL.displayText,
+                findButton(selector.getControl(), UpdateMode.OPENBLT_MANUAL.displayText).getText());
             selector.setPrimaryActionStatus(true, false);
-            assertEquals("Reflash anyway", findButton(selector.getControl(), "Reflash anyway").getText());
+            assertEquals(UpdateMode.OPENBLT_MANUAL.displayText,
+                findButton(selector.getControl(), UpdateMode.OPENBLT_MANUAL.displayText).getText());
             selector.setPrimaryActionStatus(false, true);
-            assertEquals("Update firmware", findButton(selector.getControl(), "Update firmware").getText());
+            assertEquals(UpdateMode.OPENBLT_MANUAL.displayText,
+                findButton(selector.getControl(), UpdateMode.OPENBLT_MANUAL.displayText).getText());
             selector.setPrimaryActionStatus(false, false);
-            assertEquals("Update ECU · lts-26lima", findButton(selector.getControl(), "Update ECU · lts-26lima").getText(),
-                "unknown status must not claim the ECU is current or newer");
+            assertEquals(UpdateMode.OPENBLT_MANUAL.displayText,
+                findButton(selector.getControl(), UpdateMode.OPENBLT_MANUAL.displayText).getText(),
+                "bootloader mode must keep the explicit manual action label");
             assertNull(findButton(selector.getControl(), "Recover ECU"), "there is no separate recovery control");
             ports.setSelectedItem(dfu);
             assertEquals("Recover ECU", findButton(selector.getControl(), "Recover ECU").getText(),
@@ -96,7 +102,7 @@ class ProgramSelectorDfuUiTest {
         SwingUtilities.invokeAndWait(() -> {
             PortResult ecu = new PortResult("ECU", SerialPortType.Ecu);
             AvailableHardware hardware = new AvailableHardware(Collections.singletonList(ecu), false, false, false);
-            ConnectivityContext context = mock(ConnectivityContext.class);
+            ConnectivityContext context = mockConnectivityContext();
             when(context.getCurrentHardware()).thenReturn(hardware);
             when(context.getConnectedEcuTarget()).thenReturn(ConnectedEcuTarget.forManualRecovery("proteus_f7"));
             ProgramSelector selector = new ProgramSelector(context, new JComboBox<>(new PortResult[]{ecu}),
@@ -133,7 +139,7 @@ class ProgramSelectorDfuUiTest {
             PortResult dfu = new PortResult("DFU", SerialPortType.Dfu);
             PortResult ecu = new PortResult("ECU", SerialPortType.Ecu);
             AvailableHardware hardware = new AvailableHardware(Arrays.asList(dfu, ecu), true, false, false);
-            ConnectivityContext context = mock(ConnectivityContext.class);
+            ConnectivityContext context = mockConnectivityContext();
             when(context.getCurrentHardware()).thenReturn(hardware);
             when(context.getConnectedEcuTarget()).thenReturn(ConnectedEcuTarget.forManualRecovery("proteus_f7"));
             ProgramSelector selector = new ProgramSelector(context, new JComboBox<>(new PortResult[]{dfu, ecu}),
@@ -165,7 +171,7 @@ class ProgramSelectorDfuUiTest {
         SwingUtilities.invokeAndWait(() -> {
             PortResult dfu = new PortResult("DFU", SerialPortType.Dfu);
             AvailableHardware hardware = new AvailableHardware(Collections.singletonList(dfu), true, false, false);
-            ConnectivityContext context = mock(ConnectivityContext.class);
+            ConnectivityContext context = mockConnectivityContext();
             when(context.getCurrentHardware()).thenReturn(hardware);
             when(context.getConnectedEcuTarget()).thenReturn(ConnectedEcuTarget.forManualRecovery("proteus_f7"));
             ProgramSelector selector = new ProgramSelector(context, new JComboBox<>(new PortResult[]{dfu}),
@@ -206,7 +212,7 @@ class ProgramSelectorDfuUiTest {
         SwingUtilities.invokeAndWait(() -> {
             PortResult dfu = new PortResult("DFU", SerialPortType.Dfu);
             AvailableHardware hardware = new AvailableHardware(Collections.singletonList(dfu), true, false, false);
-            ConnectivityContext context = mock(ConnectivityContext.class);
+            ConnectivityContext context = mockConnectivityContext();
             when(context.getCurrentHardware()).thenReturn(hardware);
             when(context.getConnectedEcuTarget()).thenReturn(ConnectedEcuTarget.forManualRecovery("proteus_f7"));
             ProgramSelector selector = new ProgramSelector(context, new JComboBox<>(new PortResult[]{dfu}),
@@ -237,7 +243,7 @@ class ProgramSelectorDfuUiTest {
         SwingUtilities.invokeAndWait(() -> {
             PortResult ecu = new PortResult("ECU", SerialPortType.Ecu);
             AvailableHardware hardware = new AvailableHardware(Collections.singletonList(ecu), false, false, false);
-            ConnectivityContext context = mock(ConnectivityContext.class);
+            ConnectivityContext context = mockConnectivityContext();
             ConnectedEcuTarget target = new ConnectedEcuTarget();
             target.setConnectedTargetForUnitTest("proteus_f7");
             when(context.getCurrentHardware()).thenReturn(hardware);
@@ -283,7 +289,7 @@ class ProgramSelectorDfuUiTest {
         SwingUtilities.invokeAndWait(() -> {
             PortResult ecu = new PortResult("ECU", SerialPortType.Ecu);
             AvailableHardware hardware = new AvailableHardware(Collections.singletonList(ecu), false, false, false);
-            ConnectivityContext context = mock(ConnectivityContext.class);
+            ConnectivityContext context = mockConnectivityContext();
             when(context.getCurrentHardware()).thenReturn(hardware);
             when(context.getConnectedEcuTarget()).thenReturn(ConnectedEcuTarget.forManualRecovery("proteus_f7"));
             ProgramSelector selector = new ProgramSelector(context, new JComboBox<>(new PortResult[]{ecu}),
@@ -322,7 +328,7 @@ class ProgramSelectorDfuUiTest {
             PortResult first = new PortResult("DFU_1", SerialPortType.Dfu);
             PortResult second = new PortResult("DFU_2", SerialPortType.Dfu);
             AvailableHardware multiple = new AvailableHardware(Arrays.asList(first, second), true, false, false);
-            ConnectivityContext context = mock(ConnectivityContext.class);
+            ConnectivityContext context = mockConnectivityContext();
             when(context.getCurrentHardware()).thenReturn(multiple);
             when(context.getConnectedEcuTarget()).thenReturn(ConnectedEcuTarget.forManualRecovery("proteus_f7"));
             JComboBox<PortResult> ports = new JComboBox<>(new PortResult[]{first, second});
@@ -365,7 +371,7 @@ class ProgramSelectorDfuUiTest {
         SwingUtilities.invokeAndWait(() -> {
             PortResult dfu = new PortResult("DFU", SerialPortType.Dfu);
             AvailableHardware hardware = new AvailableHardware(Collections.singletonList(dfu), true, false, false);
-            ConnectivityContext context = mock(ConnectivityContext.class);
+            ConnectivityContext context = mockConnectivityContext();
             when(context.getCurrentHardware()).thenReturn(hardware);
             when(context.getConnectedEcuTarget()).thenReturn(ConnectedEcuTarget.forManualRecovery("proteus_f7"));
             ProgramSelector selector = new ProgramSelector(context, new JComboBox<>(new PortResult[]{dfu}),
@@ -413,7 +419,9 @@ class ProgramSelectorDfuUiTest {
             for (SerialPortType type : Arrays.asList(SerialPortType.Ecu, SerialPortType.OpenBlt)) {
                 Harness h = new Harness(new PortResult("ECU", type), new PortResult("DFU", SerialPortType.Dfu));
                 JPopupMenu menu = h.selector.apply(h.hardware.get(), true, false, "proteus_f7", "proteus_f7");
-                JButton primary = findButton(h.selector.getControl(), "Update ECU firmware");
+                String primaryText = type == SerialPortType.OpenBlt
+                    ? UpdateMode.OPENBLT_MANUAL.displayText : "Update ECU firmware";
+                JButton primary = findButton(h.selector.getControl(), primaryText);
                 assertNotNull(primary);
                 assertTrue(primary.isEnabled());
                 assertNull(findButton(h.selector.getControl(), "Recover ECU"));
@@ -482,7 +490,7 @@ class ProgramSelectorDfuUiTest {
 
             primary.doClick();
 
-            assertEquals("Update ECU firmware", primary.getText());
+            assertEquals(UpdateMode.OPENBLT_MANUAL.displayText, primary.getText());
             verify(h.executor, never()).startJob(any(), any());
         });
     }
@@ -1348,7 +1356,10 @@ class ProgramSelectorDfuUiTest {
     private static void openNormalPrimary(Harness h) {
         h.selector.setNormalUpdateConfirmationForTests(null);
         h.selector.apply(h.hardware.get());
-        JButton primary = findButton(h.selector.getControl(), "Update ECU firmware");
+        PortResult selected = (PortResult) h.ports.getSelectedItem();
+        String primaryText = selected != null && selected.type == SerialPortType.OpenBlt
+            ? UpdateMode.OPENBLT_MANUAL.displayText : "Update ECU firmware";
+        JButton primary = findButton(h.selector.getControl(), primaryText);
         assertNotNull(primary);
         assertTrue(primary.isEnabled());
         primary.doClick();
@@ -1416,7 +1427,7 @@ class ProgramSelectorDfuUiTest {
     }
 
     private static final class Harness {
-        final ConnectivityContext context = mock(ConnectivityContext.class);
+        final ConnectivityContext context = mockConnectivityContext();
         final AtomicReference<AvailableHardware> hardware;
         final AtomicReference<ProgramSelector.ProgrammingCapabilities> capabilities = new AtomicReference<>(
             capabilities(true, false, "proteus_f7", "proteus_f7"));
@@ -1446,10 +1457,17 @@ class ProgramSelectorDfuUiTest {
         }
     }
 
+    private static ConnectivityContext mockConnectivityContext() {
+        ConnectivityContext context = mock(ConnectivityContext.class);
+        when(context.getMissingIniRecoveryState()).thenReturn(new MissingIniRecoveryState());
+        return context;
+    }
+
     private static int countFirmwareActionButtons(Container container) {
         int count = 0;
         for (Component component : container.getComponents()) {
             if (component instanceof JButton && ("Update ECU firmware".equals(((JButton) component).getText())
+                || UpdateMode.OPENBLT_MANUAL.displayText.equals(((JButton) component).getText())
                 || ((JButton) component).getText().startsWith("Update ECU · ")
                 || "Recover ECU".equals(((JButton) component).getText()))) {
                 count++;

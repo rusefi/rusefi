@@ -7,8 +7,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -30,6 +30,9 @@ public class SerialPortScanner implements PortScanner {
     private final static Logging log = Logging.getLogging(SerialPortScanner.class);
 
     private static final long DETECTED_ECU_CACHE_MS = 3000;
+    private static final long INITIAL_PORT_PROBE_TIMEOUT_MILLIS = 5_000;
+    // Covers the 10 s connect/read INI download timeouts plus the 12 s drive-root search.
+    private static final long INI_RESOLUTION_SCAN_DEADLINE_MILLIS = 40_000;
 
     /**
      * The hardware/OS probes the scan loop performs, separated from the scan *policy* (caching,
@@ -44,6 +47,11 @@ public class SerialPortScanner implements PortScanner {
         /** @return detected port type, or null for a dead/stale OS node that must be dropped entirely */
         @Nullable
         PortResult inspectPort(String serialPort);
+
+        /** True only while this identified port is resolving its ECU INI. */
+        default boolean shouldWaitForIniResolution(String serialPort) {
+            return false;
+        }
 
         Collection<String> listTcpPorts();
 
@@ -122,6 +130,21 @@ public class SerialPortScanner implements PortScanner {
      */
     static List<PortResult> inspectPorts(final List<String> ports, final Map<String, Thread> probeThreadsRef,
                                          final Function<String, PortResult> inspector) {
+        return inspectPorts(ports, probeThreadsRef, inspector, port -> false,
+            INITIAL_PORT_PROBE_TIMEOUT_MILLIS, INI_RESOLUTION_SCAN_DEADLINE_MILLIS);
+    }
+
+    static List<PortResult> inspectPorts(final List<String> ports, final Map<String, Thread> probeThreadsRef,
+                                         final Function<String, PortResult> inspector,
+                                         final Predicate<String> iniResolutionInProgress) {
+        return inspectPorts(ports, probeThreadsRef, inspector, iniResolutionInProgress,
+            INITIAL_PORT_PROBE_TIMEOUT_MILLIS, INI_RESOLUTION_SCAN_DEADLINE_MILLIS);
+    }
+
+    static List<PortResult> inspectPorts(final List<String> ports, final Map<String, Thread> probeThreadsRef,
+                                         final Function<String, PortResult> inspector,
+                                         final Predicate<String> iniResolutionInProgress,
+                                         final long initialTimeoutMillis, final long totalDeadlineMillis) {
         synchronized (probeThreadsRef) {
             probeThreadsRef.values().removeIf(t -> !t.isAlive());
         }
@@ -131,8 +154,10 @@ public class SerialPortScanner implements PortScanner {
 
         final Object resultsLock = new Object();
         final Map<String, PortResult> results = new HashMap<>();
-        final AtomicBoolean acceptingResults = new AtomicBoolean(true);
+        final Set<String> acceptingPorts = new HashSet<>(ports);
         final CountDownLatch completed = new CountDownLatch(ports.size());
+        final Map<String, CountDownLatch> completedByPort = new HashMap<>();
+        final Map<String, Thread> threadsByPort = new HashMap<>();
         final List<Thread> threads = new ArrayList<>();
 
         for (String port : ports) {
@@ -149,6 +174,8 @@ public class SerialPortScanner implements PortScanner {
                 }
 
                 final String threadName = "SerialPortScanner inspectPort " + port;
+                CountDownLatch portCompleted = new CountDownLatch(1);
+                completedByPort.put(port, portCompleted);
                 Thread thread = new Thread(() -> {
                     log.trace(String.format("Thread `%s` is starting...", threadName));
                     try {
@@ -164,7 +191,7 @@ public class SerialPortScanner implements PortScanner {
                         synchronized (resultsLock) {
                             // A native call may consume the interrupt before returning. Explicitly
                             // reject late results as well as results from an interrupted probe.
-                            if (acceptingResults.get() && !Thread.currentThread().isInterrupted()) {
+                            if (acceptingPorts.contains(port) && !Thread.currentThread().isInterrupted()) {
                                 results.put(port, result);
                             }
                         }
@@ -175,25 +202,77 @@ public class SerialPortScanner implements PortScanner {
                         synchronized (probeThreadsRef) {
                             probeThreadsRef.remove(port, Thread.currentThread());
                         }
+                        portCompleted.countDown();
                         completed.countDown();
                     }
                 }, threadName);
                 thread.setDaemon(true);
                 probeThreadsRef.put(port, thread);
+                threadsByPort.put(port, thread);
                 thread.start();
                 threads.add(thread);
             }
         }
 
+        long scanStartedNanos = System.nanoTime();
+        boolean interrupted = false;
         try {
-            completed.await(5, TimeUnit.SECONDS);
+            completed.await(initialTimeoutMillis, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
-            // The scanner was interrupted (for example, to suspend for flashing).
+            interrupted = true;
+        }
+
+        if (!interrupted && completed.getCount() != 0) {
+            long deadlineNanos = scanStartedNanos + TimeUnit.MILLISECONDS.toNanos(totalDeadlineMillis);
+            Set<String> nonIniPorts = new HashSet<>();
+            List<Thread> nonIniProbeThreads = new ArrayList<>();
+            List<Map.Entry<String, CountDownLatch>> iniProbeCompletions = new ArrayList<>();
+            for (Map.Entry<String, CountDownLatch> portCompletion : completedByPort.entrySet()) {
+                CountDownLatch portDone = portCompletion.getValue();
+                if (portDone.getCount() == 0) {
+                    continue;
+                }
+                boolean isIniResolution;
+                try {
+                    isIniResolution = iniResolutionInProgress.test(portCompletion.getKey());
+                } catch (RuntimeException e) {
+                    isIniResolution = false;
+                }
+                if (isIniResolution) {
+                    iniProbeCompletions.add(portCompletion);
+                } else {
+                    nonIniPorts.add(portCompletion.getKey());
+                }
+            }
+            synchronized (resultsLock) {
+                acceptingPorts.removeAll(nonIniPorts);
+            }
+            for (String port : nonIniPorts) {
+                Thread thread = threadsByPort.get(port);
+                if (thread != null) {
+                    nonIniProbeThreads.add(thread);
+                }
+            }
+            ScannerHelper.interruptThreads(nonIniProbeThreads);
+
+            for (Map.Entry<String, CountDownLatch> portCompletion : iniProbeCompletions) {
+                CountDownLatch portDone = portCompletion.getValue();
+                long remainingNanos = deadlineNanos - System.nanoTime();
+                if (remainingNanos <= 0) {
+                    break;
+                }
+                try {
+                    portDone.await(remainingNanos, TimeUnit.NANOSECONDS);
+                } catch (InterruptedException e) {
+                    interrupted = true;
+                    break;
+                }
+            }
         }
 
         List<PortResult> scanResults;
         synchronized (resultsLock) {
-            acceptingResults.set(false);
+            acceptingPorts.clear();
             ScannerHelper.interruptThreads(threads);
             for (String port : ports) {
                 if (!results.containsKey(port)) {
@@ -270,7 +349,8 @@ public class SerialPortScanner implements PortScanner {
             }
         }
 
-        for (PortResult p : inspectPorts(portsToInspect, probeThreads, probes::inspectPort)) {
+        for (PortResult p : inspectPorts(portsToInspect, probeThreads, probes::inspectPort,
+                probes::shouldWaitForIniResolution)) {
             log.info("Port " + p.port + " detected as: " + p.type.friendlyString);
             ports.add(p);
             // Do not cache Unknown — keep the port uninspected so the next scan cycle retries

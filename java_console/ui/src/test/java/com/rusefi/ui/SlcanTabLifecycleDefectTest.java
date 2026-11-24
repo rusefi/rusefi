@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileModel;
@@ -52,7 +53,7 @@ class SlcanTabLifecycleDefectTest {
                     return tab;
                 });
             // Numeric reads require a four-byte window even for a UINT8 field.
-            ConfigurationImage enabled = new ConfigurationImage(new byte[]{1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0});
+            ConfigurationImage enabled = ConfigurationImageTestHelper.newLittleEndian(new byte[]{1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0});
             try {
                 for (int cycle = 1; cycle <= 10; cycle++) {
                     controller.update(ini, true);
@@ -67,7 +68,7 @@ class SlcanTabLifecycleDefectTest {
                     findCheckboxes(lazyTab, currentCheckboxes);
                     assertEquals(3, currentCheckboxes.size());
                     context.deliveries = 0;
-                    context.fireConfigImageChanged(new ConfigurationImage(12));
+                    context.fireConfigImageChanged(ConfigurationImageTestHelper.newLittleEndian(12));
                     assertEquals(3, context.deliveries, "Only the current tab's three buses receive updates");
                     assertTrue(currentCheckboxes.stream().noneMatch(AbstractButton::isSelected));
                     assertTrue(removedCheckboxes.stream().allMatch(AbstractButton::isSelected));
@@ -80,7 +81,7 @@ class SlcanTabLifecycleDefectTest {
 
                     context.deliveries = 0;
                     createdTabs.get(createdTabs.size() - 1).close(); // Repeated close is harmless.
-                    context.fireConfigImageChanged(new ConfigurationImage(12));
+                    context.fireConfigImageChanged(ConfigurationImageTestHelper.newLittleEndian(12));
                     assertEquals(0, context.deliveries, "Closed tabs must unsubscribe from the live UIContext");
                     assertTrue(removedCheckboxes.stream().allMatch(AbstractButton::isSelected),
                         "Removed controls must retain their last state instead of processing later tune images");

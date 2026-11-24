@@ -72,4 +72,45 @@ public class LinkManagerCompatibilityListenerTest {
         assertEquals(java.util.Collections.singletonList(
             "compatible:log viewer:board-b"), events);
     }
+
+    @Test
+    public void newConnectionAttemptClearsMissingIniPairing() {
+        LinkManager linkManager = new LinkManager().setNotifyGlobalStatusOnClose(false);
+        AtomicReference<String> failure = new AtomicReference<>();
+        linkManager.setMissingIniListener((signature, port) -> failure.set(port + ":" + signature));
+        linkManager.start("COM_TEST", ConnectionStatusLogic.Listener.VOID);
+        linkManager.recordMissingIniFailure("signature-a");
+
+        assertEquals("COM_TEST", linkManager.getMissingIniFailure().port);
+        assertEquals("signature-a", linkManager.getMissingIniFailure().signature);
+        assertEquals("COM_TEST:signature-a", failure.get(), "the exact probe target must be propagated");
+
+        linkManager.close();
+        linkManager.start("COM_OTHER", ConnectionStatusLogic.Listener.VOID);
+
+        assertEquals(null, linkManager.getMissingIniFailure());
+        linkManager.close();
+    }
+
+    @Test
+    public void iniResolutionStartUsesTheExistingProbeListener() {
+        List<String> events = new ArrayList<>();
+        LinkManager linkManager = new LinkManager()
+            .setNotifyGlobalStatusOnClose(false)
+            .setMissingIniListener(new LinkManager.MissingIniListener() {
+                @Override
+                public void onMissingIni(String signature, String port) {
+                }
+
+                @Override
+                public void onIniResolutionStarted(String port) {
+                    events.add("started:" + port);
+                }
+
+            });
+        linkManager.onIniResolutionStarted("COM_TEST");
+
+        assertEquals(java.util.Collections.singletonList("started:COM_TEST"), events);
+        linkManager.close();
+    }
 }

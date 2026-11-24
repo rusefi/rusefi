@@ -10,6 +10,8 @@ import com.opensr5.ini.field.PcVariableArrayIniField;
 import com.rusefi.config.StringFormatter;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.maintenance.CalibrationsInfo;
+import com.rusefi.ui.util.WrapLayout;
+import com.rusefi.ui.widgets.SegmentedControl;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -29,9 +31,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 public class TuningTableView {
     private static final int TOOLBAR_GAP = 6;
@@ -55,7 +60,42 @@ public class TuningTableView {
             }
             return super.processKeyBinding(stroke, event, condition, pressed);
         }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            paintLiveMarker(g);
+        }
+
+        @Override
+        public boolean getScrollableTracksViewportWidth() {
+            // Columns stretch to fill a wide window, but never below their minimum widths
+            // (fitColumnWidths): a narrower window scrolls the grid sideways instead of
+            // squeezing every value to "...".
+            return getAutoResizeMode() != AUTO_RESIZE_OFF
+                && (!(getParent() instanceof JViewport) || getParent().getWidth() >= minimumGridWidth());
+        }
+
+        @Override
+        public Dimension getPreferredScrollableViewportSize() {
+            // [tag:table_window_fit] As tall as the rows: JTable asks for 400 px whatever its row
+            // count, which left an empty band inside the grid's frame once windows fit their content.
+            return new Dimension(super.getPreferredScrollableViewportSize().width, getRowCount() * getRowHeight());
+        }
     };
+    /** Space around a cell's text, so values do not touch the grid lines. */
+    private static final int CELL_TEXT_PADDING = 8;
+    /** A column never needs more room than this to stay readable. */
+    private static final int MAX_COLUMN_MIN_WIDTH = 90;
+    private static final int LIVE_DOT_RADIUS = 5;
+    private static final int TRAIL_DOT_RADIUS = 3;
+    /** How long earlier operating points stay on the trail, fading out. */
+    static final long TRAIL_MILLIS = 2000;
+    static final int TRAIL_MAX_POINTS = 40;
+    /** Raw {x value, y value, time} of recent live points, oldest first. */
+    private final java.util.ArrayDeque<double[]> trail = new java.util.ArrayDeque<>();
+    /** Live values of the displayed X and Y axis channels, after the flip option. */
+    private final LiveChannelFeed live = new LiveChannelFeed(table, this::onLiveChange);
     private final Surface3DView surface3DView = new Surface3DView();
     private final Surface3DView mini3DView = new Surface3DView();
     private final JPanel gridPanel = new JPanel(new BorderLayout());
@@ -63,7 +103,24 @@ public class TuningTableView {
     private boolean full3D;
     private boolean previewEligible;
     private final CardLayout cardLayout = new CardLayout();
-    private final JPanel tableContainer = new JPanel(cardLayout);
+    private final JPanel tableContainer = new JPanel(cardLayout) {
+        @Override
+        public Dimension getPreferredSize() {
+            // [tag:table_window_fit] The size of the view shown: CardLayout asks for the largest
+            // card, so the grid would get the full 3D view's height.
+            if (isPreferredSizeSet()) {
+                return super.getPreferredSize();
+            }
+            for (Component card : getComponents()) {
+                if (card.isVisible()) {
+                    Dimension size = card.getPreferredSize();
+                    Insets insets = getInsets();
+                    return new Dimension(size.width + insets.left + insets.right, size.height + insets.top + insets.bottom);
+                }
+            }
+            return super.getPreferredSize();
+        }
+    };
     private final JPanel content = new JPanel();
     private final String title;
     private double minValue = Double.MAX_VALUE;
@@ -78,6 +135,8 @@ public class TuningTableView {
     private Runnable onEdit;
     private Runnable onOrientationChange = () -> { };
     private String selectionInput = "";
+    /** Whether the wheel edits the grid rather than scrolling the page; see {@link TableMouse}. */
+    private boolean wheelEditing;
     private boolean applyingSelectionInput;
     private IniFileModel currentIni;
     private String currentTableName;
@@ -85,6 +144,23 @@ public class TuningTableView {
     private boolean flipAxes;
     private boolean invertX;
     private boolean invertY;
+    /** [tag:unburned_marks] The last burned tune; null marks nothing. */
+    private Supplier<ConfigurationImage> burnedImage = () -> null;
+    private Supplier<UnburnedWording> unburnedWording = () -> UnburnedWording.BURNED;
+    private final JLabel unburnedCountLabel = UnburnedCellMark.createCountLabel();
+    private final JToggleButton tableSegment = SegmentedControl.segment("Table");
+    private final JToggleButton surfaceSegment = SegmentedControl.segment("3D");
+    /**
+     * The grid with a small 3D preview below it. Tables open on "Table": the preview made table
+     * windows tall enough to hide the gauges. Choosing "Table" or "Both" is one choice for every
+     * table, kept with the orientation settings; "3D" is a look and is not remembered.
+     * [tag:table_window_fit] Detached windows fit their height to the content without the preview.
+     */
+    private final JToggleButton bothSegment = SegmentedControl.segment("Both");
+    static final String PREVIEW_PROPERTY = "mini_3d_preview";
+    private boolean previewOn;
+    /** Grid editing buttons; disabled while the 3D view replaces the grid. */
+    private final java.util.List<Component> editControls = new java.util.ArrayList<>();
 
     public TuningTableView(String title) {
         this(title, false);
@@ -149,43 +225,42 @@ public class TuningTableView {
             }
         });
         table.addMouseWheelListener(this::handleTableWheel);
-
-        table.addMouseListener(new MouseAdapter() {
+        table.addFocusListener(new FocusAdapter() {
             @Override
-            public void mousePressed(MouseEvent e) {
-                selectionInput = "";
-                int row = table.rowAtPoint(e.getPoint());
-                int col = table.columnAtPoint(e.getPoint());
-                if (row != -1 && col != -1) {
-                    if (table.isCellSelected(row, col)) {
-                        // If cell is already selected, we want to keep selection as is
-                        // Standard JTable would clear other selections on click.
-                        // However, we must be careful not to break standard selection (Shift/Ctrl)
-                        if (!e.isControlDown() && !e.isShiftDown()) {
-                            // If we click an already selected cell without modifiers,
-                            // we usually expect it to become the ONLY selected cell in standard JTable.
-                            // But the user said "keep selection selected until click on a cell outside of selection"
-                            e.consume();
-                        }
-                    }
+            public void focusLost(FocusEvent e) {
+                // The cell editor is part of the table; focus anywhere else ends wheel editing.
+                Component opposite = e.getOppositeComponent();
+                if (!e.isTemporary() && (opposite == null || !SwingUtilities.isDescendingFrom(opposite, table))) {
+                    wheelEditing = false;
                 }
             }
         });
 
+        table.addMouseListener(new TableMouse());
+
         mini3DView.setPreferredSize(new Dimension(320, 160));
-        mini3DView.setToolTipText("3D preview - drag to rotate; select 3D view for a larger view");
+        mini3DView.setToolTipText("3D preview - drag to rotate; click 3D above for a larger view");
         mini3DView.setVisible(false);
         gridPanel.add(tableScrollPane, BorderLayout.CENTER);
         gridPanel.add(mini3DView, BorderLayout.SOUTH);
         tableContainer.add(gridPanel, "table");
         tableContainer.add(surface3DView, "3d");
 
-        JCheckBox view3d = new JCheckBox("3D view");
-        view3d.addActionListener(e -> {
-            full3D = view3d.isSelected();
-            cardLayout.show(tableContainer, view3d.isSelected() ? "3d" : "table");
-            updatePreviewVisibility();
-        });
+        // One switch for the three views rather than a checkbox per view
+        tableSegment.setToolTipText("Edit the values in a grid");
+        bothSegment.setToolTipText("Edit the values in a grid, with a small 3D preview below it");
+        surfaceSegment.setToolTipText("Show the table as a large 3D surface - drag to rotate");
+        ButtonGroup viewGroup = new ButtonGroup();
+        viewGroup.add(tableSegment);
+        viewGroup.add(bothSegment);
+        viewGroup.add(surfaceSegment);
+        previewOn = orientationConfig.getBoolProperty(PREVIEW_PROPERTY);
+        (previewOn ? bothSegment : tableSegment).setSelected(true);
+        tableSegment.addActionListener(e -> showGrid(false));
+        bothSegment.addActionListener(e -> showGrid(true));
+        surfaceSegment.addActionListener(e -> show3D(true));
+        SegmentedControl viewSwitch = new SegmentedControl(tableSegment, bothSegment, surfaceSegment);
+        viewSwitch.setMaximumSize(viewSwitch.getPreferredSize());
 
         JTextField deltaField = new JTextField("0.5", 5);
         deltaField.setToolTipText("Amount added or subtracted by the Up and Down buttons");
@@ -233,8 +308,8 @@ public class TuningTableView {
         interpolateButton.setToolTipText("Interpolate selected cells - Key: /");
         smoothButton.setToolTipText("Smooth selected cells - Key: S");
 
-        JPanel editControls = new JPanel(new FlowLayout(FlowLayout.LEFT, TOOLBAR_GAP, 0));
-        editControls.add(new JLabel("delta:"));
+        JLabel deltaLabel = new JLabel("delta:");
+        editControls.add(deltaLabel);
         editControls.add(deltaField);
         editControls.add(upButton);
         editControls.add(downButton);
@@ -244,17 +319,23 @@ public class TuningTableView {
         editControls.add(interpolateButton);
         editControls.add(smoothButton);
 
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+        // Wraps onto further lines in a narrow window rather than squeezing or cutting off controls.
+        JPanel topPanel = new JPanel(new WrapLayout(FlowLayout.LEFT, TOOLBAR_GAP, 4));
         topPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        topPanel.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+        topPanel.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));
         topPanel.add(new JLabel(title));
-        topPanel.add(Box.createHorizontalStrut(10));
-        topPanel.add(view3d);
+        topPanel.add(viewSwitch);
+        topPanel.add(unburnedCountLabel);
 
         if (!viewMode) {
-            topPanel.add(Box.createHorizontalStrut(10));
-            topPanel.add(editControls);
+            // The label and its field wrap together.
+            JPanel delta = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
+            delta.add(deltaLabel);
+            delta.add(deltaField);
+            topPanel.add(delta);
+            for (Component control : editControls.subList(2, editControls.size())) {
+                topPanel.add(control);
+            }
 
             InputMap inputMap = content.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
             inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_H, 0), "interpolateHorizontal");
@@ -290,6 +371,177 @@ public class TuningTableView {
         });
     }
 
+    LiveChannelFeed liveFeedForUnitTest() {
+        return live;
+    }
+
+    /**
+     * Records the live values for the trail: a point that moves adds one, a point that stays only
+     * refreshes its time, and points older than {@link #TRAIL_MILLIS} drop off. Values are kept
+     * raw, so the trail follows axis edits; no data, or a new orientation, clears it.
+     */
+    private void onLiveChange() {
+        double x = live.value(0);
+        double y = live.value(1);
+        if (Double.isNaN(x) || Double.isNaN(y)) {
+            trail.clear();
+        } else {
+            long now = live.nowMillis();
+            double[] last = trail.peekLast();
+            if (last != null && last[0] == x && last[1] == y) {
+                last[2] = now;
+            } else {
+                trail.addLast(new double[]{x, y, now});
+            }
+            while (!trail.isEmpty() && (trail.size() > TRAIL_MAX_POINTS || now - trail.peekFirst()[2] > TRAIL_MILLIS)) {
+                trail.pollFirst();
+            }
+        }
+        table.repaint();
+        updateSurfaceLive();
+    }
+
+    /**
+     * The trail, oldest first and ending at the current point, as {x index, y index, opacity}:
+     * fractional data-cell indexes into the displayed axes and an opacity fading with age.
+     */
+    java.util.List<double[]> liveTrail() {
+        java.util.List<double[]> points = new java.util.ArrayList<>();
+        if (!(table.getModel() instanceof TuningTableModel)) {
+            return points;
+        }
+        TuningTableModel model = (TuningTableModel) table.getModel();
+        if (model.data.length == 0 || model.data[0].length == 0) {
+            return points;
+        }
+        long now = live.nowMillis();
+        for (double[] entry : trail) {
+            Double x = LiveOperatingPoint.axisPosition(model.xBins, model.data[0].length, entry[0]);
+            Double y = LiveOperatingPoint.axisPosition(model.yBins, model.data.length, entry[1]);
+            if (x != null && y != null) {
+                points.add(new double[]{x, y, Math.max(0, 1 - (now - entry[2]) / (double) TRAIL_MILLIS)});
+            }
+        }
+        return points;
+    }
+
+    private void updateSurfaceLive() {
+        java.util.List<double[]> points = liveTrail();
+        double[][] surfaceTrail = points.isEmpty() ? null : points.toArray(new double[0][]);
+        surface3DView.setLiveTrail(surfaceTrail);
+        mini3DView.setLiveTrail(surfaceTrail);
+    }
+
+    /** Pixel centre of fractional data-cell indexes; rows show the Y bins bottom-up. */
+    private Point2D.Double cellPixel(double xIndex, double yIndex) {
+        int rows = ((TuningTableModel) table.getModel()).data.length;
+        return new Point2D.Double(
+            interpolateCentre(xIndex, index -> table.getCellRect(0, index + 1, true).getCenterX()),
+            interpolateCentre(yIndex, index -> table.getCellRect(rows - 1 - index, 1, true).getCenterY()));
+    }
+
+    /** Earlier live points as fading dots joined by lines, under the current marker. */
+    private void paintTrail(Graphics2D g2) {
+        java.util.List<double[]> points = liveTrail();
+        Point2D.Double previous = null;
+        for (int i = 0; i < points.size(); i++) {
+            double[] point = points.get(i);
+            Point2D.Double pixel = cellPixel(point[0], point[1]);
+            int alpha = (int) Math.round(255 * point[2]);
+            if (previous != null && alpha > 0) {
+                g2.setStroke(new BasicStroke(3f));
+                g2.setColor(new Color(0, 0, 0, alpha)); // [tag:fixed_color] trail edge over the value gradient
+                g2.drawLine((int) previous.x, (int) previous.y, (int) pixel.x, (int) pixel.y);
+                g2.setStroke(new BasicStroke(1f));
+                g2.setColor(new Color(255, 255, 255, alpha)); // [tag:fixed_color] trail core over the value gradient
+                g2.drawLine((int) previous.x, (int) previous.y, (int) pixel.x, (int) pixel.y);
+            }
+            if (i < points.size() - 1 && alpha > 0) {
+                Ellipse2D dot = new Ellipse2D.Double(pixel.x - TRAIL_DOT_RADIUS, pixel.y - TRAIL_DOT_RADIUS,
+                    2 * TRAIL_DOT_RADIUS, 2 * TRAIL_DOT_RADIUS);
+                g2.setColor(new Color(255, 255, 255, alpha)); // [tag:fixed_color] trail dot over the value gradient
+                g2.fill(dot);
+                g2.setColor(new Color(0, 0, 0, alpha)); // [tag:fixed_color] trail dot edge over the value gradient
+                g2.draw(dot);
+            }
+            previous = pixel;
+        }
+        g2.setStroke(new BasicStroke(1f));
+    }
+
+    /**
+     * The live operating point as fractional data-cell indexes into the displayed axes
+     * (x along xBins, y along yBins), or null when there is nothing to show.
+     */
+    private Point2D.Double livePosition() {
+        if (!(table.getModel() instanceof TuningTableModel)) {
+            return null;
+        }
+        TuningTableModel model = (TuningTableModel) table.getModel();
+        if (model.data.length == 0 || model.data[0].length == 0) {
+            return null;
+        }
+        Double x = LiveOperatingPoint.axisPosition(model.xBins, model.data[0].length, live.value(0));
+        Double y = LiveOperatingPoint.axisPosition(model.yBins, model.data.length, live.value(1));
+        return x == null || y == null ? null : new Point2D.Double(x, y);
+    }
+
+    /** The table cell (row, column) nearest the live operating point, or null when none is shown. */
+    Point liveCell() {
+        Point2D.Double position = livePosition();
+        if (position == null) {
+            return null;
+        }
+        int rows = ((TuningTableModel) table.getModel()).data.length;
+        return new Point(rows - 1 - (int) Math.round(position.y), (int) Math.round(position.x) + 1);
+    }
+
+    /**
+     * Outlines the cell nearest the live operating point and puts a dot where the firmware
+     * interpolates between the surrounding cells. Rows show the Y bins bottom-up.
+     */
+    private void paintLiveMarker(Graphics g) {
+        Point cell = liveCell();
+        if (cell == null) {
+            return;
+        }
+        Point2D.Double position = livePosition();
+        Point2D.Double centre = cellPixel(position.x, position.y);
+        double x = centre.x;
+        double y = centre.y;
+        Rectangle bounds = table.getCellRect(cell.x, cell.y, true);
+        Graphics2D g2 = (Graphics2D) g.create();
+        try {
+            Graphics2D trailGraphics = (Graphics2D) g2.create();
+            trailGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            paintTrail(trailGraphics);
+            trailGraphics.dispose();
+            // The marker sits on the value gradient, which looks the same in every theme, so it does too.
+            // Black-white-black rings stay visible on light and dark cells alike.
+            g2.setColor(Color.BLACK); // [tag:fixed_color] live cell outline over the value gradient
+            g2.drawRect(bounds.x, bounds.y, bounds.width - 1, bounds.height - 1);
+            g2.drawRect(bounds.x + 2, bounds.y + 2, bounds.width - 5, bounds.height - 5);
+            g2.setColor(Color.WHITE); // [tag:fixed_color] middle ring and dot fill of the live marker
+            g2.drawRect(bounds.x + 1, bounds.y + 1, bounds.width - 3, bounds.height - 3);
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            Ellipse2D dot = new Ellipse2D.Double(x - LIVE_DOT_RADIUS, y - LIVE_DOT_RADIUS,
+                2 * LIVE_DOT_RADIUS, 2 * LIVE_DOT_RADIUS);
+            g2.fill(dot);
+            g2.setStroke(new BasicStroke(2f));
+            g2.setColor(Color.BLACK); // [tag:fixed_color] live point dot outline over the value gradient
+            g2.draw(dot);
+        } finally {
+            g2.dispose();
+        }
+    }
+
+    private static double interpolateCentre(double position, java.util.function.IntToDoubleFunction centre) {
+        int from = (int) Math.floor(position);
+        double fraction = position - from;
+        double start = centre.applyAsDouble(from);
+        return fraction == 0 ? start : start + fraction * (centre.applyAsDouble(from + 1) - start);
+    }
+
     JPopupMenu orientationMenuFor(int column) {
         if (column != 0 || orientationNode == null) {
             return null;
@@ -319,7 +571,9 @@ public class TuningTableView {
         // Keep the grid usable in small dialogs. Large tables can scroll above the preview.
         Insets border = tableScrollPane.getInsets();
         int gridHeight = Math.min(320, table.getRowCount() * table.getRowHeight())
-            + table.getTableHeader().getPreferredSize().height + border.top + border.bottom;
+            + table.getTableHeader().getPreferredSize().height + border.top + border.bottom
+            + (table.getScrollableTracksViewportWidth() ? 0
+                : tableScrollPane.getHorizontalScrollBar().getPreferredSize().height);
         int availableHeight = tableContainer.getHeight();
         JViewport viewport = (JViewport) SwingUtilities.getAncestorOfClass(JViewport.class, tableContainer);
         if (viewport != null) {
@@ -331,7 +585,8 @@ public class TuningTableView {
         // A scrollable dialog keeps a short preview and scrolls to it; elsewhere it hides when it
         // does not fit below the table.
         boolean fits = viewport != null || availableHeight >= gridHeight + MIN_PREVIEW_HEIGHT;
-        boolean visible = previewEligible && !full3D && tableContainer.getWidth() >= 320 && fits;
+        boolean visible = previewOn && previewEligible && !full3D
+            && tableContainer.getWidth() >= 320 && fits;
         boolean sizeChanged = false;
         if (visible) {
             int previewHeight = Math.max(MIN_PREVIEW_HEIGHT, availableHeight - gridHeight);
@@ -359,6 +614,7 @@ public class TuningTableView {
     private void updateSurfaces(Double[][] data, Double[] xBins, Double[] yBins) {
         surface3DView.setData(data, xBins, yBins, minValue, maxValue);
         mini3DView.setData(data, xBins, yBins, minValue, maxValue);
+        updateSurfaceLive();
         previewEligible = data.length >= 2 && data[0].length >= 2
             && Surface3DView.hasUsableAxis(xBins, data[0].length)
             && Surface3DView.hasUsableAxis(yBins, data.length);
@@ -372,6 +628,7 @@ public class TuningTableView {
             Color background = table.getTableHeader().getBackground();
             renderer.setBackground(isActiveValueCell() && column == activeColumn()
                 ? axisHighlight(background) : background);
+            UnburnedCellMark.apply(renderer, String.valueOf(value), burnedXAxisText(column), unburnedWording.get());
             return renderer;
         });
         table.getSelectionModel().addListSelectionListener(e -> repaintAxes());
@@ -825,11 +1082,41 @@ public class TuningTableView {
         component.getActionMap().put(name, action);
     }
 
+    /**
+     * Shows the large 3D surface in place of the grid, or the grid again. The grid's editing
+     * buttons and shortcuts are off while the grid is hidden.
+     */
+    public void show3D(boolean show) {
+        full3D = show;
+        (show ? surfaceSegment : previewOn ? bothSegment : tableSegment).setSelected(true);
+        cardLayout.show(tableContainer, show ? "3d" : "table");
+        for (Component control : editControls) {
+            control.setEnabled(!show);
+        }
+        updatePreviewVisibility();
+    }
+
+    /** "Table" or "Both": the grid, without or with the preview; the choice is remembered. */
+    private void showGrid(boolean preview) {
+        boolean changed = preview != previewOn;
+        previewOn = preview;
+        show3D(false);
+        if (changed) {
+            orientationConfig.setBoolProperty(PREVIEW_PROPERTY, preview);
+            // Other open tables follow, and the window fits the new height.
+            onOrientationChange.run();
+        }
+    }
+
+    boolean is3DShown() {
+        return full3D;
+    }
+
     private Action tableShortcut(Action action) {
         return new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!table.isEditing() && xAxisEditingColumn < 0) {
+                if (!full3D && !table.isEditing() && xAxisEditingColumn < 0) {
                     selectionInput = "";
                     action.actionPerformed(e);
                 }
@@ -855,7 +1142,47 @@ public class TuningTableView {
         table.requestFocusInWindow();
     }
 
+    /**
+     * Mouse handling on the grid. A click also turns on wheel editing, which lasts until the
+     * pointer leaves the table or focus moves elsewhere, so scrolling the page across the table
+     * doesn't change values.
+     */
+    class TableMouse extends MouseAdapter {
+        @Override
+        public void mouseExited(MouseEvent e) {
+            // Moving onto the cell editor also exits the table, but stays inside its bounds.
+            if (!table.contains(e.getPoint())) {
+                wheelEditing = false;
+            }
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            wheelEditing = true;
+            selectionInput = "";
+            int row = table.rowAtPoint(e.getPoint());
+            int col = table.columnAtPoint(e.getPoint());
+            if (row != -1 && col != -1) {
+                if (table.isCellSelected(row, col)) {
+                    // If cell is already selected, we want to keep selection as is
+                    // Standard JTable would clear other selections on click.
+                    // However, we must be careful not to break standard selection (Shift/Ctrl)
+                    if (!e.isControlDown() && !e.isShiftDown()) {
+                        // If we click an already selected cell without modifiers,
+                        // we usually expect it to become the ONLY selected cell in standard JTable.
+                        // But the user said "keep selection selected until click on a cell outside of selection"
+                        e.consume();
+                    }
+                }
+            }
+        }
+    }
+
     private void handleTableWheel(MouseWheelEvent event) {
+        if (!wheelEditing) {
+            scrollEnclosingPane(event);
+            return;
+        }
         // Handle the wheel here so the scroll pane doesn't also scroll independently.
         event.consume();
         if (table.isEditing() || xAxisEditingColumn >= 0 || event.getWheelRotation() == 0) {
@@ -873,6 +1200,32 @@ public class TuningTableView {
         if (row != activeRow()) {
             // changeSelection also scrolls the selected cell into view.
             table.changeSelection(row, activeColumn(), false, false);
+        }
+    }
+
+    /**
+     * Hands the wheel to the nearest enclosing scroll pane that scrolls in the wheel's direction
+     * (vertical, or horizontal with Shift): the table's own when the grid is clipped, otherwise the
+     * page around it. AWT does not pass a wheel event on from a scroll pane that ignores it, and a
+     * grid that only scrolls sideways would take a plain wheel turn meant for the page, so this
+     * picks the pane itself.
+     */
+    private void scrollEnclosingPane(MouseWheelEvent event) {
+        Component source = event.getComponent();
+        for (Container parent = source.getParent(); parent != null; parent = parent.getParent()) {
+            if (!(parent instanceof JScrollPane)) {
+                continue;
+            }
+            JScrollPane pane = (JScrollPane) parent;
+            JScrollBar bar = event.isShiftDown() ? pane.getHorizontalScrollBar() : pane.getVerticalScrollBar();
+            if (pane.isWheelScrollingEnabled() && bar != null && bar.isVisible()) {
+                MouseWheelEvent converted = (MouseWheelEvent) SwingUtilities.convertMouseEvent(source, event, parent);
+                parent.dispatchEvent(converted);
+                if (converted.isConsumed()) {
+                    event.consume();
+                    return;
+                }
+            }
         }
     }
 
@@ -1017,6 +1370,7 @@ public class TuningTableView {
         bins[index] = encoded;
         if (xAxis) {
             table.getColumnModel().getColumn(index + 1).setHeaderValue(model.getColumnName(index + 1));
+            fitColumnWidths();
             table.getTableHeader().repaint();
         } else {
             model.fireTableCellUpdated(model.data.length - 1 - index, 0);
@@ -1324,6 +1678,8 @@ public class TuningTableView {
         flipAxes = orientationNode.getBoolProperty("flip_xy");
         invertX = orientationNode.getBoolProperty("invert_x");
         invertY = orientationNode.getBoolProperty("invert_y");
+        live.setChannels(flipAxes ? iniTable.getYBinsChannel() : iniTable.getXBinsChannel(),
+            flipAxes ? iniTable.getXBinsChannel() : iniTable.getYBinsChannel());
         Double[][] dataValues = orientData(storedValues);
         Double[] xBins = orientAxis(flipAxes ? storedY : storedX, invertX);
         Double[] yBins = orientAxis(flipAxes ? storedX : storedY, invertY);
@@ -1352,9 +1708,148 @@ public class TuningTableView {
         surface3DView.setAxisTitles(xLabel, yLabel, zLabel);
         mini3DView.setAxisTitles(xLabel, yLabel, zLabel);
         table.setModel(model);
+        model.addTableModelListener(e -> fitColumnWidths());
+        fitColumnWidths();
         table.clearSelection();
         updateSurfaceSelection();
         updateSurfaces(dataValues, xBins, yBins);
+        refreshUnburnedMarks();
+    }
+
+    /** [tag:unburned_marks] Supplies the last burned tune, so changed cells and axis values are marked. */
+    public void setBurnedImage(Supplier<ConfigurationImage> burnedImage) {
+        this.burnedImage = burnedImage == null ? () -> null : burnedImage;
+        refreshUnburnedMarks();
+    }
+
+    /** Names the reference tune in the cell tooltips: burned, or loaded while offline. */
+    public void setUnburnedWording(Supplier<UnburnedWording> wording) {
+        unburnedWording = wording == null ? () -> UnburnedWording.BURNED : wording;
+    }
+
+    /** Re-marks the cells and recounts them, after an edit or when the burned tune changes. */
+    public void refreshUnburnedMarks() {
+        UnburnedCellMark.updateCountLabel(unburnedCountLabel, unburnedCellCount());
+        table.repaint();
+        table.getTableHeader().repaint();
+    }
+
+    /** Changed values cells plus changed axis values. */
+    int unburnedCellCount() {
+        ConfigurationImage burned = burnedImage.get();
+        UnburnedChanges values = UnburnedChanges.of(imageTarget, burned);
+        UnburnedChanges axes = UnburnedChanges.of(axisImageTarget, burned);
+        return values.countChangedCells(zBinsField) + axes.countChangedCells(xBinsField)
+            + axes.countChangedCells(yBinsField);
+    }
+
+    /**
+     * Gives every column the width of its widest value or axis label as a minimum. The grid
+     * stretches beyond that in wide windows and scrolls sideways in narrow ones.
+     */
+    private void fitColumnWidths() {
+        FontMetrics values = table.getFontMetrics(table.getFont());
+        JTableHeader header = table.getTableHeader();
+        FontMetrics labels = header.getFontMetrics(header.getFont());
+        javax.swing.table.TableColumnModel columns = table.getColumnModel();
+        for (int column = 0; column < columns.getColumnCount(); column++) {
+            javax.swing.table.TableColumn tableColumn = columns.getColumn(column);
+            int textWidth = labels.stringWidth(String.valueOf(tableColumn.getHeaderValue()));
+            for (int row = 0; row < table.getRowCount(); row++) {
+                textWidth = Math.max(textWidth, values.stringWidth(String.valueOf(table.getValueAt(row, column))));
+            }
+            int width = Math.min(MAX_COLUMN_MIN_WIDTH, textWidth + CELL_TEXT_PADDING);
+            if (tableColumn.getMinWidth() != width || tableColumn.getPreferredWidth() != width) {
+                tableColumn.setMinWidth(width);
+                // Without stretching, the grid is exactly as wide as its minimum.
+                tableColumn.setPreferredWidth(width);
+            }
+        }
+        table.revalidate();
+    }
+
+    private int minimumGridWidth() {
+        int width = 0;
+        javax.swing.table.TableColumnModel columns = table.getColumnModel();
+        for (int column = 0; column < columns.getColumnCount(); column++) {
+            width += columns.getColumn(column).getMinWidth();
+        }
+        return width;
+    }
+
+    JTable getTableForTests() {
+        return table;
+    }
+
+    JLabel getUnburnedCountLabelForTests() {
+        return unburnedCountLabel;
+    }
+
+    /**
+     * The stored [row, column] of {@link #zBinsField} shown in table cell ({@code row}, {@code column} >= 1):
+     * rows are shown bottom-up, then {@link #orientData} applies the invert and flip options.
+     */
+    int[] storedValuesCell(int row, int column) {
+        TuningTableModel model = (TuningTableModel) table.getModel();
+        int rows = model.data.length;
+        int columns = model.data[0].length;
+        int dataRow = rows - 1 - row;
+        int dataColumn = column - 1;
+        int y = invertY ? rows - 1 - dataRow : dataRow;
+        int x = invertX ? columns - 1 - dataColumn : dataColumn;
+        return flipAxes ? new int[]{x, y} : new int[]{y, x};
+    }
+
+    /** The stored [row, column] of a one-dimensional axis field for shown bin {@code index}. */
+    private static int[] storedAxisCell(ArrayIniField field, int binCount, boolean inverted, int index) {
+        int storedIndex = inverted ? binCount - 1 - index : index;
+        return field.getRows() == 1 ? new int[]{0, storedIndex} : new int[]{storedIndex, 0};
+    }
+
+    /** The burned value of table cell ({@code row}, {@code column}) when it differs, else null. */
+    String burnedCellText(int row, int column) {
+        ConfigurationImage burned = burnedImage.get();
+        if (burned == null || !(table.getModel() instanceof TuningTableModel)) {
+            return null;
+        }
+        TuningTableModel model = (TuningTableModel) table.getModel();
+        if (column == 0) {
+            int index = model.data.length - 1 - row;
+            if (yBinsField == null || model.yBins == null || index < 0 || index >= model.yBins.length) {
+                return null;
+            }
+            int[] cell = storedAxisCell(yBinsField, model.yBins.length, invertY, index);
+            if (!UnburnedChanges.of(axisImageTarget, burned).isCellChanged(yBinsField, cell[0], cell[1])) {
+                return null;
+            }
+            return model.formatNumber(UnburnedCellMark.burnedValue(yBinsField, cell[0], cell[1], burned), model.yPrecision);
+        }
+        if (zBinsField == null || row < 0 || row >= model.data.length || column > model.data[0].length) {
+            return null;
+        }
+        int[] cell = storedValuesCell(row, column);
+        if (!UnburnedChanges.of(imageTarget, burned).isCellChanged(zBinsField, cell[0], cell[1])) {
+            return null;
+        }
+        return model.formatNumber(UnburnedCellMark.burnedValue(zBinsField, cell[0], cell[1], burned));
+    }
+
+    /** The burned value of X axis header {@code column} when it differs, else null. */
+    String burnedXAxisText(int column) {
+        ConfigurationImage burned = burnedImage.get();
+        if (burned == null || column < 1 || xBinsField == null || !(table.getModel() instanceof TuningTableModel)) {
+            return null;
+        }
+        TuningTableModel model = (TuningTableModel) table.getModel();
+        int index = column - 1;
+        if (model.xBins == null || index >= model.xBins.length) {
+            return null;
+        }
+        int[] cell = storedAxisCell(xBinsField, model.xBins.length, invertX, index);
+        if (!UnburnedChanges.of(axisImageTarget, burned).isCellChanged(xBinsField, cell[0], cell[1])) {
+            return null;
+        }
+        return model.formatNumber(UnburnedCellMark.burnedValue(xBinsField, cell[0], cell[1], burned), model.xPrecision);
     }
 
     public void displayTable(IniFileModel iniFile, String tableName, ConfigurationImage image) {
@@ -1404,7 +1899,8 @@ public class TuningTableView {
 
     @Deprecated
     public void displayTable(CalibrationsInfo info, byte[] zBinsBuffer, ConfigurationImage image, String tableName) {
-        displayTable(info.getIniFile(), tableName, new ConfigurationImage(zBinsBuffer), image);
+        displayTable(info.getIniFile(), tableName,
+            new ConfigurationImage(zBinsBuffer, info.getIniFile().getByteOrder()), image);
     }
 
     private void calculateMinMax(Double[][] dataValues) {
@@ -1568,6 +2064,13 @@ public class TuningTableView {
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            Component c = renderCell(table, value, isSelected, hasFocus, row, column);
+            // [tag:unburned_marks] after the renderer set its own border for this cell
+            UnburnedCellMark.apply(c, String.valueOf(value), burnedCellText(row, column), unburnedWording.get());
+            return c;
+        }
+
+        private Component renderCell(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             if (column == 0) {
                 c.setBackground(isActiveValueCell() && row == activeRow()

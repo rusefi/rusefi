@@ -26,7 +26,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.core.ByteBufferUtil.littleEndianWrap;
 
 public interface ISensorHolder {
     Logging log = getLogging(ISensorHolder.class);
@@ -257,11 +256,6 @@ public interface ISensorHolder {
      * @return the scaled value, or null if the field type is not supported
      */
     @Nullable
-    static Double readFieldValue(byte[] response, String label, IniField field) {
-        return readFieldValue(response, label, field, ByteOrder.LITTLE_ENDIAN);
-    }
-
-    @Nullable
     static Double readFieldValue(byte[] response, String label, IniField field, ByteOrder order) {
         ByteBuffer bb = getByteBuffer(response, label, field.getOffset(), field.getSize(), order);
         if (field instanceof ScalarIniField) {
@@ -283,16 +277,6 @@ public interface ISensorHolder {
     // This avoids allocating a new HeapByteBuffer for every output channel read per ECU frame.
     ThreadLocal<ByteBuffer[]> RESPONSE_BB_HOLDER = ThreadLocal.withInitial(() -> new ByteBuffer[1]);
 
-    // Legacy overload: callers that always read a full 32-bit word (e.g. CustomBinaryLogEntry
-    // masks a getInt(), PanamaHelper reads a 4-byte serial) rely on the fixed 4-byte window.
-    static @NotNull ByteBuffer getByteBuffer(byte[] response, String message, int fieldOffset) {
-        return getByteBuffer(response, message, fieldOffset, 4);
-    }
-
-    static @NotNull ByteBuffer getByteBuffer(byte[] response, String message, int fieldOffset, int size) {
-        return getByteBuffer(response, message, fieldOffset, size, ByteOrder.LITTLE_ENDIAN);
-    }
-
     static @NotNull ByteBuffer getByteBuffer(byte[] response, String message, int fieldOffset, int size, ByteOrder order) {
         int offset = fieldOffset + 1; // first byte is response code
         // Use the field's actual storage size (1/2/4 bytes) rather than assuming 4: a 1- or 2-byte
@@ -304,7 +288,7 @@ public interface ISensorHolder {
         ByteBuffer[] holder = RESPONSE_BB_HOLDER.get();
         ByteBuffer bb = holder[0];
         if (bb == null || bb.array() != response) {
-            bb = littleEndianWrap(response, 0, response.length);
+            bb = ByteBufferUtil.wrap(response, 0, response.length, order);
             holder[0] = bb;
         }
         // the cached buffer may have been wrapped for a different-endian connection

@@ -1,5 +1,6 @@
 package com.rusefi.ui.wizard;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.IniFileModel;
@@ -101,7 +102,7 @@ public class WizardContainerTest {
             new EnumKeyValueMap(values), 6, 0);
         IniFileModel ini = mock(IniFileModel.class);
         when(ini.findIniField("wizardDisplacement")).thenReturn(Optional.of(displacementFlag));
-        ConfigurationImage image = new ConfigurationImage(new byte[]{-1, -1, -1, -1});
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[]{-1, -1, -1, -1});
         WizardContainer.clearDependentWizardFlags("wizardVeTable", ini, image);
         assertEquals("\"no\"", ConfigurationImageGetterSetter.getStringValue(displacementFlag, image));
         assertArrayEquals(new byte[]{-65, -1, -1, -1}, image.getContent());
@@ -150,7 +151,7 @@ public class WizardContainerTest {
         when(ini.findIniField("wizardFiringOrder")).thenReturn(Optional.of(firingOrderFlag));
 
         for (String cylinders : Arrays.asList("1", "2")) {
-            ConfigurationImage image = new ConfigurationImage(new byte[8]);
+            ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[8]);
             WizardContainer.completeImplicitFiringOrder(
                 "wizardNumberOfCylinders", cylinders, ini, image);
 
@@ -168,7 +169,7 @@ public class WizardContainerTest {
         IniFileModel ini = mock(IniFileModel.class);
 
         WizardContainer.completeImplicitFiringOrder(
-            "wizardNumberOfCylinders", "4", ini, new ConfigurationImage(new byte[1]));
+            "wizardNumberOfCylinders", "4", ini, ConfigurationImageTestHelper.newLittleEndian(new byte[1]));
 
         verify(ini, org.mockito.Mockito.never()).findIniField(anyString());
     }
@@ -219,7 +220,7 @@ public class WizardContainerTest {
         when(ini.findIniField(anyString())).thenReturn(Optional.empty());
         when(ini.findIniField("wizardNumberOfCylinders")).thenReturn(Optional.of(flag));
 
-        ConfigurationImage image = new ConfigurationImage(new byte[4]);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[4]);
         BinaryProtocol binaryProtocol = mock(BinaryProtocol.class);
         when(binaryProtocol.getControllerConfiguration()).thenReturn(image);
 

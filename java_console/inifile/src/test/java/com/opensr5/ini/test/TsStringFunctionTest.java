@@ -1,5 +1,6 @@
 package com.opensr5.ini.test;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.GaugeModel;
 import com.opensr5.ini.IniFileModel;
@@ -153,7 +154,7 @@ public class TsStringFunctionTest {
         IniFileModel ini = mock(IniFileModel.class);
         when(ini.findIniField("labels")).thenReturn(Optional.of(labels));
         when(ini.findIniField("mode")).thenReturn(Optional.of(mode));
-        ConfigurationImage image = new ConfigurationImage(8);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(8);
         image.getContent()[4] = 1;
 
         assertEquals("Input", TsStringFunction.resolve(
@@ -173,7 +174,7 @@ public class TsStringFunctionTest {
         byte[] configContent = new byte[200];
         byte[] noteBytes = "My Custom PWM".getBytes(StandardCharsets.US_ASCII);
         System.arraycopy(noteBytes, 0, configContent, 100, noteBytes.length);
-        ConfigurationImage configImage = new ConfigurationImage(configContent);
+        ConfigurationImage configImage = ConfigurationImageTestHelper.newLittleEndian(configContent);
 
         String result = TsStringFunction.resolve("{ stringValue(gpPwmNote1) }", ini, configImage, null);
         assertEquals("My Custom PWM", result);
@@ -188,7 +189,7 @@ public class TsStringFunctionTest {
         configContent[0] = 'H';
         configContent[1] = 'i';
         // rest is null bytes
-        ConfigurationImage configImage = new ConfigurationImage(configContent);
+        ConfigurationImage configImage = ConfigurationImageTestHelper.newLittleEndian(configContent);
 
         String result = TsStringFunction.resolve("stringValue(note)", ini, configImage, null);
         assertEquals("Hi", result);
@@ -208,7 +209,7 @@ public class TsStringFunctionTest {
         IniFileModel ini = mock(IniFileModel.class);
         when(ini.findIniField("noSuchField")).thenReturn(Optional.empty());
 
-        ConfigurationImage configImage = new ConfigurationImage(new byte[100]);
+        ConfigurationImage configImage = ConfigurationImageTestHelper.newLittleEndian(new byte[100]);
 
         String result = TsStringFunction.resolve("stringValue(noSuchField)", ini, configImage, null);
         assertNull(result);
@@ -235,7 +236,7 @@ public class TsStringFunctionTest {
         // Create config image with debugMode=3 at offset 10
         byte[] configContent = new byte[100];
         configContent[10] = 3; // debugMode value
-        ConfigurationImage configImage = new ConfigurationImage(configContent);
+        ConfigurationImage configImage = ConfigurationImageTestHelper.newLittleEndian(configContent);
 
         // No output channel values — debugMode must come from config
         String result = TsStringFunction.resolve(
@@ -264,7 +265,7 @@ public class TsStringFunctionTest {
         configContent[773] = 0x00;
         configContent[774] = 0x00;
         configContent[775] = 0x20;
-        ConfigurationImage configImage = new ConfigurationImage(configContent);
+        ConfigurationImage configImage = ConfigurationImageTestHelper.newLittleEndian(configContent);
 
         String result = TsStringFunction.resolve(
             "{bitStringValue(unitsLabels, useMetricOnInterface)}", ini, configImage, new HashMap<>());
@@ -286,7 +287,7 @@ public class TsStringFunctionTest {
         // Config image with bit 29 NOT set (useMetricOnInterface=0)
         byte[] configContent = new byte[800];
         // All zeros at offset 772 — bit 29 is 0
-        ConfigurationImage configImage = new ConfigurationImage(configContent);
+        ConfigurationImage configImage = ConfigurationImageTestHelper.newLittleEndian(configContent);
 
         String result = TsStringFunction.resolve(
             "{bitStringValue(unitsLabels, useMetricOnInterface)}", ini, configImage, new HashMap<>());
@@ -305,7 +306,7 @@ public class TsStringFunctionTest {
 
         // Even with a config image, output channel value should be used
         byte[] configContent = new byte[100];
-        ConfigurationImage configImage = new ConfigurationImage(configContent);
+        ConfigurationImage configImage = ConfigurationImageTestHelper.newLittleEndian(configContent);
 
         String result = TsStringFunction.resolve("bitStringValue(myList, idx)", ini, configImage, values);
         assertEquals("B", result);
@@ -371,7 +372,7 @@ public class TsStringFunctionTest {
         // Create config image with debugMode=3 at offset 10
         byte[] configContent = new byte[100];
         configContent[10] = 3; // debugMode = "Stepper Idle" (index 3)
-        ConfigurationImage configImage = new ConfigurationImage(configContent);
+        ConfigurationImage configImage = ConfigurationImageTestHelper.newLittleEndian(configContent);
 
         // Resolve the title
         String resolved = TsStringFunction.resolve(gauge.getTitle(), model, configImage, new HashMap<>());
@@ -398,7 +399,7 @@ public class TsStringFunctionTest {
         byte[] configContent = new byte[100];
         byte[] note = "My PWM".getBytes(StandardCharsets.US_ASCII);
         System.arraycopy(note, 0, configContent, 50, note.length);
-        ConfigurationImage configImage = new ConfigurationImage(configContent);
+        ConfigurationImage configImage = ConfigurationImageTestHelper.newLittleEndian(configContent);
 
         String resolved = TsStringFunction.resolve(gauge.getTitle(), model, configImage, null);
         assertEquals("My PWM", resolved);
@@ -428,7 +429,7 @@ public class TsStringFunctionTest {
         byte[] configContent = new byte[800];
         // Bit 29 in LE: byte at offset 775 = 0x20
         configContent[775] = 0x20;
-        ConfigurationImage configImage = new ConfigurationImage(configContent);
+        ConfigurationImage configImage = ConfigurationImageTestHelper.newLittleEndian(configContent);
 
         // Resolve gauge units
         GaugeModel gauge = model.getGauge("CLTGauge");
@@ -455,7 +456,7 @@ public class TsStringFunctionTest {
 
         // Config with useMetricOnInterface=0 (Imperial: bit 29 NOT set)
         byte[] configContent = new byte[800];
-        ConfigurationImage configImage = new ConfigurationImage(configContent);
+        ConfigurationImage configImage = ConfigurationImageTestHelper.newLittleEndian(configContent);
 
         GaugeModel gauge = model.getGauge("CLTGauge");
         String resolvedUnits = TsStringFunction.resolve(gauge.getUnits(), model, configImage, new HashMap<>());
@@ -490,7 +491,7 @@ public class TsStringFunctionTest {
         // Create config image with debugMode=3 at offset 10
         byte[] configContent = new byte[100];
         configContent[10] = 3; // debugMode = "Stepper Idle" (index 3)
-        ConfigurationImage configImage = new ConfigurationImage(configContent);
+        ConfigurationImage configImage = ConfigurationImageTestHelper.newLittleEndian(configContent);
 
         // Resolve the gauge title
         GaugeModel gauge = model.getGauge("debugF1Gauge");
@@ -538,9 +539,9 @@ public class TsStringFunctionTest {
 
         assertTrue(TsStringFunction.containsStringFunction(gauge.getUnits()),
             "A string ternary is a computed label, so gauges resolve it instead of showing the expression");
-        assertEquals("kPa", TsStringFunction.resolve(gauge.getUnits(), model, new ConfigurationImage(metric), new HashMap<>()));
-        assertEquals("psi", TsStringFunction.resolve(gauge.getUnits(), model, new ConfigurationImage(new byte[800]), new HashMap<>()));
-        assertEquals("psi", TsStringFunction.resolveDisplayLabel(gauge.getUnits(), model, new ConfigurationImage(new byte[800]), null));
+        assertEquals("kPa", TsStringFunction.resolve(gauge.getUnits(), model, ConfigurationImageTestHelper.newLittleEndian(metric), new HashMap<>()));
+        assertEquals("psi", TsStringFunction.resolve(gauge.getUnits(), model, ConfigurationImageTestHelper.newLittleEndian(new byte[800]), new HashMap<>()));
+        assertEquals("psi", TsStringFunction.resolveDisplayLabel(gauge.getUnits(), model, ConfigurationImageTestHelper.newLittleEndian(new byte[800]), null));
         assertEquals(java.util.Collections.singleton("useMetricOnInterface"),
             com.opensr5.ini.ExpressionEvaluator.extractVariables(gauge.getUnits()), "Quoted text is not a channel");
         assertEquals(java.util.Arrays.asList("kPa", "psi"), TsStringFunction.allPossibleResolutions(gauge.getUnits(), model));

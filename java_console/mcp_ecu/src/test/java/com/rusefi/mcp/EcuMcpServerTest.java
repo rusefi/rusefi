@@ -72,6 +72,7 @@ class EcuMcpServerTest {
         assertTrue(names.contains("write_tune"));
         assertTrue(names.contains("ecu_info"));
         assertTrue(names.contains("connect"));
+        assertTrue(names.contains("import_ini_to_cache"));
         assertTrue(names.contains("download_bundle"));
         assertTrue(names.contains("update_firmware"));
         assertTrue(names.contains("reboot"));
@@ -252,6 +253,44 @@ class EcuMcpServerTest {
             assertEquals(true, envelope.get("isError"));
             assertEquals(false, ((JSONObject) envelope.get("structuredContent")).get("success"));
         }
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void importIniToCacheRejectsBadArguments(@TempDir Path directory) throws Exception {
+        // Missing path / empty / wrong type.
+        for (String arguments : new String[]{"{}", "{\"path\":\"\"}", "{\"path\":42}"}) {
+            JSONObject envelope = (JSONObject) parse(drive(jsonRpc(1, "tools/call",
+                    "{\"name\":\"import_ini_to_cache\",\"arguments\":" + arguments + "}") + "\n")[0]).get("result");
+            assertEquals(Boolean.TRUE, envelope.get("isError"));
+            assertTrue(((JSONObject) envelope.get("structuredContent")).get("error").toString().contains("path"));
+        }
+
+        // Non-existent path.
+        Path missing = directory.resolve("not-here.ini");
+        JSONObject envelope = (JSONObject) parse(drive(jsonRpc(1, "tools/call",
+                "{\"name\":\"import_ini_to_cache\",\"arguments\":{\"path\":\""
+                        + JSONObject.escape(missing.toString()) + "\"}}") + "\n")[0]).get("result");
+        assertEquals(Boolean.TRUE, envelope.get("isError"));
+        assertTrue(((JSONObject) envelope.get("structuredContent")).get("error").toString().contains("not an existing regular file"));
+
+        // File without a 'signature' line.
+        Path noSignature = directory.resolve("no-signature.ini");
+        Files.write(noSignature, "pageSize = 1234\n".getBytes(StandardCharsets.UTF_8));
+        envelope = (JSONObject) parse(drive(jsonRpc(2, "tools/call",
+                "{\"name\":\"import_ini_to_cache\",\"arguments\":{\"path\":\""
+                        + JSONObject.escape(noSignature.toString()) + "\"}}") + "\n")[0]).get("result");
+        assertEquals(Boolean.TRUE, envelope.get("isError"));
+        assertTrue(((JSONObject) envelope.get("structuredContent")).get("error").toString().contains("signature"));
+
+        // Override with unparseable signature => error, cache not touched.
+        Path anyIni = directory.resolve("any.ini");
+        Files.write(anyIni, "pageSize = 1234\n".getBytes(StandardCharsets.UTF_8));
+        envelope = (JSONObject) parse(drive(jsonRpc(3, "tools/call",
+                "{\"name\":\"import_ini_to_cache\",\"arguments\":{\"path\":\""
+                        + JSONObject.escape(anyIni.toString()) + "\",\"signature\":\"not a signature\"}}") + "\n")[0]).get("result");
+        assertEquals(Boolean.TRUE, envelope.get("isError"));
+        assertTrue(((JSONObject) envelope.get("structuredContent")).get("error").toString().contains("Unparseable"));
     }
 
     // ---- helpers ----

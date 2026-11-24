@@ -75,6 +75,26 @@ class Surface3DViewTest {
     }
 
     @Test
+    void livePointSitsOnTheInterpolatedSurface() {
+        // Issue #10670. Rows at y = -0.5 (value 0) and 0.5 (value 100): halfway between them the
+        // surface is at 50, the middle of the cube.
+        Surface3DView surface = new Surface3DView();
+        surface.setSize(400, 400);
+        surface.setData(new Double[][]{{0.0, 0.0, 0.0}, {100.0, 100.0, 100.0}},
+            new Double[]{1000.0, 2000.0, 3000.0}, new Double[]{40.0, 120.0}, 0, 100);
+        assertNotEquals(Surface3DView.LIVE_POINT_COLOR, color(render(surface), 0, 0, 0));
+
+        surface.setLiveTrail(new double[][]{{0, 0, 0.5}, {1, 0.5, 1}});
+        assertEquals(Surface3DView.LIVE_POINT_COLOR, color(render(surface), 0, 0, 0));
+
+        surface.setLiveTrail(new double[][]{{7, 3, 1}});
+        assertNotEquals(Surface3DView.LIVE_POINT_COLOR, color(render(surface), 0, 0, 0),
+            "A point outside the data is not drawn");
+        surface.setLiveTrail(null);
+        assertNotEquals(Surface3DView.LIVE_POINT_COLOR, color(render(surface), 0, 0, 0));
+    }
+
+    @Test
     void axisValuesAreCompact() {
         assertEquals("7000", Surface3DView.formatValue(7000));
         assertEquals("120", Surface3DView.formatValue(120.4));

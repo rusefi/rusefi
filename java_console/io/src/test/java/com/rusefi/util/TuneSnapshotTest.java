@@ -1,5 +1,9 @@
 package com.rusefi.util;
 
+import com.opensr5.ConfigurationImage;
+import com.opensr5.ConfigurationImageGetterSetter;
+import com.opensr5.ini.field.ScalarIniField;
+import com.rusefi.config.FieldType;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.tune.xml.Page;
@@ -9,6 +13,7 @@ import org.junit.jupiter.api.io.TempDir;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.nio.ByteOrder;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,6 +21,17 @@ class TuneSnapshotTest {
     private static final LocalDate DATE = LocalDate.of(2026, 9, 15);
     @TempDir
     Path directory;
+
+    @Test
+    void preservesBigEndianPowerPcPageOrder() {
+        ConfigurationImage page = TuneSnapshot.rawPage(
+                new byte[]{0x00, 0x6e}, ByteOrder.BIG_ENDIAN);
+        ScalarIniField threshold = new ScalarIniField(
+                "tpsErrorDetectionTooHigh", 0, "%", FieldType.INT16, 1, "0", 0);
+
+        assertEquals(ByteOrder.BIG_ENDIAN, page.getByteOrder());
+        assertEquals("110", ConfigurationImageGetterSetter.getStringValue(threshold, page));
+    }
 
     @Test
     void namesDailySnapshotsAndReusesBothOriginalAndNumberedTunes() throws Exception {

@@ -29,7 +29,7 @@ public class BinaryProtocolLocalCache {
             return ConfigurationImageWithMeta.VOID;
         ConfigurationImageWithMeta localCached;
         try {
-            localCached = ConfigurationImageFile.readFromFile(CONFIGURATION_RUSEFI_BINARY);
+            localCached = ConfigurationImageFile.readFromFile(CONFIGURATION_RUSEFI_BINARY, binaryProtocol.getWireByteOrder());
         } catch (IOException e) {
             log.error("Error reading " + CONFIGURATION_RUSEFI_BINARY + ": no worries " + e);
             return ConfigurationImageWithMeta.VOID;

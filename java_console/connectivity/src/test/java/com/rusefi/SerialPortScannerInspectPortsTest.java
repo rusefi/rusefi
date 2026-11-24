@@ -8,7 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 
 import static java.util.Arrays.asList;
@@ -68,6 +71,108 @@ public class SerialPortScannerInspectPortsTest {
         assertTrue(results.contains(new PortResult("COM_BOOM", SerialPortType.Unknown)),
             "a probe exception must degrade to Unknown, not lose the port");
         assertTrue(results.contains(new PortResult("COM1", SerialPortType.Ecu)));
+    }
+
+    @Test
+    public void identifiedIniResolutionGetsBoundedExtraWaitWithoutWaitingForUnknownSibling() throws Exception {
+        CountDownLatch iniResolutionEntered = new CountDownLatch(1);
+        CountDownLatch releaseIniResolution = new CountDownLatch(1);
+        CountDownLatch unknownProbeEntered = new CountDownLatch(1);
+        CountDownLatch unknownProbeInterrupted = new CountDownLatch(1);
+        CountDownLatch releaseUnknownProbe = new CountDownLatch(1);
+        CountDownLatch extensionWaitStarted = new CountDownLatch(1);
+        AtomicBoolean iniResolutionInProgress = new AtomicBoolean();
+        Map<String, Thread> tracked = new HashMap<>();
+        FutureTask<List<PortResult>> scan = new FutureTask<>(() ->
+            SerialPortScanner.inspectPorts(asList("INI_TARGET", "UNKNOWN_SIBLING"), tracked, port -> {
+                if ("INI_TARGET".equals(port)) {
+                    iniResolutionInProgress.set(true);
+                    iniResolutionEntered.countDown();
+                    awaitIgnoringInterrupts(releaseIniResolution);
+                    iniResolutionInProgress.set(false);
+                    return new PortResult(port, SerialPortType.Ecu);
+                }
+                unknownProbeEntered.countDown();
+                try {
+                    releaseUnknownProbe.await();
+                } catch (InterruptedException e) {
+                    unknownProbeInterrupted.countDown();
+                    awaitIgnoringInterrupts(releaseUnknownProbe);
+                }
+                return new PortResult(port, SerialPortType.Ecu);
+            }, port -> {
+                boolean pending = "INI_TARGET".equals(port) && iniResolutionInProgress.get();
+                if (pending) {
+                    extensionWaitStarted.countDown();
+                }
+                return pending;
+            }, 50, 1_000));
+        Thread scanThread = new Thread(scan, "test INI-aware scanner deadline");
+        scanThread.setDaemon(true);
+        scanThread.start();
+
+        try {
+            assertTrue(iniResolutionEntered.await(1, TimeUnit.SECONDS));
+            assertTrue(unknownProbeEntered.await(1, TimeUnit.SECONDS));
+            assertTrue(extensionWaitStarted.await(1, TimeUnit.SECONDS),
+                "the scanner should extend only after identifying the active INI resolution");
+            assertTrue(unknownProbeInterrupted.await(1, TimeUnit.SECONDS),
+                "unfinished non-INI probes must be interrupted at the initial deadline");
+            releaseIniResolution.countDown();
+
+            List<PortResult> results = scan.get(1, TimeUnit.SECONDS);
+            assertTrue(results.contains(new PortResult("INI_TARGET", SerialPortType.Ecu)),
+                "the identified ECU must finish INI resolution before its probe is interrupted");
+            assertTrue(results.contains(new PortResult("UNKNOWN_SIBLING", SerialPortType.Unknown)),
+                "an interrupted sibling remains Unknown and a late result cannot overwrite it");
+        } finally {
+            releaseIniResolution.countDown();
+            releaseUnknownProbe.countDown();
+        }
+    }
+
+    @Test
+    public void identifiedIniResolutionStillStopsAtTheTotalScanDeadline() throws Exception {
+        CountDownLatch iniResolutionEntered = new CountDownLatch(1);
+        CountDownLatch releaseIniResolution = new CountDownLatch(1);
+        CountDownLatch extensionWaitStarted = new CountDownLatch(1);
+        AtomicBoolean iniResolutionInProgress = new AtomicBoolean();
+        FutureTask<List<PortResult>> scan = new FutureTask<>(() ->
+            SerialPortScanner.inspectPorts(Collections.singletonList("INI_TARGET"), new HashMap<>(), port -> {
+                iniResolutionInProgress.set(true);
+                iniResolutionEntered.countDown();
+                awaitIgnoringInterrupts(releaseIniResolution);
+                return new PortResult(port, SerialPortType.Ecu);
+            }, port -> {
+                boolean pending = iniResolutionInProgress.get();
+                if (pending) {
+                    extensionWaitStarted.countDown();
+                }
+                return pending;
+            }, 50, 250));
+        Thread scanThread = new Thread(scan, "test bounded INI scan deadline");
+        scanThread.setDaemon(true);
+        scanThread.start();
+
+        try {
+            assertTrue(iniResolutionEntered.await(1, TimeUnit.SECONDS));
+            assertTrue(extensionWaitStarted.await(1, TimeUnit.SECONDS));
+            assertEquals(SerialPortType.Unknown, scan.get(1, TimeUnit.SECONDS).get(0).type,
+                "an INI probe that exceeds its total deadline remains bounded");
+        } finally {
+            releaseIniResolution.countDown();
+        }
+    }
+
+    private static void awaitIgnoringInterrupts(CountDownLatch latch) {
+        boolean released = false;
+        while (!released) {
+            try {
+                released = latch.await(5, TimeUnit.SECONDS);
+            } catch (InterruptedException ignored) {
+                // Model an underlying protocol/native operation which finishes only on its own.
+            }
+        }
     }
 
     @Test

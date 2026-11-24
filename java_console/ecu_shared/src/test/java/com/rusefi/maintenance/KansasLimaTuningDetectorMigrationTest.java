@@ -1,5 +1,6 @@
 package com.rusefi.maintenance;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ConfigurationImageWithMeta;
@@ -105,7 +106,7 @@ class KansasLimaTuningDetectorMigrationTest {
             + ", \"no\", \"yes\"\n[OutputChannels]\nochBlockSize = 4\n";
         Files.write(file, iniText.getBytes(StandardCharsets.UTF_8));
         IniFileModel ini = IniFileReaderUtil.readIniFile(file.toString());
-        ConfigurationImage image = new ConfigurationImage(new byte[]{0x12, 0x34, 0x56, 0x78,
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[]{0x12, 0x34, 0x56, 0x78,
             0x55, (byte) 0xaa, 0x5a, (byte) 0xa5});
         ConfigurationImageGetterSetter.setValue2(ini.getIniField(FIELD), image, FIELD, quote(value));
         return new CalibrationsInfo(ini, ConfigurationImageWithMeta.valueOf(ini, image));

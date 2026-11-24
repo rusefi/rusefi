@@ -191,7 +191,7 @@ class FirmwareSourceCodeDownloaderTest {
         downloader = new FirmwareSourceCodeDownloader(directory,
                 new URL("http://127.0.0.1:" + server.getAddress().getPort() + "/firmware-source.zip"),
                 Clock.fixed(NOW, ZoneOffset.UTC), (source, target, options) -> {
-                    if (source.toString().contains("/extracted/") && publishedRoots.incrementAndGet() == 2) {
+                    if (source.getParent().endsWith("extracted") && publishedRoots.incrementAndGet() == 2) {
                         throw new IOException("injected publication failure");
                     }
                     return Files.move(source, target, options);
@@ -217,10 +217,10 @@ class FirmwareSourceCodeDownloaderTest {
         downloader = new FirmwareSourceCodeDownloader(directory,
                 new URL("http://127.0.0.1:" + server.getAddress().getPort() + "/firmware-source.zip"),
                 Clock.fixed(NOW, ZoneOffset.UTC), (source, target, options) -> {
-                    if (source.toString().contains("/extracted/") && extractedMoves.incrementAndGet() == 2) {
+                    if (source.getParent().endsWith("extracted") && extractedMoves.incrementAndGet() == 2) {
                         throw new IOException("primary publication failure");
                     }
-                    if (source.toString().contains("/backups/") && target.getParent().equals(directory)) {
+                    if (source.getParent().endsWith("backups") && target.getParent().equals(directory)) {
                         throw new IOException("rollback move failure");
                     }
                     return Files.move(source, target, options);

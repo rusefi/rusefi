@@ -10,6 +10,7 @@ import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -17,6 +18,7 @@ import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.JToggleButton;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.text.DefaultFormatter;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
@@ -25,8 +27,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.MouseWheelEvent;
 import java.util.function.Consumer;
-import java.util.function.IntConsumer;
 
 /**
  * Toolbar above the log chart, styled like the Gauges toolbar: Open, plot colours, Grid and display-smoothing
@@ -52,6 +54,13 @@ final class ChartToolbar extends ThemedStrip {
     final JToggleButton atMouse = SegmentedControl.segment("Mouse");
     final JToggleButton atClick = SegmentedControl.segment("Clicked time");
     private final JLabel atNote = muted(new JLabel());
+    final JToggleButton rawShow = SegmentedControl.segment("Show");
+    final JToggleButton rawHide = SegmentedControl.segment("Hide");
+    /** Shown while smoothing is on: min/max stay raw although the line is smoothed. */
+    final JLabel smoothingNote = muted(new JLabel("<html>Smoothing is on: cursor values follow the<br>"
+            + "smoothed line, min/max are raw values.</html>"));
+    final JToggleButton minMaxHover = SegmentedControl.segment("On hover");
+    final JToggleButton minMaxAlways = SegmentedControl.segment("Always");
     private final JPopupMenu valuesPopup = new JPopupMenu();
     /** Shows the statistics table; the viewer panel listens to it. */
     final JToggleButton measureButton = new JToggleButton("Measure");
@@ -69,18 +78,27 @@ final class ChartToolbar extends ThemedStrip {
     final JSpinner timeSpacing;
     final JCheckBox horizontalBox = new JCheckBox("Horizontal lines");
     final JSpinner horizontalDivisions;
+    /** Default trace width in pixels; shows the plot's own width until one is chosen. */
+    final JSpinner traceWidthInput = new JSpinner(new SpinnerNumberModel(2.0, TraceStyle.MIN_WIDTH,
+            TraceStyle.MAX_WIDTH, TraceStyle.WIDTH_STEP));
+    final JButton traceWidthPlotDefault = new JButton("Default");
+    final JButton resetLinesButton = new JButton("Reset all lines");
+    private boolean syncingWidth;
 
     private final JPopupMenu gridPopup = new JPopupMenu();
+
+    // display smoothing options, shown in a popup under the smoothing button; changes apply at once
+    final JPanel smoothingPanel = new JPanel(new GridBagLayout());
+    final JToggleButton smoothingOff = SegmentedControl.segment("Raw");
+    final JToggleButton smoothingOn = SegmentedControl.segment("Smoothed");
+    final JSpinner smoothingInput;
+    private final JPopupMenu smoothingPopup = new JPopupMenu();
+    /** True while the controls are set from the settings, so that does not count as a user change. */
+    private boolean syncingSmoothing;
+
     private final ChartSettings settings;
     private final Runnable onChange;
     private final TimelineSmoothingWindow smoothingWindow;
-
-    interface SmoothingPrompt {
-        Integer show(int initialMs, IntConsumer preview);
-    }
-
-    /** Replaced in tests so the dialog behaviour can be exercised without showing a window. */
-    SmoothingPrompt smoothingPrompt;
 
     ChartToolbar(ChartSettings settings, Runnable onChange) {
         this(settings, onChange, null, TimelineSmoothingWindow.unrestricted());
@@ -97,8 +115,6 @@ final class ChartToolbar extends ThemedStrip {
         this.settings = settings;
         this.onChange = onChange;
         this.smoothingWindow = smoothingWindow;
-        smoothingPrompt = (initialMs, preview) -> TimelineSmoothingDialog.show(this,
-                "Display smoothing", smoothingWindow, initialMs, true, preview);
         setBorder(BorderFactory.createEmptyBorder(4, JoinedButtons.ROW_END_INSET - JoinedButtons.ROW_GAP, 5, 0));
 
         ButtonGroup plotGroup = new ButtonGroup();
@@ -108,12 +124,27 @@ final class ChartToolbar extends ThemedStrip {
         lightPlot.setToolTipText("Plot area with a light background");
         darkPlot.setToolTipText("Plot area with a dark background");
 
-        gridButton.setToolTipText("Grid line options");
-        gridButton.addActionListener(e -> gridPopup.show(gridButton, 0, gridButton.getHeight() + 4));
+        gridButton.setToolTipText("Grid line and trace width options");
+        gridButton.addActionListener(e -> {
+            // signals' own lines change from their menus, so refresh Reset all lines before showing it
+            updateControls();
+            gridPopup.show(gridButton, 0, gridButton.getHeight() + 4);
+        });
 
         smoothingButton.setToolTipText("<html>Display-only smoothing for timeline lines.<br>"
-                + "Recorded samples, cursor values, statistics and exports stay raw.</html>");
-        smoothingButton.addActionListener(e -> editGlobalSmoothing());
+                + "Cursor values follow the smoothed line; min/max, statistics and exports stay raw.<br>"
+                + "While smoothing is on, scroll the mouse wheel here to change it by "
+                + WHEEL_STEP_MS + " ms.</html>");
+        smoothingButton.addActionListener(e -> {
+            updateControls();
+            smoothingPopup.show(smoothingButton, 0, smoothingButton.getHeight() + 4);
+        });
+        smoothingButton.addMouseWheelListener(this::wheelSmoothing);
+        smoothingInput = new JSpinner(new SpinnerNumberModel(
+                smoothingWindow.initialMilliseconds(settings.getSmoothingWindowSeconds()),
+                smoothingWindow.minimumMs, smoothingWindow.maximumMs, smoothingWindow.minimumMs));
+        buildSmoothingPanel();
+        smoothingPopup.add(smoothingPanel);
         smoothingRawButton.setToolTipText("Turn off global display smoothing and show recorded samples");
         smoothingRawButton.addActionListener(e -> setGlobalSmoothing(0));
 
@@ -125,8 +156,12 @@ final class ChartToolbar extends ThemedStrip {
         freeCursor.setToolTipText("<html>The cursor line follows the mouse; values come from the<br>"
                 + "nearest logged sample, marked with a dot on each trace</html>");
 
-        valuesButton.setToolTipText("How the signal values at the cursor show on the plots");
-        valuesButton.addActionListener(e -> valuesPopup.show(valuesButton, 0, valuesButton.getHeight() + 4));
+        valuesButton.setToolTipText("How the signal values at the cursor and the min/max markers show on the plots");
+        valuesButton.addActionListener(e -> {
+            // per-signal smoothing changes elsewhere, so refresh the smoothing note before showing it
+            updateControls();
+            valuesPopup.show(valuesButton, 0, valuesButton.getHeight() + 4);
+        });
         buildValuesPanel();
         valuesPopup.add(valuesPanel);
 
@@ -147,6 +182,24 @@ final class ChartToolbar extends ThemedStrip {
         timeSpacing.addChangeListener(e -> apply());
         horizontalBox.addActionListener(e -> apply());
         horizontalDivisions.addChangeListener(e -> apply());
+        // only a change of the width itself sets it, so untouched it keeps following the light or dark plot
+        traceWidthInput.addChangeListener(e -> {
+            if (!syncingWidth) {
+                settings.setDefaultLineWidth(((Number) traceWidthInput.getValue()).doubleValue());
+                updateControls();
+                onChange.run();
+            }
+        });
+        traceWidthPlotDefault.addActionListener(e -> {
+            settings.setDefaultLineWidth(Double.NaN);
+            updateControls();
+            onChange.run();
+        });
+        resetLinesButton.addActionListener(e -> {
+            settings.resetTraceLines();
+            updateControls();
+            onChange.run();
+        });
 
         if (onOpen != null) {
             openButton.addActionListener(e -> onOpen.accept(openButton));
@@ -269,17 +322,99 @@ final class ChartToolbar extends ThemedStrip {
         addRow(muted(new JLabel("Bands")), horizontalDivisions, row++, 24);
         JLabel note = muted(new JLabel("<html>Each trace has its own scale, so horizontal<br>"
                 + "lines mark fractions of each trace's range.</html>"));
-        GridBagConstraints noteConstraints = constraints(0, row, 2, 0);
+        GridBagConstraints noteConstraints = constraints(0, row++, 2, 0);
         noteConstraints.insets = new Insets(8, 0, 0, 0);
         gridPanel.add(note, noteConstraints);
+
+        GridBagConstraints traceSeparator = constraints(0, row++, 2, 0);
+        traceSeparator.fill = GridBagConstraints.HORIZONTAL;
+        traceSeparator.insets = new Insets(10, 0, 8, 0);
+        gridPanel.add(new JSeparator(), traceSeparator);
+        String widthTip = "<html>Width in pixels of every signal line without a width of its own.<br>"
+                + "For one signal (its own width, dashed or dotted): right-click its name, then Line…</html>";
+        JLabel widthLabel = muted(new JLabel("Trace width"));
+        widthLabel.setToolTipText(widthTip);
+        traceWidthInput.setToolTipText(widthTip);
+        ((JSpinner.DefaultEditor) traceWidthInput.getEditor()).getTextField().setColumns(3);
+        traceWidthPlotDefault.setToolTipText("Back to the plot's usual width (2 px light, 1.5 px dark)");
+        JPanel width = withUnit(traceWidthInput, "px");
+        width.add(traceWidthPlotDefault);
+        addRow(widthLabel, width, row++, 0);
+        resetLinesButton.setToolTipText("<html>Every signal back to the default width and a solid line,<br>"
+                + "and the default width back to the plot's usual one</html>");
+        GridBagConstraints resetAt = constraints(0, row, 2, 0);
+        resetAt.insets = new Insets(6, 0, 0, 0);
+        gridPanel.add(resetLinesButton, resetAt);
     }
 
-    private void editGlobalSmoothing() {
-        double previous = settings.getSmoothingWindowSeconds();
-        int initialMs = previous == 0 ? 0 : smoothingWindow.initialMilliseconds(previous);
-        Integer picked = smoothingPrompt.show(initialMs, milliseconds ->
-                setGlobalSmoothing(milliseconds / 1000.0));
-        setGlobalSmoothing(picked == null ? previous : picked / 1000.0);
+    /** Milliseconds one mouse wheel notch over the smoothing button adds or removes. */
+    static final int WHEEL_STEP_MS = 100;
+
+    /** Wheel up widens the global smoothing window, wheel down narrows it; nothing happens while it is Raw. */
+    void wheelSmoothing(MouseWheelEvent event) {
+        int notches = event.getWheelRotation();
+        double current = settings.getSmoothingWindowSeconds();
+        if (notches == 0 || current == 0) {
+            return;
+        }
+        int milliseconds = wheelStep((int) Math.round(current * 1000), -notches, smoothingWindow);
+        setGlobalSmoothing(milliseconds / 1000.0);
+    }
+
+    /**
+     * The window after {@code steps} wheel notches (positive widens): it moves to the next multiple of
+     * {@link #WHEEL_STEP_MS} in that direction per notch, so 150 ms goes to 200 or 100, and stays within the log's
+     * limits; it never reaches Raw, which has its own button.
+     */
+    static int wheelStep(int currentMs, int steps, TimelineSmoothingWindow limits) {
+        int milliseconds = currentMs;
+        for (int i = 0; i < Math.abs(steps); i++) {
+            milliseconds = steps > 0
+                    ? (milliseconds / WHEEL_STEP_MS + 1) * WHEEL_STEP_MS
+                    : ((milliseconds + WHEEL_STEP_MS - 1) / WHEEL_STEP_MS - 1) * WHEEL_STEP_MS;
+        }
+        return Math.max(limits.minimumMs, Math.min(limits.maximumMs, milliseconds));
+    }
+
+    private void buildSmoothingPanel() {
+        smoothingPanel.setBorder(BorderFactory.createEmptyBorder(10, 12, 10, 12));
+        ButtonGroup modeGroup = new ButtonGroup();
+        modeGroup.add(smoothingOff);
+        modeGroup.add(smoothingOn);
+        smoothingOff.setToolTipText("Draw the recorded samples");
+        smoothingOn.setToolTipText("Draw a centred moving average over the window below");
+        smoothingOff.addActionListener(e -> setGlobalSmoothing(0));
+        smoothingOn.addActionListener(e -> setGlobalSmoothing((Integer) smoothingInput.getValue() / 1000.0));
+
+        JFormattedTextField field = ((JSpinner.DefaultEditor) smoothingInput.getEditor()).getTextField();
+        field.setColumns(6);
+        if (field.getFormatter() instanceof DefaultFormatter) {
+            // apply every valid typed value, not only on Enter or focus loss
+            ((DefaultFormatter) field.getFormatter()).setCommitsOnValidEdit(true);
+        }
+        smoothingInput.setToolTipText("Width of the moving average; the mouse wheel over the smoothing button "
+                + "changes it by " + WHEEL_STEP_MS + " ms");
+        smoothingInput.addChangeListener(e -> {
+            if (!syncingSmoothing && smoothingOn.isSelected()) {
+                setGlobalSmoothing((Integer) smoothingInput.getValue() / 1000.0);
+            }
+        });
+
+        int row = 0;
+        addRow(smoothingPanel, muted(new JLabel("Lines")), new SegmentedControl(smoothingOff, smoothingOn), row++, 0);
+        addRow(smoothingPanel, muted(new JLabel("Window")), withUnit(smoothingInput, "ms"), row++, 0);
+        if (smoothingWindow.maximumMs < Integer.MAX_VALUE) {
+            GridBagConstraints rangeConstraints = constraints(0, row++, 2, 0);
+            smoothingPanel.add(muted(new JLabel("Range " + smoothingWindow.minimumMs + "\u2013"
+                    + smoothingWindow.maximumMs + " ms for this log")), rangeConstraints);
+        }
+        GridBagConstraints separator = constraints(0, row++, 2, 0);
+        separator.fill = GridBagConstraints.HORIZONTAL;
+        separator.insets = new Insets(8, 0, 8, 0);
+        smoothingPanel.add(new JSeparator(), separator);
+        smoothingPanel.add(muted(new JLabel("<html>Display only: cursor values follow the smoothed<br>"
+                + "line; min/max, statistics and exports stay raw.<br>"
+                + "Each signal's legend menu can override it.</html>")), constraints(0, row, 2, 0));
     }
 
     private void setGlobalSmoothing(double seconds) {
@@ -314,12 +449,40 @@ final class ChartToolbar extends ThemedStrip {
         atMouse.addActionListener(e -> apply());
         atClick.addActionListener(e -> apply());
 
+        ButtonGroup minMaxGroup = new ButtonGroup();
+        minMaxGroup.add(minMaxHover);
+        minMaxGroup.add(minMaxAlways);
+        (settings.isAlwaysMinMax() ? minMaxAlways : minMaxHover).setSelected(true);
+        minMaxHover.setToolTipText("Min and max of the visible time on the trace you hover or pin in a legend");
+        minMaxAlways.setToolTipText("<html>Min and max of the visible time on every trace;<br>"
+                + "the hovered or pinned trace keeps the larger markers</html>");
+        minMaxHover.addActionListener(e -> apply());
+        minMaxAlways.addActionListener(e -> apply());
+
+        ButtonGroup rawGroup = new ButtonGroup();
+        rawGroup.add(rawShow);
+        rawGroup.add(rawHide);
+        (settings.isShowRawValues() ? rawShow : rawHide).setSelected(true);
+        rawShow.setToolTipText("A smoothed trace's value is followed by the recorded one: 15.5 (12.2 raw)");
+        rawHide.setToolTipText("Only the smoothed value, as on the drawn line");
+        rawShow.addActionListener(e -> apply());
+        rawHide.addActionListener(e -> apply());
+
         int row = 0;
         addRow(valuesPanel, muted(new JLabel("Show")), new SegmentedControl(valuesSegments()), row++, 0);
         addRow(valuesPanel, muted(new JLabel("At")), new SegmentedControl(atMouse, atClick), row++, 0);
-        GridBagConstraints noteConstraints = constraints(0, row, 2, 0);
+        GridBagConstraints noteConstraints = constraints(0, row++, 2, 0);
         noteConstraints.insets = new Insets(8, 0, 0, 0);
         valuesPanel.add(atNote, noteConstraints);
+        GridBagConstraints separator = constraints(0, row++, 2, 0);
+        separator.fill = GridBagConstraints.HORIZONTAL;
+        separator.insets = new Insets(8, 0, 8, 0);
+        valuesPanel.add(new JSeparator(), separator);
+        addRow(valuesPanel, muted(new JLabel("Min/max")), new SegmentedControl(minMaxHover, minMaxAlways), row++, 0);
+        addRow(valuesPanel, muted(new JLabel("Raw values")), new SegmentedControl(rawShow, rawHide), row++, 0);
+        GridBagConstraints smoothingNoteConstraints = constraints(0, row, 2, 0);
+        smoothingNoteConstraints.insets = new Insets(8, 0, 0, 0);
+        valuesPanel.add(smoothingNote, smoothingNoteConstraints);
     }
 
     /** The Values button's text: "Values: Labels  ▾", "Values: List at click  ▾". */
@@ -422,6 +585,8 @@ final class ChartToolbar extends ThemedStrip {
             }
         }
         settings.setPinValues(atClick.isSelected());
+        settings.setAlwaysMinMax(minMaxAlways.isSelected());
+        settings.setShowRawValues(rawShow.isSelected());
         settings.setVertical(verticalBox.isSelected());
         settings.setVerticalMode(samplesMode.isSelected()
                 ? ChartSettings.VerticalMode.SAMPLES : ChartSettings.VerticalMode.TIME_TICKS);
@@ -432,11 +597,23 @@ final class ChartToolbar extends ThemedStrip {
         onChange.run();
     }
 
-    private void updateControls() {
+    /** Refreshes the button texts and the enabled and visible states from the settings. */
+    void updateControls() {
         gridButton.setText(gridSummary(settings));
         smoothingButton.setText((compact ? "Smoothing: " : "Display smoothing: ")
                 + TimelineSmoothingWindow.label(settings.getSmoothingWindowSeconds()) + "  \u25BE");
         smoothingRawButton.setVisible(settings.getSmoothingWindowSeconds() > 0);
+        syncingSmoothing = true;
+        try {
+            double windowSeconds = settings.getSmoothingWindowSeconds();
+            (windowSeconds > 0 ? smoothingOn : smoothingOff).setSelected(true);
+            if (windowSeconds > 0) {
+                smoothingInput.setValue(smoothingWindow.initialMilliseconds(windowSeconds));
+            }
+            smoothingInput.setEnabled(windowSeconds > 0);
+        } finally {
+            syncingSmoothing = false;
+        }
         valuesButton.setText(compact ? "Values  \u25BE" : valuesSummary(settings));
         boolean valuesShown = settings.getCursorValues() != ChartSettings.CursorValues.OFF;
         atMouse.setEnabled(valuesShown);
@@ -445,12 +622,25 @@ final class ChartToolbar extends ThemedStrip {
                 : settings.isPinValues() ? "<html>Click a plot to show the values there.<br>"
                 + "Click the same spot again or press Esc to hide them.</html>"
                 : "<html>Move the mouse over the plots<br>to see the values at the cursor.</html>");
-        // the note's height changes with its text
+        boolean smoothing = settings.isAnySmoothing();
+        rawShow.setEnabled(smoothing);
+        rawHide.setEnabled(smoothing);
+        smoothingNote.setVisible(smoothing);
+        // the notes' height changes with their text
         valuesPopup.pack();
         timeTicksMode.setEnabled(settings.isVertical());
         samplesMode.setEnabled(settings.isVertical());
         // Spacing also sets the time labels, so it stays usable while the vertical lines are off.
         timeSpacing.setEnabled(settings.getVerticalMode() == ChartSettings.VerticalMode.TIME_TICKS || !settings.isVertical());
         horizontalDivisions.setEnabled(settings.isHorizontal());
+        syncingWidth = true;
+        try {
+            traceWidthInput.setValue((double) settings.defaultLineWidth(
+                    settings.isDarkPlot() ? PlotPalette.DARK : PlotPalette.LIGHT));
+        } finally {
+            syncingWidth = false;
+        }
+        traceWidthPlotDefault.setEnabled(!Double.isNaN(settings.getDefaultLineWidth()));
+        resetLinesButton.setEnabled(settings.hasCustomLines());
     }
 }

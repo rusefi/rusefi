@@ -1,5 +1,6 @@
 package com.rusefi.ui.wizard;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.IniFileMetaInfoImpl;
@@ -90,7 +91,7 @@ public class OutputAssignmentPanelTest {
     @Test
     void appliesAssignmentsBeforeSendingBenchCommand() {
         BinaryProtocol bp = mock(BinaryProtocol.class);
-        ConfigurationImage image = new ConfigurationImage(4);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(4);
         String description = "test ignition output 2";
         byte[] response = new byte[]{(byte) Integration.TS_RESPONSE_OK};
         when(bp.executeCommand(eq(Integration.TS_IO_TEST_COMMAND), any(), eq(description)))
@@ -111,7 +112,7 @@ public class OutputAssignmentPanelTest {
         when(bp.executeCommand(eq(Integration.TS_IO_TEST_COMMAND), any(), any()))
             .thenReturn(new byte[]{(byte) Integration.TS_RESPONSE_UNRECOGNIZED_COMMAND});
 
-        assertFalse(OutputAssignmentPanel.applyAndTest(bp, new ConfigurationImage(4),
+        assertFalse(OutputAssignmentPanel.applyAndTest(bp, ConfigurationImageTestHelper.newLittleEndian(4),
             VariableRegistryValues.ts_command_e_TS_INJECTOR_CATEGORY, 1, "test injector"));
     }
 

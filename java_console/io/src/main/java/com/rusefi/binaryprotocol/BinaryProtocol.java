@@ -20,7 +20,6 @@ import com.rusefi.core.OutputChannelSnapshot;
 import com.rusefi.core.RusEfiSignature;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.SignatureHelper;
-import com.rusefi.core.io.BoardCompatibility;
 import com.rusefi.core.io.BundleInfo;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.io.UnsupportedEcuInfo;
@@ -42,6 +41,7 @@ import java.util.BitSet;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.LongSupplier;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -65,8 +65,14 @@ public class BinaryProtocol {
     private static final ThreadFactory THREAD_FACTORY = new NamedThreadFactory("ECU text pull", true);
     // Intended for high-latency TCP links to firmware built with CUSTOM_TS_BUFFER_SIZE.
     private static final Integer BLOCKING_FACTOR_OVERRIDE = Integer.getInteger("blockingFactorOverride");
+    private static final AtomicLong NEXT_CONNECTION_GENERATION = new AtomicLong();
+
+    static long nextConnectionGeneration() {
+        return NEXT_CONNECTION_GENERATION.incrementAndGet();
+    }
 
     private final LinkManager linkManager;
+    private final long connectionGeneration = nextConnectionGeneration();
     private final IoStream stream;
     // Serialize response publication with disconnect cleanup. Never hold this during device I/O:
     // close must be able to clear the UI while a command is waiting for a response.
@@ -168,14 +174,14 @@ public class BinaryProtocol {
         // stale sensor data so a subsequent ECU doesn't inherit values from this one.
         // This is the only mechanism that fires NOT_CONNECTED on the splash screen — the
         // ConnectionWatchdog exists only inside ConsoleUI and is not created during splash.
-        // Skip the global status change for short-lived scanner probes (notifyGlobalStatusOnClose=false)
-        // so they don't disrupt the main console connection.
+        // Scanner probes (notifyGlobalStatusOnClose=false) own neither the global connection
+        // status nor its sensor readings. Closing one must leave the active console data intact.
         stream.addCloseListener(() -> {
             synchronized (publicationLock) {
                 if (linkManager.getNotifyGlobalStatusOnClose()) {
                     ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
+                    SensorCentral.getInstance().reset();
                 }
-                SensorCentral.getInstance().reset();
             }
         });
     }
@@ -285,13 +291,20 @@ public class BinaryProtocol {
         }
 
         try {
-            iniFile = Objects.requireNonNull(iniFileProvider.provide(signature));
+            String port = linkManager.getLastTriedPort();
+            linkManager.onIniResolutionStarted(port);
+            iniFile = Objects.requireNonNull(
+                iniFileProvider.provide(signature, port, connectionGeneration,
+                    () -> !isClosed()
+                        && Objects.equals(port, linkManager.getLastTriedPort())));
+            linkManager.clearMissingIniFailure();
             // SensorLogger is in the UI module, we can't easily access it from the IO module if it's not on the classpath
             // However, BinaryProtocol is often used in the context where UI is also present.
             // Let's check if we can use reflection or if there is a better way.
             // For now, let's try to fix the import or use the full name if it's available.
         } catch (IniNotFoundException e) {
             log.info("INI not found for signature: " + signature);
+            linkManager.recordMissingIniFailure(signature);
             close();
             return "Failed to located .ini";
         }
@@ -618,14 +631,6 @@ public class BinaryProtocol {
 
     public byte @NotNull [] smartPacketPrefix(int page, int offset, int requestSize) {
         return smartPacketPrefix2(page, offset, requestSize, isSinglePageController(), getWireByteOrder());
-    }
-
-    static byte @NotNull [] smartPacketPrefix2(int offset, int requestSize, boolean isSinglePageController) {
-        return smartPacketPrefix2(0, offset, requestSize, isSinglePageController);
-    }
-
-    static byte @NotNull [] smartPacketPrefix2(int page, int offset, int requestSize, boolean isSinglePageController) {
-        return smartPacketPrefix2(page, offset, requestSize, isSinglePageController, ByteOrder.LITTLE_ENDIAN);
     }
 
     static byte @NotNull [] smartPacketPrefix2(int page, int offset, int requestSize, boolean isSinglePageController, ByteOrder order) {

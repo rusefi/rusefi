@@ -262,7 +262,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         try {
             GeneratedIniValidator.validate(Path.of(fileName));
             IniFileModel ini = IniFileReaderUtil.readIniFile(fileName);
-            ConfigurationImage ci = new ConfigurationImage(ini.getMetaInfo().getPageSize(0));
+            ConfigurationImage ci = new ConfigurationImage(ini.getMetaInfo().getPageSize(0), ini.getByteOrder());
             Msq msq = MsqFactory.valueOf(ci, ini);
             msq.writeXmlFile("quick-self-test.xml");
         } catch (IOException | JAXBException e) {

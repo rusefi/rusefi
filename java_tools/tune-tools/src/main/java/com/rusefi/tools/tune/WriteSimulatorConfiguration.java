@@ -16,6 +16,7 @@ import jakarta.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.ByteOrder;
 import java.nio.file.Files;
 import java.util.Objects;
 
@@ -77,7 +78,9 @@ public class WriteSimulatorConfiguration {
         log.info("Got " + fileContent.length + " from " + inputBinaryTuneFileName + " while expecting " + pageSize);
         if (fileContent.length != pageSize)
             throw new IllegalStateException("Unexpected image size " + fileContent.length + " while expecting " + pageSize);
-        ConfigurationImage configuration = new ConfigurationImage(fileContent);
+        // [tag:image_byte_order] this image was written by the simulator running on this very host,
+        // not by the controller: it is in host byte order even while board .ini says big-endian
+        ConfigurationImage configuration = new ConfigurationImage(fileContent, ByteOrder.nativeOrder());
         log.info("Got " + Objects.requireNonNull(configuration, "configuration"));
         Msq m = MsqFactory.valueOf(configuration, ini);
         String name = "KNOCKNOISERPMBINS";

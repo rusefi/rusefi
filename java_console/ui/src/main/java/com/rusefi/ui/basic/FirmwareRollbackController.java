@@ -132,6 +132,7 @@ public final class FirmwareRollbackController {
     private volatile @Nullable String sessionInstalledSha;
     private volatile @Nullable LinkManager linkManager;
     private volatile @Nullable String lastDevIdentityDiagnostic;
+    private volatile @Nullable PortResult selectedPortSnapshot;
 
     public FirmwareRollbackController(
         ConnectivityContext connectivityContext,
@@ -203,10 +204,14 @@ public final class FirmwareRollbackController {
 
     /** Status is deliberately unknown unless the connected build is ordered in its exact branch catalog. */
     public String getReleaseStatus() {
-        BundleInfo firmware = connectedFirmware();
+        BundleInfo firmware = releaseStatusFirmware();
         if (firmware == null) {
             return "Disconnected — connect to inspect ECU firmware";
         }
+        String signature = releaseStatusSignature();
+        PortResult selectedPort = currentSelectedPortForStatus();
+        boolean missingIniIdentity = signature != null && connectedSignature() == null
+            && Objects.equals(signature, missingIniSignature(selectedPort));
         String key = firmware.getTarget() + "/" + firmware.getBranchName();
         if (isDevelopmentBundle(firmware)) {
             return getDevelopmentReleaseStatus();
@@ -214,9 +219,8 @@ public final class FirmwareRollbackController {
         if (!isLtsBundle(firmware)) {
             return releaseStatus(firmware.getBranchName(), false, false, false, false, false, false);
         }
-        PortResult selectedPort = portProvider.get().orElse(null);
         LinkManager lm = linkManager;
-        if (!matchesExpectedUpdateTarget(selectedPort, selectedPort, hasLiveConnection(),
+        if (!missingIniIdentity && !matchesExpectedUpdateTarget(selectedPort, selectedPort, hasLiveConnection(),
             lm == null ? null : lm.getLastTriedPort())) {
             return "Couldn't check for updates. Reconnect the ECU and try again.";
         }
@@ -228,7 +232,7 @@ public final class FirmwareRollbackController {
         }
         Optional<String> observedSha = Optional.ofNullable(selectedPort).flatMap(PortResult::getFirmwareHash);
         if (!observedSha.isPresent()) {
-            return signatureMatchedReleaseStatus(firmware, connectedSignature());
+            return signatureMatchedReleaseStatus(firmware, signature);
         }
         FirmwareRollbackResolver.Build installed = builds.stream()
             .filter(build -> sameReleaseIdentity(firmware.getTarget(), firmware.getBranchName(), observedSha.get(),
@@ -245,9 +249,9 @@ public final class FirmwareRollbackController {
 
     /** Display data from the same live ECU/catalog snapshot used by the release-status decision. */
     public ReleaseDisplay getReleaseDisplay() {
-        BundleInfo firmware = connectedFirmware();
+        BundleInfo firmware = releaseStatusFirmware();
         String status = getReleaseStatus();
-        LocalDate installedDate = parseSignatureDate(SignatureHelper.parse(connectedSignature()));
+        LocalDate installedDate = parseSignatureDate(SignatureHelper.parse(releaseStatusSignature()));
         LocalDate latestDate = null;
         if (firmware != null && isLtsBundle(firmware) && firmware.getTarget() != null
             && (firmware.getTarget() + "/" + firmware.getBranchName()).equals(catalogKey)) {
@@ -287,7 +291,7 @@ public final class FirmwareRollbackController {
     }
 
     public @Nullable String getConnectedPortLabel() {
-        PortResult selected = portProvider.get().orElse(null);
+        PortResult selected = currentSelectedPortForStatus();
         LinkManager lm = linkManager;
         if (!matchesExpectedUpdateTarget(selected, selected, hasLiveConnection(),
             lm == null ? null : lm.getLastTriedPort())) {
@@ -420,6 +424,7 @@ public final class FirmwareRollbackController {
         if (disposed) {
             return;
         }
+        selectedPortSnapshot = port;
         if (!isSerialFirmwareUpdateSupported(port)) {
             reset();
             return;
@@ -448,6 +453,7 @@ public final class FirmwareRollbackController {
             devMetadataCheckedAt = 0;
             devRetryAfter = 0;
             devStatusSnapshot = null;
+            selectedPortSnapshot = null;
         }
         if (SwingUtilities.isEventDispatchThread()) {
             refreshButton();
@@ -503,7 +509,7 @@ public final class FirmwareRollbackController {
     }
 
     private void discover(final PortResult port) {
-        final BundleInfo bundle = connectedFirmware();
+        final BundleInfo bundle = releaseStatusFirmware();
         if ((!enabled && !releaseStatusDiscoveryEnabled)) {
             reset();
             return;
@@ -709,14 +715,14 @@ public final class FirmwareRollbackController {
 
     private DevStatusSnapshot captureDevStatusSnapshot(@Nullable PortResult expectedPort) {
         LinkManager lm = linkManager;
-        String signature = connectedSignature();
-        BundleInfo firmware = connectedFirmware(signature);
+        String signature = releaseStatusSignature();
+        BundleInfo firmware = releaseStatusFirmware();
         Optional<PortResult> selected = portProvider.get();
         String livePort = lm == null ? null : lm.getLastTriedPort();
         PortResult selectedPort = selected.orElse(null);
         boolean matches = selectedPort != null
             && (expectedPort == null || expectedPort.equals(selectedPort))
-            && matchesExpectedUpdateTarget(selectedPort, selectedPort, signature != null, livePort)
+            && matchesReleaseStatusTarget(selectedPort, signature, livePort)
             && isDevelopmentBundle(firmware);
         DevLookupKey key = matches
             ? new DevLookupKey(firmware.getTarget(), BundleInfo.DEVELOPMENT,
@@ -745,7 +751,7 @@ public final class FirmwareRollbackController {
     }
 
     private String getDevelopmentReleaseStatus() {
-        RusEfiSignature signature = SignatureHelper.parse(connectedSignature());
+        RusEfiSignature signature = SignatureHelper.parse(releaseStatusSignature());
         DevStatusSnapshot snapshot = currentDevStatusSnapshot();
         if (snapshot == null) {
             return "Couldn't check for updates. Reconnect the ECU and try again.";
@@ -784,12 +790,12 @@ public final class FirmwareRollbackController {
     /** The Dev status and displayed publication date must both belong to the same live identity snapshot. */
     private @Nullable DevStatusSnapshot currentDevStatusSnapshot() {
         DevStatusSnapshot snapshot = devStatusSnapshot;
-        String connectedSignature = connectedSignature();
+        String connectedSignature = releaseStatusSignature();
         String snapshotLivePort = snapshot == null || snapshot.linkManager == null
             ? null : snapshot.linkManager.getLastTriedPort();
         boolean sessionConnected = externallyIdle.getAsBoolean();
-        boolean liveTargetMatches = snapshot != null && matchesExpectedUpdateTarget(snapshot.selectedPort,
-            snapshot.selectedPort, hasLiveConnection(), snapshotLivePort);
+        boolean liveTargetMatches = snapshot != null
+            && matchesReleaseStatusTarget(snapshot.selectedPort, snapshot.signature, snapshotLivePort);
         if (snapshot == null || !snapshot.matchesLiveEcu
             || !Objects.equals(snapshot.signature, connectedSignature)
             || !Objects.equals(snapshot.livePort, snapshotLivePort)
@@ -862,7 +868,7 @@ public final class FirmwareRollbackController {
         return sanitized.length() <= 80 ? sanitized : sanitized.substring(0, 80);
     }
 
-    private static @Nullable LocalDate parseSignatureDate(@Nullable RusEfiSignature signature) {
+    static @Nullable LocalDate parseSignatureDate(@Nullable RusEfiSignature signature) {
         if (signature == null || signature.getYear() == null || signature.getMonth() == null || signature.getDay() == null
             || !signature.getYear().matches("\\d{4}")
             || !signature.getMonth().matches("\\d{1,2}") || !signature.getDay().matches("\\d{1,2}")) {
@@ -876,7 +882,7 @@ public final class FirmwareRollbackController {
         }
     }
 
-    private static boolean isDevelopmentBundle(@Nullable BundleInfo bundle) {
+    static boolean isDevelopmentBundle(@Nullable BundleInfo bundle) {
         return bundle != null && !BundleInfo.isUndefined(bundle)
             && FirmwareBranch.isSameBranch(bundle.getBranchName(), BundleInfo.DEVELOPMENT);
     }
@@ -1126,6 +1132,49 @@ public final class FirmwareRollbackController {
         LinkManager lm = linkManager;
         BinaryProtocol bp = lm == null ? null : lm.getBinaryProtocol();
         return bp == null || bp.isClosed() ? null : bp.signature;
+    }
+
+    private @Nullable String releaseStatusSignature() {
+        String liveSignature = connectedSignature();
+        if (liveSignature != null) {
+            return liveSignature;
+        }
+        return missingIniSignature(currentSelectedPortForStatus());
+    }
+
+    private @Nullable PortResult currentSelectedPortForStatus() {
+        return SwingUtilities.isEventDispatchThread()
+            ? portProvider.get().orElse(null) : selectedPortSnapshot;
+    }
+
+    private @Nullable BundleInfo releaseStatusFirmware() {
+        BundleInfo liveFirmware = connectedFirmware();
+        return liveFirmware != null ? liveFirmware : connectedFirmware(releaseStatusSignature());
+    }
+
+    private @Nullable String missingIniSignature(@Nullable PortResult selectedPort) {
+        com.rusefi.AvailableHardware hardware = connectivityContext.getCurrentHardware();
+        if (selectedPort == null
+            || (selectedPort.type != SerialPortType.Ecu && selectedPort.type != SerialPortType.EcuWithOpenblt)
+            || LinkManager.isCanPort(selectedPort.port)
+            || hardware == null || hardware.getKnownPorts().stream().noneMatch(port ->
+                port.type == selectedPort.type && port.port.equals(selectedPort.port))) {
+            return null;
+        }
+        com.rusefi.MissingIniRecoveryState.Failure failure =
+            connectivityContext.getMissingIniRecoveryState().get();
+        return failure != null && selectedPort.port.equals(failure.port)
+            && SignatureHelper.parse(failure.signature) != null ? failure.signature : null;
+    }
+
+    private boolean matchesReleaseStatusTarget(@Nullable PortResult selectedPort, @Nullable String signature,
+                                               @Nullable String livePort) {
+        if (selectedPort == null || signature == null) {
+            return false;
+        }
+        return hasLiveConnection()
+            ? matchesExpectedUpdateTarget(selectedPort, selectedPort, true, livePort)
+            : Objects.equals(signature, missingIniSignature(selectedPort));
     }
 
     static @Nullable BundleInfo connectedFirmware(@Nullable String signature) {

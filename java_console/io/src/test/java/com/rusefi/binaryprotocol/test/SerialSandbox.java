@@ -49,7 +49,7 @@ public class SerialSandbox {
         Objects.requireNonNull(mcuSerialField);
 
         SensorCentral.getInstance().addListener(() -> {
-            int mcuSerial = PanamaHelper.getMcuSerial(mcuSerialField);
+            int mcuSerial = PanamaHelper.getMcuSerial(mcuSerialField, linkManager.getBinaryProtocol().getWireByteOrder());
             System.out.println("mcuSerial " + mcuSerial);
         });
 

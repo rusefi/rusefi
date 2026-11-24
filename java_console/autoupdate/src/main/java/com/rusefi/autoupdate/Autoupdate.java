@@ -40,6 +40,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -95,21 +96,22 @@ import static com.rusefi.core.FindFileHelper.findFirmwareFile;
  * <ul>
  *   <li><b>"Update Software" ({@code updateSoftwareItem})</b> — updates the bundle
  *       (console + firmware files) from within a running console, without needing to
- *       restart via the autoupdate exe.
+ *       restart via the autoupdate exe. {@code SoftwareUpdateCoordinator} shares one update
+ *       state between the startup screen and {@code MainFrame}.
  *       <ul>
- *         <li>Disabled by default. Only when {@link #isAutoUpdateEnabled} is false (the user
- *             preference is OFF or the bundle hard-disables auto-update — i.e. the launch-time
- *             silent update did not run, see #9775) does {@code MainFrame} spawn a background
- *             thread that polls {@link #isUpdateAvailable} and enables the menu item if a newer
- *             bundle exists on the server. When auto-update is fully enabled the launch-time
- *             flow already handled it, so the menu stays disabled.</li>
+ *         <li>At launch {@code Launcher} runs {@link #checkForUpdate} in the background. The
+ *             item is enabled only when a newer bundle exists, or when a staged update waits
+ *             for a restart. When {@link #isAutoUpdateEnabled} is true the user is also asked
+ *             once per session; otherwise the update is only offered by a banner and the menu
+ *             item (#9775).</li>
  *         <li>Clicking runs {@link #runManualUpdate} which — bypassing the
  *             {@link #isAutoUpdateEnabled} gate — calls {@link #performUpdate} to
- *             download+unpack the bundle, stage {@code rusefi_console.jar} as
- *             {@link #PENDING_CONSOLE_JAR} (the running JAR cannot overwrite itself),
- *             then invokes {@link #relaunchConsole} which spawns a new JVM off the
- *             pending JAR; {@link #finalizePendingUpdate} promotes it to the real name
- *             during the next startup.</li>
+ *             download+unpack the bundle and stage {@code rusefi_console.jar} as
+ *             {@link #PENDING_CONSOLE_JAR} (the running JAR cannot overwrite itself).
+ *             Nothing restarts until the user chooses to: the UI then closes through its
+ *             normal guarded exit path and calls {@link #startUpdatedConsole}, which spawns a
+ *             new JVM off the pending JAR; {@link #finalizePendingUpdate} promotes it to the
+ *             real name during that startup.</li>
  *       </ul></li>
  *   <li><b>"Update ECU" ({@code updateEcuItem})</b> — flashes the connected ECU when
  *       its firmware signature does not match the locally cached srec. Enabled by
@@ -123,11 +125,9 @@ import static com.rusefi.core.FindFileHelper.findFirmwareFile;
  * <h3>5. "Check" vs. "Apply" are separate</h3>
  * The class deliberately splits availability check from the actual download+install:
  * <ul>
- *   <li>{@link #isUpdateAvailable} / {@link #isNewerAvailable} — read-only, network-only,
- *       safe to call from a background thread; used by {@code MainFrame} to decide
- *       whether to enable "Update Software".</li>
- *   <li>{@link #runSilentUpdate} — respects the {@link #isAutoUpdateEnabled} gate; used
- *       by callers that want the settings honored.</li>
+ *   <li>{@link #checkForUpdate} / {@link #isNewerAvailable} — read-only, network-only,
+ *       safe to call from a background thread; checks server metadata without downloading
+ *       or installing anything, whatever {@link #isAutoUpdateEnabled} says.</li>
  *   <li>{@link #runManualUpdate} — ignores the gate; used by the "Update Software"
  *       menu item because reaching that item already implies explicit user intent.</li>
  *   <li>{@link #performUpdate} — the shared apply path used by both silent and manual.</li>
@@ -138,7 +138,7 @@ import static com.rusefi.core.FindFileHelper.findFirmwareFile;
  */
 public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
-    private static final int AUTOUPDATE_VERSION = 20261117; // separate from rusEFIVersion#CONSOLE_VERSION
+    private static final int AUTOUPDATE_VERSION = 20261123; // separate from rusEFIVersion#CONSOLE_VERSION
     // Resolve before unzipping can replace our own JAR. Installed launchers bypass
     // ConsoleExeFileLocator's default lookup, so it may not have loaded OsUtil (#10368).
     private static final boolean IS_WINDOWS = OsUtil.isWindows();
@@ -146,16 +146,22 @@ public class Autoupdate {
 
     /**
      * Filename used to stage a downloaded rusefi_console.jar before it can replace the running one.
-     * The new process launched by {@link #relaunchConsole()} finalizes the swap via
+     * The new process launched by {@link #startUpdatedConsole()} finalizes the swap via
      * {@link #finalizePendingUpdate()}.
      */
     public static final String PENDING_CONSOLE_JAR = "rusefi_console_pending.jar";
 
     public enum UpdateOutcome {
+        AVAILABLE,
         UPDATED,
         UP_TO_DATE,
         FAILED,
         SKIPPED
+    }
+
+    @FunctionalInterface
+    interface UpdateChecker {
+        boolean isAvailable(BundleInfo bundleInfo) throws Exception;
     }
 
     static class DownloadResult {
@@ -319,34 +325,37 @@ public class Autoupdate {
     }
 
     /**
-     * Relaunches the console as a new process and exits the current JVM.
-     * Call this after {@link #runSilentUpdate} reports a completed update so the freshly
-     * downloaded rusefi_console.jar is picked up by the new process.
+     * Starts the console as a new process without exiting the current JVM.
+     * Call this after {@link #runManualUpdate} reports a completed update so the freshly
+     * downloaded rusefi_console.jar is picked up by the new process. UI callers start it before
+     * closing through their normal guarded exit path, so tune saving and connection cleanup
+     * still run, and keep their window open when this returns false.
      * <p>
      * Prefers a direct {@code java -jar} invocation (platform-independent) so that
      * {@code -DSKIP_ONE_INSTANCE_CHECK=true} can be passed as a JVM arg, preventing
      * the "already running" dialog that would otherwise appear before the old instance
      * releases its server socket. Falls back to the platform exe launcher when the
      * current JAR path cannot be resolved (e.g. running from an IDE class directory).
+     *
+     * @return true when a replacement process was started
      */
-    public static void relaunchConsole() {
+    public static boolean startUpdatedConsole() {
         String jarPath = getCurrentJarPath();
         if (jarPath != null) {
             // If a staged update exists, launch from it so the new code is picked up immediately.
             File pendingJar = new File(new File(jarPath).getParentFile(), PENDING_CONSOLE_JAR);
             String launchJar = pendingJar.exists() ? pendingJar.getAbsolutePath() : jarPath;
             String javaExe = Paths.get(System.getProperty("java.home"), "bin", "java").toString();
-            log.info("relaunchConsole: launching " + launchJar);
+            log.info("startUpdatedConsole: launching " + launchJar);
             try {
                 new ProcessBuilder(javaExe, "-DSKIP_ONE_INSTANCE_CHECK=true", "-jar", launchJar).start();
-                System.exit(0);
+                return true;
             } catch (IOException e) {
                 log.error("Direct relaunch failed, falling back to exe launcher: " + e);
             }
         }
         String consoleExeFileName = new ConsoleExeFileLocator().getConsoleExeFileName();
-        startConsoleAsANewProcess(consoleExeFileName, new String[0]);
-        System.exit(0);
+        return startConsoleAsANewProcess(consoleExeFileName, new String[0]);
     }
 
     /**
@@ -362,7 +371,7 @@ public class Autoupdate {
 
         File targetJar = new File(runningJar.getParentFile(), "rusefi_console.jar");
         log.info("finalizePendingUpdate: " + runningJar + " -> " + targetJar);
-        // relaunchConsole() starts this process and then System.exit(0)s the previous JVM, but that
+        // startUpdatedConsole() starts this process and then the previous JVM exits, but that
         // old JVM was running from rusefi_console.jar and may not have released its file lock yet
         // (on Windows the copy fails with "being used by another process"). Retry to wait it out -
         // giving up on the first failure leaves the pending JAR orphaned and old code running (#9727).
@@ -391,6 +400,69 @@ public class Autoupdate {
         // On Linux the pending file can be deleted even while open; on Windows this may fail silently.
         if (!runningJar.delete()) {
             log.info("finalizePendingUpdate: pending JAR will be cleaned up on next update");
+        }
+    }
+
+    /**
+     * Returns true when a staged console JAR is waiting next to the running console and has not
+     * been applied yet. A process already running from the pending JAR has applied the update and
+     * must not prompt again.
+     */
+    public static boolean hasPendingUpdate() {
+        String jarPath = getCurrentJarPath();
+        if (jarPath != null) {
+            File runningJar = new File(jarPath);
+            return hasPendingUpdate(runningJar.getParentFile(), runningJar.getName());
+        }
+        return hasPendingUpdate(new File(new File(".."), "console"), null);
+    }
+
+    static boolean hasPendingUpdate(File consoleDirectory, String runningJarName) {
+        if (PENDING_CONSOLE_JAR.equals(runningJarName)) {
+            return false;
+        }
+        File pendingJar = new File(consoleDirectory, PENDING_CONSOLE_JAR);
+        if (!pendingJar.isFile() || pendingJar.length() == 0) {
+            return false;
+        }
+        try (ZipFile jar = new ZipFile(pendingJar)) {
+            if (jar.getEntry("com/rusefi/Launcher.class") == null) {
+                return false;
+            }
+        } catch (IOException e) {
+            log.info("hasPendingUpdate: ignoring invalid staged JAR " + pendingJar + ": " + e);
+            return false;
+        }
+        // finalizePendingUpdate() copies the pending JAR over rusefi_console.jar but cannot delete it
+        // on Windows, where the process is still running from it. An identical leftover is already
+        // applied: remove it now that nothing runs from it, and do not ask for another restart.
+        File installedJar = new File(consoleDirectory, "rusefi_console.jar");
+        if (hasSameContent(pendingJar, installedJar)) {
+            if (!pendingJar.delete()) {
+                log.info("hasPendingUpdate: could not delete applied staged JAR " + pendingJar);
+            }
+            return false;
+        }
+        return true;
+    }
+
+    static boolean hasSameContent(File first, File second) {
+        if (!first.isFile() || !second.isFile() || first.length() != second.length()) {
+            return false;
+        }
+        try (InputStream a = new BufferedInputStream(Files.newInputStream(first.toPath()));
+             InputStream b = new BufferedInputStream(Files.newInputStream(second.toPath()))) {
+            int value;
+            do {
+                value = a.read();
+                if (value != b.read()) {
+                    return false;
+                }
+            } while (value != -1);
+            return true;
+        } catch (IOException e) {
+            log.info("hasSameContent: " + e);
+            return false;
         }
     }
 
@@ -440,68 +512,61 @@ public class Autoupdate {
         return null;
     }
 
-    /**
-     * Checks server metadata to determine if a newer bundle is available, without downloading anything.
-     * Safe to call from a background thread.
-     */
-    public static boolean isUpdateAvailable() {
-        try {
-            BundleInfo bundleInfo = BundleUtil.readBundleFullNameNotNull();
-            if (BundleInfo.isUndefined(bundleInfo)) {
-                return false;
-            }
-            return isNewerAvailable(bundleInfo);
-        } catch (Exception e) {
-            log.error("isUpdateAvailable error: " + e);
+    private static boolean isNewerAvailable(BundleInfo bundleInfo) throws IOException {
+        String branchUrl = BundleInfoStrategy.getDownloadUrl(bundleInfo, PropertiesHolder.getBaseUrl(), BundleInfo::getBranchName);
+        boolean isObfuscated = FindFileHelper.isObfuscated();
+        String suffix = isObfuscated ? "_obfuscated_public" : "";
+        String folderName = bundleInfo.getTarget() + "_" + bundleInfo.getBranchName();
+        String localFolder = userHomeSubDirectory + folderName + File.separator;
+        new File(localFolder).mkdirs();
+        String fileName = ConnectionAndMeta.getWhiteLabel(ConnectionAndMeta.getProperties()) + "_bundle_" + bundleInfo.getTarget() + suffix + "_autoupdate" + ".zip";
+        String localZipFileName = localFolder + fileName;
+        ConnectionAndMeta connectionAndMeta = new ConnectionAndMeta(fileName).invoke(branchUrl);
+        log.info("isNewerAvailable: local=" + localZipFileName);
+        log.info("isNewerAvailable: server size=" + connectionAndMeta.getCompleteFileSize() + " modified=" + new Date(connectionAndMeta.getLastModified()));
+        File localFile = new File(localZipFileName);
+        log.info("isNewerAvailable: local  size=" + localFile.length() + " modified=" + new Date(localFile.lastModified()));
+        boolean upToDate = AutoupdateUtil.hasExistingFile(localZipFileName, connectionAndMeta.getCompleteFileSize(), connectionAndMeta.getLastModified());
+        if (upToDate) {
+            log.info("isNewerAvailable: update NOT needed (already up to date)");
             return false;
         }
-    }
-
-    private static boolean isNewerAvailable(BundleInfo bundleInfo) {
-        try {
-            String branchUrl = BundleInfoStrategy.getDownloadUrl(bundleInfo, PropertiesHolder.getBaseUrl(), BundleInfo::getBranchName);
-            boolean isObfuscated = FindFileHelper.isObfuscated();
-            String suffix = isObfuscated ? "_obfuscated_public" : "";
-            String folderName = bundleInfo.getTarget() + "_" + bundleInfo.getBranchName();
-            String localFolder = userHomeSubDirectory + folderName + File.separator;
-            new File(localFolder).mkdirs();
-            String fileName = ConnectionAndMeta.getWhiteLabel(ConnectionAndMeta.getProperties()) + "_bundle_" + bundleInfo.getTarget() + suffix + "_autoupdate" + ".zip";
-            String localZipFileName = localFolder + fileName;
-            ConnectionAndMeta connectionAndMeta = new ConnectionAndMeta(fileName).invoke(branchUrl);
-            log.info("isNewerAvailable: local=" + localZipFileName);
-            log.info("isNewerAvailable: server size=" + connectionAndMeta.getCompleteFileSize() + " modified=" + new Date(connectionAndMeta.getLastModified()));
-            File localFile = new File(localZipFileName);
-            log.info("isNewerAvailable: local  size=" + localFile.length() + " modified=" + new Date(localFile.lastModified()));
-            boolean upToDate = AutoupdateUtil.hasExistingFile(localZipFileName, connectionAndMeta.getCompleteFileSize(), connectionAndMeta.getLastModified());
-            log.info("isNewerAvailable: update " + (upToDate ? "NOT needed (already up to date)" : "IS available"));
-            return !upToDate;
-        } catch (IOException e) {
-            log.error("isNewerAvailable error: " + e);
-            return false;
-        }
+        log.info("isNewerAvailable: update IS available");
+        return true;
     }
 
     /**
-     * Runs a silent background update from within rusefi_console: downloads and unpacks the bundle
-     * (excluding rusefi_console.jar itself, which cannot be replaced while running),
-     * @return the result of checking and, when needed, applying the update
+     * Checks for an application update without downloading or installing it. The check runs even
+     * when {@link #isAutoUpdateEnabled} is false, since it only reads server metadata; callers use
+     * that setting to decide how prominently to offer the update (#9775).
+     *
+     * @return {@link UpdateOutcome#AVAILABLE} when newer server metadata is present
      */
-    public static UpdateOutcome runSilentUpdate() {
+    public static UpdateOutcome checkForUpdate() {
+        if (hasPendingUpdate()) {
+            log.info("checkForUpdate: staged update is waiting for restart");
+            return UpdateOutcome.UPDATED;
+        }
         try {
-            log.info("runSilentUpdate: starting");
+            log.info("checkForUpdate: starting");
             BundleInfo bundleInfo = BundleUtil.readBundleFullNameNotNull();
-            log.info("runSilentUpdate: bundle=" + bundleInfo);
+            log.info("checkForUpdate: bundle=" + bundleInfo);
             if (BundleInfo.isUndefined(bundleInfo)) {
-                log.info("runSilentUpdate: no bundle info, skipping");
+                log.info("checkForUpdate: no bundle info, skipping");
                 return UpdateOutcome.SKIPPED;
             }
-            if (!isAutoUpdateEnabled()) {
-                log.info("runSilentUpdate: autoupdate is disabled");
-                return UpdateOutcome.SKIPPED;
-            }
-            return performUpdate(bundleInfo);
+            return checkForUpdate(bundleInfo, Autoupdate::isNewerAvailable);
         } catch (Throwable e) {
-            log.error("runSilentUpdate error: " + e);
+            log.error("checkForUpdate error: " + e);
+            return UpdateOutcome.FAILED;
+        }
+    }
+
+    static UpdateOutcome checkForUpdate(BundleInfo bundleInfo, UpdateChecker checker) {
+        try {
+            return checker.isAvailable(bundleInfo) ? UpdateOutcome.AVAILABLE : UpdateOutcome.UP_TO_DATE;
+        } catch (Throwable e) {
+            log.error("checkForUpdate failed", e);
             return UpdateOutcome.FAILED;
         }
     }
@@ -510,23 +575,21 @@ public class Autoupdate {
      * Performs a bundle update regardless of the AutoupdateProperty setting.
      * Intended for the "Update Software" menu item when auto-update is disabled.
      */
-    public static void runManualUpdate(Consumer<String> onComplete) {
+    public static void runManualUpdate(Consumer<UpdateOutcome> onComplete) {
         try {
             log.info("runManualUpdate: starting");
             BundleInfo bundleInfo = BundleUtil.readBundleFullNameNotNull();
             log.info("runManualUpdate: bundle=" + bundleInfo);
             if (BundleInfo.isUndefined(bundleInfo)) {
                 log.info("runManualUpdate: no bundle info, skipping");
-                onComplete.accept(null);
+                onComplete.accept(UpdateOutcome.SKIPPED);
                 return;
             }
             UpdateOutcome outcome = performUpdate(bundleInfo);
-            onComplete.accept(outcome == UpdateOutcome.UPDATED
-                ? "Update installed - please restart to apply the new console"
-                : null);
+            onComplete.accept(outcome);
         } catch (Throwable e) {
             log.error("runManualUpdate error: " + e);
-            onComplete.accept(null);
+            onComplete.accept(UpdateOutcome.FAILED);
         }
     }
 
@@ -564,7 +627,7 @@ public class Autoupdate {
         final String firmwareFile = findFirmwareFile();
         new File(srecFile == null ? firmwareFile : srecFile).setLastModified(file.lastModified);
         tryInstallTsPlugin();
-        // Stage the new console JAR under a different name so relaunchConsole() can
+        // Stage the new console JAR under a different name so startUpdatedConsole() can
         // launch from it and finalizePendingUpdate() can swap it in on next startup.
         extractConsoleJarAsPending(file.zipFileName);
     }
@@ -1250,13 +1313,13 @@ public class Autoupdate {
     /**
      * rusefi_updater.exe/invokes rusefi_console.jar - entry point is Launcher#main
      */
-    private static void startConsoleAsANewProcess(final String consoleExeFileName, final String[] args) {
+    private static boolean startConsoleAsANewProcess(final String consoleExeFileName, final String[] args) {
         if (!Files.exists(Paths.get(consoleExeFileName))) {
             log.error(String.format("File `%s` to launch isn't found", consoleExeFileName));
             if (!AutoupdateUtil.runHeadless) {
                 ErrorMessageHelper.showErrorDialog(String.format("File `%s` to launch isn't found.", consoleExeFileName), "Error");
             }
-            return;
+            return false;
         }
         log.info(String.format("File `%s` to launch is found", consoleExeFileName));
         ensureLauncherIsExecutable(consoleExeFileName);
@@ -1267,6 +1330,7 @@ public class Autoupdate {
             log.info(String.format("We're starting `%s` process", consoleExeFileName));
             new ProcessBuilder(processBuilderArgs).start();
             log.info(String.format("Process `%s` is started", consoleExeFileName));
+            return true;
         } catch (final IOException e) {
             final String command = String.join(" ", processBuilderArgs);
             log.error(String.format("Failed to run `%s` command", command), e);
@@ -1276,6 +1340,7 @@ public class Autoupdate {
                     command
                 ), "Error");
             }
+            return false;
         }
     }
 

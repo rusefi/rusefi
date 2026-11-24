@@ -1,5 +1,6 @@
 package com.rusefi.ui.wizard;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileMetaInfoImpl;
 import com.opensr5.ini.IniFileModel;
@@ -85,7 +86,7 @@ class TpsPanelTest {
         EnumIniField field = new EnumIniField("tps1_1AdcChannel", 0, FieldType.UINT8,
             new EnumIniField.EnumKeyValueMap(values), 0, 7);
 
-        assertNull(TpsPanel.readEnum(field, new ConfigurationImage(new byte[]{16})));
+        assertNull(TpsPanel.readEnum(field, ConfigurationImageTestHelper.newLittleEndian(new byte[]{16})));
     }
 
     private static IniFileModel loadTestIni() throws Throwable {

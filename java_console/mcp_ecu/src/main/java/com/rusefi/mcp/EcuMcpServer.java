@@ -54,7 +54,7 @@ import static com.devexperts.logging.Logging.getLogging;
  *     <li><code>tools/list</code></li>
  *     <li><code>tools/call</code> for: connect, ecu_info, set_lua, get_lua, lua_reset,
  *         send_command (alias: command), read_output_channel, read_messages,
- *         wait_for_message, read_tune, write_tune, start_data_logging, stop_data_logging, data_logging_status, download_bundle, update_firmware, reboot, reboot_to_blt — see
+ *         wait_for_message, read_tune, write_tune, start_data_logging, stop_data_logging, data_logging_status, import_ini_to_cache, download_bundle, update_firmware, reboot, reboot_to_blt — see
  *         java_console/mcp_ecu/README.md for the tool reference</li>
  *     <li><code>notifications/initialized</code></li>
  * </ul>
@@ -454,6 +454,21 @@ public class EcuMcpServer {
                 schemaObject(new String[][]{
                         {"path", "string", "Existing input .msq file path on the MCP server host (not the client)."}
                 }, new String[]{"path"}, false)));
+        tools.add(tool("import_ini_to_cache",
+                "Import a .ini file from the MCP server host into the rusEFI console's local .ini cache " +
+                        "(~/.rusEFI/ini_database/<hash>.ini), keyed by the firmware signature hash. " +
+                        "Subsequent connects for that signature resolve the .ini locally without any " +
+                        "network download or user prompt — the same path the Swing manual-picker uses " +
+                        "for custom boards or offline installs. The signature is read from the file's " +
+                        "'signature' line unless an override is supplied. Overwrites any existing cached " +
+                        "entry for the same hash. No ECU connection required. Returns success, path " +
+                        "(the cached file) and signature.",
+                schemaObject(new String[][]{
+                        {"path", "string", "Existing .ini file path on the MCP server host (not the client)."},
+                        {"signature", "string", "Optional firmware signature override " +
+                                "(e.g. 'rusEFI master.2026.07.02.uaefi.2367417284'). " +
+                                "By default the signature is read from the file's 'signature' line."}
+                }, new String[]{"path"}, false)));
         tools.add(tool("download_bundle",
                 "Download and extract a fresh autoupdate bundle on the MCP server host, without connecting " +
                         "to or flashing an ECU. Select a board, the universal updater, or both. The universal " +
@@ -519,6 +534,7 @@ public class EcuMcpServer {
                 case "wait_for_message": toolResult = doWaitForMessage(args); break;
                 case "read_tune":   toolResult = doReadTune(args); break;
                 case "write_tune":  toolResult = doWriteTune(args); break;
+                case "import_ini_to_cache": toolResult = com.rusefi.mcp.tools.IniTools.importIniToCache(args); break;
                 case "download_bundle": toolResult = new BundleDownloader().download(args); break;
                 case "update_firmware": toolResult = doUpdateFirmware(args); break;
                 case "reboot":      toolResult = doReboot(Integration.CMD_REBOOT); break;

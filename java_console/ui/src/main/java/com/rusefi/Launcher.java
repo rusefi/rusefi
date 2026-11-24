@@ -65,8 +65,8 @@ public class Launcher implements rusEFIVersion {
         ConsoleTools.printTools();
 
         CompletableFuture<Autoupdate.UpdateOutcome> updateOutcome = new CompletableFuture<>();
-        Thread updateThread = new Thread(() -> updateOutcome.complete(Autoupdate.runSilentUpdate()),
-            "autoupdate-background");
+        Thread updateThread = new Thread(() -> updateOutcome.complete(Autoupdate.checkForUpdate()),
+            "update-availability-check");
         updateThread.setDaemon(true);
         updateThread.start();
 

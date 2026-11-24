@@ -12,6 +12,7 @@ package com.rusefi;
  */
 public class ConnectivityContext {
     private final PortScanner portScanner;
+    private final MissingIniRecoveryState missingIniRecoveryState;
     // Identity of the board this process talks to: written at connect time (via the LinkManager sharing
     // this instance, see ProductionConnectivity), read by flashing/hardware-kind decisions. Owned here
     // because those decisions run in offline flows where no live connection exists to ask.
@@ -22,8 +23,14 @@ public class ConnectivityContext {
     }
 
     public ConnectivityContext(PortScanner portScanner, com.rusefi.core.io.ConnectedEcuTarget connectedEcuTarget) {
+        this(portScanner, connectedEcuTarget, new MissingIniRecoveryState());
+    }
+
+    public ConnectivityContext(PortScanner portScanner, com.rusefi.core.io.ConnectedEcuTarget connectedEcuTarget,
+                               MissingIniRecoveryState missingIniRecoveryState) {
         this.portScanner = portScanner;
         this.connectedEcuTarget = connectedEcuTarget;
+        this.missingIniRecoveryState = missingIniRecoveryState;
     }
 
     public PortScanner getPortScanner() {
@@ -32,6 +39,10 @@ public class ConnectivityContext {
 
     public com.rusefi.core.io.ConnectedEcuTarget getConnectedEcuTarget() {
         return connectedEcuTarget;
+    }
+
+    public MissingIniRecoveryState getMissingIniRecoveryState() {
+        return missingIniRecoveryState;
     }
 
     public AvailableHardware getCurrentHardware() {

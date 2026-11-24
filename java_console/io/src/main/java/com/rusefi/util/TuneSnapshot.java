@@ -35,7 +35,11 @@ public final class TuneSnapshot {
                 if (bytes == null) {
                     throw new IOException("Failed to read tune page " + id);
                 }
-                pages.put(id, new ConfigurationImage(bytes));
+                // readFromPage returns the ECU's raw bytes.  Preserve the byte order declared by
+                // the connected firmware's INI when those bytes are decoded into MSQ constants.
+                // The one-argument constructor defaults to little-endian and silently byte-swaps
+                // every multi-byte scalar exported from big-endian PowerPC targets.
+                pages.put(id, rawPage(bytes, bp.getWireByteOrder()));
             }
             if (!pages.containsKey(0)) {
                 throw new IOException("Main tune page is missing from the ECU .ini");
@@ -49,6 +53,10 @@ public final class TuneSnapshot {
             // Prevent a timed-out queued read from starting later; never interrupt a wire transaction.
             read.cancel(false);
         }
+    }
+
+    static ConfigurationImage rawPage(byte[] bytes, java.nio.ByteOrder byteOrder) {
+        return new ConfigurationImage(bytes, byteOrder);
     }
 
     public static Path save(Path directory, Msq tune, LocalDate date) throws IOException {

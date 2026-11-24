@@ -110,7 +110,7 @@ public class PartialMergeTestContext extends TuneMigrationContext {
         return new CalibrationsHelper.MergeResult(
             java.util.Optional.of(new CalibrationsInfo(
                 newCalibrations.getIniFile(),
-                new ConfigurationImageWithMeta(newCalibrations.getImage().getMeta(), mergedImage.getContent())
+                new ConfigurationImageWithMeta(newCalibrations.getImage().getMeta(), mergedImage.getContent(), mergedImage.getByteOrder())
             )),
             failedFields
         );

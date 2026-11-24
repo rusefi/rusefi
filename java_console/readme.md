@@ -17,6 +17,12 @@ Windows universal bundles include `PCANBasic_JNI.dll` and `PCANBasic.dll` beside
 the console JAR. If no ECU appears, check the driver, channel, bitrate, ECU power,
 wiring, and bus termination.
 
+Windows PCAN uses 500 kbit/s with an 87.5% sample point and a two-quanta
+synchronization jump width (BTR0/BTR1 `0x401c`). The wider synchronization
+window prevents payload-dependent repeated frames observed during GPEC2A
+configuration reads with the standard one-quanta timing. ISO-TP sequence
+validation remains strict.
+
 ## Linux SocketCAN
 
 The console automatically probes a Linux SocketCAN interface for a rusEFI ECU.

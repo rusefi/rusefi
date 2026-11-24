@@ -49,7 +49,7 @@ public class UnsupportedEcuCardHostTest {
         when(stream.getDataBuffer()).thenReturn(buffer);
         when(buffer.getPacket(Timeouts.BINARY_IO_TIMEOUT, "[hello]")).thenReturn(("\u0000" + liveSignature + "\u0000").getBytes(StandardCharsets.US_ASCII));
         when(bp.readFullImageFromController(any(ConfigurationImageMeta.class))).thenAnswer(call ->
-            new ConfigurationImageWithMeta(call.getArgument(0), new byte[16]));
+            new ConfigurationImageWithMeta(call.getArgument(0), new byte[16], java.nio.ByteOrder.LITTLE_ENDIAN));
         when(bp.readFromPage(0x0400, 0, 8)).thenReturn(new byte[8]);
         IniFileProvider previousProvider = BinaryProtocol.iniFileProvider;
         CalibrationsInfo calibrations;

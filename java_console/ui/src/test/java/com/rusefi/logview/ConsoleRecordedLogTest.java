@@ -9,6 +9,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,11 +18,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Logs recorded by the console (Binary Logging > Start, {@link BinarySensorLog}) have no Time field:
- * time is only in each data block's 16-bit timestamp, in 10 us units, as MegaLogViewer reads it.
- * ECU-written logs (firmware binary_mlg_logging.cpp) carry an explicit Time field instead.
+ * [tag:mlg_time_field] Logs recorded by the console (Binary Logging > Start, {@link BinarySensorLog}) start
+ * with a Time field, like ECU-written logs (firmware binary_mlg_logging.cpp). Console logs recorded before
+ * that field existed have the time only in each data block's 16-bit timestamp, in 10 us units.
  */
 class ConsoleRecordedLogTest {
+    private static final int FIELD_SIZE = 89;
+
     private static BinaryLogEntry entry(String name, String unit, int mlgType) {
         return new BinaryLogEntry() {
             @Override
@@ -71,11 +74,46 @@ class ConsoleRecordedLogTest {
         return bytes.toByteArray();
     }
 
+    /** The same log as consoles wrote it before the Time field: no descriptor and no value for it. */
+    private static byte[] logWithoutTimeField() throws IOException {
+        byte[] bytes = consoleLog();
+        ByteBuffer header = ByteBuffer.wrap(bytes);
+        int dataBegin = header.getInt(16);
+        int rowSize = 4 + header.getShort(20) + 1;
+        ByteArrayOutputStream stripped = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(stripped);
+        out.write(bytes, 0, 12);
+        out.writeInt(header.getInt(12) - FIELD_SIZE);
+        out.writeInt(dataBegin - FIELD_SIZE);
+        out.writeShort(header.getShort(20) - 4);
+        out.writeShort(header.getShort(22) - 1);
+        out.write(bytes, 24 + FIELD_SIZE, dataBegin - 24 - FIELD_SIZE);
+        for (int row = dataBegin; row < bytes.length; row += rowSize) {
+            out.write(bytes, row, 4);
+            out.write(bytes, row + 8, rowSize - 9);
+            int checksum = bytes[row + rowSize - 1];
+            for (int i = 4; i < 8; i++) {
+                checksum -= bytes[row + i];
+            }
+            out.write(checksum);
+        }
+        return stripped.toByteArray();
+    }
+
     @Test
-    void consoleRecordedLogOpensWithTimeFromTheBlocks() throws IOException {
-        CsvLogReader log = BinaryLogReader.read(new ByteArrayInputStream(consoleLog()));
+    void consoleRecordedLogOpensWithItsTimeField() throws IOException {
+        checkConsoleLog(consoleLog());
+    }
+
+    @Test
+    void logWithoutTimeFieldOpensWithTimeFromTheBlocks() throws IOException {
+        checkConsoleLog(logWithoutTimeField());
+    }
+
+    private static void checkConsoleLog(byte[] bytes) throws IOException {
+        CsvLogReader log = BinaryLogReader.read(new ByteArrayInputStream(bytes));
         assertEquals(3, log.sampleCount());
-        assertEquals(3, log.fieldCount(), "Time added in front of RPM and MAP");
+        assertEquals(3, log.fieldCount(), "Time in front of RPM and MAP");
         assertEquals(GAUGE_NAME_TIME, log.name(0));
         assertEquals("s", log.unit(0));
         assertEquals("RPM", log.name(1));

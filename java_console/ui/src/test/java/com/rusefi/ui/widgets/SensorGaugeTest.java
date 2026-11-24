@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.GaugeModel;
 import com.opensr5.ini.IniFileMetaInfo;
@@ -43,7 +44,7 @@ class SensorGaugeTest {
         IniFileModel ini = IniFileReaderUtil.readIniFile(IniFileReaderUtil.read(
             new ByteArrayInputStream(text.getBytes(StandardCharsets.US_ASCII))),
             "gppwm.ini", mock(IniFileMetaInfo.class));
-        ConfigurationImage image = new ConfigurationImage(new byte[16]);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[16]);
         byte[] note = "Cooling fan".getBytes(StandardCharsets.US_ASCII);
         System.arraycopy(note, 0, image.getContent(), 0, note.length);
         assertEquals("Cooling fan", TsStringFunction.resolve(ini.getGauge("gppwmGauge1").getTitle(), ini, image, null));
@@ -259,7 +260,7 @@ class SensorGaugeTest {
         IniFileModel ini = IniFileReaderUtil.readIniFile(IniFileReaderUtil.read(
             new ByteArrayInputStream(text.getBytes(StandardCharsets.US_ASCII))),
             "circular-rpm.ini", mock(IniFileMetaInfo.class));
-        ConfigurationImage image = new ConfigurationImage(new byte[4]);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[4]);
         image.getByteBuffer(0, 2).putShort((short) 6000);
         UIContext context = new UIContext();
         context.iniFileState.setIniFileModelForTest(ini);

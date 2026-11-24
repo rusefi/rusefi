@@ -21,6 +21,7 @@ import com.rusefi.maintenance.StLinkFlasher;
 import com.rusefi.updater.OpenbltDetectorStrategy;
 import com.rusefi.updater.OpenbltDetectorStrategy.OpenbltInfo;
 import com.rusefi.core.io.UnsupportedEcuInfo;
+import com.rusefi.core.SignatureHelper;
 
 import java.util.Collection;
 import java.util.List;
@@ -45,9 +46,16 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
     // The DFU driver-state query differs between H7 and F4/F7 boards, so the probe needs the
     // connected-board identity (shared with ConnectivityContext, see ProductionConnectivity).
     private final com.rusefi.core.io.ConnectedEcuTarget connectedEcuTarget;
+    private final MissingIniRecoveryState missingIniRecoveryState;
 
     public EcuHardwareProbes(com.rusefi.core.io.ConnectedEcuTarget connectedEcuTarget) {
+        this(connectedEcuTarget, new MissingIniRecoveryState());
+    }
+
+    public EcuHardwareProbes(com.rusefi.core.io.ConnectedEcuTarget connectedEcuTarget,
+                             MissingIniRecoveryState missingIniRecoveryState) {
         this.connectedEcuTarget = connectedEcuTarget;
+        this.missingIniRecoveryState = missingIniRecoveryState;
     }
 
     @Override
@@ -77,7 +85,13 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
             return inspectCanPort(serialPort, () -> SLCANConnector.createStream(
                 serialPort.substring(LinkManager.SLCAN_PREFIX.length()), 6));
         }
-        return EcuHardwareProbes.inspect(serialPort);
+        return EcuHardwareProbes.inspect(serialPort, REAL_PROBE, missingIniRecoveryState);
+    }
+
+    @Override
+    public boolean shouldWaitForIniResolution(String serialPort) {
+        return missingIniRecoveryState != null
+            && missingIniRecoveryState.shouldWaitForResolution(serialPort);
     }
 
     static PortResult inspectCanPort(String port, Callable<IoStream> opener) {
@@ -105,7 +119,7 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
 
     @Override
     public PortResult inspectTcpPort(String tcpPort) {
-        PortResult result = EcuHardwareProbes.inspectRunningEcu(tcpPort);
+        PortResult result = EcuHardwareProbes.inspectRunningEcu(tcpPort, (signature, failedPort) -> {});
         return result != null ? result : new PortResult(tcpPort, SerialPortType.Unknown);
     }
 
@@ -236,6 +250,10 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
         /** @throws com.fazecast.jSerialComm.SerialPortInvalidPortException when the port vanishes mid-probe */
         PortResult inspectRunningEcu(String port);
 
+        default PortResult inspectRunningEcu(String port, LinkManager.MissingIniListener missingIniListener) {
+            return inspectRunningEcu(port);
+        }
+
         boolean ecuHasOpenblt(String port);
 
         /** Backoff between ECU-detection attempts; a test fake counts calls instead of sleeping. */
@@ -250,7 +268,12 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
 
         @Override
         public PortResult inspectRunningEcu(String port) {
-            return EcuHardwareProbes.inspectRunningEcu(port);
+            return EcuHardwareProbes.inspectRunningEcu(port, (signature, failedPort) -> {});
+        }
+
+        @Override
+        public PortResult inspectRunningEcu(String port, LinkManager.MissingIniListener missingIniListener) {
+            return EcuHardwareProbes.inspectRunningEcu(port, missingIniListener);
         }
 
         @Override
@@ -274,8 +297,25 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
     }
 
     static PortResult inspect(String serialPort, PortProbe probe) {
-        log.info("Determining type of serial port: " + serialPort);
+        return inspect(serialPort, probe, null);
+    }
 
+    static PortResult inspect(String serialPort, PortProbe probe, MissingIniRecoveryState missingIniRecoveryState) {
+        log.info("Determining type of serial port: " + serialPort);
+        if (missingIniRecoveryState != null) {
+            missingIniRecoveryState.clearForPort(serialPort);
+        }
+        try {
+            return inspectAfterStart(serialPort, probe, missingIniRecoveryState);
+        } finally {
+            if (missingIniRecoveryState != null) {
+                missingIniRecoveryState.resolutionFinished(serialPort);
+            }
+        }
+    }
+
+    private static PortResult inspectAfterStart(String serialPort, PortProbe probe,
+                                                MissingIniRecoveryState missingIniRecoveryState) {
         OpenbltInfo openbltInfo;
         try {
             openbltInfo = probe.getOpenbltInfo(serialPort);
@@ -291,25 +331,47 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
 
         for (int attempt = 1; attempt <= DETECT_MAX_ATTEMPTS; attempt++) {
             final PortResult ecuResult;
+            AtomicReference<String> missingIniSignature = new AtomicReference<>();
             try {
-                ecuResult = probe.inspectRunningEcu(serialPort);
+                ecuResult = probe.inspectRunningEcu(serialPort, new LinkManager.MissingIniListener() {
+                    @Override
+                    public void onMissingIni(String signature, String failedPort) {
+                        if (serialPort.equals(failedPort) && SignatureHelper.parse(signature) != null) {
+                            missingIniSignature.set(signature);
+                            if (missingIniRecoveryState != null) {
+                                missingIniRecoveryState.record(failedPort, signature);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onIniResolutionStarted(String port) {
+                        if (serialPort.equals(port) && missingIniRecoveryState != null) {
+                            missingIniRecoveryState.resolutionStarted(port);
+                        }
+                    }
+
+                });
             } catch (com.fazecast.jSerialComm.SerialPortInvalidPortException e) {
                 log.info("Port " + serialPort + " vanished during ECU detection: " + e.getMessage());
                 return null;
             }
-            final boolean isEcu = ecuResult != null;
+            final boolean isEcu = ecuResult != null || missingIniSignature.get() != null;
             log.info("Port " + serialPort + " ECU detection attempt " + attempt + "/" + DETECT_MAX_ATTEMPTS
                 + ": " + (isEcu ? "found" : "not found"));
             if (isEcu) {
-                if (ecuResult.isUnsupportedEcu()) {
+                if (ecuResult != null && ecuResult.isUnsupportedEcu()) {
                     return ecuResult;
+                }
+                if (missingIniSignature.get() == null && missingIniRecoveryState != null) {
+                    missingIniRecoveryState.clearForPort(serialPort);
                 }
                 final boolean hasOpenblt = probe.ecuHasOpenblt(serialPort);
                 log.info("ECU at " + serialPort + (hasOpenblt ? " has" : " does not have") + " an OpenBLT bootloader");
                 return new PortResult(
                     serialPort,
                     hasOpenblt ? SerialPortType.EcuWithOpenblt : SerialPortType.Ecu,
-                    ecuResult.getCalibrations()
+                    ecuResult == null ? null : ecuResult.getCalibrations()
                 );
             }
             if (attempt < DETECT_MAX_ATTEMPTS) {
@@ -331,14 +393,15 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
         return SerialPortScanner.inspectPorts(ports, null, EcuHardwareProbes::inspect);
     }
 
-    private static PortResult inspectRunningEcu(final String port) {
+    private static PortResult inspectRunningEcu(final String port, LinkManager.MissingIniListener missingIniListener) {
         log.info("getEcuCalibrations " + port);
         AtomicReference<UnsupportedEcuInfo> unsupported = new AtomicReference<>();
         Optional<CalibrationsInfo> calibrations =
             CalibrationsHelper.readCurrentCalibrationsWithoutSuspendingPortScanner(
             port,
             UpdateOperationCallbacks.LOGGER,
-            (ignoredPort, info) -> unsupported.set(info)
+            (ignoredPort, info) -> unsupported.set(info),
+            missingIniListener
         );
         if (calibrations.isPresent()) {
             return new PortResult(port, SerialPortType.Ecu, calibrations.get());
@@ -360,7 +423,7 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
     }
 
     private static OpenbltInfo getOpenbltInfo(String port) {
-        try (IoStream stream = BufferedSerialIoStream.openPort(port)) {
+        try (IoStream stream = BufferedSerialIoStream.openPortForProbe(port)) {
             return OpenbltDetectorStrategy.detectOpenbltWithSignature(stream);
         } catch (com.fazecast.jSerialComm.SerialPortInvalidPortException e) {
             // Port is truly dead — let it propagate so inspectPort returns null.

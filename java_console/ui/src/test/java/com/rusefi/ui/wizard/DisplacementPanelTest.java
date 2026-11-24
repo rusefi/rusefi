@@ -1,5 +1,6 @@
 package com.rusefi.ui.wizard;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.IniFileModel;
@@ -111,7 +112,7 @@ class DisplacementPanelTest {
     private static class Fixture {
         final ScalarIniField field = new ScalarIniField("displacement", 4, "L", FieldType.FLOAT, 1, "3", 0);
         final IniFileModel ini = mock(IniFileModel.class);
-        final ConfigurationImage image = new ConfigurationImage(new byte[16]);
+        final ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[16]);
         final BinaryProtocol bp = mock(BinaryProtocol.class);
         final UIContext context = new UIContext();
 

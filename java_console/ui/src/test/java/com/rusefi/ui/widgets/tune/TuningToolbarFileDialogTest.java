@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModelMocks;
 import com.rusefi.io.UpdateOperationCallbacks;
@@ -105,7 +106,7 @@ class TuningToolbarFileDialogTest {
             UIContext context = new UIContext();
             context.iniFileState.setIniFileModelForTest(IniFileModelMocks.withGauges());
             CalibrationDialogWidget calibration = new CalibrationDialogWidget(context);
-            ConfigurationImage image = new ConfigurationImage(16);
+            ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(16);
             AtomicBoolean loadStarted = new AtomicBoolean();
             TuningToolbarWidget toolbar = new TuningToolbarWidget(context, calibration,
                 new AtomicReference<>(), new AtomicReference<>(image), image.clone(),

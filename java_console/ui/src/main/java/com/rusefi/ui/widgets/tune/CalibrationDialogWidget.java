@@ -50,6 +50,7 @@ import java.util.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -66,6 +67,10 @@ public class CalibrationDialogWidget {
     private final DialogViewport viewportPane = new DialogViewport(contentPane);
     private final UIContext uiContext;
     private final Node tableOrientationConfig;
+    /** The current page's Help row, or null when it has none; see {@link #withVeGenerator}. */
+    private JPanel pageToolbar;
+    /** [tag:settings_summary_line] Opens the page where a summarized setting is edited. */
+    private SettingsSummaryLine.SettingOpener settingOpener = SettingsSummaryLine.SettingOpener.NONE;
     private final List<Runnable> triggerImageUpdaters = new ArrayList<>();
     private ConfigurationImage workingImage;
     private IniFileModel currentIniFileModel;
@@ -93,6 +98,11 @@ public class CalibrationDialogWidget {
     /** Client property holding a setting row's field key, for {@link #highlightField}. */
     private static final String FIELD_KEY = "rusefi.fieldKey";
     private final FieldHighlight fieldHighlight = new FieldHighlight();
+    /** [tag:unburned_marks] The last burned tune; null (no marks) unless the Tuning tab supplies it. */
+    private Supplier<ConfigurationImage> burnedImage = () -> null;
+    private final List<UnburnedRowMark> unburnedMarks = new ArrayList<>();
+    /** Tables and curves on the page shown, re-marked with the rows. */
+    private final List<Runnable> unburnedViewRefreshers = new ArrayList<>();
 
     /** Also reports replacements from navigation, undo, discard, and loading another tune. */
     public void setOnViewChanged(Runnable listener) {
@@ -117,6 +127,52 @@ public class CalibrationDialogWidget {
 
     public void setOnShowInPinout(PinoutLink onShowInPinout) {
         this.onShowInPinout = onShowInPinout;
+    }
+
+    /** [tag:settings_summary_line] Used when the next page is built. */
+    void setSettingOpener(SettingsSummaryLine.SettingOpener settingOpener) {
+        this.settingOpener = settingOpener == null ? SettingsSummaryLine.SettingOpener.NONE : settingOpener;
+    }
+
+    /**
+     * [tag:unburned_marks] Supplies the last burned tune, so settings that differ from it are marked.
+     * Call {@link #refreshUnburnedMarks()} when it changes (burn, load).
+     */
+    public void setBurnedImage(Supplier<ConfigurationImage> burnedImage) {
+        this.burnedImage = burnedImage == null ? () -> null : burnedImage;
+        refreshUnburnedMarks();
+    }
+
+    /** Re-evaluates the unburned marks of the page shown against the working image and the burned tune. */
+    public void refreshUnburnedMarks() {
+        ConfigurationImage burned = burnedImage.get();
+        UnburnedChanges changes = UnburnedChanges.of(workingImage, burned);
+        UnburnedWording wording = unburnedWording();
+        for (UnburnedRowMark mark : unburnedMarks) {
+            mark.refresh(changes, burned, wording);
+        }
+        for (Runnable view : unburnedViewRefreshers) {
+            view.run();
+        }
+    }
+
+    /** Offline the reference tune is the one loaded from a file, see {@link UnburnedWording}. */
+    private UnburnedWording unburnedWording() {
+        return UnburnedWording.of(uiContext != null && uiContext.isOfflineMode());
+    }
+
+    /** The setting rows of the page shown that are marked as not burned, by field key. */
+    public List<String> getUnburnedFieldKeysForTests() {
+        List<String> keys = new ArrayList<>();
+        for (Component component : UiUtils.getAllComponents(contentPane)) {
+            if (component instanceof JComponent && ((JComponent) component).getClientProperty(FIELD_KEY) != null) {
+                Object slot = ((JComponent) component).getClientProperty(UnburnedRowMark.SLOT);
+                if (slot instanceof JComponent && ((JComponent) slot).isVisible()) {
+                    keys.add((String) ((JComponent) component).getClientProperty(FIELD_KEY));
+                }
+            }
+        }
+        return keys;
     }
 
     public void setFieldRowVerticalMargin(int margin) {
@@ -186,6 +242,11 @@ public class CalibrationDialogWidget {
 
     private PageReader pageReader = this::readFromEcuPage;
 
+    /** [tag:image_byte_order] a secondary page read from the controller has the byte order of its main page */
+    private static java.nio.ByteOrder pageByteOrder(ConfigurationImage mainPage, IniFileModel ini) {
+        return mainPage != null ? mainPage.getByteOrder() : ini.getByteOrder();
+    }
+
     void setPageReaderForUnitTest(PageReader pageReader) {
         this.pageReader = pageReader;
     }
@@ -207,19 +268,28 @@ public class CalibrationDialogWidget {
      * TS page (LTFT trims on 0x0200) are read from the ECU and shown read-only: drawing them from
      * the working image would show, and on edit overwrite, main-page settings at the same offsets.
      */
-    private JComponent createTableView(IniFileModel iniFileModel, TableModel table, Runnable notifyEdit) {
+    private JComponent createTableView(IniFileModel iniFileModel, TableModel table, Runnable notifyEdit, boolean show3D) {
         Optional<IniField> valuesField = iniFileModel.findIniField(table.getZBinsConstant());
         if (!valuesField.isPresent() || valuesField.get().getPageIndex() == 0) {
             TuningTableView view = new TuningTableView(table.getTitle(), false, tableOrientationConfig);
             view.displayTable(iniFileModel, table.getTableId(), workingImage);
-            view.setOnEdit(notifyEdit);
+            // [tag:unburned_marks]
+            view.setUnburnedWording(this::unburnedWording);
+            view.setBurnedImage(() -> burnedImage.get());
+            unburnedViewRefreshers.add(view::refreshUnburnedMarks);
+            view.setOnEdit(() -> {
+                notifyEdit.run();
+                refreshUnburnedMarks();
+            });
             view.setOnOrientationChange(onTableOrientationChange);
+            view.show3D(show3D);
             return view.getContent();
         }
 
         IniField field = valuesField.get();
         TuningTableView view = new TuningTableView(table.getTitle(), true, tableOrientationConfig);
         view.setOnOrientationChange(onTableOrientationChange);
+        view.show3D(show3D);
         JLabel status = new JLabel("Reading from ECU...");
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(status, BorderLayout.NORTH);
@@ -232,7 +302,8 @@ public class CalibrationDialogWidget {
             }
             byte[] page = new byte[field.getOffset() + data.length];
             System.arraycopy(data, 0, page, field.getOffset(), data.length);
-            view.displayTable(iniFileModel, table.getTableId(), new ConfigurationImage(page), axisImage);
+            view.displayTable(iniFileModel, table.getTableId(),
+                new ConfigurationImage(page, pageByteOrder(axisImage, iniFileModel)), axisImage);
             panel.remove(status);
             panel.revalidate();
             panel.repaint();
@@ -246,7 +317,14 @@ public class CalibrationDialogWidget {
         IniField yField = ini.findIniField(curve.getyBins()).orElse(null);
         if (xField == null || yField == null || xField.getPageIndex() == 0 && yField.getPageIndex() == 0) {
             CurveWidget widget = new CurveWidget(curve, ini, workingImage);
-            widget.setOnEdit(notifyEdit);
+            // [tag:unburned_marks]
+            widget.setUnburnedWording(this::unburnedWording);
+            widget.setBurnedImage(() -> burnedImage.get());
+            unburnedViewRefreshers.add(widget::refreshUnburnedMarks);
+            widget.setOnEdit(() -> {
+                notifyEdit.run();
+                refreshUnburnedMarks();
+            });
             return widget.getContentPane();
         }
         if (xField.getPageIndex() != yField.getPageIndex()) {
@@ -278,7 +356,8 @@ public class CalibrationDialogWidget {
             }
             byte[] page = new byte[readEnd];
             System.arraycopy(data, 0, page, readOffset, data.length);
-            CurveWidget widget = new CurveWidget(curve, ini, new ConfigurationImage(page), configImage, true);
+            CurveWidget widget = new CurveWidget(curve, ini,
+                new ConfigurationImage(page, pageByteOrder(configImage, ini)), configImage, true);
             panel.remove(status);
             panel.add(widget.getContentPane(), BorderLayout.CENTER);
             panel.revalidate();
@@ -332,6 +411,38 @@ public class CalibrationDialogWidget {
         return body;
     }
 
+    /** Like {@link #prepareTopicHelp}, for the page itself: tool buttons join its Help row. */
+    private JPanel preparePageHelp(JPanel container, String reference, IniFileModel ini) {
+        JPanel body = prepareTopicHelp(container, reference, ini);
+        pageToolbar = body == container ? null
+            : (JPanel) ((BorderLayout) container.getLayout()).getLayoutComponent(BorderLayout.NORTH);
+        return body;
+    }
+
+    /**
+     * Adds "Generate base VE..." for the VE table: in the page's Help row when it has one, saving a
+     * row above the table, otherwise in a row of its own.
+     */
+    private JComponent withVeGenerator(JComponent tableContent, TableModel table, IniFileModel ini) {
+        //TODO: nicer injection of this button? maybe a comment on the .ini and then hook this?
+        if (!"veTableTbl".equals(table.getTableId())) {
+            return tableContent;
+        }
+        JButton button = new JButton("Generate base VE...");
+        button.addActionListener(e -> showVeGeneratorPanel(ini));
+        if (pageToolbar != null) {
+            pageToolbar.add(button);
+            return tableContent;
+        }
+        JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
+        row.add(button);
+        JPanel wrapper = new JPanel(new BorderLayout());
+        wrapper.setAlignmentX(Component.LEFT_ALIGNMENT);
+        wrapper.add(row, BorderLayout.NORTH);
+        wrapper.add(tableContent, BorderLayout.CENTER);
+        return wrapper;
+    }
+
     private static JComponent withTopicHelp(JComponent content, String reference, IniFileModel ini) {
         JPanel wrapper = new JPanel();
         JPanel body = prepareTopicHelp(wrapper, reference, ini);
@@ -356,6 +467,8 @@ public class CalibrationDialogWidget {
         workingImage = null;
         currentKey = null;
         currentIniFileModel = null;
+        unburnedMarks.clear();
+        unburnedViewRefreshers.clear();
         CalibrationFieldFactory.closeHelpPopup();
         clearLiveComponents();
         contentPane.removeAll();
@@ -376,8 +489,11 @@ public class CalibrationDialogWidget {
         currentIniFileModel = iniFileModel;
         clearLiveComponents();
         expressionRows.clear();
+        unburnedMarks.clear();
+        unburnedViewRefreshers.clear();
         triggerImageUpdaters.clear();
         contentPane.removeAll();
+        pageToolbar = null;
         if (dialogModel != null) {
             String uiName = dialogModel.getUiName();
             if (uiName == null || uiName.isEmpty()) {
@@ -385,7 +501,7 @@ public class CalibrationDialogWidget {
             }
             contentPane.setName(uiName);
 
-            JPanel body = prepareTopicHelp(contentPane, dialogModel.getTopicHelp(), iniFileModel);
+            JPanel body = preparePageHelp(contentPane, dialogModel.getTopicHelp(), iniFileModel);
             applyLayout(body, dialogModel.getLayoutHint());
             contentPane.setAlignmentX(Component.LEFT_ALIGNMENT);
             fillPanel(body, dialogModel, iniFileModel, ci,
@@ -396,6 +512,7 @@ public class CalibrationDialogWidget {
                 addTriggerImage(body, dialogModel.getKey(), uiName);
             }
         }
+        refreshUnburnedMarks();
         updateLiveDemand();
         contentPane.revalidate();
         contentPane.repaint();
@@ -429,8 +546,11 @@ public class CalibrationDialogWidget {
         currentViewRestorer = () -> update(capturedKey, capturedIniForRestore, workingImage);
         clearLiveComponents();
         expressionRows.clear();
+        unburnedMarks.clear();
+        unburnedViewRefreshers.clear();
         triggerImageUpdaters.clear();
         contentPane.removeAll();
+        pageToolbar = null;
         workingImage = ci != null ? ci.clone() : null;
         if (key != null) {
             DialogModel dialog = iniFileModel.getDialogs().get(key);
@@ -440,21 +560,15 @@ public class CalibrationDialogWidget {
             }
             Runnable notifyEdit = () -> { if (onConfigChange != null) onConfigChange.accept(workingImage); };
 
-            TableModel table = iniFileModel.getTable(key);
+            // [tag:table_map3d_pages] a 3D map id opens its table with the 3D view showing
+            TableModel table = TablePages.find(iniFileModel, key);
             if (table != null) {
                 viewportPane.fillWidth = true;
-                JPanel body = prepareTopicHelp(contentPane, table.getTopicHelp(), iniFileModel);
+                JPanel body = preparePageHelp(contentPane, table.getTopicHelp(), iniFileModel);
                 body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
-                //TODO: nicer injection of this button? maybe a comment on the .ini and then hook this?
-                if ("veTableTbl".equals(table.getTableId())) {
-                    final IniFileModel capturedIni = iniFileModel;
-                    JButton genVeBtn = new JButton("Generate base VE...");
-                    genVeBtn.addActionListener(e -> showVeGeneratorPanel(capturedIni));
-                    JPanel veToolbar = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
-                    veToolbar.add(genVeBtn);
-                    body.add(veToolbar);
-                }
-                body.add(createTableView(iniFileModel, table, notifyEdit));
+                body.add(withVeGenerator(
+                    createTableView(iniFileModel, table, notifyEdit, TablePages.isMap3d(iniFileModel, key)),
+                    table, iniFileModel));
             } else {
                 CurveModel curve = iniFileModel.getCurves().get(key);
                 if (curve != null) {
@@ -486,6 +600,7 @@ public class CalibrationDialogWidget {
         }
 
         boolean isBorderLayout = container.getLayout() instanceof BorderLayout;
+        boolean summaryShown = false;
         JPanel[] horizontalPanelRef = {null};
         List<IndicatorModel> pendingIndicators = new ArrayList<>();
         List<String> pendingGauges = new ArrayList<>();
@@ -525,6 +640,23 @@ public class CalibrationDialogWidget {
                     pendingGauges.add(entry.getAs(String.class));
                     break;
                 case PANEL:
+                    // [tag:settings_summary_line] panels repeated from other pages become one line
+                    if (SettingsSummaryLine.isSummarized(dialogModel.getKey(), entry.getAs(PanelModel.class))) {
+                        if (!summaryShown && ci != null) {
+                            summaryShown = true;
+                            List<SettingsSummaryLine.Item> items =
+                                SettingsSummaryLine.items(dialogModel.getKey(), iniFileModel, ci);
+                            if (!items.isEmpty()) {
+                                JComponent line = SettingsSummaryLine.create(dialogModel.getKey(), items, settingOpener);
+                                if (isBorderLayout) {
+                                    container.add(line, BorderLayout.NORTH);
+                                } else {
+                                    container.add(line);
+                                }
+                            }
+                        }
+                        break;
+                    }
                     renderPanelEntry(container, entry.getAs(PanelModel.class), iniFileModel, ci,
                             isBorderLayout, horizontalPanelRef, notifyEdit, fieldLabelWidth, fieldEditorWidth);
                     break;
@@ -540,6 +672,16 @@ public class CalibrationDialogWidget {
         }
     }
 
+    private static boolean isTitled(DialogModel dialog) {
+        return dialog.getUiName() != null && !dialog.getUiName().trim().isEmpty();
+    }
+
+    private static int titledPanelInset() {
+        JPanel probe = new JPanel();
+        GradientTitleBorder.installBorder("x", probe);
+        return probe.getInsets().left;
+    }
+
     private static int getFieldLabelWidth(DialogModel dialog, IniFileModel iniFileModel, Set<String> visited) {
         if (dialog == null || !visited.add(dialog.getKey())) {
             return 0;
@@ -551,10 +693,17 @@ public class CalibrationDialogWidget {
             }
             JLabel label = new JLabel(field.getUiName());
             CalibrationFieldFactory.applyStyle(label);
-            width = Math.max(width, label.getPreferredSize().width);
+            width = Math.max(width, label.getPreferredSize().width + CalibrationFieldFactory.LABEL_TEXT_SLACK);
         }
         for (PanelModel panel : dialog.getPanels()) {
-            width = Math.max(width, getFieldLabelWidth(panel.resolveDialog(iniFileModel), iniFileModel, visited));
+            DialogModel subDialog = panel.resolveDialog(iniFileModel);
+            int nested = getFieldLabelWidth(subDialog, iniFileModel, visited);
+            if (nested > 0 && isTitled(subDialog)) {
+                // A titled panel's labels get this width less its border inset (see the panel
+                // rendering), so its widest label needs the inset added back to stay whole.
+                nested += titledPanelInset();
+            }
+            width = Math.max(width, nested);
         }
         return Math.min(width, CalibrationFieldFactory.MAX_LABEL_WIDTH);
     }
@@ -588,6 +737,7 @@ public class CalibrationDialogWidget {
     private void renderField(JPanel container, DialogModel.Field field, IniFileModel iniFileModel,
                               ConfigurationImage ci, int fieldLabelWidth, int fieldEditorWidth) {
         Runnable onChange = () -> {
+            refreshUnburnedMarks();
             refreshExpressions();
             if ("trigger_type".equalsIgnoreCase(field.getKey()) ||
                 "vvtMode1".equalsIgnoreCase(field.getKey()) ||
@@ -614,6 +764,13 @@ public class CalibrationDialogWidget {
             CalibrationFieldFactory.fixRowHeight(row);
         }
 
+        if (iniField.isPresent()) {
+            UnburnedRowMark mark = UnburnedRowMark.install(row, iniField.get(),
+                () -> workingImage, () -> burnedImage.get(), onChange);
+            if (mark != null) {
+                unburnedMarks.add(mark);
+            }
+        }
         registerFieldExpressions(row, field, iniFileModel, ci);
         row.putClientProperty(FIELD_KEY, field.getKey());
         container.add(row);
@@ -820,21 +977,11 @@ public class CalibrationDialogWidget {
             return;
         }
 
-        TableModel table = iniFileModel.getTable(panel.getPanelName());
+        TableModel table = TablePages.find(iniFileModel, panel.getPanelName());
         if (table != null) {
             viewportPane.fillWidth = true;
-            JComponent content = createTableView(iniFileModel, table, notifyEdit);
-            if ("veTableTbl".equals(table.getTableId())) {
-                final IniFileModel capturedIni = iniFileModel;
-                JButton genVeBtn = new JButton("Generate base VE...");
-                genVeBtn.addActionListener(e -> showVeGeneratorPanel(capturedIni));
-                JPanel veToolbar = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
-                veToolbar.add(genVeBtn);
-                JPanel wrapper = new JPanel(new BorderLayout());
-                wrapper.add(veToolbar, BorderLayout.NORTH);
-                wrapper.add(content, BorderLayout.CENTER);
-                content = wrapper;
-            }
+            JComponent content = withVeGenerator(createTableView(iniFileModel, table, notifyEdit,
+                TablePages.isMap3d(iniFileModel, panel.getPanelName())), table, iniFileModel);
             content = withTopicHelp(content, table.getTopicHelp(), iniFileModel);
             CalibrationFieldFactory.applyStyle(content);
             content.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -855,7 +1002,7 @@ public class CalibrationDialogWidget {
             panelWidget.setName(uiName == null || uiName.isEmpty() ? subDialog.getKey() : uiName);
             // Empty INI titles intentionally group controls without a visible heading/frame.
             // Indicator and readout panels use this too; their keys are only internal IDs.
-            if (uiName != null && !uiName.trim().isEmpty()) {
+            if (isTitled(subDialog)) {
                 GradientTitleBorder.installBorder(uiName, panelWidget);
             }
             fillPanel(body, subDialog, iniFileModel, ci,

@@ -1,5 +1,6 @@
 package com.rusefi.ui.lua;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileMetaInfoImpl;
 import com.opensr5.ini.IniFileModel;
@@ -40,12 +41,12 @@ class LuaTuneEditTest {
             context.setIniFileModelForOffline(ini);
             BinaryProtocol protocol = mock(BinaryProtocol.class);
             byte[] ram = new byte[128];
-            when(protocol.getControllerConfiguration()).thenAnswer(ignored -> new ConfigurationImage(ram.clone()));
+            when(protocol.getControllerConfiguration()).thenAnswer(ignored -> ConfigurationImageTestHelper.newLittleEndian(ram.clone()));
             when(protocol.getIniFileNullable()).thenReturn(ini);
             context.getLinkManager().setBinaryProtocolForTests(protocol);
             TuningPane tuning = new TuningPane(context);
             try {
-                tuning.seedOfflineImage(new ConfigurationImage(ram.clone()), null);
+                tuning.seedOfflineImage(ConfigurationImageTestHelper.newLittleEndian(ram.clone()), null);
                 context.setTuneEditor(tuning::applyEdit);
                 assertTrue(tuning.applyEdit(image -> image.getContent()[0] = 42));
                 List<String> events = new ArrayList<>();

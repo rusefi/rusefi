@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.IniFileModel;
@@ -39,7 +40,7 @@ public class TuningTableViewTest {
     public void popupTriggerOpensOnlyFromCornerHeader() throws Exception {
         assumeFalse(GraphicsEnvironment.isHeadless());
         SwingUtilities.invokeAndWait(() -> {
-            TuningTableView view = editableView(false, new ConfigurationImage(4));
+            TuningTableView view = editableView(false, ConfigurationImageTestHelper.newLittleEndian(4));
             JFrame frame = new JFrame("Table orientation menu test");
             try {
                 frame.add(view.getContent());
@@ -73,8 +74,8 @@ public class TuningTableViewTest {
             ArrayIniField timing = new ArrayIniField("timing", 0, FieldType.UINT8, 3, 2, "", 1, "0", "255", "0");
             ArrayIniField rpm = new ArrayIniField("rpm", 0, FieldType.UINT16, 3, 1, "RPM", 1, "0", "8000", "0");
             ArrayIniField load = new ArrayIniField("load", 6, FieldType.UINT16, 1, 2, "kPa", 1, "0", "300", "0");
-            ConfigurationImage timingImage = new ConfigurationImage(6);
-            ConfigurationImage axisImage = new ConfigurationImage(10);
+            ConfigurationImage timingImage = ConfigurationImageTestHelper.newLittleEndian(6);
+            ConfigurationImage axisImage = ConfigurationImageTestHelper.newLittleEndian(10);
             ConfigurationImageGetterSetter.setArrayValues(timing, timingImage,
                 new Double[][]{{11.0, 22.0, 33.0}, {44.0, 55.0, 66.0}});
             ConfigurationImageGetterSetter.setArrayValues(rpm, axisImage,
@@ -192,8 +193,8 @@ public class TuningTableViewTest {
             ArrayIniField timing = new ArrayIniField("timing", 0, FieldType.UINT8, 3, 2, "", 1, "0", "255", "0");
             ArrayIniField rpm = new ArrayIniField("rpm", 0, FieldType.UINT16, 3, 1, "RPM", 1, "0", "8000", "0");
             ArrayIniField load = new ArrayIniField("load", 6, FieldType.UINT16, 1, 2, "kPa", 1, "0", "300", "0");
-            ConfigurationImage timingImage = new ConfigurationImage(6);
-            ConfigurationImage axisImage = new ConfigurationImage(10);
+            ConfigurationImage timingImage = ConfigurationImageTestHelper.newLittleEndian(6);
+            ConfigurationImage axisImage = ConfigurationImageTestHelper.newLittleEndian(10);
             ConfigurationImageGetterSetter.setArrayValues(timing, timingImage,
                 new Double[][]{{11.0, 22.0, 33.0}, {44.0, 55.0, 66.0}});
             ConfigurationImageGetterSetter.setArrayValues(rpm, axisImage,
@@ -247,7 +248,7 @@ public class TuningTableViewTest {
     @Test
     public void testKeyboardEntryModes() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
-            ConfigurationImage image = new ConfigurationImage(4);
+            ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(4);
             JTable table = findTable(editableView(false, image).getContent());
             table.changeSelection(0, 1, false, false);
             pressKey(table, "ENTER");
@@ -273,7 +274,7 @@ public class TuningTableViewTest {
     public void testReplacementCommitsWithArrowsAndRetainsCellOnEnter() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
             for (String key : new String[]{"ENTER", "shift ENTER", "LEFT", "RIGHT", "UP", "DOWN", "TAB", "shift TAB"}) {
-                ConfigurationImage image = new ConfigurationImage(4);
+                ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(4);
                 TuningTableView view = editableView(false, image);
                 AtomicInteger edits = new AtomicInteger();
                 view.setOnEdit(edits::incrementAndGet);
@@ -295,7 +296,7 @@ public class TuningTableViewTest {
     @Test
     public void testTextEditingKeepsHorizontalCaretNavigation() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
-            ConfigurationImage image = new ConfigurationImage(4);
+            ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(4);
             JTable table = findTable(editableView(false, image).getContent());
             table.changeSelection(0, 1, false, false);
             pressKey(table, "F2");
@@ -322,7 +323,7 @@ public class TuningTableViewTest {
         SwingUtilities.invokeAndWait(() -> {
             for (boolean textEditing : new boolean[]{false, true}) {
                 for (String value : new String[]{"65", "", "bad", "NaN", "Infinity"}) {
-                    ConfigurationImage image = new ConfigurationImage(4);
+                    ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(4);
                     TuningTableView view = editableView(false, image);
                     AtomicInteger edits = new AtomicInteger();
                     view.setOnEdit(edits::incrementAndGet);
@@ -347,7 +348,7 @@ public class TuningTableViewTest {
     @Test
     public void testMovingFocusIntoEditorDoesNotAcceptReplacement() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
-            ConfigurationImage image = new ConfigurationImage(4);
+            ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(4);
             JTable table = findTable(editableView(false, image).getContent());
             table.changeSelection(0, 1, false, false);
             pressKey(table, "typed 6");
@@ -363,7 +364,7 @@ public class TuningTableViewTest {
     @Test
     public void testSelectedCellsAcceptDigitsImmediatelyAndEscapeDoesNotUndo() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
-            ConfigurationImage image = new ConfigurationImage(4);
+            ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(4);
             TuningTableView view = editableView(false, image);
             AtomicInteger edits = new AtomicInteger();
             view.setOnEdit(edits::incrementAndGet);
@@ -395,7 +396,7 @@ public class TuningTableViewTest {
     @Test
     public void testPlusMinusAdjustByOneRegardlessOfPrecision() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
-            ConfigurationImage image = new ConfigurationImage(16);
+            ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(16);
             ArrayIniField field = new ArrayIniField("zBins", 0, FieldType.FLOAT, 2, 2, "", 1, "-100", "100", "2");
             TuningTableView view = editableView(false, image, field);
             JTable table = findTable(view.getContent());
@@ -421,7 +422,7 @@ public class TuningTableViewTest {
     @Test
     public void testPlusMinusAdjustSelectionSkipAxesAndResetBulkEntry() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
-            ConfigurationImage image = new ConfigurationImage(4);
+            ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(4);
             TuningTableView view = editableView(false, image);
             JTable table = findTable(view.getContent());
             AtomicInteger edits = new AtomicInteger();
@@ -459,7 +460,7 @@ public class TuningTableViewTest {
     public void testPlusMinusRemainTextDuringPendingReplacement() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
             for (String sign : new String[]{"+", "-"}) {
-                ConfigurationImage image = new ConfigurationImage(16);
+                ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(16);
                 ArrayIniField field = new ArrayIniField("zBins", 0, FieldType.FLOAT, 2, 2, "", 1, "-100", "100", "1");
                 TuningTableView view = editableView(false, image, field);
                 JTable table = findTable(view.getContent());
@@ -483,7 +484,7 @@ public class TuningTableViewTest {
     @Test
     public void testDecimalReplacementAndSelectedCellEntry() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
-            ConfigurationImage image = new ConfigurationImage(16);
+            ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(16);
             ArrayIniField field = new ArrayIniField("zBins", 0, FieldType.FLOAT, 2, 2, "", 1, "0", "100", "1");
             JTable table = findTable(editableView(false, image, field).getContent());
             table.changeSelection(0, 1, false, false);
@@ -511,7 +512,7 @@ public class TuningTableViewTest {
     @Test
     public void testDeleteAndBackspaceStartEmptyPendingEditsAndSpaceDoesNotEdit() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
-            ConfigurationImage image = new ConfigurationImage(4);
+            ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(4);
             JTable table = findTable(editableView(false, image).getContent());
             table.changeSelection(0, 1, false, false);
             pressKey(table, "SPACE");
@@ -535,7 +536,7 @@ public class TuningTableViewTest {
     @Test
     public void testNavigationStaysInValueGridAndPreservesColumnAtRowEndpoints() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
-            JTable table = findTable(editableView(false, new ConfigurationImage(4)).getContent());
+            JTable table = findTable(editableView(false, ConfigurationImageTestHelper.newLittleEndian(4)).getContent());
             table.changeSelection(0, 1, false, false);
             pressKey(table, "LEFT");
             pressKey(table, "UP");
@@ -557,7 +558,7 @@ public class TuningTableViewTest {
     @Test
     public void testLoadingTableCancelsPendingValueAndResetsSelectionEntry() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
-            ConfigurationImage original = new ConfigurationImage(4);
+            ConfigurationImage original = ConfigurationImageTestHelper.newLittleEndian(4);
             TuningTableView view = editableView(false, original);
             JTable table = findTable(view.getContent());
             table.changeSelection(0, 1, false, false);
@@ -568,7 +569,7 @@ public class TuningTableViewTest {
             when(ini.getTable("table")).thenReturn(definition);
             when(definition.getZBinsConstant()).thenReturn("zBins");
             when(ini.findIniField("zBins")).thenReturn(Optional.of(field));
-            ConfigurationImage next = new ConfigurationImage(new byte[]{10, 20, 30, 40});
+            ConfigurationImage next = ConfigurationImageTestHelper.newLittleEndian(new byte[]{10, 20, 30, 40});
             view.displayTable(ini, "table", next);
             assertFalse(table.isEditing());
             assertEquals(-1, table.getSelectedRow());
@@ -588,7 +589,7 @@ public class TuningTableViewTest {
     @Test
     public void testReadOnlyTableRejectsNumericAndSelectionEntry() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
-            ConfigurationImage image = new ConfigurationImage(4);
+            ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(4);
             JTable table = findTable(editableView(true, image).getContent());
             for (boolean multiple : new boolean[]{false, true}) {
                 table.setRowSelectionInterval(0, multiple ? 1 : 0);
@@ -615,7 +616,7 @@ public class TuningTableViewTest {
     public void testKeyboardFocusWithRealEvents() throws Exception {
         assumeTrue(Boolean.getBoolean("rusefi.test.keyboardFocus"),
             "Opt in with a dedicated display for native keyboard events");
-        ConfigurationImage image = new ConfigurationImage(4);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(4);
         AtomicReference<JFrame> window = new AtomicReference<>();
         AtomicReference<JTable> grid = new AtomicReference<>();
         AtomicReference<JButton> outside = new AtomicReference<>();
@@ -752,11 +753,12 @@ public class TuningTableViewTest {
     @Test
     public void testPlainWheelAdjustsSelection() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
-            ConfigurationImage image = new ConfigurationImage(4);
+            ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(4);
             TuningTableView view = editableView(false, image);
             AtomicInteger edits = new AtomicInteger();
             view.setOnEdit(edits::incrementAndGet);
             JTable table = findTable(view.getContent());
+            clickInto(table);
             table.setRowSelectionInterval(0, 0);
             table.setColumnSelectionInterval(1, 2);
             MouseWheelEvent event = new MouseWheelEvent(table, MouseEvent.MOUSE_WHEEL,
@@ -784,14 +786,82 @@ public class TuningTableViewTest {
     }
 
     @Test
+    public void testWheelOverAnUnclickedTableScrollsThePage() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(4);
+            TuningTableView view = editableView(false, image);
+            JTable table = findTable(view.getContent());
+            JScrollPane page = pageAbove(view.getContent());
+            table.changeSelection(0, 1, false, false);
+            MouseWheelEvent event = wheelEvent(table, 1, 0);
+            table.dispatchEvent(event);
+            assertTrue(event.isConsumed(), "The page took the wheel");
+            assertArrayEquals(new byte[]{1, 2, 3, 4}, image.getContent(), "Scrolling past the table keeps its values");
+            int scrolled = page.getViewport().getViewPosition().y;
+            assertTrue(scrolled > 0, "The page scrolled");
+
+            // A grid wider than the window scrolls sideways; a plain wheel turn still moves the page.
+            JScrollPane grid = (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class, table);
+            grid.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+            // As a shown window would revalidate: the grid then grows by its scroll bar.
+            com.rusefi.ui.util.SwingUtil.invalidateTree(page);
+            layOut(page);
+            assertTrue(grid.getHorizontalScrollBar().isVisible());
+            table.dispatchEvent(wheelEvent(table, 1, 0));
+            assertTrue(page.getViewport().getViewPosition().y > scrolled, "The page scrolled further");
+            scrolled = page.getViewport().getViewPosition().y;
+
+            clickInto(table);
+            wheel(table, 1, 0);
+            assertArrayEquals(new byte[]{1, 2, 2, 4}, image.getContent(), "After a click the wheel edits");
+            assertEquals(scrolled, page.getViewport().getViewPosition().y, "Editing does not scroll the page");
+
+            tableMouse(table).mouseExited(mouseAt(table, MouseEvent.MOUSE_EXITED, -5, -5));
+            table.dispatchEvent(wheelEvent(table, -1, 0));
+            assertArrayEquals(new byte[]{1, 2, 2, 4}, image.getContent(), "Leaving the table ends wheel editing");
+            assertTrue(page.getViewport().getViewPosition().y < scrolled, "The page scrolled back up");
+
+            clickInto(table);
+            tableMouse(table).mouseExited(mouseAt(table, MouseEvent.MOUSE_EXITED, 10, 10));
+            wheel(table, -1, 0);
+            assertArrayEquals(new byte[]{1, 2, 3, 4}, image.getContent(), "Moving onto the cell editor keeps wheel editing");
+
+            for (java.awt.event.FocusListener listener : table.getFocusListeners()) {
+                listener.focusLost(new FocusEvent(table, FocusEvent.FOCUS_LOST, false, new JButton()));
+            }
+            table.dispatchEvent(wheelEvent(table, 1, 0));
+            assertArrayEquals(new byte[]{1, 2, 3, 4}, image.getContent(), "Focus elsewhere ends wheel editing");
+        });
+    }
+
+    private static TuningTableView.TableMouse tableMouse(JTable table) {
+        for (java.awt.event.MouseListener listener : table.getMouseListeners()) {
+            if (listener instanceof TuningTableView.TableMouse) {
+                return (TuningTableView.TableMouse) listener;
+            }
+        }
+        throw new AssertionError("No table mouse handler");
+    }
+
+    private static MouseEvent mouseAt(JTable table, int id, int x, int y) {
+        return new MouseEvent(table, id, System.currentTimeMillis(), 0, x, y, 1, false, MouseEvent.BUTTON1);
+    }
+
+    /** What a click in the grid does to wheel handling; Swing doesn't deliver mouse events to undisplayed tables. */
+    private static void clickInto(JTable table) {
+        tableMouse(table).mousePressed(mouseAt(table, MouseEvent.MOUSE_PRESSED, 10, 10));
+    }
+
+    @Test
     public void testWheelUsesPrecisionAndShiftThreeSteps() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
-            ConfigurationImage image = new ConfigurationImage(16);
+            ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(16);
             ArrayIniField field = new ArrayIniField("zBins", 0, FieldType.FLOAT, 2, 2, "", 1, "0", "100", "1");
             TuningTableView view = editableView(false, image, field);
             AtomicInteger edits = new AtomicInteger();
             view.setOnEdit(edits::incrementAndGet);
             JTable table = findTable(view.getContent());
+            clickInto(table);
             table.setRowSelectionInterval(0, 0);
             table.setColumnSelectionInterval(0, 2);
             wheel(table, -3, 0);
@@ -831,8 +901,8 @@ public class TuningTableViewTest {
             ArrayIniField z = new ArrayIniField("z", 0, FieldType.UINT8, 2, 2, "", 1, "0", "255", "0");
             ArrayIniField x = new ArrayIniField("x", 2, FieldType.UINT16, 2, 1, "", 0.5, "0", "1000", "1");
             ArrayIniField y = new ArrayIniField("y", 8, FieldType.UINT16, 1, 2, "", 0.5, "0", "1000", "1");
-            ConfigurationImage zImage = new ConfigurationImage(4);
-            ConfigurationImage axisImage = new ConfigurationImage(16);
+            ConfigurationImage zImage = ConfigurationImageTestHelper.newLittleEndian(4);
+            ConfigurationImage axisImage = ConfigurationImageTestHelper.newLittleEndian(16);
             ConfigurationImageGetterSetter.setArrayValues(z, zImage, new Double[][]{{1.0, 2.0}, {3.0, 4.0}});
             ConfigurationImageGetterSetter.setArrayValues(x, axisImage, new Double[][]{{100.0, 200.0}});
             ConfigurationImageGetterSetter.setArrayValues(y, axisImage, new Double[][]{{10.0}, {20.0}});
@@ -861,7 +931,7 @@ public class TuningTableViewTest {
             inlineAxis.setText("175.25");
             pressKey(inlineAxis, "ENTER");
             assertFalse(inlineAxis.isVisible());
-            ConfigurationImage expected = new ConfigurationImage(originalAxes.clone());
+            ConfigurationImage expected = ConfigurationImageTestHelper.newLittleEndian(originalAxes.clone());
             ConfigurationImageGetterSetter.setArrayValues(x, expected, new Double[][]{{175.25, 200.0}});
             assertArrayEquals(expected.getContent(), axisImage.getContent());
             double encodedX = ConfigurationImageGetterSetter.getArrayValues(x, expected)[0][0];
@@ -1000,7 +1070,7 @@ public class TuningTableViewTest {
         ArrayIniField zField = new ArrayIniField("zBins", 0, FieldType.FLOAT, 1, 1, "", 1, "0", "100", "1");
         when(iniFile.findIniField("zBins")).thenReturn(Optional.of(zField));
 
-        view.displayTable(iniFile, "newTable", new ConfigurationImage(new byte[100]));
+        view.displayTable(iniFile, "newTable", ConfigurationImageTestHelper.newLittleEndian(new byte[100]));
 
         assertFalse(table.isCellSelected(0, 1), "Selection should be cleared on new table");
     }
@@ -1056,7 +1126,7 @@ public class TuningTableViewTest {
         IniFileModel iniFile = mock(IniFileModel.class);
         TableModel tableModel = mock(TableModel.class);
         ArrayIniField zField = new ArrayIniField("zBins", 0, FieldType.UINT8, 3, 2, "", 1, "0", "255", "0");
-        ConfigurationImage image = new ConfigurationImage(6);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(6);
         ConfigurationImageGetterSetter.setArrayValues(zField, image, new Double[][]{
             {40.0, 12.0, 81.0},
             {81.0, 12.0, 40.0}
@@ -1215,7 +1285,7 @@ public class TuningTableViewTest {
     public void testKeyboardEditWritesImageAndNavigatesValueCells() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
             AtomicInteger edits = new AtomicInteger();
-            ConfigurationImage image = new ConfigurationImage(4);
+            ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(4);
             TuningTableView view = editableView(false, image);
             view.setOnEdit(edits::incrementAndGet);
             JTable table = findTable(view.getContent());
@@ -1263,7 +1333,7 @@ public class TuningTableViewTest {
     @Test
     public void testInvalidEditAndEscapeLeaveImageUntouched() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
-            ConfigurationImage image = new ConfigurationImage(4);
+            ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(4);
             TuningTableView view = editableView(false, image);
             AtomicInteger edits = new AtomicInteger();
             view.setOnEdit(edits::incrementAndGet);
@@ -1292,7 +1362,7 @@ public class TuningTableViewTest {
     public void testAxesAndComparisonTablesCannotBeEdited() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
             for (boolean viewMode : new boolean[]{false, true}) {
-                TuningTableView view = editableView(viewMode, new ConfigurationImage(4));
+                TuningTableView view = editableView(viewMode, ConfigurationImageTestHelper.newLittleEndian(4));
                 JTable table = findTable(view.getContent());
                 table.changeSelection(0, 0, false, false);
                 assertFalse(table.editCellAt(0, 0));
@@ -1311,7 +1381,7 @@ public class TuningTableViewTest {
     @Test
     public void testAxisHighlightFollowsActiveCellAndClearsWithSelection() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
-            JTable table = findTable(editableView(false, new ConfigurationImage(4)).getContent());
+            JTable table = findTable(editableView(false, ConfigurationImageTestHelper.newLittleEndian(4)).getContent());
             Color xNormal = headerBackground(table, 1);
             Color yNormal = cellBackground(table, 0, 0);
             table.changeSelection(0, 1, false, false);
@@ -1337,11 +1407,13 @@ public class TuningTableViewTest {
     public void testWheelMovesActiveCellAndStopsAtEdges() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
             for (boolean viewMode : new boolean[]{false, true}) {
-                ConfigurationImage image = new ConfigurationImage(4);
+                ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(4);
                 TuningTableView view = editableView(viewMode, image);
                 AtomicInteger edits = new AtomicInteger();
                 view.setOnEdit(edits::incrementAndGet);
                 JTable table = findTable(view.getContent());
+                clickInto(table);
+                table.clearSelection();
                 wheel(table, 1);
                 assertEquals(-1, table.getSelectedRow());
 
@@ -1395,6 +1467,7 @@ public class TuningTableViewTest {
             JViewport viewport = (JViewport) table.getParent();
             viewport.setSize(300, table.getRowHeight() * 3);
             table.setSize(300, table.getRowHeight() * 30);
+            clickInto(table);
             table.changeSelection(0, 2, false, false);
             wheel(table, 10);
             assertTrue(table.isCellSelected(10, 2));
@@ -1410,11 +1483,46 @@ public class TuningTableViewTest {
     }
 
     private void wheel(JTable table, int rotation, int modifiers) {
-        MouseWheelEvent event = new MouseWheelEvent(table, MouseEvent.MOUSE_WHEEL,
-            System.currentTimeMillis(), modifiers, 10, 10, 0, false,
-            MouseWheelEvent.WHEEL_UNIT_SCROLL, 3, rotation);
+        MouseWheelEvent event = wheelEvent(table, rotation, modifiers);
         table.dispatchEvent(event);
         assertTrue(event.isConsumed());
+    }
+
+    private static MouseWheelEvent wheelEvent(JTable table, int rotation, int modifiers) {
+        return new MouseWheelEvent(table, MouseEvent.MOUSE_WHEEL,
+            System.currentTimeMillis(), modifiers, 10, 10, 0, false,
+            MouseWheelEvent.WHEEL_UNIT_SCROLL, 3, rotation);
+    }
+
+    /**
+     * Lays the table out below other settings in a scrolling page, as a calibration dialog does,
+     * with the page taller than its window.
+     */
+    private JScrollPane pageAbove(JComponent tableContent) {
+        JPanel page = new com.rusefi.ui.util.ScrollablePanel();
+        page.setLayout(new BoxLayout(page, BoxLayout.Y_AXIS));
+        JPanel settings = new JPanel();
+        // Tall enough to scroll several wheel steps: the grid itself is only as tall as its rows.
+        settings.setPreferredSize(new Dimension(300, 1000));
+        page.add(settings);
+        page.add(tableContent);
+        JScrollPane scroll = new JScrollPane(page);
+        scroll.setSize(300, 200);
+        layOut(scroll);
+        assertTrue(scroll.getVerticalScrollBar().isVisible(), "The page needs to scroll");
+        JScrollPane grid = (JScrollPane) SwingUtilities.getAncestorOfClass(JScrollPane.class, findTable(tableContent));
+        assertFalse(grid.getVerticalScrollBar().isVisible(), "The whole grid shows, as in a calibration dialog");
+        return scroll;
+    }
+
+    /** validate() does nothing without a displayed window, so lay the hierarchy out directly. */
+    private static void layOut(Component component) {
+        component.doLayout();
+        if (component instanceof Container) {
+            for (Component child : ((Container) component).getComponents()) {
+                layOut(child);
+            }
+        }
     }
 
     private TuningTableView editableView(boolean viewMode, ConfigurationImage image) {

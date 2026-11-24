@@ -43,9 +43,12 @@ class BinaryProtocolLifecycleDefectTest {
                         return false;
                     }
                 }.setNotifyGlobalStatusOnClose(false);
+                link.start("COM_TEST", com.rusefi.io.ConnectionStatusLogic.Listener.VOID);
+                link.recordMissingIniFailure("stale-signature");
                 BinaryProtocol protocol = new BinaryProtocol(link, stream);
                 assertNotNull(protocol.connectAndReadConfiguration(new BinaryProtocol.Arguments(false, false),
                     bytes -> { }), "Connection completion must reject a closed stream");
+                assertNull(link.getMissingIniFailure(), "a successful INI lookup clears stale no-INI state");
                 assertTrue(protocol.isClosed());
                 protocol.close(); // Idempotent stream close does not replay logger cleanup.
                 assertEquals(before, sensors.getSensorListenerCountForTests(),

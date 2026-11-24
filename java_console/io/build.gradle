@@ -9,6 +9,21 @@ tasks.withType(Test) {
     systemProperty "java.library.path", "../../unit_tests/build"
 }
 
+if (System.getProperty('os.name', '').toLowerCase(Locale.ROOT).contains('windows')) {
+    def sharedIoProject = project(':shared_io')
+    def test7za = project(':shared_io').layout.buildDirectory
+        .file('iniArchiveTestRuntime/7za.exe').get().asFile.absolutePath
+    def testSharedIoJar = sharedIoProject.layout.buildDirectory
+        .file('iniArchiveTestRuntime/shared_io.jar')
+    def productionSharedIoJar = sharedIoProject.tasks.named('jar').flatMap { it.archiveFile }
+    tasks.named('test') {
+        dependsOn ':shared_io:stageTest7za'
+        def ordinaryClasspath = classpath
+        classpath = files(testSharedIoJar, ordinaryClasspath.minus(files(productionSharedIoJar)))
+        systemProperty 'rusefi.test.7z', test7za
+    }
+}
+
 dependencies {
     implementation global_libs.javaxJson
 

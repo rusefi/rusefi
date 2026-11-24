@@ -2,6 +2,8 @@ package com.rusefi.ui.widgets;
 
 import com.rusefi.core.preferences.storage.Node;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit;
+import org.fife.ui.rtextarea.RTextArea;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -145,8 +147,9 @@ class TextZoomTest {
                 assertNull(own.get(KeyStroke.getKeyStroke(key, InputEvent.CTRL_DOWN_MASK)),
                     KeyEvent.getKeyText(key) + " with Ctrl reaches the tab's text size keys");
             }
-            assertNotNull(own.get(KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, InputEvent.CTRL_DOWN_MASK)),
-                "Ctrl + numpad minus still folds code in the editor");
+            assertEquals(RSyntaxTextAreaEditorKit.rstaCollapseFoldAction,
+                own.get(KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, RTextArea.getDefaultModifier())),
+                "the editor's native shortcut + numpad minus still folds code");
         });
     }
 

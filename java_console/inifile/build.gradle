@@ -3,6 +3,7 @@
 dependencies {
     api project(':logging-api')
     api project(':version')
+    implementation project(':shared_io')
 
     testImplementation global_libs.mockito
     api 'javax.activation:activation:1.1.1'

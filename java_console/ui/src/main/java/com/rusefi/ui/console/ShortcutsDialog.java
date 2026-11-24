@@ -26,10 +26,13 @@ final class ShortcutsDialog extends JDialog {
             "        This shortcut controls logging; use File > Save Tune to save a tune.",
             "",
             "SETTINGS SEARCH",
-            "Ctrl+K  Search the Tuning pages from any tab in the main Console. In the Lua script editor",
-            "        Ctrl+K stays the editor's own key; click outside the script text first.",
-            "        Up / Down or Page Up / Page Down choose a page; Enter or a click opens it in its own",
-            "        settings window over the current screen, and Esc closes the search.",
+            "Ctrl+K  Search the Tuning pages and settings from any tab in the main Console: the search box",
+            "        at the top right takes the typing and the menu tree drops down under it (a click in the",
+            "        box does the same). In the Lua script editor Ctrl+K stays the editor's own key; click",
+            "        outside the script text first.",
+            "        Up / Down or Page Up / Page Down choose a row; Enter or a click opens a page in its own",
+            "        settings window over the current screen (at the setting, for a setting found), or opens",
+            "        and closes a category. Esc closes the search and empties the box.",
             "",
             "PINOUT",
             "Enter   In the search box: select the first matching pin on the connector shown.",
@@ -42,7 +45,8 @@ final class ShortcutsDialog extends JDialog {
             "",
             "TUNING TABLES",
             "Focus the table with Tab or click a cell. Editing shortcuts operate on the selected data cells "
-                    + "in an editable table, not on the axis column or a read-only comparison.",
+                    + "in an editable table, not on the axis column or a read-only comparison. "
+                    + "They are off while the table's 3D view is shown; switch to Table or Both to edit.",
             "H  Interpolate horizontally between the selected endpoints in each row.",
             "V  Interpolate vertically between the selected endpoints in each column.",
             "/  Interpolate the selection: horizontal for one row, vertical for one column,",
@@ -57,7 +61,9 @@ final class ShortcutsDialog extends JDialog {
             "+ / -         Increase / decrease selected data values by 1, regardless of precision.",
             "              Main keyboard or numpad, with table focus and no Ctrl or Alt modifier.",
             "              While editing a number, these keys enter signs as text.",
-            "Mouse wheel over the grid  Adjust selected values by their displayed precision.",
+            "Mouse wheel over the grid  Scrolls the page until you click in the table. After a click,",
+            "              adjust selected values by their displayed precision, until the pointer",
+            "              leaves the table or focus moves elsewhere.",
             "Shift+wheel   Adjust by three steps. Ctrl+wheel moves up/down instead.",
             "              Wheel actions are ignored while editing.",
             "Shift+arrows  Extend the selection.",
@@ -96,7 +102,8 @@ final class ShortcutsDialog extends JDialog {
             "In the signal list: Space adds the selected signal to the active plot or removes it,",
             "Shift+Space adds it to a new plot. Click and Shift+click do the same.",
             "Mouse on the plots: wheel zooms around the pointer, drag selects a time range to zoom "
-                    + "into, right-drag or Shift+wheel pans, double-click shows the whole log.",
+                    + "into, right-drag or Shift+wheel pans (a right-drag goes on past the edge of the plots), "
+                    + "double-click shows the whole log.",
             "Hover a legend item or a Stats row to highlight its trace with markers at its visible min "
                     + "and max (a legend item also shows a card with max, min and average); click it to keep "
                     + "the highlight, click again to release it. With the pointer off the plots the legend "

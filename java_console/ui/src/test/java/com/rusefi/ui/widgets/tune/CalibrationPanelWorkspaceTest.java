@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
@@ -44,7 +45,7 @@ class CalibrationPanelWorkspaceTest {
         SwingUtilities.invokeAndWait(() -> {
             Node config = new Node();
             try (Fixture fixture = new Fixture(ini, config)) {
-                fixture.primary.update("softwareKnock", ini, new ConfigurationImage(ini.getMetaInfo().getPageSize(0)));
+                fixture.primary.update("softwareKnock", ini, ConfigurationImageTestHelper.newLittleEndian(ini.getMetaInfo().getPageSize(0)));
                 fixture.workspace.detachCurrentPanel();
                 FakeWindow original = fixture.windows.get(0);
                 assertTrue(original.canSplit);
@@ -76,10 +77,65 @@ class CalibrationPanelWorkspaceTest {
                     ini.findIniField("cylinderBore").get(), fixture.primary.getWorkingImage()));
             }
             try (Fixture restored = new Fixture(ini, roundTrip(config))) {
-                restored.primary.update("softwareKnock", ini, new ConfigurationImage(ini.getMetaInfo().getPageSize(0)));
+                restored.primary.update("softwareKnock", ini, ConfigurationImageTestHelper.newLittleEndian(ini.getMetaInfo().getPageSize(0)));
                 restored.workspace.restoreWindows();
                 assertEquals(3, restored.windows.size());
                 assertTrue(restored.windows.stream().noneMatch(window -> "Software Knock".equals(window.title)));
+            }
+        });
+    }
+
+    /** [tag:unburned_marks] #10671: a detached panel marks an edit made elsewhere and clears after a burn. */
+    @Test
+    void detachedPanelsShowAndClearUnburnedMarks() throws Throwable {
+        IniFileModel ini = ini();
+        SwingUtilities.invokeAndWait(() -> {
+            try (Fixture fixture = new Fixture(ini, new Node())) {
+                ConfigurationImage[] burned = {fixture.primary.getWorkingImage().clone()};
+                fixture.workspace.setBurnedImage(() -> burned[0]);
+                fixture.select("first");
+                fixture.workspace.detachCurrentPanel();
+                FakeWindow first = fixture.windows.get(0);
+                assertFalse(hasVisibleUnburnedMark(first.content));
+
+                fixture.select("second");
+                find(fixture.primary.getContentPane(), JTextField.class).setText("44");
+                assertEquals("44", find(first.content, JTextField.class).getText());
+                assertTrue(hasVisibleUnburnedMark(first.content), "the detached copy of the setting is marked");
+                assertTrue(hasVisibleUnburnedMark(fixture.primary.getContentPane()));
+
+                burned[0] = fixture.primary.getWorkingImage().clone(); // as after a burn
+                fixture.workspace.refreshUnburnedMarks();
+                assertFalse(hasVisibleUnburnedMark(first.content));
+                assertFalse(hasVisibleUnburnedMark(fixture.primary.getContentPane()));
+            }
+        });
+    }
+
+    private static boolean hasVisibleUnburnedMark(Container parent) {
+        for (Component child : parent.getComponents()) {
+            if ("unburnedSlot".equals(child.getName()) && child.isVisible()) {
+                return true;
+            }
+            if (child instanceof Container && hasVisibleUnburnedMark((Container) child)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Test
+    void untitledLayoutDialogTakesItsMenuLabel() throws Throwable {
+        IniFileModel ini = ini();
+        SwingUtilities.invokeAndWait(() -> {
+            try (Fixture fixture = new Fixture(ini, new Node())) {
+                fixture.select("untitled");
+                fixture.workspace.detachCurrentPanel();
+                FakeWindow window = fixture.windows.get(0);
+                assertEquals("Trigger", window.title, "named by the menu entry, not \"Settings\"");
+                window.split.run();
+                assertEquals("Trigger — Left", fixture.windows.get(1).title);
+                assertEquals("Second", fixture.windows.get(2).title);
             }
         });
     }
@@ -158,7 +214,7 @@ class CalibrationPanelWorkspaceTest {
         SwingUtilities.invokeAndWait(() -> {
             try (Fixture fixture = new Fixture(ini, new Node())) {
                 fixture.primary.update("multisparkSettings", ini,
-                    new ConfigurationImage(ini.getMetaInfo().getPageSize(0)));
+                    ConfigurationImageTestHelper.newLittleEndian(ini.getMetaInfo().getPageSize(0)));
                 DetachPanelLayer ui = (DetachPanelLayer) ((JLayer<?>) fixture.workspace.getContent()).getUI();
                 JLayer<JScrollPane> layer = ui.getContent();
                 layer.setSize(1500, 900);
@@ -349,6 +405,7 @@ class CalibrationPanelWorkspaceTest {
         CalibrationPanelWorkspace[] workspace = new CalibrationPanelWorkspace[1];
         LookAndFeel previous = UIManager.getLookAndFeel();
         Rectangle savedBounds = new Rectangle(330, 160, 640, 400);
+        int[] packedHeight = new int[1];
         try {
             SwingUtilities.invokeAndWait(() -> {
                 if (flatLaf) {
@@ -392,6 +449,7 @@ class CalibrationPanelWorkspaceTest {
                     "Pack around the form, with native window decorations outside the preferred content size");
                 find(detached, JTextField.class).setText("58");
                 assertEquals("58", find(workspace[0].getPrimary().getContentPane(), JTextField.class).getText());
+                packedHeight[0] = detached.getHeight();
                 detached.setBounds(savedBounds);
             });
             robot.waitForIdle();
@@ -412,7 +470,10 @@ class CalibrationPanelWorkspaceTest {
             robot.waitForIdle();
             SwingUtilities.invokeAndWait(() -> {
                 Window detached = Arrays.stream(owner[0].getOwnedWindows()).filter(Window::isShowing).findFirst().get();
-                assertEquals(savedBounds, detached.getBounds());
+                // [tag:table_window_fit] The saved size was taller than the form: the restored window
+                // keeps its place and width and shrinks to the height it was packed at.
+                assertEquals(new Rectangle(savedBounds.x, savedBounds.y, savedBounds.width, packedHeight[0]),
+                    detached.getBounds());
                 detached.dispatchEvent(new WindowEvent(detached, WindowEvent.WINDOW_CLOSING));
                 assertFalse(detached.isDisplayable());
             });
@@ -653,6 +714,31 @@ class CalibrationPanelWorkspaceTest {
         });
     }
 
+    /** A setting found by the settings search: its page opens with that row marked. */
+    @Test
+    void pageOpensAtASetting() throws Throwable {
+        IniFileModel ini = ini();
+        AtomicReference<Fixture> fixture = new AtomicReference<>();
+        SwingUtilities.invokeAndWait(() -> {
+            fixture.set(new Fixture(ini, new Node()));
+            assertTrue(fixture.get().workspace.openPanel("second", "mode"));
+        });
+        SwingUtilities.invokeAndWait(() -> {
+            try (Fixture opened = fixture.get()) {
+                JComponent marked = null;
+                for (Component component : UiUtils.getAllComponents(opened.windows.get(0).content)) {
+                    if (component instanceof JComponent
+                        && "mode".equals(((JComponent) component).getClientProperty("rusefi.fieldKey"))) {
+                        marked = (JComponent) component;
+                    }
+                }
+                assertNotNull(marked, "the page shows the setting");
+                assertTrue(marked.getBorder().getClass().getName().endsWith("FieldHighlight$Mark"),
+                    "and marks its row: " + marked.getBorder());
+            }
+        });
+    }
+
     @Test
     void pageOpensWhereItWasLeftAndNotWithoutATune() throws Throwable {
         IniFileModel ini = ini();
@@ -726,6 +812,103 @@ class CalibrationPanelWorkspaceTest {
         });
     }
 
+    /** [tag:table_window_fit] */
+    @Test
+    void windowsFitTheirContentUnlessThePreviewIsOn() throws Throwable {
+        IniFileModel ini = ini();
+        Node tableSettings = new Node();
+        Fixture[] fixture = new Fixture[1];
+        FakeWindow[] windows = new FakeWindow[2];
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                fixture[0] = new Fixture(ini, new Node(), tableSettings,
+                    Collections.singletonList(new Rectangle(0, 0, 1280, 960)));
+                fixture[0].select("table");
+                fixture[0].workspace.detachCurrentPanel();
+                fixture[0].select("curve");
+                fixture[0].workspace.detachCurrentPanel();
+                windows[0] = fixture[0].windows.get(0);
+                windows[1] = fixture[0].windows.get(1);
+                assertTrue(windows[0].fits.isEmpty(), "A fresh window is packed instead");
+                viewSegment(windows[0], "Both").doClick();
+            });
+            // The workspace reacts to the change on a later event.
+            SwingUtilities.invokeAndWait(() -> {
+                assertEquals(Collections.singletonList(true), windows[0].fits,
+                    "The window where the preview was switched on may grow to show it");
+                assertTrue(windows[1].fits.isEmpty(), "Other windows keep their size while the preview is on");
+                assertTrue(viewSegment(fixture[0].windows.get(0), "Both").isSelected());
+                viewSegment(windows[0], "Table").doClick();
+            });
+            SwingUtilities.invokeAndWait(() -> {
+                assertEquals(Arrays.asList(true, false), windows[0].fits, "Without the preview it shrinks");
+                assertEquals(Collections.singletonList(false), windows[1].fits, "Every window shrinks to its content");
+            });
+        } finally {
+            SwingUtilities.invokeAndWait(() -> fixture[0].close());
+        }
+    }
+
+    @Test
+    void restoredWindowsAreNoTallerThanTheirContentUnlessThePreviewIsOn() throws Throwable {
+        IniFileModel ini = ini();
+        SwingUtilities.invokeAndWait(() -> {
+            Node config = new Node();
+            Node tableSettings = new Node();
+            List<Rectangle> screens = Collections.singletonList(new Rectangle(0, 0, 1280, 960));
+            try (Fixture first = new Fixture(ini, config, tableSettings, screens)) {
+                first.workspace.openPanel("table");
+                first.windows.get(0).move(new Rectangle(210, 130, 640, 900));
+            }
+            try (Fixture second = new Fixture(ini, config, tableSettings, screens)) {
+                second.workspace.openPanel("table");
+                assertEquals(Collections.singletonList(false), second.windows.get(0).fits,
+                    "A restored window shrinks to its content but never grows past its saved size");
+            }
+            tableSettings.setBoolProperty(TuningTableView.PREVIEW_PROPERTY, true);
+            try (Fixture third = new Fixture(ini, config, tableSettings, screens)) {
+                third.workspace.openPanel("table");
+                assertTrue(third.windows.get(0).fits.isEmpty(), "The preview fills the saved size");
+            }
+        });
+    }
+
+    @Test
+    void heightFitsContentShrinkingAlwaysAndGrowingOnlyWhenAsked() {
+        List<Rectangle> screens = Collections.singletonList(new Rectangle(0, 0, 1280, 960));
+        Rectangle tall = new Rectangle(100, 50, 700, 800);
+        assertEquals(new Rectangle(100, 50, 700, 450), CalibrationPanelWorkspace.fitHeight(tall, 450, false, screens));
+        assertEquals(new Rectangle(100, 50, 700, 450), CalibrationPanelWorkspace.fitHeight(tall, 450, true, screens));
+        Rectangle shortWindow = new Rectangle(100, 50, 700, 300);
+        assertEquals(shortWindow, CalibrationPanelWorkspace.fitHeight(shortWindow, 450, false, screens),
+            "A window the user made shorter keeps its size");
+        assertEquals(new Rectangle(100, 50, 700, 450), CalibrationPanelWorkspace.fitHeight(shortWindow, 450, true, screens));
+        assertEquals(new Rectangle(100, 0, 700, 960), CalibrationPanelWorkspace.fitHeight(shortWindow, 2000, true, screens),
+            "Growing stops at the screen");
+    }
+
+    /** "Table", "Both" or "3D" on the table's view switch. */
+    private static JToggleButton viewSegment(FakeWindow window, String text) {
+        JToggleButton toggle = findToggle(window.content, text);
+        assertNotNull(toggle, "no " + text + " segment");
+        return toggle;
+    }
+
+    private static JToggleButton findToggle(Container container, String text) {
+        for (Component component : container.getComponents()) {
+            if (component instanceof JToggleButton && text.equals(((JToggleButton) component).getText())) {
+                return (JToggleButton) component;
+            }
+            if (component instanceof Container) {
+                JToggleButton found = findToggle((Container) component, text);
+                if (found != null) {
+                    return found;
+                }
+            }
+        }
+        return null;
+    }
+
     @Test
     void restoredBoundsFitAvailableMonitorsIncludingNegativeOrigins() {
         List<Rectangle> screens = Arrays.asList(new Rectangle(0, 0, 1920, 1040), new Rectangle(-1280, 0, 1280, 984));
@@ -749,9 +932,13 @@ class CalibrationPanelWorkspaceTest {
         }
 
         Fixture(IniFileModel ini, Node config, List<Rectangle> screens) {
+            this(ini, config, null, screens);
+        }
+
+        Fixture(IniFileModel ini, Node config, Node tableSettings, List<Rectangle> screens) {
             this.ini = ini;
             context.iniFileState.setIniFileModelForTest(ini);
-            workspace = new CalibrationPanelWorkspace(context, config,
+            workspace = new CalibrationPanelWorkspace(context, config, tableSettings,
                 (owner, title, content, close, split, canSplit, moved) -> {
                     FakeWindow window = new FakeWindow(title, content, close, split, canSplit, moved);
                     windows.add(window);
@@ -784,6 +971,8 @@ class CalibrationPanelWorkspaceTest {
         boolean canSplit;
         boolean packToContent;
         int raised;
+        /** Each fitHeight call: whether it could grow the window. */
+        final java.util.List<Boolean> fits = new java.util.ArrayList<>();
 
         FakeWindow(String title, JScrollPane content, Runnable close, Runnable split, boolean canSplit,
                    Consumer<Rectangle> moved) {
@@ -806,6 +995,7 @@ class CalibrationPanelWorkspaceTest {
         public Rectangle getBounds() { return new Rectangle(bounds); }
         public void setBounds(Rectangle bounds) { this.bounds = new Rectangle(bounds); }
         public void setCanSplit(boolean canSplit) { this.canSplit = canSplit; }
+        public void fitHeight(boolean grow) { fits.add(grow); }
         public void dispose() { disposed = true; }
     }
 
@@ -848,7 +1038,7 @@ class CalibrationPanelWorkspaceTest {
     }
 
     private static ConfigurationImage initialImage() {
-        return new ConfigurationImage(new byte[]{10, 0, 0, 20, 1, 10, 2, 10, 1, 2, 3, 4});
+        return ConfigurationImageTestHelper.newLittleEndian(new byte[]{10, 0, 0, 20, 1, 10, 2, 10, 1, 2, 3, 4});
     }
 
     private static IniFileModel exampleIni() throws Throwable {
@@ -875,6 +1065,9 @@ class CalibrationPanelWorkspaceTest {
             + "dialog = charts, \"Charts\"\npanel = table\npanel = curve\n"
             + "dialog = incomplete, \"Incomplete\"\npanel = first\npanel = missing\n"
             + "dialog = recursive, \"Recursive\"\npanel = first\npanel = recursive\n"
+            + "dialog = untitledLeft, \"\"\nfield = \"Value\", value\n"
+            + "dialog = untitled, \"\", xAxis\npanel = untitledLeft, West\npanel = second, East\n"
+            + "[Menu]\nmenuDialog = main\nmenu = \"Setup\"\nsubMenu = untitled, \"Trigger\"\n"
             + "[TableEditor]\ntable = table, tableMap, \"Table\", 1\nxBins = x\nyBins = y\nzBins = z\n"
             + "[CurveEditor]\ncurve = curve, \"Curve\"\ncolumnLabel = \"X\", \"Y\"\n"
             + "xAxis = 0, 10, 5\nyAxis = 0, 10, 5\nxBins = x\nyBins = y\n";

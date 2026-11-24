@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.AxisModel;
 import com.opensr5.ini.CurveModel;
@@ -311,7 +312,7 @@ todo: spllit into smaller tests?
         DefaultMutableTreeNode disabled = findNode(trims, "Fuel trim cyl 5");
         assertNotNull(disabled);
 
-        widget.refreshExpressions(new ConfigurationImage(new byte[model.getMetaInfo().getPageSize(0)]));
+        widget.refreshExpressions(ConfigurationImageTestHelper.newLittleEndian(new byte[model.getMetaInfo().getPageSize(0)]));
         Component rendered = tree.getCellRenderer().getTreeCellRendererComponent(
             tree, disabled, false, false, true, 0, false);
         assertTrue(rendered instanceof JLabel);
@@ -340,7 +341,7 @@ todo: spllit into smaller tests?
         SubMenuModel boost = (SubMenuModel) findNode(advanced, "Boost control").getUserObject();
 
         assertNull(widget.getUnlockHint(pid), "nothing is disabled before a tune is evaluated");
-        ConfigurationImage image = new ConfigurationImage(new byte[model.getMetaInfo().getPageSize(0)]);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[model.getMetaInfo().getPageSize(0)]);
         widget.refreshExpressions(image);
         // { isBoostControlEnabled && boostType == 1 }
         assertEquals("<html>Not available with the current settings. Depends on:"
@@ -368,7 +369,7 @@ todo: spllit into smaller tests?
         MainMenuTreeWidget widget = new MainMenuTreeWidget(uiContext);
         JTextField searchField = (JTextField) ((JPanel) widget.getContentPane().getComponent(0)).getComponent(0);
         JTree tree = (JTree) ((JScrollPane) widget.getContentPane().getComponent(1)).getViewport().getView();
-        widget.refreshExpressions(new ConfigurationImage(new byte[model.getMetaInfo().getPageSize(0)]));
+        widget.refreshExpressions(ConfigurationImageTestHelper.newLittleEndian(new byte[model.getMetaInfo().getPageSize(0)]));
 
         // search results are built from copies of the tree nodes
         searchField.setText("Fuel trim cyl 5");
@@ -421,7 +422,7 @@ todo: spllit into smaller tests?
         UIContext context = new UIContext();
         context.iniFileState.setIniFileModelForTest(ini);
         MainMenuTreeWidget widget = new MainMenuTreeWidget(context);
-        widget.refreshExpressions(new ConfigurationImage(new byte[100]));
+        widget.refreshExpressions(ConfigurationImageTestHelper.newLittleEndian(new byte[100]));
         return widget;
     }
 
@@ -555,6 +556,38 @@ todo: spllit into smaller tests?
         });
     }
 
+    @Test
+    public void testSettingFoundBySearchOpensItsPageThenTheSetting() throws Exception {
+        String text = "[Constants]\npage = 1\n[Menu]\nmenu = \"Setup\"\n"
+            + "subMenu = first, \"First\"\nsubMenu = limits, \"Limits\"\n"
+            + "[UserDefined]\ndialog = limits\nfield = \"Rev limit\", revLimit\n";
+        IniFileModel ini = readLines(IniFileReaderUtil.read(
+            new ByteArrayInputStream(text.getBytes(java.nio.charset.StandardCharsets.UTF_8))));
+        AtomicReference<MainMenuTreeWidget> widgetRef = new AtomicReference<>();
+        List<String> events = new ArrayList<>();
+        SwingUtilities.invokeAndWait(() -> {
+            UIContext context = new UIContext();
+            context.iniFileState.setIniFileModelForTest(ini);
+            MainMenuTreeWidget widget = new MainMenuTreeWidget(context);
+            widget.setOnSelect(subMenu -> events.add("page " + subMenu.getKey()));
+            widget.setOnSelectField(field -> events.add("setting " + field));
+            widgetRef.set(widget);
+            JTextField search = (JTextField) ((JPanel) widget.getContentPane().getComponent(0)).getComponent(0);
+            JTree tree = (JTree) ((JScrollPane) widget.getContentPane().getComponent(1)).getViewport().getView();
+            search.setText("rev");
+            DefaultMutableTreeNode revLimit = findNode(findNode(
+                findNode((DefaultMutableTreeNode) tree.getModel().getRoot(), "Setup"), "Limits"), "Rev limit");
+            assertNotNull(revLimit, "the setting is a row under its page");
+            tree.setSelectionPath(new TreePath(revLimit.getPath()));
+        });
+        SwingUtilities.invokeAndWait(() -> { });
+        SwingUtilities.invokeAndWait(() -> {
+            assertEquals(Arrays.asList("page limits", "setting revLimit"), events);
+            JTextField search = (JTextField) ((JPanel) widgetRef.get().getContentPane().getComponent(0)).getComponent(0);
+            assertEquals("", search.getText(), "the search clears as for a page");
+        });
+    }
+
     private static void pressTreeKey(JTree tree, int keyCode, int modifiers) {
         Object binding = tree.getInputMap(JComponent.WHEN_FOCUSED).get(KeyStroke.getKeyStroke(keyCode, modifiers));
         assertNotNull(binding, "Tree key must have a binding");
@@ -587,7 +620,7 @@ todo: spllit into smaller tests?
             UIContext context = new UIContext();
             context.iniFileState.setIniFileModelForTest(ini);
             MainMenuTreeWidget widget = new MainMenuTreeWidget(context);
-            widget.refreshExpressions(new ConfigurationImage(new byte[100]));
+            widget.refreshExpressions(ConfigurationImageTestHelper.newLittleEndian(new byte[100]));
             AtomicReference<String> opened = new AtomicReference<>();
             widget.setOnSelect(subMenu -> opened.set(subMenu.getKey()));
 
@@ -1113,12 +1146,12 @@ todo: spllit into smaller tests?
         byte[] metric = new byte[800];
         metric[775] = 0x20;
         assertEquals("C", com.rusefi.ui.widgets.tune.CurveWidget.resolveUnits(
-            unitsExpr, model, new ConfigurationImage(metric)),
+            unitsExpr, model, ConfigurationImageTestHelper.newLittleEndian(metric)),
             "metric config should resolve units to C");
 
         // Imperial: bit 29 clear -> "F"
         assertEquals("F", com.rusefi.ui.widgets.tune.CurveWidget.resolveUnits(
-            unitsExpr, model, new ConfigurationImage(new byte[800])),
+            unitsExpr, model, ConfigurationImageTestHelper.newLittleEndian(new byte[800])),
             "imperial config should resolve units to F");
 
         // Plain (non-expression) units pass through, with surrounding braces stripped.

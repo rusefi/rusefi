@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.StringIniField;
@@ -198,7 +199,7 @@ class StartupWizardHandoffTest {
     private static class Fixture {
         final BinaryProtocol bp = mock(BinaryProtocol.class);
         final LinkManager lm = mock(LinkManager.class);
-        final ConfigurationImage image = new ConfigurationImage(new byte[32]);
+        final ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[32]);
         final List<Runnable> uploads = new ArrayList<>();
         final List<String> events = new ArrayList<>();
         final UIContext context = new UIContext() {

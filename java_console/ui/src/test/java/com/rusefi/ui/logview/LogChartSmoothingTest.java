@@ -38,7 +38,7 @@ class LogChartSmoothingTest {
     }
 
     @Test
-    void smoothingChangesOnlyThePaintedTrace() throws IOException {
+    void smoothingChangesThePaintedTraceAndCursorValuesOnly() throws IOException {
         CsvLogReader log = log();
         LogChart chart = chart(log, 0.10);
 
@@ -49,10 +49,38 @@ class LogChartSmoothingTest {
 
         assertEquals(0, log.value(0, 1), "the recorded sample stays raw");
         assertEquals(10, log.value(1, 1), "the recorded sample stays raw");
-        assertEquals("10", chart.legendValue(1, 1), "cursor values stay raw");
+        assertEquals("5 (10 raw)", chart.legendValue(1, 1), "cursor value follows the line, recorded one beside it");
         assertArrayEquals(new double[]{0, 100}, chart.range(1), 1e-12, "the y scale stays raw");
         assertEquals(0, chart.visibleStats().get(1).min, "statistics stay raw");
         assertEquals(100, chart.visibleStats().get(1).max, "statistics stay raw");
+    }
+
+    @Test
+    void rawValuesCanBeHidden() throws IOException {
+        LogChart chart = chart(log(), 0.10);
+        chart.chartSettings().setShowRawValues(false);
+        assertEquals("5", chart.legendValue(1, 1), "only the smoothed value, as MegaLogViewer shows it");
+        assertEquals("5", chart.cursorText(1, 1));
+    }
+
+    @Test
+    void unsmoothedTracesShowOnlyTheRecordedValue() throws IOException {
+        LogChart chart = chart(log(), 0);
+        assertEquals("10", chart.legendValue(1, 1));
+        assertEquals(" (0–100)", chart.legendRange(1, 1), "no raw tag without smoothing");
+    }
+
+    @Test
+    void minMaxOfASmoothedTraceAreTaggedRaw() throws IOException {
+        LogChart chart = chart(log(), 0.10);
+        assertEquals(" (0–100 raw)", chart.legendRange(1, 1));
+        assertEquals("(0–100 raw)", chart.legendValue(1, -1), "pointer away");
+
+        chart.focus().togglePin(1);
+        chart.chartSettings().setAlwaysMinMax(true);
+        chart.paint(new BufferedImage(600, 400, BufferedImage.TYPE_INT_RGB).createGraphics());
+        assertEquals("100 raw", chart.markers().get(0).text);
+        assertEquals("0 raw", chart.markers().get(1).text);
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.rusefi.ui.wizard;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.EnumIniField;
@@ -27,21 +28,21 @@ public class GenericFieldsPanelTest {
 
     @Test
     public void emptyStringFieldNeedsAttention() {
-        ConfigurationImage image = new ConfigurationImage(new byte[32]);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[32]);
         // All zero bytes → getStringValue returns ""
         assertTrue(GenericFieldsPanel.anyFieldEmpty(iniWithVin(), image, VIN_FIELDS));
     }
 
     @Test
     public void populatedStringFieldDoesNotNeedAttention() {
-        ConfigurationImage image = new ConfigurationImage(new byte[32]);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[32]);
         writeString(image, "ABCDEFGHJKLMN1234", VIN_OFFSET);
         assertFalse(GenericFieldsPanel.anyFieldEmpty(iniWithVin(), image, VIN_FIELDS));
     }
 
     @Test
     public void whitespaceOnlyStringNeedsAttention() {
-        ConfigurationImage image = new ConfigurationImage(new byte[32]);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[32]);
         writeString(image, "                 ", VIN_OFFSET);
         assertTrue(GenericFieldsPanel.anyFieldEmpty(iniWithVin(), image, VIN_FIELDS));
     }
@@ -51,7 +52,7 @@ public class GenericFieldsPanelTest {
         // Enum with INVALID at ordinal 0 — image bytes all zero → stored ordinal 0 → "INVALID"
         IniFileModel ini = iniWithEnum("mapSensorType",
             "INVALID", "MPX4250", "MPX4100", "honda3bar");
-        ConfigurationImage image = new ConfigurationImage(new byte[4]);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[4]);
         assertTrue(GenericFieldsPanel.anyFieldEmpty(ini, image,
             Collections.singletonList("mapSensorType")));
     }
@@ -60,7 +61,7 @@ public class GenericFieldsPanelTest {
     public void validEnumValueDoesNotNeedAttention() {
         IniFileModel ini = iniWithEnum("mapSensorType",
             "INVALID", "MPX4250", "MPX4100", "honda3bar");
-        ConfigurationImage image = new ConfigurationImage(new byte[4]);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[4]);
         // Write ordinal 2 (MPX4100) as a little-endian byte
         image.getContent()[0] = 2;
         assertFalse(GenericFieldsPanel.anyFieldEmpty(ini, image,
@@ -71,7 +72,7 @@ public class GenericFieldsPanelTest {
     public void missingFieldIsSkippedAndDoesNotCrash() {
         IniFileModel ini = mock(IniFileModel.class);
         when(ini.findIniField("nonexistent")).thenReturn(Optional.empty());
-        ConfigurationImage image = new ConfigurationImage(new byte[32]);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[32]);
         // No fields are present → no field reports "empty" → returns false (no NPE)
         assertFalse(GenericFieldsPanel.anyFieldEmpty(ini, image,
             Collections.singletonList("nonexistent")));
@@ -85,7 +86,7 @@ public class GenericFieldsPanelTest {
         when(ini.findIniField("a")).thenReturn(Optional.of(a));
         when(ini.findIniField("b")).thenReturn(Optional.of(b));
 
-        ConfigurationImage image = new ConfigurationImage(new byte[8]);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[8]);
         writeString(image, "OKAY", 0);
         // "b" region stays zeroed
         assertTrue(GenericFieldsPanel.anyFieldEmpty(ini, image, Arrays.asList("a", "b")));

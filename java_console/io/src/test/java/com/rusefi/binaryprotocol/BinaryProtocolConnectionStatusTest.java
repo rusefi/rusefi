@@ -296,7 +296,7 @@ class BinaryProtocolConnectionStatusTest {
     @Test
     void closeBetweenImageReadAndCompletionRejectsImage() {
         doAnswer(invocation -> {
-            ConfigurationImageWithMeta image = new ConfigurationImageWithMeta(invocation.getArgument(0));
+            ConfigurationImageWithMeta image = new ConfigurationImageWithMeta(invocation.getArgument(0), java.nio.ByteOrder.LITTLE_ENDIAN);
             stream.close();
             return image;
         }).when(protocol).readFullImageFromController(any(ConfigurationImageMeta.class));
@@ -448,6 +448,30 @@ class BinaryProtocolConnectionStatusTest {
             workers.shutdownNow();
             assertTrue(workers.awaitTermination(5, TimeUnit.SECONDS));
         }
+    }
+
+    @Test
+    void probeClosePreservesActiveConsoleSensorData() throws Exception {
+        SensorCentral sensors = SensorCentral.getInstance();
+        status.setValue(ConnectionStatusValue.CONNECTED);
+        assertTrue(poll());
+        sensors.setValue(1, "sd_present");
+        assertNotNull(sensors.getCurrentSnapshot());
+        assertEquals(42, sensors.getValue(SECONDS));
+        Object snapshot = sensors.getCurrentSnapshot();
+
+        try (LinkManager probeLink = new LinkManager().setNotifyGlobalStatusOnClose(false)) {
+            TestStream probeStream = new TestStream();
+            new BinaryProtocol(probeLink, probeStream);
+            probeStream.close();
+        }
+
+        // An unrelated probe must preserve both the connection and its last published readings.
+        assertEquals(ConnectionStatusValue.CONNECTED, status.getValue());
+        assertFalse(stream.isClosed());
+        assertEquals(1, sensors.getValue("sd_present"));
+        assertEquals(42, sensors.getValue(SECONDS));
+        assertSame(snapshot, sensors.getCurrentSnapshot());
     }
 
     @Test

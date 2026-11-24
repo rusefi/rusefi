@@ -1,5 +1,6 @@
 package com.rusefi.maintenance;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileMetaInfoImpl;
 import com.opensr5.ini.IniFileModel;
@@ -41,7 +42,7 @@ class OfflineTuneLoaderConnectedTest {
     void connectedLoadDoesNotRequireConvertingTheMsqToASourceImage() throws IniParsingException {
         IniFileModel customIni = pinIni("custom_pin_list", "0=\"NONE\",47=\"Auxiliary pin\"");
         IniFileModel standardIni = pinIni("standard_pin_list", "0=\"NONE\",5=\"Output\"");
-        Msq tune = MsqFactory.valueOf(new ConfigurationImage(new byte[]{47, 0}), customIni);
+        Msq tune = MsqFactory.valueOf(ConfigurationImageTestHelper.newLittleEndian(new byte[]{47, 0}), customIni);
 
         OfflineTuneLoader.Result result = OfflineTuneLoader.loadConnectedTune(tune, "test-signature", standardIni);
 
@@ -55,7 +56,7 @@ class OfflineTuneLoaderConnectedTest {
     void failedOfflineConversionExplainsWhichIniToSelect() throws IniParsingException {
         IniFileModel customIni = pinIni("custom_pin_list", "0=\"NONE\",47=\"Auxiliary pin\"");
         IniFileModel standardIni = pinIni("standard_pin_list", "0=\"NONE\",5=\"Output\"");
-        Msq tune = MsqFactory.valueOf(new ConfigurationImage(new byte[]{47, 0}), customIni);
+        Msq tune = MsqFactory.valueOf(ConfigurationImageTestHelper.newLittleEndian(new byte[]{47, 0}), customIni);
         List<String> errors = new ArrayList<>();
 
         OfflineTuneLoader.loadResolvedTune(tune, "test-signature", standardIni, errors::add, signature -> null);
@@ -68,7 +69,7 @@ class OfflineTuneLoaderConnectedTest {
     @Test
     void missingAutomaticIniRecoversWithSelectedOriginalForOfflineLoad() throws IniParsingException {
         IniFileModel originalIni = pinIni("custom_pin_list", "0=\"NONE\",47=\"Auxiliary pin\"");
-        Msq tune = MsqFactory.valueOf(new ConfigurationImage(new byte[]{47, 0}), originalIni);
+        Msq tune = MsqFactory.valueOf(ConfigurationImageTestHelper.newLittleEndian(new byte[]{47, 0}), originalIni);
 
         OfflineTuneLoader.Result result = OfflineTuneLoader.loadResolvedSourceIni(
             tune, "test-signature", ignored -> { }, signature -> originalIni, true,
@@ -83,7 +84,7 @@ class OfflineTuneLoaderConnectedTest {
     @Test
     void missingAutomaticIniCancellationReportsSourceIniGuidance() throws IniParsingException {
         IniFileModel sourceIni = pinIni("custom_pin_list", "0=\"NONE\",47=\"Auxiliary pin\"");
-        Msq tune = MsqFactory.valueOf(new ConfigurationImage(new byte[]{47, 0}), sourceIni);
+        Msq tune = MsqFactory.valueOf(ConfigurationImageTestHelper.newLittleEndian(new byte[]{47, 0}), sourceIni);
         List<String> errors = new ArrayList<>();
 
         OfflineTuneLoader.Result result = OfflineTuneLoader.loadResolvedSourceIni(
@@ -100,7 +101,7 @@ class OfflineTuneLoaderConnectedTest {
         IniFileModel sourceIni = pinIni("custom_pin_list", "0=\"NONE\",47=\"Auxiliary pin\"");
         IniFileModel wrongIni = pinIni(
             "custom_pin_list", "0=\"NONE\",47=\"Auxiliary pin\"", "different-signature");
-        Msq tune = MsqFactory.valueOf(new ConfigurationImage(new byte[]{47, 0}), sourceIni);
+        Msq tune = MsqFactory.valueOf(ConfigurationImageTestHelper.newLittleEndian(new byte[]{47, 0}), sourceIni);
         List<String> errors = new ArrayList<>();
 
         OfflineTuneLoader.Result result = OfflineTuneLoader.loadResolvedSourceIni(
@@ -116,7 +117,7 @@ class OfflineTuneLoaderConnectedTest {
         IniFileModel originalIni = pinIni("custom_pin_list", "0=\"NONE\",47=\"Auxiliary pin\"");
         IniFileModel incompleteIni = pinIni("custom_pin_list", "0=\"NONE\",47=\"Auxiliary pin\"",
             "test-signature", false);
-        Msq tune = MsqFactory.valueOf(new ConfigurationImage(new byte[]{47, 0}), originalIni);
+        Msq tune = MsqFactory.valueOf(ConfigurationImageTestHelper.newLittleEndian(new byte[]{47, 0}), originalIni);
         List<String> errors = new ArrayList<>();
 
         OfflineTuneLoader.Result result = OfflineTuneLoader.loadResolvedSourceIni(
@@ -130,7 +131,7 @@ class OfflineTuneLoaderConnectedTest {
     @Test
     void missingAutomaticIniAllowsConnectedLoadWithSelectedSourceSchema() throws IniParsingException {
         IniFileModel sourceIni = pinIni("custom_pin_list", "0=\"NONE\",47=\"Auxiliary pin\"");
-        Msq tune = MsqFactory.valueOf(new ConfigurationImage(new byte[]{47, 0}), sourceIni);
+        Msq tune = MsqFactory.valueOf(ConfigurationImageTestHelper.newLittleEndian(new byte[]{47, 0}), sourceIni);
 
         OfflineTuneLoader.Result result = OfflineTuneLoader.loadResolvedSourceIni(
             tune, "test-signature", ignored -> { }, signature -> sourceIni, false,
@@ -144,7 +145,7 @@ class OfflineTuneLoaderConnectedTest {
     @Test
     void matchingDestinationSignatureLoadsWithoutSourceResolutionOrPicker() throws Exception, IniParsingException {
         IniFileModel destinationIni = pinIni("destination_pin_list", "0=\"NONE\",47=\"Auxiliary pin\"");
-        Msq tune = MsqFactory.valueOf(new ConfigurationImage(new byte[]{47, 0}), destinationIni);
+        Msq tune = MsqFactory.valueOf(ConfigurationImageTestHelper.newLittleEndian(new byte[]{47, 0}), destinationIni);
         Path file = tempDir.resolve("same-signature.msq");
         tune.writeXmlFile(file.toString());
         List<String> errors = new ArrayList<>();
@@ -172,7 +173,7 @@ class OfflineTuneLoaderConnectedTest {
         IniFileModel sourceIni = pinIni("source_pin_list", "0=\"NONE\",47=\"Auxiliary pin\"");
         IniFileModel destinationIni = pinIni(
             "destination_pin_list", "0=\"NONE\",47=\"Auxiliary pin\"", "destination-signature");
-        Msq tune = MsqFactory.valueOf(new ConfigurationImage(new byte[]{47, 0}), sourceIni);
+        Msq tune = MsqFactory.valueOf(ConfigurationImageTestHelper.newLittleEndian(new byte[]{47, 0}), sourceIni);
         Path file = tempDir.resolve("different-signature.msq");
         tune.writeXmlFile(file.toString());
         List<String> sourceRequests = new ArrayList<>();

@@ -1,5 +1,6 @@
 package com.rusefi.ui.wizard;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.IniFileMetaInfoImpl;
@@ -43,7 +44,7 @@ class NumberOfCylindersPanelTest {
         IniFileModel ini = mock(IniFileModel.class);
         when(ini.findIniField("twoStroke")).thenReturn(Optional.empty());
 
-        assertNull(NumberOfCylindersPanel.createResult(ini, new ConfigurationImage(new byte[1]), 4, false));
+        assertNull(NumberOfCylindersPanel.createResult(ini, ConfigurationImageTestHelper.newLittleEndian(new byte[1]), 4, false));
     }
 
     private static IniFileModel loadTestIni() throws Throwable {
