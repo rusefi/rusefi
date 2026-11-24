@@ -55,6 +55,7 @@ void deinitAuxSensors();
 void deInitVehicleSpeedSensor();
 void deinitTurbochargerSpeedSensor();
 void deinitMap();
+void deinitFuelLevel();
 void deinitAuxSpeedSensors();
 void deinitInputShaftSpeedSensor();
 void deinitOutputShaftSpeedSensor();

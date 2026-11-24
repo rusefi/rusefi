@@ -620,11 +620,8 @@ TEST(SensorInit, customBaroSensorUsesBaroCalibration) {
 	deinitMap();
 }
 
-// Coverage of a present defect, asserting current behavior (the expectation to move to with the
-// fix is noted at the assertion).
-// Changing or clearing the fuel level input and burning leaves the sensor subscribed to its
-// old pin until reboot.
-TEST(SensorInit, fuelLevelInputChangeNeedsReboot) {
+// Changing or clearing the fuel level input and burning takes effect without a reboot.
+TEST(SensorInit, fuelLevelInputChangeAppliesOnBurn) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
 	engineConfiguration->maf2AdcChannel = EFI_ADC_NONE;
@@ -647,14 +644,47 @@ TEST(SensorInit, fuelLevelInputChangeNeedsReboot) {
 	reconfigureSensors();
 	rememberCurrentConfiguration();
 	AdcSubscription::UpdateSubscribers(getTimeNowNt());
-	// Expected after the fix: 3.0
-	EXPECT_NEAR(1.0f, Sensor::getRaw(SensorType::FuelLevel), 0.01);
+	EXPECT_NEAR(3.0f, Sensor::getRaw(SensorType::FuelLevel), 0.01);
+
+	// an unrelated burn keeps the input
+	stopSensors();
+	reconfigureSensors();
+	rememberCurrentConfiguration();
+	setMockAdcVoltage(EFI_ADC_7, 2.0f);
+	// the subscription and its low-pass filter state are kept, so the reading settles
+	for (int i = 0; i < 100; i++) {
+		AdcSubscription::UpdateSubscribers(getTimeNowNt());
+	}
+	EXPECT_NEAR(2.0f, Sensor::getRaw(SensorType::FuelLevel), 0.01);
 
 	// remove the input and burn
 	engineConfiguration->fuelLevelSensor = EFI_ADC_NONE;
 	stopSensors();
 	reconfigureSensors();
 	rememberCurrentConfiguration();
+	EXPECT_FALSE(Sensor::hasSensor(SensorType::FuelLevel));
+}
+
+// Coverage of a present defect, asserting current behavior (the expectation to move to with the
+// fix is noted at the assertion).
+// Clearing a MAF input and burning leaves the sensor registered on its old pin until reboot.
+// Only registration is checked: MAF samples cannot be delivered in host tests.
+TEST(SensorInit, mafInputRemovalNeedsReboot) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->maf2AdcChannel = EFI_ADC_NONE;
+	stopSensors();
+	Sensor::resetRegistry();
+
+	engineConfiguration->mafAdcChannel = EFI_ADC_6;
+	initNewSensors();
+	rememberCurrentConfiguration();
+	EXPECT_TRUE(Sensor::hasSensor(SensorType::Maf));
+
+	// remove the input and burn
+	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
+	stopSensors();
+	reconfigureSensors();
+	rememberCurrentConfiguration();
 	// Expected after the fix: EXPECT_FALSE
-	EXPECT_TRUE(Sensor::hasSensor(SensorType::FuelLevel));
+	EXPECT_TRUE(Sensor::hasSensor(SensorType::Maf));
 }
