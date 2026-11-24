@@ -523,6 +523,7 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 		state = (uint8_t)EtbState::Autotune;
 
 		m_targetErrorAccumulator.reset();
+		resetJamTimer();
 
 		return getClosedLoopAutotune(target, observation);
 	} else {
@@ -583,6 +584,7 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 	} else {
 		// Otherwise disable the motor.
 		m_motor->disable("no-ETB");
+		resetJamTimer();
 	}
 }
 
@@ -673,6 +675,7 @@ void EtbController::update() {
 		// If engine is stopped and so configured, skip the ETB update entirely
 		// This is quieter and pulls less power than leaving it on all the time
 		m_motor->disable("etb status");
+		resetJamTimer();
 		return;
 	}
 
@@ -681,6 +684,16 @@ void EtbController::update() {
 	if (isEtbMode() && !validPlantPosition) {
 		etbErrorCode = (int8_t)EtbStatus::TpsError;
 	}
+}
+
+// Time during which the throttle is not commanded (paused, disabled, autotune) is not jam time:
+// the plate is not expected to follow the target then. Called on every cycle spent that way, so
+// a jam needs the error to last for the whole timeout once control resumes.
+// jamDetected is left alone: after a jam the limp manager keeps the throttle disabled, and the
+// indicator has to stay on while the position error remains.
+void EtbController::resetJamTimer() {
+	m_jamDetectTimer.reset();
+	jamTimer = 0;
 }
 
 void EtbController::checkJam(percent_t setpoint, percent_t observation) {

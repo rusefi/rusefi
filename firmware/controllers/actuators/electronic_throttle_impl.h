@@ -57,6 +57,7 @@ public:
 	dc_function_e getFunction() const { return m_function; }
 
 	void checkJam(percent_t setpoint, percent_t observation);
+	void resetJamTimer();
 
 	void setOutput(expected<percent_t> outputValue) override;
 

@@ -907,12 +907,9 @@ TEST(etb, dcWastegateDisabledWithInvalidOutput) {
 	EXPECT_EQ((uint8_t)EtbState::NoOutput, etb.state);
 }
 
-// Coverage of a present defect, asserting current behavior: the jam timer only runs down inside
-// checkJam(), which is not called while the throttle is not being commanded (paused, disabled
-// with the engine stopped, autotune). The time spent not commanded then counts as jam time and
-// the first position error afterwards is reported as a jam at once, latching the throttle off.
-// FOME resets the timer while not commanded: see FOME commit 5d957abb08.
-TEST(etb, jamReportedAtOnceAfterThrottleWasNotCommanded) {
+// Time spent not commanding the throttle (paused, disabled with the engine stopped, autotune)
+// is not jam time: once control resumes, a jam needs the position error to last for the timeout.
+TEST(etb, jamTimerRestartsAfterThrottleWasNotCommanded) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	MockIgnitionController ignController;
@@ -927,20 +924,46 @@ TEST(etb, jamReportedAtOnceAfterThrottleWasNotCommanded) {
 	engineConfiguration->etbJamDetectThreshold = 5;
 	engineConfiguration->etbJamTimeout = 1;
 
+	::testing::NiceMock<MockMotor> motor;
 	EtbController etb;
-	etb.init(DC_Throttle1, nullptr, nullptr, nullptr);
+	etb.init(DC_Throttle1, &motor, nullptr, nullptr);
 
 	setTimeNowUs(0);
 	// commanded and on target
 	etb.checkJam(10, 10);
 	EXPECT_FALSE(etb.jamDetected);
 
-	// ten seconds without control, so without checkJam(): the plate rests at its default position
-	setTimeNowUs(10e6);
+	// ten seconds paused: the plate rests at its default position, away from the target,
+	// while the control loop keeps running
+	engineConfiguration->pauseEtbControl = true;
+	for (int ms = 0; ms <= 10000; ms += 10) {
+		setTimeNowUs(ms * 1000);
+		etb.checkJam(10, 16);
+		etb.setOutput(25.0f);
+	}
+	EXPECT_FALSE(etb.jamDetected);
+	EXPECT_EQ((uint8_t)EtbState::Paused, etb.state);
+	EXPECT_EQ(etb.jamTimer, 0);
 
-	// control resumes: the very first sample with an error is a "jam"
+	// control resumes: the first sample with an error is not a jam
+	engineConfiguration->pauseEtbControl = false;
 	etb.checkJam(10, 16);
-	// Expected after the fix: EXPECT_FALSE, a jam needs the error to last for the timeout
+	EXPECT_FALSE(etb.jamDetected);
+
+	// 0.9 second with the error, not yet
+	setTimeNowUs(10.9e6);
+	etb.checkJam(10, 16);
+	EXPECT_FALSE(etb.jamDetected);
+
+	// the error lasted for the timeout: jammed
+	setTimeNowUs(11.1e6);
+	etb.checkJam(10, 16);
+	EXPECT_TRUE(etb.jamDetected);
+
+	// the limp manager now keeps the throttle disabled; the indicator stays on
+	etb.setOutput(25.0f);
+	EXPECT_EQ((uint8_t)EtbState::LimpProhibited, etb.state);
+	etb.checkJam(10, 16);
 	EXPECT_TRUE(etb.jamDetected);
 }
 
