@@ -32,5 +32,7 @@ struct multispark_state
 {
 	efidur_t delay = 0;
 	efidur_t dwell = 0;
+	// Same as dwell, for comparing against the measured dwell of a restrike
+	floatms_t dwellMs = 0;
 	uint8_t count = 0;
 };

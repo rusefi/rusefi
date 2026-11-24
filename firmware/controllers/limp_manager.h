@@ -143,6 +143,10 @@ private:
 	Clearable m_transientAllowIgnition = true;
 
 	bool m_hadOilPressureAfterStart = false;
+	// The after start oil pressure check has been made (once, at the timeout)
+	bool m_checkedOilPressureAfterStart = false;
+	// ...and it failed: cut fuel until the engine stops
+	bool m_noOilPressureAfterStart = false;
 
 	// Ignition switch state
 	bool m_ignitionOn = false;

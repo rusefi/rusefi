@@ -144,10 +144,10 @@ TEST(Multispark, IntegratedCoilRestrikes) {
 	EXPECT_EQ(enginePins.coils[0].getLogicValue(), false);
 }
 
-// Coverage of a present defect, asserting current behavior: every multispark restrike is compared
-// with the main spark's dwell, so the short restrike dwells are counted as undercharged sparks and
-// overwrite the dwell accuracy ratio. FOME commit 45a04dc865.
-TEST(Multispark, RestrikesCountedAsUnderchargedSparks) {
+// A multispark restrike is compared with the multispark dwell it was charged for. Comparing it
+// with the main spark's dwell counted every short restrike as an undercharged spark and
+// overwrote the dwell accuracy ratio.
+TEST(Multispark, RestrikesComparedWithMultisparkDwell) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 
@@ -183,6 +183,7 @@ TEST(Multispark, RestrikesCountedAsUnderchargedSparks) {
 	// main spark just fired, with the dwell it was asked for
 	ASSERT_EQ(enginePins.coils[0].getLogicValue(), false);
 	const auto underChargedBefore = engine->engineState.dwellUnderChargeCounter;
+	const auto overChargedBefore = engine->engineState.dwellOverChargeCounter;
 	EXPECT_NEAR(1, engine->engineState.dwellActualRatio, 0.2);
 
 	for (int i = 0; i < 3; i++) {
@@ -192,7 +193,8 @@ TEST(Multispark, RestrikesCountedAsUnderchargedSparks) {
 		eth.executeActions();
 	}
 
-	// Expected after the fix: no change, and the ratio still describes the main spark
-	EXPECT_EQ(underChargedBefore + 3, engine->engineState.dwellUnderChargeCounter);
-	EXPECT_LT(engine->engineState.dwellActualRatio, 0.8);
+	// each restrike charged for the 1 ms it was asked for
+	EXPECT_EQ(underChargedBefore, engine->engineState.dwellUnderChargeCounter);
+	EXPECT_EQ(overChargedBefore, engine->engineState.dwellOverChargeCounter);
+	EXPECT_NEAR(1, engine->engineState.dwellActualRatio, 0.05);
 }

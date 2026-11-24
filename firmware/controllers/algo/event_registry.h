@@ -64,6 +64,9 @@ public:
 	// How many additional sparks should we fire after the first one?
 	// For single sparks, this should be zero.
 	uint8_t sparksRemaining = 0;
+	// The spark now charging or about to fire is a multispark restrike, charged for the multispark
+	// dwell rather than the main dwell
+	bool isRestrike = false;
 
 	// Track whether coil charge was intentionally skipped (spark limiter)
 	bool wasSparkLimited = false;

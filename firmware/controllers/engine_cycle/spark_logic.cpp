@@ -247,7 +247,10 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 		 * ratio of desired dwell duration to actual dwell duration gives us some idea of how good is input trigger jitter
 		 */
 		float actualDwellMs = event->actualDwellTimer.getElapsedSeconds(nowNt) * 1e3f;
-		float ratio = actualDwellMs / event->sparkDwell;
+		// Compare against the dwell this spark was charged for: the main spark's from the dwell
+		// table, or the (usually much shorter) multispark dwell for a restrike
+		float intendedDwellMs = event->isRestrike ? engine->engineState.multispark.dwellMs : event->sparkDwell;
+		float ratio = actualDwellMs / intendedDwellMs;
 
 		if (ratio > 1.2f) {
 			engine->engineState.dwellOverChargeCounter++;
@@ -269,6 +272,7 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	// If there are more sparks to fire, schedule them
 	if (event->sparksRemaining > 0) {
 		event->sparksRemaining--;
+		event->isRestrike = true;
 
 		// each restrike is its own spark: grab a fresh id, otherwise the out-of-order
 		// protection in startDwellByTurningSparkPinHigh bails restrike dwell since
@@ -285,6 +289,8 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 		engine->scheduler.schedule("dwell", &event->dwellStartTimer, nextDwellStart, action_s::make<turnSparkPinHighStartCharging>( event ));
 		engine->scheduler.schedule("firing", &event->sparkEvent.eventScheduling, nextFiring, action_s::make<fireSparkAndPrepareNextSchedule>( event ));
 	} else {
+		event->isRestrike = false;
+
 		if (engineConfiguration->enableTrailingSparks) {
 #if SPARK_EXTREME_LOGGING
 			efiPrintf("scheduleByAngle TrailingSparks");
@@ -428,6 +434,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 	 */
 	event->sparkCounter = engine->engineState.globalSparkCounter++;
 	event->wasSparkLimited = limitedSpark;
+	event->isRestrike = false;
 
 	efitick_t chargeTime = 0;
 
