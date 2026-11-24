@@ -369,6 +369,9 @@ expected<percent_t> EtbController::getSetpointEtb() {
 
 		// rev limit active if the position was changed by rev limiter
 		etbRevLimitActive = std::abs(targetPosition - targetPositionBefore) > 0.1f;
+	} else {
+		// limiter turned off: nothing is limited
+		etbRevLimitActive = false;
 	}
 
 	float minPosition = engineConfiguration->etbMinimumPosition;
@@ -539,16 +542,22 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 	}
 }
 
-void EtbController::setOutput(expected<percent_t> outputValue) {
+// The duty channel shows what the motor is driven with, which is 0 while it is disabled
+void EtbController::reportDutyCycle(percent_t duty) {
 #if EFI_TUNER_STUDIO
 	// Only report first-throttle stats
 	if (m_function == DC_Throttle1) {
-		engine->outputChannels.etb1DutyCycle = outputValue.value_or(0);
+		engine->outputChannels.etb1DutyCycle = duty;
 	}
+#else
+	UNUSED(duty);
 #endif
+}
 
+void EtbController::setOutput(expected<percent_t> outputValue) {
 	if (!m_motor) {
 		state = (uint8_t)EtbState::NoMotor;
+		reportDutyCycle(0);
 		return;
 	}
 
@@ -581,9 +590,12 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 	if (isEnabled) {
 		m_motor->enable();
 		m_motor->set(ETB_PERCENT_TO_DUTY(outputValue.Value));
+		reportDutyCycle(outputValue.Value);
 	} else {
 		// Otherwise disable the motor.
 		m_motor->disable("no-ETB");
+		// nothing is driven, whatever was requested
+		reportDutyCycle(0);
 		resetJamTimer();
 	}
 }
@@ -675,6 +687,7 @@ void EtbController::update() {
 		// If engine is stopped and so configured, skip the ETB update entirely
 		// This is quieter and pulls less power than leaving it on all the time
 		m_motor->disable("etb status");
+		reportDutyCycle(0);
 		resetJamTimer();
 		return;
 	}

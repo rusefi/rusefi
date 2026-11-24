@@ -451,10 +451,8 @@ TEST(etb, setpointRevLimit) {
 	EXPECT_NEAR(1, etb.getSetpoint().value_or(-1), 1e-4);
 }
 
-// Coverage of a present defect, asserting current behavior: the "ETB RPM Limit" indicator
-// is only written while the limiter is configured, so it stays latched once the limiter is
-// turned off. FOME clears it: see FOME commit 7cae2fb109 "revamp ETB live data".
-TEST(etb, revLimitIndicatorStaysOnAfterLimiterDisabled) {
+// The "ETB RPM Limit" indicator turns off once the limiter is turned off in the tune.
+TEST(etb, revLimitIndicatorClearsAfterLimiterDisabled) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->etbRevLimitStart = 5000;
@@ -485,8 +483,8 @@ TEST(etb, revLimitIndicatorStaysOnAfterLimiterDisabled) {
 	// limiter turned off in the tune: the throttle is no longer limited...
 	engineConfiguration->etbRevLimitStart = 0;
 	EXPECT_NEAR(80, etb.getSetpoint().value_or(-1), 1e-4);
-	// ...but the indicator still claims it is. Expected after the fix: EXPECT_FALSE
-	EXPECT_TRUE(etb.etbRevLimitActive);
+	// ...and the indicator agrees
+	EXPECT_FALSE(etb.etbRevLimitActive);
 }
 
 TEST(etb, setpointNoPedalMap) {
@@ -770,10 +768,9 @@ TEST(etb, setOutputLimpHome) {
 	etb.setOutput(25.0f);
 }
 
-// Coverage of a present defect, asserting current behavior: the ETB duty channel reports the
-// requested duty even though the motor is disabled and nothing is driven. FOME reports 0:
-// see FOME commit 7cae2fb109 "revamp ETB live data".
-TEST(etb, dutyChannelReportsRequestedDutyWhileMotorDisabled) {
+// The ETB duty channel reports what the motor is driven with: 0 while it is disabled,
+// whatever duty was requested.
+TEST(etb, dutyChannelReportsZeroWhileMotorDisabled) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
@@ -786,20 +783,29 @@ TEST(etb, dutyChannelReportsRequestedDutyWhileMotorDisabled) {
 
 	// paused: the motor is disabled and never given a duty
 	engineConfiguration->pauseEtbControl = true;
-	EXPECT_CALL(motor, disable(_)).Times(2);
+	EXPECT_CALL(motor, disable(_)).Times(3);
 
 	etb.setOutput(25.0f);
 	EXPECT_EQ((uint8_t)EtbState::Paused, etb.state);
-	// Expected after the fix: 0
+	EXPECT_FLOAT_EQ(0, engine->outputChannels.etb1DutyCycle);
+
+	// control resumes: the driven duty is reported
+	engineConfiguration->pauseEtbControl = false;
+	EXPECT_CALL(motor, enable());
+	EXPECT_CALL(motor, set(0.25f));
+	etb.setOutput(25.0f);
 	EXPECT_FLOAT_EQ(25, engine->outputChannels.etb1DutyCycle);
+
+	// no valid output
+	etb.setOutput(unexpected);
+	EXPECT_FLOAT_EQ(0, engine->outputChannels.etb1DutyCycle);
 
 	// same in limp mode
 	engineConfiguration->pauseEtbControl = false;
 	getLimpManager()->fatalError();
 	etb.setOutput(40.0f);
 	EXPECT_EQ((uint8_t)EtbState::LimpProhibited, etb.state);
-	// Expected after the fix: 0
-	EXPECT_FLOAT_EQ(40, engine->outputChannels.etb1DutyCycle);
+	EXPECT_FLOAT_EQ(0, engine->outputChannels.etb1DutyCycle);
 }
 
 TEST(etb, closedLoopPid) {

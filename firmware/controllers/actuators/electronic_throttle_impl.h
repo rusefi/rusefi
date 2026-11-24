@@ -58,6 +58,7 @@ public:
 
 	void checkJam(percent_t setpoint, percent_t observation);
 	void resetJamTimer();
+	void reportDutyCycle(percent_t duty);
 
 	void setOutput(expected<percent_t> outputValue) override;
 
