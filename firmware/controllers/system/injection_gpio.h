@@ -13,6 +13,9 @@ public:
 
 	void open(efitick_t nowNt);
 	void close(efitick_t nowNt);
+
+	// Force the injector closed, and forget any opens it was counting
+	bool stop();
 	void setHigh() override;
 	void setLow() override;
 

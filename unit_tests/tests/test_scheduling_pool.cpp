@@ -138,11 +138,12 @@ TEST(scheduler, poolExhaustionSkipsInjectionPulse) {
 }
 
 // [tag:scheduling_pool_exhaustion] InjectorOutputPin merges overlapping pulses by counting
-// openings and closings. If a closing is lost (injection pulses can no longer lose one, see poolExhaustionSkipsInjectionPulse) the
-// stopped-engine safety, EnginePins::stopPins(), drives the pin low through
-// NamedOutputPin::stop() but keeps the count. Each later opening then only moves the count
-// from one to two, so that injector stays shut until reboot.
-TEST(scheduler, injectorDeadAfterStopFollowingLostClose) {
+// openings and closings. If a closing is lost (injection pulses can no longer lose one, see
+// poolExhaustionSkipsInjectionPulse) the stopped-engine safety, EnginePins::stopPins(), drives
+// the pin low through InjectorOutputPin::stop(), which also clears the count. With a stale
+// count each later opening only moved it from one to two and that injector stayed shut until
+// a configuration reset.
+TEST(scheduler, injectorWorksAfterStopFollowingLostClose) {
 	EngineTestHelper eth(engine_type_e::MINIMAL_PINS);
 
 	InjectorOutputPin& injector = enginePins.injectors[0];
@@ -155,17 +156,15 @@ TEST(scheduler, injectorDeadAfterStopFollowingLostClose) {
 	// engine stops, the safety turns the stuck injector off
 	EXPECT_TRUE(enginePins.stopPins());
 	EXPECT_FALSE(injector.getLogicValue());
-
-	// current defective behaviour, should be 0
-	EXPECT_EQ(1, injector.getOverlappingCounter());
+	EXPECT_EQ(0, injector.getOverlappingCounter());
 
 	// next start: a normal pulse
 	injector.open(getTimeNowNt());
-	// current defective behaviour, should be open
-	EXPECT_FALSE(injector.getLogicValue());
+	EXPECT_TRUE(injector.getLogicValue());
+	EXPECT_EQ(1, injector.getOverlappingCounter());
 	injector.close(getTimeNowNt());
 	EXPECT_FALSE(injector.getLogicValue());
-	EXPECT_EQ(1, injector.getOverlappingCounter());
+	EXPECT_EQ(0, injector.getOverlappingCounter());
 
 	// leave the shared pin clean for the next test
 	injector.reset();

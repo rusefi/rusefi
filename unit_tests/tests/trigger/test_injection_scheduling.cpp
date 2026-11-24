@@ -231,31 +231,3 @@ TEST(injectionScheduling, InjectionNotScheduled) {
 	// We are at 130 degrees now, next tooth 140
 	event.onTriggerTooth(nowNt, 130, 140);
 }
-
-// Coverage of a present defect, asserting current behavior (the expectation to move to with the
-// fix is noted at the assertion).
-// The stopped-engine safety turns an injector off through NamedOutputPin::stop(), which does not
-// clear the injector's overlap counter. The injector then treats every later open() as an
-// overlapping pulse and never drives the pin again until a configuration reset.
-// FOME commit 3b772a890a.
-TEST(injectionScheduling, injectorStaysOffAfterBeingForcedOff) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	auto& injector = enginePins.injectors[0];
-	ASSERT_TRUE(injector.isInitialized());
-
-	// a pulse whose close never came
-	injector.open(getTimeNowNt());
-	ASSERT_TRUE(injector.getLogicValue());
-
-	// engine stopped: pins are forced off
-	EXPECT_TRUE(injector.stop());
-	ASSERT_FALSE(injector.getLogicValue());
-
-	// next start
-	injector.open(getTimeNowNt());
-	// Expected after the fix: EXPECT_TRUE, with an overlap counter of 1
-	EXPECT_FALSE(injector.getLogicValue());
-	EXPECT_EQ(2, injector.getOverlappingCounter());
-
-	injector.reset();
-}

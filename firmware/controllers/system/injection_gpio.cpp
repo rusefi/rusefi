@@ -69,6 +69,16 @@ void InjectorOutputPin::close(efitick_t nowNt) {
 	}
 }
 
+bool InjectorOutputPin::stop() {
+	// [tag:scheduling_pool_exhaustion] see injectorWorksAfterStopFollowingLostClose
+	// Any opens still being counted are void once the pin has been forced low. If one of them
+	// had lost its close, keeping the count would make every later open() look like an
+	// overlapping pulse and the injector could not open again until a configuration reset.
+	overlappingCounter = 0;
+
+	return NamedOutputPin::stop();
+}
+
 void InjectorOutputPin::setHigh() {
     NamedOutputPin::setHigh();
     output_channels_s *state = getTunerStudioOutputChannels();

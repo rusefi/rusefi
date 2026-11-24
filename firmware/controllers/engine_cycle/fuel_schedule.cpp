@@ -80,6 +80,10 @@ FuelSchedule::FuelSchedule() {
 
 void FuelSchedule::invalidate() {
 	isReady = false;
+
+	for (auto& element : elements) {
+		element.forgetStartAngle();
+	}
 }
 
 // Determines how much to adjust injection opening angle based on the injection's duration and the current phasing mode
@@ -161,8 +165,16 @@ bool InjectionEvent::updateInjectionAngle() {
 	if (result) {
 		// If injector duty cycle is high, lock injection SOI so that we
 		// don't miss injections at or above 100% duty
-		if (getEngineState()->shouldUpdateInjectionTiming) {
+		bool lockForHighDuty = !getEngineState()->shouldUpdateInjectionTiming;
+
+		// With no fuel (fuel cut), the angle would be worked out for a pulse of no length, so
+		// with End or Center injection timing the first pulse after the cut would end a whole
+		// (or half a) pulse late. Keep the angle from the last real pulse instead.
+		bool noFuel = getEngineState()->injectionDuration < MIN_INJECTION_DURATION_MS;
+
+		if (!m_hasStartAngle || !(lockForHighDuty || noFuel)) {
 			injectionStartAngle = result.Value;
+			m_hasStartAngle = true;
 		}
 
 		return true;

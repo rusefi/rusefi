@@ -11,6 +11,9 @@
 #include "trigger_structure.h"
 #include "wall_fuel.h"
 
+// Pulses shorter than this are not injected at all, see handleFuelInjectionEvent()
+#define MIN_INJECTION_DURATION_MS 0.050f
+
 class InjectionEvent {
 public:
 	InjectionEvent() = default;
@@ -32,7 +35,15 @@ public:
 	CylinderMask calculateInjectorOutputMask() const;
 	uint8_t getIndex() const { return ownIndex; }
 
+	// Work out the start angle from scratch at the next update
+	void forgetStartAngle() {
+		m_hasStartAngle = false;
+	}
+
 private:
+	// Whether injectionStartAngle has been worked out since the schedule was last invalidated
+	bool m_hasStartAngle = false;
+
 	// Update the injection start angle
 	bool updateInjectionAngle();
 

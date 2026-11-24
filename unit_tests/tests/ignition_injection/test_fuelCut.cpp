@@ -628,13 +628,11 @@ TEST(fuelCut, dfcoTimingRampShorterThanHalfSecond) {
 	checkDfcoTimingRamp(0.2f);
 }
 
-// Coverage of a present defect, asserting current behavior (the expectation to move to with the
-// fix is noted at the assertion).
 // In End (or Center) of injection timing the start angle is the table angle minus the pulse
 // length. With no fuel commanded, as during decel fuel cut, an event which refreshes its angle
-// stores the uncorrected angle, so the first pulse after the cut starts and ends a whole pulse
-// late. FOME commit 3b772a890a keeps the last angle while there is no fuel.
-TEST(fuelCut, injectionAngleLosesDurationCorrectionDuringFuelCut) {
+// keeps the angle of the last real pulse: working it out for a pulse of no length made the first
+// pulse after the cut start and end a whole pulse late.
+TEST(fuelCut, injectionAngleKeptDuringFuelCut) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
@@ -655,10 +653,20 @@ TEST(fuelCut, injectionAngleLosesDurationCorrectionDuringFuelCut) {
 	// fuel cut
 	engine->engineState.injectionDuration = 0;
 	dut.addFuelEvents();
-	float cutAngle = dut.elements[0].injectionStartAngle;
+	EXPECT_FLOAT_EQ(fuelingAngle, dut.elements[0].injectionStartAngle);
 
-	float moved = cutAngle - fuelingAngle;
+	// fuel is back with a shorter pulse: 2.5 ms is 30 degrees, so the start moves 30 degrees later
+	engine->engineState.injectionDuration = 2.5f;
+	dut.addFuelEvents();
+	float moved = dut.elements[0].injectionStartAngle - fuelingAngle;
 	wrapAngle(moved, "test", ObdCode::CUSTOM_ERR_6555);
-	// Expected after the fix: 0
+	EXPECT_NEAR(30, moved, 0.1);
+
+	// a schedule rebuilt during a cut has no earlier angle to keep and takes the uncorrected one
+	engine->engineState.injectionDuration = 0;
+	dut.invalidate();
+	dut.addFuelEvents();
+	moved = dut.elements[0].injectionStartAngle - fuelingAngle;
+	wrapAngle(moved, "test", ObdCode::CUSTOM_ERR_6555);
 	EXPECT_NEAR(60, moved, 0.1);
 }

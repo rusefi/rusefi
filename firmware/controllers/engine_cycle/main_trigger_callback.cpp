@@ -130,7 +130,7 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 	// Durations under 50us-ish aren't safe for the scheduler
 	// as their order may be swapped, resulting in a stuck open injector
 	// see https://github.com/rusefi/rusefi/pull/596 for more details
-	if (injectionDurationStage1 < 0.050f)
+	if (injectionDurationStage1 < MIN_INJECTION_DURATION_MS)
 	{
 		// Zero duration means zero commanded fuel mass - an intentional "no injection"
 		// (deceleration fuel cut-off, zero-fuel transients), not a misconfiguration.
