@@ -7,6 +7,7 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
+import com.rusefi.config.StringFormatter;
 import com.rusefi.tune.xml.Msq;
 
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ final class RestorePointDiff {
     }
 
     static RestorePointDiff of(Msq point, ConfigurationImage current, IniFileModel ini) {
-        ConfigurationImage restored = point.applyOnto(current, ini);
+        ConfigurationImage restored = asShown(point.applyOnto(current, ini), current, ini);
         UnburnedChanges changes = UnburnedChanges.of(restored, current);
         Map<String, IniField> fields = ini.getAllIniFields();
         List<Row> rows = new ArrayList<>();
@@ -76,6 +77,67 @@ final class RestorePointDiff {
             }
         }
         return new RestorePointDiff(restored, changes.countChanged(fields.values()), rows);
+    }
+
+    /**
+     * [tag:restore_point_rounding] The open tune with only the point's values that differ as shown. A restore point
+     * keeps each value at the decimals its setting shows (the .msq digits), so a value the open tune holds more finely,
+     * e.g. 689.4757 shown as 689.48, comes back rounded; that is no change, and restoring keeps the finer value. A table
+     * cell counts the same way; an enum or bit by its bits, a text by its characters.
+     */
+    static ConfigurationImage asShown(ConfigurationImage full, ConfigurationImage current, IniFileModel ini) {
+        ConfigurationImage result = current.clone();
+        UnburnedChanges raw = UnburnedChanges.of(full, current);
+        for (IniField field : ini.getAllIniFields().values()) {
+            if (field.getPageIndex() != 0) {
+                continue;
+            }
+            try {
+                if (field instanceof ArrayIniField) {
+                    copyCellsShownChanged((ArrayIniField) field, raw, full, current, result);
+                } else if (field instanceof EnumIniField) {
+                    if (raw.isChanged(field)) {
+                        EnumIniField bits = (EnumIniField) field;
+                        int word = (int) bits.getType().readRawValue(full.getByteBuffer(bits));
+                        result.setBitValue(bits, ConfigurationImage.getBitRange(word, bits.getBitPosition(),
+                            bits.getBitSize0() + 1));
+                    }
+                } else if (raw.isChanged(field) && !ConfigurationImageGetterSetter.getStringValue(field, full)
+                    .equals(ConfigurationImageGetterSetter.getStringValue(field, current))) {
+                    copy(full, result, field.getOffset(), field.getSize());
+                }
+            } catch (RuntimeException e) {
+                // cannot be read as shown: a real difference, kept
+                if (raw.isChanged(field)) {
+                    copy(full, result, field.getOffset(), field.getSize());
+                }
+            }
+        }
+        return result;
+    }
+
+    private static void copyCellsShownChanged(ArrayIniField field, UnburnedChanges raw, ConfigurationImage full,
+                                              ConfigurationImage current, ConfigurationImage result) {
+        if (raw.countChangedCells(field) == 0) {
+            return;
+        }
+        int precision = IniField.parseDigits(field.getDigits());
+        Double[][] then = ConfigurationImageGetterSetter.getArrayValues(field, full);
+        Double[][] now = ConfigurationImageGetterSetter.getArrayValues(field, current);
+        int cellSize = field.getType().getStorageSize();
+        for (int row = 0; row < field.getRows(); row++) {
+            for (int col = 0; col < field.getCols(); col++) {
+                if (raw.isCellChanged(field, row, col) && !StringFormatter.niceToString(then[row][col], precision)
+                    .equals(StringFormatter.niceToString(now[row][col], precision))) {
+                    copy(full, result, field.getOffset(row, col), cellSize);
+                }
+            }
+        }
+    }
+
+    private static void copy(ConfigurationImage from, ConfigurationImage to, int offset, int size) {
+        System.arraycopy(from.getContent(), offset, to.getContent(), offset,
+            Math.max(0, Math.min(size, Math.min(from.getSize(), to.getSize()) - offset)));
     }
 
     /** The settings the Tuning pages show, in their order, then the others by where they sit in the tune. */
@@ -106,10 +168,18 @@ final class RestorePointDiff {
         return name == null || name.trim().isEmpty() ? key : name.trim();
     }
 
+    /** Without the quotes around a text or enum value; quotes inside, e.g. in a Lua script, are kept. */
+    static String unquoted(String value) {
+        if (value == null) {
+            return "";
+        }
+        return value.length() >= 2 && value.startsWith("\"") && value.endsWith("\"")
+            ? value.substring(1, value.length() - 1) : value;
+    }
+
     private static String value(IniField field, ConfigurationImage image) {
         try {
-            String value = ConfigurationImageGetterSetter.getStringValue(field, image);
-            return value == null ? "" : value.replace("\"", "");
+            return unquoted(ConfigurationImageGetterSetter.getStringValue(field, image));
         } catch (RuntimeException e) {
             return "?";
         }

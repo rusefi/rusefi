@@ -111,7 +111,7 @@ class TuningToolbarPersistenceDefectTest {
                 assertEquals(2, opened.get());
             });
             assertArrayEquals(fixture[0].b, fixture[0].protocol.flash);
-            List<com.rusefi.util.RestorePointStore.RestorePoint> points = store.list(RESTORE_SIGNATURE);
+            List<com.rusefi.util.RestorePointStore.RestorePoint> points = store.list(RESTORE_SIGNATURE, "");
             assertEquals(1, points.size());
             assertEquals(com.rusefi.util.RestorePointStore.Reason.BEFORE_BURN, points.get(0).reason);
             assertEquals("2", points.get(0).readTune().getConstantsAsMap().get("fuel").getValue(),
@@ -140,7 +140,7 @@ class TuningToolbarPersistenceDefectTest {
             });
             // the confirmation is posted to the EDT
             runOnEdt(() -> assertTrue(toolbarTexts(fixture[0].toolbar).contains("Restore point created")));
-            List<com.rusefi.util.RestorePointStore.RestorePoint> points = store.list(RESTORE_SIGNATURE);
+            List<com.rusefi.util.RestorePointStore.RestorePoint> points = store.list(RESTORE_SIGNATURE, "");
             assertEquals(1, points.size());
             assertEquals(com.rusefi.util.RestorePointStore.Reason.MANUAL, points.get(0).reason);
             assertEquals("before idle work", points.get(0).readNote());
