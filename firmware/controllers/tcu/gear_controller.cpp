@@ -66,6 +66,9 @@ void GearControllerBase::postState() {
 
 void initGearController() {
 	switch (engineConfiguration->gearControllerMode) {
+	case GearControllerMode::Automatic :
+		engine->gearController = getAutomaticGearController();
+		break;
 	case GearControllerMode::ButtonShift :
 		engine->gearController = getButtonShiftController();
 		break;

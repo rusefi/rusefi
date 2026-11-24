@@ -141,6 +141,15 @@ Generic4TransmissionController* getGeneric4TransmissionController() {
 void configureTcu4R70W() {
 	// TCU Software Config
 	engineConfiguration->tcuEnabled = true;
+	// The 4R70W calibration is for a four-speed transmission. Keep the
+	// controller and gear detector's configured gear count in sync.
+	engineConfiguration->totalGearsCount = 4;
+	// Stock 4R70W forward gear ratios. GearDetector requires positive,
+	// strictly decreasing ratios when the gear count is nonzero.
+	engineConfiguration->gearRatio[0] = 2.84f;
+	engineConfiguration->gearRatio[1] = 1.55f;
+	engineConfiguration->gearRatio[2] = 1.00f;
+	engineConfiguration->gearRatio[3] = 0.70f;
 	engineConfiguration->gearControllerMode = GearControllerMode::Generic;
 	engineConfiguration->transmissionControllerMode = TransmissionControllerMode::Generic4;
 
