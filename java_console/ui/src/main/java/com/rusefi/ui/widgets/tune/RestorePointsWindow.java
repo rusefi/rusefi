@@ -191,14 +191,8 @@ public final class RestorePointsWindow {
         header.add(centredVertically(actions), BorderLayout.EAST);
 
         // a note, not one more grey line: the open car has no Vehicle Name
-        Color accent = UIManager.getColor("Component.accentColor");
-        Color panel = UIManager.getColor("Panel.background");
-        if (accent == null) {
-            accent = new Color(0x2675BF);
-        }
-        if (panel == null) {
-            panel = Color.WHITE;
-        }
+        Color accent = TuningStyle.color("Component.accentColor", new Color(0x2675BF));
+        Color panel = TuningStyle.color("Panel.background", Color.WHITE);
         unnamedBanner.setBackground(mix(accent, panel, 0.12));
         unnamedBanner.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(mix(accent, panel, 0.35)),
@@ -882,10 +876,13 @@ public final class RestorePointsWindow {
 
     /** {@code share} of {@code a} over {@code b}: a tint that follows the light or dark theme. */
     private static Color mix(Color a, Color b, double share) {
-        return new Color(
-            (int) Math.round(a.getRed() * share + b.getRed() * (1 - share)),
-            (int) Math.round(a.getGreen() * share + b.getGreen() * (1 - share)),
-            (int) Math.round(a.getBlue() * share + b.getBlue() * (1 - share)));
+        // derived from the two theme colours, not written into the code
+        return new Color(blend(a.getRed(), b.getRed(), share), blend(a.getGreen(), b.getGreen(), share),
+            blend(a.getBlue(), b.getBlue(), share));
+    }
+
+    private static int blend(int a, int b, double share) {
+        return (int) Math.round(a * share + b * (1 - share));
     }
 
     /** The icon drawn at {@code size} px, e.g. the option pane's 32 px info icon in a one-line note. */
@@ -1063,8 +1060,7 @@ public final class RestorePointsWindow {
         }
         area.setFont(new Font(Font.MONOSPACED, Font.PLAIN, area.getFont().getSize()));
         area.setTabSize(4);
-        Color accent = UIManager.getColor("Component.accentColor");
-        Color tint = mix(accent != null ? accent : new Color(0x2675BF), area.getBackground(), 0.18);
+        Color tint = mix(TuningStyle.color("Component.accentColor", new Color(0x2675BF)), area.getBackground(), 0.18);
         javax.swing.text.Highlighter.HighlightPainter painter = new LinePainter(tint);
         for (int line : changed) {
             try {
