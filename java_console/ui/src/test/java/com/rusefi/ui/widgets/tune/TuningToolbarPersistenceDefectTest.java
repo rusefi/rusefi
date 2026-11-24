@@ -455,6 +455,49 @@ class TuningToolbarPersistenceDefectTest {
         }
     }
 
+    @Test
+    void mirrorControlsFollowAndDriveTheToolbar() throws Exception {
+        Fixture[] fixture = new Fixture[1];
+        try {
+            runOnEdt(() -> {
+                fixture[0] = new Fixture();
+                Fixture current = fixture[0];
+                JComponent mirror = current.toolbar.createMirrorControls();
+                JButton undo = findButton(mirror, "Undo");
+                assertFalse(undo.isEnabled());
+
+                current.editToB();
+                current.toolbar.flushBeforeNavigate();
+                assertTrue(undo.isEnabled(), "mirror Undo follows the toolbar's");
+                assertTrue(findLabelText(mirror).startsWith("Pending changes not burned"));
+
+                findButton(mirror, "Discard changes").doClick();
+                assertArrayEquals(current.a, current.session.get().getContent());
+                assertFalse(undo.isEnabled());
+                assertEquals("", findLabelText(mirror));
+
+                current.editToB();
+                findButton(mirror, "Burn to ECU").doClick();
+            });
+            runOnEdt(() -> { });
+            assertArrayEquals(fixture[0].b, fixture[0].protocol.flash);
+            assertArrayEquals(fixture[0].b, fixture[0].toolbar.getBaselineImage().getContent());
+        } finally {
+            if (fixture[0] != null) {
+                runOnEdt(fixture[0]::close);
+            }
+        }
+    }
+
+    private static String findLabelText(Container container) {
+        for (Component component : container.getComponents()) {
+            if (component instanceof JLabel) {
+                return ((JLabel) component).getText();
+            }
+        }
+        return null;
+    }
+
     private static void runOnEdt(Runnable action) throws Exception {
         SwingUtilities.invokeAndWait(action);
     }

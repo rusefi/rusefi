@@ -4,6 +4,7 @@ import com.rusefi.core.preferences.storage.Node;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * What the histogram remembers from one log to the next and across console runs: the view shown, the X / Y / Z
@@ -35,6 +36,8 @@ final class HistogramSettings {
     static final int DEFAULT_BINS = 16;
     static final double DEFAULT_MIN_TIME = 1.0;
     static final double MAX_MIN_TIME = 60;
+    static final int DEFAULT_MIN_RECORDS = 10;
+    static final int MAX_MIN_RECORDS = 100_000;
 
     private final Node node;
 
@@ -169,6 +172,16 @@ final class HistogramSettings {
         node.setProperty("bins_table", table == null ? "" : table);
     }
 
+    /** The round step of the X ({@code 'x'}) or Y bins, e.g. 500 rpm; 0 for the number of bins instead. */
+    double step(char axis) {
+        double step = node.getDoubleProperty(axis + "_step", 0);
+        return Double.isFinite(step) && step > 0 ? step : 0;
+    }
+
+    void setStep(char axis, double step) {
+        node.setProperty(axis + "_step", Double.isFinite(step) && step > 0 ? step : 0);
+    }
+
     static int clampBins(int bins) {
         return Math.max(HistogramAxis.MIN_BINS, Math.min(HistogramAxis.MAX_BINS, bins));
     }
@@ -181,6 +194,58 @@ final class HistogramSettings {
 
     void setMinTime(double seconds) {
         node.setProperty("min_time", Math.max(0, Math.min(MAX_MIN_TIME, seconds)));
+    }
+
+    /** Cells with fewer records than this are thin data while {@link #thinByRecords()}. */
+    int minRecords() {
+        return Math.max(0, Math.min(MAX_MIN_RECORDS, node.getIntProperty("min_records", DEFAULT_MIN_RECORDS)));
+    }
+
+    void setMinRecords(int records) {
+        node.setProperty("min_records", Math.max(0, Math.min(MAX_MIN_RECORDS, records)));
+    }
+
+    /** Whether the thin-data limit counts records rather than seconds. */
+    boolean thinByRecords() {
+        return node.getBoolProperty("thin_by_records", false);
+    }
+
+    void setThinByRecords(boolean byRecords) {
+        node.setBoolProperty("thin_by_records", byRecords);
+    }
+
+    ThinLimit thinLimit() {
+        return thinByRecords() ? ThinLimit.records(minRecords()) : ThinLimit.seconds(minTime());
+    }
+
+    /** Below this a cell is thin data: too little of it to trust. By time spent in the cell, or by its records. */
+    static final class ThinLimit {
+        final boolean byRecords;
+        final double value;
+
+        private ThinLimit(boolean byRecords, double value) {
+            this.byRecords = byRecords;
+            this.value = value;
+        }
+
+        static ThinLimit seconds(double seconds) {
+            return new ThinLimit(false, seconds);
+        }
+
+        static ThinLimit records(int records) {
+            return new ThinLimit(true, records);
+        }
+
+        boolean isThin(Histogram.Cell cell) {
+            return byRecords ? cell.count < value : cell.time < value;
+        }
+
+        /** "1 s of data" or "10 records", after "under". */
+        String describe() {
+            return byRecords
+                    ? String.format(Locale.ROOT, "%,d record%s", (int) value, value == 1 ? "" : "s")
+                    : HistogramFilter.number(value) + " s of data";
+        }
     }
 
     boolean hideThin() {

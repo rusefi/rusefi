@@ -2,7 +2,13 @@ package com.rusefi.ui.logview;
 
 import com.rusefi.ui.widgets.JoinedButtons;
 
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
+import javax.swing.KeyStroke;
+import javax.swing.text.JTextComponent;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -13,15 +19,18 @@ import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.BooleanSupplier;
 
 import static com.rusefi.ui.logview.ThemedStrip.themed;
 
 /**
  * The strip above the timeline after "Show on timeline" from a histogram cell: which cell, how often and how long
  * the engine was in it, and which stay is in view, with Previous / Next to step through the stays, Back to the
- * histogram, and × to clear the shading. Opens on the longest stay. [tag:console_theme]
+ * histogram (or Esc), and × to clear the shading. Opens on the longest stay. [tag:console_theme]
  */
 final class VisitsBar extends ThemedStrip {
+    static final String BACK_ACTION = "backToView";
+
     final JLabel titleLabel = new JLabel();
     final JLabel positionLabel = ChartToolbar.muted(new JLabel());
     final JButton previousButton = new JButton("‹ Previous");
@@ -32,6 +41,7 @@ final class VisitsBar extends ThemedStrip {
     private final LogChart chart;
     private List<double[]> visits = new ArrayList<>();
     private int current = -1;
+    private BooleanSupplier onTimeline = this::isShowing;
 
     VisitsBar(LogChart chart, Runnable onBack) {
         super(new BorderLayout(12, 0), "Console.Banner.info.background", false);
@@ -64,6 +74,40 @@ final class VisitsBar extends ThemedStrip {
         add(text, BorderLayout.CENTER);
         add(buttons, BorderLayout.EAST);
         setVisible(false);
+
+        // Esc goes back wherever the focus is on the timeline; the plots call goBack themselves
+        getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), BACK_ACTION);
+        getActionMap().put(BACK_ACTION, new AbstractAction() {
+            @Override
+            public boolean isEnabled() {
+                // not from another tab of the window; a text field may use Esc itself
+                return isShowing() && canGoBack() && !(KeyboardFocusManager.getCurrentKeyboardFocusManager()
+                        .getFocusOwner() instanceof JTextComponent);
+            }
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                goBack();
+            }
+        });
+    }
+
+    /** Whether the timeline, which holds this bar, is the view shown; by default, whether the bar is on screen. */
+    void setOnTimeline(BooleanSupplier onTimeline) {
+        this.onTimeline = onTimeline;
+    }
+
+    private boolean canGoBack() {
+        return isVisible() && onTimeline.getAsBoolean();
+    }
+
+    /** Back to the histogram or scatter plot while this bar is on the timeline shown; false when it is not. */
+    boolean goBack() {
+        if (!canGoBack()) {
+            return false;
+        }
+        backButton.doClick();
+        return true;
     }
 
     /** Shades the stays and shows the longest; nothing happens for an empty list. */

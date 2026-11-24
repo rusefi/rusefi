@@ -117,11 +117,26 @@ final class Histogram {
      */
     static Histogram compute(CsvLogReader log, int xField, int yField, int zField, int columns, int rows,
                              boolean[] hidden, double start, double end) {
+        return compute(log, xField, yField, zField, columns, rows, 0, 0, hidden, start, end);
+    }
+
+    /**
+     * As {@link #compute(CsvLogReader, int, int, int, int, int, boolean[], double, double)}, but an axis with a
+     * step above 0 has bins on round multiples of it ({@link HistogramAxis#stepped}); a step that would give more
+     * than {@link HistogramAxis#MAX_BINS} bins falls back to the even bins.
+     */
+    static Histogram compute(CsvLogReader log, int xField, int yField, int zField, int columns, int rows,
+                             double xStep, double yStep, boolean[] hidden, double start, double end) {
         int[] range = sampleRange(log, start, end);
         double[] xRange = valueRange(log, xField, zField, hidden, range);
         double[] yRange = valueRange(log, yField, zField, hidden, range);
-        return compute(log, xField, yField, zField, HistogramAxis.even(xRange[0], xRange[1], columns),
-                HistogramAxis.even(yRange[0], yRange[1], rows), hidden, start, end);
+        return compute(log, xField, yField, zField, axis(xRange, columns, xStep), axis(yRange, rows, yStep),
+                hidden, start, end);
+    }
+
+    private static HistogramAxis axis(double[] range, int count, double step) {
+        HistogramAxis stepped = HistogramAxis.stepped(range[0], range[1], step);
+        return stepped != null ? stepped : HistogramAxis.even(range[0], range[1], count);
     }
 
     /** Bins the records with the given axes, e.g. those of a tune table. */
