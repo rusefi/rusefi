@@ -822,12 +822,9 @@ TEST(idle_v2, IntegrationClamping) {
 	EXPECT_EQ(100, dut.getIdlePosition(950));
 }
 
-// Coverage of a present defect, asserting current behavior (the expectation to move to with the
-// fix is noted at the assertion).
-// With "Ramp target on return to idle" the target jumps to normal target + "RPM upper limit"
-// on entering idle, even when the engine arrives at idle already close to the normal target.
-// FOME commit bb8f26b4c7 starts the ramp from the RPM at idle entry.
-TEST(idle_v2, idleReturnRampStartsAboveActualRpm) {
+// With "Ramp target on return to idle" the target ramp starts from the RPM the engine has on
+// entering idle: no higher than normal target + "RPM upper limit", no lower than normal target.
+TEST(idle_v2, idleReturnRampStartsAtActualRpm) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	IdleController dut;
 
@@ -859,6 +856,35 @@ TEST(idle_v2, idleReturnRampStartsAboveActualRpm) {
 	ASSERT_TRUE(dut.isIdlingOrTaper());
 	ASSERT_TRUE(dut.isIdling);
 
-	// Expected after the fix: no more than 1050
-	EXPECT_NEAR(1300, dut.getTargetRpm(80).ClosedLoopTarget, 1);
+	EXPECT_NEAR(1050, dut.getTargetRpm(80).ClosedLoopTarget, 1);
+	// the entry and exit thresholds do not move
+	EXPECT_NEAR(1300, dut.getTargetRpm(80).IdleEntryRpm, 1);
+	EXPECT_NEAR(1450, dut.getTargetRpm(80).IdleExitRpm, 1);
+
+	// half of the ramp duration
+	advanceTimeUs(1'500'000);
+	dut.getIdlePosition(1040);
+	EXPECT_NEAR(1025, dut.getTargetRpm(80).ClosedLoopTarget, 1);
+
+	advanceTimeUs(1'500'000);
+	dut.getIdlePosition(1010);
+	EXPECT_NEAR(1000, dut.getTargetRpm(80).ClosedLoopTarget, 1);
+
+	// drive again, then release the throttle below the normal target: no elevation
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 30);
+	dut.getIdlePosition(950);
+	ASSERT_FALSE(dut.isIdling);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
+	dut.getIdlePosition(950);
+	ASSERT_TRUE(dut.isIdling);
+	EXPECT_NEAR(1000, dut.getTargetRpm(80).ClosedLoopTarget, 1);
+
+	// and near the entry threshold: almost the full elevation
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 30);
+	dut.getIdlePosition(1290);
+	ASSERT_FALSE(dut.isIdling);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
+	dut.getIdlePosition(1290);
+	ASSERT_TRUE(dut.isIdling);
+	EXPECT_NEAR(1290, dut.getTargetRpm(80).ClosedLoopTarget, 1);
 }

@@ -133,6 +133,8 @@ private:
 	float m_idleTimingSoftEntryEndTime = 0.0f;
 
   Timer m_timeInIdlePhase;
+	// share of 'RPM upper limit' the return-to-idle target ramp starts from, latched at idle entry
+	float m_returnRampStartFraction = 1;
 
 	// This is stored by getClosedLoop and used in case we want to "do nothing"
 	float m_lastAutomaticPosition = 0;

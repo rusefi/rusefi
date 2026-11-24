@@ -52,11 +52,10 @@ IIdleController::TargetInfo IdleController::getTargetRpm(float clt) {
   // Higher exit than entry to add some hysteresis to avoid bouncing around upper threshold
  	float exitRpm = target + 1.5f * rpmUpperLimit;
 
- 	// Ramp the target down from the transition RPM to normal over a few seconds
+ 	// Ramp the target down from the RPM at idle entry to normal over a few seconds
   if (engineConfiguration->idleReturnTargetRamp) {
- 		// Ramp the target down from the transition RPM to normal over a few seconds
  		float timeSinceIdleEntry = m_timeInIdlePhase.getElapsedSeconds();
- 		target += interpolateClamped(
+ 		target += m_returnRampStartFraction * interpolateClamped(
  			0, rpmUpperLimit,
  			engineConfiguration->idleReturnTargetRampDuration, 0,
  			timeSinceIdleEntry
@@ -454,8 +453,19 @@ float IdleController::getIdlePosition(float rpm) {
 		isIdling = (phase == Phase::Idling) || (phase == Phase::CrankToIdleTaper);
 
     if (phase != m_lastPhase && phase == Phase::Idling) {
-        // Just entered idle, reset timer
+        // Just entered idle: start the target ramp from where the engine is now, so the target
+        // never starts above the engine (e.g. throttle released at an RPM already near idle).
+        // It starts no higher than the entry threshold and no lower than the normal target.
+        float rpmUpperLimit = engineConfiguration->idlePidRpmUpperLimit;
+        float normalTarget = targetRpm.IdleEntryRpm - rpmUpperLimit;
+        m_returnRampStartFraction = rpmUpperLimit > 0 ? clampF(0, (rpm - normalTarget) / rpmUpperLimit, 1) : 0;
  		    m_timeInIdlePhase.reset();
+
+        if (engineConfiguration->idleReturnTargetRamp) {
+            // Recompute so the ramp applies from this tick
+            targetRpm = getTargetRpm(clt);
+            m_lastTargetRpm = static_cast<int>(targetRpm.ClosedLoopTarget);
+        }
  	  }
 
 		m_lastPhase = phase;
