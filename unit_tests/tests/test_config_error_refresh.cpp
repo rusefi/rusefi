@@ -167,3 +167,28 @@ TEST_F(ConfigErrorRefresh, settingsWriteFailureOutranksBoardHook) {
 	ASSERT_TRUE(hasConfigError());
 	EXPECT_STREQ("second problem", getConfigErrorMessage());
 }
+
+// Reproduces #10711: the failing state is cleared only by a successful attempt, and nothing
+// tells the tracker that attempts have stopped. The storage manager stops attempting when it
+// drops the request ("Tune edited after Burn; not saved", tryWriteValidatedTune() in
+// storage.cpp) or while storageAllowWriteID() defers settings writes because the engine runs.
+// One failed attempt is then reported as "keeps failing" and stays until the next good burn.
+TEST_F(ConfigErrorRefresh, settingsWriteSingleFailureReportedAsKeepsFailing) {
+	// the only attempt ever made
+	trackSettingsWriteResult(false);
+	refreshConfigErrorState();
+	EXPECT_FALSE(hasConfigError());
+
+	// no further attempts: nothing is failing any more, yet the alert threshold still elapses
+	advanceTimeUs(MS2US(11'000));
+	refreshConfigErrorState();
+	// current faulty behaviour; with the fix: EXPECT_FALSE(hasConfigError())
+	ASSERT_TRUE(hasConfigError());
+	EXPECT_STREQ("Settings write keeps failing - your changes are NOT saved to flash", getConfigErrorMessage());
+
+	// and it never goes away on its own
+	advanceTimeUs(MS2US(600'000));
+	refreshConfigErrorState();
+	// current faulty behaviour; with the fix: EXPECT_FALSE(hasConfigError())
+	EXPECT_TRUE(hasConfigError());
+}
