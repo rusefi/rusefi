@@ -187,6 +187,10 @@ bool InjectionEvent::updateInjectionAngle() {
  * @returns false in case of error, true if success
  */
 bool InjectionEvent::update() {
+	// The cylinder this event belongs to, whichever injectors it drives: needed first, as the
+	// injection angle includes this cylinder's odd-fire offset. Also selects its fuel mass.
+	cylinderNumber = getCylinderNumberAtIndex(ownIndex);
+
 	bool updatedAngle = updateInjectionAngle();
 
 	if (!updatedAngle) {
@@ -211,8 +215,6 @@ bool InjectionEvent::update() {
 	InjectorOutputPin *output = &enginePins.injectors[injectorIndex];
 	isSimultaneous = mode == IM_SIMULTANEOUS;
 	m_injectionMode = mode;
-	// Stash the cylinder number so we can select the correct fueling bank later
-	cylinderNumber = injectorIndex;
 
 	if (!isSimultaneous && !output->isInitialized()) {
 		// todo: extract method for this index math
