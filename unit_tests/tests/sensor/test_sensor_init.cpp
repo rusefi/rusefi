@@ -665,11 +665,9 @@ TEST(SensorInit, fuelLevelInputChangeAppliesOnBurn) {
 	EXPECT_FALSE(Sensor::hasSensor(SensorType::FuelLevel));
 }
 
-// Coverage of a present defect, asserting current behavior (the expectation to move to with the
-// fix is noted at the assertion).
-// Clearing a MAF input and burning leaves the sensor registered on its old pin until reboot.
+// Clearing or adding a MAF input and burning takes effect without a reboot.
 // Only registration is checked: MAF samples cannot be delivered in host tests.
-TEST(SensorInit, mafInputRemovalNeedsReboot) {
+TEST(SensorInit, mafInputChangeAppliesOnBurn) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->maf2AdcChannel = EFI_ADC_NONE;
 	stopSensors();
@@ -685,6 +683,23 @@ TEST(SensorInit, mafInputRemovalNeedsReboot) {
 	stopSensors();
 	reconfigureSensors();
 	rememberCurrentConfiguration();
-	// Expected after the fix: EXPECT_FALSE
+	EXPECT_FALSE(Sensor::hasSensor(SensorType::Maf));
+
+	// an unrelated burn does not bring it back
+	stopSensors();
+	reconfigureSensors();
+	rememberCurrentConfiguration();
+	EXPECT_FALSE(Sensor::hasSensor(SensorType::Maf));
+
+	// add the input on another pin and burn
+	engineConfiguration->mafAdcChannel = EFI_ADC_7;
+	stopSensors();
+	reconfigureSensors();
+	rememberCurrentConfiguration();
 	EXPECT_TRUE(Sensor::hasSensor(SensorType::Maf));
+	EXPECT_FALSE(Sensor::hasSensor(SensorType::Maf2));
+
+	// leave no MAF subscription for later tests
+	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
+	stopSensors();
 }

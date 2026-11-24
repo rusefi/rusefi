@@ -103,6 +103,7 @@ static void sensorStartUpOrReconfiguration(bool isFirstTime) {
 	initVbatt();
 	initMap();
 	initFuelLevel();
+	initMaf();
 	initTps();
 	initFluidPressure();
 	initThermistors();
@@ -134,8 +135,6 @@ void initNewSensors() {
 	initEgt();
 	initBaro();
 
-	// todo: MAF inputs are only subscribed at start-up, see SensorInit.mafInputRemovalNeedsReboot
-	initMaf();
 
 	initOldAnalogInputs();
 	initAuxDigital();
@@ -173,6 +172,7 @@ void stopSensors() {
 	deinitAuxSpeedSensors();
 	deinitMap();
 	deinitFuelLevel();
+	deinitMaf();
 	deinitInputShaftSpeedSensor();
 	deinitOutputShaftSpeedSensor();
 	stopEgt();

@@ -92,3 +92,8 @@ void initMaf() {
 	initMaf(engineConfiguration->mafAdcChannel, maf);
 	initMaf(engineConfiguration->maf2AdcChannel, maf2);
 }
+
+void deinitMaf() {
+	AdcSubscription::UnsubscribeSensor(maf, engineConfiguration->mafAdcChannel);
+	AdcSubscription::UnsubscribeSensor(maf2, engineConfiguration->maf2AdcChannel);
+}
