@@ -136,7 +136,6 @@ TEST(SensorInit, TpsValuesTooClose) {
 // Coverage of a present defect, asserting current behavior: with open/closed calibration
 // voltages too close together the TPS is neither subscribed to the ADC nor registered, so its
 // raw voltage reads 0 and the user cannot see the voltages needed to repair the calibration.
-// FOME always subscribes and registers: see FOME commit 24ddeb6de7 "fix #710".
 TEST(SensorInit, TpsRawVoltageUnavailableWithInvalidCalibration) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	const adc_channel_e channel = engineConfiguration->tps1_1AdcChannel;
@@ -561,11 +560,9 @@ TEST_F(MapSensorReconfiguration, CalibrationBurnUpdatesConversion) {
 
 } // namespace
 
-// Coverage of a present defect, asserting current behavior (the expectation to move to with the
-// fix is noted at the assertion).
-// Oil temperature and aux temperature 2 share one conversion object (faux2), so configuring
-// aux 2 replaces the oil temperature calibration. FOME commit 8b7167ca7f.
-TEST(SensorInit, auxTemp2OverwritesOilTemperatureCalibration) {
+// Oil temperature and aux temperature 2 each have their own conversion object, so configuring
+// aux 2 leaves the oil temperature calibration alone.
+TEST(SensorInit, auxTemp2KeepsOilTemperatureCalibration) {
 	// 2.7k pull-up, 5V: 2100 ohm reads 2.1875 V
 	constexpr float volts = 5.0f * 2100 / (2100 + 2700);
 	const thermistor_conf_s oilCalibration = {0, 30, 100, 9500, 2100, 180, 2700};
@@ -592,14 +589,13 @@ TEST(SensorInit, auxTemp2OverwritesOilTemperatureCalibration) {
 	float oil = convertRaw(SensorType::OilTemperature, volts).value_or(-1);
 	// 2100 ohm is close to the hot end of the aux 2 curve
 	EXPECT_GT(aux2, 90);
-	// Expected after the fix: 30
-	EXPECT_FLOAT_EQ(aux2, oil);
+	EXPECT_NEAR(30, oil, 0.1);
 }
 
 // Coverage of a present defect, asserting current behavior (the expectation to move to with the
 // fix is noted at the assertion).
 // A baro sensor of type "custom" is converted with the MAP sensor's kPa range; its own
-// baroSensor.lowValue/highValue are never used. FOME commit 2afe90cab8 (#806).
+// baroSensor.lowValue/highValue are never used.
 TEST(SensorInit, customBaroSensorUsesMapCalibration) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
@@ -629,7 +625,7 @@ TEST(SensorInit, customBaroSensorUsesMapCalibration) {
 // Coverage of a present defect, asserting current behavior (the expectation to move to with the
 // fix is noted at the assertion).
 // Changing or clearing the fuel level input and burning leaves the sensor subscribed to its
-// old pin until reboot. FOME commit 46f921021d.
+// old pin until reboot.
 TEST(SensorInit, fuelLevelInputChangeNeedsReboot) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
