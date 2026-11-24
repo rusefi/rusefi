@@ -572,7 +572,7 @@ AEM X-Series or rusEFI Wideband
 
 
 ### idleReturnTargetRamp
-When returning to idle from coasting, start the closed-loop RPM target elevated by the 'RPM upper limit' idle detection threshold, then ramp it down to the normal target over the 'Ramp target duration'. Helps prevent RPM from dipping below the idle target on return to idle.
+When returning to idle from coasting, start the closed-loop RPM target at the RPM the engine has on entering idle (no higher than normal target + 'RPM upper limit'), then ramp it down to the normal target over the 'Ramp target duration'. Helps prevent RPM from dipping below the idle target on return to idle.
 
 ### useInjectorFlowLinearizationTable
 
@@ -2033,7 +2033,7 @@ Compensates for trigger delay due to belt stretch, or other electromechanical is
 Delay before cutting fuel due to extra high oil pressure. Use this to ignore short pressure blips and sensor noise.
 
 ### idleReturnTargetRampDuration
-Time for the idle RPM target to ramp down from the elevated return-to-idle value (normal target + 'RPM upper limit') to the normal target. Longer duration gives a gentler, slower settle to idle. Only used when 'Ramp target on return to idle' is enabled.
+Time for the idle RPM target to ramp down from the elevated return-to-idle value (the RPM on entering idle, at most normal target + 'RPM upper limit') to the normal target. Longer duration gives a gentler, slower settle to idle. Only used when 'Ramp target on return to idle' is enabled.
 
 ### wastegatePositionOpenedVoltage
 Voltage when the wastegate is fully open
