@@ -554,8 +554,14 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 	bool isEnabled;
 	if (!isEtbMode()) {
 	  // technical debt: non-ETB usages of DC motor are still mixed into ETB controller?
-		state = (uint8_t)EtbState::NotEbt;
-		isEnabled = true;
+		// limp and pause apply to throttles only, a valid output is required by every actuator
+		if (outputValue) {
+			state = (uint8_t)EtbState::NotEbt;
+			isEnabled = true;
+		} else {
+			state = (uint8_t)EtbState::NoOutput;
+			isEnabled = false;
+		}
 	} else if (!getLimpManager()->allowElectronicThrottle()) {
 		state = (uint8_t)EtbState::LimpProhibited;
 		isEnabled = false;
@@ -570,7 +576,7 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 		isEnabled = true;
 	}
 
-	// If not ETB, or ETB is allowed, output is valid, and we aren't paused, output to motor.
+	// Output to motor only with a valid output; a throttle also has to be allowed and not paused.
 	if (isEnabled) {
 		m_motor->enable();
 		m_motor->set(ETB_PERCENT_TO_DUTY(outputValue.Value));

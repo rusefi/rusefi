@@ -875,11 +875,10 @@ TEST(etb, jamDetection) {
 	EXPECT_TRUE(etb.jamDetected);
 }
 
-// Coverage of a present defect, asserting current behavior: a DC motor used for something other
-// than a throttle (wastegate, idle valve) is enabled and given a duty even when there is no valid
-// output, for example with position feedback lost; the duty is then whatever the invalid result
-// happens to hold. FOME disables the bridge: see FOME commit ab331c3ad7.
-TEST(etb, dcWastegateDrivenWithInvalidOutput) {
+// A DC motor used for something other than a throttle (wastegate, idle valve) is disabled when
+// there is no valid output, for example with position feedback lost. Throttle pause and limp
+// do not apply to it.
+TEST(etb, dcWastegateDisabledWithInvalidOutput) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
@@ -890,12 +889,22 @@ TEST(etb, dcWastegateDrivenWithInvalidOutput) {
 	EtbController etb;
 	etb.init(DC_Wastegate, &motor, nullptr, nullptr);
 
-	// Expected after the fix: only disable(_) is called
-	EXPECT_CALL(motor, enable());
-	EXPECT_CALL(motor, set(_));
-
+	::testing::InSequence sequence;
+	EXPECT_CALL(motor, disable(_));
 	etb.setOutput(unexpected);
+	EXPECT_EQ((uint8_t)EtbState::NoOutput, etb.state);
+
+	// a valid output is driven again, even with throttle control paused and limp active
+	engineConfiguration->pauseEtbControl = true;
+	getLimpManager()->fatalError();
+	EXPECT_CALL(motor, enable());
+	EXPECT_CALL(motor, set(0.25f));
+	etb.setOutput(25.0f);
 	EXPECT_EQ((uint8_t)EtbState::NotEbt, etb.state);
+
+	EXPECT_CALL(motor, disable(_));
+	etb.setOutput(UnexpectedCode::Timeout);
+	EXPECT_EQ((uint8_t)EtbState::NoOutput, etb.state);
 }
 
 // Coverage of a present defect, asserting current behavior: the jam timer only runs down inside
