@@ -84,7 +84,7 @@ class HistogramColorsTest {
         CsvLogReader log = CsvLogReader.read(new StringReader(text.toString()));
         Histogram histogram = Histogram.compute(log, 1, 2, 3, 31, 2, new boolean[31], Double.NaN, Double.NaN);
         HistogramTable table = new HistogramTable();
-        table.set(histogram, HistogramSettings.Mode.MEAN, HistogramTable.Mixture.LAMBDA, 0, false, colors);
+        table.set(histogram, HistogramSettings.Mode.MEAN, HistogramTable.Mixture.LAMBDA, HistogramSettings.ThinLimit.seconds(0), false, colors);
         return table;
     }
 

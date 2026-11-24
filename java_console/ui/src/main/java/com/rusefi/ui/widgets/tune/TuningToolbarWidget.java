@@ -198,22 +198,85 @@ public class TuningToolbarWidget {
             refreshState();
         });
 
-        panel = new JPanel(new FlowLayout(FlowLayout.LEFT, JoinedButtons.ROW_GAP, 6));
         // sits on the Tuning tab's toolbar strip (TuningPane), which supplies the colour
-        panel.setOpaque(false);
-        stateLabel.setBorder(BorderFactory.createEmptyBorder(0, 6, 0, 0));
-        // same controls as the Gauges and Lua toolbars [tag:console_theme]: 36 px tall, primary
-        // Burn, outlined groups; Undo and Redo joined as one control
-        burnButton.setPreferredSize(new Dimension(burnButton.getPreferredSize().width + 24, JoinedButtons.HEIGHT));
-        panel.add(burnButton);
-        panel.add(new JoinedButtons(discardButton));
-        panel.add(new JoinedButtons(undoButton, redoButton));
-        panel.add(stateLabel);
+        panel = layOut(CONTROLS_TOP, stateLabel, burnButton, discardButton, undoButton, redoButton);
 
         // [tag:offline_tune] Refresh the state label whenever offline mode toggles (e.g. Load Tune
         // while disconnected). Edit/discard/burn/connect/disconnect paths call refreshState() directly.
         uiContext.addOfflineModeListener(offline -> SwingUtilities.invokeLater(this::refreshState));
         refreshState();
+    }
+
+    /**
+     * Same controls as the Tuning toolbar [tag:console_theme]: 36 px tall, primary Burn, outlined
+     * groups, Undo and Redo joined as one control, then the state label.
+     * [tag:tune_controls_position] Burn sits {@link #CONTROLS_LEFT} px from the screen edge and
+     * {@link #CONTROLS_TOP} px below the tab row on both Tuning and Gauges, so switching tabs never moves it.
+     */
+    private static JPanel layOut(int vgap, JLabel label, JButton burn, JButton discard, JButton undo, JButton redo) {
+        JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, JoinedButtons.ROW_GAP, vgap));
+        row.setOpaque(false);
+        burn.setPreferredSize(new Dimension(burn.getPreferredSize().width + 24, JoinedButtons.HEIGHT));
+        row.add(burn);
+        row.add(new JoinedButtons(discard));
+        row.add(new JoinedButtons(undo, redo));
+        label.setBorder(BorderFactory.createEmptyBorder(0, 6, 0, 0));
+        row.add(label);
+        return row;
+    }
+
+    /** [tag:tune_controls_position] Left inset of the Tuning strip (TuningPane) plus the row gap. */
+    public static final int CONTROLS_LEFT = 4 + JoinedButtons.ROW_GAP;
+    /** [tag:tune_controls_position] The Tuning toolbar row's vertical gap. */
+    public static final int CONTROLS_TOP = 6;
+
+    /**
+     * Disabled Burn / Discard / Undo / Redo laid out exactly like {@link #createMirrorControls()}, holding
+     * their place on another screen until the Tuning pane (built on first use) supplies the live ones.
+     */
+    public static JComponent createPlaceholderControls() {
+        JButton burn = new JButton("Burn to ECU");
+        burn.putClientProperty(FlatClientProperties.STYLE_CLASS, "primary");
+        JButton[] buttons = {burn, new JButton("Discard changes"), new JButton("Undo"), new JButton("Redo")};
+        for (JButton button : buttons) {
+            button.setEnabled(false);
+        }
+        return layOut(0, new JLabel(), buttons[0], buttons[1], buttons[2], buttons[3]);
+    }
+
+    /**
+     * Burn / Discard / Undo / Redo for another screen, e.g. the Gauges toolbar, where settings windows edit
+     * the same tune. Each button runs this toolbar's own handler and follows its enabled state, so both
+     * places always agree; the label repeats the unburned-changes text.
+     */
+    public JComponent createMirrorControls() {
+        JLabel label = new JLabel();
+        Runnable syncLabel = () -> {
+            label.setText(stateLabel.getText());
+            label.setForeground(stateLabel.getForeground());
+        };
+        stateLabel.addPropertyChangeListener("text", e -> syncLabel.run());
+        stateLabel.addPropertyChangeListener("foreground", e -> syncLabel.run());
+        syncLabel.run();
+        return layOut(0, label, mirrorOf(burnButton), mirrorOf(discardButton), mirrorOf(undoButton),
+            mirrorOf(redoButton));
+    }
+
+    private static JButton mirrorOf(JButton original) {
+        JButton mirror = new JButton(original.getText());
+        mirror.setToolTipText(original.getToolTipText());
+        mirror.putClientProperty(FlatClientProperties.STYLE_CLASS,
+            original.getClientProperty(FlatClientProperties.STYLE_CLASS));
+        mirror.setEnabled(original.isEnabled());
+        original.addPropertyChangeListener("enabled", e -> mirror.setEnabled(original.isEnabled()));
+        mirror.addActionListener(e -> {
+            if (original.isEnabled()) {
+                for (java.awt.event.ActionListener listener : original.getActionListeners()) {
+                    listener.actionPerformed(e);
+                }
+            }
+        });
+        return mirror;
     }
 
     /**

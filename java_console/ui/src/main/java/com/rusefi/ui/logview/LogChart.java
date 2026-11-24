@@ -110,6 +110,7 @@ final class LogChart extends JComponent {
     private int pointerY = -1;
     /** {@link ChartSettings#isPinValues()}: the clicked sample and y, or -1. */
     private int clickedSample = -1;
+    private java.util.function.BooleanSupplier escapeHandler = () -> false;
     private int clickedY = -1;
     /** The cursor value labels and list boxes from the last paint. */
     private List<ValueBox> valueBoxes = new ArrayList<>();
@@ -495,6 +496,9 @@ final class LogChart extends JComponent {
         bindKey("dropA", () -> dropCursor(MeasureCursors.Which.A), KeyEvent.VK_A, 0);
         bindKey("dropB", () -> dropCursor(MeasureCursors.Which.B), KeyEvent.VK_B, 0);
         bindKey("escape", () -> {
+            if (escapeHandler.getAsBoolean()) {
+                return;
+            }
             if (clickedSample >= 0) {
                 clickedSample = -1;
                 repaint();
@@ -504,6 +508,11 @@ final class LogChart extends JComponent {
                 focus.togglePin(focus.pinned());
             }
         }, KeyEvent.VK_ESCAPE, 0);
+    }
+
+    /** Runs first on Esc; true when it used the key, e.g. to go back to the histogram. */
+    void setEscapeHandler(java.util.function.BooleanSupplier escapeHandler) {
+        this.escapeHandler = escapeHandler;
     }
 
     /** Binds a key while the plots have focus; a null action reuses the one already named. */
