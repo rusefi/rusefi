@@ -395,7 +395,7 @@ public class TuningToolbarWidget {
             submit.accept(() -> {
                 // the ECU's tune as it is before this Burn replaces it
                 boolean previousKept = saveRestorePoint(store, bp.getControllerConfiguration(), ini,
-                    RestorePointStore.Reason.BEFORE_BURN);
+                    RestorePointStore.Reason.BEFORE_BURN, RestorePointsWindow.vehicleNameOf(image, ini));
                 RuntimeException failure = null;
                 try {
                     bp.uploadChangesWithoutBurn(image);
@@ -1081,12 +1081,22 @@ public class TuningToolbarWidget {
      */
     static boolean saveRestorePoint(RestorePointStore store, ConfigurationImage image, IniFileModel ini,
                                     RestorePointStore.Reason reason) {
+        return saveRestorePoint(store, image, ini, reason, null);
+    }
+
+    /**
+     * @param vehicleName the car the point belongs to, when not the one named in {@code image}: before a Burn, the
+     *                    tune being burned names it
+     */
+    static boolean saveRestorePoint(RestorePointStore store, ConfigurationImage image, IniFileModel ini,
+                                    RestorePointStore.Reason reason, String vehicleName) {
         if (store == null || image == null || ini == null) {
             return false;
         }
         try {
+            Msq tune = MsqFactory.valueOf(image, ini);
             // empty when the newest point already holds this tune: it is kept all the same
-            store.save(MsqFactory.valueOf(image, ini), reason, null)
+            (vehicleName == null ? store.save(tune, reason, null) : store.save(tune, vehicleName, reason, null))
                 .ifPresent(point -> log.info("Restore point " + point.file));
             return true;
         } catch (IOException | RuntimeException e) {

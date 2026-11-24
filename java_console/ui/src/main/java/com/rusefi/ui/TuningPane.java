@@ -20,6 +20,7 @@ import com.rusefi.ui.widgets.tune.CalibrationPanelWorkspace;
 import com.rusefi.ui.widgets.tune.IndicatorStrip;
 import com.rusefi.ui.widgets.tune.PinoutLink;
 import com.rusefi.ui.widgets.tune.RestorePointsWindow;
+import com.rusefi.util.RestorePointStore;
 import com.rusefi.ui.basic.LoadTuneHelper;
 import com.rusefi.ui.widgets.tune.MainMenuTreeWidget;
 import com.rusefi.ui.widgets.tune.SettingHelpCard;
@@ -589,6 +590,10 @@ public class TuningPane {
         return restorePointsAction;
     }
 
+    /** The INI dialog of Setup › Vehicle Information, which holds the Engine Metadata panel with Vehicle Name. */
+    static final String VEHICLE_INFORMATION_PAGE = "engineChars";
+    static final String ENGINE_METADATA_PAGE = "engineMetadata";
+
     /** Opens the Restore Points window, or brings the open one to the front. */
     void openRestorePoints() {
         if (restorePointsWindow != null && restorePointsWindow.isShowing()) {
@@ -602,6 +607,11 @@ public class TuningPane {
         restorePointsWindow = new RestorePointsWindow(owner, toolbar.getRestorePointStore(),
             () -> uiContext.iniFileState.getIniFileModel(), this::tuneToEdit, this::restoreTune,
             toolbar.getCreateRestorePointAction());
+        Window settingsOwner = owner;
+        // Setup › Vehicle Information holds the Engine Metadata panel; its own page as a fallback
+        restorePointsWindow.setOpenVehicleName(() ->
+            openSettingsWindow(settingsOwner, VEHICLE_INFORMATION_PAGE, RestorePointStore.VEHICLE_NAME)
+                || openSettingsWindow(settingsOwner, ENGINE_METADATA_PAGE, RestorePointStore.VEHICLE_NAME));
         restorePointsWindow.show();
     }
 
