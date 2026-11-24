@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import javax.swing.SwingUtilities;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.StringReader;
@@ -370,7 +371,7 @@ class LogChartSettingsTest {
     }
 
     @Test
-    void smoothingButtonAppliesTheGlobalDisplayWindow() {
+    void smoothingPopupAppliesTheGlobalDisplayWindowAtOnce() {
         ChartSettings settings = new ChartSettings();
         int[] repaints = {0};
         ChartToolbar toolbar = new ChartToolbar(settings, () -> repaints[0]++, null,
@@ -378,32 +379,73 @@ class LogChartSettingsTest {
 
         assertEquals("Display smoothing: Raw  \u25BE", toolbar.smoothingButton.getText());
         assertFalse(toolbar.smoothingRawButton.isVisible());
-        toolbar.smoothingPrompt = (initialMs, preview) -> {
-            assertEquals(0, initialMs);
-            preview.accept(5_000);
-            return 5_000;
-        };
-        toolbar.smoothingButton.doClick();
-        assertEquals(5, settings.getSmoothingWindowSeconds());
-        assertEquals("Display smoothing: 5000 ms  \u25BE", toolbar.smoothingButton.getText());
-        assertTrue(toolbar.smoothingRawButton.isVisible());
+        assertTrue(toolbar.smoothingOff.isSelected());
+        assertFalse(toolbar.smoothingInput.isEnabled(), "no window to edit while Raw");
+
+        toolbar.smoothingOn.doClick();
+        assertEquals(0.1, settings.getSmoothingWindowSeconds(), 1e-9, "starts at 100 ms");
+        assertTrue(toolbar.smoothingInput.isEnabled());
         assertEquals(1, repaints[0]);
 
-        toolbar.smoothingPrompt = (initialMs, preview) -> {
-            assertEquals(5_000, initialMs);
-            preview.accept(8_000);
-            return null;
-        };
-        toolbar.smoothingButton.doClick();
-        assertEquals(5, settings.getSmoothingWindowSeconds(), "Cancel restores the setting before the preview");
+        toolbar.smoothingInput.setValue(5_000);
+        assertEquals(5, settings.getSmoothingWindowSeconds(), 1e-9, "applies while typing, no OK needed");
         assertEquals("Display smoothing: 5000 ms  \u25BE", toolbar.smoothingButton.getText());
-        assertEquals(3, repaints[0], "one live preview and one restoration");
+        assertTrue(toolbar.smoothingRawButton.isVisible());
+        assertEquals(2, repaints[0]);
 
         toolbar.smoothingRawButton.doClick();
         assertEquals(0, settings.getSmoothingWindowSeconds());
+        assertTrue(toolbar.smoothingOff.isSelected(), "the popup follows the Raw button");
+        assertFalse(toolbar.smoothingInput.isEnabled());
         assertEquals("Display smoothing: Raw  \u25BE", toolbar.smoothingButton.getText());
-        assertFalse(toolbar.smoothingRawButton.isVisible());
-        assertEquals(4, repaints[0]);
+        assertEquals(3, repaints[0]);
+
+        toolbar.smoothingOn.doClick();
+        assertEquals(5, settings.getSmoothingWindowSeconds(), 1e-9, "back to the last window");
+
+        settings.setSmoothingWindowSeconds(0.3);
+        toolbar.updateControls();
+        assertEquals(300, toolbar.smoothingInput.getValue(), "follows changes made elsewhere, e.g. the wheel");
+        assertEquals(0.3, settings.getSmoothingWindowSeconds(), 1e-9, "syncing the input is not a change");
+    }
+
+    @Test
+    void wheelStepsToTheNextHundredMillisecondsWithinTheLimits() {
+        TimelineSmoothingWindow limits = new TimelineSmoothingWindow(20, 1_000);
+        assertEquals(200, ChartToolbar.wheelStep(100, 1, limits));
+        assertEquals(400, ChartToolbar.wheelStep(100, 3, limits));
+        assertEquals(200, ChartToolbar.wheelStep(150, 1, limits), "snaps up to a multiple");
+        assertEquals(100, ChartToolbar.wheelStep(150, -1, limits), "snaps down to a multiple");
+        assertEquals(100, ChartToolbar.wheelStep(200, -1, limits));
+        assertEquals(20, ChartToolbar.wheelStep(100, -1, limits), "stops at the shortest window, not Raw");
+        assertEquals(20, ChartToolbar.wheelStep(20, -1, limits));
+        assertEquals(1_000, ChartToolbar.wheelStep(950, 2, limits), "stops at the longest window");
+    }
+
+    @Test
+    void wheelOverTheSmoothingButtonChangesItOnlyWhileSmoothing() {
+        ChartSettings settings = new ChartSettings();
+        int[] repaints = {0};
+        ChartToolbar toolbar = new ChartToolbar(settings, () -> repaints[0]++, null,
+                new TimelineSmoothingWindow(4, 10_000));
+
+        toolbar.wheelSmoothing(wheel(toolbar, -1));
+        assertEquals(0, settings.getSmoothingWindowSeconds(), "Raw stays Raw");
+        assertEquals(0, repaints[0]);
+
+        settings.setSmoothingWindowSeconds(0.1);
+        toolbar.wheelSmoothing(wheel(toolbar, -1));
+        assertEquals(0.2, settings.getSmoothingWindowSeconds(), 1e-9, "wheel up widens");
+        assertEquals("Display smoothing: 200 ms  \u25BE", toolbar.smoothingButton.getText());
+        toolbar.wheelSmoothing(wheel(toolbar, 1));
+        toolbar.wheelSmoothing(wheel(toolbar, 1));
+        assertEquals(0.004, settings.getSmoothingWindowSeconds(), 1e-9, "wheel down narrows to the shortest window");
+        assertEquals(3, repaints[0]);
+    }
+
+    private static MouseWheelEvent wheel(ChartToolbar toolbar, int rotation) {
+        return new MouseWheelEvent(toolbar.smoothingButton, MouseEvent.MOUSE_WHEEL, 0, 0, 5, 5, 0, false,
+                MouseWheelEvent.WHEEL_UNIT_SCROLL, 3, rotation);
     }
 
     @Test

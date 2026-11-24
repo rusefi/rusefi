@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.field.EnumIniField;
@@ -45,7 +46,7 @@ class HoverPreviewTest {
                     return pin.startsWith("B16") ? card : null;
                 }
             };
-            ConfigurationImage image = new ConfigurationImage(new byte[1]);
+            ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[1]);
             JPanel row = CalibrationFieldFactory.createFieldRow(
                 new DialogModel.Field("injectionPins1", "Injection Output 1"),
                 enumField("B16 Low Side output 4", "C1 not on this board", "NONE"), image, image.clone(), null, link);

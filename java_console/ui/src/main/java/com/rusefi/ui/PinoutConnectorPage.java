@@ -40,7 +40,9 @@ import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.dnd.DragSource;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -64,6 +66,8 @@ import java.util.function.Function;
 final class PinoutConnectorPage extends JPanel {
     static final String[] COLUMNS = {"Pin", "Function", "Type", "Pigtail", "Tune use"};
     static final int TUNE_USE_COLUMN = 4;
+    /** Pixels the pointer may move during a click on a Tune use link; at least the drag threshold. */
+    private static final int CLICK_SLOP = 5;
 
     final String title;
     /** The connector drawing; null when the board has none. */
@@ -199,16 +203,33 @@ final class PinoutConnectorPage extends JPanel {
                 }
             }
         });
+        /*
+         * A click on a Tune use link acts on release when the pointer stayed near the press and on the same pin, not
+         * on MOUSE_CLICKED, which AWT drops after the slightest movement (#10627 review). The second click of a
+         * double-click is ignored, so it does not open the picker twice.
+         */
         MouseAdapter tuneUseLink = new MouseAdapter() {
+            private PinoutPin pressedPin;
+            private Point pressedAt;
+
             @Override
-            public void mouseClicked(MouseEvent e) {
-                PinoutPin pin = tuneUseLinkAt(e);
-                if (pin != null && e.getClickCount() == 1) {
-                    if (pin.use() == PinoutPin.Use.FREE) {
-                        assign(pin);
-                    } else {
-                        open(pin);
-                    }
+            public void mousePressed(MouseEvent e) {
+                pressedPin = e.getButton() == MouseEvent.BUTTON1 ? tuneUseLinkAt(e) : null;
+                pressedAt = e.getPoint();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                PinoutPin pin = pressedPin;
+                pressedPin = null;
+                if (pin == null || e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() > 1
+                        || pressedAt.distance(e.getPoint()) > clickSlop() || tuneUseLinkAt(e) != pin) {
+                    return;
+                }
+                if (pin.use() == PinoutPin.Use.FREE) {
+                    assign(pin);
+                } else {
+                    open(pin);
                 }
             }
 
@@ -457,6 +478,15 @@ final class PinoutConnectorPage extends JPanel {
             table.scrollRectToVisible(table.getCellRect(row, 0, true));
         } else {
             table.clearSelection();
+        }
+    }
+
+    /** How far the pointer may move between press and release for a Tune use click to still count. */
+    private static int clickSlop() {
+        try {
+            return Math.max(CLICK_SLOP, DragSource.getDragThreshold());
+        } catch (RuntimeException headless) {
+            return CLICK_SLOP;
         }
     }
 

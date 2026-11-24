@@ -1,5 +1,6 @@
 package com.rusefi.ui.wizard;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.ui.FlatStylingSupport;
 import com.opensr5.ConfigurationImage;
@@ -201,7 +202,7 @@ class WizardButtonStyleTest {
         when(firingOrder.getEnums()).thenReturn(orders);
         when(ini.findIniField("firingOrder")).thenReturn(Optional.of(firingOrder));
         BinaryProtocol bp = mock(BinaryProtocol.class);
-        when(bp.getControllerConfiguration()).thenReturn(new ConfigurationImage(64));
+        when(bp.getControllerConfiguration()).thenReturn(ConfigurationImageTestHelper.newLittleEndian(64));
         context.iniFileState.setIniFileModelForTest(ini);
         context.getLinkManager().setBinaryProtocolForTests(bp);
         return context;

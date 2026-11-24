@@ -66,7 +66,7 @@ import static com.devexperts.logging.Logging.getLogging;
 /**
  * Hosts the log viewer and opens logs: the recent logs on the empty card, the toolbar's Open menu, Ctrl+O,
  * or dropping a file anywhere on the viewer. Files load in the background; on failure the previous log
- * stays. Chart settings (plot colours, grid, cursor) carry over from one log to the next.
+ * stays. Chart settings (plot colours, grid, cursor, min/max) carry over from one log to the next and are saved.
  * Right-clicking the plots exports the visible data or drops data before or after the clicked time; dropped data
  * stays in memory for Undo until the edited log is saved, and opening another log first offers to save it.
  */
@@ -76,7 +76,7 @@ public final class LogViewerHost extends JPanel {
     public static final String TITLE = "Log Viewer";
     static final String SUPPORTED = ".mlg or .msl";
 
-    private final ChartSettings settings = new ChartSettings();
+    private final ChartSettings settings;
     private final SignalLists lists;
     private final SidebarState sidebar;
     private final SignalColors colors;
@@ -138,6 +138,8 @@ public final class LogViewerHost extends JPanel {
         colors.addListener(() -> configSaver.run());
         scales = new SignalScales(config.getChild("scales"));
         scales.addListener(() -> configSaver.run());
+        settings = new ChartSettings(config.getChild("chart"));
+        settings.addListener(() -> configSaver.run());
         histogramSettings = new HistogramSettings(config.getChild("histogram"));
         scatterSettings = new HistogramSettings(config.getChild("scatter"));
         directory = logsFolder;

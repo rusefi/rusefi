@@ -127,17 +127,47 @@ class FirmwareRollbackControllerTest {
             for (boolean selected : new boolean[]{false, true}) {
                 ProgramSelector selector = mock(ProgramSelector.class);
                 when(selector.getControl()).thenReturn(new JPanel());
+                ConnectivityContext context = new ConnectivityContext(new com.rusefi.FakePortScanner());
                 FirmwareRollbackController controller = new FirmwareRollbackController(
-                    mock(ConnectivityContext.class), UpdateOperationCallbacks.DUMMY,
+                    context, UpdateOperationCallbacks.DUMMY,
                     new SingleAsyncJobExecutor(UpdateOperationCallbacks.DUMMY), Optional::empty,
                     () -> true, () -> {}, ignored -> {}, () -> {});
                 JCheckBox keepTune = new JCheckBox("Keep my current tune");
                 keepTune.setSelected(selected);
 
-                new FirmwareStatusSummaryPanel(controller, selector, new JButton(), keepTune);
+                new FirmwareStatusSummaryPanel(controller, selector, new JButton(), keepTune, context,
+                    () -> null, () -> false);
 
                 assertEquals(selected, keepTune.isSelected());
             }
+        });
+    }
+
+    @Test
+    void summaryRefreshDoesNotReenableTunePreservationDuringFlash() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            ProgramSelector selector = mock(ProgramSelector.class);
+            when(selector.getControl()).thenReturn(new JPanel());
+            ConnectivityContext context = new ConnectivityContext(new com.rusefi.FakePortScanner());
+            FirmwareRollbackController controller = new FirmwareRollbackController(
+                context, UpdateOperationCallbacks.DUMMY,
+                new SingleAsyncJobExecutor(UpdateOperationCallbacks.DUMMY), Optional::empty,
+                () -> true, () -> {}, ignored -> {}, () -> {});
+            JCheckBox keepTune = new JCheckBox("Keep my current tune");
+            keepTune.setSelected(true);
+            AtomicBoolean flashing = new AtomicBoolean(true);
+
+            FirmwareStatusSummaryPanel summary = new FirmwareStatusSummaryPanel(
+                controller, selector, new JButton(), keepTune, context, () -> null, flashing::get);
+
+            assertTrue(keepTune.isSelected());
+            assertFalse(keepTune.isEnabled());
+            summary.refresh();
+            assertFalse(keepTune.isEnabled(), "periodic summary refresh must preserve the active-flash lock");
+
+            flashing.set(false);
+            summary.refresh();
+            assertTrue(keepTune.isEnabled(), "the tune option returns after the busy state clears");
         });
     }
 
@@ -1107,7 +1137,10 @@ class FirmwareRollbackControllerTest {
                 controllerRef.get().getReleaseStatus(),
                 "a selected ECU hash must not be attributed to the different ECU on the live link");
 
-            selected.set(livePort);
+            SwingUtilities.invokeAndWait(() -> {
+                selected.set(livePort);
+                controllerRef.get().refresh(livePort);
+            });
             assertEquals("Update available",
                 controllerRef.get().getReleaseStatus(), "matching selected/live port should use ECU A's hash");
         } finally {

@@ -135,7 +135,8 @@ public final class TuneMigrationSandbox {
             final int size = nextIni.getMetaInfo().getPageSize(page);
             pages.put(identifier, new ConfigurationImageWithMeta(
                 new ConfigurationImageMetaVersion0_0(size, nextIni.getSignature()),
-                new byte[size]
+                new byte[size],
+                nextIni.getByteOrder()
             ));
         }
         for (Constant constant : defaultTune.getConstantsAsMap().values()) {

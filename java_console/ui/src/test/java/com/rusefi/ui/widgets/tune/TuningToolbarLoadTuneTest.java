@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileMetaInfoImpl;
 import com.opensr5.ini.IniFileModel;
@@ -44,7 +45,7 @@ class TuningToolbarLoadTuneTest {
         IniFileModel standardSource = pinIni("standard_pin_list", "0=\"NONE\",5=\"Output\"");
         IniFileModel targetIni = pinIni("target_pin_list", "0=\"NONE\",19=\"Auxiliary pin\"");
         Msq tune = customPinTune(customSource);
-        ConfigurationImage base = new ConfigurationImage(new byte[]{5, (byte) 0xA5});
+        ConfigurationImage base = ConfigurationImageTestHelper.newLittleEndian(new byte[]{5, (byte) 0xA5});
 
         ConfigurationImage loaded = TuningToolbarWidget.applyLoadedTune(
             tune, standardSource, base, targetIni, new TestCallbacks());
@@ -59,7 +60,7 @@ class TuningToolbarLoadTuneTest {
         IniFileModel standardSource = pinIni("standard_pin_list", "0=\"NONE\",5=\"Output\"");
         IniFileModel targetIni = pinIni("target_pin_list", "0=\"NONE\",19=\"Other pin\"");
         Msq tune = customPinTune(customSource);
-        ConfigurationImage base = new ConfigurationImage(new byte[]{5, (byte) 0xA5});
+        ConfigurationImage base = ConfigurationImageTestHelper.newLittleEndian(new byte[]{5, (byte) 0xA5});
         TestCallbacks callbacks = new TestCallbacks();
 
         ConfigurationImage loaded = TuningToolbarWidget.applyLoadedTune(
@@ -77,7 +78,7 @@ class TuningToolbarLoadTuneTest {
         IniFileModel targetIni = pinIni(
             "target_pin_list", "0=\"NONE\",19=\"Auxiliary pin\",27=\"Auxiliary pin\"");
         Msq tune = customPinTune(customSource);
-        ConfigurationImage base = new ConfigurationImage(new byte[]{5, (byte) 0xA5});
+        ConfigurationImage base = ConfigurationImageTestHelper.newLittleEndian(new byte[]{5, (byte) 0xA5});
         TestCallbacks callbacks = new TestCallbacks();
 
         ConfigurationImage loaded = TuningToolbarWidget.applyLoadedTune(
@@ -92,7 +93,7 @@ class TuningToolbarLoadTuneTest {
     void sameSignatureImportMapsOnlyUniqueExactDestinationEnumLabels() throws IniParsingException {
         IniFileModel sourceIni = pinIni("custom_pin_list", "0=\"NONE\",47=\"Auxiliary pin\"");
         IniFileModel targetIni = pinIni("target_pin_list", "0=\"NONE\",19=\"Auxiliary pin\"");
-        ConfigurationImage base = new ConfigurationImage(new byte[]{5, (byte) 0xA5});
+        ConfigurationImage base = ConfigurationImageTestHelper.newLittleEndian(new byte[]{5, (byte) 0xA5});
 
         ConfigurationImage loaded = TuningToolbarWidget.applyLoadedTune(
             customPinTune(sourceIni), null, base, targetIni, new TestCallbacks());
@@ -104,7 +105,7 @@ class TuningToolbarLoadTuneTest {
     @Test
     void sameSignatureImportRetainsBaseForMissingAmbiguousAndUnknownEnumValues() throws IniParsingException {
         IniFileModel sourceIni = pinIni("custom_pin_list", "0=\"NONE\",47=\"Auxiliary pin\"");
-        ConfigurationImage base = new ConfigurationImage(new byte[]{5, (byte) 0xA5});
+        ConfigurationImage base = ConfigurationImageTestHelper.newLittleEndian(new byte[]{5, (byte) 0xA5});
         String marker = com.opensr5.ini.field.EnumIniField.unknownOrdinalValue(33);
         for (String options : new String[] {
                 "0=\"NONE\",19=\"Other pin\"",
@@ -131,7 +132,7 @@ class TuningToolbarLoadTuneTest {
     @Test
     void quotedMarkerLookingPinLabelIsImportedButInvalidPinIsRejected() throws IniParsingException {
         IniFileModel sourceIni = pinIni("custom_pin_list", "0=\"NONE\",47=\"Auxiliary pin\"");
-        ConfigurationImage base = new ConfigurationImage(new byte[]{5, (byte) 0xA5});
+        ConfigurationImage base = ConfigurationImageTestHelper.newLittleEndian(new byte[]{5, (byte) 0xA5});
         String marker = com.opensr5.ini.field.EnumIniField.unknownOrdinalValue(33);
         IniFileModel markerTarget = pinIni("target_pin_list", "0=\"NONE\",19=\"" + marker + "\"");
         Msq markerTune = customPinTune(sourceIni);
@@ -157,8 +158,8 @@ class TuningToolbarLoadTuneTest {
             throws IniParsingException {
         IniFileModel sourceScalar = scalarIni("psi");
         IniFileModel targetScalar = scalarIni("kPa");
-        Msq scalarTune = MsqFactory.valueOf(new ConfigurationImage(new byte[]{42}), sourceScalar);
-        ConfigurationImage scalarBase = new ConfigurationImage(new byte[]{9});
+        Msq scalarTune = MsqFactory.valueOf(ConfigurationImageTestHelper.newLittleEndian(new byte[]{42}), sourceScalar);
+        ConfigurationImage scalarBase = ConfigurationImageTestHelper.newLittleEndian(new byte[]{9});
 
         ConfigurationImage scalarResult = TuningToolbarWidget.applyLoadedTune(
             scalarTune, null, scalarBase, targetScalar, new TestCallbacks());
@@ -167,8 +168,8 @@ class TuningToolbarLoadTuneTest {
 
         IniFileModel missingSourceUnits = scalarIni("");
         IniFileModel declaredDestinationUnits = scalarIni("psi");
-        ConfigurationImage unqualifiedTune = new ConfigurationImage(new byte[]{42});
-        ConfigurationImage unqualifiedBase = new ConfigurationImage(new byte[]{9});
+        ConfigurationImage unqualifiedTune = ConfigurationImageTestHelper.newLittleEndian(new byte[]{42});
+        ConfigurationImage unqualifiedBase = ConfigurationImageTestHelper.newLittleEndian(new byte[]{9});
         ConfigurationImage unqualifiedResult = TuningToolbarWidget.applyLoadedTune(
             MsqFactory.valueOf(unqualifiedTune, missingSourceUnits), null,
             unqualifiedBase, declaredDestinationUnits, new TestCallbacks());
@@ -176,8 +177,8 @@ class TuningToolbarLoadTuneTest {
 
         IniFileModel sourceArray = arrayIni("[2]", 2);
         IniFileModel differentDimensions = arrayIni("[1]", 2);
-        Msq arrayTune = MsqFactory.valueOf(new ConfigurationImage(new byte[]{3, 4}), sourceArray);
-        ConfigurationImage arrayBase = new ConfigurationImage(new byte[]{8, 9});
+        Msq arrayTune = MsqFactory.valueOf(ConfigurationImageTestHelper.newLittleEndian(new byte[]{3, 4}), sourceArray);
+        ConfigurationImage arrayBase = ConfigurationImageTestHelper.newLittleEndian(new byte[]{8, 9});
         TestCallbacks dimensionCallbacks = new TestCallbacks();
 
         ConfigurationImage dimensionResult = TuningToolbarWidget.applyLoadedTune(
@@ -198,9 +199,9 @@ class TuningToolbarLoadTuneTest {
     void sameSignatureImportRejectsUnrepresentableAndNonFiniteNumericValuesBeforeWriting()
             throws IniParsingException {
         IniFileModel scalarIni = scalarIni("");
-        ConfigurationImage base = new ConfigurationImage(new byte[]{9});
+        ConfigurationImage base = ConfigurationImageTestHelper.newLittleEndian(new byte[]{9});
         for (String value : new String[] {"256", "NaN"}) {
-            Msq tune = MsqFactory.valueOf(new ConfigurationImage(new byte[]{42}), scalarIni);
+            Msq tune = MsqFactory.valueOf(ConfigurationImageTestHelper.newLittleEndian(new byte[]{42}), scalarIni);
             tune.findPage().constant.get(0).setValue(value);
             TestCallbacks callbacks = new TestCallbacks();
 
@@ -213,12 +214,12 @@ class TuningToolbarLoadTuneTest {
 
         IniFileModel arrayIni = arrayIni("[2]", 2);
         for (String value : new String[] {"7 256", "7 NaN"}) {
-            Msq tune = MsqFactory.valueOf(new ConfigurationImage(new byte[]{3, 4}), arrayIni);
+            Msq tune = MsqFactory.valueOf(ConfigurationImageTestHelper.newLittleEndian(new byte[]{3, 4}), arrayIni);
             tune.findPage().constant.get(0).setValue(value);
             TestCallbacks callbacks = new TestCallbacks();
 
             ConfigurationImage result = TuningToolbarWidget.applyLoadedTune(
-                tune, null, new ConfigurationImage(new byte[]{8, 9}), arrayIni, callbacks);
+                tune, null, ConfigurationImageTestHelper.newLittleEndian(new byte[]{8, 9}), arrayIni, callbacks);
 
             assertArrayEquals(new byte[]{8, 9}, result.getContent());
             assertTrue(callbacks.getContent().contains("value is out of range"));
@@ -229,11 +230,11 @@ class TuningToolbarLoadTuneTest {
     void sameSignatureImportAcceptsAValueAtTheScaledStorageBoundary() throws IniParsingException {
         IniFileModel scaledIni = ini(
             "scaled = scalar, U08, 0, \"\", 0.5, 0, 0, 255, 0\n", 1);
-        Msq tune = MsqFactory.valueOf(new ConfigurationImage(new byte[]{0}), scaledIni);
+        Msq tune = MsqFactory.valueOf(ConfigurationImageTestHelper.newLittleEndian(new byte[]{0}), scaledIni);
         tune.findPage().constant.get(0).setValue("127.5");
 
         ConfigurationImage result = TuningToolbarWidget.applyLoadedTune(
-            tune, null, new ConfigurationImage(new byte[]{0}), scaledIni, new TestCallbacks());
+            tune, null, ConfigurationImageTestHelper.newLittleEndian(new byte[]{0}), scaledIni, new TestCallbacks());
 
         assertEquals(255, Byte.toUnsignedInt(result.getContent()[0]));
     }
@@ -241,10 +242,10 @@ class TuningToolbarLoadTuneTest {
     @Test
     void sameSignatureImportRejectsTableDimensionsOnNonArrayFields() throws IniParsingException {
         IniFileModel scalarIni = scalarIni("");
-        Msq tune = MsqFactory.valueOf(new ConfigurationImage(new byte[]{42}), scalarIni);
+        Msq tune = MsqFactory.valueOf(ConfigurationImageTestHelper.newLittleEndian(new byte[]{42}), scalarIni);
         tune.findPage().constant.get(0).setRows("1");
         tune.findPage().constant.get(0).setCols("1");
-        ConfigurationImage base = new ConfigurationImage(new byte[]{9});
+        ConfigurationImage base = ConfigurationImageTestHelper.newLittleEndian(new byte[]{9});
         TestCallbacks callbacks = new TestCallbacks();
 
         ConfigurationImage result = TuningToolbarWidget.applyLoadedTune(
@@ -259,7 +260,7 @@ class TuningToolbarLoadTuneTest {
         IniFileModel sourceIni = pinIni("custom_pin_list", "0=\"NONE\",47=\"Auxiliary pin\"");
         IniFileModel targetIni = pinIni(
             "target_pin_list", "0=\"NONE\",19=\"Auxiliary pin\"", "different-signature");
-        ConfigurationImage base = new ConfigurationImage(new byte[]{5, (byte) 0xA5});
+        ConfigurationImage base = ConfigurationImageTestHelper.newLittleEndian(new byte[]{5, (byte) 0xA5});
         TestCallbacks callbacks = new TestCallbacks();
 
         ConfigurationImage loaded = TuningToolbarWidget.applyLoadedTune(
@@ -273,8 +274,8 @@ class TuningToolbarLoadTuneTest {
     void sameSignatureImportIgnoresDestinationSecondaryPageFields() throws IniParsingException {
         IniFileModel sourceIni = ini("secondary = scalar, U08, 0, \"\", 1, 0, 0, 255, 0\n", 1);
         IniFileModel targetIni = secondaryIni();
-        Msq tune = MsqFactory.valueOf(new ConfigurationImage(new byte[]{42}), sourceIni);
-        ConfigurationImage base = new ConfigurationImage(new byte[]{9});
+        Msq tune = MsqFactory.valueOf(ConfigurationImageTestHelper.newLittleEndian(new byte[]{42}), sourceIni);
+        ConfigurationImage base = ConfigurationImageTestHelper.newLittleEndian(new byte[]{9});
         TestCallbacks callbacks = new TestCallbacks();
 
         ConfigurationImage loaded = TuningToolbarWidget.applyLoadedTune(
@@ -289,7 +290,7 @@ class TuningToolbarLoadTuneTest {
     }
 
     private static Msq customPinTune(IniFileModel ini) {
-        return MsqFactory.valueOf(new ConfigurationImage(new byte[]{47, 0}), ini);
+        return MsqFactory.valueOf(ConfigurationImageTestHelper.newLittleEndian(new byte[]{47, 0}), ini);
     }
 
     private static IniFileModel pinIni(String listName, String options) throws IniParsingException {

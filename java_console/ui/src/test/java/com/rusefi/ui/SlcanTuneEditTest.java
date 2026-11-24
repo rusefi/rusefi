@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileMetaInfoImpl;
 import com.opensr5.ini.IniFileModel;
@@ -26,12 +27,12 @@ class SlcanTuneEditTest {
             context.setOfflineMode(true);
             context.setIniFileModelForOffline(ini);
             BinaryProtocol protocol = mock(BinaryProtocol.class);
-            when(protocol.getControllerConfiguration()).thenReturn(new ConfigurationImage(8));
+            when(protocol.getControllerConfiguration()).thenReturn(ConfigurationImageTestHelper.newLittleEndian(8));
             context.getLinkManager().setBinaryProtocolForTests(protocol);
             TuningPane tuning = new TuningPane(context);
             SlcanTab sniffer = null;
             try {
-                tuning.seedOfflineImage(new ConfigurationImage(8), "canHw1");
+                tuning.seedOfflineImage(ConfigurationImageTestHelper.newLittleEndian(8), "canHw1");
                 context.setTuneEditor(tuning::applyEdit);
                 assertTrue(tuning.applyEdit(image -> image.getContent()[2] = 42));
                 sniffer = new SlcanTab(context, message -> fail(message), false);

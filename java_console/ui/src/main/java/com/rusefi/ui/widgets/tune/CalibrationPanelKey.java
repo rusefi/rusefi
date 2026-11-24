@@ -33,7 +33,7 @@ final class CalibrationPanelKey {
         if (ownContent) {
             return hasOwnContent(ini.getDialogs().get(name));
         }
-        return ini.getDialogs().containsKey(name) || ini.getTable(name) != null || ini.getCurves().containsKey(name);
+        return ini.getDialogs().containsKey(name) || TablePages.find(ini, name) != null || ini.getCurves().containsKey(name);
     }
 
     /** Split exactly one layout level. Anonymous layout groups remain groups and can split again. */

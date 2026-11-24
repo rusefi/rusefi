@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import org.junit.jupiter.api.Test;
 
@@ -36,11 +37,36 @@ public class TuningToolbarStateLabelTest {
     }
 
     @Test
+    void countsChangedValues() {
+        // [tag:unburned_marks] #10671
+        assertEquals("Pending changes not burned (3 values)",
+                TuningToolbarWidget.stateLabelText(false, true, 3));
+        assertEquals("Pending changes not burned (1 value)",
+                TuningToolbarWidget.stateLabelText(false, true, 1));
+        assertEquals("Local changes not burned to ECU (2 values)",
+                TuningToolbarWidget.stateLabelText(true, true, 2));
+    }
+
+    @Test
+    void noCountWhenNoSettingIsChanged() {
+        // e.g. only bytes that no setting covers differ: still dirty, nothing to count
+        assertEquals("Pending changes not burned", TuningToolbarWidget.stateLabelText(false, true, 0));
+        assertEquals("", TuningToolbarWidget.stateLabelText(false, false, 0));
+    }
+
+    @Test
+    void noIniCountsNothing() {
+        ConfigurationImage burned = ConfigurationImageTestHelper.newLittleEndian(4);
+        ConfigurationImage current = ConfigurationImageTestHelper.newLittleEndian(new byte[]{1, 0, 0, 0});
+        assertEquals(0, TuningToolbarWidget.changedValueCount(null, current, burned));
+    }
+
+    @Test
     void savesCurrentTuneWithoutEdits() {
-        ConfigurationImage working = new ConfigurationImage(1);
-        ConfigurationImage session = new ConfigurationImage(2);
-        ConfigurationImage ecu = new ConfigurationImage(3);
-        ConfigurationImage baseline = new ConfigurationImage(4);
+        ConfigurationImage working = ConfigurationImageTestHelper.newLittleEndian(1);
+        ConfigurationImage session = ConfigurationImageTestHelper.newLittleEndian(2);
+        ConfigurationImage ecu = ConfigurationImageTestHelper.newLittleEndian(3);
+        ConfigurationImage baseline = ConfigurationImageTestHelper.newLittleEndian(4);
 
         assertSame(working, TuningToolbarWidget.imageToSave(working, session, ecu, baseline));
         assertSame(session, TuningToolbarWidget.imageToSave(null, session, ecu, baseline));

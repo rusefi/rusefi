@@ -45,6 +45,7 @@ public class SensorLogger {
 
     public static List<CustomBinaryLogEntry> getOutputChannels(IniFileModel iniFileModel) {
         List<CustomBinaryLogEntry> outputChannels = new ArrayList<>();
+        java.nio.ByteOrder byteOrder = iniFileModel.getByteOrder();
         Map<String, IniField> fieldsByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         fieldsByName.putAll(iniFileModel.getAllOutputChannels());
         Set<IniField> labeledFields = new HashSet<>();
@@ -52,16 +53,16 @@ public class SensorLogger {
             IniField field = fieldsByName.get(entry.getChannel());
             // Computed and host-only channels (including TS 'time') have no raw field.
             if (isRecordable(field)) {
-                outputChannels.add(new CustomBinaryLogEntry(entry.getLabel(), field));
+                outputChannels.add(new CustomBinaryLogEntry(entry.getLabel(), field, byteOrder));
                 labeledFields.add(field);
             }
         }
         // Preserve coverage for INIs with missing or incomplete [Datalog] sections.
         for (IniField field : iniFileModel.getAllOutputChannels().values()) {
             if (isRecordable(field) && !labeledFields.contains(field)) {
-                outputChannels.add(new CustomBinaryLogEntry(field.getName(), field));
+                outputChannels.add(new CustomBinaryLogEntry(field.getName(), field, byteOrder));
                 if (MAPGauge.equalsIgnoreCase(field.getName())) {
-                    outputChannels.add(new CustomBinaryLogEntry(GAUGE_NAME_MAP, field));
+                    outputChannels.add(new CustomBinaryLogEntry(GAUGE_NAME_MAP, field, byteOrder));
                 }
             }
         }

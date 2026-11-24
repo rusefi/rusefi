@@ -24,21 +24,9 @@ public class ByteRange {
         return new DataInputStream(new ByteArrayInputStream(payload, 1, payload.length - 1));
     }
 
-    public static void packOffsetAndSize(int offset, int requestSize, byte[] packet) {
-        packOffsetAndSize(offset, requestSize, packet, ByteOrder.LITTLE_ENDIAN);
-    }
-
     public static void packOffsetAndSize(int offset, int requestSize, byte[] packet, ByteOrder order) {
         putShort(packet, 0, toWire16(offset, order));
         putShort(packet, 2, toWire16(requestSize, order));
-    }
-
-    public static void packPageOffsetAndSize(int offset, int requestSize, byte[] packet) {
-        packPageOffsetAndSize(0, offset, requestSize, packet);
-    }
-
-    public static void packPageOffsetAndSize(int page, int offset, int requestSize, byte[] packet) {
-        packPageOffsetAndSize(page, offset, requestSize, packet, ByteOrder.LITTLE_ENDIAN);
     }
 
     public static void packPageOffsetAndSize(int page, int offset, int requestSize, byte[] packet, ByteOrder order) {

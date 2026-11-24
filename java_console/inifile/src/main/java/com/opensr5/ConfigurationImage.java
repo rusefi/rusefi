@@ -30,16 +30,8 @@ public class ConfigurationImage {
      */
     private final ByteOrder byteOrder;
 
-    public ConfigurationImage(int size) {
-        this(size, ByteOrder.LITTLE_ENDIAN);
-    }
-
     public ConfigurationImage(int size, ByteOrder byteOrder) {
         this(new byte[size], byteOrder);
-    }
-
-    public ConfigurationImage(byte[] content) {
-        this(content, ByteOrder.LITTLE_ENDIAN);
     }
 
     public ConfigurationImage(byte[] content, ByteOrder byteOrder) {

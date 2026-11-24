@@ -228,7 +228,10 @@ public class LiveDataParserPanel {
                 //log.error("BAD condition, should be variable: " + name);
                 return null;
             }
-            double number = f.getValue(new ConfigurationImage(bytes));
+            // [tag:image_byte_order] live data arrives in the controller's byte order
+            BinaryProtocol bp = uiContext.getBinaryProtocol();
+            double number = f.getValue(new ConfigurationImage(bytes,
+                bp == null ? java.nio.ByteOrder.LITTLE_ENDIAN : bp.getWireByteOrder()));
             if (log.debugEnabled()) {
                 log.debug("getValue(" + name + "): " + number);
             }

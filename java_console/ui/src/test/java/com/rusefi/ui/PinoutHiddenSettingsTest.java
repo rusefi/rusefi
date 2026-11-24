@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileMetaInfoImpl;
 import com.opensr5.ini.IniFileModel;
@@ -93,7 +94,7 @@ class PinoutHiddenSettingsTest {
     /** Boost and nitrous enabled (0/1), and the cylinder count; no pin chosen. */
     private static ConfigurationImage image(int boost, int nitrous, int cylinders) {
         // padded: the expression evaluator reads 4 bytes for any scalar, U08 included
-        return new ConfigurationImage(new byte[]{0, (byte) boost, 0, (byte) nitrous, 0, (byte) cylinders, 0, 0, 0, 0});
+        return ConfigurationImageTestHelper.newLittleEndian(new byte[]{0, (byte) boost, 0, (byte) nitrous, 0, (byte) cylinders, 0, 0, 0, 0});
     }
 
     private static IniFileModel readIni() throws Throwable {

@@ -10,23 +10,19 @@ import java.nio.ByteOrder;
  * calibration binary snapshot with signature info
  */
 public class ConfigurationImageWithMeta {
-    public static ConfigurationImageWithMeta VOID = new ConfigurationImageWithMeta(null, new byte[0]);
+    public static ConfigurationImageWithMeta VOID = new ConfigurationImageWithMeta(null, new byte[0], ByteOrder.LITTLE_ENDIAN);
 
     private final ConfigurationImageMeta meta;
     @NotNull
     private final ConfigurationImage image;
 
-    public ConfigurationImageWithMeta(final ConfigurationImageMeta meta) {
-        this(meta, ByteOrder.LITTLE_ENDIAN);
-    }
-
+    /**
+     * [tag:image_byte_order] There is deliberately no constructor without a byte order: the
+     * content is the controller's raw bytes, see IniFileModel#getByteOrder().
+     */
     public ConfigurationImageWithMeta(final ConfigurationImageMeta meta, final ByteOrder byteOrder) {
         image = new ConfigurationImage(meta.getImageSize(), byteOrder);
         this.meta = meta;
-    }
-
-    public ConfigurationImageWithMeta(final ConfigurationImageMeta meta, final byte[] content) {
-        this(meta, content, ByteOrder.LITTLE_ENDIAN);
     }
 
     public ConfigurationImageWithMeta(final ConfigurationImageMeta meta, final byte[] content, final ByteOrder byteOrder) {

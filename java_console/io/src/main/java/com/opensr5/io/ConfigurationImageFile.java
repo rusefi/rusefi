@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
+import java.nio.ByteOrder;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Optional;
@@ -40,8 +41,12 @@ public class ConfigurationImageFile {
     private ConfigurationImageFile() {
     }
 
+    /**
+     * [tag:image_byte_order] The archive holds the controller's raw bytes and no byte order.
+     * @param byteOrder byte order declared by the ini of the controller the archive belongs to
+     */
     @NotNull
-    public static ConfigurationImageWithMeta readFromFile(final String fileName) throws IOException {
+    public static ConfigurationImageWithMeta readFromFile(final String fileName, final ByteOrder byteOrder) throws IOException {
         try (final ZipFile zipFile = new ZipFile(fileName)) {
             Optional<ConfigurationImageMeta> meta = Optional.empty();
             Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
@@ -68,7 +73,7 @@ public class ConfigurationImageFile {
                 try (final InputStream calibrationsInputStream = zipFile.getInputStream(calibrationsZipEntry)) {
                     final byte[] content = readFromStream(foundMeta.getImageSize(), calibrationsInputStream);
                     if (content != null) {
-                        return new ConfigurationImageWithMeta(foundMeta, content);
+                        return new ConfigurationImageWithMeta(foundMeta, content, byteOrder);
                     } else {
                         log.warn(String.format("Loading content from file `%s` failed", fileName));
                     }
@@ -154,9 +159,10 @@ public class ConfigurationImageFile {
         }
     }
 
-    public static Map<Integer, ConfigurationImageWithMeta> readPagesFromFile(final String fileName) throws IOException {
+    /** @param byteOrder see {@link #readFromFile(String, ByteOrder)} */
+    public static Map<Integer, ConfigurationImageWithMeta> readPagesFromFile(final String fileName, final ByteOrder byteOrder) throws IOException {
         final Map<Integer, ConfigurationImageWithMeta> pages = new TreeMap<>();
-        final ConfigurationImageWithMeta mainImage = readFromFile(fileName);
+        final ConfigurationImageWithMeta mainImage = readFromFile(fileName, byteOrder);
         pages.put(0, mainImage);
         try (final ZipFile zipFile = new ZipFile(fileName)) {
             final Enumeration<? extends ZipEntry> entries = zipFile.entries();
@@ -180,7 +186,8 @@ public class ConfigurationImageFile {
                     pageIdentifier,
                     new ConfigurationImageWithMeta(
                         new ConfigurationImageMetaVersion0_0(content.length, mainImage.getMeta().getEcuSignature()),
-                        content
+                        content,
+                        byteOrder
                     )
                 );
             }

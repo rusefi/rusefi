@@ -89,9 +89,9 @@ class StatsPanelTest {
     void legendSummarisesTheVisibleRangeWhenThePointerIsAway() throws IOException {
         LogViewerPanel panel = panel();
         LogChart chart = panel.chart();
-        assertEquals("1000–6000", chart.legendValue(1, -1));
+        assertEquals("(1000–6000)", chart.legendValue(1, -1));
         chart.timeWindow().show(2, 4);
-        assertEquals("2000–3000", chart.legendValue(1, -1));
+        assertEquals("(2000–3000)", chart.legendValue(1, -1));
         assertEquals("2500", chart.legendValue(1, 30), "with a cursor sample: its value");
     }
 

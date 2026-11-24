@@ -8,6 +8,7 @@ import com.rusefi.core.FindFileHelper;
 import com.rusefi.core.io.BundleInfo;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.io.ConnectedEcuTarget;
+import com.rusefi.core.SignatureHelper;
 import com.rusefi.io.LinkManager;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.maintenance.jobs.*;
@@ -72,6 +73,13 @@ public class ProgramSelector {
     private long modalGeneration;
     @Nullable
     private Predicate<String> confirmNormalUpdateForTests;
+    private Consumer<JComponent> showNoIniUpdatePanel;
+    private Runnable closeNoIniUpdatePanel;
+    private Runnable missingIniStateChanged = () -> {};
+    @Nullable
+    private PortResult pendingNoIniTarget;
+    @Nullable
+    private String pendingNoIniSignature;
     // Rendering is only a hint: every invocation reads fresh capability inputs, including after modal confirmation.
     private Supplier<ProgrammingCapabilities> capabilityProvider;
 
@@ -99,7 +107,6 @@ public class ProgramSelector {
             return supportsDfu && !requiresBlt();
         }
     }
-
     public ProgramSelector(ConnectivityContext connectivityContext, JComboBox<PortResult> comboPorts,
                            Consumer<JComponent> showFullScreenPanel, Runnable closeFullScreenPanel) {
         this.connectivityContext = connectivityContext;
@@ -109,6 +116,8 @@ public class ProgramSelector {
         this.comboPorts = comboPorts;
         this.showFullScreenPanel = Objects.requireNonNull(showFullScreenPanel);
         this.closeFullScreenPanel = Objects.requireNonNull(closeFullScreenPanel);
+        showNoIniUpdatePanel = showFullScreenPanel;
+        closeNoIniUpdatePanel = closeFullScreenPanel;
         noHardware.setBorder(BorderFactory.createEmptyBorder(5, 8, 5, 8));
         noHardware.setFont(noHardware.getFont().deriveFont(noHardware.getFont().getSize2D() + 2));
         content.add(updateModeAndButton, BorderLayout.NORTH);
@@ -124,6 +133,7 @@ public class ProgramSelector {
         comboPorts.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 apply(connectivityContext.getCurrentHardware());
+                missingIniStateChanged.run();
             }
         });
         refreshMainButtonText();
@@ -160,13 +170,119 @@ public class ProgramSelector {
         return null;
     }
 
+    static UpdateMode mainButtonModeFor(@Nullable PortResult selectedPort, boolean liveConnection,
+                                        boolean canUseDfu, boolean matchingNoIniFailure) {
+        if (matchingNoIniFailure && selectedPort != null
+            && (selectedPort.type == SerialPortType.Ecu || selectedPort.type == SerialPortType.EcuWithOpenblt)) {
+            return OPENBLT_NO_INI;
+        }
+        return mainButtonModeFor(selectedPort, liveConnection, canUseDfu);
+    }
+
+    /** Keep no-INI consent inside the firmware tab so console navigation stays available. */
+    public void setNoIniUpdatePanelHost(Consumer<JComponent> showPanel, Runnable closePanel) {
+        showNoIniUpdatePanel = Objects.requireNonNull(showPanel);
+        closeNoIniUpdatePanel = Objects.requireNonNull(closePanel);
+    }
+
+    public void setMissingIniStateChangedListener(Runnable listener) {
+        missingIniStateChanged = Objects.requireNonNull(listener);
+    }
+
+    public void cancelNoIniUpdateConfirmation() {
+        cancelNoIniUpdate();
+    }
+
+    private void startMainButtonUpdate(JComponent parent, PortResult targetPort) {
+        if (isJobRunning() || externalPrimaryActionBusy.getAsBoolean()) {
+            return;
+        }
+        final ProgrammingCapabilities capabilities = capabilityProvider.get();
+        final UpdateMode mode = mainButtonModeFor(targetPort, isLiveConnection(), capabilities.canUseDfu(),
+            isMatchingNoIniFailure(targetPort));
+        if (mode == OPENBLT_NO_INI) {
+            showNoIniUpdateConfirmation(parent, targetPort);
+            return;
+        } else if (firmwareUpdateInterceptor.apply(parent, targetPort)) {
+            return;
+        }
+        executeJob(parent, mode, targetPort);
+    }
+
+    private void showNoIniUpdateConfirmation(JComponent parent, PortResult targetPort) {
+        final String signature = missingIniSignature(targetPort);
+        if (signature == null || isJobRunning() || externalPrimaryActionBusy.getAsBoolean()
+            || !isNoIniConfirmationTarget(targetPort, signature)) {
+            return;
+        }
+        pendingNoIniTarget = targetPort;
+        pendingNoIniSignature = signature;
+        String warning = "No matching INI is available for this ECU, so the console cannot back up or "
+            + "restore its settings. After the update, the ECU will use firmware defaults.\n\n"
+            + "Detected signature: " + signature + "\nSelected device: " + targetPort.port
+            + "\n\nKeep the engine stopped and maintain stable power throughout the update.";
+        showNoIniUpdatePanel.accept(FirmwareProgrammingPanel.noIniUpdateConfirmation(
+            warning, () -> confirmNoIniUpdate(targetPort, signature, parent), this::cancelNoIniUpdate));
+    }
+
+    private void confirmNoIniUpdate(PortResult targetPort, String signature, JComponent parent) {
+        if (pendingNoIniTarget == null || !sameConfirmedPort(pendingNoIniTarget, targetPort)
+            || !Objects.equals(pendingNoIniSignature, signature)
+            || isJobRunning() || externalPrimaryActionBusy.getAsBoolean()
+            || !isNoIniConfirmationTarget(targetPort, signature)) {
+            cancelNoIniUpdate();
+            return;
+        }
+        pendingNoIniTarget = null;
+        pendingNoIniSignature = null;
+        closeNoIniUpdatePanel.run();
+        runNoIniUpdateJob(resolveFlashPort(), parent, signature);
+    }
+
+    private void runNoIniUpdateJob(@Nullable PortResult targetPort, JComponent parent, String signature) {
+        if (targetPort == null || isJobRunning() || externalPrimaryActionBusy.getAsBoolean()
+            || !isNoIniConfirmationTarget(targetPort, signature)) {
+            return;
+        }
+        runJob(OpenBltManualJobFactory.createNoIniUpdate(
+            targetPort, parent, connectivityContext, linkManager, signature), parent);
+    }
+
+    private boolean isNoIniConfirmationTarget(PortResult targetPort, String signature) {
+        PortResult current = resolveFlashPort();
+        return sameConfirmedPort(targetPort, current)
+            && Objects.equals(signature, missingIniSignature(current))
+            && isMatchingNoIniFailure(current);
+    }
+
+    private void cancelNoIniUpdate() {
+        if (pendingNoIniTarget != null) {
+            pendingNoIniTarget = null;
+            pendingNoIniSignature = null;
+            closeNoIniUpdatePanel.run();
+        }
+    }
+
+    private void clearStaleNoIniUpdateConfirmation() {
+        if (pendingNoIniTarget != null && (pendingNoIniSignature == null || isJobRunning()
+            || externalPrimaryActionBusy.getAsBoolean()
+            || !isNoIniConfirmationTarget(pendingNoIniTarget, pendingNoIniSignature))) {
+            cancelNoIniUpdate();
+        }
+    }
+
     private void refreshMainButtonText() {
         refreshMainButtonText(isDfuRecoveryDefault(connectivityContext.getCurrentHardware()));
     }
 
     private void refreshMainButtonText(boolean recoveryDefault) {
         this.recoveryDefault = recoveryDefault;
-        splitButton.setText(recoveryDefault ? "Recover ECU" : confirmedUpToDate ? "Reflash anyway"
+        final UpdateMode mode = mainButtonModeFor(
+            resolveFlashPort(), isLiveConnection(), capabilityProvider.get().canUseDfu(),
+            isMatchingNoIniFailure(resolveFlashPort()));
+        splitButton.setText(recoveryDefault ? "Recover ECU" : mode == OPENBLT_MANUAL ? OPENBLT_MANUAL.displayText
+            : mode == OPENBLT_NO_INI ? OPENBLT_NO_INI.displayText
+            : confirmedUpToDate ? "Reflash anyway"
             : confirmedNewerBuild ? "Update firmware" : primaryActionBranch == null
                 ? "Update ECU firmware" : "Update ECU · " + primaryActionBranch);
         matchFirmwareControlSizes();
@@ -207,6 +323,12 @@ public class ProgramSelector {
         }
         if (recoveryDefault) {
             startDfuRecovery(null, true);
+        } else if (mainButtonModeFor(resolveFlashPort(), isLiveConnection(),
+            capabilityProvider.get().canUseDfu(), isMatchingNoIniFailure(resolveFlashPort())) == OPENBLT_NO_INI) {
+            PortResult target = resolveNormalFlashPort();
+            if (target != null) {
+                startMainButtonUpdate(splitButton, target);
+            }
         } else {
             triggerUpdateFirmware();
         }
@@ -223,6 +345,12 @@ public class ProgramSelector {
         return currentPort(hardware.getKnownPorts(), selected);
     }
 
+    /** Current selection as reported by the latest scan; does not choose a fallback target. */
+    @Nullable
+    public PortResult getSelectedDetectedPort() {
+        return resolveFlashPort();
+    }
+
     /**
      * Resolve only a normal firmware-update target. DFU is intentionally excluded: it has its own
      * explicitly labelled and confirmed recovery action, never reached by the normal update shortcut.
@@ -230,6 +358,10 @@ public class ProgramSelector {
     private PortResult resolveNormalFlashPort() {
         final PortResult selected = (PortResult) comboPorts.getSelectedItem();
         final AvailableHardware hardware = connectivityContext.getCurrentHardware();
+        final PortResult current = currentPort(hardware.getKnownPorts(), selected);
+        if (isMatchingNoIniFailure(current)) {
+            return current;
+        }
         return resolveNormalFlashPort(
             selected,
             isLiveConnection(),
@@ -379,6 +511,28 @@ public class ProgramSelector {
         };
     }
 
+    private boolean isMatchingNoIniFailure(@Nullable PortResult port) {
+        if (port == null
+            || (port.type != SerialPortType.Ecu && port.type != SerialPortType.EcuWithOpenblt)
+            || LinkManager.isCanPort(port.port)) {
+            return false;
+        }
+        if (missingIniSignature(port) == null) {
+            return false;
+        }
+        return samePort(currentPort(connectivityContext.getCurrentHardware().getKnownPorts(), port), port);
+    }
+
+    @Nullable
+    private String missingIniSignature(PortResult port) {
+        MissingIniRecoveryState.Failure probedFailure = connectivityContext.getMissingIniRecoveryState().get();
+        if (probedFailure != null && probedFailure.port.equals(port.port)
+            && SignatureHelper.parse(probedFailure.signature) != null) {
+            return probedFailure.signature;
+        }
+        return null;
+    }
+
     private static boolean samePort(@Nullable PortResult left, @Nullable PortResult right) {
         return left != null && right != null && left.type == right.type && left.port.equals(right.port);
     }
@@ -488,6 +642,12 @@ public class ProgramSelector {
             case OPENBLT_MANUAL:
                 job = OpenBltManualJobFactory.createProduction(selectedPort, parent, connectivityContext);
                 break;
+            case OPENBLT_NO_INI:
+                String noIniSignature = missingIniSignature(selectedPort);
+                if (isMatchingNoIniFailure(selectedPort) && noIniSignature != null) {
+                    showNoIniUpdateConfirmation(parent, selectedPort);
+                }
+                return;
             case OPENBLT_AUTO:
                 job = new OpenBltAutoJob(selectedPort, parent, connectivityContext, linkManager);
                 break;
@@ -592,6 +752,44 @@ public class ProgramSelector {
 
     public void setLinkManager(@Nullable LinkManager linkManager) {
         this.linkManager = linkManager;
+        if (linkManager != null) {
+            linkManager.setMissingIniListener(new LinkManager.MissingIniListener() {
+                @Override
+                public void onMissingIni(String signature, String port) {
+                    connectivityContext.getMissingIniRecoveryState().record(port, signature);
+                    refreshForMissingIniChange();
+                }
+
+                @Override
+                public void onMissingIniCleared(String port) {
+                    connectivityContext.getMissingIniRecoveryState().clearForPort(port);
+                    refreshForMissingIniChange();
+                }
+
+                @Override
+                public void onConnectionAttempt(String port) {
+                    connectivityContext.getMissingIniRecoveryState().clearForPort(port);
+                    refreshForMissingIniChange();
+                }
+            });
+            LinkManager.MissingIniFailure failure = linkManager.getMissingIniFailure();
+            if (failure != null && SignatureHelper.parse(failure.signature) != null) {
+                connectivityContext.getMissingIniRecoveryState().record(failure.port, failure.signature);
+            }
+        }
+    }
+
+    private void refreshForMissingIniChange() {
+        Runnable refresh = () -> {
+            clearStaleNoIniUpdateConfirmation();
+            apply(connectivityContext.getCurrentHardware());
+            missingIniStateChanged.run();
+        };
+        if (SwingUtilities.isEventDispatchThread()) {
+            refresh.run();
+        } else {
+            SwingUtilities.invokeLater(refresh);
+        }
     }
 
     public void setFirmwareUpdateInterceptor(Function<JComponent, Boolean> firmwareUpdateInterceptor) {
@@ -848,6 +1046,7 @@ public class ProgramSelector {
     /** Snapshot inputs permit hardware-free testing of the actual buttons and menu. */
     JPopupMenu apply(AvailableHardware currentHardware, boolean supportsDfu, boolean obfuscated,
                      String bundleTarget, String effectiveTarget) {
+        clearStaleNoIniUpdateConfirmation();
         boolean isJobRunning = isJobRunning();
         boolean additionalControlVisible = additionalFirmwareControls.stream().anyMatch(Component::isVisible);
         noHardware.setVisible(currentHardware.isEmpty());
@@ -910,7 +1109,8 @@ public class ProgramSelector {
         splitButton.setPopupMenu(popupMenu.getComponentCount() > 0 ? popupMenu : null);
         final boolean recoveryDefault = isDfuRecoveryDefault(currentHardware);
         final UpdateMode normalMode = flashPort == null ? null
-            : mainButtonModeFor(flashPort, isLiveConnection(), canUseDfu);
+            : mainButtonModeFor(flashPort, isLiveConnection(), canUseDfu,
+                isMatchingNoIniFailure(flashPort));
         splitButton.setMainButtonEnabled(recoveryDefault ? recoveryAvailable && !isJobRunning
             : shouldEnableMainButton(hasFirmwareTarget, isJobRunning || externalPrimaryActionBusy.getAsBoolean(), normalMode));
         splitButton.setArrowButtonEnabled(popupMenu.getComponentCount() > 0 && !isJobRunning);

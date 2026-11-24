@@ -1,5 +1,6 @@
 package com.opensr5.ini.test;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileMetaInfoImpl;
 import com.opensr5.ini.IniFileModel;
@@ -24,7 +25,7 @@ public class CustomOutputListTuneTest {
         IniFileModel customIni = outputListIni("gpio_list",
             "0=\"NONE\",5=\"Output\",47=\"Auxiliary pin\"");
         IniFileModel standardIni = outputListIni("output_pin_e_list", "0=\"NONE\",5=\"Output\"");
-        Msq tune = MsqFactory.valueOf(new ConfigurationImage(IMAGE.clone()), customIni);
+        Msq tune = MsqFactory.valueOf(ConfigurationImageTestHelper.newLittleEndian(IMAGE.clone()), customIni);
 
         assertEquals("\"Auxiliary pin\"", tune.getConstantsAsMap().get("outputPin").getValue());
         assertArrayEquals(IMAGE, tune.asImage(customIni).getContent());
@@ -39,7 +40,7 @@ public class CustomOutputListTuneTest {
     @Test
     public void customListNamesDoNotEnableSuffixCompatibility() throws IniParsingException {
         IniFileModel sourceIni = outputListIni("output_pin_e_list", "0=\"NONE\",47=\"Output\"");
-        Msq tune = MsqFactory.valueOf(new ConfigurationImage(IMAGE.clone()), sourceIni);
+        Msq tune = MsqFactory.valueOf(ConfigurationImageTestHelper.newLittleEndian(IMAGE.clone()), sourceIni);
         String documentedOptions = "0=\"NONE\",47=\"Output (documentation)\"";
         IniFileModel standardIni = outputListIni("output_pin_e_list", documentedOptions);
         IniFileModel customIni = outputListIni("custom_output_list", documentedOptions);
@@ -47,7 +48,7 @@ public class CustomOutputListTuneTest {
         assertTrue(((EnumIniField) standardIni.getAllIniFields().get("outputPin")).isPinEnum());
         assertFalse(((EnumIniField) customIni.getAllIniFields().get("outputPin")).isPinEnum());
         assertArrayEquals(IMAGE, tune.asImage(standardIni).getContent());
-        Msq customTune = MsqFactory.valueOf(new ConfigurationImage(IMAGE.clone()), customIni);
+        Msq customTune = MsqFactory.valueOf(ConfigurationImageTestHelper.newLittleEndian(IMAGE.clone()), customIni);
         assertArrayEquals(IMAGE, customTune.asImage(customIni).getContent());
 
         // Without metadata identifying a pin list, cross-label suffix matching is intentionally unsupported.
@@ -61,7 +62,7 @@ public class CustomOutputListTuneTest {
             throws IniParsingException {
         IniFileModel ini = outputListIni("gpio_list", "0=\"NONE\",5=\"Output\",47=\"Auxiliary pin\"");
         byte[] image = {0x5A, (byte) 200, 0, 0x6B};
-        Msq tune = MsqFactory.valueOf(new ConfigurationImage(image.clone()), ini);
+        Msq tune = MsqFactory.valueOf(ConfigurationImageTestHelper.newLittleEndian(image.clone()), ini);
         String value = EnumIniField.unknownOrdinalValue(200);
 
         assertEquals(value, tune.getConstantsAsMap().get("outputPin").getValue());

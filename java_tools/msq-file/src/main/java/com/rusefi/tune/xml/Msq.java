@@ -92,7 +92,8 @@ public class Msq {
      */
     public ConfigurationImage asImage(IniFileModel instance) {
         Objects.requireNonNull(instance, "ini model");
-        ConfigurationImage ci = new ConfigurationImage(instance.getMetaInfo().getPageSize(0));
+        // [tag:image_byte_order] the image is uploaded to the controller as is
+        ConfigurationImage ci = new ConfigurationImage(instance.getMetaInfo().getPageSize(0), instance.getByteOrder());
 
         Page page = findPage();
         if (page == null)

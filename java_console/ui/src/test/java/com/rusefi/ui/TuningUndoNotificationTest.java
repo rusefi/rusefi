@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.IniFileMetaInfoImpl;
@@ -44,7 +45,7 @@ class TuningUndoNotificationTest {
                 TuningPane tuning = new TuningPane(context);
                 tuningRef.set(tuning);
                 // fan on B7 as loaded
-                tuning.seedOfflineImage(new ConfigurationImage(new byte[]{2}), "fanSettings");
+                tuning.seedOfflineImage(ConfigurationImageTestHelper.newLittleEndian(new byte[]{2}), "fanSettings");
                 context.addConfigImageListener(image -> notifiedFan.add(fan(ini, image)));
 
                 // the user picks B6 in the Fan page's pin selector

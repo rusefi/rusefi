@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileMetaInfo;
 import com.opensr5.ini.IniFileModel;
@@ -129,7 +130,7 @@ class TopicHelpTest {
             + "help = sharedHelp, \"Shared help\"\ntext = \"Editor instructions\"\n");
         assertEquals("sharedHelp", ini.getCurves().get("curveExample").getTopicHelp());
         assertNull(ini.getCurves().get("noHelpCurve").getTopicHelp());
-        ConfigurationImage image = new ConfigurationImage(new byte[]{0, 10, 0, 10, 1, 2, 3, 4});
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[]{0, 10, 0, 10, 1, 2, 3, 4});
         SwingUtilities.invokeAndWait(() -> {
             CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
             try {

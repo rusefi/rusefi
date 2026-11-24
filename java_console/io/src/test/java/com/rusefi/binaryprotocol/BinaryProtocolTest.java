@@ -59,7 +59,7 @@ public class BinaryProtocolTest {
 
     @Test
     public void test() {
-        byte[] packet = BinaryProtocol.smartPacketPrefix2(2000, 1000, false);
+        byte[] packet = BinaryProtocol.smartPacketPrefix2(0, 2000, 1000, false, java.nio.ByteOrder.LITTLE_ENDIAN);
         byte[] fullRequest = BinaryProtocol.getFullRequest((byte) Integration.TS_READ_COMMAND, packet);
         assertArrayEquals(new byte[]{
                 'R',
@@ -71,7 +71,7 @@ public class BinaryProtocolTest {
 
     @Test
     public void testSinglePage() {
-        byte[] packet = BinaryProtocol.smartPacketPrefix2(2000, 1000, true);
+        byte[] packet = BinaryProtocol.smartPacketPrefix2(0, 2000, 1000, true, java.nio.ByteOrder.LITTLE_ENDIAN);
         byte[] fullRequest = BinaryProtocol.getFullRequest((byte) Integration.TS_READ_COMMAND, packet);
         assertArrayEquals(new byte[]{
                 'R',
@@ -82,7 +82,7 @@ public class BinaryProtocolTest {
 
     @Test
     public void testCrcCheck() {
-        byte[] packet = BinaryProtocol.smartPacketPrefix2(0, 21000, false);
+        byte[] packet = BinaryProtocol.smartPacketPrefix2(0, 0, 21000, false, java.nio.ByteOrder.LITTLE_ENDIAN);
         byte[] fullRequest = BinaryProtocol.getFullRequest((byte) Integration.TS_CRC_CHECK_COMMAND, packet);
         assertArrayEquals(new byte[]{
                 'k',
@@ -105,7 +105,7 @@ public class BinaryProtocolTest {
     public void testChunkWrite() {
         int offset = 123;
         byte[] content = new byte[]{0x11, 0x22};
-        byte[] header = BinaryProtocol.smartPacketPrefix2(offset, content.length, false);
+        byte[] header = BinaryProtocol.smartPacketPrefix2(0, offset, content.length, false, java.nio.ByteOrder.LITTLE_ENDIAN);
         byte[] packet = new byte[header.length + content.length];
         System.arraycopy(header, 0, packet, 0, header.length);
         System.arraycopy(content, 0, packet, header.length, content.length);

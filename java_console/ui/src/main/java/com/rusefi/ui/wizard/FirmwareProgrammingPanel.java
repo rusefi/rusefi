@@ -20,6 +20,13 @@ public final class FirmwareProgrammingPanel extends JPanel {
         return new FirmwareProgrammingPanel("Update ECU firmware", message, "Update ECU firmware", confirm, cancel);
     }
 
+    public static FirmwareProgrammingPanel noIniUpdateConfirmation(
+        String message, Runnable confirm, Runnable cancel
+    ) {
+        return new FirmwareProgrammingPanel("Update firmware without tune preservation", message,
+            "Update without preserving tune", confirm, cancel);
+    }
+
     public static FirmwareProgrammingPanel error(String title, String message, Runnable close) {
         return new FirmwareProgrammingPanel(title, message, null, close, close);
     }

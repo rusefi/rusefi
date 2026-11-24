@@ -16,6 +16,7 @@ public class CurveBuilder {
     private AxisModel xAxis;
     private AxisModel yAxis;
     private String xBins;
+    private String xBinsChannel;
     private String yBins;
     private String topicHelp;
 
@@ -58,7 +59,7 @@ public class CurveBuilder {
     }
 
     public CurveModel build() {
-        return new CurveModel(curveId, title, xLabel, yLabel, xAxis, yAxis, xBins, yBins, topicHelp);
+        return new CurveModel(curveId, title, xLabel, yLabel, xAxis, yAxis, xBins, yBins, topicHelp, xBinsChannel);
     }
 
     public void reset() {
@@ -69,6 +70,7 @@ public class CurveBuilder {
         xAxis = null;
         yAxis = null;
         xBins = null;
+        xBinsChannel = null;
         yBins = null;
         topicHelp = null;
     }
@@ -114,6 +116,9 @@ public class CurveBuilder {
             list.removeFirst();
             String bins = list.removeFirst();
             setXBins(bins);
+            // "xBins = fan1TempBins, coolantTemperature": the output channel shows the live point
+            String channel = list.isEmpty() ? null : list.removeFirst();
+            xBinsChannel = channel == null || channel.equalsIgnoreCase("readonly") ? null : channel;
             addField.accept(bins);
             return true;
         } else if (first.equalsIgnoreCase("yBins")) {

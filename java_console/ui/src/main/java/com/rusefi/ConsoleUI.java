@@ -22,6 +22,7 @@ import com.rusefi.maintenance.StLinkFlasher;
 import com.rusefi.maintenance.jobs.ImportTuneJob;
 import com.rusefi.ui.*;
 import com.rusefi.ui.basic.SingleAsyncJobExecutor;
+import com.rusefi.ui.basic.SoftwareUpdateCoordinator;
 import com.rusefi.ui.basic.StatusPanelWithProgressBar;
 import com.rusefi.ui.basic.TuneManagementTab;
 import com.rusefi.ui.console.MainFrame;
@@ -42,7 +43,6 @@ import com.rusefi.ui.widgets.StatusPanel;
 import com.rusefi.ui.widgets.TextZoom;
 import com.rusefi.ui.widgets.tune.CalibrationPanelWorkspace;
 import com.rusefi.ui.widgets.tune.PinoutLink;
-import com.rusefi.ui.widgets.tune.SettingsPageIndex;
 import com.rusefi.ui.widgets.tune.SettingsSearchPopup;
 import com.rusefi.ui.wizard.WizardCatalog;
 import com.rusefi.ui.wizard.WizardContainer;
@@ -117,12 +117,7 @@ public class ConsoleUI {
     private LogViewerHost logViewer;
     private TuningPane tuningPane;
     /** Set up with the Tuning tab; until then (and in log viewer mode) the tab bar's search box is hidden. */
-    private SettingsSearchPopup.Launcher settingsSearch;
-    private final JTextField settingsSearchBox = SettingsSearchPopup.createSearchBox((text, anchor) -> {
-        if (settingsSearch != null) {
-            settingsSearch.show(text, anchor);
-        }
-    });
+    private final JTextField settingsSearchBox = SettingsSearchPopup.createSearchBox();
     private Component gaugesTab;
     private Component tuningTab;
     private SensorCentral.FullOutputLease unclassifiedTabLease;
@@ -130,11 +125,12 @@ public class ConsoleUI {
 
     public ConsoleUI(String port, SerialPortType serialPortType, ConnectivityContext connectivityContext) {
         this(new UIContext(connectivityContext.getConnectedEcuTarget()), port, serialPortType, false,
-            null, null, null, null, connectivityContext);
+            null, null, null, null, connectivityContext, idleUpdateCoordinator());
     }
 
     public ConsoleUI(UIContext uiContext, String port, SerialPortType serialPortType, boolean alreadyConnected, ConnectivityContext connectivityContext) {
-        this(uiContext, port, serialPortType, alreadyConnected, null, null, null, null, connectivityContext);
+        this(uiContext, port, serialPortType, alreadyConnected, null, null, null, null,
+            connectivityContext, idleUpdateCoordinator());
     }
 
     /**
@@ -142,14 +138,22 @@ public class ConsoleUI {
      * instead of opening a second window (#9715).
      */
     public ConsoleUI(UIContext uiContext, String port, SerialPortType serialPortType, boolean alreadyConnected, JFrame reuseFrame, ConnectivityContext connectivityContext) {
-        this(uiContext, port, serialPortType, alreadyConnected, null, null, reuseFrame, null, connectivityContext);
+        this(uiContext, port, serialPortType, alreadyConnected, null, null, reuseFrame, null,
+            connectivityContext, idleUpdateCoordinator());
     }
 
     public ConsoleUI(UIContext uiContext, String port, SerialPortType serialPortType, boolean alreadyConnected,
                      JFrame reuseFrame, UnsupportedEcuCardHost unsupportedEcuHost,
                      ConnectivityContext connectivityContext) {
         this(uiContext, port, serialPortType, alreadyConnected, null, null, reuseFrame,
-            unsupportedEcuHost, connectivityContext);
+            unsupportedEcuHost, connectivityContext, idleUpdateCoordinator());
+    }
+
+    public ConsoleUI(UIContext uiContext, String port, SerialPortType serialPortType, boolean alreadyConnected,
+                     JFrame reuseFrame, UnsupportedEcuCardHost unsupportedEcuHost,
+                     ConnectivityContext connectivityContext, SoftwareUpdateCoordinator softwareUpdateCoordinator) {
+        this(uiContext, port, serialPortType, alreadyConnected, null, null, reuseFrame,
+            unsupportedEcuHost, connectivityContext, softwareUpdateCoordinator);
     }
 
     /**
@@ -167,13 +171,26 @@ public class ConsoleUI {
      * {@code reuseFrame} instead of opening a second window — same handoff the online path uses (#9715).
      */
     public ConsoleUI(UIContext uiContext, IniFileModel ini, ConfigurationImage initialImage, JFrame reuseFrame, ConnectivityContext connectivityContext) {
-        this(uiContext, null, SerialPortType.Unknown, false, ini, initialImage, reuseFrame, null, connectivityContext);
+        this(uiContext, null, SerialPortType.Unknown, false, ini, initialImage, reuseFrame, null,
+            connectivityContext, idleUpdateCoordinator());
     }
 
     public ConsoleUI(UIContext uiContext, IniFileModel ini, ConfigurationImage initialImage, JFrame reuseFrame,
                      UnsupportedEcuCardHost unsupportedEcuHost, ConnectivityContext connectivityContext) {
         this(uiContext, null, SerialPortType.Unknown, false, ini, initialImage, reuseFrame,
-            unsupportedEcuHost, connectivityContext);
+            unsupportedEcuHost, connectivityContext, idleUpdateCoordinator());
+    }
+
+    public ConsoleUI(UIContext uiContext, IniFileModel ini, ConfigurationImage initialImage, JFrame reuseFrame,
+                     UnsupportedEcuCardHost unsupportedEcuHost, ConnectivityContext connectivityContext,
+                     SoftwareUpdateCoordinator softwareUpdateCoordinator) {
+        this(uiContext, null, SerialPortType.Unknown, false, ini, initialImage, reuseFrame,
+            unsupportedEcuHost, connectivityContext, softwareUpdateCoordinator);
+    }
+
+    private static SoftwareUpdateCoordinator idleUpdateCoordinator() {
+        return new SoftwareUpdateCoordinator(
+            CompletableFuture.completedFuture(Autoupdate.UpdateOutcome.SKIPPED));
     }
 
     /**
@@ -227,7 +244,8 @@ public class ConsoleUI {
     private ConsoleUI(UIContext uiContext, String port, SerialPortType serialPortType,
                       boolean alreadyConnected, IniFileModel offlineIni, ConfigurationImage offlineImage,
                       JFrame reuseFrame, UnsupportedEcuCardHost existingUnsupportedEcuHost,
-                      ConnectivityContext connectivityContext) {
+                      ConnectivityContext connectivityContext,
+                      SoftwareUpdateCoordinator softwareUpdateCoordinator) {
         this.uiContext = uiContext;
         this.connectivityContext = connectivityContext;
         LinkManager linkManager = uiContext.getLinkManager();
@@ -287,7 +305,8 @@ public class ConsoleUI {
         JPanel consoleCard = new JPanel(new BorderLayout());
         consoleCard.add(tabbedPane.getContent(), BorderLayout.CENTER);
         rootPanel.add(consoleCard, "console");
-        MainFrame mainFrame = new MainFrame(this, tabbedPane, reuseFrame, unsupportedEcuHost);
+        MainFrame mainFrame = new MainFrame(this, tabbedPane, reuseFrame, unsupportedEcuHost,
+            softwareUpdateCoordinator);
         // One status strip under every tab, after MainFrame has set the Record button factory. Its
         // on-screen log buffer size is the Messages tab's setting.
         Node messagesConfig = getConfig().getRoot().getChild("messages");
@@ -520,9 +539,8 @@ console live data tab is broken #8402
                 if (isOffline && offlineImage != null) {
                     tp.seedOfflineImage(offlineImage, null);
                 }
-                mainFrame.setExitRequestHandler(() ->
-                        tp.requestExit(mainFrame,
-                            () -> mainFrame.getFrame().getFrame().dispose(),
+                mainFrame.setExitRequestHandler(exit ->
+                        tp.requestExit(mainFrame, exit,
                             deviceSessionManager.getState() == SessionState.FLASHING));
                 mainFrame.setTuneActions(tp.getLoadTuneAction(), tp.getSaveTuneAction(), tp.getSaveTuneAsAction());
                 if (UiProperties.isPinoutEnabled()) {
@@ -565,14 +583,14 @@ console live data tab is broken #8402
             // Ctrl+K: search the Tuning pages from any tab and open one floating over it, without
             // switching to Tuning (built in the background when needed).
             JFrame consoleFrame = mainFrame.getFrame().getFrame();
-            settingsSearch = SettingsSearchPopup.install(consoleFrame, () -> {
+            SettingsSearchPopup.install(consoleFrame, settingsSearchBox, () -> {
                 if (deviceSessionManager.getState() == SessionState.FLASHING) {
                     return null;
                 }
                 buildTuning.run();
-                return SettingsPageIndex.build(uiContext.iniFileState.getIniFileModel(),
+                return new SettingsSearchPopup.Source(uiContext.iniFileState.getIniFileModel(),
                     tuningHolder[0].getTuneImage());
-            }, page -> tuningHolder[0].openSettingsWindow(consoleFrame, page.getKey()));
+            }, (pageKey, fieldKey) -> tuningHolder[0].openSettingsWindow(consoleFrame, pageKey, fieldKey));
             settingsSearchBox.setVisible(true);
 
             // Restore detached calibration windows even when another tab was selected at exit.
@@ -737,7 +755,7 @@ console live data tab is broken #8402
                 && !unsupportedEcuHost.isBlocking());
         AutoupdateUtil.setAppIcon(mainFrame.getFrame().getFrame());
 
-        unsupportedEcuHost.setNormalContent(mainFrame.wrapContentWithInstallerBanner(rootPanel));
+        unsupportedEcuHost.setNormalContent(mainFrame.wrapContentWithBanners(rootPanel));
         mainFrame.getFrame().getFrame().addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
@@ -913,7 +931,8 @@ console live data tab is broken #8402
         AutotestLogging.suspendLogging = getConfig().getRoot().getBoolProperty(GaugesPanel.DISABLE_LOGS);
         commonUiStartup();
 // not very useful?        VersionChecker.start();
-        SwingUtilities.invokeAndWait(() -> awtCode(args, updateOutcome));
+        SoftwareUpdateCoordinator softwareUpdateCoordinator = new SoftwareUpdateCoordinator(updateOutcome);
+        SwingUtilities.invokeAndWait(() -> awtCode(args, softwareUpdateCoordinator));
     }
 
     /**
@@ -983,7 +1002,7 @@ console live data tab is broken #8402
         }
     }
 
-    private static void awtCode(String[] args, CompletableFuture<Autoupdate.UpdateOutcome> updateOutcome) {
+    private static void awtCode(String[] args, SoftwareUpdateCoordinator softwareUpdateCoordinator) {
         File initialLog = logFileArgument(args);
         if (initialLog != null && JustOneInstance.openLogInRunningInstance(initialLog)) {
             System.exit(0);
@@ -1022,12 +1041,14 @@ console live data tab is broken #8402
             // touches the production connectivity singleton; everything below receives it as a parameter.
             ConnectivityContext connectivityContext = ProductionConnectivity.CONTEXT;
             if (isPortDefined) {
-                new ConsoleUI(port, SerialPortType.Unknown, connectivityContext);
+                new ConsoleUI(new UIContext(connectivityContext.getConnectedEcuTarget()), port,
+                    SerialPortType.Unknown, false, null, null, connectivityContext,
+                    softwareUpdateCoordinator);
             } else {
                 for (String p : LinkManager.getCommPorts())
                     MessagesCentral.getInstance().postMessage(Launcher.class, "Available port: " + p);
                 StartupFrame startupFrame = new StartupFrame(connectivityContext,
-                    new UIContext(connectivityContext.getConnectedEcuTarget()), updateOutcome, initialLog);
+                    new UIContext(connectivityContext.getConnectedEcuTarget()), softwareUpdateCoordinator, initialLog);
                 startupFrame.showUi();
             }
 

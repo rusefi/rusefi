@@ -8,6 +8,7 @@ dependencies {
     api project(':msq-file')
 
     testImplementation testFixtures(project(':config_definition_base'))
+    testImplementation testFixtures(project(':inifile'))
 }
 
 shadowJar {

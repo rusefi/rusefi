@@ -15,7 +15,7 @@ public class OchGetCommandTest {
     public void testReadBytes() {
         int offset = 400;
         int chunkSize = 300;
-        byte[] payload = GetOutputsCommand.createRequest(offset, chunkSize);
+        byte[] payload = GetOutputsCommand.createRequest(offset, chunkSize, java.nio.ByteOrder.LITTLE_ENDIAN);
         byte[] fullPacket = BinaryProtocol.getFullRequest((byte) Integration.TS_OUTPUT_COMMAND, payload);
 //        System.out.println("OchGetCommand command " + Hex.encodeHexString(fullPacket, false));
         assertArrayEquals(new byte[]{0x4f, (byte) 0x90, 0x01, 0x2c, 0x01}, fullPacket);

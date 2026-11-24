@@ -150,7 +150,7 @@ public class ConsoleTools {
 
     private static void calcBinaryImageTuneCrc(String... args) throws IOException {
         String fileName = args[1];
-        ConfigurationImage image = ConfigurationImageFile.readFromFile(fileName).getConfigurationImage();
+        ConfigurationImage image = ConfigurationImageFile.readFromFile(fileName, java.nio.ByteOrder.LITTLE_ENDIAN).getConfigurationImage();
         printCrc(image);
     }
 

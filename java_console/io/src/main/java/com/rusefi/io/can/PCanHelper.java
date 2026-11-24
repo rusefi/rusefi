@@ -1,6 +1,7 @@
 package com.rusefi.io.can;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.core.OsUtil;
 import com.rusefi.util.HexBinary;
 import org.jetbrains.annotations.NotNull;
 import peak.can.basic.*;
@@ -12,6 +13,20 @@ public class PCanHelper {
     private static Logging log = getLogging(PCanHelper.class);
 
     public static final TPCANHandle CHANNEL = TPCANHandle.PCAN_USBBUS1;
+
+    // [tag:pcan_500k_sjw] BTR0/BTR1: retain 500 kbit/s and 87.5% sampling,
+    // but allow two time quanta for resynchronization. With one Tq, Windows
+    // PCAN/GPEC2A bulk reads can deliver repeated CAN frames before completing.
+    private static final TPCANBaudrate WINDOWS_500K = TPCANBaudrate.valueOf(0x401c);
+
+    public static TPCANBaudrate get500kBaudrate() {
+        return get500kBaudrate(OsUtil.isWindows());
+    }
+
+    static TPCANBaudrate get500kBaudrate(boolean windows) {
+        // Keep the existing timing on native backends not tested with custom BTRs.
+        return windows ? WINDOWS_500K : TPCANBaudrate.PCAN_BAUD_500K;
+    }
 
     /**
      * Whether the PCANBasic native layer can be used in this process, without touching any CAN channel.
@@ -41,7 +56,7 @@ public class PCanHelper {
     }
 
     public static TPCANStatus init(PCANBasic can) {
-        return can.Initialize(CHANNEL, TPCANBaudrate.PCAN_BAUD_500K, TPCANType.PCAN_TYPE_NONE, 0, (short) 0);
+        return can.Initialize(CHANNEL, get500kBaudrate(), TPCANType.PCAN_TYPE_NONE, 0, (short) 0);
     }
 
     public static TPCANStatus send(PCANBasic can, int id, byte[] payLoad) {

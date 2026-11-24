@@ -7,6 +7,8 @@ import com.rusefi.autodetect.PortDetector;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.FindFileHelper;
+import com.rusefi.core.RusEfiSignature;
+import com.rusefi.core.SignatureHelper;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
@@ -15,6 +17,7 @@ import com.rusefi.io.can.SocketCanRawPort;
 import com.rusefi.io.serial.BufferedSerialIoStream;
 import com.rusefi.maintenance.jobs.OpenbltRebooter;
 import com.rusefi.updater.OpenbltDetectorStrategy;
+import com.rusefi.updater.OpenbltDetectorStrategy.OpenbltInfo;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -99,7 +102,7 @@ public final class FirmwareOperations {
                 // Directly probe the port rather than relying on the scanner snapshot.
                 // The scanner cache would keep reporting EcuWithOpenblt even after the
                 // ECU has already entered OpenBLT mode (the OS port does not disappear).
-                try (IoStream stream = BufferedSerialIoStream.openPort(ecuPort.port)) {
+                try (IoStream stream = BufferedSerialIoStream.openPortForProbe(ecuPort.port)) {
                     if (stream == null) {
                         log.info("Port " + ecuPort.port + " is unavailable — ECU is rebooting");
                         return true;
@@ -135,26 +138,59 @@ public final class FirmwareOperations {
         waitForPredicate(
             "Waiting for the ECU to enter firmware update mode...",
             () -> {
-                for (SerialPort sp : SerialPort.getCommPorts()) {
-                    final String portName = sp.getSystemPortName();
-                    if (openBltPortsBefore.stream().anyMatch(p -> p.port.equals(portName))) {
-                        continue; // skip ports that were already in OpenBLT mode before
-                    }
-                    try (IoStream stream = BufferedSerialIoStream.openPort(portName)) {
-                        if (OpenbltDetectorStrategy.isPortOpenblt(stream)) {
-                            log.info("Direct probe: port " + portName + " is in OpenBLT mode");
-                            newPorts.add(new PortResult(portName, OpenBlt));
-                            return true;
-                        }
+                List<String> portNames = new ArrayList<>();
+                for (SerialPort serialPort : SerialPort.getCommPorts()) {
+                    portNames.add(serialPort.getSystemPortName());
+                }
+                newPorts.clear();
+                newPorts.addAll(detectNewOpenBltPorts(portNames, openBltPortsBefore, portName -> {
+                    try (IoStream stream = BufferedSerialIoStream.openPortForProbe(portName)) {
+                        return OpenbltDetectorStrategy.detectOpenbltWithSignature(stream);
                     } catch (Exception e) {
                         log.info("Probe of " + portName + " error: " + e.getMessage());
+                        return new OpenbltInfo(false, null);
                     }
-                }
-                return false;
+                }));
+                return !newPorts.isEmpty();
             },
             callbacks
         );
         return newPorts;
+    }
+
+    interface OpenBltPortProbe {
+        OpenbltInfo inspect(String port);
+    }
+
+    static List<PortResult> detectNewOpenBltPorts(List<String> portNames, List<PortResult> openBltPortsBefore,
+                                                  OpenBltPortProbe probe) {
+        List<PortResult> detected = new ArrayList<>();
+        for (String portName : portNames) {
+            if (openBltPortsBefore.stream().anyMatch(port -> port.port.equals(portName))) {
+                continue;
+            }
+            OpenbltInfo info = probe.inspect(portName);
+            if (info.isOpenblt) {
+                detected.add(new PortResult(portName, OpenBlt, null, info));
+            }
+        }
+        return detected;
+    }
+
+    static boolean isVerifiedNoIniHandoff(String sourcePort, PortResult candidate, String expectedSignature,
+                                          com.rusefi.core.io.ConnectedEcuTarget jobTarget) {
+        if (candidate == null || jobTarget == null) {
+            return false;
+        }
+        RusEfiSignature expected = SignatureHelper.parse(expectedSignature);
+        OpenbltInfo bootloader = candidate.bootloaderInfo;
+        String expectedTarget = expected == null ? null : expected.getBundleTarget();
+        String jobTargetName = jobTarget.effectiveTarget();
+        return expectedTarget != null && jobTargetName != null
+            && sourcePort.equals(candidate.port) && candidate.type == OpenBlt
+            && bootloader != null && bootloader.isOpenblt && bootloader.board != null
+            && expectedTarget.equalsIgnoreCase(jobTargetName)
+            && expectedTarget.equalsIgnoreCase(bootloader.board);
     }
 
     public static boolean flashOpenbltSerialAutomatic(
@@ -418,14 +454,111 @@ public final class FirmwareOperations {
                                                                   @Nullable String firmwareSrecFile,
                                                                   @Nullable BinaryProtocol bp,
                                                                   @Nullable FirmwareSelection selection) {
+        return bltUpdateFirmwareWithSuspendedScanner(parent, ecuPort, callbacks, connectivityContext,
+            firmwareSrecFile, bp, selection, null, null);
+    }
+
+    /** The caller holds scanner ownership through this reboot-and-flash sequence. */
+    public static boolean flashOpenbltWithoutSettings(
+        JComponent parent,
+        PortResult ecuPort,
+        String expectedSignature,
+        UpdateOperationCallbacks callbacks,
+        ConnectivityContext connectivityContext
+    ) {
+        RusEfiSignature signature = SignatureHelper.parse(expectedSignature);
+        if (signature == null || signature.getBundleTarget() == null) {
+            callbacks.logLine("A valid ECU signature is required for a no-INI update.");
+            return false;
+        }
+        return flashOpenbltWithoutSettings(parent, ecuPort, expectedSignature, callbacks, connectivityContext,
+            com.rusefi.core.io.ConnectedEcuTarget.forManualRecovery(signature.getBundleTarget()));
+    }
+
+    public static boolean flashOpenbltWithoutSettings(
+        JComponent parent,
+        PortResult ecuPort,
+        String expectedSignature,
+        UpdateOperationCallbacks callbacks,
+        ConnectivityContext connectivityContext,
+        com.rusefi.core.io.ConnectedEcuTarget jobTarget
+    ) {
+        FirmwareSelection selection = selectNoIniFirmware(expectedSignature, jobTarget, callbacks);
+        return flashOpenbltWithoutSettings(parent, ecuPort, expectedSignature, callbacks,
+            connectivityContext, jobTarget, selection);
+    }
+
+    public static @Nullable FirmwareSelection prepareNoIniFirmware(
+        String expectedSignature, UpdateOperationCallbacks callbacks,
+        com.rusefi.core.io.ConnectedEcuTarget jobTarget) {
+        if (!MaintenanceUtil.ensureFirmwareForConnectedTarget(callbacks, jobTarget)) {
+            return null;
+        }
+        return selectNoIniFirmware(expectedSignature, jobTarget, callbacks);
+    }
+
+    static @Nullable FirmwareSelection selectNoIniFirmware(
+        String expectedSignature, com.rusefi.core.io.ConnectedEcuTarget jobTarget,
+        UpdateOperationCallbacks callbacks) {
+        RusEfiSignature source = SignatureHelper.parse(expectedSignature);
+        if (source == null || source.getBundleTarget() == null || jobTarget == null
+            || !source.getBundleTarget().equalsIgnoreCase(jobTarget.effectiveTarget())) {
+            callbacks.firmwareUpdateBlocked("The selected firmware target does not match the ECU identity.");
+            return null;
+        }
+        String srecPath = FindFileHelper.findSrecFileForConnectedBoard(jobTarget);
+        if (srecPath == null) {
+            callbacks.firmwareUpdateBlocked("No usable firmware file was found. Please download the firmware again.");
+            return null;
+        }
+        return FirmwareSelection.fromSrec(expectedSignature, srecPath, callbacks);
+    }
+
+    public static boolean flashOpenbltWithoutSettings(
+        JComponent parent,
+        PortResult ecuPort,
+        String expectedSignature,
+        UpdateOperationCallbacks callbacks,
+        ConnectivityContext connectivityContext,
+        com.rusefi.core.io.ConnectedEcuTarget jobTarget,
+        @Nullable FirmwareSelection selection
+    ) {
+        if (selection == null || !selection.revalidateForSrec(expectedSignature, callbacks)) {
+            return false;
+        }
+        return bltUpdateFirmwareWithSuspendedScanner(
+            parent, ecuPort, callbacks, connectivityContext, selection.getSrecPath(), null,
+            selection, expectedSignature, jobTarget);
+    }
+
+    private static boolean bltUpdateFirmwareWithSuspendedScanner(JComponent parent, PortResult ecuPort,
+                                                                 UpdateOperationCallbacks callbacks,
+                                                                 ConnectivityContext connectivityContext,
+                                                                 @Nullable String firmwareSrecFile,
+                                                                 @Nullable BinaryProtocol bp,
+                                                                 @Nullable FirmwareSelection selection,
+                                                                 @Nullable String expectedSignature,
+                                                                 @Nullable com.rusefi.core.io.ConnectedEcuTarget jobTarget) {
         // Snapshot pre-existing OpenBLT ports so we can ignore them when searching
         // for the newly-appeared bootloader port after the reboot.
         final List<PortResult> openBltPortsBefore = connectivityContext.getCurrentHardware().getKnownPorts(OpenBlt);
 
-        if (selection != null && (bp == null || !selection.revalidateForSrec(bp.signature, callbacks))) {
+        if (expectedSignature != null && selection == null) {
+            callbacks.firmwareUpdateBlocked("A verified firmware selection is required for a no-INI update.");
             return false;
         }
-        if (selection == null) {
+        String selectionSignature = bp == null ? expectedSignature : bp.signature;
+        if (selection != null
+            && (selectionSignature == null || !selection.revalidateForSrec(selectionSignature, callbacks))) {
+            return false;
+        }
+        if (expectedSignature != null) {
+            final java.util.concurrent.atomic.AtomicBoolean signatureValidated = DfuFlasher.rebootToDfu(
+                parent, ecuPort.port, callbacks, Integration.CMD_REBOOT_OPENBLT, expectedSignature);
+            if (signatureValidated == null || !signatureValidated.get()) {
+                return false;
+            }
+        } else if (selection == null) {
             rebootToOpenblt(parent, ecuPort.port, callbacks);
         } else {
             rebootToOpenbltSelected(parent, ecuPort.port, callbacks, selection);
@@ -456,16 +589,26 @@ public final class FirmwareOperations {
             return false;
         }
 
+        if (expectedSignature != null
+            && (jobTarget == null
+                || !isVerifiedNoIniHandoff(ecuPort.port, newItems.get(0), expectedSignature, jobTarget))) {
+            callbacks.logLine("Could not verify that the OpenBLT port is the same ECU and board. Update cancelled.");
+            return false;
+        }
+
         final String openbltPort = newItems.get(0).port;
 
         callbacks.logLine("Serial port " + openbltPort + " appeared, programming firmware...");
 
-        if (selection != null && (bp == null || !selection.revalidateForSrec(bp.signature, callbacks))) {
+        if (selection != null
+            && (selectionSignature == null || !selection.revalidateForSrec(selectionSignature, callbacks))) {
             return false;
         }
 
         return flashOpenbltSerial(
-            parent, openbltPort, callbacks, connectivityContext.getConnectedEcuTarget(), firmwareSrecFile);
+            parent, openbltPort, callbacks,
+            jobTarget == null ? connectivityContext.getConnectedEcuTarget() : jobTarget,
+            expectedSignature == null ? firmwareSrecFile : selection.getSrecPath());
     }
 
     static OpenbltJni.OpenbltCallbacks makeOpenbltCallbacks(UpdateOperationCallbacks callbacks) {

@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelMocks;
@@ -67,9 +68,9 @@ class TuningToolbarPersistenceDefectTest {
 
                 assertFalse(button(current.toolbar, "Burn to ECU").isEnabled());
                 assertFalse(button(current.toolbar, "Discard changes").isEnabled());
-                current.session.set(new ConfigurationImage(current.c));
+                current.session.set(ConfigurationImageTestHelper.newLittleEndian(current.c));
                 current.calibration.update((String) null, current.ini, current.session.get());
-                current.toolbar.onEdit(new ConfigurationImage(current.b));
+                current.toolbar.onEdit(ConfigurationImageTestHelper.newLittleEndian(current.b));
                 submitted.remove(0).run();
             });
             runOnEdt(() -> { });
@@ -161,8 +162,8 @@ class TuningToolbarPersistenceDefectTest {
             runOnEdt(() -> {
                 fixture[0] = new Fixture();
                 Fixture current = fixture[0];
-                current.protocol.uploadChangesWithoutBurn(new ConfigurationImage(current.b));
-                current.protocol.uploadChangesWithoutBurn(new ConfigurationImage(current.a));
+                current.protocol.uploadChangesWithoutBurn(ConfigurationImageTestHelper.newLittleEndian(current.b));
+                current.protocol.uploadChangesWithoutBurn(ConfigurationImageTestHelper.newLittleEndian(current.a));
 
                 assertArrayEquals(current.a, current.protocol.ram);
                 assertArrayEquals(current.a, current.protocol.getControllerConfiguration().getContent());
@@ -485,7 +486,7 @@ class TuningToolbarPersistenceDefectTest {
         private final IniFileModel ini = IniFileModelMocks.withGauges();
         private final FakeProtocol protocol;
         private final AtomicReference<ConfigurationImage> session =
-            new AtomicReference<>(new ConfigurationImage(a));
+            new AtomicReference<>(ConfigurationImageTestHelper.newLittleEndian(a));
         private final CalibrationDialogWidget calibration = new CalibrationDialogWidget(context);
         private final TuningToolbarWidget toolbar;
 
@@ -502,14 +503,14 @@ class TuningToolbarPersistenceDefectTest {
             context.getLinkManager().setBinaryProtocolForTests(protocol);
             calibration.update((String) null, ini, session.get());
             toolbar = new TuningToolbarWidget(context, calibration, new AtomicReference<>(),
-                session, new ConfigurationImage(a), UpdateOperationCallbacks.DUMMY,
+                session, ConfigurationImageTestHelper.newLittleEndian(a), UpdateOperationCallbacks.DUMMY,
                 () -> { }, failed -> { }, submit);
         }
 
         private void editToB() {
-            session.set(new ConfigurationImage(b));
+            session.set(ConfigurationImageTestHelper.newLittleEndian(b));
             calibration.update((String) null, ini, session.get());
-            toolbar.onEdit(new ConfigurationImage(a));
+            toolbar.onEdit(ConfigurationImageTestHelper.newLittleEndian(a));
         }
 
         @Override
@@ -540,7 +541,7 @@ class TuningToolbarPersistenceDefectTest {
             ram = initial == null ? new byte[8] : initial.clone();
             flash = initial == null ? new byte[8] : initial.clone();
             if (initial != null) {
-                setConfigurationImage(new ConfigurationImage(initial));
+                setConfigurationImage(ConfigurationImageTestHelper.newLittleEndian(initial));
                 cacheCurrentImage();
             }
         }

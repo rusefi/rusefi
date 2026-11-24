@@ -1,5 +1,6 @@
 package com.opensr5.ini.test;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
 import com.rusefi.tune.ConfigurationImageGetterSetter2;
@@ -21,7 +22,7 @@ public class ScalarIniFieldTest {
     @Test
     public void updateShort() {
         ScalarIniField testField = new ScalarIniField(TEST_FIELD, 0, TEST_UNIT, TEST_TYPE, TEST_MULTIPLIER, TEST_DIGITS, 0);
-        ConfigurationImage image = new ConfigurationImage(2);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(2);
         ConfigurationImageGetterSetter2.setValue(testField, image, new Constant(TEST_FIELD, TEST_UNIT, TEST_VALUE, TEST_DIGITS));
         assertEquals(TEST_VALUE, ConfigurationImageGetterSetter.getStringValue(testField, image));
     }

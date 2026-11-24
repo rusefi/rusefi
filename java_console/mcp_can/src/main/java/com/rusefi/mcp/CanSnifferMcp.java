@@ -487,7 +487,7 @@ public class CanSnifferMcp {
                 return doStatus();
             }
             can = PCanHelper.create();
-            TPCANStatus status = can.Initialize(channel, TPCANBaudrate.PCAN_BAUD_500K,
+            TPCANStatus status = can.Initialize(channel, PCanHelper.get500kBaudrate(),
                     TPCANType.PCAN_TYPE_NONE, 0, (short) 0);
             if (status != TPCANStatus.PCAN_ERROR_OK) {
                 JSONObject r = new JSONObject();

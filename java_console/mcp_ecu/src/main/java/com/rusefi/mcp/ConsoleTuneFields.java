@@ -66,7 +66,8 @@ final class ConsoleTuneFields {
                         if (part == null || part.length != size) { throw new IOException("ECU field read failed."); }
                         System.arraycopy(part, 0, bytes, offset, size);
                     }
-                    decode(result, field, ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN));
+                    // [tag:image_byte_order]
+                    decode(result, field, ByteBuffer.wrap(bytes).order(ini.getByteOrder()));
                     result.put("readStartedTimestampMs", readStarted);
                     result.put("readCompletedTimestampMs", System.currentTimeMillis());
                     result.put("success", true);

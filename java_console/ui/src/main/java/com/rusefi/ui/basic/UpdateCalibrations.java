@@ -39,7 +39,10 @@ public class UpdateCalibrations {
                     throw new IOException("ECU calibration layout is unavailable");
                 }
                 final Map<Integer, ConfigurationImageWithMeta> pages =
-                    ConfigurationImageFile.readPagesFromFile(selectedFile.getAbsolutePath());
+                    ConfigurationImageFile.readPagesFromFile(
+                        selectedFile.getAbsolutePath(),
+                        port.getCalibrations().getIniFile().getByteOrder()
+                    );
                 final String archiveSignature = pages.get(0).getMeta().getEcuSignature();
                 final String ecuSignature = port.getCalibrations().getImage().getMeta().getEcuSignature();
                 if (!matchesCalibrationSignature(archiveSignature, port.getCalibrations())) {

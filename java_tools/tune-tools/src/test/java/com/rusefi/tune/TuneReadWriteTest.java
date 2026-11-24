@@ -48,7 +48,7 @@ public class TuneReadWriteTest {
 */
     @Test
     public void testMeta() throws IOException {
-        final ConfigurationImageWithMeta configurationImage = ConfigurationImageFile.readFromFile(TEST_BINARY_FILE);
+        final ConfigurationImageWithMeta configurationImage = ConfigurationImageFile.readFromFile(TEST_BINARY_FILE, java.nio.ByteOrder.LITTLE_ENDIAN);
         assertNotNull(configurationImage);
         final ConfigurationImageMeta meta = configurationImage.getMeta();
         assertInstanceOf(ConfigurationImageMetaVersion0_0.class, meta);
@@ -70,7 +70,7 @@ public class TuneReadWriteTest {
         ConfigurationImage tsBinaryData = tsTune.asImage(model);
 
         System.out.println("Reading " + TEST_BINARY_FILE);
-        ConfigurationImage fileBinaryData = ConfigurationImageFile.readFromFile(TEST_BINARY_FILE).getConfigurationImage();
+        ConfigurationImage fileBinaryData = ConfigurationImageFile.readFromFile(TEST_BINARY_FILE, java.nio.ByteOrder.LITTLE_ENDIAN).getConfigurationImage();
 
         int mismatchCounter = compareImages(tsBinaryData, fileBinaryData, model);
         // Mismatches:
@@ -88,7 +88,7 @@ public class TuneReadWriteTest {
 
     @Test
     public void testWriteAndReadTSTune() throws Exception {
-        ConfigurationImage fileBinaryData = ConfigurationImageFile.readFromFile(TEST_BINARY_FILE).getConfigurationImage();
+        ConfigurationImage fileBinaryData = ConfigurationImageFile.readFromFile(TEST_BINARY_FILE, java.nio.ByteOrder.LITTLE_ENDIAN).getConfigurationImage();
 
         Path path = Files.createTempFile("unit_test_", ".xml");
         String fileName = path.getFileName().toString();

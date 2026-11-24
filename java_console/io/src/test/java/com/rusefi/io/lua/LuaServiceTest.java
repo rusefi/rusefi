@@ -1,5 +1,6 @@
 package com.rusefi.io.lua;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelMocks;
@@ -89,7 +90,7 @@ public class LuaServiceTest {
 
         byte[] image = new byte[64];
         System.arraycopy(paddedScript("hello", 16), 0, image, 8, 16);
-        when(bp.getControllerConfiguration()).thenReturn(new ConfigurationImage(image));
+        when(bp.getControllerConfiguration()).thenReturn(ConfigurationImageTestHelper.newLittleEndian(image));
 
         assertEquals("hello", LuaService.readLuaScript(linkManagerWith(bp)));
         verify(bp, never()).readFromPage(anyInt(), anyInt(), anyInt());

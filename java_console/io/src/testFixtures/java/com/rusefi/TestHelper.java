@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.field.ScalarIniField;
@@ -42,7 +43,7 @@ public class TestHelper extends MockitoTestHelper {
     public static ConfigurationImage prepareImage(int input) {
         ConfigurationImage ci = null;
         try {
-            ci = new ConfigurationImage(BinaryProtocol.iniFileProvider.provide(null).getMetaInfo().getPageSize(0));
+            ci = ConfigurationImageTestHelper.newLittleEndian(BinaryProtocol.iniFileProvider.provide(null).getMetaInfo().getPageSize(0));
         } catch (IniNotFoundException e) {
             throw new RuntimeException(e);
         }

@@ -22,7 +22,8 @@ public class PinOutputModeWithAndWithoutDollarTest {
         final String EXPECTED_NITROUS_RELAY_PIN_MODE = "\"open collector inverted\"";
 
         final ConfigurationImageWithMeta testConfigurationImage = ConfigurationImageFile.readFromFile(
-            String.format("%s/image.zip", TEST_DATA_FOLDER_PATH)
+            String.format("%s/image.zip", TEST_DATA_FOLDER_PATH),
+            java.nio.ByteOrder.LITTLE_ENDIAN
         );
 
         final CalibrationsInfo calibrationsInfoWithDollars = new CalibrationsInfo(

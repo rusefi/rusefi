@@ -1,5 +1,6 @@
 package com.rusefi.ui.mocked;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.*;
 import com.opensr5.ini.field.ArrayIniField;
@@ -77,7 +78,7 @@ public class TableTracerSandboxMocked {
 
     public void start() {
         IniFileModel stubModel = createTableIniModelMock();
-        ConfigurationImage stubImage = new ConfigurationImage(getData());
+        ConfigurationImage stubImage = ConfigurationImageTestHelper.newLittleEndian(getData());
 
         AbstractIoStream tsStream = new AbstractIoStream() {
             @Override public void setInputListener(DataListener listener) {}

@@ -18,6 +18,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.TransferHandler;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -132,6 +133,30 @@ final class LogChart extends JComponent {
     private int selectionTo = -1;
     private int panFromX = -1;
     private double panFromStart;
+    /*
+     * Endless pan-drag (#10669): when the pointer reaches the edge of the plots (or the screen) it is moved to the
+     * opposite side and the pan rebased there, so one drag can cross the whole log. Where the pointer cannot be
+     * moved, holding it at the edge scrolls on a timer instead.
+     */
+    /** Moves the pointer for an endless pan-drag; replaced in tests. */
+    PointerWarp pointerWarp = PointerWarp.ROBOT;
+    /** Pan edges in chart x for this drag: the plot area, limited to the screen the chart is on. */
+    private int panLow;
+    private int panHigh;
+    /** x of the last pan drag event used. */
+    private int lastPanX;
+    /** Where the pointer was moved to and no drag event there has arrived yet, or -1; and where it was. */
+    private int warpTargetX = -1;
+    private int warpFromX;
+    /** The pointer did not move when asked to this drag: use {@link #edgeScroll} instead. */
+    private boolean warpFailed;
+    /** Pointer movement, in signed pixels, that each {@link #edgeScroll} tick stands for; 0 while stopped. */
+    private int edgeScrollPixels;
+    private final Timer edgeScroll = new Timer(EDGE_SCROLL_MS, event -> edgeScrollTick());
+    /** Gives up on a pointer move that produced no drag event at its target. */
+    private final Timer warpCheck = new Timer(WARP_CHECK_MS, event -> warpCheck());
+    /** Tests drive {@link #edgeScroll} by hand, so no timer runs alongside them. */
+    boolean manualEdgeScrollForTests;
     private int hoveredField = -1;
     private int hoveredMenu = -1;
     private final List<Runnable> viewListeners = new ArrayList<>();
@@ -166,12 +191,18 @@ final class LogChart extends JComponent {
 
     /** Asks for one signal's smoothing window in milliseconds; null when cancelled. Replaced in tests. */
     SmoothingWindowPrompt smoothingWindowPrompt;
+    /** Shows the line dialog; replaced in tests. */
+    TraceLineEditor.Confirm lineConfirm = TraceLineEditor.DIALOG;
     private final List<Runnable> colorListeners = new ArrayList<>();
     /** Asks for a custom colour (signal name, current colour); null when cancelled. Replaced in tests. */
     BiFunction<String, Color, Color> customColorPrompt = (label, initial) ->
             JColorChooser.showDialog(this, "Colour of " + label, initial);
     // markers and card from the last paint, for tests
     private List<Marker> markers = new ArrayList<>();
+    /** The compact markers of the other traces while min/max shows always; a dropped tag is null. */
+    private List<Marker> minMaxMarkers = new ArrayList<>();
+    /** Which trace each of {@link #minMaxMarkers} belongs to, in the same order. */
+    private List<Integer> minMaxFields = new ArrayList<>();
     private Rectangle card;
     private List<String> cardLines = new ArrayList<>();
     /** One cached display array per smoothed field; recorded values always stay in {@link #log}. */
@@ -309,8 +340,20 @@ final class LogChart extends JComponent {
         return focus;
     }
 
+    ChartSettings chartSettings() {
+        return grid;
+    }
+
     List<Marker> markers() {
         return markers;
+    }
+
+    List<Marker> minMaxMarkers() {
+        return minMaxMarkers;
+    }
+
+    List<Integer> minMaxFields() {
+        return minMaxFields;
     }
 
     /** The detail card of the hovered legend item from the last paint, or null. */
@@ -322,7 +365,10 @@ final class LogChart extends JComponent {
         return cardLines;
     }
 
-    /** A min or max marker of the focused trace: the point on the trace and the value tag next to it. */
+    /**
+     * A min or max marker: the point on the trace and the value tag next to it. Compact markers of unfocused traces
+     * may have no tag (null) when there is no free room for it; only the triangle is drawn then.
+     */
     static final class Marker {
         final boolean max;
         final Point point;
@@ -717,14 +763,35 @@ final class LogChart extends JComponent {
         menu.addSeparator();
         menu.add(smoothingSubmenu(field));
         menu.add(colorSubmenu(field));
+        menu.add(lineItem(field));
         menu.add(scaleSubmenu(field));
         return menu;
+    }
+
+    /**
+     * "Line…": the signal's width and line options ({@link TraceLineEditor}) in a dialog centred on the window, as
+     * per-signal smoothing; the same item serves the legend and the signal list.
+     */
+    JMenuItem lineItem(int field) {
+        JMenuItem item = new JMenuItem("Line…");
+        item.setToolTipText("Width, and solid, dashed or dotted line, for this signal");
+        item.addActionListener(e -> editLine(field));
+        return item;
+    }
+
+    /** Opens the line dialog; the plot follows every change and Cancel puts the line back. */
+    boolean editLine(int field) {
+        PlotPalette palette = palette();
+        // an unplotted signal has no automatic colour yet
+        Color shown = shownColor(field);
+        return TraceLineEditor.edit(this, grid, log.name(field), shown != null ? shown : palette.label,
+                grid.defaultLineWidth(palette), this::repaint, lineConfirm);
     }
 
     /** Per-signal display smoothing: inherit the toolbar choice, stay raw, or use a separate time window. */
     JMenu smoothingSubmenu(int field) {
         JMenu smoothing = new JMenu("Display smoothing");
-        smoothing.setToolTipText("Recorded samples, cursor values, statistics and exports stay raw");
+        smoothing.setToolTipText("Cursor values follow the smoothed line; min/max, statistics and exports stay raw");
         String signal = log.name(field);
         boolean usesGlobal = grid.usesGlobalSmoothing(signal);
         double current = grid.getSmoothingWindowSeconds(signal);
@@ -1058,8 +1125,7 @@ final class LogChart extends JComponent {
                     selectionFrom = selectionTo = x;
                 }
             } else if (SwingUtilities.isRightMouseButton(event) || SwingUtilities.isMiddleMouseButton(event)) {
-                panFromX = x;
-                panFromStart = window.start();
+                startPan(x);
                 legendRightPress = SwingUtilities.isRightMouseButton(event) ? legendAt(x, y) : null;
                 rightPressX = x;
             }
@@ -1087,8 +1153,10 @@ final class LogChart extends JComponent {
             if (selectionFrom >= 0) {
                 selectionTo = Math.max(plotLeft, Math.min(plotRight, event.getX()));
             } else if (panFromX >= 0) {
-                double secondsPerPixel = window.span() / Math.max(1, plotRight - plotLeft);
-                window.pan(panFromStart - (event.getX() - panFromX) * secondsPerPixel - window.start());
+                if (!panDragged(event.getX(), event.getY())) {
+                    // an event from before the pointer was moved
+                    return;
+                }
             }
             mouseMoved(event);
         }
@@ -1129,7 +1197,7 @@ final class LogChart extends JComponent {
                 legendPressField = -1;
             }
             selectionFrom = selectionTo = -1;
-            panFromX = -1;
+            endPan();
             resizing = -1;
             dragField = -1;
             repaint();
@@ -1161,6 +1229,128 @@ final class LogChart extends JComponent {
             }
             mouseMoved(event);
         }
+    }
+
+    /** Within this many pixels of a pan edge the pointer counts as at the edge. */
+    static final int EDGE_PIXELS = 3;
+    /** A wrapped pointer lands this far inside the opposite edge. */
+    static final int WRAP_INSET = 40;
+    static final int EDGE_SCROLL_MS = 16;
+    /** Pointer movement one edge-scroll tick stands for: about 500 pixels a second. */
+    static final int EDGE_SCROLL_PIXELS = 8;
+    static final int WARP_CHECK_MS = 250;
+
+    private void startPan(int x) {
+        panFromX = lastPanX = x;
+        panFromStart = window.start();
+        panLow = plotLeft;
+        panHigh = plotRight;
+        if (isShowing() && getGraphicsConfiguration() != null) {
+            Rectangle screen = getGraphicsConfiguration().getBounds();
+            int originX = getLocationOnScreen().x;
+            panLow = Math.max(panLow, screen.x - originX);
+            panHigh = Math.min(panHigh, screen.x + screen.width - 1 - originX);
+        }
+        warpTargetX = -1;
+        warpFailed = false;
+    }
+
+    private void endPan() {
+        panFromX = -1;
+        warpTargetX = -1;
+        stopEdgeScroll();
+        warpCheck.stop();
+    }
+
+    /** Pans to a drag at {@code x}; false for an event still on the far side of a pointer move. */
+    private boolean panDragged(int x, int y) {
+        if (warpTargetX >= 0) {
+            if (Math.abs(x - warpTargetX) > Math.abs(x - warpFromX)) {
+                return false;
+            }
+            warpTargetX = -1;
+            warpCheck.stop();
+        }
+        lastPanX = x;
+        panTo(x);
+        boolean atLow = x <= panLow + EDGE_PIXELS;
+        boolean atHigh = x >= panHigh - EDGE_PIXELS;
+        if (!atLow && !atHigh) {
+            stopEdgeScroll();
+            return true;
+        }
+        // a long pan, not a right-click: no menu on release
+        rightPressX = Integer.MIN_VALUE / 2;
+        if (!warpFailed && panHigh - panLow > 4 * WRAP_INSET) {
+            int target = atHigh ? panLow + WRAP_INSET : panHigh - WRAP_INSET;
+            if (pointerWarp.moveTo(this, target, y)) {
+                warpFromX = x;
+                warpTargetX = target;
+                panFromX = target;
+                panFromStart = window.start();
+                if (!manualEdgeScrollForTests) {
+                    warpCheck.restart();
+                }
+                return true;
+            }
+            warpFailed = true;
+        }
+        startEdgeScroll(atHigh);
+        return true;
+    }
+
+    private void panTo(int x) {
+        double secondsPerPixel = window.span() / Math.max(1, plotRight - plotLeft);
+        window.pan(panFromStart - (x - panFromX) * secondsPerPixel - window.start());
+    }
+
+    private void startEdgeScroll(boolean atHigh) {
+        edgeScrollPixels = atHigh ? EDGE_SCROLL_PIXELS : -EDGE_SCROLL_PIXELS;
+        if (!manualEdgeScrollForTests && !edgeScroll.isRunning()) {
+            edgeScroll.start();
+        }
+    }
+
+    private void stopEdgeScroll() {
+        edgeScrollPixels = 0;
+        edgeScroll.stop();
+    }
+
+    /** Pans on as if the pointer held at the edge kept moving. */
+    private void edgeScrollTick() {
+        if (panFromX < 0) {
+            stopEdgeScroll();
+            return;
+        }
+        panFromX -= edgeScrollPixels;
+        panTo(lastPanX);
+        if (cursorSample >= 0) {
+            cursorSample = log.nearestSample(timeAt(cursorX));
+        }
+        viewChanged();
+    }
+
+    /** The pointer move produced no drag event at its target: the desktop ignored it, so scroll on a timer. */
+    private void warpCheck() {
+        warpCheck.stop();
+        if (panFromX < 0 || warpTargetX < 0) {
+            return;
+        }
+        warpTargetX = -1;
+        warpFailed = true;
+        panFromX = lastPanX;
+        panFromStart = window.start();
+        startEdgeScroll(lastPanX >= panHigh - EDGE_PIXELS);
+    }
+
+    void edgeScrollTickForTests() {
+        if (edgeScrollPixels != 0 && panFromX >= 0) {
+            edgeScrollTick();
+        }
+    }
+
+    void warpCheckForTests() {
+        warpCheck();
     }
 
     /** Moves divider {@link #resizing} by {@code delta} pixels, keeping both neighbouring plots usable. */
@@ -1220,9 +1410,12 @@ final class LogChart extends JComponent {
             int x = plotLeft;
             int line = 0;
             for (int field : layout.fields(plot)) {
-                int nameWidth = metrics.stringWidth(log.name(field) + " ");
-                int valueWidth = valueMetrics.stringWidth(legendValue(field, cursorSample));
-                int width = 19 + nameWidth + valueWidth + metrics.stringWidth(unitSuffix(field)) + CLOSE_WIDTH + 10;
+                FontMetrics bold = getFontMetrics(legendBold(metrics.getFont()));
+                int nameWidth = bold.stringWidth(log.name(field) + " ");
+                // the value and, with min/max always, the range in brackets after it
+                int valueWidth = valueMetrics.stringWidth(legendValue(field, cursorSample)
+                        + legendRange(field, cursorSample));
+                int width = 19 + nameWidth + valueWidth + bold.stringWidth(unitSuffix(field)) + CLOSE_WIDTH + 10;
                 if (x + width > legendRight && x > plotLeft) {
                     x = plotLeft;
                     line++;
@@ -1306,6 +1499,33 @@ final class LogChart extends JComponent {
             int focusedPlot = layout.plotOf(focused);
             if (focusedPlot >= 0 && focusedPlot < bands.size()) {
                 markers = markers(bands.get(focusedPlot).traces, focused, g.getFontMetrics(valueFont));
+            }
+            minMaxMarkers = new ArrayList<>();
+            minMaxFields = new ArrayList<>();
+            if (grid.isAlwaysMinMax()) {
+                Font compactFont = compactMarkerFont(valueFont);
+                FontMetrics compactMetrics = g.getFontMetrics(compactFont);
+                for (Band band : bands) {
+                    // the focused trace's full tags are placed first, so the compact ones keep clear of them
+                    List<Rectangle> taken = new ArrayList<>();
+                    if (band.plot == focusedPlot) {
+                        for (Marker marker : markers) {
+                            taken.add(marker.tag);
+                        }
+                    }
+                    for (int field : layout.fields(band.plot)) {
+                        if (field == focused) {
+                            continue;
+                        }
+                        for (Marker marker : compactMarkers(band.traces, field, compactMetrics, taken)) {
+                            minMaxMarkers.add(marker);
+                            minMaxFields.add(field);
+                        }
+                    }
+                }
+                drawCompactMarkers(g, palette, compactFont);
+            }
+            if (!markers.isEmpty()) {
                 drawMarkers(g, palette, valueFont, focused);
             }
             valueBoxes = new ArrayList<>();
@@ -1379,18 +1599,29 @@ final class LogChart extends JComponent {
                 }
             }
             g.setColor(colorOf(item.field, palette));
-            g.fillRoundRect(x, barY, 13, LEGEND_BAR_HEIGHT, 4, 4);
+            // dashed or dotted like the trace, so the line can be matched to its name
+            TraceStyle.paintMark(g, grid.getLineStyle(log.name(item.field)), x, barY, 13, LEGEND_BAR_HEIGHT);
             if (item.field == hoveredSwatch) {
                 // the colour mark opens the colour picker
                 g.setColor(palette.accent);
                 g.drawRoundRect(x - 4, barY - 4, 21, LEGEND_BAR_HEIGHT + 8, 6, 6);
             }
+            // NAME value (min–max) UNIT, with the name and unit in bold
+            Font bold = legendBold(metrics.getFont());
             g.setColor(palette.label);
+            g.setFont(bold);
             g.drawString(log.name(item.field) + " ", x + 19, baseline);
             g.setFont(valueFont);
-            g.drawString(legendValue(item.field, cursorSample), x + 19 + item.nameWidth, baseline);
+            String value = legendValue(item.field, cursorSample);
+            int valueX = x + 19 + item.nameWidth;
+            g.drawString(value, valueX, baseline);
+            String range = legendRange(item.field, cursorSample);
+            if (!range.isEmpty()) {
+                g.drawString(range, valueX + g.getFontMetrics().stringWidth(value), baseline);
+            }
+            g.setFont(bold);
+            g.drawString(unitSuffix(item.field), valueX + item.valueWidth, baseline);
             g.setFont(metrics.getFont());
-            g.drawString(unitSuffix(item.field), x + 19 + item.nameWidth + item.valueWidth, baseline);
             if (item.field == hoveredField) {
                 g.setColor(palette.hint);
                 g.drawString("×", item.close.x + (item.close.width - metrics.stringWidth("×")) / 2, baseline);
@@ -1448,17 +1679,17 @@ final class LogChart extends JComponent {
         try {
             plot.clipRect(area.x, area.y - 1, area.width + 1, area.height + 3);
             paintHighlights(plot, area, palette);
-            plot.setStroke(new BasicStroke(palette.strokeWidth));
             int focused = focus.focused();
             for (int field : fields) {
                 if (field != focused) {
+                    plot.setStroke(traceStroke(field, palette, false));
                     plot.setColor(traceColor(field, palette));
                     plot.draw(tracePath(field));
                 }
             }
             if (fields.contains(focused)) {
                 // on top of the faded traces, slightly thicker
-                plot.setStroke(new BasicStroke(palette.strokeWidth + 1));
+                plot.setStroke(traceStroke(focused, palette, true));
                 plot.setColor(traceColor(focused, palette));
                 plot.draw(tracePath(focused));
             }
@@ -1476,7 +1707,7 @@ final class LogChart extends JComponent {
                 // The line no longer sits on the sample being read, so mark that sample on each trace.
                 int sampleX = xOf(log.value(cursorSample, 0));
                 for (int field : fields) {
-                    double value = log.value(cursorSample, field);
+                    double value = traceValue(cursorSample, field);
                     if (Double.isFinite(value)) {
                         int y = (int) Math.round(yOf(field, value, area));
                         plot.setColor(traceColor(field, palette));
@@ -1508,6 +1739,21 @@ final class LogChart extends JComponent {
             return color;
         }
         return new Color(color.getRed(), color.getGreen(), color.getBlue(), FADED_ALPHA);
+    }
+
+    /** The trace's width in pixels: its own or the default ({@link ChartSettings#lineWidth}), a pixel more when focused. */
+    float traceWidth(int field, PlotPalette palette, boolean focused) {
+        return grid.lineWidth(log.name(field), palette) + (focused ? 1 : 0);
+    }
+
+    /**
+     * The trace's line: its style, dash and gap ({@link ChartSettings#getTraceLine}) at its width. Automatic dashes
+     * follow the width without the focus pixel, so highlighting a trace does not change its pattern.
+     */
+    Stroke traceStroke(int field, PlotPalette palette, boolean focused) {
+        TraceStyle.Spec spec = grid.getTraceLine(log.name(field));
+        float width = traceWidth(field, palette, false);
+        return TraceStyle.stroke(spec.line, width + (focused ? 1 : 0), spec.dash(width), spec.gap(width));
     }
 
     /**
@@ -1633,16 +1879,16 @@ final class LogChart extends JComponent {
         int sampleX = xOf(log.value(sample, 0));
         List<Integer> shown = new ArrayList<>();
         for (int field : fields) {
-            if (Double.isFinite(log.value(sample, field))) {
+            if (Double.isFinite(traceValue(sample, field))) {
                 shown.add(field);
             }
         }
         // top to bottom, so pushing apart keeps each label on the same side of its neighbours as its trace
-        shown.sort((a, b) -> Double.compare(yOf(a, log.value(sample, a), area), yOf(b, log.value(sample, b), area)));
+        shown.sort((a, b) -> Double.compare(yOf(a, traceValue(sample, a), area), yOf(b, traceValue(sample, b), area)));
         double[] centers = new double[shown.size()];
         for (int i = 0; i < centers.length; i++) {
             int field = shown.get(i);
-            centers[i] = Math.max(area.y, Math.min(area.y + area.height, yOf(field, log.value(sample, field), area)));
+            centers[i] = Math.max(area.y, Math.min(area.y + area.height, yOf(field, traceValue(sample, field), area)));
         }
         int[] tops = spreadLabels(centers, LABEL_HEIGHT, LABEL_SPACING, area.y, area.y + area.height);
         if (tops == null) {
@@ -1655,7 +1901,7 @@ final class LogChart extends JComponent {
         int widest = 0;
         for (int i = 0; i < values.length; i++) {
             int field = shown.get(i);
-            values[i] = ValueFormat.format(log, field, log.value(sample, field));
+            values[i] = cursorText(sample, field);
             widths[i] = 6 + valueMetrics.stringWidth(values[i]) + metrics.stringWidth(unitSuffix(field)) + 6;
             widest = Math.max(widest, widths[i]);
         }
@@ -1711,7 +1957,7 @@ final class LogChart extends JComponent {
         int valueWidth = 0;
         int unitWidth = 0;
         for (int field : fields) {
-            String value = ValueFormat.format(log, field, log.value(sample, field));
+            String value = cursorText(sample, field);
             values.add(value);
             valueWidth = Math.max(valueWidth, valueMetrics.stringWidth(value));
             unitWidth = Math.max(unitWidth, metrics.stringWidth(unitSuffix(field)));
@@ -1789,7 +2035,7 @@ final class LogChart extends JComponent {
             double value = log.value(sample, field);
             int x = Math.max(area.x, Math.min(area.x + area.width, xOf(log.value(sample, 0))));
             int y = (int) Math.round(yOf(field, value, area));
-            String text = ValueFormat.format(log, field, value);
+            String text = ValueFormat.format(log, field, value) + rawTag(field);
             int width = valueMetrics.stringWidth(text) + 10;
             int tagX = Math.max(area.x, Math.min(area.x + area.width - width, x - width / 2));
             int above = y - TAG_OFFSET - TAG_HEIGHT;
@@ -1801,6 +2047,105 @@ final class LogChart extends JComponent {
             result.add(new Marker(max, new Point(x, y), new Rectangle(tagX, tagY, width, TAG_HEIGHT), text));
         }
         return result;
+    }
+
+    private static final int COMPACT_TAG_HEIGHT = 15;
+    private static final int COMPACT_TAG_OFFSET = 8;
+    /** Free pixels kept between compact tags and any other tag. */
+    private static final int TAG_GAP = 2;
+
+    static Font compactMarkerFont(Font valueFont) {
+        return valueFont.deriveFont(Font.PLAIN, Math.max(9f, valueFont.getSize2D() - 1));
+    }
+
+    /**
+     * Smaller markers at the visible max and min of an unfocused {@code field}, for "min/max always". Each tag
+     * prefers the same side as a full marker, tries the other side when that overlaps a tag in {@code taken}, and is
+     * dropped (null) when both do, leaving only the triangle. Placed tags are added to {@code taken}.
+     */
+    List<Marker> compactMarkers(Rectangle area, int field, FontMetrics metrics, List<Rectangle> taken) {
+        List<Marker> result = new ArrayList<>();
+        TraceStats traceStats = stats.get(field);
+        if (traceStats.isEmpty()) {
+            return result;
+        }
+        for (boolean max : new boolean[]{true, false}) {
+            int sample = max ? traceStats.maxSample : traceStats.minSample;
+            if (!max && sample == traceStats.maxSample) {
+                continue;
+            }
+            double value = log.value(sample, field);
+            int x = Math.max(area.x, Math.min(area.x + area.width, xOf(log.value(sample, 0))));
+            int y = (int) Math.round(yOf(field, value, area));
+            String text = ValueFormat.format(log, field, value) + rawTag(field);
+            int width = metrics.stringWidth(text) + 8;
+            int tagX = Math.max(area.x, Math.min(area.x + area.width - width, x - width / 2));
+            int above = y - COMPACT_TAG_OFFSET - COMPACT_TAG_HEIGHT;
+            int below = y + COMPACT_TAG_OFFSET;
+            int[] sides = max ? new int[]{above, below} : new int[]{below, above};
+            Rectangle tag = null;
+            for (int side : sides) {
+                if (side < area.y || side + COMPACT_TAG_HEIGHT > area.y + area.height) {
+                    continue;
+                }
+                Rectangle candidate = new Rectangle(tagX, side, width, COMPACT_TAG_HEIGHT);
+                if (isFree(candidate, taken)) {
+                    tag = candidate;
+                    break;
+                }
+            }
+            if (tag != null) {
+                taken.add(tag);
+            }
+            result.add(new Marker(max, new Point(x, y), tag, text));
+        }
+        return result;
+    }
+
+    private static boolean isFree(Rectangle candidate, List<Rectangle> taken) {
+        Rectangle padded = new Rectangle(candidate.x - TAG_GAP, candidate.y - TAG_GAP,
+                candidate.width + 2 * TAG_GAP, candidate.height + 2 * TAG_GAP);
+        for (Rectangle other : taken) {
+            if (other != null && padded.intersects(other)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** Compact markers: a small triangle in the trace colour, and a slightly see-through tag when it has room. */
+    private void drawCompactMarkers(Graphics2D g, PlotPalette palette, Font font) {
+        g.setFont(font);
+        FontMetrics metrics = g.getFontMetrics();
+        g.setStroke(new BasicStroke(1));
+        // faded like their traces while another trace is focused
+        int alpha = focus.focused() == TraceFocus.NONE ? 215 : FADED_ALPHA;
+        Color outline = withAlpha(palette.background, alpha);
+        for (int i = 0; i < minMaxMarkers.size(); i++) {
+            Marker marker = minMaxMarkers.get(i);
+            Color color = withAlpha(colorOf(minMaxFields.get(i), palette), alpha);
+            int x = marker.point.x;
+            int y = marker.point.y;
+            boolean pointsDown = marker.tag != null ? marker.tag.y < y : marker.max;
+            Polygon triangle = pointsDown
+                    ? new Polygon(new int[]{x - 4, x + 4, x}, new int[]{y - 8, y - 8, y - 2}, 3)
+                    : new Polygon(new int[]{x - 4, x + 4, x}, new int[]{y + 8, y + 8, y + 2}, 3);
+            g.setColor(color);
+            g.fillPolygon(triangle);
+            g.setColor(outline);
+            g.drawPolygon(triangle);
+            if (marker.tag != null) {
+                g.setColor(color);
+                g.fillRoundRect(marker.tag.x, marker.tag.y, marker.tag.width, marker.tag.height, 5, 5);
+                g.setColor(outline);
+                g.drawString(marker.text, marker.tag.x + 4,
+                        marker.tag.y + (marker.tag.height + metrics.getAscent() - metrics.getDescent()) / 2);
+            }
+        }
+    }
+
+    private static Color withAlpha(Color color, int alpha) {
+        return new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
     }
 
     private void drawMarkers(Graphics2D g, PlotPalette palette, Font valueFont, int field) {
@@ -1887,6 +2232,10 @@ final class LogChart extends JComponent {
         String range = stats.isBetweenCursors()
                 ? String.format(Locale.ROOT, "A–B %.2f–%.2f s", stats.rangeStart(), stats.rangeEnd())
                 : String.format(Locale.ROOT, "visible %.1f–%.1f s", window.start(), window.end());
+        if (isSmoothed(field)) {
+            // the drawn line is smoothed, these statistics are not
+            range += ", raw values";
+        }
         String[][] rows = traceStats.isEmpty()
                 ? new String[][]{{"", "no values in the visible time", ""}}
                 : new String[][]{
@@ -2640,7 +2989,10 @@ final class LogChart extends JComponent {
         return path;
     }
 
-    /** Value used only for the painted trace; cursor values, statistics, scales and exports read {@link #log}. */
+    /**
+     * Value of the drawn trace: smoothed when display smoothing is on. Cursor values follow it; min/max, statistics,
+     * scales, A–B deltas and exports read the recorded values in {@link #log}.
+     */
     double traceValue(int sample, int field) {
         double[] smoothed = smoothedValues(field);
         return smoothed == null ? log.value(sample, field) : smoothed[sample];
@@ -2737,9 +3089,59 @@ final class LogChart extends JComponent {
      * visible time window, so the legend summarises what is on screen.
      */
     String legendValue(int field, int sample) {
-        String value = sample >= 0 ? ValueFormat.format(log, field, log.value(sample, field))
-                : ValueFormat.range(log, field, stats.get(field));
+        TraceStats traceStats = stats.get(field);
+        String value = sample >= 0 ? cursorText(sample, field)
+                : traceStats.isEmpty() ? ValueFormat.range(log, field, traceStats) : bracketedRange(field);
         return cursors.isRange() ? value + "  Δ" + delta(field) : value;
+    }
+
+    /**
+     * The visible min–max in brackets after the cursor value (" (1001–3515)"), so both stay readable without hunting
+     * for markers, whatever the min/max setting (that one only controls the markers on the plots); empty while the
+     * pointer is away, when the legend already shows the range.
+     */
+    String legendRange(int field, int sample) {
+        if (sample < 0) {
+            return "";
+        }
+        String range = bracketedRange(field);
+        return range.isEmpty() ? "" : " " + range;
+    }
+
+    /**
+     * The visible min–max in brackets, "(1001–3515)", tagged "(1001–3515 raw)" while the trace is drawn smoothed,
+     * because min/max always come from the recorded samples; empty when nothing is visible.
+     */
+    private String bracketedRange(int field) {
+        TraceStats traceStats = stats.get(field);
+        return traceStats.isEmpty() ? "" : "(" + ValueFormat.range(log, field, traceStats) + rawTag(field) + ")";
+    }
+
+    /** " raw" while {@code field} is drawn smoothed, so recorded values are not mistaken for the drawn line. */
+    private String rawTag(int field) {
+        return isSmoothed(field) ? " raw" : "";
+    }
+
+    /** True when {@code field} is drawn smoothed. */
+    boolean isSmoothed(int field) {
+        return grid.getSmoothingWindowSeconds(log.name(field)) > 0;
+    }
+
+    /**
+     * The value at the cursor as drawn: the smoothed value on a smoothed trace, followed by the recorded one when
+     * raw values are shown, "15.5 (12.2 raw)"; the recorded value on a raw trace.
+     */
+    String cursorText(int sample, int field) {
+        String drawn = ValueFormat.format(log, field, traceValue(sample, field));
+        if (!isSmoothed(field) || !grid.isShowRawValues()) {
+            return drawn;
+        }
+        return drawn + " (" + ValueFormat.format(log, field, log.value(sample, field)) + " raw)";
+    }
+
+    /** The legend's signal name and unit font. */
+    private static Font legendBold(Font font) {
+        return font.deriveFont(Font.BOLD);
     }
 
     /** B minus A of a signal, signed: "+820", "-0.12". */

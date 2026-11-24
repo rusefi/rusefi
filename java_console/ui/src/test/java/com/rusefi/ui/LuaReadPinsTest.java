@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileMetaInfoImpl;
 import com.opensr5.ini.IniFileModel;
@@ -85,7 +86,7 @@ class LuaReadPinsTest {
                 context.setOfflineMode(true);
                 context.setIniFileModelForOffline(ini);
                 pinoutRef.set(new PinoutPane(context, false));
-                context.fireConfigImageChanged(new ConfigurationImage(content));
+                context.fireConfigImageChanged(ConfigurationImageTestHelper.newLittleEndian(content));
             });
             // the pane takes the tune on the next event
             SwingUtilities.invokeAndWait(() -> pinoutRef.get().luaScriptSource.accept(scripts::add));

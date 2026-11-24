@@ -17,7 +17,7 @@ class UpdateCalibrationsSignatureTest {
         IniFileModel ini = mock(IniFileModel.class);
         when(ini.getSignature()).thenReturn(iniSignature);
         CalibrationsInfo current = new CalibrationsInfo(ini,
-            new ConfigurationImageWithMeta(new ConfigurationImageMetaVersion0_0(16, live + "\u0000"), new byte[16]));
+            new ConfigurationImageWithMeta(new ConfigurationImageMetaVersion0_0(16, live + "\u0000"), new byte[16], java.nio.ByteOrder.LITTLE_ENDIAN));
 
         assertTrue(UpdateCalibrations.matchesCalibrationSignature(live, current));
         assertTrue(UpdateCalibrations.matchesCalibrationSignature(live + "\u0000", current));

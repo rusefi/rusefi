@@ -4,9 +4,9 @@ import com.rusefi.core.RusEfiSignature;
 import com.rusefi.io.ConnectionStatusValue;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import javax.swing.Icon;
-import javax.swing.JTextArea;
+import javax.swing.JMenuItem;
+import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 import java.awt.Color;
 import java.awt.Component;
@@ -24,6 +24,17 @@ public class MainFrameUpdateCheckTest {
     private static final RusEfiSignature ECU_SIG = new RusEfiSignature(
         "development", "2026", "05", "09", "uaefi_pro", "4226383888", false
     );
+
+    @Test
+    public void installedApplicationUpdateBecomesExplicitRestartAction() {
+        JMenuItem updateItem = new JMenuItem("Update Software");
+        updateItem.setEnabled(false);
+
+        MainFrame.applySoftwareRestartRequired(updateItem);
+
+        assertEquals("Restart Application", updateItem.getText());
+        assertTrue(updateItem.isEnabled());
+    }
 
     @Test
     public void nullEcuSigReturnsFalse() {
@@ -209,7 +220,7 @@ public class MainFrameUpdateCheckTest {
             overlay.setActionVisible(0, false);
             overlay.setMessage("Unable to check ECU firmware", Color.RED);
             Container content = (Container) overlay.getComponent(0);
-            JTextArea message = (JTextArea) content.getComponent(0);
+            JTextPane message = (JTextPane) content.getComponent(0);
             for (int width : new int[]{800, 1280, 1916}) {
                 overlay.setSize(width, 600);
                 layoutRecursively(overlay);

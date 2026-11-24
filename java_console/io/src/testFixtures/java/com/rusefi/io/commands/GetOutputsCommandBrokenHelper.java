@@ -13,7 +13,7 @@ public class GetOutputsCommandBrokenHelper {
         // each session should know what signature it talks to and use dynamic IniModel!
         // we have a pile of dreams/unused code which was moved from PROD into TEST folders
         // under https://github.com/rusefi/rusefi/issues/6845
-        return GetOutputsCommand.createRequest(0, VariableRegistryValues.TS_TOTAL_OUTPUT_SIZE);
+        return GetOutputsCommand.createRequest(0, VariableRegistryValues.TS_TOTAL_OUTPUT_SIZE, java.nio.ByteOrder.LITTLE_ENDIAN);
     }
 
     public static void sendOutput(IoStream stream) throws IOException {

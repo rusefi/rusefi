@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,7 +44,13 @@ public class RawIniFile {
     }
 
     public static RawIniFile read(String fileName) throws FileNotFoundException {
-        return IniFileReaderUtil.read(new FileInputStream(fileName));
+        try (FileInputStream input = new FileInputStream(fileName)) {
+            return IniFileReaderUtil.read(input);
+        } catch (FileNotFoundException e) {
+            throw e;
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     @NotNull

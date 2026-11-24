@@ -17,7 +17,7 @@ public class ByteBufferUtilTest {
     public void damnItWhichOneIsLittleEndian() {
         byte[] testArrayForLittleEndianByteBuffer = new byte[2];
         // LSB Little-endian System, "Intel"
-        ByteBuffer littleEndianBuffer = ByteBufferUtil.littleEndianWrap(testArrayForLittleEndianByteBuffer, 0, 2);
+        ByteBuffer littleEndianBuffer = ByteBufferUtil.wrap(testArrayForLittleEndianByteBuffer, 0, 2, java.nio.ByteOrder.LITTLE_ENDIAN);
         short testValue = 0x1122;
         littleEndianBuffer.putShort(testValue);
         assertEquals(testArrayForLittleEndianByteBuffer[0], 0x22);

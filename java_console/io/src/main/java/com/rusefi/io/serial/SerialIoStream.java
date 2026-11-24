@@ -7,9 +7,8 @@ import com.fazecast.jSerialComm.SerialPortEvent;
 import com.fazecast.jSerialComm.SerialPortThreadFactory;
 import com.opensr5.io.DataListener;
 import com.rusefi.NamedThreadFactory;
-import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.binaryprotocol.test.Bug3923;
-import com.rusefi.io.IoStream;
+import com.rusefi.core.OsUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,9 +19,11 @@ import static com.devexperts.logging.Logging.getLogging;
 
 public abstract class SerialIoStream extends AbstractIoStream {
     static final Logging log = getLogging(SerialIoStream.class);
+    private static final int PROBE_WRITE_TIMEOUT_MS = 500;
 
     @Nullable // null in case of port open error, for instance lack of permissions on Unix
     protected final SerialPort sp;
+    private final NativePort nativePort;
     protected final String port;
     private boolean withListener;
 
@@ -33,24 +34,54 @@ public abstract class SerialIoStream extends AbstractIoStream {
     }
 
     public SerialIoStream(@NotNull SerialPort sp, String port) {
-        this.sp = sp;
+        this(sp == null ? null : new NativePort(sp), port);
+    }
+
+    SerialIoStream(NativePort nativePort, String port) {
+        this.nativePort = nativePort;
+        this.sp = nativePort == null ? null : nativePort.serialPort;
         this.port = Objects.requireNonNull(port);
     }
 
     @Nullable
     protected static SerialPort openSerial(String port) {
-        SerialPort serialPort = SerialPort.getCommPort(port);
-        serialPort.setBaudRate(BaudRateHolder.INSTANCE.baudRate);
-        boolean openedOk = serialPort.openPort();
+        NativePort nativePort = openSerial(port, false, new NativePort(SerialPort.getCommPort(port)));
+        return nativePort == null ? null : nativePort.serialPort;
+    }
+
+    @Nullable
+    static NativePort openSerial(String port, boolean probe, NativePort nativePort) {
+        nativePort.setBaudRate(BaudRateHolder.INSTANCE.baudRate);
+        boolean openedOk = nativePort.openPort();
         if (!openedOk) {
             log.error("Error opening " + port + " maybe no permissions?");
             // todo: leverage jSerialComm method once we start using version 2.9+
             return null;
         }
+        if (probe && nativePort.supportsWriteTimeout()) {
+            // On Windows, even a nominally nonblocking jSerialComm write can wait
+            // in native code. WRITE_BLOCKING makes its finite TX budget effective.
+            // Do not enable it on POSIX: the TX budget is ignored and writes use tcdrain.
+            // Leave reads nonblocking: buffered input still uses the data listener.
+            // This is not a deadline for native open/flush/close or a broken driver.
+            boolean configured = false;
+            try {
+                configured = nativePort.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 0,
+                    PROBE_WRITE_TIMEOUT_MS);
+            } finally {
+                if (!configured) {
+                    nativePort.closePort();
+                }
+            }
+            if (!configured) {
+                log.error("Cannot configure serial probe write timeout on " + port);
+                return null;
+            }
+        }
         // Discard any stale bytes left in the RX/TX queues by a prior
         // open/close cycle (e.g. scanner probe, prior console connection).
-        serialPort.flushIOBuffers();
-        return serialPort;
+        nativePort.flushIOBuffers();
+        return nativePort;
     }
 
     @Override
@@ -59,7 +90,7 @@ public abstract class SerialIoStream extends AbstractIoStream {
             return;
         log.info(port + ": Closing port...");
         super.close();
-        sp.closePort();
+        nativePort.closePort();
         log.info(port + ": Closed port.");
     }
 
@@ -67,14 +98,52 @@ public abstract class SerialIoStream extends AbstractIoStream {
     public void write(byte[] bytes) throws IOException {
         if (Bug3923.obscene)
             log.info("Writing " + bytes.length + " byte(s)");
-        if (sp == null)
+        if (nativePort == null) {
             throw new IOException("Port was never opened");
+        }
 
-        int written = sp.writeBytes(bytes, bytes.length);
+        int written = nativePort.writeBytes(bytes);
 
         // If we failed to write all the bytes, the ECU probably disconnected
         if (written != bytes.length) {
             throw new IOException("write failed: wrote " + written + " but expected " + bytes.length);
+        }
+    }
+
+    /** Narrow native-call seam: the real opener and writes use these same operations. */
+    static class NativePort {
+        final SerialPort serialPort;
+
+        NativePort(SerialPort serialPort) {
+            this.serialPort = serialPort;
+        }
+
+        void setBaudRate(int baudRate) {
+            serialPort.setBaudRate(baudRate);
+        }
+
+        boolean openPort() {
+            return serialPort.openPort();
+        }
+
+        boolean supportsWriteTimeout() {
+            return OsUtil.isWindows();
+        }
+
+        boolean setComPortTimeouts(int mode, int readTimeoutMs, int writeTimeoutMs) {
+            return serialPort.setComPortTimeouts(mode, readTimeoutMs, writeTimeoutMs);
+        }
+
+        void flushIOBuffers() {
+            serialPort.flushIOBuffers();
+        }
+
+        void closePort() {
+            serialPort.closePort();
+        }
+
+        int writeBytes(byte[] bytes) {
+            return serialPort.writeBytes(bytes, bytes.length);
         }
     }
 

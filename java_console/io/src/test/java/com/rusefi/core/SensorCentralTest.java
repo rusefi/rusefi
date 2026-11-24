@@ -459,10 +459,10 @@ public class SensorCentralTest {
         byte[] response = new byte[5];
         ByteBuffer.wrap(response, 1, 4).order(ByteOrder.LITTLE_ENDIAN).putFloat(1.0f);
 
-        assertEquals(0.0, ISensorHolder.readFieldValue(response, "ltftCorrection1", field), 1e-9);
+        assertEquals(0.0, ISensorHolder.readFieldValue(response, "ltftCorrection1", field, ByteOrder.LITTLE_ENDIAN), 1e-9);
 
         ByteBuffer.wrap(response, 1, 4).order(ByteOrder.LITTLE_ENDIAN).putFloat(1.05f);
-        assertEquals(5.0, ISensorHolder.readFieldValue(response, "ltftCorrection1", field), 1e-4);
+        assertEquals(5.0, ISensorHolder.readFieldValue(response, "ltftCorrection1", field, ByteOrder.LITTLE_ENDIAN), 1e-4);
     }
 
     /** A big-endian controller ('endianness = big', e.g. PowerPC) sends MSB-first output channels. */

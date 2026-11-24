@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileMetaInfoImpl;
 import com.opensr5.ini.IniFileModel;
@@ -52,7 +53,7 @@ class PinoutTuneUseNavigationTest {
                 pinoutRef.set(pinout);
                 TuningPane tuning = new TuningPane(context);
                 tuningRef.set(tuning);
-                ConfigurationImage image = new ConfigurationImage(new byte[]{1, 1});
+                ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[]{1, 1});
                 tuning.seedOfflineImage(image, "fanSettings");
                 context.fireConfigImageChanged(image);
 
