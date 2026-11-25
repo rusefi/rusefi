@@ -33,7 +33,10 @@ bool flashAllowWriteID(uint32_t id);
 // Level state consumed by checkSettingsWriteFailure(): writeToFlashNowImpl() reports
 // every settings-write attempt outcome here; a success clears the failing state.
 void trackSettingsWriteResult(bool success);
-// Core config-error producer (see refreshConfigErrorState()): reports when settings
-// write attempts have been failing continuously for longer than the alert threshold.
-// About saving the tune only, not about what the tune contains.
+// The pending settings write was given up, so no attempt will report an outcome: forget the
+// failing streak. [tag:settings_write_keeps_failing]
+void resetSettingsWriteFailure();
+// Core config-error producer (see refreshConfigErrorState()): reports when retried settings
+// writes keep failing: an attempt failed longer than the alert threshold after the first
+// failure of the streak. About saving the tune only, not about what the tune contains.
 bool checkSettingsWriteFailure();
