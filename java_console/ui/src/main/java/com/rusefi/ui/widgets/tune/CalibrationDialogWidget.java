@@ -84,6 +84,8 @@ public class CalibrationDialogWidget {
     private boolean hasReadoutDemand;
     private static final int READOUT_GAUGE_SIZE = 90;
     private static final int MIN_GAUGE_SIZE = 60;
+    /** Gauges wrap into more rows, e.g. four into 2x2, rather than sit in a row smaller than this. */
+    private static final int LARGEST_GAUGE_SIZE = 180;
     /** Counts gauge groups so renderPanelEntry can mark panels that contain gauges as growing. */
     private int gaugeGroupsRendered;
     /** Called after each user edit with the current working image, so listeners can re-evaluate their own expressions. */
@@ -875,11 +877,13 @@ public class CalibrationDialogWidget {
     /**
      * Gauges scale with the width the dialog offers: the dialog fills the viewport width, panels
      * holding gauges are marked {@link ConstrainedBorderLayout#GROWS} so they take the spare
-     * width, and the square grid fits as many gauges per row as that width allows and shares it
-     * between them, so the gauges always fill the width they are given.
+     * width, and the square grid uses the fewest columns that keep gauges within
+     * {@link #LARGEST_GAUGE_SIZE} (four gauges in a medium panel form a 2x2 grid) and shares the
+     * width between them, so the gauges always fill the width they are given.
      */
     private void renderGaugeGroup(JPanel container, List<String> gaugeNames, IniFileModel iniFileModel) {
-        JPanel gaugePanel = new JPanel(new SquareGridLayout(2, 4, MIN_GAUGE_SIZE, READOUT_GAUGE_SIZE));
+        JPanel gaugePanel = new JPanel(new SquareGridLayout(2, 4, MIN_GAUGE_SIZE, READOUT_GAUGE_SIZE,
+            LARGEST_GAUGE_SIZE));
         SquareGridLayout.revalidateOnWidthChange(gaugePanel);
         gaugePanel.putClientProperty(ConstrainedBorderLayout.GROWS, Boolean.TRUE);
         gaugePanel.setAlignmentX(Component.LEFT_ALIGNMENT);

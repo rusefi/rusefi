@@ -78,10 +78,15 @@ class CalibrationDialogGaugeLayoutTest {
                     "The settings column keeps its width; spare width goes to the gauges");
                 int veryWide = gauges.get(0).getWidth();
 
+                // One row would make the gauges small, so each group of four forms a 2x2 grid of
+                // larger gauges instead (tuner request for the CAN O2 dialog).
                 layout(scroll, 1600, 2000);
                 assertFillWidth(gauges);
+                assertEquals(gauges.get(0).getY(), gauges.get(1).getY(), "Medium window: two gauges per row");
+                assertTrue(gauges.get(2).getY() > gauges.get(0).getY(), "Medium window: 2x2 grid");
+                assertEquals(gauges.get(0).getX(), gauges.get(2).getX());
                 int wide = gauges.get(0).getWidth();
-                assertTrue(wide < veryWide, "Gauges shrink with the window: " + wide + " vs " + veryWide);
+                assertTrue(wide > 180, "Medium window: 2x2 gauges are large, got " + wide + " vs " + veryWide);
 
                 // Fewer columns fit, so the groups wrap into more rows instead of shrinking further.
                 layout(scroll, 900, 2000);
