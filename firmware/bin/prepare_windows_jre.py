@@ -3,20 +3,30 @@
 
 import argparse
 import hashlib
+import http.client
 import json
 import os
 from pathlib import Path, PurePosixPath
 import re
 import shutil
+import socket
 import stat
 import sys
 import tempfile
+import time
+import urllib.error
 import urllib.request
 import zipfile
 
 
 DEFAULT_MANIFEST = Path(__file__).with_name("windows_jre.json")
 REQUIRED_FILES = ("bin/java.exe", "bin/javaw.exe", "bin/server/jvm.dll", "release")
+MAX_DOWNLOAD_ATTEMPTS = 4
+RETRYABLE_HTTP_CODES = {408, 429, 500, 502, 503, 504}
+NETWORK_ERRORS = (
+    TimeoutError, ConnectionError, socket.gaierror, socket.herror,
+    http.client.IncompleteRead,
+)
 
 
 def fail(message):
@@ -45,6 +55,24 @@ def read_manifest(path):
     return data
 
 
+def retryable_download_error(error):
+    if isinstance(error, urllib.error.HTTPError):
+        return error.code in RETRYABLE_HTTP_CODES
+    if isinstance(error, urllib.error.URLError):
+        error = error.reason
+    return isinstance(error, NETWORK_ERRORS)
+
+
+def download_retry_delay(error, attempt):
+    delay = 2 ** attempt
+    if isinstance(error, urllib.error.HTTPError):
+        try:
+            delay = max(delay, float(error.headers.get("Retry-After", delay)))
+        except (AttributeError, TypeError, ValueError):
+            pass
+    return min(delay, 30)
+
+
 def get_archive(manifest, cache_dir, offline_archive):
     if offline_archive is not None:
         archive = offline_archive
@@ -60,9 +88,29 @@ def get_archive(manifest, cache_dir, offline_archive):
             os.close(fd)
             partial = Path(name)
             try:
-                request = urllib.request.Request(manifest["url"], headers={"User-Agent": "rusEFI-JRE-preparer"})
-                with urllib.request.urlopen(request, timeout=30) as response, partial.open("wb") as destination:
-                    shutil.copyfileobj(response, destination)
+                for attempt in range(MAX_DOWNLOAD_ATTEMPTS):
+                    try:
+                        request = urllib.request.Request(
+                            manifest["url"], headers={"User-Agent": "rusEFI-JRE-preparer"},
+                        )
+                        with urllib.request.urlopen(request, timeout=30) as response:
+                            with partial.open("wb") as destination:
+                                shutil.copyfileobj(response, destination)
+                                content_length = getattr(response, "headers", {}).get("Content-Length")
+                                if content_length is not None:
+                                    missing = int(content_length) - destination.tell()
+                                    if missing > 0:
+                                        raise http.client.IncompleteRead(b"", missing)
+                        break
+                    except (urllib.error.URLError, TimeoutError, ConnectionError,
+                            socket.gaierror, socket.herror,
+                            http.client.IncompleteRead) as error:
+                        retry = retryable_download_error(error)
+                        if isinstance(error, urllib.error.HTTPError):
+                            error.close()
+                        if not retry or attempt + 1 == MAX_DOWNLOAD_ATTEMPTS:
+                            raise
+                        time.sleep(download_retry_delay(error, attempt))
                 if sha256(partial) != manifest["sha256"]:
                     fail("downloaded archive SHA-256 mismatch")
                 os.replace(partial, archive)
@@ -144,7 +192,8 @@ def main():
     args = parser.parse_args()
     try:
         prepare(args.output_dir, args.cache_dir, args.archive, args.manifest)
-    except (OSError, ValueError, KeyError, zipfile.BadZipFile, json.JSONDecodeError) as error:
+    except (OSError, ValueError, KeyError, zipfile.BadZipFile,
+            json.JSONDecodeError, http.client.IncompleteRead) as error:
         print(f"prepare_windows_jre.py: {error}", file=sys.stderr)
         return 1
     return 0

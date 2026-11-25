@@ -2,6 +2,32 @@
 
 Build-system, CI and simulator details moved out of CLAUDE.md.
 
+### Dependency caches
+
+The shared Java setup action uses `gradle/actions/setup-gradle` as the sole
+Gradle cache owner, including downloaded distributions and dependencies.
+Pull-request and pull-request-target runs restore caches read-only; other
+events can populate their branch-scoped caches. Do not add overlapping
+`setup-java` or manual Gradle-home caching.
+
+Linux firmware and universal-bundle jobs persist only the pinned Windows
+dependency archives under `~/.cache/rusefi/7za` and `~/.cache/rusefi/jre`.
+The archive preparation helpers verify checksums even after cache restoration.
+Extracted runtimes, generated files and firmware build outputs are not part of
+these dependency caches.
+
+Cache keys track the 7za preparation script or JRE manifest, not board names or
+commit IDs. GitHub cache entries are immutable: if a stored entry is corrupt,
+delete that entry or bump the corresponding cache-key version to replace it.
+Cold or evicted caches still require upstream downloads; concurrent jobs can
+download the same dependency before the first successful job saves its cache.
+Bounded retries handle transient failures without accepting unverified files.
+The JRE downloader honors numeric `Retry-After` delays up to 30 seconds;
+unsupported header forms fall back to exponential delays. A longer requested
+delay is capped rather than extending the CI wait indefinitely.
+Explicit offline archive inputs remain fail-closed and are never repaired or
+modified automatically.
+
 Firmware and unit-test builds keep dependency files in `firmware/.dep/` and `unit_tests/.dep/` (separate from the object dirs). After a source file is moved or deleted (e.g. a controller promoted into `controllers/modules/`), incremental builds fail with `No rule to make target '<old path>.cpp'` until the stale `.dep` is removed - `make clean` or `rm -rf .dep` fixes it; wiping only `build/obj` does not. Also note the first build after such a wipe can measure several KB larger than an identical follow-up build - for flash-size comparisons, compare consecutive rebuilds of each variant, never a single post-wipe build. `firmware/bin/compile.sh` has been observed to exit 0 even when the underlying `make` failed - check the log (or that `build/rusefi.elf` got a new timestamp), not just the exit code.
 
 After ChibiOS build-rule changes, validate generated-header dependencies with an empty `DEPDIR` (a fresh directory under `/tmp` is sufficient). Existing compiler-generated `.dep` files can hide missing explicit Makefile prerequisites: an incremental build generates the RAM disk correctly while a clean CI build compiles against its checked-in placeholder header.
