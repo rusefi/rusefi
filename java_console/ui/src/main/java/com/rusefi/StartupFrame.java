@@ -1446,6 +1446,10 @@ public class StartupFrame {
      * Flip the root {@link CardLayout}. The frame stays fixed-maximized (#9715), so we relayout
      * the content in place rather than packing/resizing the window.
      */
+    JFrame getFrameForTests() {
+        return frame;
+    }
+
     private void showCard(String name) {
         CardLayout cl = (CardLayout) rootContent.getLayout();
         cl.show(rootContent, name);
