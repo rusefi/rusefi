@@ -7,11 +7,13 @@ package com.opensr5.ini.field;
  */
 public class PcVariableArrayIniField extends ArrayIniField {
     private final Double[][] values;
+    private boolean hasDefaultValues;
 
     public PcVariableArrayIniField(ArrayIniField definition) {
         super(definition.getName(), 0, definition.getType(), definition.getCols(), definition.getRows(),
             definition.getUnits(), definition.getMultiplier(), definition.getMin(), definition.getMax(),
-            definition.getDigits());
+            definition.getDigits(), definition.getScaleExpression(), definition.getTranslate(),
+            definition.getTranslateExpression());
         values = new Double[getRows()][getCols()];
         for (Double[] row : values) {
             java.util.Arrays.fill(row, 0.0);
@@ -29,7 +31,12 @@ public class PcVariableArrayIniField extends ArrayIniField {
         for (int i = 0; i < defaults.length; i++) {
             values[i / getCols()][i % getCols()] = defaults[i];
         }
+        hasDefaultValues = true;
         return true;
+    }
+
+    public boolean hasDefaultValues() {
+        return hasDefaultValues;
     }
 
     public Double[][] getValues() {

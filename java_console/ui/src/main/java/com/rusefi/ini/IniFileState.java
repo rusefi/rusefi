@@ -24,6 +24,7 @@ public class IniFileState {
     private final UIContext uiContext;
 
     private IniFileModel iniFileModel;
+    private IniFileModel offlineIniFileModel;
     // Signature of the ECU whose INI model is currently cached. Null means local fallback.
     private String lastSignature;
 
@@ -45,7 +46,14 @@ public class IniFileState {
         this.iniFileModel = iniFileModel;
     }
 
+    public void setIniFileModelForOffline(IniFileModel iniFileModel) {
+        this.offlineIniFileModel = iniFileModel;
+    }
+
     public IniFileModel getIniFileModel() {
+        if (uiContext.isOfflineMode()) {
+            return offlineIniFileModel;
+        }
         BinaryProtocol bp = uiContext.getBinaryProtocol();
         if (bp != null) {
             String currentSignature = bp.signature;

@@ -31,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyChar;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
@@ -152,6 +153,37 @@ public class BinaryProtocolTest {
         try {
             protocol.writeInBlocks(new byte[LUA_PAGE_SIZE], 0, 0, LUA_PAGE_SIZE, LUA_PAGE);
             assertIssue10134TargetSafeChunks(requests);
+        } finally {
+            stream.close();
+        }
+    }
+
+    @Test
+    public void secondaryBurnMustNotConsumePendingMainPageBurn() {
+        TestStream stream = new TestStream();
+        BinaryProtocol protocol = createProtocol(stream);
+        List<Integer> burnedPages = new ArrayList<>();
+        doAnswer(invocation -> {
+            char command = invocation.getArgument(0);
+            if (command == Integration.TS_BURN_COMMAND) {
+                byte[] packet = invocation.getArgument(1);
+                burnedPages.add(packet == null ? 0 : unsignedShort(packet, 0));
+                return new byte[]{Integration.TS_RESPONSE_BURN_OK};
+            }
+            return new byte[]{Integration.TS_RESPONSE_OK};
+        }).when(protocol).executeCommand(anyChar(), any(), anyString());
+
+        try {
+            protocol.writeInBlocks(new byte[]{1}, 0, 0, 1, LUA_PAGE);
+            protocol.burn();
+            assertTrue(burnedPages.isEmpty(), "Secondary writes must not create a main-page burn request");
+
+            protocol.writeInBlocks(new byte[]{1}, 0, 0, 1, 0);
+            assertTrue(protocol.burnPage(LUA_PAGE));
+            protocol.burn();
+
+            assertEquals(java.util.Arrays.asList(LUA_PAGE, 0), burnedPages,
+                "A secondary burn must leave the pending main-page burn intact");
         } finally {
             stream.close();
         }

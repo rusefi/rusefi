@@ -109,6 +109,11 @@ public interface IniFileModel {
 
     Map<String, CurveModel> getCurves();
 
+    /** Names declared in [PcVariables], including PC-only arrays and enum variables. */
+    default Set<String> getPcVariableNames() {
+        return Collections.emptySet();
+    }
+
     @Nullable
     TableModel getTable(String name);
 
@@ -131,6 +136,21 @@ public interface IniFileModel {
      * [ConstantsExtensions]. Names compare case-insensitively.
      */
     default Set<String> getRequiresPowerCycle() {
+        return Collections.emptySet();
+    }
+
+    /** PC scalar expressions maintained by [ConstantsExtensions], keyed by PC variable name. */
+    default Map<String, String> getMaintainedPcVariableExpressions() {
+        return Collections.emptyMap();
+    }
+
+    /** PC scalar defaults from [ConstantsExtensions], keyed by PC variable name. */
+    default Map<String, Double> getPcVariableDefaults() {
+        return Collections.emptyMap();
+    }
+
+    /** Names of scalar fields declared in [PcVariables]. */
+    default Set<String> getPcScalarVariables() {
         return Collections.emptySet();
     }
 }

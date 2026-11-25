@@ -22,6 +22,7 @@ public class TableModel {
     private final String downLabel;
     private final Double gridHeight;
     private final String gridOrient;
+    private final String visibilityExpression;
 
     public TableModel(String tableId, String map3dId, String title,
                       String topicHelp, String xLabel, String yLabel,
@@ -29,6 +30,17 @@ public class TableModel {
                       String yBinsConstant, String yBinsChannel, boolean yBinsReadOnly,
                       String zBinsConstant, String upLabel, String downLabel,
                       Double gridHeight, String gridOrient) {
+        this(tableId, map3dId, title, topicHelp, xLabel, yLabel, xBinsConstant, xBinsChannel,
+                xBinsReadOnly, yBinsConstant, yBinsChannel, yBinsReadOnly, zBinsConstant, upLabel,
+                downLabel, gridHeight, gridOrient, null);
+    }
+
+    public TableModel(String tableId, String map3dId, String title,
+                      String topicHelp, String xLabel, String yLabel,
+                      String xBinsConstant, String xBinsChannel, boolean xBinsReadOnly,
+                      String yBinsConstant, String yBinsChannel, boolean yBinsReadOnly,
+                      String zBinsConstant, String upLabel, String downLabel,
+                      Double gridHeight, String gridOrient, String visibilityExpression) {
         this.tableId = tableId;
         this.map3dId = map3dId;
         this.title = title;
@@ -46,6 +58,7 @@ public class TableModel {
         this.downLabel = downLabel;
         this.gridHeight = gridHeight;
         this.gridOrient = gridOrient;
+        this.visibilityExpression = visibilityExpression;
     }
 
     public String getTableId() {
@@ -114,5 +127,9 @@ public class TableModel {
 
     public String getGridOrient() {
         return gridOrient;
+    }
+
+    public String getVisibilityExpression() {
+        return visibilityExpression;
     }
 }

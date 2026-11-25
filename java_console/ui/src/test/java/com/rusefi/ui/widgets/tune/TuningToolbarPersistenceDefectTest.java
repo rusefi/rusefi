@@ -56,6 +56,34 @@ class TuningToolbarPersistenceDefectTest {
 
     private static final String RESTORE_SIGNATURE = "rusEFI master.2026.11.20.uaefi.123";
 
+    @Test
+    void burningDoesNotSaveTheTuneFile(@org.junit.jupiter.api.io.TempDir java.nio.file.Path dir) throws Exception {
+        Fixture[] fixture = new Fixture[1];
+        try {
+            runOnEdt(() -> {
+                fixture[0] = new Fixture(realIni(), Runnable::run);
+                fixture[0].toolbar.setRestorePointStoreForTests(new com.rusefi.util.RestorePointStore(
+                    dir.resolve("points"), 50, java.time.Clock.systemUTC()));
+                fixture[0].editToB();
+                button(fixture[0].toolbar, "Burn to ECU").doClick(0);
+            });
+
+            java.util.concurrent.CountDownLatch saved = new java.util.concurrent.CountDownLatch(1);
+            runOnEdt(() -> {
+                Fixture current = fixture[0];
+                assertFalse(current.toolbar.hasUnsavedChanges(current.session.get()));
+                assertTrue(current.toolbar.hasUnsavedFileChanges(current.session.get()));
+                current.toolbar.saveTuneToPathAndThen(current.calibration, dir.resolve("saved.msq").toString(), saved::countDown);
+            });
+            assertTrue(saved.await(10, java.util.concurrent.TimeUnit.SECONDS));
+            runOnEdt(() -> assertFalse(fixture[0].toolbar.hasUnsavedFileChanges(fixture[0].session.get())));
+        } finally {
+            if (fixture[0] != null) {
+                runOnEdt(fixture[0]::close);
+            }
+        }
+    }
+
     /** 8 bytes like the fixture's images; "fuel" is byte 1 (2 in a, 42 in b). */
     private static IniFileModel realIni() {
         String text = "[Constants]\n"

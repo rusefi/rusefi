@@ -3,6 +3,7 @@ package com.rusefi.ui.lua;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.StringIniField;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.ui.UIContext;
@@ -27,6 +28,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -79,6 +81,69 @@ class LuaScriptPanelCharacterizationTest {
         String sent = new String(transmitted.getValue(), StandardCharsets.US_ASCII);
         assertTrue(sent.startsWith(DISK_SCRIPT), "Reload transmits the same script displayed in the editor");
         assertFalse(sent.startsWith(ECU_SCRIPT));
+    }
+
+    @Test
+    void burningLuaOnASecondaryPageUsesItsWirePage() throws Exception {
+        TestProtocol testProtocol = new TestProtocol();
+        when(testProtocol.protocol.burnPage(testProtocol.field.getPageIndex())).thenReturn(true);
+        Harness harness = harness(testProtocol.protocol, new Node(), false);
+
+        SwingUtilities.invokeAndWait(() -> button(harness.panel, LuaScriptPanel.BURN).doClick(0));
+        harness.runPendingCommunicationTasks();
+
+        verify(testProtocol.protocol).burnPage(testProtocol.field.getPageIndex());
+        org.mockito.Mockito.verify(testProtocol.protocol, org.mockito.Mockito.never()).burn();
+    }
+
+    @Test
+    void burningLuaOnPageZeroKeepsTheMainPageBurnPath() throws Exception {
+        TestProtocol testProtocol = new TestProtocol();
+        testProtocol.field.setPageIndex(0);
+        Harness harness = harness(testProtocol.protocol, new Node(), false);
+
+        SwingUtilities.invokeAndWait(() -> button(harness.panel, LuaScriptPanel.BURN).doClick(0));
+        harness.runPendingCommunicationTasks();
+
+        verify(testProtocol.protocol).burn();
+        org.mockito.Mockito.verify(testProtocol.protocol, org.mockito.Mockito.never()).burnPage(0);
+    }
+
+    @Test
+    void burningWithoutALuaFieldDoesNotBurnTheMainPage() throws Exception {
+        TestProtocol testProtocol = new TestProtocol();
+        when(testProtocol.protocol.getIniFileNullable()).thenReturn(null);
+        Harness harness = harness(testProtocol.protocol, new Node(), false);
+
+        SwingUtilities.invokeAndWait(() -> button(harness.panel, LuaScriptPanel.BURN).doClick(0));
+        harness.runPendingCommunicationTasks();
+
+        verify(testProtocol.protocol, org.mockito.Mockito.never()).burn();
+        verify(testProtocol.protocol, org.mockito.Mockito.never()).burnPage(anyInt());
+    }
+
+    @Test
+    void rejectedLuaPageBurnIsReported() throws Exception {
+        TestProtocol testProtocol = new TestProtocol();
+        Harness harness = harness(testProtocol.protocol, new Node(), false);
+        AtomicReference<String> error = new AtomicReference<>();
+        MessagesCentral.MessageListener listener = (source, message) -> {
+            if (source == LuaScriptPanel.class && message.startsWith("Failed to burn Lua:")) {
+                error.set(message);
+            }
+        };
+        MessagesCentral central = MessagesCentral.getInstance();
+        central.addListener(listener);
+        try {
+            SwingUtilities.invokeAndWait(() -> button(harness.panel, LuaScriptPanel.BURN).doClick(0));
+            harness.runPendingCommunicationTasks();
+            flushEdt();
+
+            assertEquals("Failed to burn Lua: The ECU rejected the Lua page burn.", error.get());
+            verify(testProtocol.protocol, org.mockito.Mockito.never()).burn();
+        } finally {
+            central.removeListener(listener);
+        }
     }
 
     @Test
@@ -218,6 +283,25 @@ class LuaScriptPanelCharacterizationTest {
 
     private static RSyntaxTextArea editor(LuaScriptPanel panel) {
         return (RSyntaxTextArea) panel.getZoomableText()[0];
+    }
+
+    private static JButton button(LuaScriptPanel panel, String text) {
+        return findButton(panel.getPanel(), text);
+    }
+
+    private static JButton findButton(java.awt.Container parent, String text) {
+        for (java.awt.Component child : parent.getComponents()) {
+            if (child instanceof JButton && text.equals(((JButton) child).getText())) {
+                return (JButton) child;
+            }
+            if (child instanceof java.awt.Container) {
+                JButton found = findButton((java.awt.Container) child, text);
+                if (found != null) {
+                    return found;
+                }
+            }
+        }
+        return null;
     }
 
     private static byte[] scriptBytes(String text, int size) {

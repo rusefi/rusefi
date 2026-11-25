@@ -79,7 +79,7 @@ public class BinaryProtocol {
     private final Object publicationLock = new Object();
     private final Integer blockingFactorOverride;
     private final LongSupplier currentTimeMillis;
-    private boolean isBurnPending;
+    private boolean mainPageBurnPending;
     private long lastOutputFallbackGeneration = Long.MIN_VALUE;
     private volatile boolean lastOutputPollWasFull = true;
     private long nextTextPullNanos;
@@ -858,8 +858,8 @@ public class BinaryProtocol {
                 // Only an acknowledged main-page write advances our RAM comparison image.
                 // The separately cached loaded baseline remains unchanged.
                 state.recordPage0Write(content, contentOffset, ecuOffset, size);
+                mainPageBurnPending = true;
             }
-            isBurnPending = true;
             return;
         }
         stream.close();
@@ -871,7 +871,7 @@ public class BinaryProtocol {
         if (stream.isClosed()) {
             throw new IllegalStateException("ECU connection is closed; cannot burn configuration");
         }
-        if (!isBurnPending)
+        if (!mainPageBurnPending)
             return;
         log.info("Need to burn");
 
@@ -879,7 +879,7 @@ public class BinaryProtocol {
         while (!stream.isClosed() && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
             if (BurnCommand.execute(this)) {
                 log.info("BURN OK");
-                isBurnPending = false;
+                mainPageBurnPending = false;
                 return;
             }
             log.warn("BURN HAS FAILED?! Will retry");
@@ -893,8 +893,8 @@ public class BinaryProtocol {
 
     public boolean burnPage(int pageIdentifier) {
         boolean result = BurnCommand.execute(this, pageIdentifier);
-        if (result) {
-            isBurnPending = false;
+        if (result && pageIdentifier == 0) {
+            mainPageBurnPending = false;
         }
         return result;
     }

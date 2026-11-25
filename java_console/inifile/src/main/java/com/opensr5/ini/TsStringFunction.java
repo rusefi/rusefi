@@ -11,10 +11,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -81,20 +81,28 @@ public class TsStringFunction {
      */
     @Nullable
     public static String resolve(String expression, IniFileModel ini,
-                                 @Nullable ConfigurationImage configImage,
-                                 @Nullable Map<String, Double> outputChannelValues) {
-        if (expression == null)
+                                  @Nullable ConfigurationImage configImage,
+                                  @Nullable Map<String, Double> outputChannelValues) {
+        return resolveWithVariables(expression, ini, configImage,
+            expr -> ExpressionEvaluator.resolveVariables(expr, ini, configImage,
+                outputChannelValues == null ? Collections.emptyMap() : outputChannelValues));
+    }
+
+    @Nullable
+    private static String resolveWithVariables(String expression, IniFileModel ini, @Nullable ConfigurationImage configImage,
+                                               Function<String, Map<String, Double>> variables) {
+        if (expression == null) {
             return null;
+        }
 
         String working = stripBraces(expression);
         ExpressionEvaluator.TernaryExpression conditional = ExpressionEvaluator.parseTernary(working);
         if (conditional != null) {
-            Double condition = resolveNumericExpression(conditional.condition, ini, configImage, outputChannelValues);
+            Boolean condition = ExpressionEvaluator.evaluateBooleanExpression(conditional.condition, variables.apply(conditional.condition));
             if (condition == null) {
                 return null;
             }
-            return resolve(condition != 0 ? conditional.trueExpr : conditional.falseExpr,
-                ini, configImage, outputChannelValues);
+            return resolveWithVariables(condition ? conditional.trueExpr : conditional.falseExpr, ini, configImage, variables);
         }
 
         if (isStringLiteral(working)) {
@@ -102,7 +110,7 @@ public class TsStringFunction {
         }
 
         // Resolve bitStringValue() calls
-        working = resolveBitStringValueCalls(working, ini, configImage, outputChannelValues);
+        working = resolveBitStringValueCalls(working, ini, variables);
         if (working == null)
             return null;
 
@@ -116,29 +124,38 @@ public class TsStringFunction {
 
     /** Resolve a UI label without exposing TunerStudio function syntax on failure. */
     public static String resolveDisplayLabel(String label, IniFileModel ini,
-                                             @Nullable ConfigurationImage configImage,
-                                             @Nullable Map<String, Double> outputChannelValues) {
+                                              @Nullable ConfigurationImage configImage,
+                                              @Nullable Map<String, Double> outputChannelValues) {
+        return displayLabel(label, text -> resolve(text, ini, configImage, outputChannelValues));
+    }
+
+    /** Resolve label expressions against a caller's page-aware value lookup. */
+    public static String resolveDisplayLabelWithVariables(String label, IniFileModel ini, @Nullable ConfigurationImage configImage,
+                                                           Function<String, Map<String, Double>> variables) {
+        return displayLabel(label, text -> resolveWithVariables(text, ini, configImage, variables));
+    }
+
+    private static String displayLabel(String label, Function<String, String> resolve) {
         if (label == null) {
             return "";
         }
         if (!containsStringFunction(label)) {
             return label;
         }
-        String resolved = resolve(label, ini, configImage, outputChannelValues);
+        String resolved = resolve.apply(label);
         return resolved != null ? resolved : "";
     }
 
     @Nullable
     private static String resolveBitStringValueCalls(String text, IniFileModel ini,
-                                                     @Nullable ConfigurationImage configImage,
-                                                     @Nullable Map<String, Double> outputChannelValues) {
+                                                      Function<String, Map<String, Double>> variables) {
         Matcher m = BIT_STRING_VALUE_PATTERN.matcher(text);
         StringBuffer sb = new StringBuffer();
         while (m.find()) {
             String enumName = m.group(1);
             String indexExpr = m.group(2).trim();
 
-            String resolved = resolveBitStringValue(enumName, indexExpr, ini, configImage, outputChannelValues);
+            String resolved = resolveBitStringValue(enumName, indexExpr, ini, variables);
             if (resolved == null) {
                 log.debug("Failed to resolve bitStringValue(" + enumName + ", " + indexExpr + ")");
                 return null;
@@ -151,8 +168,7 @@ public class TsStringFunction {
 
     @Nullable
     private static String resolveBitStringValue(String enumName, String indexExpr, IniFileModel ini,
-                                                @Nullable ConfigurationImage configImage,
-                                                @Nullable Map<String, Double> outputChannelValues) {
+                                                 Function<String, Map<String, Double>> variables) {
         // Look up the enum field
         Optional<IniField> optField = ini.findIniField(enumName);
         if (!optField.isPresent()) {
@@ -167,7 +183,7 @@ public class TsStringFunction {
         EnumIniField enumField = (EnumIniField) field;
 
         // Evaluate the index expression
-        Double indexValue = resolveNumericExpression(indexExpr, ini, configImage, outputChannelValues);
+        Double indexValue = ExpressionEvaluator.tryEvaluateWithContext(indexExpr, variables.apply(indexExpr));
         if (indexValue == null) {
             log.debug("bitStringValue: could not resolve index expression: " + indexExpr);
             return null;
@@ -215,74 +231,14 @@ public class TsStringFunction {
             return null;
         }
         IniField field = optField.get();
-        if (!(field instanceof StringIniField)) {
-            log.debug("stringValue: field is not a StringIniField: " + fieldName);
+        if (!(field instanceof StringIniField) || !ExpressionEvaluator.containsMainPageField(configImage, field)) {
+            log.debug("stringValue: field is not a readable main-page string: " + fieldName);
             return null;
         }
         StringIniField stringField = (StringIniField) field;
 
         byte[] bytes = configImage.getRange(stringField.getOffset(), stringField.getSize());
         return trimNulls(new String(bytes, StandardCharsets.US_ASCII));
-    }
-
-    /**
-     * Resolve a numeric expression using output channel values, config values, or static evaluation.
-     */
-    @Nullable
-    static Double resolveNumericExpression(String expr, IniFileModel ini,
-                                           @Nullable ConfigurationImage configImage,
-                                           @Nullable Map<String, Double> outputChannelValues) {
-        // Try as a simple variable name first
-        String simpleVar = expr.trim();
-        if (ExpressionEvaluator.IS_SIMPLE_IDENTIFIER.matcher(simpleVar).matches()) {
-            // Try output channel values first
-            if (outputChannelValues != null && outputChannelValues.containsKey(simpleVar)) {
-                return outputChannelValues.get(simpleVar);
-            }
-            // Fall back to config image
-            if (configImage != null) {
-                Double configVal = readConfigValue(simpleVar, ini, configImage);
-                if (configVal != null) {
-                    return configVal;
-                }
-            }
-            log.info("resolveNumericExpression(" + simpleVar + "): NOT FOUND (outputChannels="
-                + (outputChannelValues != null) + " configImage=" + (configImage != null)
-                + " iniField=" + ini.findIniField(simpleVar).isPresent() + ")");
-            return null;
-        }
-
-        // Try static evaluation (numeric literal or arithmetic)
-        Double staticResult = ExpressionEvaluator.tryEvaluate(expr);
-        if (staticResult != null) {
-            return staticResult;
-        }
-
-        // Complex indices can combine output channels with config fields, including ternaries.
-        Map<String, Double> context = new HashMap<>();
-        for (String variable : ExpressionEvaluator.extractVariables(expr)) {
-            Double value = outputChannelValues == null ? null : outputChannelValues.get(variable);
-            if (value == null && configImage != null) {
-                value = readConfigValue(variable, ini, configImage);
-            }
-            if (value != null) {
-                context.put(variable, value);
-            }
-        }
-        return ExpressionEvaluator.tryEvaluateWithContext(expr, context);
-    }
-
-    /**
-     * Read a numeric value from the config image for the given field name.
-     * Handles ScalarIniField and EnumIniField (bits).
-     */
-    @Nullable
-    private static Double readConfigValue(String fieldName, IniFileModel ini, ConfigurationImage configImage) {
-        Optional<IniField> optField = ini.findIniField(fieldName);
-        if (!optField.isPresent() || optField.get().getPageIndex() != 0) {
-            return null;
-        }
-        return configImage.readNumericValue(optField.get());
     }
 
     /**

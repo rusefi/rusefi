@@ -293,6 +293,8 @@ public class TuningPane {
                     if (bp == null || bp.getControllerConfiguration() == null) {
                         return;
                     }
+                    boolean replacingOfflineData = uiContext.isOfflineMode();
+                    boolean hadWorkingSession = sessionImage.get() != null;
 
                     // [tag:offline_tune] If we were editing offline and have pending changes, ask the
                     // user what to do before the freshly-read ECU image overwrites their edits. If the
@@ -310,6 +312,9 @@ public class TuningPane {
                     uiContext.setOfflineMode(false);
                     toolbar.onEcuConnected();
                     sessionImage.set(bp.getControllerConfiguration().clone());
+                    if (replacingOfflineData || !hadWorkingSession) {
+                        toolbar.resetTuneFileBaseline(sessionImage.get());
+                    }
                     toolbar.setBaselineImage(sessionImage.get().clone());
                     left.refreshExpressions(sessionImage.get());
                     String key = currentKey.get();
@@ -730,6 +735,7 @@ public class TuningPane {
         toolbar.setBaselineImage(image.clone());
         // Remember which .ini these edits belong to so a different-signature ECU can migrate them.
         offlineIni = uiContext.iniFileState.getIniFileModel();
+        toolbar.resetTuneFileBaseline(image);
         // Grey out the pages the loaded tune's INI menu conditions disable, as a connect does.
         left.refreshExpressions(sessionImage.get());
         right.update(currentKey.get(), offlineIni, sessionImage.get());
@@ -774,7 +780,7 @@ public class TuningPane {
         if (firmwareUpdateInProgress) {
             return true;
         }
-        IniFileModel ecuIni = uiContext.iniFileState.getIniFileModel();
+        IniFileModel ecuIni = bp.getIniFileNullable();
         String ecuSig = (ecuIni != null) ? ecuIni.getSignature() : bp.signature;
         String offlineSig = (offlineIni != null) ? offlineIni.getSignature() : null;
         boolean sameSignature = offlineSig != null && offlineSig.equals(ecuSig);

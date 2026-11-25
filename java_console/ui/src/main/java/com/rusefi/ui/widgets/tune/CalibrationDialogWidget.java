@@ -252,6 +252,10 @@ public class CalibrationDialogWidget {
     }
 
     private void readFromEcuPage(int pageIndex, int offset, int size, Consumer<byte[]> onResult) {
+        if (uiContext.isOfflineMode()) {
+            onResult.accept(null);
+            return;
+        }
         BinaryProtocol bp = uiContext.getBinaryProtocol();
         if (bp == null) {
             onResult.accept(null);
@@ -295,20 +299,50 @@ public class CalibrationDialogWidget {
         panel.add(status, BorderLayout.NORTH);
         panel.add(view.getContent(), BorderLayout.CENTER);
         ConfigurationImage axisImage = workingImage;
-        pageReader.read(field.getPageIndex(), field.getOffset(), field.getSize(), data -> {
-            if (data == null) {
+        int pageIndex = field.getPageIndex();
+        int readOffset = field.getOffset();
+        int readEnd = field.getOffset() + field.getSize();
+        for (String axisName : Arrays.asList(table.getXBinsConstant(), table.getYBinsConstant())) {
+            IniField axis = iniFileModel.findIniField(axisName).orElse(null);
+            if (axis != null && axis.getPageIndex() == pageIndex) {
+                readOffset = Math.min(readOffset, axis.getOffset());
+                readEnd = Math.max(readEnd, axis.getOffset() + axis.getSize());
+            }
+        }
+        final int pageOffset = readOffset;
+        final int pageSize = readEnd - readOffset;
+        pageReader.read(pageIndex, pageOffset, pageSize, data -> {
+            if (data == null || data.length != pageSize) {
                 status.setText("Connect to the ECU to view this table");
                 return;
             }
-            byte[] page = new byte[field.getOffset() + data.length];
-            System.arraycopy(data, 0, page, field.getOffset(), data.length);
+            byte[] page = new byte[pageOffset + data.length];
+            System.arraycopy(data, 0, page, pageOffset, data.length);
+            ConfigurationImage secondaryImage = new ConfigurationImage(page, pageByteOrder(axisImage, iniFileModel));
+            ConfigurationImage xAxisImage = axisImageForPage(iniFileModel, table.getXBinsConstant(),
+                pageIndex, secondaryImage, axisImage);
+            ConfigurationImage yAxisImage = axisImageForPage(iniFileModel, table.getYBinsConstant(),
+                pageIndex, secondaryImage, axisImage);
             view.displayTable(iniFileModel, table.getTableId(),
-                new ConfigurationImage(page, pageByteOrder(axisImage, iniFileModel)), axisImage);
+                secondaryImage, xAxisImage, yAxisImage);
             panel.remove(status);
             panel.revalidate();
             panel.repaint();
         });
         return panel;
+    }
+
+    private static ConfigurationImage axisImageForPage(IniFileModel ini, String axisName, int valuesPage,
+                                                         ConfigurationImage valuesImage,
+                                                         ConfigurationImage mainImage) {
+        IniField axis = ini.findIniField(axisName).orElse(null);
+        if (axis == null) {
+            return null;
+        }
+        if (axis.getPageIndex() == 0) {
+            return mainImage;
+        }
+        return axis.getPageIndex() == valuesPage ? valuesImage : null;
     }
 
     /** Curves on extra TS pages must use those page bytes, never same-offset main settings. */

@@ -127,6 +127,14 @@ public class TuningTableViewTest {
             assertArrayEquals(originalAxes, axisImage.getContent());
             assertEquals(3, orientationChanges.get());
 
+            TuningTableView mixedPages = new TuningTableView("Ignition timing", true, new Node());
+            mixedPages.displayTable(ini, "ignition", timingImage, axisImage, axisImage.clone());
+            JTable mixedTable = findTable(mixedPages.getContent());
+            assertEquals("1000", mixedTable.getColumnName(1));
+            ((JCheckBoxMenuItem) mixedPages.orientationMenuFor(0).getComponent(0)).doClick(0);
+            assertEquals("40", mixedTable.getColumnName(1), "flipping keeps the Y-axis image");
+            assertEquals("6000", mixedTable.getValueAt(0, 0), "flipping keeps the X-axis image");
+
             table.setValueAt("77", 0, 1);
             table.setValueAt("88", 2, 2);
             Double[][] stored = ConfigurationImageGetterSetter.getArrayValues(timing, timingImage);

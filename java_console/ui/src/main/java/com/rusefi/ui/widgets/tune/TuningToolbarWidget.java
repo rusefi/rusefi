@@ -5,11 +5,7 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
-import com.opensr5.ini.field.ArrayIniField;
-import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
-import com.opensr5.ini.field.ScalarIniField;
-import com.rusefi.config.FieldType;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.CalibrationsHelper;
@@ -18,8 +14,6 @@ import com.rusefi.maintenance.OfflineTuneLoader;
 import com.rusefi.maintenance.jobs.AsyncJob;
 import com.rusefi.maintenance.jobs.AsyncJobExecutor;
 import com.rusefi.maintenance.jobs.JobHelper;
-import com.rusefi.maintenance.migration.IniFieldMigrationUtils;
-import com.rusefi.tune.ConfigurationImageGetterSetter2;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.tune.xml.MsqFactory;
@@ -36,6 +30,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.Map;
@@ -76,6 +75,7 @@ public class TuningToolbarWidget {
 
     /** [tag:offline_tune] Baseline image for discard — set when a tune is loaded (from ECU or MSQ file). */
     private ConfigurationImage baselineImage;
+    private ConfigurationImage savedFileBaseline;
 
     private final JButton undoButton = new JButton("Undo");
     private final JButton redoButton = new JButton("Redo");
@@ -108,6 +108,7 @@ public class TuningToolbarWidget {
     private final Timer uploadTimer;
     private volatile boolean firmwareUpdateInProgress;
     private boolean burnInProgress;
+    private boolean saveInProgress;
     private Runnable onBaselineChanged = () -> { };
     private long editGeneration;
     private volatile long connectionGeneration;
@@ -145,6 +146,7 @@ public class TuningToolbarWidget {
         this.submit = submit;
         this.sessionImage = sessionImage;
         this.baselineImage = baselineImage;
+        resetTuneFileBaseline(baselineImage);
         noteTimer.setRepeats(false);
         stateLabel.addMouseListener(noteClick);
         undoButton.setEnabled(false);
@@ -563,7 +565,27 @@ public class TuningToolbarWidget {
         loadTuneAction = new AbstractAction(LoadTuneHelper.LOAD_TUNE_TEXT) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (firmwareUpdateInProgress || burnInProgress) {
+                if (firmwareUpdateInProgress || burnInProgress || saveInProgress) {
+                    return;
+                }
+                ConfigurationImage current = imageToSave(right.getWorkingImage(), sessionImage.get(), null, baselineImage);
+                if (hasUnsavedFileChanges(current)) {
+                    String[] options = {"Save", "Continue Without Saving", "Cancel"};
+                    int choice = JOptionPane.showOptionDialog(getDialogParent(),
+                        "The current tune has changes that have not been saved to an .msq file.",
+                        "Unsaved Tune", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[2]);
+                    if (choice == 0) {
+                        saveTuneAndThen(right, this::chooseTune);
+                    } else if (choice == 1) {
+                        chooseTune();
+                    }
+                    return;
+                }
+                chooseTune();
+            }
+
+            private void chooseTune() {
+                if (firmwareUpdateInProgress || burnInProgress || saveInProgress) {
                     return;
                 }
                 TuneFileFolder.openIn(chooser);
@@ -584,7 +606,7 @@ public class TuningToolbarWidget {
                             JobHelper.doJob(() -> {
                                 try {
                                     cb.logLine("Loading " + fileName + "...");
-                                    BinaryProtocol bp = uiContext.getBinaryProtocol();
+                                    BinaryProtocol bp = uiContext.isOfflineMode() ? null : uiContext.getBinaryProtocol();
                                     OfflineTuneLoader.Result result = bp == null
                                         ? OfflineTuneLoader.loadTuneFromFile(path, null, cb::logLine)
                                         : OfflineTuneLoader.loadConnectedTuneFromFile(
@@ -637,9 +659,14 @@ public class TuningToolbarWidget {
                                         sessionImage.set(newImage);
                                         // [tag:offline_tune] Loading a tune with no ECU attached is an offline session.
                                         if (loadedWhileDisconnected) {
+                                            uiContext.setIniFileModelForOffline(targetIni);
                                             uiContext.setOfflineMode(true);
+                                            resetTuneFileBaseline(newImage);
+                                            uiContext.setTuneFilePath(path);
+                                        } else {
+                                            // A merge can retain ECU values omitted by the input file.
+                                            uiContext.setTuneFilePath(null);
                                         }
-                                        uiContext.setTuneFilePath(path);
                                         String key = currentKey.get();
                                         right.update(key, targetIni, newImage);
                                         // Adopt the loaded tune as baseline (enables discard + refreshes state label).
@@ -714,147 +741,22 @@ public class TuningToolbarWidget {
                 callbacks.logLine("Skipped " + name + ": not available.");
                 continue;
             }
-            String sourceUnits = constant.getUnits();
-            String destinationUnits = field.getUnits();
-            boolean sourceUnitsMissing = sourceUnits == null || sourceUnits.isEmpty();
-            boolean destinationUnitsMissing = destinationUnits == null || destinationUnits.isEmpty();
-            if (sourceUnitsMissing != destinationUnitsMissing
-                    || !IniFieldMigrationUtils.checkIfUnitsCanBeMigrated(sourceUnits, destinationUnits)) {
-                callbacks.logLine("Skipped " + name + ": units do not match.");
-                continue;
-            }
-            if (field instanceof ArrayIniField) {
-                ArrayIniField array = (ArrayIniField) field;
-                if (!Objects.equals(constant.getRows(), Integer.toString(array.getRows()))
-                        || !Objects.equals(constant.getCols(), Integer.toString(array.getCols()))) {
-                    callbacks.logLine("Skipped " + name + ": table size does not match.");
-                    continue;
-                }
-            } else if (constant.getRows() != null || constant.getCols() != null) {
-                callbacks.logLine("Skipped " + name + ": table size does not match.");
-                continue;
-            }
-
             try {
-                if (field instanceof EnumIniField) {
-                    ConfigurationImage candidate = result.clone();
-                    applyExactEnumValue((EnumIniField) field, constant, candidate);
-                    result = candidate;
-                } else {
-                    validateNumericValues(field, constant);
-                    ConfigurationImage candidate = result.clone();
-                    ConfigurationImageGetterSetter2.setValue(field, candidate, constant);
-                    result = candidate;
-                }
+                ConfigurationImage candidate = result.clone();
+                TuneLoadPreparation.applyTuneConstant(constant, field, candidate);
+                result = candidate;
             } catch (RuntimeException e) {
                 String reason = e instanceof IllegalArgumentException ? e.getMessage() : null;
                 if (!"unknown pin".equals(reason) && !"pin is not available".equals(reason)
                         && !"pin label is ambiguous".equals(reason) && !"value is out of range".equals(reason)
-                        && !"table size does not match".equals(reason) && !"invalid value".equals(reason)) {
+                        && !"table size does not match".equals(reason) && !"units do not match".equals(reason)
+                        && !"invalid value".equals(reason)) {
                     reason = "invalid value";
                 }
                 callbacks.logLine("Skipped " + name + ": " + reason + ".");
             }
         }
         return result;
-    }
-
-    private static void validateNumericValues(IniField field, Constant constant) {
-        if (field instanceof ScalarIniField) {
-            ScalarIniField scalar = (ScalarIniField) field;
-            validateNumericValue(constant.getValue(), scalar.getType(), scalar.getMultiplier(),
-                scalar.getSerializationOffset());
-        } else if (field instanceof ArrayIniField) {
-            ArrayIniField array = (ArrayIniField) field;
-            String[][] values;
-            try {
-                values = array.getValues(constant.getValue());
-            } catch (RuntimeException e) {
-                throw new IllegalArgumentException("table size does not match");
-            }
-            for (String[] row : values) {
-                for (String value : row) {
-                    validateNumericValue(value, array.getType(), array.getMultiplier(), 0);
-                }
-            }
-        }
-    }
-
-    private static void validateNumericValue(String value, FieldType type, double multiplier,
-                                            double serializationOffset) {
-        double parsed;
-        double raw;
-        try {
-            parsed = Double.parseDouble(value);
-            raw = (parsed - serializationOffset) / multiplier;
-        } catch (RuntimeException e) {
-            throw new IllegalArgumentException("invalid value");
-        }
-        if (!Double.isFinite(parsed) || !Double.isFinite(raw)) {
-            throw new IllegalArgumentException("value is out of range");
-        }
-
-        if (type == FieldType.FLOAT) {
-            if (!Float.isFinite((float) raw)) {
-                throw new IllegalArgumentException("value is out of range");
-            }
-            return;
-        }
-
-        long rounded = Math.round(raw);
-        long min;
-        long max;
-        switch (type) {
-            case INT8:
-                min = Byte.MIN_VALUE;
-                max = Byte.MAX_VALUE;
-                break;
-            case UINT8:
-                min = 0;
-                max = 0xff;
-                break;
-            case INT16:
-                min = Short.MIN_VALUE;
-                max = Short.MAX_VALUE;
-                break;
-            case UINT16:
-                min = 0;
-                max = 0xffff;
-                break;
-            case INT:
-                min = Integer.MIN_VALUE;
-                max = Integer.MAX_VALUE;
-                break;
-            default:
-                throw new IllegalArgumentException("invalid value");
-        }
-        if (rounded < min || rounded > max) {
-            throw new IllegalArgumentException("value is out of range");
-        }
-    }
-
-    private static void applyExactEnumValue(EnumIniField field, Constant constant, ConfigurationImage image) {
-        String value = constant.getValue();
-        if (value != null && !EnumIniField.isQuoted(value) && EnumIniField.isUnknownOrdinalValue(value)) {
-            throw new IllegalArgumentException("unknown pin");
-        }
-        String label = value != null && EnumIniField.isQuoted(value)
-            ? javax.management.ObjectName.unquote(value)
-            : value;
-        if (label == null) {
-            throw new IllegalArgumentException("unknown pin");
-        }
-        if (field.isPinEnum() && "INVALID".equalsIgnoreCase(label)) {
-            throw new IllegalArgumentException("unknown pin");
-        }
-        long matches = field.getEnums().values().stream().filter(label::equals).count();
-        int ordinal = field.getEnums().indexOf(value);
-        if (matches != 1 || ordinal < 0) {
-            throw new IllegalArgumentException(matches > 1
-                ? "pin label is ambiguous"
-                : "pin is not available");
-        }
-        image.setBitValue(field, ordinal);
     }
 
     public void setFirmwareUpdateInProgress(boolean inProgress) {
@@ -1058,19 +960,43 @@ public class TuningToolbarWidget {
     }
 
     private void saveTuneToPathAndThen(IniFileModel ini, ConfigurationImage image, String path, Runnable onSuccess) {
-        final String finalPath = path;
-        final ConfigurationImage finalImage = image;
+        if (saveInProgress) {
+            return;
+        }
+        saveInProgress = true;
+        ConfigurationImage snapshot = image.clone();
+        long connection = connectionGeneration;
+        long edit = editGeneration;
         new Thread(() -> {
             try {
-                MsqFactory.valueOf(finalImage, ini).writeXmlFile(finalPath);
+                Path destination = Paths.get(path).toAbsolutePath();
+                Path temporary = Files.createTempFile(destination.getParent(), ".tune-", ".msq");
+                try {
+                    MsqFactory.valueOf(snapshot, ini).writeXmlFile(temporary.toString());
+                    try {
+                        Files.move(temporary, destination, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+                    } catch (AtomicMoveNotSupportedException ex) {
+                        Files.move(temporary, destination, StandardCopyOption.REPLACE_EXISTING);
+                    }
+                } finally {
+                    Files.deleteIfExists(temporary);
+                }
                 SwingUtilities.invokeLater(() -> {
-                    uiContext.setTuneFilePath(finalPath);
-                    if (onSuccess != null) {
+                    saveInProgress = false;
+                    if (connection != connectionGeneration || uiContext.iniFileState.getIniFileModel() != ini) {
+                        return;
+                    }
+                    resetTuneFileBaseline(snapshot);
+                    uiContext.setTuneFilePath(path);
+                    if (onSuccess != null && edit == editGeneration) {
                         onSuccess.run();
                     }
                 });
             } catch (Exception ex) {
-                SwingUtilities.invokeLater(() -> errorHandler.accept("Failed to save tune: " + ex.getMessage()));
+                SwingUtilities.invokeLater(() -> {
+                    saveInProgress = false;
+                    errorHandler.accept("Failed to save tune: " + ex.getMessage());
+                });
             }
         }, "save-tune").start();
     }
@@ -1154,6 +1080,16 @@ public class TuningToolbarWidget {
             return true;
         }
         return !java.util.Arrays.equals(current.getContent(), baselineImage.getContent());
+    }
+
+    /** The last file snapshot is independent of the image acknowledged by an ECU Burn. */
+    public void resetTuneFileBaseline(ConfigurationImage image) {
+        savedFileBaseline = image == null ? null : image.clone();
+    }
+
+    boolean hasUnsavedFileChanges(ConfigurationImage current) {
+        return current != null && (savedFileBaseline == null || current.getByteOrder() != savedFileBaseline.getByteOrder()
+            || !java.util.Arrays.equals(current.getContent(), savedFileBaseline.getContent()));
     }
 
     /** @return the loaded baseline image (pre-edit), or null if none loaded. */

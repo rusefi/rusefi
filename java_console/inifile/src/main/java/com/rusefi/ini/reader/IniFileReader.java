@@ -46,7 +46,11 @@ public class IniFileReader {
                 lambdaTargetTables,
                 veAnalyzeFilters,
                 eventTriggers,
-                requiresPowerCycle);
+                requiresPowerCycle,
+                maintainedPcVariableExpressions,
+                pcVariableDefaults,
+                pcScalarVariables,
+                pcVariableNames);
     }
     private static final Logging log = Logging.getLogging(IniFileReader.class);
     public static final String RUSEFI_INI_PREFIX = "rusefi";
@@ -61,6 +65,10 @@ public class IniFileReader {
     private final Map<String, List<String>> defines = new TreeMap<>();
     /** [ConstantsExtensions] {@code requiresPowerCycle = name}: settings applied only after a restart. */
     private final List<String> requiresPowerCycle = new ArrayList<>();
+    private final Map<String, String> maintainedPcVariableExpressions = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private final Map<String, Double> pcVariableDefaults = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private final Set<String> pcScalarVariables = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+    private final Set<String> pcVariableNames = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 
     private String dialogId;
     private String dialogUiName;
@@ -92,6 +100,7 @@ public class IniFileReader {
     private boolean isOutputChannelsSection;
     private boolean isDatalogSection;
     private boolean isPcVariablesSection;
+    private boolean isConstantsExtensionsSection;
     private final IniFileMetaInfo metaInfo;
     private final String iniFilePath;
 
@@ -245,6 +254,7 @@ public class IniFileReader {
                 isOutputChannelsSection = first.equals("[OutputChannels]");
                 isDatalogSection = first.equalsIgnoreCase("[Datalog]");
                 isPcVariablesSection = first.equalsIgnoreCase("[PcVariables]");
+                isConstantsExtensionsSection = first.equalsIgnoreCase("[ConstantsExtensions]");
                 isGaugeConfigurationsSection = first.equalsIgnoreCase("[GaugeConfigurations]");
                 isTableEditorSection = first.equalsIgnoreCase("[TableEditor]");
                 isCurveEditorSection = first.equalsIgnoreCase("[CurveEditor]");
@@ -285,6 +295,9 @@ public class IniFileReader {
                 return;
             } else if (isPcVariablesSection) {
                 handlePcVariableDefinition(list, line);
+                return;
+            } else if (isConstantsExtensionsSection) {
+                handleConstantExtension(list);
                 return;
             } else if (isGaugeConfigurationsSection) {
                 handleGaugeConfiguration(list);
@@ -449,13 +462,21 @@ public class IniFileReader {
 
     /**
      * Parse [PcVariables] section fields. These are TunerStudio-local variables (no ECU offset).
-     * We only handle 'bits' and 'array' types for now
      */
     private void handlePcVariableDefinition(LinkedList<String> list, RawIniFile.Line line) {
         if (list.size() < 4)
             return;
         if (FIELD_TYPE_ARRAY.equals(list.get(1))) {
             handlePcVariableArray(list);
+            return;
+        }
+        if (FIELD_TYPE_SCALAR.equals(list.get(1))) {
+            if (isNumeric(list.get(3))) {
+                // The legacy offset-bearing form is not a [PcVariables] scalar declaration.
+                return;
+            }
+            // PC scalars can be used in expressions but have no address in an ECU configuration image.
+            pcScalarVariables.add(list.getFirst());
             return;
         }
         if (!FIELD_TYPE_BITS.equals(list.get(1)))
@@ -480,6 +501,7 @@ public class IniFileReader {
 
         // Store in secondary fields so they're findable via findIniField() but don't conflict with real config fields
         secondaryIniFields.put(field.getName(), field);
+        pcVariableNames.add(field.getName());
     }
 
     /**
@@ -513,11 +535,47 @@ public class IniFileReader {
         }
         // same place as 'bits' PC variables: findable via findIniField() without mixing with config fields
         secondaryIniFields.put(field.getName(), field);
+        pcVariableNames.add(field.getName());
+    }
+
+    /** Parse PC scalar defaults/expressions and preserve existing PC array defaults. */
+    private void handleConstantExtension(LinkedList<String> list) {
+        if ("requiresPowerCycle".equalsIgnoreCase(list.getFirst())) {
+            if (list.size() >= 2) {
+                requiresPowerCycle.add(list.get(1));
+            }
+            return;
+        }
+        if (list.size() < 3) {
+            return;
+        }
+        String name = list.get(1);
+        if (!pcScalarVariables.contains(name)) {
+            handleDefaultValue(list);
+            return;
+        }
+        if ("defaultValue".equalsIgnoreCase(list.getFirst())) {
+            try {
+                pcVariableDefaults.put(name, Double.parseDouble(list.get(2)));
+            } catch (NumberFormatException e) {
+                log.warn("Skipping PC scalar defaultValue " + list + ": " + e);
+            }
+        } else if ("maintainConstantValue".equalsIgnoreCase(list.getFirst())) {
+            maintainedPcVariableExpressions.put(name, list.get(2));
+        }
+    }
+
+    private static boolean isNumeric(String value) {
+        try {
+            Double.parseDouble(value);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     /**
-     * [ConstantsExtensions] format: defaultValue = name, value value value
-     * Only the values of PC variable arrays are used.
+     * [ConstantsExtensions] defaultValue = name, value value value.
      */
     private void handleDefaultValue(LinkedList<String> list) {
         if (list.size() < 3) {
