@@ -7,10 +7,13 @@ import java.awt.Insets;
 import java.awt.LayoutManager2;
 
 /**
- * A grid of square cells, such as round gauges, that fills the width it is given: as many cells
- * per row as fit at {@code preferredCell}, rows balanced so the last one is not left nearly
- * empty, then the width shared equally between the columns. There is no upper cell size, so the
- * cells keep growing with the window.
+ * A grid of square cells, such as round gauges, that fills the width it is given: the fewest
+ * columns that keep cells within {@code largestCell}, but never more than fit at
+ * {@code preferredCell}; rows balanced so the last one is not left nearly empty, then the width
+ * shared equally between the columns. Four gauges in a medium-width panel therefore form a 2x2
+ * grid of large cells instead of one row of small ones, while a very wide panel still fits them in
+ * one row. Balancing can make cells somewhat larger than {@code largestCell}, and a single row
+ * keeps growing with the window.
  * <p>
  * The preferred width is fixed at {@code preferredColumns} cells of {@code preferredCell}, while
  * the preferred height follows the cell size the current width allows.
@@ -24,12 +27,14 @@ public class SquareGridLayout implements LayoutManager2 {
     private final int gap;
     private final int minimumCell;
     private final int preferredCell;
+    private final int largestCell;
 
-    public SquareGridLayout(int preferredColumns, int gap, int minimumCell, int preferredCell) {
+    public SquareGridLayout(int preferredColumns, int gap, int minimumCell, int preferredCell, int largestCell) {
         this.preferredColumns = Math.max(1, preferredColumns);
         this.gap = Math.max(0, gap);
         this.minimumCell = Math.max(1, minimumCell);
         this.preferredCell = Math.max(this.minimumCell, preferredCell);
+        this.largestCell = Math.max(this.preferredCell, largestCell);
     }
 
     /** Revalidates {@code parent} whenever its width changes, so ancestors pick up the new height. */
@@ -70,7 +75,10 @@ public class SquareGridLayout implements LayoutManager2 {
         return parent.getWidth() - insets.left - insets.right;
     }
 
-    /** As many columns as fit at the preferred cell size, balanced over the resulting rows. */
+    /**
+     * The fewest columns whose cells stay within the largest cell size, at most as many as fit at
+     * the preferred cell size, balanced over the resulting rows.
+     */
     int columnsForWidth(Container parent) {
         int count = visibleCount(parent);
         if (count == 0) {
@@ -80,7 +88,8 @@ public class SquareGridLayout implements LayoutManager2 {
             return preferredColumns(count);
         }
         int fit = (innerWidth(parent) + gap) / (preferredCell + gap);
-        int cols = Math.max(1, Math.min(count, fit));
+        int needed = (innerWidth(parent) + gap + largestCell + gap - 1) / (largestCell + gap);
+        int cols = Math.max(1, Math.min(Math.min(count, fit), needed));
         return (count + rows(count, cols) - 1) / rows(count, cols);
     }
 
