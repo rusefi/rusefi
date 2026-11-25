@@ -1044,6 +1044,10 @@ public class MainFrame {
                 break;
             case RESTART_REQUIRED:
                 showSoftwareRestartRequired();
+                // [tag:update_restart_prompt] asks once per session, unless the startup window already did
+                SwingUtilities.invokeLater(() ->
+                    ApplicationUpdatePrompt.showRestart(frame.getFrame(), softwareUpdateCoordinator,
+                        this::restartApplication));
                 break;
             case FAILED:
                 softwareRestartRequired = false;

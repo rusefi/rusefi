@@ -528,6 +528,8 @@ public class StartupFrame {
             asyncJobExecutor, ecuPortToUse, softwareUpdateCoordinator,
             this::showFullScreenPanel, this::closeFullScreenPanel, () -> frame,
             this::restartApplication);
+        // [tag:update_restart_prompt] once handed over, the main console asks instead and restarts its own way
+        startupUpdateActions.setRestartPromptAllowed(() -> !isProceeding);
         startupUpdateActions.configureFirmwareSelector(selector);
 
         JPanel firmwareTabPanel = new JPanel(new BorderLayout());
