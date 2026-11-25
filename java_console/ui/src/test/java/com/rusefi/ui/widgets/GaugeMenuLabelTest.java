@@ -69,6 +69,7 @@ class GaugeMenuLabelTest {
     @Test
     void offlineTuneResolvesWithoutSensorUpdates() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
+            context.setIniFileModelForOffline(ini);
             context.setOfflineMode(true);
             context.fireConfigImageChanged(image("Cooling fan"));
             assertEquals("Cooling fan", title());
@@ -104,6 +105,7 @@ class GaugeMenuLabelTest {
             assertEquals("", GaugeMenuLabel.getUnits(context, ini.getGauge("unitsGauge")),
                 "nothing to resolve against yet: no units rather than INI syntax");
             assertEquals("rpm", GaugeMenuLabel.getUnits(context, ini.getGauge("rpmGauge")));
+            context.setIniFileModelForOffline(ini);
             context.setOfflineMode(true);
             context.fireConfigImageChanged(image("C"));
             assertEquals("C", GaugeMenuLabel.getUnits(context, ini.getGauge("unitsGauge")));
