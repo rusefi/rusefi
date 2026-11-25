@@ -3,11 +3,15 @@ package com.rusefi.ui.widgets.tune;
 import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
+import com.opensr5.ini.IniFileMetaInfoImpl;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.RawIniFile;
 import com.opensr5.ini.TableModel;
 import com.opensr5.ini.field.ArrayIniField;
 import com.rusefi.config.FieldType;
 import com.rusefi.core.preferences.storage.Node;
+import com.rusefi.ini.reader.IniFileReaderUtil;
+import com.rusefi.ini.reader.IniParsingException;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -23,6 +27,7 @@ import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -88,6 +93,8 @@ public class TuningTableViewTest {
             when(definition.getZBinsConstant()).thenReturn("timing");
             when(definition.getXBinsConstant()).thenReturn("rpm");
             when(definition.getYBinsConstant()).thenReturn("load");
+            when(definition.getXLabel()).thenReturn("RPM");
+            when(definition.getYLabel()).thenReturn("Load");
             when(ini.findIniField("timing")).thenReturn(Optional.of(timing));
             when(ini.findIniField("rpm")).thenReturn(Optional.of(rpm));
             when(ini.findIniField("load")).thenReturn(Optional.of(load));
@@ -182,6 +189,98 @@ public class TuningTableViewTest {
         });
     }
 
+    /** The corner names the row axis, then the column axis, from the table's INI xyLabels. */
+    @Test
+    public void cornerNamesTheTableAxesFromTheIni() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            IniFileModel ini = mock(IniFileModel.class);
+            TableModel idle = axisTable(ini, "idle");
+            when(idle.getXLabel()).thenReturn("\"Coolant\"");
+            when(idle.getYLabel()).thenReturn("\"RPM\"");
+
+            Node settings = new Node();
+            TuningTableView view = new TuningTableView("Idle", false, settings);
+            ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(10);
+            view.displayTable(ini, "idle", image, image);
+            JTable table = findTable(view.getContent());
+            assertEquals("RPM \\ Coolant", table.getColumnName(0), "rows are RPM, columns are coolant");
+
+            ((JCheckBoxMenuItem) view.orientationMenuFor(0).getComponent(0)).doClick();
+            assertEquals("Coolant \\ RPM", table.getColumnName(0), "flipping swaps the corner too");
+
+            TableModel unlabelled = axisTable(ini, "tpsTps");
+            when(unlabelled.getXBinsChannel()).thenReturn("tpsFrom");
+            when(unlabelled.getYBinsChannel()).thenReturn("tpsTo");
+            when(unlabelled.getYLabel()).thenReturn("\"\"");
+            TuningTableView other = new TuningTableView("TPS/TPS", false, new Node());
+            other.displayTable(ini, "tpsTps", image, image);
+            assertEquals("tpsTo \\ tpsFrom", findTable(other.getContent()).getColumnName(0),
+                "missing or empty labels fall back to the axis channel");
+
+            axisTable(ini, "bare");
+            TuningTableView bare = new TuningTableView("Bare", false, new Node());
+            bare.displayTable(ini, "bare", image, image);
+            assertEquals("bareY \\ bareX", findTable(bare.getContent()).getColumnName(0),
+                "without labels or channels the bins constants name the axes");
+        });
+    }
+
+    /**
+     * The VE table names its load axis with an expression that follows the fuel algorithm, the same
+     * chain as the real INI; the corner shows the chosen load, not the axis channel.
+     */
+    @Test
+    public void cornerResolvesExpressionAxisLabels() throws Exception, IniParsingException {
+        String text = "signature = \"test\"\n"
+            + "nPages = 1\npageSize = 20\npageReadCommand = \"R\"\nochBlockSize = 1\n"
+            + "[PcVariables]\n"
+            + "veAxisLabels = bits, U08, [0:1], \"MAP\", \"TPS\", \"Air Charge\", \"Lua\"\n"
+            + "veLoadSrc = scalar, U08, \"\", 1, 0, 0, 5, 0, noMsqSave\n"
+            + "[Constants]\npage = 1\n"
+            + "fuelAlgorithm = bits, U08, 0, [0:1], \"Speed Density\", \"MAF\", \"Alpha-N\", \"Lua\"\n"
+            + "veRpmBins = array, U16, 2, [3], \"RPM\", 1, 0, 0, 8000, 0\n"
+            + "veLoadBins = array, U16, 8, [2], \"kPa\", 1, 0, 0, 400, 0\n"
+            + "veTable = array, U08, 12, [3x2], \"%\", 1, 0, 0, 255, 0\n"
+            + "[ConstantsExtensions]\n"
+            + "defaultValue = veLoadSrc, 0\n"
+            + "maintainConstantValue = veLoadSrc, { fuelAlgorithm == 0 ? 0 : fuelAlgorithm == 2 ? 1 : fuelAlgorithm == 1 ? 2 : 3 }\n"
+            + "[TableEditor]\n"
+            + "table = veTableTbl, veTableMap, \"VE\", 1\n"
+            + "xyLabels = \"RPM\", {bitStringValue(veAxisLabels, veLoadSrc)}\n"
+            + "xBins = veRpmBins, RPMValue\n"
+            + "yBins = veLoadBins, veTableYAxisDisplay\n"
+            + "zBins = veTable\n";
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8)));
+        IniFileModel ini = IniFileReaderUtil.readIniFile(lines, "synthetic.ini", new IniFileMetaInfoImpl(lines));
+
+        SwingUtilities.invokeAndWait(() -> {
+            ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(20);
+            TuningTableView view = new TuningTableView("VE", false, new Node());
+            view.displayTable(ini, "veTableTbl", image, image);
+            JTable table = findTable(view.getContent());
+            assertEquals("MAP \\ RPM", table.getColumnName(0), "Speed Density loads by MAP");
+
+            image.getContent()[0] = 2;
+            view.displayTable(ini, "veTableTbl", image, image);
+            assertEquals("TPS \\ RPM", table.getColumnName(0), "Alpha-N loads by TPS");
+        });
+    }
+
+    private static TableModel axisTable(IniFileModel ini, String name) {
+        TableModel definition = mock(TableModel.class);
+        ArrayIniField z = new ArrayIniField(name + "Z", 0, FieldType.UINT8, 3, 2, "", 1, "0", "255", "0");
+        ArrayIniField x = new ArrayIniField(name + "X", 0, FieldType.UINT16, 3, 1, "", 1, "0", "8000", "0");
+        ArrayIniField y = new ArrayIniField(name + "Y", 6, FieldType.UINT16, 1, 2, "", 1, "0", "8000", "0");
+        when(ini.getTable(name)).thenReturn(definition);
+        when(definition.getZBinsConstant()).thenReturn(z.getName());
+        when(definition.getXBinsConstant()).thenReturn(x.getName());
+        when(definition.getYBinsConstant()).thenReturn(y.getName());
+        when(ini.findIniField(z.getName())).thenReturn(Optional.of(z));
+        when(ini.findIniField(x.getName())).thenReturn(Optional.of(x));
+        when(ini.findIniField(y.getName())).thenReturn(Optional.of(y));
+        return definition;
+    }
+
     private Node roundTrip(Node node) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         try (XMLEncoder encoder = new XMLEncoder(bytes)) {
@@ -213,6 +312,8 @@ public class TuningTableViewTest {
             when(definition.getZBinsConstant()).thenReturn("timing");
             when(definition.getXBinsConstant()).thenReturn("rpm");
             when(definition.getYBinsConstant()).thenReturn("load");
+            when(definition.getXLabel()).thenReturn("RPM");
+            when(definition.getYLabel()).thenReturn("Load");
             when(ini.findIniField("timing")).thenReturn(Optional.of(timing));
             when(ini.findIniField("rpm")).thenReturn(Optional.of(rpm));
             when(ini.findIniField("load")).thenReturn(Optional.of(load));
