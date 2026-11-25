@@ -216,6 +216,8 @@ jobs:
 
     - uses: ./.github/actions/setup-java
 
+    - uses: ./.github/actions/cache-bundle-dependencies
+
     - name: Install multilib, mingw, sshpass and mtools
       run: |
         sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
@@ -399,6 +401,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v7
+
+    - uses: ./.github/actions/cache-bundle-dependencies
 
     - name: Checkout bundle submodules
       run: git submodule update --init --depth=1 firmware/ext/rusefi-gha java_console/luaformatter java_console/peak-can-basic

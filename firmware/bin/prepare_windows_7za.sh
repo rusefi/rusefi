@@ -32,23 +32,29 @@ check_hash() {
   local actual
   actual="$(sha256sum "$1")"
   actual="${actual%% *}"
-  [[ "$actual" == "$ARCHIVE_SHA256" ]] || fail "7-Zip $VERSION archive SHA-256 mismatch: $1"
+  [[ "$actual" == "$ARCHIVE_SHA256" ]]
 }
 
 if [[ -z "$archive" ]]; then
   mkdir -p "$cache_dir"
   archive="$cache_dir/$ARCHIVE_NAME"
+  if [[ -f "$archive" ]] && ! check_hash "$archive"; then
+    rm -f -- "$archive" || fail "could not remove corrupt cached archive: $archive"
+  fi
   if [[ ! -f "$archive" ]]; then
     download="$(mktemp "$cache_dir/$ARCHIVE_NAME.XXXXXX")"
     trap 'rm -f -- "$download"' EXIT
-    curl -fsSL --proto '=https' --tlsv1.2 "$URL" -o "$download"
-    check_hash "$download"
+    # A named output file lets curl discard partial data before retrying this GET.
+    curl -fsSL --proto '=https' --tlsv1.2 \
+      --connect-timeout 10 --max-time 60 --retry 5 --retry-all-errors --retry-max-time 120 \
+      "$URL" -o "$download"
+    check_hash "$download" || fail "7-Zip $VERSION archive SHA-256 mismatch: $download"
     mv -- "$download" "$archive"
     trap - EXIT
   fi
 fi
 [[ -f "$archive" ]] || fail "archive does not exist: $archive"
-check_hash "$archive"
+check_hash "$archive" || fail "7-Zip $VERSION archive SHA-256 mismatch: $archive"
 
 seven_zip="$(command -v 7z || command -v 7zz || true)"
 [[ -n "$seven_zip" ]] || fail "7z build tool missing; run in the repository's Pixi environment"

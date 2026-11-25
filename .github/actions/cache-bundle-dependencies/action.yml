@@ -1,0 +1,15 @@
+name: 'Cache Windows bundle dependencies'
+description: 'Persist the checksum-verified Windows 7-Zip and JRE archives'
+runs:
+  using: composite
+  steps:
+    - name: Cache Windows 7-Zip archive
+      uses: actions/cache@v6
+      with:
+        path: ~/.cache/rusefi/7za
+        key: ${{ runner.os }}-windows-7za-v1-${{ hashFiles('firmware/bin/prepare_windows_7za.sh') }}
+    - name: Cache Windows JRE archive
+      uses: actions/cache@v6
+      with:
+        path: ~/.cache/rusefi/jre
+        key: ${{ runner.os }}-windows-jre-v1-${{ hashFiles('firmware/bin/windows_jre.json') }}
