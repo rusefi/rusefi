@@ -5,6 +5,7 @@ import com.opensr5.ini.*;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
+import com.opensr5.ini.field.PcVariableArrayIniField;
 import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.config.FieldType;
 import com.rusefi.ini.reader.IniFileReaderUtil;
@@ -35,6 +36,20 @@ public class IniFileReaderTest {
         assertEquals(0.1, IniField.parseDouble("{1/10}"), EPS);
         assertEquals(0.1, IniField.parseDouble("{0.1}"), EPS);
         assertEquals(0.1, IniField.parseDouble("0.1"), EPS);
+    }
+
+    @Test
+    public void pcVariableArrayWithSpacedDimensionsKeepsDefaults() {
+        String ini = "[PcVariables]\n"
+            + "wueAfrTargetOffset = array, S16, [ 2], \":1\", 0.1, 0.0, -3.0, 3.0, 1\n"
+            + "[ConstantsExtensions]\n"
+            + "defaultValue = wueAfrTargetOffset, -1.5 0\n";
+        IniFileModel model = readLines(fromString(ini));
+
+        PcVariableArrayIniField field = (PcVariableArrayIniField) model.findIniField("wueAfrTargetOffset").get();
+        assertEquals(2, field.getRows());
+        assertEquals(-1.5, field.getValues()[0][0], EPS);
+        assertEquals(0.0, field.getValues()[1][0], EPS);
     }
 
     @Test
