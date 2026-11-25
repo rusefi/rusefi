@@ -37,7 +37,7 @@ class TextGaugeTraceTest {
         IniFileModel ini = mock(IniFileModel.class);
         when(ini.getGauge("afr1Gauge")).thenReturn(afr);
         UIContext uiContext = new UIContext();
-        uiContext.setIniFileModelForOffline(ini);
+        uiContext.iniFileState.setIniFileModelForTest(ini);
         return uiContext;
     }
 
@@ -58,7 +58,7 @@ class TextGaugeTraceTest {
     @Test
     void unknownChannelDrawsNothing() {
         UIContext uiContext = new UIContext();
-        uiContext.setIniFileModelForOffline(mock(IniFileModel.class));
+        uiContext.iniFileState.setIniFileModelForTest(mock(IniFileModel.class));
 
         TextGauge gauge = new TextGauge(uiContext, "noSuchGauge", new Node(), name -> { });
         try {
@@ -131,7 +131,7 @@ class TextGaugeTraceTest {
     @Test
     void noScaleItemForAGaugeTheIniDoesNotKnow() {
         UIContext uiContext = new UIContext();
-        uiContext.setIniFileModelForOffline(mock(IniFileModel.class));
+        uiContext.iniFileState.setIniFileModelForTest(mock(IniFileModel.class));
         TextGauge gauge = new TextGauge(uiContext, "noSuchGauge", new Node(), name -> { });
         try {
             assertEquals(0, gauge.createPopupMenu(uiContext, name -> { }).getComponentCount());
