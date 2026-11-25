@@ -9,6 +9,7 @@
 
 #include "pch.h"
 #include "bench_test.h"
+#include "board_overrides.h"
 #include "board_id.h"
 #include "can_bench_test.h"
 #include "can_msg_tx.h"
@@ -22,6 +23,8 @@
 #endif // HW_HELLEN
 
 extern PinRepository pinRepository;
+
+std::optional<setup_custom_bool_type> custom_board_qcForcePadMode;
 
 // todo: WHAT?! document why do we manually truncate higher bits?
 #define TRUNCATE_TO_BYTE(i) ((i) & 0xff)
@@ -109,9 +112,16 @@ static void setPin(const CANRxFrame& frame, [[maybe_unused]] int value) {
 	  criticalAssertVoid(boardOutputs != nullptr, "outputs not defined");
 		Gpio pin = boardOutputs[outputIndex];
 
-        int hwIndex = brainPin_to_index(pin);
-        if (pinRepository.getBrainUsedPin(hwIndex) == nullptr) {
-            // if pin is assigned we better configure it
+        bool configurePad;
+        if (get_board_override_result(custom_board_qcForcePadMode, false)) {
+            // assigned pins included; only on-chip pads have a PAL mode
+            configurePad = brain_pin_is_onchip(pin);
+        } else {
+            // default: pins claimed by a normal function keep their pad mode
+            int hwIndex = brainPin_to_index(pin);
+            configurePad = pinRepository.getBrainUsedPin(hwIndex) == nullptr;
+        }
+        if (configurePad) {
             efiSetPadModeWithoutOwnershipAcquisition("QC_SET", pin, PAL_MODE_OUTPUT_PUSHPULL);
         }
 

@@ -185,6 +185,14 @@ extern std::optional<setup_custom_board_output_type> custom_board_getMetaLowSide
 extern std::optional<setup_custom_board_outputs_type> custom_board_getMetaOutputs;
 extern std::optional<setup_custom_board_output_type> custom_board_getMetaDcOutputsCount;
 
+// CAN QC direct output control (setPin() in can_bench_test.cpp). By default a QC
+// output already claimed by a normal function (injector, VVT, etc) keeps its pad
+// mode and only unassigned pins are switched to push-pull GPIO. Return true to
+// force every on-chip QC output into push-pull GPIO before it is driven: needed
+// where an assigned pin sits in a PWM/alternate pad mode and would otherwise hold
+// its idle level instead of following the QC write.
+extern std::optional<setup_custom_bool_type> custom_board_qcForcePadMode;
+
 // LTFT to VE table custom apply algo
 extern std::optional<setup_custom_board_overrides_type> custom_board_LtftTrimToVeApply;
 
