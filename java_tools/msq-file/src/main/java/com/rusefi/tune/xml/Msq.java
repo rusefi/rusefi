@@ -7,6 +7,7 @@ import com.rusefi.tune.ConfigurationImageGetterSetter2;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
+import com.opensr5.ini.field.StringIniField;
 import com.rusefi.UiVersion;
 import com.rusefi.xml.XmlUtil;
 import org.jetbrains.annotations.NotNull;
@@ -160,12 +161,14 @@ public class Msq {
     }
 
     private void loadConstant(IniField field, ConfigurationImage image, Page page) {
-        String value = ConfigurationImageGetterSetter.getStringValue(field, image);
+        boolean lua = field instanceof StringIniField && "luaScript".equalsIgnoreCase(field.getName());
+        String value = lua ? getLuaScript(image, (StringIniField) field)
+            : ConfigurationImageGetterSetter.getStringValue(field, image);
         if (page == null) {
             log.error("Msq: No page");
             return;
         }
-        if (value.isEmpty()) {
+        if (value.isEmpty() && !lua) {
             log.debug("Skipping " + field.getName());
             return;
         }
@@ -176,6 +179,22 @@ public class Msq {
             constant.setCols(Integer.toString(arrayIniField.getCols()));
             constant.setRows(Integer.toString(arrayIniField.getRows()));
         }
+    }
+
+    private static String getLuaScript(ConfigurationImage image, StringIniField field) {
+        StringBuilder value = new StringBuilder();
+        byte[] content = image.getContent();
+        for (int i = 0; i < field.getSize(); i++) {
+            int character = content[field.getOffset() + i] & 0xff;
+            if (character == 0) {
+                return value.toString();
+            }
+            if (character > 0x7f) {
+                throw new IllegalArgumentException("Lua script must contain only ASCII bytes");
+            }
+            value.append((char) character);
+        }
+        throw new IllegalArgumentException("Lua script is not NUL-terminated");
     }
 
     public Page findPage() {

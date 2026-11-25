@@ -490,6 +490,20 @@ public class IniFileReader {
         // same layout as a [Constants] array, without the offset
         LinkedList<String> withOffset = new LinkedList<>(list);
         withOffset.add(3, "0");
+        // A spaced dimension such as [ 16] can span several lexer tokens.
+        int dimension = 4;
+        if (withOffset.get(dimension).startsWith("[")) {
+            int end = dimension;
+            while (end < withOffset.size() && !withOffset.get(end).endsWith("]")) {
+                end++;
+            }
+            if (end > dimension && end < withOffset.size()) {
+                List<String> tokens = withOffset.subList(dimension, end + 1);
+                String joined = String.join("", tokens);
+                tokens.clear();
+                withOffset.add(dimension, joined);
+            }
+        }
         PcVariableArrayIniField field;
         try {
             field = new PcVariableArrayIniField((ArrayIniField) ArrayIniField.parse(withOffset));

@@ -26,7 +26,6 @@ public class ConfigurationImageGetterSetterTest {
     @Test
     public void imageByteOrderGovernsScalarReads() {
         // 0x12 0x34: a big-endian image ('endianness = big') reads 0x1234, a little-endian one 0x3412
-        // (readNumericValue wraps a fixed 4-byte window, so pad the image)
         byte[] bytes = {0x12, 0x34, 0, 0};
         ScalarIniField field = new ScalarIniField("word", 0, "", FieldType.UINT16, 1.0, "0", 0.0);
 
@@ -36,6 +35,16 @@ public class ConfigurationImageGetterSetterTest {
 
         ConfigurationImage little = ConfigurationImageTestHelper.newLittleEndian(bytes.clone());
         assertEquals(0x3412, little.readNumericValue(field), 1e-9);
+    }
+
+    @Test
+    public void shortScalarsAtEndOfImageUseTheirOwnWidth() {
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[]{0x12, 0x34});
+        ScalarIniField word = new ScalarIniField("word", 0, "", FieldType.UINT16, 1.0, "0", 0.0);
+        ScalarIniField last = new ScalarIniField("last", 1, "", FieldType.UINT8, 1.0, "0", 0.0);
+
+        assertEquals(0x3412, image.readNumericValue(word), 1e-9);
+        assertEquals(0x34, image.readNumericValue(last), 1e-9);
     }
 
     @Test

@@ -126,7 +126,7 @@ public class ConfigurationImage {
     public Double readNumericValue(IniField field) {
         if (field instanceof ScalarIniField) {
             ScalarIniField scalarField = (ScalarIniField) field;
-            ByteBuffer bb = getByteBuffer(scalarField.getOffset(), 4);
+            ByteBuffer bb = getByteBuffer(scalarField.getOffset(), scalarField.getSize());
             double rawValue = scalarField.getType().readRawValue(bb);
             return rawValue * scalarField.getMultiplier();
         }
