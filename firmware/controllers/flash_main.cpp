@@ -29,20 +29,33 @@ struct SettingsFlashServiceGuard {
 #endif
 
 // A failed settings write stays pending and is retried by the storage manager thread;
-// once it has been failing this long, checkSettingsWriteFailure() escalates to
+// once retries have kept failing for this long, checkSettingsWriteFailure() escalates to
 // configError so the TS user learns their changes are not persisted
 static constexpr float SETTINGS_WRITE_FAIL_ALERT_SEC = 10.0f;
 
+// started by the first failed attempt of a streak
 static Timer settingsWriteFailTimer;
 static bool settingsWriteFailing = false;
+// [tag:settings_write_keeps_failing] Latched by a failed attempt, never by elapsed time: the
+// storage manager makes no attempts while settings writes are deferred (engine running, see
+// storageAllowWriteID()), and none after it drops a request, so time passing since one failure
+// does not mean that anything keeps failing (#10711).
+static bool settingsWriteKeepsFailing = false;
 
 void trackSettingsWriteResult(bool success) {
 	if (success) {
-		settingsWriteFailing = false;
+		resetSettingsWriteFailure();
 	} else if (!settingsWriteFailing) {
 		settingsWriteFailing = true;
 		settingsWriteFailTimer.reset();
+	} else if (settingsWriteFailTimer.hasElapsedSec(SETTINGS_WRITE_FAIL_ALERT_SEC)) {
+		settingsWriteKeepsFailing = true;
 	}
+}
+
+void resetSettingsWriteFailure() {
+	settingsWriteFailing = false;
+	settingsWriteKeepsFailing = false;
 }
 
 // level-triggered producer evaluated from refreshConfigErrorState(); the auto-clear
@@ -52,7 +65,7 @@ void trackSettingsWriteResult(bool success) {
 // refreshConfigErrorState(); it does not belong here. Without settings storage there is
 // nothing to fail, hence the stub below.
 bool checkSettingsWriteFailure() {
-	if (settingsWriteFailing && settingsWriteFailTimer.hasElapsedSec(SETTINGS_WRITE_FAIL_ALERT_SEC)) {
+	if (settingsWriteKeepsFailing) {
 		configError("Settings write keeps failing - your changes are NOT saved to flash");
 		return true;
 	}

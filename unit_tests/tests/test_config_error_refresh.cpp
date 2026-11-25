@@ -155,6 +155,7 @@ TEST_F(ConfigErrorRefresh, settingsWriteFailureOutranksBoardHook) {
 	secondActive = true;
 	trackSettingsWriteResult(false);
 	advanceTimeUs(MS2US(11'000));
+	trackSettingsWriteResult(false);
 	refreshConfigErrorState();
 
 	// core producer wins over the board hook
@@ -168,27 +169,47 @@ TEST_F(ConfigErrorRefresh, settingsWriteFailureOutranksBoardHook) {
 	EXPECT_STREQ("second problem", getConfigErrorMessage());
 }
 
-// Reproduces #10711: the failing state is cleared only by a successful attempt, and nothing
-// tells the tracker that attempts have stopped. The storage manager stops attempting when it
-// drops the request ("Tune edited after Burn; not saved", tryWriteValidatedTune() in
-// storage.cpp) or while storageAllowWriteID() defers settings writes because the engine runs.
-// One failed attempt is then reported as "keeps failing" and stays until the next good burn.
-TEST_F(ConfigErrorRefresh, settingsWriteSingleFailureReportedAsKeepsFailing) {
+// [tag:settings_write_keeps_failing] #10711: elapsed time alone must not raise the error. The
+// storage manager makes no attempts while storageAllowWriteID() defers settings writes because
+// the engine runs, so one failed attempt followed by silence is not "keeps failing".
+TEST_F(ConfigErrorRefresh, settingsWriteSingleFailureIsNotKeepsFailing) {
 	// the only attempt ever made
 	trackSettingsWriteResult(false);
 	refreshConfigErrorState();
 	EXPECT_FALSE(hasConfigError());
 
-	// no further attempts: nothing is failing any more, yet the alert threshold still elapses
+	// no further attempts: the alert threshold elapses with nothing failing
 	advanceTimeUs(MS2US(11'000));
 	refreshConfigErrorState();
-	// current faulty behaviour; with the fix: EXPECT_FALSE(hasConfigError())
-	ASSERT_TRUE(hasConfigError());
-	EXPECT_STREQ("Settings write keeps failing - your changes are NOT saved to flash", getConfigErrorMessage());
+	EXPECT_FALSE(hasConfigError());
 
-	// and it never goes away on its own
 	advanceTimeUs(MS2US(600'000));
 	refreshConfigErrorState();
-	// current faulty behaviour; with the fix: EXPECT_FALSE(hasConfigError())
-	EXPECT_TRUE(hasConfigError());
+	EXPECT_FALSE(hasConfigError());
+
+	// attempts resume and still fail: now it does keep failing
+	trackSettingsWriteResult(false);
+	refreshConfigErrorState();
+	ASSERT_TRUE(hasConfigError());
+	EXPECT_STREQ("Settings write keeps failing - your changes are NOT saved to flash", getConfigErrorMessage());
+}
+
+// [tag:settings_write_keeps_failing] the storage manager drops the request when the tune is
+// edited after Burn (tryWriteValidatedTune() in storage.cpp): no outcome will ever follow
+TEST_F(ConfigErrorRefresh, settingsWriteFailureForgottenWhenRequestDropped) {
+	trackSettingsWriteResult(false);
+	advanceTimeUs(MS2US(11'000));
+	trackSettingsWriteResult(false);
+	refreshConfigErrorState();
+	ASSERT_TRUE(hasConfigError());
+
+	resetSettingsWriteFailure();
+	refreshConfigErrorState();
+	EXPECT_FALSE(hasConfigError());
+
+	// the next Burn starts a new streak, not reported on its first failure
+	advanceTimeUs(MS2US(60'000));
+	trackSettingsWriteResult(false);
+	refreshConfigErrorState();
+	EXPECT_FALSE(hasConfigError());
 }

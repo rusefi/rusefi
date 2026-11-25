@@ -10,6 +10,7 @@
 
 #include "storage.h"
 #include "extra_flash_pages.h"
+#include "flash_main.h"
 #include "board_overrides.h"
 
 #if IS_WINDOWS_COMPILER
@@ -379,6 +380,10 @@ static bool tryWriteValidatedTune(StorageItemId id) {
 	const auto mask = getTuneWriteMask(id);
 	if ((validatedTuneWrites & mask) != mask) {
 		efiPrintf("Tune edited after Burn; not saved. Burn again to save the new tune.");
+		if (id == EFI_SETTINGS_RECORD_ID) {
+			// [tag:settings_write_keeps_failing] no attempt will follow an earlier failure
+			resetSettingsWriteFailure();
+		}
 		return true; // The next Burn must validate the edited tune.
 	}
 	// Recheck after waiting for the mutex: the engine could have started.
