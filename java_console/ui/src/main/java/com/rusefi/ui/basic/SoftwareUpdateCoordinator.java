@@ -29,6 +29,7 @@ public final class SoftwareUpdateCoordinator {
     private final Executor eventExecutor;
     private final BooleanSupplier promptForAvailableUpdate;
     private final AtomicBoolean availablePromptClaimed = new AtomicBoolean();
+    private final AtomicBoolean restartPromptClaimed = new AtomicBoolean();
     private volatile State state = State.CHECKING;
 
     public SoftwareUpdateCoordinator(CompletableFuture<Autoupdate.UpdateOutcome> checkOutcome) {
@@ -74,6 +75,14 @@ public final class SoftwareUpdateCoordinator {
     /** Ensures that only the first active window shows the session's availability popup. */
     public boolean claimAvailablePrompt() {
         return availablePromptClaimed.compareAndSet(false, true);
+    }
+
+    /**
+     * [tag:update_restart_prompt] Ensures that only one window asks to restart once the update is ready: the
+     * window in use claims it, the others keep their banner.
+     */
+    public boolean claimRestartPrompt() {
+        return restartPromptClaimed.compareAndSet(false, true);
     }
 
     public void install() {

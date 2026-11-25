@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.BiFunction;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -36,6 +37,7 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
     private final SoftwareUpdateCoordinator softwareUpdateCoordinator;
     private final Supplier<Component> updateDialogParent;
     private final Runnable restartApplication;
+    private volatile BooleanSupplier restartPromptAllowed = () -> true;
     // todo: this control lives on a different parent TODO fix this mess!
     private final ImportTuneControl importTuneButton;
 
@@ -268,6 +270,7 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
                 applySoftwareRestartRequired(updateSoftwareButton, updateSoftwareStatus,
                     updateLaterButton);
                 softwareUpdateOffer.setVisible(true);
+                scheduleRestartPrompt();
                 break;
             case FAILED:
                 softwareUpdateAvailable = true;
@@ -295,6 +298,27 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
     private void scheduleApplicationUpdateDialog() {
         SwingUtilities.invokeLater(() ->
             ApplicationUpdatePrompt.show(updateDialogParent.get(), softwareUpdateCoordinator));
+    }
+
+    /**
+     * [tag:update_restart_prompt] The banner above sits in the startup window's main view only; the window may be
+     * showing "Scanning for ECU…" or another view, so ask over the window while it is the one in use.
+     */
+    private void scheduleRestartPrompt() {
+        SwingUtilities.invokeLater(() -> {
+            if (restartPromptAllowed.getAsBoolean()) {
+                ApplicationUpdatePrompt.showRestart(updateDialogParent.get(), softwareUpdateCoordinator,
+                    restartApplication);
+            }
+        });
+    }
+
+    /**
+     * Whether this window may ask to restart: false once it has handed over to the main console, which then asks
+     * and restarts the way it closes.
+     */
+    public void setRestartPromptAllowed(BooleanSupplier allowed) {
+        restartPromptAllowed = allowed;
     }
 
     private void showDeferredRestartReminder() {
