@@ -53,7 +53,8 @@ public class AfrLambdaTableMigrationTest {
                 0.006802721088435374,
                 "{useLambdaOnInterface ? 0.6 : 0}",
                 "{useLambdaOnInterface ? 1.5 : 25}",
-                "{useLambdaOnInterface ? 2 : 1}"
+                "{useLambdaOnInterface ? 2 : 1}",
+                "{useLambdaOnInterface ? 1/147 : 1/10}"
             )
         );
 

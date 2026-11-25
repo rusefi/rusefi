@@ -13,9 +13,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -284,8 +285,11 @@ public class ExpressionEvaluator {
             return null;
         }
 
-        // Remove braces if present
+        // Parenthesized branches can themselves contain a ternary.
         String cleaned = stripBraces(expression);
+        while (cleaned.startsWith("(") && findMatchingParen(cleaned) == cleaned.length() - 1) {
+            cleaned = cleaned.substring(1, cleaned.length() - 1).trim();
+        }
 
         // Find the ? operator
         int questionMark = findOperatorOutsideParens(cleaned, '?');
@@ -341,23 +345,7 @@ public class ExpressionEvaluator {
     @Nullable
     private static Boolean evaluateCondition(String condition, Map<String, Double> variables) {
         condition = condition.trim();
-
-        // Handle negation
-        boolean negate = false;
-        if (condition.startsWith("!")) {
-            negate = true;
-            condition = condition.substring(1).trim();
-        }
-
-        // Try to evaluate as an expression
-        Double result = evaluateSimpleExpression(condition, variables);
-        if (result == null) {
-            return null;
-        }
-
-        // Non-zero is truthy
-        boolean truthy = result != 0.0;
-        return negate != truthy;
+        return evaluateBooleanExpression(condition, variables);
     }
 
     /**
@@ -434,43 +422,77 @@ public class ExpressionEvaluator {
      */
     @Nullable
     public static Boolean evaluateBooleanExpression(String expression, IniFileModel ini, ConfigurationImage ci) {
-        return evaluateBooleanExpression(expression, buildVariableContext(expression, ini, ci));
+        return evaluateBooleanExpression(expression, resolveVariables(expression, ini, ci, Collections.emptyMap()));
     }
 
     /**
-     * Evaluate a numeric expression against INI fields read from the given configuration image.
+     * Evaluate a numeric expression against PC variables and the main ECU configuration image.
      * Supports ternary expressions (e.g. "{useMetricOnInterface ? 300 : 43.5}").
      */
     @Nullable
-    public static Double evaluateNumericExpression(String expression, IniFileModel ini, ConfigurationImage ci) {
-        if (expression == null || ini == null || ci == null) return null;
-        return tryEvaluateWithContext(expression, buildVariableContext(expression, ini, ci));
+    public static Double evaluateNumericExpression(String expression, IniFileModel ini, @Nullable ConfigurationImage ci) {
+        if (ini == null) {
+            return null;
+        }
+        return tryEvaluateWithContext(expression, resolveVariables(expression, ini, ci, Collections.emptyMap()));
     }
 
-    private static Map<String, Double> buildVariableContext(String expression, IniFileModel ini, ConfigurationImage ci) {
-        return buildVariableContext(expression, ini, ci, new HashSet<>());
+    static Map<String, Double> resolveVariables(String expression, IniFileModel ini,
+                                                @Nullable ConfigurationImage ci, Map<String, Double> outputValues) {
+        return resolveVariables(expression, ini, field -> containsMainPageField(ci, field) ? ci.readNumericValue(field) : null,
+            outputValues);
     }
 
-    private static Map<String, Double> buildVariableContext(String expression, IniFileModel ini,
-                                                           ConfigurationImage ci, Set<String> resolving) {
-        Set<String> varNames = extractVariables(expression);
+    static boolean containsMainPageField(@Nullable ConfigurationImage image, IniField field) {
+        return image != null && field.getPageIndex() == 0 && field.getOffset() >= 0 && field.getSize() >= 0
+            && field.getOffset() <= image.getSize() - field.getSize();
+    }
+
+    /** Resolve an expression against PC variables and a caller's page-aware ECU value lookup. */
+    public static Map<String, Double> resolveVariables(String expression, IniFileModel ini,
+                                                        Function<IniField, Double> ecuValue) {
+        return resolveVariables(expression, ini, ecuValue, Collections.emptyMap());
+    }
+
+    private static Map<String, Double> resolveVariables(String expression, IniFileModel ini,
+                                                         Function<IniField, Double> ecuValue, Map<String, Double> outputValues) {
+        return resolveVariables(expression, ini, ecuValue, outputValues, new TreeSet<>(String.CASE_INSENSITIVE_ORDER));
+    }
+
+    private static Map<String, Double> resolveVariables(String expression, IniFileModel ini, Function<IniField, Double> ecuValue,
+                                                         Map<String, Double> outputValues, Set<String> resolving) {
         Map<String, Double> context = new HashMap<>();
-        for (String varName : varNames) {
-            Optional<IniField> field = ini.findIniField(varName);
-            if (field.isPresent()) {
-                Double value = ci.readNumericValue(field.get());
-                if (value != null) context.put(varName, value);
-            } else {
-                // Axis limits can reference expression channels such as cltHighXaxis.
-                // Resolve only config-backed expressions; cyclic references remain unresolved.
-                String channel = ini.getExpressionOutputChannel(varName);
-                if (channel != null && resolving.add(varName)) {
-                    Double value = tryEvaluateWithContext(channel, buildVariableContext(channel, ini, ci, resolving));
-                    resolving.remove(varName);
-                    if (value != null) {
-                        context.put(varName, value);
+        for (String name : extractVariables(expression)) {
+            if (!resolving.add(name)) {
+                continue;
+            }
+            try {
+                Double value;
+                if (ini.getPcScalarVariables().contains(name)) {
+                    String maintained = ini.getMaintainedPcVariableExpressions().get(name);
+                    // A missing dependency or cycle must not silently select the default.
+                    value = maintained == null ? ini.getPcVariableDefaults().get(name)
+                        : tryEvaluateWithContext(maintained, resolveVariables(maintained, ini, ecuValue, outputValues, resolving));
+                } else if (ini.getPcVariableNames().contains(name)) {
+                    // PC enum/array definitions are not backed by ECU bytes.
+                    continue;
+                } else {
+                    value = outputValues.get(name);
+                    if (value == null) {
+                        value = ini.findIniField(name).map(ecuValue).orElse(null);
+                    }
+                    if (value == null) {
+                        String channel = ini.getExpressionOutputChannel(name);
+                        if (channel != null) {
+                            value = tryEvaluateWithContext(channel, resolveVariables(channel, ini, ecuValue, outputValues, resolving));
+                        }
                     }
                 }
+                if (value != null) {
+                    context.put(name, value);
+                }
+            } finally {
+                resolving.remove(name);
             }
         }
         return context;

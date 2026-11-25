@@ -3,12 +3,14 @@ package com.opensr5.ini.test;
 import com.opensr5.ConfigurationImageTestHelper;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.GaugeModel;
+import com.opensr5.ini.ExpressionEvaluator;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.RawIniFile;
 import com.opensr5.ini.TsStringFunction;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.StringIniField;
+import com.opensr5.ini.field.ArrayIniField;
 import com.rusefi.config.FieldType;
 import com.rusefi.ini.reader.IniFileReaderUtil;
 import org.junit.jupiter.api.Test;
@@ -461,6 +463,113 @@ public class TsStringFunctionTest {
         GaugeModel gauge = model.getGauge("CLTGauge");
         String resolvedUnits = TsStringFunction.resolve(gauge.getUnits(), model, configImage, new HashMap<>());
         assertEquals("F", resolvedUnits, "Imperial config should resolve units to 'F'");
+    }
+
+    @Test
+    public void testResolveMaintainedPcScalarFromCurrentConfigSnapshot() {
+        String iniContent = "[Constants]\n" +
+            "page = 1\n" +
+            "afrOverrideMode = scalar, U08, 0, \"\", 1, 0, 0, 3, 0\n" +
+            "fuelAlgorithm = scalar, U08, 1, \"\", 1, 0, 0, 3, 0\n" +
+            "useMetricOnInterface = scalar, U08, 2, \"\", 1, 0, 0, 1, 0\n" +
+            "scaledAxis = array, U16, 4, [2], \"\", { useMetricOnInterface ? 2 : 3 }, 0, 0, 100, 0\n" +
+            "[PcVariables]\n" +
+            "afrLoadUnitLabels = bits, U08, [0:1], \"psi\", \"kPa\", \"%\", \"Lua\"\n" +
+            "afrLoadUnitIdx = scalar, U08, \"\", 1, 0, 0, 3, 0, noMsqSave\n" +
+            "[ConstantsExtensions]\n" +
+            "defaultValue = afrLoadUnitIdx, 1\n" +
+            "maintainConstantValue = afrLoadUnitIdx, { (afrOverrideMode == 1 || (afrOverrideMode == 0 && fuelAlgorithm == 0)) "
+            + "? useMetricOnInterface : ((afrOverrideMode == 0 && fuelAlgorithm == 3) ? 3 : 2) } ; display units\n";
+
+        IniFileModel model = readLines(IniFileReaderUtil.read(
+            new ByteArrayInputStream(iniContent.getBytes(StandardCharsets.UTF_8))));
+        assertFalse(model.findIniField("afrLoadUnitIdx").isPresent(),
+            "a PC scalar must not be read from an ECU page");
+        byte[] bytes = new byte[3];
+        bytes[0] = 1; // AFR load override selects useMetricOnInterface
+        bytes[2] = 1;
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(bytes);
+
+        assertEquals("kPa", TsStringFunction.resolveDisplayLabel(
+            "{bitStringValue(afrLoadUnitLabels, afrLoadUnitIdx)}", model, image, null));
+        image.getContent()[2] = 0;
+        assertEquals("psi", TsStringFunction.resolveDisplayLabel(
+            "{bitStringValue(afrLoadUnitLabels, afrLoadUnitIdx)}", model, image, null));
+
+        ArrayIniField scaledAxis = (ArrayIniField) model.findIniField("scaledAxis").orElseThrow(IllegalStateException::new);
+        assertEquals("{ useMetricOnInterface ? 2 : 3 }", scaledAxis.getScaleExpression());
+        assertEquals(2.0, scaledAxis.getMultiplier(), 0.00001);
+        assertEquals(3.0, ExpressionEvaluator.evaluateNumericExpression(
+            scaledAxis.getScaleExpression(), model, image));
+
+        image.getContent()[0] = 0;
+        image.getContent()[1] = 3;
+        assertEquals("Lua", TsStringFunction.resolveDisplayLabel(
+            "{bitStringValue(afrLoadUnitLabels, afrLoadUnitIdx)}", model, image, null));
+
+        assertEquals("", TsStringFunction.resolveDisplayLabel(
+            "{bitStringValue(afrLoadUnitLabels, afrLoadUnitIdx)}", model, ConfigurationImageTestHelper.newLittleEndian(1), null));
+    }
+
+    @Test
+    public void pcScalarsResolveInLabelsAndGeneralExpressions() {
+        String iniContent = "[Constants]\npage = 1\n"
+            + "ecuValue = scalar, U08, 0, \"\", 1, 0, 0, 10, 0\n"
+            + "[PcVariables]\n"
+            + "lookup = bits, U08, [0:1], \"zero\", \"one\", \"two\", \"three\"\n"
+            + "pcDefault = scalar, U08, \"\", 1, 0, 0, 3, 0\n"
+            + "pcMaintained = scalar, U08, \"\", 1, 0, 0, 10, 0, noMsqSave\n"
+            + "[ConstantsExtensions]\n"
+            + "defaultValue = pcDefault, 2\n"
+            + "maintainConstantValue = pcMaintained, { pcDefault + ecuValue }\n";
+        IniFileModel model = readLines(IniFileReaderUtil.read(
+            new ByteArrayInputStream(iniContent.getBytes(StandardCharsets.UTF_8))));
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(new byte[]{1});
+
+        assertEquals("three", TsStringFunction.resolveDisplayLabel("{bitStringValue(lookup, pcMaintained)}", model, image, null));
+        assertEquals(4.0, ExpressionEvaluator.evaluateNumericExpression("{ pcDefault * 2 }", model, image));
+        assertEquals(6.0, ExpressionEvaluator.evaluateNumericExpression("{ pcMaintained * 2 }", model, image));
+        assertEquals(Boolean.TRUE, ExpressionEvaluator.evaluateBooleanExpression("{ pcMaintained == 3 }", model, image));
+        assertEquals(4.0, ExpressionEvaluator.evaluateNumericExpression("{ pcDefault * 2 }", model, null));
+        assertEquals("matched", TsStringFunction.resolveDisplayLabel(
+            "{ pcMaintained == 3 ? \"matched\" : \"not matched\" }", model, image, null));
+        image.getContent()[0] = 0;
+        assertEquals(Boolean.FALSE, ExpressionEvaluator.evaluateBooleanExpression("{ pcMaintained == 3 }", model, image));
+    }
+
+    @Test
+    public void testMaintainedPcScalarDoesNotUseDefaultWhenDependencyIsMissing() {
+        String iniContent = "[Constants]\npage = 1\n" +
+            "[PcVariables]\n" +
+            "labels = bits, U08, [0:1], \"zero\", \"one\"\n" +
+            "idx = scalar, U08, \"\", 1, 0, 0, 1, 0, noMsqSave\n" +
+            "[ConstantsExtensions]\n" +
+            "defaultValue = idx, 1\n" +
+            "maintainConstantValue = idx, { missingDependency }\n";
+        IniFileModel model = readLines(IniFileReaderUtil.read(
+            new ByteArrayInputStream(iniContent.getBytes(StandardCharsets.UTF_8))));
+        assertEquals("", TsStringFunction.resolveDisplayLabel(
+            "{bitStringValue(labels, idx)}", model, ConfigurationImageTestHelper.newLittleEndian(8), null));
+        assertNull(ExpressionEvaluator.evaluateNumericExpression("{ idx }", model, null));
+    }
+
+    @Test
+    public void testMaintainedPcScalarCycleDoesNotUseDefaults() {
+        String iniContent = "[Constants]\npage = 1\n" +
+            "[PcVariables]\n" +
+            "labels = bits, U08, [0:1], \"zero\", \"one\"\n" +
+            "idx = scalar, U08, \"\", 1, 0, 0, 1, 0, noMsqSave\n" +
+            "otherIdx = scalar, U08, \"\", 1, 0, 0, 1, 0, noMsqSave\n" +
+            "[ConstantsExtensions]\n" +
+            "defaultValue = idx, 1\n" +
+            "defaultValue = otherIdx, 0\n" +
+            "maintainConstantValue = idx, { otherIdx }\n" +
+            "maintainConstantValue = otherIdx, { idx }\n";
+        IniFileModel model = readLines(IniFileReaderUtil.read(
+            new ByteArrayInputStream(iniContent.getBytes(StandardCharsets.UTF_8))));
+        assertEquals("", TsStringFunction.resolveDisplayLabel(
+            "{bitStringValue(labels, idx)}", model, ConfigurationImageTestHelper.newLittleEndian(8), null));
+        assertNull(ExpressionEvaluator.evaluateBooleanExpression("{ idx == 1 }", model, null));
     }
 
     @Test

@@ -3,7 +3,9 @@ package com.rusefi.ini.reader;
 import com.opensr5.ini.AxisModel;
 import com.opensr5.ini.CurveModel;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 public class CurveBuilder {
     // TunerStudio treats the axis step (grid divisions) as optional, e.g. "yAxis = -5, 5,"
@@ -18,6 +20,9 @@ public class CurveBuilder {
     private String xBins;
     private String xBinsChannel;
     private String yBins;
+    private final List<String> yBinsSeries = new ArrayList<>();
+    private final List<String> yColumnLabels = new ArrayList<>();
+    private final List<String> lineLabels = new ArrayList<>();
     private String topicHelp;
 
     public void setCurveDefinition(String curveId, String title) {
@@ -44,6 +49,7 @@ public class CurveBuilder {
 
     public void setYBins(String yBins) {
         this.yBins = yBins;
+        yBinsSeries.add(yBins);
     }
 
     public boolean isComplete() {
@@ -59,7 +65,16 @@ public class CurveBuilder {
     }
 
     public CurveModel build() {
-        return new CurveModel(curveId, title, xLabel, yLabel, xAxis, yAxis, xBins, yBins, topicHelp, xBinsChannel);
+        List<String> labels = new ArrayList<>(yBinsSeries.size());
+        for (int i = 0; i < yBinsSeries.size(); i++) {
+            String label = i < lineLabels.size() ? lineLabels.get(i) : "";
+            if (label.trim().isEmpty() && i < yColumnLabels.size()) {
+                label = yColumnLabels.get(i);
+            }
+            labels.add(label);
+        }
+        return new CurveModel(curveId, title, xLabel, yLabel, xAxis, yAxis, xBins, yBins, topicHelp,
+                xBinsChannel, yBinsSeries, labels);
     }
 
     public void reset() {
@@ -72,6 +87,9 @@ public class CurveBuilder {
         xBins = null;
         xBinsChannel = null;
         yBins = null;
+        yBinsSeries.clear();
+        yColumnLabels.clear();
+        lineLabels.clear();
         topicHelp = null;
     }
 
@@ -97,6 +115,11 @@ public class CurveBuilder {
         } else if (first.equalsIgnoreCase("columnLabel")) {
             list.removeFirst();
             setColumnLabels(list.removeFirst(), list.removeFirst());
+            yColumnLabels.add(yLabel);
+            yColumnLabels.addAll(list);
+            return true;
+        } else if (first.equalsIgnoreCase("lineLabel")) {
+            lineLabels.add(list.size() >= 2 ? list.get(1) : "");
             return true;
         } else if (first.equalsIgnoreCase("xAxis")) {
             list.removeFirst();

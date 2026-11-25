@@ -29,6 +29,7 @@ class TableBuilder {
     private String downLabel;
     private Double gridHeight;
     private String gridOrient;
+    private String visibilityExpression;
 
     void setTableDefinition(String tableId, String map3dId, String title) {
         this.tableId = tableId;
@@ -124,7 +125,8 @@ class TableBuilder {
                 upLabel,
                 downLabel,
                 gridHeight,
-                gridOrient
+                gridOrient,
+                visibilityExpression
         );
     }
 
@@ -146,6 +148,7 @@ class TableBuilder {
         downLabel = null;
         gridHeight = null;
         gridOrient = null;
+        visibilityExpression = null;
     }
 
     /**
@@ -229,7 +232,7 @@ class TableBuilder {
     }
 
     private void parseTableDefinition(LinkedList<String> list) {
-        // table = table_id, map3d_id, "title" [, page]
+        // table = table_id, map3d_id, "title" [, page [, visibility]]
         if (list.size() < 4) {
             log.warn("Incomplete table definition, expected at least 4 fields");
             return;
@@ -239,6 +242,7 @@ class TableBuilder {
         String tableId = list.removeFirst().trim();
         String map3dId = list.removeFirst().trim();
         String title = list.removeFirst().trim();
+        visibilityExpression = list.size() >= 2 ? list.get(1).trim() : null;
 
         setTableDefinition(tableId, map3dId, title);
     }

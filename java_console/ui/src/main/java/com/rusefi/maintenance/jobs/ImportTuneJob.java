@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import jakarta.xml.bind.JAXBException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.function.Consumer;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -70,7 +71,21 @@ public class ImportTuneJob extends AsyncJobWithContext<ImportTuneJobContext> {
     private static void loadAndStart(String tuneFileName, JComponent parent,
                                      Consumer<Msq> starter, Consumer<String> errorHandler) {
         try {
-            starter.accept(Msq.readTune(tuneFileName));
+            Msq tune = Msq.readTune(tuneFileName);
+            runOnEdtAndWait(() -> {
+                Object[] options = {"Import and Burn", "Cancel"};
+                int choice = JOptionPane.showOptionDialog(
+                    parent,
+                    "Importing this tune writes settings to the ECU immediately and burns them to ECU flash. Continue?",
+                    "Import and Burn",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.WARNING_MESSAGE,
+                    null,
+                    options,
+                    options[1]
+                );
+                startIfApproved(choice == 0, tune, starter);
+            });
         } catch (JAXBException e) {
             final String errorMsg = String.format("Failed to load tune to import from file %s: %s",
                 tuneFileName, e.getMessage());
@@ -79,10 +94,35 @@ public class ImportTuneJob extends AsyncJobWithContext<ImportTuneJobContext> {
         }
     }
 
+    static void startIfApproved(boolean approved, Msq tune, Consumer<Msq> starter) {
+        if (approved) {
+            starter.accept(tune);
+        }
+    }
+
+    private static void runOnEdtAndWait(Runnable action) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            action.run();
+            return;
+        }
+        try {
+            SwingUtilities.invokeAndWait(action);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (InvocationTargetException e) {
+            log.error("Failed to confirm tune import", e.getCause());
+        }
+    }
+
     @Override
     public void doJob(final UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
         if (binaryProtocol != null) {
             JobHelper.doJob(() -> {
+                if (!isEstablishedConnectionCurrent(binaryProtocol, linkManager)) {
+                    callbacks.logLine("The ECU connection changed; start Import and Burn again.");
+                    callbacks.error();
+                    return;
+                }
                 if (CalibrationsHelper.importTune(
                     binaryProtocol, linkManager, context.getTuneToImport(), callbacks, connectivityContext)) {
                     callbacks.done();
@@ -106,6 +146,10 @@ public class ImportTuneJob extends AsyncJobWithContext<ImportTuneJobContext> {
                 }
             }, onJobFinished);
         }
+    }
+
+    static boolean isEstablishedConnectionCurrent(BinaryProtocol bp, LinkManager lm) {
+        return lm.getBinaryProtocol() == bp && !bp.isClosed();
     }
 
 }

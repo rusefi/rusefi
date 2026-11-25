@@ -126,7 +126,7 @@ public class UIContext {
      * [tag:offline_tune] Sets the INI model directly for offline editing (no ECU connection).
      */
     public void setIniFileModelForOffline(IniFileModel ini) {
-        iniFileState.setIniFileModelForTest(ini);
+        iniFileState.setIniFileModelForOffline(ini);
     }
 
     // ---- Config-image change notifications ----

@@ -5,6 +5,7 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.StringIniField;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.core.MessagesCentral;
 import com.rusefi.binaryprotocol.ShortcutsHelper;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.ui.AutoupdateUtil;
@@ -86,10 +87,28 @@ public class LuaScriptPanel {
 
         burnButton.addActionListener(e -> {
             LinkManager linkManager = context.getLinkManager();
+            BinaryProtocol bp = linkManager.getBinaryProtocol();
+            if (bp == null) {
+                return;
+            }
 
-            linkManager.submit(() -> {
-                BinaryProtocol bp = linkManager.getBinaryProtocol();
-                bp.burn();
+            submitCommunicationTask.accept(() -> {
+                if (linkManager.getBinaryProtocol() != bp || bp.isClosed()) {
+                    return;
+                }
+                try {
+                    StringIniField field = getLuaScriptField(bp);
+                    if (field == null) {
+                        throw new IllegalStateException("The ECU's INI does not define a Lua page.");
+                    }
+                    if (field.getPageIndex() == 0) {
+                        bp.burn();
+                    } else if (!bp.burnPage(field.getPageIndex())) {
+                        throw new IllegalStateException("The ECU rejected the Lua page burn.");
+                    }
+                } catch (RuntimeException ex) {
+                    MessagesCentral.getInstance().postMessage(LuaScriptPanel.class, "Failed to burn Lua: " + ex.getMessage());
+                }
             });
         });
 

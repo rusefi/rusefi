@@ -128,6 +128,8 @@ public class TuningTableView {
     private ConfigurationImage imageTarget;
     private ArrayIniField zBinsField;
     private ConfigurationImage axisImageTarget;
+    private ConfigurationImage displayXAxisImage;
+    private ConfigurationImage displayYAxisImage;
     private ArrayIniField xBinsField;
     private ArrayIniField yBinsField;
     private final JTextField xAxisEditor = new JTextField();
@@ -561,7 +563,7 @@ public class TuningTableView {
                 return;
             }
             orientationNode.setBoolProperty(key, option.isSelected());
-            displayTable(currentIni, currentTableName, imageTarget, axisImageTarget);
+            displayTable(currentIni, currentTableName, imageTarget, displayXAxisImage, displayYAxisImage);
             onOrientationChange.run();
         });
         menu.add(option);
@@ -1647,6 +1649,11 @@ public class TuningTableView {
     }
 
     public void displayTable(IniFileModel iniFile, String tableName, ConfigurationImage zImage, ConfigurationImage axisImage) {
+        displayTable(iniFile, tableName, zImage, axisImage, axisImage);
+    }
+
+    public void displayTable(IniFileModel iniFile, String tableName, ConfigurationImage zImage,
+                             ConfigurationImage xAxisImage, ConfigurationImage yAxisImage) {
         finishXAxisEdit(false);
         if (table.isEditing()) {
             table.getCellEditor().cancelCellEditing();
@@ -1669,8 +1676,8 @@ public class TuningTableView {
         Double[][] storedValues = ConfigurationImageGetterSetter.getArrayValues(ltft, zImage);
 
         // X and Y bins (RPM and load) are on page 1
-        Double[] storedX = extractAxisBins(iniFile, iniTable.getXBinsConstant(), axisImage);
-        Double[] storedY = extractAxisBins(iniFile, iniTable.getYBinsConstant(), axisImage);
+        Double[] storedX = extractAxisBins(iniFile, iniTable.getXBinsConstant(), xAxisImage);
+        Double[] storedY = extractAxisBins(iniFile, iniTable.getYBinsConstant(), yAxisImage);
 
         currentIni = iniFile;
         currentTableName = tableName;
@@ -1688,7 +1695,10 @@ public class TuningTableView {
 
         this.imageTarget = zImage;
         this.zBinsField = ltft;
-        this.axisImageTarget = axisImage;
+        this.displayXAxisImage = xAxisImage;
+        this.displayYAxisImage = yAxisImage;
+        // Editing only supports a single shared axis image; split images are for display.
+        this.axisImageTarget = xAxisImage == yAxisImage ? xAxisImage : null;
         this.xBinsField = editableAxisField(iniFile,
             flipAxes ? iniTable.getYBinsConstant() : iniTable.getXBinsConstant());
         this.yBinsField = editableAxisField(iniFile,
@@ -1697,7 +1707,7 @@ public class TuningTableView {
         TuningTableModel model = new TuningTableModel(dataValues, xBins, yBins, precision, !viewMode,
             edited -> commitEdit(edited, table.getSelectedRows(), table.getSelectedColumns()),
             flipAxes ? "RPM \\ Load" : "Load \\ RPM");
-        if (!viewMode && axisImage != null && yBinsField != null) {
+        if (!viewMode && axisImageTarget != null && yBinsField != null) {
             model.onYAxisEdit = (index, value) -> setAxisValue(false, index, value);
         }
         model.xPrecision = xBinsField == null ? precision : IniField.parseDigits(xBinsField.getDigits());
@@ -1921,6 +1931,9 @@ public class TuningTableView {
     private Double[] extractAxisBins(IniFileModel iniFile,
                                      String binConstant,
                                      ConfigurationImage image) {
+        if (image == null) {
+            return null;
+        }
         Optional<IniField> binsField = iniFile.findIniField(binConstant);
         if (!binsField.isPresent() || !(binsField.get() instanceof ArrayIniField)) {
             return null;

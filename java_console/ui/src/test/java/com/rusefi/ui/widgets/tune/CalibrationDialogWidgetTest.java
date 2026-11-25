@@ -658,6 +658,39 @@ public class CalibrationDialogWidgetTest {
         }
     }
 
+    @Test
+    public void tableOnSecondaryPageUsesAxesFromThatPage() {
+        IniFileModel ini = ltftTableIni();
+        ArrayIniField x = new ArrayIniField("veRpmBins", 100, FieldType.FLOAT, 1, 1, "RPM", 1, "0", "18000", "0");
+        ArrayIniField y = new ArrayIniField("veLoadBins", 8, FieldType.FLOAT, 1, 1, "kPa", 1, "0", "650", "0");
+        y.setPageIndex(0x0200);
+        when(ini.findIniField("veRpmBins")).thenReturn(java.util.Optional.of(x));
+        when(ini.findIniField("veLoadBins")).thenReturn(java.util.Optional.of(y));
+        ConfigurationImage main = ltftMainPage();
+        AtomicReference<int[]> request = new AtomicReference<>();
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        widget.setPageReaderForUnitTest((page, offset, size, onResult) -> {
+            request.set(new int[]{page, offset, size});
+            byte[] data = new byte[size];
+            ConfigurationImage secondary = ConfigurationImageTestHelper.newLittleEndian(data);
+            secondary.getByteBuffer(0, 4).putFloat(0.125f);
+            secondary.getByteBuffer(4, 4).putFloat(2500);
+            secondary.getByteBuffer(8, 4).putFloat(40);
+            onResult.accept(data);
+        });
+        try {
+            widget.update("ltftBank1Tbl", ini, main);
+
+            assertArrayEquals(new int[]{0x0200, 0, 12}, request.get());
+            JTable table = findTable(widget.getContentPane());
+            assertEquals("650", table.getColumnName(1));
+            assertEquals("40", table.getValueAt(0, 0));
+            assertEquals("12.5", table.getValueAt(0, 1));
+        } finally {
+            widget.destroy();
+        }
+    }
+
     /** [tag:image_byte_order] secondary page bytes are in the byte order declared by the controller's ini */
     @Test
     public void tableOnSecondaryPageOfBigEndianController() {

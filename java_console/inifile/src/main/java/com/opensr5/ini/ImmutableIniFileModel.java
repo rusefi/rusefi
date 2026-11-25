@@ -39,6 +39,10 @@ public class ImmutableIniFileModel implements IniFileModel {
     private final List<VeAnalyzeFilter> veAnalyzeFilters;
     private final List<EventTriggerModel> eventTriggers;
     private final Set<String> requiresPowerCycle;
+    private final Map<String, String> maintainedPcVariableExpressions;
+    private final Map<String, Double> pcVariableDefaults;
+    private final Set<String> pcScalarVariables;
+    private final Set<String> pcVariableNames;
 
     private static <V> Map<String, V> copyWithCaseInsensitiveKeys(Map<String, V> source) {
         LowercaseHashMap<V> result = new LowercaseHashMap<>(source.size() * 2);
@@ -82,9 +86,13 @@ public class ImmutableIniFileModel implements IniFileModel {
                                  Map<String, String> controllerCommands,
                                  List<VeAnalyzeMap> veAnalyzeMaps,
                                  List<String> lambdaTargetTables,
-                                 List<VeAnalyzeFilter> veAnalyzeFilters,
-                                 List<EventTriggerModel> eventTriggers,
-                                 Collection<String> requiresPowerCycle) {
+                                  List<VeAnalyzeFilter> veAnalyzeFilters,
+                                  List<EventTriggerModel> eventTriggers,
+                                  Collection<String> requiresPowerCycle,
+                                  Map<String, String> maintainedPcVariableExpressions,
+                                  Map<String, Double> pcVariableDefaults,
+                                  Collection<String> pcScalarVariables,
+                                  Collection<String> pcVariableNames) {
         this.signature = signature;
         this.blockingFactor = blockingFactor;
         this.defines = Collections.unmodifiableMap(new TreeMap<>(defines));
@@ -133,6 +141,15 @@ public class ImmutableIniFileModel implements IniFileModel {
         TreeSet<String> powerCycle = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
         powerCycle.addAll(requiresPowerCycle);
         this.requiresPowerCycle = Collections.unmodifiableSet(powerCycle);
+        this.maintainedPcVariableExpressions = copyWithCaseInsensitiveKeys(maintainedPcVariableExpressions);
+        this.pcVariableDefaults = copyWithCaseInsensitiveKeys(pcVariableDefaults);
+        TreeSet<String> pcScalars = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+        pcScalars.addAll(pcScalarVariables);
+        this.pcScalarVariables = Collections.unmodifiableSet(pcScalars);
+        TreeSet<String> pcNames = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+        pcNames.addAll(pcVariableNames);
+        pcNames.addAll(pcScalars);
+        this.pcVariableNames = Collections.unmodifiableSet(pcNames);
     }
 
     /**
@@ -423,5 +440,25 @@ public class ImmutableIniFileModel implements IniFileModel {
     @Override
     public Set<String> getRequiresPowerCycle() {
         return requiresPowerCycle;
+    }
+
+    @Override
+    public Map<String, String> getMaintainedPcVariableExpressions() {
+        return maintainedPcVariableExpressions;
+    }
+
+    @Override
+    public Map<String, Double> getPcVariableDefaults() {
+        return pcVariableDefaults;
+    }
+
+    @Override
+    public Set<String> getPcScalarVariables() {
+        return pcScalarVariables;
+    }
+
+    @Override
+    public Set<String> getPcVariableNames() {
+        return pcVariableNames;
     }
 }

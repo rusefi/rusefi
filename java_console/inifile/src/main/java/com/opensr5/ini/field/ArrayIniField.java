@@ -1,6 +1,7 @@
 package com.opensr5.ini.field;
 
 import com.rusefi.config.FieldType;
+import com.opensr5.ini.ExpressionEvaluator;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
@@ -12,6 +13,11 @@ public class ArrayIniField extends IniField {
     private final int cols;
     private final int rows;
     private final double multiplier;
+    @Nullable
+    private final String scaleExpression;
+    @Nullable
+    private final String translateExpression;
+    private final double translate;
     @Nullable
     private final String min;
     @Nullable
@@ -30,6 +36,40 @@ public class ArrayIniField extends IniField {
         final String max,
         String digits
     ) {
+        this(name, offset, type, cols, rows, unit, multiplier, min, max, digits, null, 0, null);
+    }
+
+    public ArrayIniField(
+        final String name,
+        final int offset,
+        final FieldType type,
+        final int cols,
+        final int rows,
+        final String unit,
+        final double multiplier,
+        final String min,
+        final String max,
+        String digits,
+        @Nullable String scaleExpression
+    ) {
+        this(name, offset, type, cols, rows, unit, multiplier, min, max, digits, scaleExpression, 0, null);
+    }
+
+    public ArrayIniField(
+        final String name,
+        final int offset,
+        final FieldType type,
+        final int cols,
+        final int rows,
+        final String unit,
+        final double multiplier,
+        final String min,
+        final String max,
+        String digits,
+        @Nullable String scaleExpression,
+        double translate,
+        @Nullable String translateExpression
+    ) {
         super(name, offset);
         this.unit = unit;
         this.type = type;
@@ -39,6 +79,9 @@ public class ArrayIniField extends IniField {
         this.min = min;
         this.max = max;
         this.digits = digits;
+        this.scaleExpression = scaleExpression;
+        this.translate = translate;
+        this.translateExpression = translateExpression;
     }
 
     @Override
@@ -65,6 +108,21 @@ public class ArrayIniField extends IniField {
 
     public double getMultiplier() {
         return multiplier;
+    }
+
+    @Nullable
+    public String getScaleExpression() {
+        return scaleExpression;
+    }
+
+    /** INI translation value before scaling; older constructors default it to zero. */
+    public double getTranslate() {
+        return translate;
+    }
+
+    @Nullable
+    public String getTranslateExpression() {
+        return translateExpression;
     }
 
     public String getMin() {
@@ -132,6 +190,9 @@ public class ArrayIniField extends IniField {
             ", cols=" + cols +
             ", rows=" + rows +
             ", multiplier=" + multiplier +
+            ", scaleExpression='" + scaleExpression + '\'' +
+            ", translate=" + translate +
+            ", translateExpression='" + translateExpression + '\'' +
             ", min='" + min + '\'' +
             ", max='" + max + '\'' +
             ", digits='" + digits + '\'' +
@@ -147,10 +208,15 @@ public class ArrayIniField extends IniField {
         final String min = list.size() > 8 ? list.get(8) : null;
         final String max = list.size() > 9 ? list.get(9) : null;
         String digits = list.size() > 10 ? list.get(10) : "0";
-        double multiplier = IniField.parseDouble(list.size() > 6 ? list.get(6) : "1");
+        String scale = list.size() > 6 ? list.get(6) : "1";
+        String translate = list.size() > 7 ? list.get(7) : "0";
+        double multiplier = IniField.parseDouble(scale);
+        String scaleExpression = ExpressionEvaluator.extractVariables(scale).isEmpty() ? null : scale;
+        double translateValue = IniField.parseDouble(translate);
+        String translateExpression = ExpressionEvaluator.extractVariables(translate).isEmpty() ? null : translate;
 
         size = size.replaceAll("[\\]\\[x]", " ").trim();
-        String dimentions[] = size.split(" ");
+        String dimentions[] = size.split("\\s+");
         int cols;
         int rows;
         if (dimentions.length == 1) {
@@ -163,7 +229,8 @@ public class ArrayIniField extends IniField {
             throw new IllegalStateException("Unexpected " + size);
         }
 
-        return new ArrayIniField(name, offset, type, cols, rows, unit, multiplier, min, max, digits);
+        return new ArrayIniField(name, offset, type, cols, rows, unit, multiplier, min, max, digits,
+            scaleExpression, translateValue, translateExpression);
     }
 
     @Override
@@ -175,6 +242,9 @@ public class ArrayIniField extends IniField {
         return getCols() == that.getCols()
             && getRows() == that.getRows()
             && Double.compare(getMultiplier(), that.getMultiplier()) == 0
+            && Objects.equals(scaleExpression, that.scaleExpression)
+            && Double.compare(translate, that.translate) == 0
+            && Objects.equals(translateExpression, that.translateExpression)
             && Objects.equals(unit, that.unit)
             && getType() == that.getType()
             && Objects.equals(getMin(), that.getMin())
@@ -191,6 +261,9 @@ public class ArrayIniField extends IniField {
             getCols(),
             getRows(),
             getMultiplier(),
+            scaleExpression,
+            translate,
+            translateExpression,
             getMin(),
             getMax(),
             getDigits()
