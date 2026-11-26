@@ -9,10 +9,11 @@ name: Firmware at GHA
 # statement one: github actions are technically not free
 # statement three: on top of dollar cost, actions get queued meaning other collaborators have to wait
 # statement three: in case of bad commit/bad PR more than one annoying email is sent
-# in light of above we have two mechanisms to reduce github action runner consumption:
+# in light of above we have three mechanisms to reduce github action runner consumption:
 # * 'only' syntax allow to build only specified configuration, for example 'only:uaefi' line in the commit message would only build 'uaefi' firmware configuration
 # *        for random commits we can build zero firmware jobs if we do 'only:docs' or anything similar
 # * 'skip_rate' ratio in meta-info.env files allows to skip some builds with specific skip percentage
+# * PRs changing only Java files under java_console/ui/src/ build uaefi.
 #
 
 on:
@@ -149,18 +150,22 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
     - uses: actions/checkout@v7
+      with:
+        # Fetch both parents to identify UI-only PRs.
+        fetch-depth: ${{ github.event_name == 'pull_request' && 2 || 1 }}
 
     - name: Set matrix
       id: set-matrix
       working-directory: firmware
+      env:
+        EVENT_NAME: ${{ github.event_name }}
+        RUN_ATTEMPT: ${{ github.run_attempt }}
+        COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+        PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       run: |
-        export EVENT_NAME="${{github.event_name}}"
-        export RUN_ATTEMPT="${{github.run_attempt}}"
-        read -d '' COMMIT_MESSAGE << EOM || true
-        ${{ github.event.head_commit.message }}
-        EOM
-        export COMMIT_MESSAGE
-        echo "matrix=$(bash bin/generate_matrix.sh config/boards)" >> $GITHUB_OUTPUT
+        MATRIX=$(bash bin/generate_matrix.sh config/boards)
+        printf 'matrix=%s\n' "$MATRIX" >> "$GITHUB_OUTPUT"
 
   build-firmware:
     runs-on: ubuntu-latest
@@ -220,8 +225,7 @@ jobs:
 
     - name: Install multilib, mingw, sshpass and mtools
       run: |
-        sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
-        sudo bash misc/actions/ubuntu-install-tools.sh
+        sudo bash misc/actions/ubuntu-install-tools.sh --ci
 
     - name: Set Build Env Variables
       env:
