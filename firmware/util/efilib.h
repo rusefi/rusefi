@@ -89,9 +89,27 @@ bool isPhaseInRange(float test, float current, float next);
 
 #include <cstddef>
 #include <cstring>
+#include <type_traits>
 
 #define IS_NEGATIVE_ZERO(value) (__builtin_signbit(value) && value==0)
 #define fixNegativeZero(value) (IS_NEGATIVE_ZERO(value) ? 0 : value)
+
+/**
+ * Zero an object in place, padding bytes included.
+ *
+ * Prefer this over `object = {};` for large objects: that form is allowed to build a complete
+ * temporary on the stack and copy it over, which unoptimized clang really does.
+ * Default member initializers are NOT applied - everything becomes zero.
+ */
+#define ZERO_STRUCT(object) \
+	do { \
+		static_assert(std::is_trivially_copyable_v<std::remove_reference_t<decltype((object))>>, \
+			"ZERO_STRUCT requires a trivially copyable type"); \
+		static_assert(!std::is_pointer_v<std::remove_reference_t<decltype((object))>>, \
+			"ZERO_STRUCT expects the object itself, not a pointer to it"); \
+		/* void* cast: zero-initializing constructors (scaled_channel) trip -Wclass-memaccess */ \
+		memset((void*)&(object), 0, sizeof(object)); \
+	} while (0)
 
 #define assertIsInBounds(length, array, msg) criticalAssertVoid(std::is_unsigned_v<decltype(length)> && (length) < efi::size(array), msg)
 
