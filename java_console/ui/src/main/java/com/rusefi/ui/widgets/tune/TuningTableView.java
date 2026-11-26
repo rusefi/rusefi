@@ -60,6 +60,7 @@ public class TuningTableView {
         protected boolean processKeyBinding(KeyStroke stroke, KeyEvent event, int condition, boolean pressed) {
             if (pressed && !Character.isDigit(event.getKeyChar())
                 && event.getKeyCode() != KeyEvent.VK_PERIOD && event.getKeyCode() != KeyEvent.VK_DECIMAL
+                && event.getKeyCode() != KeyEvent.VK_COMMA
                 && event.getKeyCode() != KeyEvent.VK_BACK_SPACE) {
                 selectionInput = "";
             }
@@ -817,6 +818,7 @@ public class TuningTableView {
             bindNumericEntry(digit);
         }
         bindNumericEntry('.');
+        bindNumericEntry(',');
         bindValueAdjustment('+', 1);
         bindValueAdjustment('-', -1);
         for (boolean backwards : new boolean[]{false, true}) {
@@ -917,14 +919,15 @@ public class TuningTableView {
                 }
                 if (table.isEditing()) {
                     ((JTextField) table.getEditorComponent()).replaceSelection(Character.toString(character));
-                } else if (character == '.' && selectionInput.isEmpty()) {
+                } else if (DecimalInput.isSeparator(character) && selectionInput.isEmpty()) {
                     adjustSelectedValuesByPrecision(1);
                 } else if (table.getSelectedRowCount() * table.getSelectedColumnCount() > 1) {
-                    if (character == '.' && (selectionInput.contains(".")
+                    if (DecimalInput.isSeparator(character) && (selectionInput.contains(".")
                         || ((TuningTableModel) table.getModel()).precision == 0)) {
                         return;
                     }
-                    applySelectionInput(selectionInput + character);
+                    // the typed digits are kept with "." whichever separator was typed
+                    applySelectionInput(selectionInput + (DecimalInput.isSeparator(character) ? '.' : character));
                 } else if (startCellEdit(false)) {
                     ((JTextField) table.getEditorComponent()).setText(Character.toString(character));
                 }
@@ -960,7 +963,7 @@ public class TuningTableView {
         }
         double value;
         try {
-            value = text.isEmpty() ? 0 : Double.parseDouble(text);
+            value = text.isEmpty() ? 0 : DecimalInput.parse(text);
         } catch (NumberFormatException e) {
             return;
         }
@@ -1033,7 +1036,7 @@ public class TuningTableView {
 
     private boolean validateNumericEditor(JTextField field) {
         try {
-            if (Double.isFinite(Double.parseDouble(field.getText().trim()))) {
+            if (Double.isFinite(DecimalInput.parse(field.getText()))) {
                 return true;
             }
         } catch (NumberFormatException ignored) {
@@ -1349,7 +1352,7 @@ public class TuningTableView {
         int result = showConfirmDialog(panel);
         if (result == JOptionPane.OK_OPTION) {
             try {
-                double value = Double.parseDouble(valueField.getText());
+                double value = DecimalInput.parse(valueField.getText());
                 setValue(value, selectedRows, selectedCols);
             } catch (NumberFormatException ignored) {
             }
@@ -1405,7 +1408,7 @@ public class TuningTableView {
         }
         double number;
         try {
-            number = Double.parseDouble(value.toString().trim());
+            number = DecimalInput.parse(value.toString());
         } catch (NumberFormatException e) {
             return;
         }
@@ -1477,7 +1480,7 @@ public class TuningTableView {
 
     private void applyDelta(JTextField deltaField, int sign) {
         try {
-            double delta = Double.parseDouble(deltaField.getText()) * sign;
+            double delta = DecimalInput.parse(deltaField.getText()) * sign;
             TuningTableModel model = (TuningTableModel) table.getModel();
             int[] selectedRows = table.getSelectedRows();
             int[] selectedCols = table.getSelectedColumns();
@@ -2071,7 +2074,7 @@ public class TuningTableView {
             }
             double number;
             try {
-                number = Double.parseDouble(value.toString().trim());
+                number = DecimalInput.parse(value.toString());
             } catch (NumberFormatException e) {
                 return;
             }

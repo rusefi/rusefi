@@ -383,6 +383,35 @@ public class CurveWidgetTest {
         assertNull(ExpressionEvaluator.evaluateNumericExpression("{ unknownLimit }", ini, image));
     }
 
+    /** Users with regional settings type a comma as the decimal separator. */
+    @Test
+    public void commaDecimalSeparator() throws Throwable {
+        String text = "[Constants]\npage = 1\n"
+            + "curveBins = array, F32, 0, [2], \"C\", 1, 0, 0, 100, 1\n"
+            + "curveValues = array, F32, 8, [2], \"%\", 1, 0, 0, 100, 1\n"
+            + "[CurveEditor]\ncurve = c, \"Curve\"\ncolumnLabel = \"X\", \"Y\"\n"
+            + "xAxis = 0, 100, 5\nyAxis = 0, 100, 5\nxBins = curveBins\nyBins = curveValues\n";
+        IniFileMetaInfo meta = mock(IniFileMetaInfo.class);
+        when(meta.getnPages()).thenReturn(1);
+        when(meta.getPageSize(0)).thenReturn(16);
+        when(meta.getSignature()).thenReturn("test");
+        IniFileModel ini = IniFileReaderUtil.readIniFile(IniFileReaderUtil.read(
+            new ByteArrayInputStream(text.getBytes(StandardCharsets.US_ASCII))), "test", meta);
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(16);
+        ArrayIniField xField = (ArrayIniField) ini.findIniField("curveBins").get();
+        ArrayIniField yField = (ArrayIniField) ini.findIniField("curveValues").get();
+        ConfigurationImageGetterSetter.setArrayValues(xField, image, new Double[]{10.0, 20.0});
+        ConfigurationImageGetterSetter.setArrayValues(yField, image, new Double[]{50.0, 60.0});
+
+        SwingUtilities.invokeAndWait(() -> {
+            JTable table = findTable(new CurveWidget(ini.getCurves().get("c"), ini, image).getContentPane());
+            edit(table, 0, 1, "52,5");
+            assertEquals(52.5, ConfigurationImageGetterSetter.getArrayValues(yField, image)[0][0], 0.001, "value");
+            edit(table, 1, 0, "25,5");
+            assertEquals(25.5, ConfigurationImageGetterSetter.getArrayValues(xField, image)[1][0], 0.001, "axis");
+        });
+    }
+
     private static void edit(JTable table, int row, int column, String value) {
         table.changeSelection(row, column, false, false);
         table.setValueAt(value, row, column);
