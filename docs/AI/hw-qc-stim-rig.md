@@ -45,7 +45,8 @@ wake the ECU and start its telemetry. Each cycle runs:
 
 `boardConfigs[]` contains one `BoardConfig` per production board. Some live in
 `test_logic_harley.cpp` and `test_logic_nissan.cpp`. `receiveBoardStatus()` matches the
-`BOARD_STATUS` board ID (`getBoardId()`: Hellen resistor ID or `STATIC_BOARD_ID_*`) against
+`BOARD_STATUS` board ID (`getBoardId()`: Hellen resistor ID or `STATIC_BOARD_ID_*`, or
+whatever a board's `custom_board_getBoardId` override returns when one is installed) against
 each entry's zero-terminated `boardIds[]`. An unknown ID fails the cycle. If
 `desiredEngineConfig != -1` and the reported engine type differs, the tester sends
 `CAN_BENCH_SET_ENGINE_TYPE`; the ECU applies the preset and reboots. That cycle fails

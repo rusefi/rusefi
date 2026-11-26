@@ -235,6 +235,7 @@ TESTS_SRC_CPP = \
 	tests/test_limp.cpp \
 	tests/test_tcu.cpp \
 	tests/test_hellen_board_id.cpp \
+	tests/test_board_id.cpp \
 	tests/sensor/test_frequency_sensor.cpp \
 	tests/sensor/test_turbocharger_speed_converter.cpp \
 	tests/sensor/test_vehicle_speed_converter.cpp \

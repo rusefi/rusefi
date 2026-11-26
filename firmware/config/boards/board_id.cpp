@@ -10,9 +10,15 @@
 #include "board_id.h"
 #include "boards_id.h"
 #include "boards_dictionary.h"
+#include "board_overrides.h"
 
+std::optional<board_get_board_id_type> custom_board_getBoardId;
 
 board_id_t getBoardId() {
+	if (custom_board_getBoardId.has_value()) {
+		return custom_board_getBoardId.value()();
+	}
+
 #if HW_PROTEUS
     if (engineConfiguration->engineType == engine_type_e::MAVERICK_X3) {
         // a way to test harness patch cord

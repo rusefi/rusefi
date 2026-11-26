@@ -28,6 +28,7 @@
 #include "rusefi_types.h"
 #include "engine_configuration.h"
 #include "obd_error_codes.h"
+#include "board_id.h"
 
 // function with no parameters and returning void
 using setup_custom_board_overrides_type = void (*)();
@@ -219,6 +220,13 @@ extern std::optional<setup_custom_get_adc_float_type> custom_board_getAnalogInpu
 extern std::optional<setup_custom_get_adc_float_type> custom_board_getThermistorSupplyVoltage;
 extern std::optional<setup_custom_on_board_standby_type> custom_board_onBoardStandBy;
 extern std::optional<setup_custom_hack_hellen_board_id_type> custom_board_hackHellenBoardId;
+// Replaces getBoardId() entirely: when installed, its result is reported as the board ID
+// (e.g. CAN QC BOARD_STATUS) instead of the engine-type patch-cord IDs, the Hellen
+// resistor ID or STATIC_BOARD_ID. custom_board_hackHellenBoardId only adjusts the
+// detected Hellen resistor ID, which this hook then takes precedence over.
+// Invoked on every getBoardId() call - keep it cheap.
+using board_get_board_id_type = board_id_t (*)();
+extern std::optional<board_get_board_id_type> custom_board_getBoardId;
 extern std::optional<setup_custom_get_cylinder_ignition_trim_type> custom_board_getCylinderIgnitionTrim;
 extern std::optional<setup_custom_get_cylinder_fuel_trim_type> custom_board_getCylinderFuelTrim;
 
