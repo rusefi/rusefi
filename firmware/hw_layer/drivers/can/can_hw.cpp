@@ -50,7 +50,13 @@ static const CANConfig * findCanConfig(can_baudrate_e /*rate*/)
 
 #endif
 
-class CanRead final : protected ThreadController<768> {
+// ECU control frames execute their command on this stack (bench_test.cpp
+// processCanUserControl), including an engine type change
+#ifndef CAN_RX_THREAD_STACK
+#define CAN_RX_THREAD_STACK 768
+#endif
+
+class CanRead final : protected ThreadController<CAN_RX_THREAD_STACK> {
 public:
 	using ThreadController::stackSize;
 

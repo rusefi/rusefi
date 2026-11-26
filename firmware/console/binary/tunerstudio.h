@@ -86,7 +86,10 @@ struct TunerStudioPageRWChunkRequest {
 static_assert(sizeof(TunerStudioPageRWChunkRequest) == 6);
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
+// A burn runs the configuration change listeners and the trigger shape rebuild on this stack
+#ifndef CONNECTIVITY_THREAD_STACK
 #define CONNECTIVITY_THREAD_STACK (3*UTILITY_THREAD_STACK_SIZE)
+#endif
 
 class TunerstudioThread : public ThreadController<CONNECTIVITY_THREAD_STACK> {
 public:
