@@ -29,6 +29,9 @@ static_assert(sizeof(page4_container_s) <= MFS_CFG_MAX_RECORD_SIZE,
 static page4_container_s secondTablesContainer;
 
 void secondTablesSetDefaults() {
+	// No stack temporary here: page4_s is a trivial aggregate without default member
+	// initializers, so the compiler zeroes the static object in place (a single memset).
+	// That stops holding if page4_s gains non-zero defaults or a user-defined operator=/constructor.
 	secondTablesContainer.data = {};
 
 	// Start with the primary tables/bins as defaults
