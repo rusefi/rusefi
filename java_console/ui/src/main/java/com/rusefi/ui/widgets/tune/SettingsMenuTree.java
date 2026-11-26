@@ -261,8 +261,11 @@ public class SettingsMenuTree {
                         if (featureIcon != null) {
                             setIcon(featureIcon);
                         } else if (currentModel != null) {
-                            if (currentModel.getDialogs().containsKey(key)) {
-                                setIcon(dialogIcon);
+                            DialogModel dialog = currentModel.getDialogs().get(key);
+                            if (dialog != null) {
+                                PageContent wrapped = wrappedContent(currentModel, dialog);
+                                setIcon(wrapped == PageContent.TABLE ? tableIcon
+                                    : wrapped == PageContent.CURVE ? curveIcon : dialogIcon);
                             } else if (TablePages.find(currentModel, key) != null) {
                                 setIcon(tableIcon);
                             } else if (currentModel.getCurves().containsKey(key)) {
@@ -370,6 +373,60 @@ public class SettingsMenuTree {
                 return styled;
             }
         };
+    }
+
+    enum PageContent { TABLE, CURVE }
+
+    /**
+     * What a menu page's dialog shows when it only wraps a table or curve: the dialog has no
+     * settings, buttons or readouts of its own, just panels; one of them is a table (or else a
+     * curve), and the panels beside it hold at most {@link #MAX_WRAPPER_SETTINGS} settings in all.
+     * VE and Ignition advance are such pages (load-source selectors plus the table), so the tree
+     * gives them the table icon. Pages with real settings keep the settings icon: Anti-Lag has its
+     * own fields beside its tables, Knock Control has 15 settings in panels beside its curve.
+     */
+    static PageContent wrappedContent(IniFileModel ini, DialogModel dialog) {
+        if (hasOwnContent(dialog)) {
+            return null;
+        }
+        PageContent content = null;
+        int besideSettings = 0;
+        for (PanelModel panel : dialog.getPanels()) {
+            String name = panel.getPanelName();
+            if (TablePages.find(ini, name) != null) {
+                content = PageContent.TABLE;
+            } else if (ini.getCurves().containsKey(name)) {
+                content = content == null ? PageContent.CURVE : content;
+            } else {
+                besideSettings += countSettings(ini, panel.resolveDialog(ini), new HashSet<>());
+            }
+        }
+        return besideSettings <= MAX_WRAPPER_SETTINGS ? content : null;
+    }
+
+    /** VE's panels beside the table hold 4 settings (fuel strategy and load override). */
+    private static final int MAX_WRAPPER_SETTINGS = 4;
+
+    private static boolean hasOwnContent(DialogModel dialog) {
+        return !dialog.getFields().isEmpty() || !dialog.getCommandsOfCurrentDialog().isEmpty()
+            || !dialog.getSettingSelectors().isEmpty() || !dialog.getReadouts().isEmpty()
+            || !dialog.getGaugeNames().isEmpty() || !dialog.getIndicators().isEmpty();
+    }
+
+    private static int countSettings(IniFileModel ini, DialogModel dialog, Set<String> visited) {
+        if (dialog == null || !visited.add(dialog.getKey())) {
+            return 0;
+        }
+        int count = dialog.getCommandsOfCurrentDialog().size() + dialog.getSettingSelectors().size();
+        for (DialogModel.Field field : dialog.getFields()) {
+            if (field.getKey() != null && !field.getKey().isEmpty()) {
+                count++;
+            }
+        }
+        for (PanelModel panel : dialog.getPanels()) {
+            count += countSettings(ini, panel.resolveDialog(ini), visited);
+        }
+        return count;
     }
 
     private static String nodeText(Object userObject) {
