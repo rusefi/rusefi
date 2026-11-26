@@ -5,7 +5,7 @@ SCAN_DIR=$1
 # The full path of the firmware directory
 FDIR=$(cd "$(dirname "$0")/.."; pwd -P)
 
-PR_UI_ONLY=false
+PR_UAEFI_ONLY=false
 if [[ "$EVENT_NAME" == pull_request ]]; then
 	parents=$(git -C "$FDIR/.." rev-list --parents -n 1 HEAD 2>/dev/null) || parents=
 	read -r -a parent_list <<< "$parents"
@@ -16,8 +16,13 @@ if [[ "$EVENT_NAME" == pull_request ]]; then
 		git -C "$FDIR/.." diff --quiet --no-renames "${parent_list[1]}" HEAD -- .
 		diff_status=$?
 		if [[ $diff_status -eq 1 ]] && git -C "$FDIR/.." diff --quiet --no-renames \
-			"${parent_list[1]}" HEAD -- . ':(top,exclude,glob)java_console/ui/src/**/*.java'; then
-			PR_UI_ONLY=true
+			"${parent_list[1]}" HEAD -- . \
+			':(top,exclude,glob)java_console/ui/src/**/*.java' \
+			':(top,exclude).github/workflows/build-firmware.yaml' \
+			':(top,exclude)firmware/bin/generate_matrix.sh' \
+			':(top,exclude)misc/actions/add-ubuntu-latest-apt-mirrors.sh' \
+			':(top,exclude)misc/actions/ubuntu-install-tools.sh'; then
+			PR_UAEFI_ONLY=true
 		fi
 	fi
 fi
@@ -56,7 +61,7 @@ while IFS= read -r -d '' F; do
 done < <(find "${SCAN_DIR}" -name "meta-info*.env" -print0)
 
 # If this checkout has no uaefi target, retain the existing PR coverage.
-if [[ "$PR_UI_ONLY" == true && -n "$UA_EFI_ENTRY" ]]; then
+if [[ "$PR_UAEFI_ONLY" == true && -n "$UA_EFI_ENTRY" ]]; then
 	TARGETS=("$UA_EFI_ENTRY")
 fi
 IFS=,
