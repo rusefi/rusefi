@@ -668,7 +668,7 @@ public class CurveWidget {
                 return;
             }
             try {
-                double val = Double.parseDouble(aValue.toString());
+                double val = DecimalInput.parse(aValue.toString());
                 if (!Double.isFinite(val)) {
                     return;
                 }

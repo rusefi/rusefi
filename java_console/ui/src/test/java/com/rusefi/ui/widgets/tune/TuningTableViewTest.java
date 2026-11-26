@@ -266,6 +266,92 @@ public class TuningTableViewTest {
         });
     }
 
+    /**
+     * Users with regional settings type a comma as the decimal separator: cells, the cell editor,
+     * axis values, the delta field, the = dialog and the comma key.
+     */
+    @Test
+    public void commaDecimalSeparator() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            AtomicReference<String> dialogText = new AtomicReference<>();
+            TuningTableView view = new TuningTableView("Comma") {
+                @Override
+                protected int showConfirmDialog(JPanel panel) {
+                    for (Component component : panel.getComponents()) {
+                        if (component instanceof JTextField) {
+                            ((JTextField) component).setText(dialogText.get());
+                        }
+                    }
+                    return JOptionPane.OK_OPTION;
+                }
+            };
+            IniFileModel ini = mock(IniFileModel.class);
+            TableModel definition = mock(TableModel.class);
+            ArrayIniField z = new ArrayIniField("z", 0, FieldType.UINT8, 2, 2, "", 0.1, "0", "25", "1");
+            ArrayIniField x = new ArrayIniField("x", 4, FieldType.UINT16, 2, 1, "", 0.5, "0", "1000", "1");
+            ArrayIniField y = new ArrayIniField("y", 8, FieldType.UINT16, 1, 2, "", 0.5, "0", "1000", "1");
+            ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(12);
+            ConfigurationImageGetterSetter.setArrayValues(z, image, new Double[][]{{1.0, 2.0}, {3.0, 4.0}});
+            ConfigurationImageGetterSetter.setArrayValues(x, image, new Double[][]{{100.0, 200.0}});
+            ConfigurationImageGetterSetter.setArrayValues(y, image, new Double[][]{{10.0}, {20.0}});
+            when(ini.getTable("table")).thenReturn(definition);
+            when(definition.getZBinsConstant()).thenReturn("z");
+            when(definition.getXBinsConstant()).thenReturn("x");
+            when(definition.getYBinsConstant()).thenReturn("y");
+            when(ini.findIniField("z")).thenReturn(Optional.of(z));
+            when(ini.findIniField("x")).thenReturn(Optional.of(x));
+            when(ini.findIniField("y")).thenReturn(Optional.of(y));
+            view.displayTable(ini, "table", image, image);
+            JTable table = findTable(view.getContent());
+            // Table row 0 is the top row, the last Y bin: data row 1.
+
+            table.setValueAt("2,5", 0, 1);
+            assertEquals(2.5, ConfigurationImageGetterSetter.getArrayValues(z, image)[1][0], 0.001, "cell");
+
+            table.setValueAt("12,5", 1, 0);
+            assertEquals(12.5, ConfigurationImageGetterSetter.getArrayValues(y, image)[0][0], 0.001, "Y axis");
+
+            table.changeSelection(1, 1, false, false);
+            findTextField(view.getContent(), "0.5").setText("0,5");
+            findButton(view.getContent(), "Up").doClick();
+            assertEquals(1.5, ConfigurationImageGetterSetter.getArrayValues(z, image)[0][0], 0.001, "delta");
+
+            table.changeSelection(1, 2, false, false);
+            dialogText.set("7,5");
+            findButton(view.getContent(), "=").doClick();
+            assertEquals(7.5, ConfigurationImageGetterSetter.getArrayValues(z, image)[0][1], 0.001, "= dialog");
+
+            table.changeSelection(0, 2, false, false);
+            assertTrue(table.editCellAt(0, 2));
+            ((JTextField) table.getEditorComponent()).setText("2,5");
+            assertTrue(table.getCellEditor().stopCellEditing(), "the editor accepts a comma");
+            assertEquals(2.5, ConfigurationImageGetterSetter.getArrayValues(z, image)[1][1], 0.001, "editor");
+
+            // The comma key types the decimal point into a multi-cell entry, like the period.
+            table.changeSelection(0, 1, false, false);
+            table.changeSelection(0, 2, false, true);
+            pressKey(table, "typed 3");
+            pressKey(table, "typed ,");
+            pressKey(table, "typed 5");
+            Double[][] typed = ConfigurationImageGetterSetter.getArrayValues(z, image);
+            assertEquals(3.5, typed[1][0], 0.001, "comma key");
+            assertEquals(3.5, typed[1][1], 0.001, "comma key");
+            pressKey(table, "typed ,");
+            assertEquals(3.5, ConfigurationImageGetterSetter.getArrayValues(z, image)[1][0], 0.001,
+                "a second separator is ignored");
+
+            table.getTableHeader().setSize(300, 30);
+            Rectangle header = table.getTableHeader().getHeaderRect(2);
+            table.getTableHeader().dispatchEvent(new MouseEvent(table.getTableHeader(), MouseEvent.MOUSE_CLICKED,
+                System.currentTimeMillis(), 0, header.x + 5, 10, 2, false, MouseEvent.BUTTON1));
+            JTextField axisEditor = findTextField(table.getTableHeader(), "200");
+            assertNotNull(axisEditor);
+            axisEditor.setText("150,5");
+            pressKey(axisEditor, "ENTER");
+            assertEquals(150.5, ConfigurationImageGetterSetter.getArrayValues(x, image)[0][1], 0.001, "X axis");
+        });
+    }
+
     private static TableModel axisTable(IniFileModel ini, String name) {
         TableModel definition = mock(TableModel.class);
         ArrayIniField z = new ArrayIniField(name + "Z", 0, FieldType.UINT8, 3, 2, "", 1, "0", "255", "0");
