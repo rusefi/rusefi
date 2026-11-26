@@ -13,7 +13,7 @@ name: Firmware at GHA
 # * 'only' syntax allow to build only specified configuration, for example 'only:uaefi' line in the commit message would only build 'uaefi' firmware configuration
 # *        for random commits we can build zero firmware jobs if we do 'only:docs' or anything similar
 # * 'skip_rate' ratio in meta-info.env files allows to skip some builds with specific skip percentage
-# * PRs changing only Java files under java_console/ui/src/ build uaefi.
+# * PRs limited to console UI Java, firmware CI setup, or both build only uaefi.
 #
 
 on:
@@ -151,7 +151,7 @@ jobs:
     steps:
     - uses: actions/checkout@v7
       with:
-        # Fetch both parents to identify UI-only PRs.
+        # Fetch both parents to check which files changed.
         fetch-depth: ${{ github.event_name == 'pull_request' && 2 || 1 }}
 
     - name: Set matrix
