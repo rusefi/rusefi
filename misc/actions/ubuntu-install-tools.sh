@@ -8,10 +8,26 @@ set -euo pipefail
 
 export DEBIAN_FRONTEND=noninteractive
 
-# Retry transient download failures, but fail setup if installation still fails.
-apt-get -o Acquire::Retries=3 install -y \
-    make gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 \
+ci_download=false
+if [[ "${1:-}" == "--ci" && $# -eq 1 ]]; then
+    ci_download=true
+elif [[ $# -ne 0 ]]; then
+    echo "Usage: $0 [--ci]" >&2
+    exit 2
+fi
+
+packages=(
+    make gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64
     sshpass mtools zip 7zip dosfstools xxd colordiff
+)
+
+if [[ "$ci_download" == true ]]; then
+    bash "$(dirname "${BASH_SOURCE[0]}")/add-ubuntu-latest-apt-mirrors.sh" "${packages[@]}"
+    apt-get --no-download install -y "${packages[@]}"
+else
+    # Retry transient download failures, but fail setup if installation still fails.
+    apt-get -o Acquire::Retries=3 install -y "${packages[@]}"
+fi
 
 # Check the RAM disk tools now instead of failing late in the firmware build.
 # Match the PATH used by firmware/hw_layer/mass_storage/create_image.sh.

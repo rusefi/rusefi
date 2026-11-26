@@ -5,6 +5,23 @@ SCAN_DIR=$1
 # The full path of the firmware directory
 FDIR=$(cd "$(dirname "$0")/.."; pwd -P)
 
+PR_UI_ONLY=false
+if [[ "$EVENT_NAME" == pull_request ]]; then
+	parents=$(git -C "$FDIR/.." rev-list --parents -n 1 HEAD 2>/dev/null) || parents=
+	read -r -a parent_list <<< "$parents"
+	if [[ ${#parent_list[@]} -eq 3 \
+		&& -n "$PR_BASE_SHA" && -n "$PR_HEAD_SHA" \
+		&& "${parent_list[1]}" == "$PR_BASE_SHA" \
+		&& "${parent_list[2]}" == "$PR_HEAD_SHA" ]]; then
+		git -C "$FDIR/.." diff --quiet --no-renames "${parent_list[1]}" HEAD -- .
+		diff_status=$?
+		if [[ $diff_status -eq 1 ]] && git -C "$FDIR/.." diff --quiet --no-renames \
+			"${parent_list[1]}" HEAD -- . ':(top,exclude,glob)java_console/ui/src/**/*.java'; then
+			PR_UI_ONLY=true
+		fi
+	fi
+fi
+
 getTarget ()
 {
 	source "${2}/config/boards/common_script_read_meta_env.inc" "$1" >/dev/null
@@ -21,13 +38,26 @@ getTarget ()
 					&& "SKIP_RATE" -lt 100 \
 					|| ( $((RANDOM % 100)) -ge "$SKIP_RATE" && -z "$ONLY" ) \
 					|| "$ONLY" == "$BUNDLE_NAME" ]]; then
-		echo "{\"build-target\": \"$BUNDLE_NAME\", \"meta-info\": \"$1\"},"
+		printf '%s\n' "$BUNDLE_NAME"
 	fi
 }
 
-echo -n '{"include": ['
-find "${SCAN_DIR}" -name "meta-info*.env" -print0 | while IFS= read -r -d '' F; do
-	echo -n $(getTarget "$F" "$FDIR")
-done
-echo "]}"
+TARGETS=()
+UA_EFI_ENTRY=
+while IFS= read -r -d '' F; do
+	TARGET_NAME=$(getTarget "$F" "$FDIR")
+	if [[ -n "$TARGET_NAME" ]]; then
+		TARGET_ENTRY="{\"build-target\": \"$TARGET_NAME\", \"meta-info\": \"$F\"}"
+		TARGETS+=("$TARGET_ENTRY")
+		if [[ "$TARGET_NAME" == uaefi ]]; then
+			UA_EFI_ENTRY=$TARGET_ENTRY
+		fi
+	fi
+done < <(find "${SCAN_DIR}" -name "meta-info*.env" -print0)
 
+# If this checkout has no uaefi target, retain the existing PR coverage.
+if [[ "$PR_UI_ONLY" == true && -n "$UA_EFI_ENTRY" ]]; then
+	TARGETS=("$UA_EFI_ENTRY")
+fi
+IFS=,
+printf '{"include": [%s]}\n' "${TARGETS[*]}"
