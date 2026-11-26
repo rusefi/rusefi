@@ -655,7 +655,7 @@ bool warningVA(ObdCode code, bool reportToTs, const char *fmt, va_list args) {
 	}
 
 	// print Pxxxx (for standard OBD) or Cxxxx (for custom) prefix
-	size_t size = snprintf(warningBuffer, sizeof(warningBuffer), "%s%04d: ",
+	size_t size = chsnprintf(warningBuffer, sizeof(warningBuffer), "%s%04d: ",
 		ObdCodeIsCustom(code) ? "C" : "P", (int) code);
 
 	// fmt may be nullptr, so no additional information

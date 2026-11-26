@@ -217,17 +217,17 @@ void initPeriodicEvents() {
 char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer, size_t bufferSize) {
 #if HAL_USE_ADC
 	if (!isAdcChannelValid(hwChannel)) {
-		snprintf(buffer, bufferSize, "NONE");
+		chsnprintf(buffer, bufferSize, "NONE");
 	} else if (isAdcChannelOffChip(hwChannel)) {
-		snprintf(buffer, bufferSize, "External ADC%d", hwChannel - EFI_ADC_0);
+		chsnprintf(buffer, bufferSize, "External ADC%d", hwChannel - EFI_ADC_0);
 	} else {
 		const char *name = portname(getAdcChannelPort(msg, hwChannel));
-		snprintf(buffer, bufferSize, "%s%d", name ? name : "null", getAdcChannelPin(hwChannel));
+		chsnprintf(buffer, bufferSize, "%s%d", name ? name : "null", getAdcChannelPin(hwChannel));
 	}
 #else
   UNUSED(msg);
   UNUSED(hwChannel);
-	snprintf(buffer, bufferSize, "NONE");
+	chsnprintf(buffer, bufferSize, "NONE");
 #endif /* HAL_USE_ADC */
 	return buffer;
 }

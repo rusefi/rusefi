@@ -121,10 +121,10 @@ size_t PastCodeHistory::format(const Snapshot& snapshot, char (&csv)[CsvBufferSi
 	for (size_t i = 0; i < snapshot.count; i++) {
 		const auto& entry = snapshot.entries[i];
 		if (entry.timestamp) {
-			size += snprintf(csv + size, CsvBufferSize - size, "%u,%lu\n",
+			size += chsnprintf(csv + size, CsvBufferSize - size, "%u,%lu\n",
 				static_cast<unsigned>(entry.code), static_cast<unsigned long>(entry.timestamp));
 		} else {
-			size += snprintf(csv + size, CsvBufferSize - size, "%u,\n", static_cast<unsigned>(entry.code));
+			size += chsnprintf(csv + size, CsvBufferSize - size, "%u,\n", static_cast<unsigned>(entry.code));
 		}
 	}
 	return size;

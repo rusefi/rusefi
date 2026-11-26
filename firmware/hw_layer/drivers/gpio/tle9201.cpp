@@ -262,7 +262,7 @@ RUSEFI_STACK_ROOT_EXPLICIT(tle9201_driver_thread, 256);
 int Tle9201::init(int i) {
 	drv_state = TLE9201_READY;
 	idx = i;
-	snprintf(name, sizeof(name), "TLE9201[%d]", idx);
+	chsnprintf(name, sizeof(name), "TLE9201[%d]", idx);
 
 	if (!drv_task_ready) {
 		chThdCreateStatic(tle9201_thread_1_wa, sizeof(tle9201_thread_1_wa),
