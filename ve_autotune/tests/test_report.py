@@ -13,3 +13,14 @@ def test_render_report_includes_summary_and_corrected_cell():
     assert "1/2 cells corrected" in text
     assert "1 not enough data" in text
     assert "92.0" in text and "15.0" in text
+
+
+def test_not_enough_data_row_shows_placeholder_instead_of_zero_afr():
+    results = [
+        CellResult(row=0, col=1, old_ve=70.0, new_ve=70.0, delta_pct=0.0,
+                   sample_count=3, measured_afr=0.0, target_afr=13.0, status="not_enough_data"),
+    ]
+    text = render_report(results)
+    row_line = [line for line in text.splitlines() if line.startswith("| 0 | 1 |")][0]
+    assert "| - | 13.00 | not_enough_data |" in row_line
+    assert "0.00" not in row_line
