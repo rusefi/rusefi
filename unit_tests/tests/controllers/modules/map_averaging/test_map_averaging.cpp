@@ -283,14 +283,19 @@ TEST_F(MapSamplingAngle, ClampsWindowToTenDegreesAndCylinderPeriodMinusTen) {
 	// applyTriggerWaveform also broadcasts a configuration change to static ETB
 	// controllers, whose PID pointers may outlive a previous EngineTestHelper.
 	// Only trigger/cylinder geometry is relevant to these MAP tests.
+	engine->rpmCalculator.setRpmValue(0);
 	engine->updateTriggerConfiguration();
+	engine->rpmCalculator.setRpmValue(1000);
 	setWindow(100, 720);
 	EXPECT_FLOAT_EQ(350, engine->engineState.mapAveragingDuration);
 }
 
 TEST_F(MapSamplingAngle, UsesTwoStrokeCycleForWrappingAndWindowLimit) {
+	// Geometry changes require a stopped engine, even though SetUp starts at 1000 RPM.
+	engine->rpmCalculator.setRpmValue(0);
 	engineConfiguration->twoStroke = true;
 	engine->updateTriggerConfiguration();
+	engine->rpmCalculator.setRpmValue(1000);
 	ASSERT_FLOAT_EQ(360, engine->engineState.engineCycle);
 	setWindow(-20, 200);
 	const float expected[] = {340, 250, 70, 160};
@@ -372,8 +377,10 @@ TEST_F(MapSamplingAngle, ZeroDurationDoesNotStartAveraging) {
 
 TEST_F(MapSamplingAngle, TriggerEdgesStartAndStopWindowAtConfiguredAngles) {
 	setWindow(75, 30);
+	engine->rpmCalculator.setRpmValue(0);
 	engineConfiguration->globalTriggerAngleOffset = 0;
 	engine->updateTriggerConfiguration();
+	engine->rpmCalculator.setRpmValue(1000);
 	// The test engine's half-moon crank wheel has an edge every 180 degrees.
 	// Feed real edges through the decoder to establish 150 RPM and engine phase.
 	eth.smartFireTriggerEvents2(10, 200);

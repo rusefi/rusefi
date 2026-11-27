@@ -310,7 +310,10 @@ public class CommonFunctionalTest extends RusefiTestBase {
         assertWaveNotNull(msg, chart, EngineChart.SPARK_1);
 
         assertWaveNull(msg, chart, EngineChart.TRIGGER_2);
+        // Trigger geometry can only be rebuilt at zero RPM. changeRpm waits for the measured RPM.
+        ecu.changeRpm(0);
         sendComplexCommand("set " + "trigger_type" + " " + com.rusefi.enums.trigger_type_e.TT_FORD_ASPIRE.ordinal());
+        ecu.changeRpm(2000);
         chart = nextChart();
         assertTrue(chart.get(EngineChart.TRIGGER_2) != null);
     }

@@ -47,6 +47,21 @@ configuration changed". It runs, in order:
 Online tuning of table cells does not count as a configuration change; only Burn (and
 console commands that call `incrementGlobalConfigurationVersion`) triggers this path.
 
+### Trigger reconstruction requires zero RPM
+
+`Engine::updateTriggerConfiguration()` prints
+`Skipping trigger configuration update: RPM > 0` and returns when the RPM sensor
+reports a positive value. This skips waveform construction, sync simulation, and
+output geometry preparation. At zero RPM (including an unavailable RPM sensor)
+it runs without a system lock. This gate does not stop other Burn callbacks or
+prevent incoming trigger edges during initialization.
+
+Skipped reconstruction is not deferred until engine stop. The configuration-change
+flow still records the new configuration in `activeConfiguration`, so another Burn
+with identical values may not detect a trigger change. Configure trigger geometry
+at zero RPM; if a stored change was skipped, restart the ECU with the engine stopped
+to initialize from the saved settings.
+
 ### `applyNewHardwareSettings()` - stop old, start new
 
 The invariant: **all stop methods run before any start method**, and stopping uses
