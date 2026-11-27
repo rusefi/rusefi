@@ -60,6 +60,8 @@ dosfstools = ">=4.2,<5"
 mtools = ">=4.0.49,<5"
 # Provides xxd for converting RAM-disk images to C headers.
 vim = ">=9.2.397,<10"
+bc = ">=1.7.1,<2"
+hex2dfu = ">=0.21.0,<0.22"
 
 [activation.env]
 # Conda's Windows Python executable is python.exe, not python3.exe.
