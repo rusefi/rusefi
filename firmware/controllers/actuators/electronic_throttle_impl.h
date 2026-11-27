@@ -138,11 +138,9 @@ private:
 
 void etbPidReset();
 
-class EtbController1 : public EtbController { };
-
-class EtbController2 : public EtbController {
+class EtbControllerWithTrim : public EtbController {
 public:
-	EtbController2(const ValueProvider3D& throttle2TrimTable)
+	EtbControllerWithTrim(const ValueProvider3D& throttle2TrimTable)
 		: m_throttle2Trim(throttle2TrimTable)
 	{
 	}
@@ -354,8 +352,12 @@ private:
 	float m_secondaryMin;
 };
 
-extern EtbImpl<EtbController1> etb1;
-extern EtbImpl<EtbController2> etb2;
+extern EtbImpl<EtbControllerWithTrim> etb1;
+extern EtbImpl<EtbControllerWithTrim> etb2;
+#if ETB_COUNT > 2
+extern EtbImpl<EtbControllerWithTrim> etb3;
+extern EtbImpl<EtbControllerWithTrim> etb4;
+#endif
 
 static constexpr electronic_throttle_s const* etbData1_ptr = &etb1;
 static constexpr electronic_throttle_s const* etbData2_ptr = &etb2;
@@ -369,9 +371,16 @@ consteval electronic_throttle_s const* getLiveDataConstexpr() requires std::is_s
 
 	if constexpr (idx == 0) {
 		return etbData1_ptr;
+	} else if constexpr (idx == 1) {
+		return etbData2_ptr;
 	}
-
-	return etbData2_ptr;
+#if ETB_COUNT > 2
+	else if constexpr (idx == 2) {
+		return &etb3;
+	} else {
+		return &etb4;
+	}
+#endif
 #else
 	return nullptr;
 #endif
