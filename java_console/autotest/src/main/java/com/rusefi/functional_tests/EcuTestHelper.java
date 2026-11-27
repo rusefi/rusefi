@@ -140,6 +140,34 @@ public class EcuTestHelper {
         IoUtil.changeRpm(commandQueue, rpm);
     }
 
+    /**
+     * [tag:trigger_update_zero_rpm] Engine::updateTriggerConfiguration() skips the trigger shape rebuild
+     * while measured RPM is above zero, and a skipped rebuild is not retried. Stopping stimulation is
+     * the way to get there: 'rpm 0' only pauses the stimulator, and under self-stimulation the paused
+     * stimulator still feeds an edge every 100 ms, so measured RPM never reaches zero.
+     */
+    public void stopStimulationAndAwaitZeroRpm() {
+        sendCommand(getDisableCommand(Integration.CMD_SELF_STIMULATION));
+        awaitZeroRpm();
+    }
+
+    private static void awaitZeroRpm() {
+        // fresh-sample wait: a change listener would never fire if RPM is already zero
+        assertSensorEventually("RPM should reach zero once stimulation is stopped",
+                WellKnownGauges.RPMGauge.getOutputChannelName(), 0, 20 * Timeouts.SECOND);
+    }
+
+    /**
+     * Applies a command which changes trigger geometry: stops self-stimulation, waits for zero RPM,
+     * sends the command and resumes self-stimulation at the previously requested RPM.
+     * See [tag:trigger_update_zero_rpm]
+     */
+    public void sendTriggerConfigurationCommand(String command) {
+        stopStimulationAndAwaitZeroRpm();
+        sendCommand(command);
+        sendCommand(getEnableCommand(Integration.CMD_SELF_STIMULATION));
+    }
+
     public void setEngineType(engine_type_e engine_type_e) {
         int type = engine_type_e.ordinal();
         log.info("AUTOTEST setEngineType " + type);
@@ -158,6 +186,8 @@ public class EcuTestHelper {
         // changing engine type while engine is running does not work well - we rightfully
         // get invalid configuration critical errors
         sleepSeconds(2);
+        // [tag:trigger_update_zero_rpm] the fixed sleep races with the firmware no-events RPM timeout
+        awaitZeroRpm();
         sendCommand("set " + Integration.CMD_ENGINE_TYPE + " " + type, Timeouts.SET_ENGINE_TIMEOUT);
         // TODO: document the reason for this sleep?!
         sleepSeconds(1);

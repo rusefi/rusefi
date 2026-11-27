@@ -1,6 +1,7 @@
 package com.rusefi.f4discovery;
 
 import com.rusefi.RusefiTestBase;
+import com.rusefi.IoUtil;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -161,7 +162,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
     @Test
     public void testCustomEngine() {
         ecu.setEngineType(engine_type_e.DEFAULT_FRANKENSO);
-        ecu.sendCommand("set_toothed_wheel 4 0");
+        ecu.sendTriggerConfigurationCommand("set_toothed_wheel 4 0");
 //        sendCommand("enable trigger_only_front");
 //        changeRpm(100);
 //        changeRpm(1500);
@@ -310,9 +311,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
         assertWaveNotNull(msg, chart, EngineChart.SPARK_1);
 
         assertWaveNull(msg, chart, EngineChart.TRIGGER_2);
-        // Trigger geometry can only be rebuilt at zero RPM. changeRpm waits for the measured RPM.
-        ecu.changeRpm(0);
-        sendComplexCommand("set " + "trigger_type" + " " + com.rusefi.enums.trigger_type_e.TT_FORD_ASPIRE.ordinal());
+        ecu.sendTriggerConfigurationCommand(IoUtil.setTriggerType(com.rusefi.enums.trigger_type_e.TT_FORD_ASPIRE));
         ecu.changeRpm(2000);
         chart = nextChart();
         assertTrue(chart.get(EngineChart.TRIGGER_2) != null);

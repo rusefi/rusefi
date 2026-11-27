@@ -5,14 +5,12 @@ import com.rusefi.IoUtil;
 import com.rusefi.RusefiTestBase;
 import com.rusefi.Timeouts;
 import com.rusefi.common.PwmHardwareTestLogic;
-import com.rusefi.config.generated.Integration;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.enums.engine_type_e;
 import org.junit.Test;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.IoUtil.getDisableCommand;
 import static com.rusefi.IoUtil.getEnableCommand;
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 import static com.rusefi.config.generated.Integration.CMD_BURNCONFIG;
@@ -37,8 +35,9 @@ public class DiscoveryPwmHardwareTest extends RusefiTestBase {
     @Test
     public void scheduleBurnDoesNotAffectTriggerIssue2839() {
         ecu.setEngineType(engine_type_e.FORD_ASPIRE_1996);
+        // [tag:trigger_update_zero_rpm]
+        ecu.stopStimulationAndAwaitZeroRpm();
         ecu.sendCommand(IoUtil.setTriggerType(com.rusefi.enums.trigger_type_e.TT_TOOTHED_WHEEL_60_2));
-        ecu.sendCommand(getDisableCommand(Integration.CMD_SELF_STIMULATION));
         ecu.sendCommand(getEnableCommand(CMD_EXTERNAL_STIMULATION));
         ecu.changeRpm(1200);
         nextChart();

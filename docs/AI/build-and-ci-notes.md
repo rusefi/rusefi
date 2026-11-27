@@ -48,15 +48,29 @@ that a particular board was built.
 
 ### Hardware CI settings-write timing
 
-Trigger geometry updates require zero measured RPM. `CommonFunctionalTest.testFord6`
-uses `ecu.changeRpm(0)` before changing trigger type and resumes at 2000 RPM afterward;
-`changeRpm` waits for the reported RPM. `EcuTestHelper.setEngineType()` disables
-self-stimulation and waits two seconds before changing engine type, but re-enables
-it afterward. A subsequent direct trigger command (for example in
-`DiscoveryPwmHardwareTest.scheduleBurnDoesNotAffectTriggerIssue2839`) can therefore
-be skipped if the stimulator resumes at positive RPM. Stopping stimulation alone
-does not immediately clear measured RPM. A rejected update is not automatically
-retried on engine stop, and an unchanged later Burn need not rebuild the shape.
+Trigger geometry updates require zero measured RPM (`[tag:trigger_update_zero_rpm]`),
+and a rejected update is not retried on engine stop, so the autotest helpers wait for
+the reported RPM instead of sleeping:
+
+- `EcuTestHelper.setEngineType()` disables self-stimulation and waits for a fresh zero
+  RPM sample before `set engine_type`. A fixed two-second sleep is not enough: the
+  firmware no-events timeout (`NO_RPM_EVENTS_TIMEOUT_SECS`) is also two seconds.
+- `EcuTestHelper.sendTriggerConfigurationCommand()` wraps a direct trigger command
+  (`set trigger_type`, `set_toothed_wheel`) in stop stimulation / wait for zero /
+  command / resume self-stimulation. `stopStimulationAndAwaitZeroRpm()` is the first
+  half, for tests which continue with external stimulation.
+- `rpm 0` is not a way to reach zero RPM under self-stimulation: the paused stimulator
+  PWM still invokes its state callback every `NAN_FREQUENCY_SLEEP_PERIOD_MS`, which
+  feeds one trigger edge each time, so measured RPM settles at a low non-zero value.
+- `IoUtil.awaitRpm()` listens for value changes and waits its full timeout when RPM
+  already has the target value; `EcuTestHelper.assertSensorEventually()` accepts an
+  unchanged fresh sample.
+
+A skipped rebuild shows up as `Skipping trigger configuration update: RPM > 0` in the
+test log. The stimulator and decoder then keep the previous engine's shape while the RPM
+multiplier follows the new configuration, typically as `rpm change did not happen` with
+a 2x or 0.5x RPM. Commands which change `globalTriggerAngleOffset` at speed are skipped
+the same way.
 
 Hardware CI's F407 `HighRevTest` is sensitive to asynchronous settings burns: `setEngineType()` queues a forced save, while the Java helper resumes configuration changes after a fixed sleep. Passing master runs can already contain `Flash: validation failed`; do not treat that message alone as a new regression. In PR #10186, adding a 5 s settings retry backoff moved the next erase from the RPM settling period into the 40 s assertion window, producing `engine stopped`, ~1200 ms coil-overcharge warnings, and 6000 -> 0 RPM failures. Self-stimulation explicitly permits settings writes even on F4, where flash erase stalls execution. Check flash-write timing against the assertion window before investigating trigger decoding. The cause of the original validation mismatches was not established by those logs (concurrent mutation of the live configuration is a candidate).
 
