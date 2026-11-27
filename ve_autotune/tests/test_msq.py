@@ -55,6 +55,21 @@ def test_read_all_constants_includes_veTable_and_closed_loop_flag():
     assert constants["fuelClosedLoopCorrectionEnabled"] == '"disabled"'
 
 
+def test_load_tune_treats_unexpected_closed_loop_value_as_enabled(tmp_path):
+    # Fail closed: only the literal "disabled" means inactive. An unexpected
+    # value must not silently decode as "inactive" (the previous
+    # `== "enabled"` check did exactly that for anything it didn't recognize).
+    text = open(FIXTURE, encoding="latin-1").read()
+    text = text.replace(
+        '<constant name="fuelClosedLoopCorrectionEnabled">"disabled"</constant>',
+        '<constant name="fuelClosedLoopCorrectionEnabled">"unknown"</constant>',
+    )
+    out = tmp_path / "weird.msq"
+    out.write_text(text, encoding="latin-1")
+    snap = load_tune(str(out))
+    assert snap.fuel_closed_loop_enabled is True
+
+
 def test_read_all_constants_is_not_limited_to_tune_snapshot_fields():
     constants = read_all_constants(FIXTURE)
     # Proves genuine comprehensiveness (every <constant> tag), not just the
