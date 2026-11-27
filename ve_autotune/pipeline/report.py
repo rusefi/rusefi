@@ -23,7 +23,7 @@ def _format_row(r: CellResult) -> str:
         f"{r.new_ve:.1f}",
         f"{r.delta_pct:.1f}",
         str(r.sample_count),
-        f"{r.measured_afr:.2f}",
+        f"{r.measured_afr:.2f}" if r.status == "corrected" else "-",
         f"{r.target_afr:.2f}",
         r.status,
     ]
