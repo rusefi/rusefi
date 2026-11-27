@@ -13,6 +13,6 @@ class CsvLoggerTest {
         val logger = CsvLogger(sw)
         logger.writeHeader()
         logger.appendRow(0.5, Channels(rpm = 1500.0, map = 45.0, tps = 10.0, clt = 80.0, afr = 13.2))
-        assertEquals("t,rpm,map,tps,clt,afr\n0.5,1500.0,45.0,10.0,80.0,13.2\n", sw.toString())
+        assertEquals("Time,RPM,MAP,TPS,CLT,Air/Fuel Ratio\n0.5,1500.0,45.0,10.0,80.0,13.2\n", sw.toString())
     }
 }

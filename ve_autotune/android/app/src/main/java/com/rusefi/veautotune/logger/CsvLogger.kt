@@ -13,7 +13,7 @@ import java.io.Writer
 class CsvLogger(private val out: Writer) {
 
     fun writeHeader() {
-        out.write("t,rpm,map,tps,clt,afr\n")
+        out.write("Time,RPM,MAP,TPS,CLT,Air/Fuel Ratio\n")
         out.flush()
     }
 

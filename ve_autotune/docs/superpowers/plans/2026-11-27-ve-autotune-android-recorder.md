@@ -64,10 +64,13 @@ recorder for Stage 1")
   - AFR: `AFRValue = scalar, U16, 210, "AFR", 0.001, 0` → unsigned 16-bit at
     byte 210, scale 0.001 (already the ECU's computed AFR, not a raw
     voltage — no calibration math needed on the Android side).
-- Output CSV header must use the same logical channel names the PC
-  pipeline's `channel_map` expects: `rpm`, `map`, `tps`, `clt`, `afr`, plus
-  `t` for the poll timestamp in seconds since logging started (matches
-  `ve_autotune/pipeline/filters.py`'s expected row shape in the other plan).
+- Output CSV header must be exactly `Time,RPM,MAP,TPS,CLT,Air/Fuel Ratio`
+  (with `Time` the poll timestamp in seconds since logging started). This
+  must match `ve_autotune/pipeline/analyze.py`'s `CHANNEL_MAP` constant
+  exactly, case-insensitively and with any trailing `" (units)"` suffix
+  stripped per `ve_autotune/pipeline/csv_log.py`'s `_normalize` -- not the
+  internal logical names (`t`, `rpm`, `map`, `tps`, `clt`, `afr`) used as
+  `CHANNEL_MAP`'s dict keys.
 - Pairing happens once in Android's own Bluetooth settings, outside this
   app; `MainActivity` only lists already-bonded devices.
 
