@@ -1,9 +1,9 @@
 """Compute per-cell VE corrections from pooled AFR samples."""
 
 from dataclasses import dataclass
-from typing import Any
 
 from ve_autotune.pipeline.binning import nearest_cell
+from ve_autotune.pipeline.msq import TuneSnapshot
 
 MIN_SAMPLES = 20
 MAX_RICH_PCT = 15.0
@@ -29,7 +29,7 @@ class CellResult:
 
 def compute_corrections(
     cell_samples: dict[tuple[int, int], list[float]],
-    snapshot: Any,
+    snapshot: TuneSnapshot,
 ) -> list[CellResult]:
     """Return one `CellResult` per VE table cell, in row-major order.
 
