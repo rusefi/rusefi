@@ -1,5 +1,7 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.formdev.flatlaf.FlatClientProperties;
+
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.LayerUI;
@@ -7,6 +9,8 @@ import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Line2D;
+import java.awt.geom.Path2D;
 
 /** Hover affordance in the form's corner; only the button intercepts mouse input. */
 final class DetachPanelLayer extends LayerUI<JScrollPane> {
@@ -36,6 +40,9 @@ final class DetachPanelLayer extends LayerUI<JScrollPane> {
         button.setToolTipText("Detach this panel into a separate window");
         button.getAccessibleContext().setAccessibleName("Detach panel");
         button.setMargin(new Insets(0, 0, 0, 0));
+        // A small rounded tile in the theme's button colours, without the focus ring of a form button.
+        button.putClientProperty(FlatClientProperties.STYLE, "arc: 8; focusWidth: 0; innerFocusWidth: 0");
+        button.setFocusable(false);
         button.setVisible(false);
         button.addActionListener(event -> detach.run());
         JPanel glass = new JPanel(null) {
@@ -105,6 +112,7 @@ final class DetachPanelLayer extends LayerUI<JScrollPane> {
             && viewport.contains(mousePosition) && viewport.contains(button.getBounds()));
     }
 
+    /** "Open in new window": a rounded window open at its top-right corner, an arrow leaving through it. */
     private static final class DetachIcon implements Icon {
         @Override
         public int getIconWidth() {
@@ -118,11 +126,34 @@ final class DetachPanelLayer extends LayerUI<JScrollPane> {
 
         @Override
         public void paintIcon(Component component, Graphics graphics, int x, int y) {
-            graphics.setColor(component.getForeground());
-            graphics.drawRect(x + 1, y + 5, 9, 9);
-            graphics.drawLine(x + 6, y + 9, x + 14, y + 1);
-            graphics.drawLine(x + 9, y + 1, x + 14, y + 1);
-            graphics.drawLine(x + 14, y + 1, x + 14, y + 6);
+            Graphics2D g2 = (Graphics2D) graphics.create();
+            try {
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+                g2.setColor(component.getForeground());
+                g2.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+                g2.translate(x, y);
+                // window: left and bottom sides plus the start of the top and right ones, rounded corners
+                Path2D window = new Path2D.Float();
+                window.moveTo(7, 2.75);
+                window.lineTo(4.5, 2.75);
+                window.quadTo(2.75, 2.75, 2.75, 4.5);
+                window.lineTo(2.75, 11.5);
+                window.quadTo(2.75, 13.25, 4.5, 13.25);
+                window.lineTo(11.5, 13.25);
+                window.quadTo(13.25, 13.25, 13.25, 11.5);
+                window.lineTo(13.25, 9);
+                g2.draw(window);
+                // arrow out of the open corner
+                g2.draw(new Line2D.Float(7.5f, 8.5f, 13.25f, 2.75f));
+                Path2D head = new Path2D.Float();
+                head.moveTo(9.5, 2.75);
+                head.lineTo(13.25, 2.75);
+                head.lineTo(13.25, 6.5);
+                g2.draw(head);
+            } finally {
+                g2.dispose();
+            }
         }
     }
 }
