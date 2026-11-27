@@ -111,5 +111,6 @@
       </constant>
         <constant name="fuelClosedLoopCorrectionEnabled">"disabled"</constant>
         <constant name="someOtherField">"keep me"</constant>
+        <constant name="injectorFuelFlow">"180.0"</constant>
     </page>
 </msq>
