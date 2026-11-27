@@ -195,6 +195,16 @@ coolant temperature (warmup filter), TPS (transient filter) — the app reads
 which exact fields/offsets these are from the `.ini`, the same "never hardcode
 a protocol value" rule as the rest of this project.
 
+**Getting a sibling `.msq` for an Android-recorded CSV:** `analyze` needs a
+`.msq` tune snapshot next to every CSV, but the Android app is deliberately
+read-only and cannot produce one (see Scope above). Use the PC pipeline's own
+`ve_autotune snapshot-tune <path>` subcommand instead: it calls the same
+`read_tune` MCP tool `burn` already uses, writing the live ECU's current tune
+straight to `<path>`. Run it once per riding session with the ECU connected to
+the PC (or once per ride, if the tune might change mid-session), then
+copy/rename the resulting `.msq` to match each CSV's filename stem before
+running `analyze` on that CSV.
+
 **Toolchain note:** this machine has no Android SDK/Gradle installed yet — first
 build will need `cmdline-tools`/`sdkmanager` to fetch the SDK platform and
 build-tools (roughly 1GB of downloads). JDK 17 is already present. Real

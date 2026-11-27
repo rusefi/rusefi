@@ -139,6 +139,31 @@ def _cmd_analyze(args: argparse.Namespace, run_mcp: Callable[[str, dict], str]) 
     return 0
 
 
+def _cmd_snapshot_tune(args: argparse.Namespace, run_mcp: Callable[[str, dict], str]) -> int:
+    """Snapshot the live ECU tune straight to ``args.out_path`` via the same
+    ``read_tune`` MCP tool / success-checking pattern as
+    ``_read_live_tune_fields`` -- the documented replacement for manually
+    invoking the ``read_tune`` MCP tool and renaming the result before
+    running ``analyze`` (see design.md's Android addendum)."""
+    try:
+        raw_result = run_mcp("read_tune", {"path": args.out_path})
+    except Exception as exc:
+        print(f"ERROR: could not read the live ECU tune: read_tune call failed: {exc}")
+        return 1
+
+    try:
+        ok, reason = _read_tune_ok(_parse_mcp_result(raw_result))
+    except RuntimeError as exc:
+        print(f"ERROR: could not read the live ECU tune: {exc}")
+        return 1
+    if not ok:
+        print(f"ERROR: could not read the live ECU tune: {reason}")
+        return 1
+
+    print(f"Wrote tune snapshot: {args.out_path}")
+    return 0
+
+
 def _cmd_burn(args: argparse.Namespace, run_mcp: Callable[[str, dict], str]) -> int:
     try:
         live_fields = _read_live_tune_fields(run_mcp)
@@ -226,10 +251,17 @@ def main(argv: list[str], run_mcp: Callable[[str, dict], str] = _default_run_mcp
     burn_parser = subparsers.add_parser("burn", help="burn a reviewed .msq to the ECU")
     burn_parser.add_argument("msq_path", help="path to the .msq file to write to the ECU")
 
+    snapshot_parser = subparsers.add_parser(
+        "snapshot-tune", help="snapshot the live ECU tune to a .msq file (for use as a CSV's sibling tune)"
+    )
+    snapshot_parser.add_argument("out_path", help="output .msq path to write the live tune snapshot to")
+
     args = parser.parse_args(argv)
 
     if args.command == "analyze":
         return _cmd_analyze(args, run_mcp)
+    if args.command == "snapshot-tune":
+        return _cmd_snapshot_tune(args, run_mcp)
     return _cmd_burn(args, run_mcp)
 
 

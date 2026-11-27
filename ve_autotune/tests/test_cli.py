@@ -105,6 +105,38 @@ def test_burn_warns_and_requires_confirmation_when_ve_table_differs_from_baselin
     assert rc != 0
 
 
+def test_snapshot_tune_writes_file_and_prints_confirmation(tmp_path, capsys):
+    out_path = str(tmp_path / "live.msq")
+    calls = []
+
+    def fake_run_mcp(tool, args):
+        calls.append((tool, args))
+        with open(args["path"], "w", encoding="latin-1") as f:
+            f.write("<!-- fake tune snapshot -->")
+        return '{"success": true}'
+
+    rc = main(["snapshot-tune", out_path], run_mcp=fake_run_mcp)
+    assert rc == 0
+    assert calls == [("read_tune", {"path": out_path})]
+    out = capsys.readouterr().out
+    assert out_path in out
+    with open(out_path, encoding="latin-1") as f:
+        assert f.read() == "<!-- fake tune snapshot -->"
+
+
+def test_snapshot_tune_reports_error_when_read_tune_fails(tmp_path, capsys):
+    out_path = str(tmp_path / "live.msq")
+
+    def fake_run_mcp(tool, args):
+        return '{"success": false, "error": "not connected"}'
+
+    rc = main(["snapshot-tune", out_path], run_mcp=fake_run_mcp)
+    assert rc != 0
+    out = capsys.readouterr().out
+    assert "ERROR" in out
+    assert "Traceback" not in out
+
+
 def test_burn_proceeds_when_ve_table_matches_baseline(monkeypatch, tmp_path):
     baseline = load_tune(_RIDE_A_MSQ)
     results = [
