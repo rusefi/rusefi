@@ -10,7 +10,6 @@ import com.opensr5.ini.TsStringFunction;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.PcVariableArrayIniField;
-import com.rusefi.config.StringFormatter;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -233,7 +232,7 @@ public class CurveWidget {
         if (!UnburnedChanges.of(imageTarget, burned).isCellChanged(field, storedRow, storedColumn)) {
             return null;
         }
-        return StringFormatter.niceToString(UnburnedCellMark.burnedValue(field, storedRow, storedColumn, burned),
+        return formatValue(UnburnedCellMark.burnedValue(field, storedRow, storedColumn, burned),
             column == 0 ? xDigits : yDigits);
     }
 
@@ -372,6 +371,14 @@ public class CurveWidget {
             t = t.replaceAll("^\\{\\s*", "").replaceAll("\\s*}$", "").trim();
         }
         return t;
+    }
+
+    /** A curve value with the INI's digits every time, like table values, so a column's decimals line up. */
+    static String formatValue(double value, int digits) {
+        if (digits <= 0) {
+            return Long.toString(Math.round(value));
+        }
+        return String.format(Locale.ROOT, "%." + digits + "f", value);
     }
 
     private int parseDigits(String digits) {
@@ -737,7 +744,7 @@ public class CurveWidget {
         public Object getValueAt(int rowIndex, int columnIndex) {
             double val = columnIndex == 0 ? xValues[rowIndex] : yValues[rowIndex];
             int digits = columnIndex == 0 ? xDigits : yDigits;
-            return StringFormatter.niceToString(val, digits);
+            return formatValue(val, digits);
         }
 
         @Override

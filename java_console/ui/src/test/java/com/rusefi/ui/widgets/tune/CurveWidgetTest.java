@@ -331,6 +331,16 @@ public class CurveWidgetTest {
         });
     }
 
+    @Test
+    public void curveValuesKeepTheIniDigits() {
+        // Like table values: 1.00 beside 0.72, not 1.0 beside 0.72, and never scientific notation.
+        assertEquals("1.00", CurveWidget.formatValue(1.0, 2));
+        assertEquals("0.72", CurveWidget.formatValue(0.72, 2));
+        assertEquals("-40.0", CurveWidget.formatValue(-40, 1));
+        assertEquals("0.0001", CurveWidget.formatValue(0.0001, 4));
+        assertEquals("755", CurveWidget.formatValue(755.4, 0));
+    }
+
     private static BufferedImage render(JPanel canvas) {
         BufferedImage image = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics = image.createGraphics();
