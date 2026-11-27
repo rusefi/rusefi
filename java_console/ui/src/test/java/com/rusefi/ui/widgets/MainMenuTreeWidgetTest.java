@@ -835,9 +835,10 @@ todo: spllit into smaller tests?
         assertEquals(2, content.getComponentCount());
         JPanel curvePanel = (JPanel) content.getComponent(1);
 
-        // CurveWidget content has GridBagLayout: Canvas (weightx=0.8) and Table panel (weightx=0.2)
+        // CurveWidget content has GridBagLayout: Canvas (weightx=0.8), Table panel (weightx=0.2)
+        // and the "Fit to limits" row above them
         assertTrue(curvePanel.getLayout() instanceof GridBagLayout);
-        assertEquals(2, curvePanel.getComponentCount());
+        assertEquals(3, curvePanel.getComponentCount());
 
         // Verify weights
         GridBagLayout gbl = (GridBagLayout) curvePanel.getLayout();

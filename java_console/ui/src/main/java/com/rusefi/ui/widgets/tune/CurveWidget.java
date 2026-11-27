@@ -10,6 +10,7 @@ import com.opensr5.ini.TsStringFunction;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.PcVariableArrayIniField;
+import com.rusefi.ui.widgets.JoinedButtons;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -79,6 +80,10 @@ public class CurveWidget {
     private Supplier<ConfigurationImage> burnedImage = () -> null;
     private Supplier<UnburnedWording> unburnedWording = () -> UnburnedWording.BURNED;
     private final JLabel unburnedCountLabel = UnburnedCellMark.createCountLabel();
+    /** Plots the whole range the values may take, from the field limits, instead of the INI's suggested range. */
+    private final JToggleButton fitToLimitsButton = new JToggleButton("Fit to limits");
+    /** The row above the plot holding the toggle; hidden with it. */
+    private final JPanel toolbar = new JPanel();
 
     public CurveWidget(CurveModel curveModel, IniFileModel iniFileModel, ConfigurationImage ci) {
         this(curveModel, iniFileModel, ci, ci, false);
@@ -145,6 +150,7 @@ public class CurveWidget {
         gbc.weighty = 1.0;
 
         gbc.gridx = 0;
+        gbc.gridy = 1;
         gbc.weightx = 0.8;
         content.add(canvas, gbc);
 
@@ -153,7 +159,47 @@ public class CurveWidget {
         gbc.insets = new Insets(0, 8, 0, 0);
         content.add(rightPanel, gbc);
 
+        // Added last so the canvas stays the first component; laid out above the plot.
+        fitToLimitsButton.setToolTipText("Plot the whole range the values may take, not only the usual range");
+        fitToLimitsButton.addActionListener(e -> {
+            fitScale();
+            canvas.repaint();
+            table.repaint();
+        });
+        toolbar.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        toolbar.setOpaque(false);
+        toolbar.setBorder(BorderFactory.createEmptyBorder(0, 0, JoinedButtons.ROW_GAP, 0));
+        toolbar.add(new JoinedButtons(fitToLimitsButton));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.weightx = 1;
+        gbc.weighty = 0;
+        gbc.insets = new Insets(0, 0, 0, 0);
+        content.add(toolbar, gbc);
+
         update(curveModel, iniFileModel, valuesImage, configImage);
+    }
+
+    JToggleButton getFitToLimitsButtonForTests() {
+        return fitToLimitsButton;
+    }
+
+    /**
+     * The scale when the curve opens or "Fit to limits" changes: the INI's suggested range, or the
+     * field limits where they are finite, widened to show every value.
+     */
+    private void fitScale() {
+        boolean limits = fitToLimitsButton.isSelected();
+        xAxis = fitAxis(limits ? limitsAxis(configuredXAxis, xMin, xMax) : configuredXAxis, xValues);
+        yAxis = fitAxis(limits ? limitsAxis(configuredYAxis, yMin, yMax) : configuredYAxis, yValues);
+    }
+
+    private static AxisModel limitsAxis(AxisModel configured, double min, double max) {
+        if (!Double.isFinite(min) || !Double.isFinite(max) || min >= max) {
+            return configured;
+        }
+        return new AxisModel(min, max, configured.getStep());
     }
 
     private void update(CurveModel curveModel, IniFileModel iniFile, ConfigurationImage valuesImage,
@@ -185,8 +231,10 @@ public class CurveWidget {
 
         this.xValues = readArray(curveModel.getxBins(), iniFile, valuesImage);
         this.yValues = readArray(curveModel.getyBins(), iniFile, valuesImage);
-        xAxis = fitAxis(configuredXAxis, xValues);
-        yAxis = fitAxis(configuredYAxis, yValues);
+        // Only where a field has both limits is there a whole range to show.
+        toolbar.setVisible(!readOnly && (Double.isFinite(yMin) && Double.isFinite(yMax) && yMin < yMax
+            || !xBinsFixed && Double.isFinite(xMin) && Double.isFinite(xMax) && xMin < xMax));
+        fitScale();
 
         canvas.setCurve(curveModel, xValues, yValues);
         table.setModel(new CurveTableModel());
@@ -524,14 +572,18 @@ public class CurveWidget {
             return null;
         }
 
-        /** Moves a point by the drag; an axis the mouse has not moved along keeps its exact value. */
+        /**
+         * Moves a point by the drag; an axis the mouse has not moved along keeps its exact value. The point
+         * stays inside the plot: past its edge it left the screen and the scale grew on release. Values
+         * beyond the plot are typed in the table, or reached with "Fit to limits".
+         */
         private void updatePoint(int index, Point mouse, Point press, Point offset) {
             Point2D world = canvasToWorld(new Point(mouse.x + offset.x, mouse.y + offset.y));
             if (mouse.x != press.x) {
-                setXValue(index, world.x);
+                setXValue(index, Math.max(xAxis.getMin(), Math.min(xAxis.getMax(), world.x)));
             }
             if (mouse.y != press.y) {
-                setYValue(index, world.y);
+                setYValue(index, Math.max(yAxis.getMin(), Math.min(yAxis.getMax(), world.y)));
             }
         }
 

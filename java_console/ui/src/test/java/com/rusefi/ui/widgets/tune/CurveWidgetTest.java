@@ -237,13 +237,14 @@ public class CurveWidgetTest {
             canvas.dispatchEvent(new MouseEvent(canvas, MouseEvent.MOUSE_PRESSED, 0, 0, start.x, start.y, 1, false));
             for (int i = 0; i < 2; i++) {
                 canvas.dispatchEvent(new MouseEvent(canvas, MouseEvent.MOUSE_DRAGGED, 0, 0, end.x, end.y, 0, false));
-                assertEquals("1200", table.getValueAt(3, 1));
+                assertEquals("800", table.getValueAt(3, 1), "an off-plot drag stops at the plot's top");
                 assertEquals(end, canvas.worldToCanvas(20, 1200), "scale stays fixed during the gesture");
                 assertFalse(hasCurveOutsidePlot(render(canvas)), "off-plot drag must not paint over the title");
             }
             canvas.dispatchEvent(new MouseEvent(canvas, MouseEvent.MOUSE_RELEASED, 0, 0, end.x, end.y, 1, false));
-            assertEquals(1200.0, ConfigurationImageGetterSetter.getArrayValues(yField, image)[3][0]);
-            assertTrue(hasColor(render(canvas), CalibrationColorPalette.selection()), "released point is visible after fitting the scale");
+            assertEquals(800.0, ConfigurationImageGetterSetter.getArrayValues(yField, image)[3][0]);
+            assertEquals(end, canvas.worldToCanvas(20, 1200), "the scale does not change on release");
+            assertTrue(hasColor(render(canvas), CalibrationColorPalette.selection()), "released point is visible");
         });
     }
 
@@ -315,6 +316,79 @@ public class CurveWidgetTest {
             assertEquals("1 cell not burned", widget.getUnburnedCountLabelForTests().getText());
             assertEquals(before, widget.getContentPane().getPreferredSize().height,
                 "the curve's panel asks for the same height once the label shows");
+        });
+    }
+
+    /** Like the IAT fuel multiplier: values may go 0..5, the INI plots 0..2. */
+    private static IniFileModel readRatioIni() throws Throwable {
+        String text = "[Constants]\npage = 1\n"
+            + "ratioBins = array, F32, 0, [4], \"C\", 1, 0, -40, 150, 0\n"
+            + "ratioValues = array, F32, 16, [4], \"ratio\", 1, 0, 0, 5, 2\n"
+            + "[CurveEditor]\ncurve = ratioCurve, \"Ratio\"\n"
+            + "columnLabel = \"Temperature\", \"Ratio\"\n"
+            + "xAxis = -40, 120, 9\nyAxis = 0, 2, 11\n"
+            + "xBins = ratioBins\nyBins = ratioValues\n";
+        IniFileMetaInfo meta = mock(IniFileMetaInfo.class);
+        when(meta.getnPages()).thenReturn(1);
+        when(meta.getPageSize(0)).thenReturn(32);
+        when(meta.getSignature()).thenReturn("test");
+        return IniFileReaderUtil.readIniFile(IniFileReaderUtil.read(
+            new ByteArrayInputStream(text.getBytes(StandardCharsets.US_ASCII))), "test", meta);
+    }
+
+    private static ConfigurationImage ratioImage(IniFileModel ini) {
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(32);
+        ConfigurationImageGetterSetter.setArrayValues((ArrayIniField) ini.findIniField("ratioBins").get(), image,
+            new Double[]{-40.0, 0.0, 40.0, 80.0});
+        ConfigurationImageGetterSetter.setArrayValues((ArrayIniField) ini.findIniField("ratioValues").get(), image,
+            new Double[]{1.0, 1.0, 1.0, 1.0});
+        return image;
+    }
+
+    @Test
+    public void draggingAPointAboveThePlotStopsAtItsEdge() throws Throwable {
+        // The point used to follow the mouse up to the field limit (5), out of the plot (0..2), and on
+        // release the scale grew, so the whole curve was drawn smaller. It now stops at the plot's top.
+        IniFileModel ini = readRatioIni();
+        ConfigurationImage image = ratioImage(ini);
+        SwingUtilities.invokeAndWait(() -> {
+            CurveWidget widget = new CurveWidget(ini.getCurves().get("ratioCurve"), ini, image);
+            CurveWidget.CurveCanvas canvas = (CurveWidget.CurveCanvas) widget.getContentPane().getComponent(0);
+            canvas.setSize(470, 360);
+            Point still = canvas.worldToCanvas(-40, 1.0);
+            Point second = canvas.worldToCanvas(0, 1.0);
+            drag(canvas, second, canvas.worldToCanvas(0, 3.0));
+            assertEquals(2.0, ConfigurationImageGetterSetter.getArrayValues(
+                (ArrayIniField) ini.findIniField("ratioValues").get(), image)[1][0], "the value stops at the plot's top");
+            assertEquals(still, canvas.worldToCanvas(-40, 1.0), "a point that did not change stays where it was drawn");
+        });
+    }
+
+    @Test
+    public void fitToLimitsPlotsTheWholeRangeSoADragReachesTheLimit() throws Throwable {
+        IniFileModel ini = readRatioIni();
+        ConfigurationImage image = ratioImage(ini);
+        ArrayIniField values = (ArrayIniField) ini.findIniField("ratioValues").get();
+        SwingUtilities.invokeAndWait(() -> {
+            CurveWidget widget = new CurveWidget(ini.getCurves().get("ratioCurve"), ini, image);
+            CurveWidget.CurveCanvas canvas = (CurveWidget.CurveCanvas) widget.getContentPane().getComponent(0);
+            canvas.setSize(470, 360);
+            JToggleButton fit = widget.getFitToLimitsButtonForTests();
+            assertTrue(fit.getParent().getParent().isVisible(), "the toggle shows for a field with limits");
+            assertFalse(fit.isSelected(), "curves open at the INI's suggested range");
+            Point top = canvas.worldToCanvas(0, 2);
+
+            fit.doClick();
+            assertTrue(canvas.worldToCanvas(0, 2).y > top.y, "2.0 is no longer the top of the plot");
+            drag(canvas, canvas.worldToCanvas(0, 1.0), canvas.worldToCanvas(0, 5.0));
+            assertEquals(5.0, ConfigurationImageGetterSetter.getArrayValues(values, image)[1][0], 0.05,
+                "a drag reaches the field's limit");
+
+            fit.doClick();
+            assertEquals(5.0, ConfigurationImageGetterSetter.getArrayValues(values, image)[1][0], 0.05,
+                "switching back keeps the values");
+            Point five = canvas.worldToCanvas(0, 5.0);
+            assertTrue(five.y >= 20, "the INI range widens to keep a value beyond it on the plot");
         });
     }
 
