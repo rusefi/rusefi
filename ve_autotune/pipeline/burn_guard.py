@@ -7,10 +7,13 @@ Operates on plain field maps so it needs no tune object. Callers build the
 from typing import Any
 
 
+_DEFAULT_IGNORE: frozenset[str] = frozenset({"veTable", "vinNumber"})
+
+
 def diff_fields(
     baseline: dict[str, Any],
     live: dict[str, Any],
-    ignore: set[str] = {"veTable", "vinNumber"},
+    ignore: frozenset[str] = _DEFAULT_IGNORE,
 ) -> list[tuple[str, Any, Any]]:
     """Return ``(key, baseline_value, live_value)`` for each changed field.
 
