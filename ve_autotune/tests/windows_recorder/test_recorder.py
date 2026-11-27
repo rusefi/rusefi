@@ -147,6 +147,27 @@ def test_fifth_consecutive_bad_response_ends_session():
     assert connection.call_count == 5
 
 
+def test_fifth_consecutive_timeout_ends_session():
+    stop_event = threading.Event()
+    connection = FakeConnection([TimeoutError("read timed out")] * 5)
+    logger = FakeLogger()
+
+    result = run_session(
+        connection,
+        logger,
+        stop_event=stop_event,
+        on_status=lambda msg: None,
+        on_channels=lambda c: None,
+        sleep=lambda _s: None,
+        clock=_make_clock(),
+        max_consecutive_bad_frames=5,
+    )
+
+    assert result is not None
+    assert logger.rows == []
+    assert connection.call_count == 5
+
+
 def test_one_good_frame_resets_bad_counter():
     stop_event = threading.Event()
     actions = [BadResponse("noise")] * 4 + [_CHANNELS] + [BadResponse("noise")] * 4

@@ -179,12 +179,17 @@ class App(tk.Tk):
                 sleep=stop_event.wait,
             )
         except Exception as e:
-            error_reason = f"unexpected error: {e}"
+            error_reason = f"unexpected error ({type(e).__name__}): {e}"
         finally:
             try:
                 csv_file.close()
-            except OSError:
-                pass
+            except OSError as e:
+                # A full disk or a yanked USB drive often only surfaces here
+                # (the buffered rows get flushed on close), not on the
+                # append_row call that buffered them -- don't let that
+                # silently report a clean "Stopped" when rows were actually
+                # lost.
+                error_reason = error_reason or f"could not finish writing CSV: {e}"
             try:
                 ser.close()
             except OSError:
