@@ -330,36 +330,45 @@ public class VeTableGeneratorPanel extends JPanel {
 
     // ---- table builders ----
 
-    private static JComponent buildVeTable(double[][] data, double[] rpmAxis, double[] mapAxis, boolean isDelta) {
+    static JComponent buildVeTable(double[][] data, double[] rpmAxis, double[] mapAxis, boolean isDelta) {
         double lo = Double.MAX_VALUE, hi = -Double.MAX_VALUE;
         if (!isDelta) {
             for (double[] row : data) for (double v : row) { lo = Math.min(lo, v); hi = Math.max(hi, v); }
         }
         final double min = lo, max = hi;
 
+        // Styled like the tuning tables: the theme's value colours, header-style axes, cells as tiles.
         JTable table = new JTable(new VePreviewModel(data, rpmAxis, mapAxis)) {
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component c = super.prepareRenderer(renderer, row, column);
-                if (!isCellSelected(row, column)) {
-                    if (column == 0) {
-                        c.setBackground(getBackground());
-                    } else {
-                        try {
-                            double val = Double.parseDouble(String.valueOf(getModel().getValueAt(row, column)));
-                            if (isDelta) {
-                                // [tag:fixed_color] value cells: green/red change or blue-to-pink ramp, black text
-                                c.setBackground(val > 0.05 ? new Color(180, 230, 180) : val < -0.05 ? new Color(230, 180, 180) : Color.WHITE);
-                            } else {
-                                double ratio = (max > min) ? Math.max(0, Math.min(1, (val - min) / (max - min))) : 0.5;
-                                // [tag:fixed_color] see above
-                                c.setBackground(new Color((int)(173 + ratio * 82), (int)(216 - ratio * 34), (int)(230 - ratio * 37)));
-                            }
-                            c.setForeground(Color.BLACK); // [tag:fixed_color] on the value cell
-                        } catch (NumberFormatException ignored) {}
-                    }
+                if (column == 0) {
+                    c.setBackground(CalibrationColorPalette.axisBackground());
+                    c.setForeground(CalibrationColorPalette.axisForeground());
+                    c.setFont(c.getFont().deriveFont(Font.BOLD));
+                    return c;
                 }
+                Color background;
+                try {
+                    double val = Double.parseDouble(String.valueOf(getModel().getValueAt(row, column)));
+                    background = isDelta ? CalibrationColorPalette.change(val, 0.05)
+                        : CalibrationColorPalette.background(val, min, max);
+                } catch (NumberFormatException ignored) {
+                    background = getBackground();
+                }
+                if (isCellSelected(row, column)) {
+                    background = CalibrationColorPalette.selected(background);
+                }
+                c.setBackground(background);
+                c.setForeground(CalibrationColorPalette.foreground(background));
                 return c;
+            }
+
+            @Override
+            public void updateUI() {
+                super.updateUI();
+                setShowGrid(false);
+                setIntercellSpacing(new Dimension(2, 2));
             }
         };
 
@@ -367,6 +376,14 @@ public class VeTableGeneratorPanel extends JPanel {
         centeredRenderer.setHorizontalAlignment(SwingConstants.CENTER);
         table.setDefaultRenderer(Object.class, centeredRenderer);
         table.getTableHeader().setReorderingAllowed(false);
+        TableCellRenderer headerRenderer = table.getTableHeader().getDefaultRenderer();
+        table.getTableHeader().setDefaultRenderer((source, value, selected, focused, row, column) -> {
+            Component header = headerRenderer.getTableCellRendererComponent(source, value, selected, focused, row, column);
+            header.setBackground(CalibrationColorPalette.axisBackground());
+            header.setForeground(CalibrationColorPalette.axisForeground());
+            header.setFont(table.getTableHeader().getFont().deriveFont(Font.BOLD));
+            return header;
+        });
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setRowHeight(20);
         table.getColumnModel().getColumn(0).setPreferredWidth(62);
