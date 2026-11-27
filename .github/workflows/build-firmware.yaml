@@ -13,7 +13,7 @@ name: Firmware at GHA
 # * 'only' syntax allow to build only specified configuration, for example 'only:uaefi' line in the commit message would only build 'uaefi' firmware configuration
 # *        for random commits we can build zero firmware jobs if we do 'only:docs' or anything similar
 # * 'skip_rate' ratio in meta-info.env files allows to skip some builds with specific skip percentage
-# * PRs limited to console UI Java, firmware CI setup, or both build only uaefi.
+# * Console UI, INI parser, console tests, Markdown docs, and firmware CI setup changes need only uaefi.
 #
 
 on:

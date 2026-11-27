@@ -18,6 +18,12 @@ if [[ "$EVENT_NAME" == pull_request ]]; then
 		if [[ $diff_status -eq 1 ]] && git -C "$FDIR/.." diff --quiet --no-renames \
 			"${parent_list[1]}" HEAD -- . \
 			':(top,exclude,glob)java_console/ui/src/**/*.java' \
+			':(top,exclude,glob)java_console/inifile/src/**/*.java' \
+			':(top,exclude)java_console/ui/src/main/resources' \
+			':(top,exclude,glob)java_console/*/src/test/**' \
+			':(top,exclude,glob)java_console/*/src/testFixtures/**' \
+			':(top,exclude,glob)*.md' \
+			':(top,exclude,glob)docs/**/*.md' \
 			':(top,exclude).github/workflows/build-firmware.yaml' \
 			':(top,exclude)firmware/bin/generate_matrix.sh' \
 			':(top,exclude)misc/actions/add-ubuntu-latest-apt-mirrors.sh' \
