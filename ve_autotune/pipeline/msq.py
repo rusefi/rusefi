@@ -39,6 +39,14 @@ def load_tune(path: str) -> TuneSnapshot:
             break
     if closed_loop_text is None:
         raise ValueError("constant 'fuelClosedLoopCorrectionEnabled' not found")
+    # Fail closed: only the literal "disabled" means closed-loop fuel
+    # correction is off. Any other value -- "enabled", something unexpected,
+    # a future ini variant -- must be treated as active, since the whole
+    # point of this flag is to refuse computing a correction when the ECU
+    # might already be trimming fuel live (design.md addendum #2). The
+    # previous `== "enabled"` check defaulted to "inactive" for anything it
+    # didn't recognize, which is the unsafe direction.
+    fuel_closed_loop_enabled = closed_loop_text.strip().lower() != "disabled"
     return TuneSnapshot(
         ve_table=_grid(_constant_values(root, "veTable")),
         ve_rpm_bins=_constant_values(root, "veRpmBins"),
@@ -46,7 +54,7 @@ def load_tune(path: str) -> TuneSnapshot:
         lambda_table=_grid(_constant_values(root, "lambdaTable")),
         lambda_rpm_bins=_constant_values(root, "lambdaRpmBins"),
         lambda_load_bins=_constant_values(root, "lambdaLoadBins"),
-        fuel_closed_loop_enabled=closed_loop_text == "enabled",
+        fuel_closed_loop_enabled=fuel_closed_loop_enabled,
     )
 
 
