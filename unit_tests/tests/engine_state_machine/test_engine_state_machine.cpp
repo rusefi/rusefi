@@ -10,8 +10,10 @@ static void setupSmConfig() {
 	engineConfiguration->useEngineStateMachine = true;
 	engineConfiguration->smWotTpsThreshold = 90;
 	engineConfiguration->smTransientHoldTimeMs = 0; // no hold-off by default in tests
-	// Lower AE threshold so tests can trigger Transient with small TPS steps on Tps1
-	engineConfiguration->tpsAccelEnrichmentThreshold = 5.0f;
+	// Lower AE rate threshold so tests can trigger Transient with small TPS steps on Tps1
+	engineConfiguration->tpsAccelRateThreshold = 50.0f;
+	// One callback per TPS step: see each step on its first sample.
+	config->tpsEventConfirmation = TPS_EVENT_CONFIRM_1;
 }
 
 // Standard accumulator config used across direction-detection tests.
@@ -31,6 +33,8 @@ static EngineStateMachine& getSm() {
 }
 
 static EngineStateMachineState runAndGetState() {
+	// [tag:tps_rate_detector] The AE detector samples TPS in the fast callback.
+	engine->periodicFastCallback();
 	engine->periodicSlowCallback();
 	return getSm().getCurrentState();
 }
@@ -140,7 +144,8 @@ TEST(EngineStateMachine, transientState) {
 	Sensor::setMockValue(SensorType::Tps1, 30.0f);
 	runAndGetState();
 
-	// Step Tps1 to 40% — delta = 10% > 5% threshold → AE isAboveAccelThreshold = true
+	// Step Tps1 to 40% 5 ms later — 2000 %/s > 50 %/s → AE isAboveAccelThreshold = true
+	advanceTimeUs(5000);
 	Sensor::setMockValue(SensorType::Tps1, 40.0f);
 	EXPECT_EQ(EngineStateMachineState::Transient, runAndGetState());
 }
@@ -149,9 +154,6 @@ TEST(EngineStateMachine, transientHoldoff) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setupSmConfig();
 	engineConfiguration->smTransientHoldTimeMs = 100; // hold Transient for 100 ms (2 ticks) after AE drops
-
-	// Use a 2-entry AE buffer so delta from the step scrolls out on the very next stable callback
-	engine->module<TpsAccelEnrichment>()->setLength(2);
 
 	engine->rpmCalculator.setRpmValue(TEST_RUNNING_RPM);
 
@@ -163,11 +165,15 @@ TEST(EngineStateMachine, transientHoldoff) {
 	runAndGetState();
 	advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 
-	// Trigger: step Tps1 to 40% → delta=10% > 5% threshold → AE fires → Transient
+	// Trigger: step Tps1 to 40% → 10% over the 100 ms rate window = 100 %/s > 50 %/s → Transient
 	Sensor::setMockValue(SensorType::Tps1, 40.0f);
 	EXPECT_EQ(EngineStateMachineState::Transient, runAndGetState());
 
-	// AE drops on next callback (buffer is [40,40], delta=0); hold-off starts
+	// The rate window spans two samples, so AE stays active for one more callback
+	advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
+	EXPECT_EQ(EngineStateMachineState::Transient, runAndGetState());
+
+	// AE drops on next callback (window is 40 -> 40); hold-off starts
 	advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));
 	EXPECT_EQ(EngineStateMachineState::Transient, runAndGetState()); // 50 ms into the 100 ms hold
 	advanceTimeUs(static_cast<int>(SLOW_CALLBACK_PERIOD_MS * 1000));

@@ -865,6 +865,15 @@ typedef enum __attribute__ ((__packed__)) {
 	AE_MODE_LUA = 3,
 } accel_enrichment_mode_e;
 
+// IMPORTANT: This enum must be kept in sync with tps_event_confirmation_e in rusefi_config.txt
+// [tag:tps_rate_detector] The value is the number of 5 ms TPS samples; zero is repaired to 2.
+typedef enum __attribute__ ((__packed__)) {
+	TPS_EVENT_CONFIRM_INVALID = 0,
+	TPS_EVENT_CONFIRM_1 = 1,
+	TPS_EVENT_CONFIRM_2 = 2,
+	TPS_EVENT_CONFIRM_3 = 3,
+} tps_event_confirmation_e;
+
 #if __cplusplus
 #include <cstdint>
 

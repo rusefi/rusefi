@@ -35,8 +35,8 @@ float TpsAccelEnrichment::getTpsEnrichment() {
 		return 0;
 	}
 
-	if (engineConfiguration->tpsAccelLookback == 0) {
-		// If disabled, return 0.
+	if (engineConfiguration->tpsAccelHoldTime <= 0) {
+		// Zero hold time disables the additive modes.
 		return 0;
 	}
 
@@ -145,8 +145,6 @@ void TpsAccelEnrichment::onEngineStop() {
 }
 
 void TpsAccelEnrichment::onEngineCycleTps() {
-	// we update values in handleFuel() directly by calling onNewValue()
-
 	onUpdateInvocationCounter++;
 
 	// we used some extra fuel during the current cycle, so we "charge" our "acceleration pump" with it
@@ -177,44 +175,21 @@ void TpsAccelEnrichment::onEngineCycleTps() {
 	}
 }
 
-int TpsAccelEnrichment::getMaxDeltaIndex() {
-	int len = minI(cb.getSize(), cb.getCount());
-	tooShort = len < 2;
-	if (tooShort) {
-		return 0;
-	}
-	int ci = cb.currentIndex - 1;
-	float maxValue = cb.get(ci) - cb.get(ci - 1);
-	int resultIndex = ci;
-
-	// todo: 'get' method is maybe a bit heavy because of the branching
-	// todo: this could be optimized with some careful magic
-
-	for (int i = 1; i<len - 1;i++) {
-		float v = cb.get(ci - i) - cb.get(ci - i - 1);
-		if (v > maxValue) {
-			maxValue = v;
-			resultIndex = ci - i;
-		}
-	}
-
-	return resultIndex;
-}
-
-float TpsAccelEnrichment::getMaxDelta() {
-	int index = getMaxDeltaIndex();
-
-	return (cb.get(index) - (cb.get(index - 1)));
-}
-
-void TpsAccelEnrichment::resetAE() {
-	cb.clear();
+void TpsAccelEnrichment::clearDetector() {
+	m_tpsHistoryCount = 0;
+	m_rawTpsCount = 0;
 	tpsFrom = 0;
 	tpsTo = 0;
 	deltaTps = 0;
+	tpsRate = 0;
+	peakTpsRate = 0;
 	isAboveAccelThreshold = false;
 	isBelowDecelThreshold = false;
 	m_accelEventJustOccurred = false;
+}
+
+void TpsAccelEnrichment::resetAE() {
+	clearDetector();
 	extraFuel = 0;
 	resetFractionValues();
 	resetLua();
@@ -228,38 +203,141 @@ void TpsAccelEnrichment::resetFractionValues() {
 	cycleCnt = 0;
 }
 
-void TpsAccelEnrichment::setLength(int length) {
-	cb.setSize(length);
+// [tag:tps_rate_detector] TPS opening/closing detector shared by the additive AE
+// modes, MAP Prediction (event latch, re-arm and closing exit), burst knock and the
+// engine state machine. It runs from Engine::periodicFastCallback() at 200 Hz, before
+// the fuel math. With tpsEventConfirmation N, each sample is the median of the last
+// 2N-1 raw TPS samples: a spike shorter than N samples disappears in both directions,
+// while a held step (for example a TPS received over CAN at a low rate) passes N-1
+// samples later. The TPS rate in %/s is measured on these samples over about 10 ms
+// (two sample intervals). Thresholds are rates, so they do not depend on the sampling
+// period. An opening event starts when the rate exceeds tpsAccelRateThreshold; tpsFrom
+// is the TPS at the start of the rate window and tpsTo follows the highest TPS reached.
+// The event lasts while the rate stays above the threshold, plus tpsAccelHoldTime.
+// Closing events mirror this with tpsDecelRateThreshold. Opening and closing events
+// are exclusive: a new one ends the other.
+static constexpr float TPS_RATE_MIN_SAMPLE_US = 2000;
+// A longer gap (engine stop, sensor dropout) restarts the rate window.
+static constexpr float TPS_RATE_MAX_GAP_US = 100000;
+
+static int getEventConfirmationSamples() {
+	int samples = config->tpsEventConfirmation;
+	// Zero is an unset tune; applyDefaultsOrFixAfterBurn() repairs it to the same default.
+	return samples >= 1 && samples <= 3 ? samples : 2;
 }
 
-void TpsAccelEnrichment::onNewValue(float currentValue) {
-	// Push new value in to the history buffer
-	cb.add(currentValue);
-	if (cb.getCount() < 2) {
+void TpsAccelEnrichment::onInvalidTps() {
+	clearDetector();
+}
+
+void TpsAccelEnrichment::onNewValue(float currentValue, efitick_t nowNt) {
+	if (m_rawTpsCount > 0) {
+		float sinceLastUs = NT2USF(nowNt - m_lastRawNt);
+		if (sinceLastUs < TPS_RATE_MIN_SAMPLE_US) {
+			// Re-entrant fast callback: keep the regular sampling interval.
+			return;
+		}
+		if (sinceLastUs > TPS_RATE_MAX_GAP_US) {
+			m_rawTpsCount = 0;
+			m_tpsHistoryCount = 0;
+		}
+	}
+	m_lastRawNt = nowNt;
+
+	// Median of the last 2N-1 raw samples. Until that many are collected there is no
+	// filtered sample, hence no rate.
+	int window = 2 * getEventConfirmationSamples() - 1;
+	if (m_rawTpsCount == TPS_MEDIAN_MAX) {
+		for (int i = 1; i < TPS_MEDIAN_MAX; i++) {
+			m_rawTps[i - 1] = m_rawTps[i];
+		}
+		m_rawTpsCount--;
+	}
+	m_rawTps[m_rawTpsCount++] = currentValue;
+
+	bool hasSample = m_rawTpsCount >= window;
+	if (hasSample && window > 1) {
+		float sorted[TPS_MEDIAN_MAX];
+		for (int i = 0; i < window; i++) {
+			float value = m_rawTps[m_rawTpsCount - window + i];
+			int j = i;
+			for (; j > 0 && sorted[j - 1] > value; j--) {
+				sorted[j] = sorted[j - 1];
+			}
+			sorted[j] = value;
+		}
+		currentValue = sorted[window / 2];
+	}
+
+	bool hasRate = hasSample && m_tpsHistoryCount > 0;
+	float windowStartTps = currentValue;
+	if (hasRate) {
+		const TpsSample& oldest = m_tpsHistory[0];
+		windowStartTps = oldest.tps;
+		float dtSec = NT2USF(nowNt - oldest.nt) * 1e-6f;
+		tpsRate = (currentValue - oldest.tps) / dtSec;
+	} else {
+		tpsRate = 0;
+	}
+
+	if (hasSample) {
+		// Keep the two most recent filtered samples.
+		if (m_tpsHistoryCount == 2) {
+			m_tpsHistory[0] = m_tpsHistory[1];
+			m_tpsHistoryCount = 1;
+		}
+		m_tpsHistory[m_tpsHistoryCount++] = { currentValue, nowNt };
+	}
+
+	float holdSec = engineConfiguration->tpsAccelHoldTime;
+	float accelThreshold = engineConfiguration->tpsAccelRateThreshold;
+	float decelThreshold = engineConfiguration->tpsDecelRateThreshold;
+
+	bool opening = hasRate && accelThreshold > 0 && tpsRate > accelThreshold;
+	bool closing = hasRate && decelThreshold > 0 && tpsRate < -decelThreshold;
+
+	if (opening) {
+		if (!isAboveAccelThreshold) {
+			isAboveAccelThreshold = true;
+			isBelowDecelThreshold = false;
+			tpsFrom = windowStartTps;
+			tpsTo = currentValue;
+			peakTpsRate = tpsRate;
+			// Latched until read once by isAccelEventTriggered().
+			m_accelEventJustOccurred = true;
+		}
+		peakTpsRate = maxF(peakTpsRate, tpsRate);
+		m_accelHoldTimer.reset(nowNt);
+	} else if (closing) {
+		if (!isBelowDecelThreshold) {
+			isBelowDecelThreshold = true;
+			isAboveAccelThreshold = false;
+			tpsFrom = windowStartTps;
+			tpsTo = currentValue;
+			peakTpsRate = tpsRate;
+		}
+		peakTpsRate = minF(peakTpsRate, tpsRate);
+		m_decelHoldTimer.reset(nowNt);
+	}
+
+	if (isAboveAccelThreshold) {
+		tpsTo = maxF(tpsTo, currentValue);
+		if (!opening && m_accelHoldTimer.getElapsedSeconds(nowNt) >= holdSec) {
+			isAboveAccelThreshold = false;
+		}
+	} else if (isBelowDecelThreshold) {
+		tpsTo = minF(tpsTo, currentValue);
+		if (!closing && m_decelHoldTimer.getElapsedSeconds(nowNt) >= holdSec) {
+			isBelowDecelThreshold = false;
+		}
+	}
+
+	if (!isAboveAccelThreshold && !isBelowDecelThreshold) {
 		tpsFrom = currentValue;
 		tpsTo = currentValue;
-		deltaTps = 0;
-		isAboveAccelThreshold = false;
-		isBelowDecelThreshold = false;
-		return;
+		peakTpsRate = 0;
 	}
-
-	// Update deltas
-	int maxDeltaIndex = getMaxDeltaIndex();
-	tpsFrom = cb.get(maxDeltaIndex - 1);
-	tpsTo = cb.get(maxDeltaIndex);
 	deltaTps = tpsTo - tpsFrom;
-
-	// Update threshold detection
-	isAboveAccelThreshold = deltaTps > engineConfiguration->tpsAccelEnrichmentThreshold;
-
-	// If an acceleration event just happened, latch the flag so it can be read once.
-	if (isAboveAccelThreshold) {
-		m_accelEventJustOccurred = true;
-	}
-
-	// TODO: can deltaTps actually be negative? Will this ever trigger?
-	isBelowDecelThreshold = deltaTps < -engineConfiguration->tpsDecelEnleanmentThreshold;
 }
 
 bool TpsAccelEnrichment::isAccelEventTriggered() {
@@ -272,39 +350,11 @@ bool TpsAccelEnrichment::isAccelEventTriggered() {
 
 TpsAccelEnrichment::TpsAccelEnrichment() {
 	resetAE();
-	cb.setSize(4);
 }
 
 void TpsAccelEnrichment::onConfigurationChange(engine_configuration_s const* /*previousConfig*/) {
 	// A transient request belongs to the tune under which it was computed.
 	resetLua();
-
-	if (engineConfiguration->accelEnrichmentMode == AE_MODE_LUA) {
-		// The script owns event detection; don't depend on legacy lookback settings.
-		return;
-	}
-
-	constexpr float slowCallbackPeriodSecond = SLOW_CALLBACK_PERIOD_MS / 1000.0f;
-	int length;
-
-	if (engineConfiguration->accelEnrichmentMode == AE_MODE_PREDICTIVE_MAP) {
-		// In predictive MAP mode, size the lookback buffer to cover the longest possible
-		// blend duration so the TPS history window is consistent with the prediction window.
-		float maxBlendDuration = 0;
-		for (int i = 0; i < TPS_TPS_ACCEL_CLT_CORR_TABLE; i++) {
-			maxBlendDuration = maxF(maxBlendDuration, config->predictiveMapBlendDurationValues[i]);
-		}
-		length = static_cast<int>(maxF(2, ceilf(maxBlendDuration / slowCallbackPeriodSecond)));
-	} else {
-		length = static_cast<int>(engineConfiguration->tpsAccelLookback / slowCallbackPeriodSecond);
-
-		if (length < 1) {
-			efiPrintf("setTpsAccelLen: Length should be positive [%d]", length);
-			return;
-		}
-	}
-
-	setLength(length);
 }
 
 float TpsAccelEnrichment::getTimeSinceAcell() const {

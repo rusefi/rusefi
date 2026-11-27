@@ -31,5 +31,4 @@ private:
 	// Starts with a new event; rising-TPS blend restarts leave this timer running.
 	Timer m_sessionTimer;
 	float m_initialPredictedMap = 0;
-	float m_tpsPeak = 0;
 };

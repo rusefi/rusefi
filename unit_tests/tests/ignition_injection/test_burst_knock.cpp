@@ -16,12 +16,14 @@ static void setupBurst(float retard = 10, float decay = 2) {
 	setLinearCurve(config->burstKnockRpmBins, 0, 7000);
 	setLinearCurve(config->burstKnockTpsRateBins, 0, 1400);
 	setTable(config->burstKnockRetardTable, retard);
-	engineConfiguration->tpsAccelLookback = 1;
 	Sensor::setMockValue(SensorType::Rpm, 3000);
 }
 
-static void feedTransient(float delta, bool aboveThreshold) {
-	getAe().deltaTps = delta;
+// [tag:tps_rate_detector] Burst knock reads the detector's peak rate during an opening
+// event and the instantaneous rate otherwise.
+static void feedTransient(float rate, bool aboveThreshold) {
+	getAe().tpsRate = rate;
+	getAe().peakTpsRate = aboveThreshold ? rate : 0;
 	getAe().isAboveAccelThreshold = aboveThreshold;
 	getBurst().onSlowCallback();
 }
@@ -125,7 +127,7 @@ TEST(BurstKnock, ZeroDecayReleasesImmediatelyAfterTransient) {
 	EXPECT_FLOAT_EQ(getBurst().getTimingRetard(), 0);
 }
 
-TEST(BurstKnock, InterpolatesRpmAndTpsRateWithLookbackFloor) {
+TEST(BurstKnock, InterpolatesRpmAndTpsRate) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setupBurst();
 	for (size_t y = 0; y < BURST_KNOCK_TPS_RATE_SIZE; y++) {
@@ -134,39 +136,38 @@ TEST(BurstKnock, InterpolatesRpmAndTpsRateWithLookbackFloor) {
 		}
 	}
 	Sensor::setMockValue(SensorType::Rpm, 2500);
-	engineConfiguration->tpsAccelLookback = 0.2f;
-	feedTransient(60, true);
-	EXPECT_NEAR(getBurst().burstKnockTpsRate, 300, 0.001f);
-	EXPECT_NEAR(getBurst().getTimingRetard(), 5.5f, 0.001f);
-
-	engineConfiguration->tpsAccelLookback = 0;
-	feedTransient(0.3f, true);
+	feedTransient(300, true);
 	EXPECT_NEAR(getBurst().burstKnockTpsRate, 300, 0.001f);
 	EXPECT_NEAR(getBurst().getTimingRetard(), 5.5f, 0.001f);
 }
 
-TEST(BurstKnock, UsesRealAccelEnrichmentThresholdAndHistory) {
+TEST(BurstKnock, UsesRealDetectorThresholdAndPeakRate) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setupBurst();
-	engineConfiguration->tpsAccelLookback = 0.2f;
-	engineConfiguration->tpsAccelEnrichmentThreshold = 5;
-	getAe().onConfigurationChange(nullptr);
+	engineConfiguration->tpsAccelHoldTime = 0.2f;
+	engineConfiguration->tpsAccelRateThreshold = 100;
+	efitick_t nowNt = getTimeNowNt();
+	auto feed = [&](float tps) {
+		nowNt += US2NT(5000);
+		getAe().onNewValue(tps, nowNt);
+	};
 	for (int i = 0; i < 4; i++) {
-		getAe().onNewValue(0);
+		feed(0);
 	}
-	getAe().onNewValue(5);
+	feed(0.5f); // 50 %/s
 	getBurst().onSlowCallback();
-	EXPECT_FALSE(getBurst().isBurstKnockActive); // Threshold is strictly greater than.
-	getAe().onNewValue(25);
+	EXPECT_FALSE(getBurst().isBurstKnockActive);
+	feed(1.5f); // 150 %/s over the 10 ms window
+	feed(4); // 350 %/s
+	feed(4); // 250 %/s, still opening
 	getBurst().onSlowCallback();
 	EXPECT_TRUE(getBurst().isBurstKnockActive);
-	EXPECT_FLOAT_EQ(getAe().deltaTps, 20);
-	EXPECT_NEAR(getBurst().burstKnockTpsRate, 100, 0.001f);
+	EXPECT_NEAR(getBurst().burstKnockTpsRate, 350, 0.01f); // peak, not the latest sample
 	EXPECT_FLOAT_EQ(getBurst().getTimingRetard(), 10);
 
-	// Stable TPS eventually ages the jump out of AE's shared buffer.
-	for (int i = 0; i < 4; i++) {
-		getAe().onNewValue(25);
+	// The event ends after the hold time; burst knock then decays.
+	for (int i = 0; i < 42; i++) {
+		feed(4);
 	}
 	ASSERT_FALSE(getAe().isAboveAccelThreshold);
 	eth.moveTimeForwardSec(1);
@@ -216,34 +217,39 @@ TEST(BurstKnock, PreservesFixedTimingAndCrankingCorrectionSwitch) {
 	EXPECT_NEAR(engine->ignitionState.getWrappedAdvance(200, 50), baseline - 10, 0.001f);
 }
 
-TEST(BurstKnock, SlowCallbackConsumesCurrentTpsSampleBeforeComputingRetard) {
+TEST(BurstKnock, SlowCallbackSeesOpeningSampledByFastCallback) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setupBurst();
-	engineConfiguration->tpsAccelLookback = 0.2f;
-	engineConfiguration->tpsAccelEnrichmentThreshold = 5;
-	getAe().onConfigurationChange(nullptr);
+	engineConfiguration->tpsAccelHoldTime = 0.2f;
+	engineConfiguration->tpsAccelRateThreshold = 100;
 	Sensor::setMockValue(SensorType::Tps1, 0);
 	for (int i = 0; i < 4; i++) {
-		eth.moveTimeForwardMs(50);
-		engine->periodicSlowCallback();
+		eth.moveTimeForwardMs(5);
+		engine->periodicFastCallback();
 	}
+	engine->periodicSlowCallback();
 	ASSERT_FALSE(getBurst().isBurstKnockActive);
 
 	// Use the engine dispatch path: feeding AE by hand would hide callback-order bugs.
-	Sensor::setMockValue(SensorType::Tps1, 20);
-	eth.moveTimeForwardMs(50);
+	Sensor::setMockValue(SensorType::Tps1, 3);
+	eth.moveTimeForwardMs(5);
+	engine->periodicFastCallback();
+	Sensor::setMockValue(SensorType::Tps1, 3);
+	eth.moveTimeForwardMs(5);
+	engine->periodicFastCallback();
 	engine->periodicSlowCallback();
 	EXPECT_TRUE(getBurst().isBurstKnockActive);
-	EXPECT_FLOAT_EQ(getAe().deltaTps, 20);
-	EXPECT_NEAR(getBurst().burstKnockTpsRate, 100, 0.001f);
+	EXPECT_FLOAT_EQ(getAe().deltaTps, 3);
+	EXPECT_NEAR(getBurst().burstKnockTpsRate, 300, 0.01f);
 	EXPECT_FLOAT_EQ(getBurst().getTimingRetard(), 10);
 
-	// Age the jump out through the same dispatch path, then observe decay.
-	for (int i = 0; i < 4; i++) {
-		eth.moveTimeForwardMs(50);
-		engine->periodicSlowCallback();
+	// The event ends through the same dispatch path, then retard decays.
+	for (int i = 0; i < 42; i++) {
+		eth.moveTimeForwardMs(5);
+		engine->periodicFastCallback();
 	}
 	ASSERT_FALSE(getAe().isAboveAccelThreshold);
+	engine->periodicSlowCallback();
 	const float retard = getBurst().getTimingRetard();
 	ASSERT_GT(retard, 0);
 	ASSERT_LT(retard, 10);
