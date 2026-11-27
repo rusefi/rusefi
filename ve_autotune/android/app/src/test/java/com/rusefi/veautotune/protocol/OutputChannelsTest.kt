@@ -1,6 +1,7 @@
 package com.rusefi.veautotune.protocol
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThrows
 import org.junit.Test
 
 class OutputChannelsTest {
@@ -41,5 +42,17 @@ class OutputChannelsTest {
         // If offset 22 were decoded as unsigned, -1234 (raw 0xFB2E = 64302)
         // would wrongly read back as 643.02 instead of -12.34.
         assertEquals(-12.34, c.tps, 0.01)
+    }
+
+    @Test
+    fun `decodeChannels throws BadResponse on a too-short payload instead of IndexOutOfBoundsException`() {
+        // AFR needs bytes 210-211, so a 50-byte payload is far too short.
+        // Without the guard this would throw an uncaught
+        // IndexOutOfBoundsException instead of a handleable BadResponse.
+        val tooShort = ByteArray(50)
+
+        assertThrows(BadResponse::class.java) {
+            decodeChannels(tooShort)
+        }
     }
 }

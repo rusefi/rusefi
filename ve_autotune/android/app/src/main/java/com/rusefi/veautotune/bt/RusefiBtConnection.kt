@@ -1,5 +1,6 @@
 package com.rusefi.veautotune.bt
 
+import com.rusefi.veautotune.protocol.BadResponse
 import com.rusefi.veautotune.protocol.Channels
 import com.rusefi.veautotune.protocol.buildOutputChannelRequest
 import com.rusefi.veautotune.protocol.decodeChannels
@@ -8,6 +9,16 @@ import com.rusefi.veautotune.protocol.parseResponse
 /** Number of output-channel bytes requested, per the SDD plan's Global Constraints. */
 private const val OUTPUT_CHANNELS_OFFSET = 0
 private const val OUTPUT_CHANNELS_COUNT = 214
+
+/**
+ * Expected length of the inner response body: 1 status byte +
+ * [OUTPUT_CHANNELS_COUNT] channel bytes. A response whose declared length
+ * prefix is anything else is untrustworthy -- reading exactly that many
+ * bytes could otherwise block forever if the length was corrupted in
+ * transit and the ECU never sends that many (it only replies once per
+ * request).
+ */
+private const val EXPECTED_INNER_LENGTH = 1 + OUTPUT_CHANNELS_COUNT
 
 /**
  * Thin seam over the raw byte stream so this class is testable without a
@@ -36,6 +47,14 @@ class RusefiBtConnection(private val transport: ByteTransport) {
 
         val lengthPrefix = transport.readFully(2)
         val innerLength = ((lengthPrefix[0].toInt() and 0xFF) shl 8) or (lengthPrefix[1].toInt() and 0xFF)
+        if (innerLength != EXPECTED_INNER_LENGTH) {
+            // Don't trust a corrupted length prefix enough to call
+            // readFully(innerLength) with it -- that could block forever
+            // waiting for bytes the ECU will never send. Fail fast and
+            // loudly instead, as an ordinary BadResponse the polling loop
+            // already knows how to skip-and-retry.
+            throw BadResponse("Unexpected frame length: $innerLength (expected $EXPECTED_INNER_LENGTH)")
+        }
         val inner = transport.readFully(innerLength)
         val crc = transport.readFully(4)
 

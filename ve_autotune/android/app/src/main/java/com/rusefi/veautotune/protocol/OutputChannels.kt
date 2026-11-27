@@ -33,6 +33,18 @@ private fun readS16(payload: ByteArray, offset: Int): Int =
  *  - afr: U16 @ 210, scale 0.001 (already the ECU's computed AFR)
  */
 fun decodeChannels(payload: ByteArray): Channels {
+    // Guard against an undersized payload before reading any field -- the
+    // highest byte offset used below is 210 (AFR's U16 read needs bytes
+    // 210-211), so anything shorter than 212 bytes would otherwise throw
+    // an uncaught IndexOutOfBoundsException instead of a handleable
+    // BadResponse. With the caller (RusefiBtConnection) now pre-validating
+    // the wire length to exactly 215 bytes (1 status + 214 channel bytes),
+    // this should be unreachable via that path -- this is defense-in-depth
+    // for decodeChannels being a public function other callers could use
+    // directly.
+    if (payload.size < 212) {
+        throw BadResponse("Channel payload too short: ${payload.size} bytes")
+    }
     // RPMValue: U16 offset 4, scale 1.0 (425490096.ini:3336 "RPMValue = scalar, U16, 4, \"RPM\", 1, 0")
     val rpm = readU16(payload, 4) * 1.0
     // MAPValue: U16 offset 30, scale 0.03333333333333333 (425490096.ini:3349 "MAPValue = scalar, U16, 30, \"kPa\", 0.03333333333333333, 0")

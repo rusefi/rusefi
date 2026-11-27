@@ -1,7 +1,9 @@
 package com.rusefi.veautotune.bt
 
+import com.rusefi.veautotune.protocol.BadResponse
 import com.rusefi.veautotune.protocol.crc32
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThrows
 import org.junit.Test
 
 private const val CHANNEL_BUFFER_SIZE = 214
@@ -60,5 +62,20 @@ class RusefiBtConnectionTest {
 
         assertEquals(1500.0, channels.rpm, 0.001)
         assertEquals(1, transport.written.size)
+    }
+
+    @Test
+    fun `readChannels throws BadResponse on a bogus length prefix instead of hanging`() {
+        // A corrupted length prefix declaring 10 bytes instead of the
+        // expected 215 (1 status + 214 channel bytes). The bytes after the
+        // length prefix don't matter -- readChannels must reject the
+        // length before ever calling readFully(innerLength) with it, so a
+        // short/garbage tail here must not make it hang or decode garbage.
+        val bogusLengthPrefix = byteArrayOf(0x00, 0x0A)
+        val transport = FakeTransport(bogusLengthPrefix + ByteArray(10))
+
+        assertThrows(BadResponse::class.java) {
+            RusefiBtConnection(transport).readChannels()
+        }
     }
 }
