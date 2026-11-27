@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- API 31+ (Android 12+): runtime-requested, no location permission implied -->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
+    <!-- Legacy (API <=30): BLUETOOTH/BLUETOOTH_ADMIN cover connect+scan pre-S -->
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
+
+    <application
+        android:allowBackup="true"
+        android:label="VE Autotune Recorder"
+        android:theme="@style/Theme.AppCompat.DayNight">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
