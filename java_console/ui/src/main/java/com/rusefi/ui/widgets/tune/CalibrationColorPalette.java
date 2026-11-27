@@ -53,6 +53,20 @@ final class CalibrationColorPalette {
         return themed("Console.Calibration.axisForeground", 0x3D444D);
     }
 
+    /**
+     * A change preview cell: the increase or decrease colour beyond the threshold, else the scale's
+     * middle colour, so an unchanged cell looks like an ordinary middle value.
+     */
+    static Color change(double delta, double threshold) {
+        if (delta > threshold) {
+            return themed("Console.Calibration.increase", 0xBFE6CB);
+        }
+        if (delta < -threshold) {
+            return themed("Console.Calibration.decrease", 0xF4C4C4);
+        }
+        return middle();
+    }
+
     /** Outline of the selected block, also mixed into its cells and the active axis values. */
     static Color selection() {
         return themed("Console.Calibration.selection", 0x2563EB);
