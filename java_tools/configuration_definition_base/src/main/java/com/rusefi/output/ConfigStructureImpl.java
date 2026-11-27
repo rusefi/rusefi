@@ -69,7 +69,7 @@ public class ConfigStructureImpl implements ConfigStructure {
                 state,
                 original.getName(),
                 substitutedComment,
-                original.getArraySizeVariableName(),
+                original.getArraySizeSpecification(),
                 original.getTypeName(),
                 original.getArraySizes(),
                 substitutedTsInfo,
