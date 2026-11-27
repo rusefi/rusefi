@@ -5,6 +5,7 @@ import pytest
 from ve_autotune.pipeline.correction import (
     MAX_LEAN_PCT,
     MAX_RICH_PCT,
+    MIN_SAMPLES,
     compute_corrections,
 )
 
@@ -40,6 +41,27 @@ def test_cell_without_enough_samples_is_unchanged():
 
 def test_lean_cap_is_never_looser_than_rich_cap():
     assert MAX_LEAN_PCT <= MAX_RICH_PCT
+
+
+def test_cell_with_measured_richer_than_target_is_leaned_and_capped():
+    ve = [[80.0]]  # measured richer than target -> wants to lean out, capped at MAX_LEAN_PCT
+    lam = [[13.0]]
+    snap = _snapshot(ve, lam, [3000])
+    samples = {(0, 0): [11.0] * 25}  # 11.0/13.0 - 1 ~= -15.4% -> clamped to -MAX_LEAN_PCT
+    r = compute_corrections(samples, snap)[0]
+    assert r.status == "corrected"
+    assert r.delta_pct == pytest.approx(-MAX_LEAN_PCT)
+    assert r.new_ve == pytest.approx(80.0 * (1 - MAX_LEAN_PCT / 100))
+
+
+def test_sample_count_exactly_at_min_samples_is_corrected():
+    ve = [[80.0]]
+    lam = [[13.0]]
+    snap = _snapshot(ve, lam, [3000])
+    samples = {(0, 0): [13.0] * MIN_SAMPLES}
+    r = compute_corrections(samples, snap)[0]
+    assert r.sample_count == MIN_SAMPLES
+    assert r.status == "corrected"
 
 
 def test_not_enough_data_still_reports_real_target_afr():
