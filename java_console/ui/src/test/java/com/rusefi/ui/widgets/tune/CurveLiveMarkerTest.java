@@ -81,12 +81,13 @@ public class CurveLiveMarkerTest {
             CurveWidget widget = widget(ini, "fanCurve", image);
             CurveWidget.CurveCanvas canvas = (CurveWidget.CurveCanvas) widget.getContentPane().getComponent(0);
             canvas.setSize(470, 360);
-            assertFalse(hasColor(render(canvas), Color.CYAN));
             // Halfway between 80 C (20 %) and 90 C (60 %): the dot is on the curve at 40 %.
+            Point dot = canvas.worldToCanvas(85, 40);
+            assertNotEquals(CurveWidget.LIVE_POINT_COLOR.getRGB(), render(canvas).getRGB(dot.x, dot.y),
+                "without data the curve line runs through that spot");
             widget.liveFeedForUnitTest().setValues(85);
             BufferedImage rendered = render(canvas);
-            Point dot = canvas.worldToCanvas(85, 40);
-            assertEquals(Color.CYAN.getRGB(), rendered.getRGB(dot.x, dot.y));
+            assertEquals(CurveWidget.LIVE_POINT_COLOR.getRGB(), rendered.getRGB(dot.x, dot.y));
         });
     }
 

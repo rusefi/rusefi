@@ -52,26 +52,28 @@ class Surface3DViewTest {
         surface.setData(new Double[][]{{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}},
             new Double[]{1000.0, 2000.0, 3000.0}, new Double[]{40.0, 120.0}, 0, 100);
         Color unselected = CalibrationColorPalette.background(0, 0, 100);
+        // Lit facets keep their value colour under the selection tint, as in tables.
+        Color lit = CalibrationColorPalette.selected(unselected);
 
         // The middle column's first cell is a corner of both facets.
         surface.setSelection(new boolean[][]{{false, true, false}, {false, false, false}});
         BufferedImage image = render(surface);
-        assertEquals(Color.ORANGE, color(image, -0.25, 0.1, -0.5), "Left facet sharing the cell");
-        assertEquals(Color.ORANGE, color(image, 0.25, 0.1, -0.5), "Right facet sharing the cell");
-        assertEquals(Surface3DView.SELECTED_POINT_COLOR, color(image, 0, -0.5, -0.5), "The cell's own point is marked");
+        assertEquals(lit, color(image, -0.25, 0.1, -0.5), "Left facet sharing the cell");
+        assertEquals(lit, color(image, 0.25, 0.1, -0.5), "Right facet sharing the cell");
+        assertEquals(Surface3DView.selectedPointColor(), color(image, 0, -0.5, -0.5), "The cell's own point is marked");
 
         // A corner cell belongs to one facet only.
         surface.setSelection(new boolean[][]{{false, false, false}, {false, false, true}});
         image = render(surface);
         assertEquals(unselected, color(image, -0.25, 0.1, -0.5), "Facet not touching the cell");
-        assertEquals(Color.ORANGE, color(image, 0.25, 0.1, -0.5));
-        assertEquals(Surface3DView.SELECTED_POINT_COLOR, color(image, 0.5, 0.5, -0.5));
+        assertEquals(lit, color(image, 0.25, 0.1, -0.5));
+        assertEquals(Surface3DView.selectedPointColor(), color(image, 0.5, 0.5, -0.5));
 
         surface.setSelection(null);
         assertFalse(surface.isSelected(1, 2));
         image = render(surface);
         assertEquals(unselected, color(image, 0.25, 0.1, -0.5));
-        assertNotEquals(Surface3DView.SELECTED_POINT_COLOR, color(image, 0.5, 0.5, -0.5));
+        assertNotEquals(Surface3DView.selectedPointColor(), color(image, 0.5, 0.5, -0.5));
     }
 
     @Test

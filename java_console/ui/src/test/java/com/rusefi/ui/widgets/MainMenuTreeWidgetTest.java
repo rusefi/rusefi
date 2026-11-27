@@ -961,7 +961,7 @@ todo: spllit into smaller tests?
                 realG2.drawString(str, x, y);
             }
             @Override public void drawLine(int x1, int y1, int x2, int y2) {
-                if (new Color(200, 200, 200, 100).equals(this.color)) {
+                if (com.rusefi.ui.widgets.tune.CurveWidget.gridColor().equals(this.color)) {
                     if (x1 == x2) {
                         verticalLines[0]++;
                         xPositions.add(x1);

@@ -104,6 +104,10 @@ replacement snapshot, so the same baseline works across platforms.
 Hard-coded `Color` values in `ui/src/main/java` are counted by `HardcodedColorRatchetTest`
 (`[tag:fixed_color]`): take colours from the theme, or mark one that must look the same in every
 theme with that tag and a reason; lower `hardcoded-colors-baseline.txt` when removing them.
+The value colour scale of tables, curves and 3D views (`CalibrationColorPalette`) comes from the
+`Console.Calibration.low/middle/high` theme keys: light cells in the light theme, dark cells in the dark
+theme, the same cool-to-warm hue order in both. Each scale keeps one text colour across all its cells;
+the live-point marker drawn over it stays `[tag:fixed_color]`. The table's axis values and selection use `Console.Calibration.axisBackground/axisForeground/selection`; a selected cell keeps its value colour under a tint, with an outline only on the block's outer edges (`CalibrationColorPalette.selectionEdges`, shared with curve cells); 3D facets and selected curve points use the same selection colour. The curve plot is themed (`Console.Tuning.curve.*`, background `Console.Tuning.surface.background`), not a black scope. While a curve is edited its plot scale only grows (`CurveWidget.growAxis`); a tight refit after each edit made the unedited points jump. A dragged point keeps its grab offset. The table has 2 px intercell gaps and no grid lines (re-applied in `updateUI`), and `changeSelection` scrolls to the cell including its gap.
 Colours inside images are invisible to that test: load the `icons/tuning/*48.png` icons through
 `TuningIcons.load`, which lightens them in the dark theme (`TuningIconsTest` checks their contrast).
 Java's logical `Font.MONOSPACED` renders as Courier New on Windows; use `ConsoleFonts.mono()` for
