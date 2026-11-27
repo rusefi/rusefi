@@ -45,6 +45,16 @@ def compute_corrections(
             samples = cell_samples.get((row, col), [])
             sample_count = len(samples)
 
+            # The lambda-table lookup depends only on the cell's (row, col)
+            # position, not on whether enough samples exist, so compute the
+            # real target_afr unconditionally.
+            rpm = snapshot.ve_rpm_bins[col]
+            map_kpa = snapshot.ve_load_bins[row]
+            lam_row, lam_col = nearest_cell(
+                rpm, map_kpa, snapshot.lambda_rpm_bins, snapshot.lambda_load_bins
+            )
+            target_afr = snapshot.lambda_table[lam_row][lam_col]
+
             if sample_count < MIN_SAMPLES:
                 results.append(
                     CellResult(
@@ -55,20 +65,13 @@ def compute_corrections(
                         delta_pct=0.0,
                         sample_count=sample_count,
                         measured_afr=0.0,
-                        target_afr=0.0,
+                        target_afr=target_afr,
                         status="not_enough_data",
                     )
                 )
                 continue
 
             measured_afr = sum(samples) / sample_count
-
-            rpm = snapshot.ve_rpm_bins[col]
-            map_kpa = snapshot.ve_load_bins[row]
-            lam_row, lam_col = nearest_cell(
-                rpm, map_kpa, snapshot.lambda_rpm_bins, snapshot.lambda_load_bins
-            )
-            target_afr = snapshot.lambda_table[lam_row][lam_col]
 
             raw_delta_pct = (measured_afr / target_afr - 1) * 100
             delta_pct = max(-MAX_LEAN_PCT, min(MAX_RICH_PCT, raw_delta_pct))
