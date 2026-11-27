@@ -30,6 +30,8 @@ std::optional<setup_custom_bool_type> custom_board_qcForcePadMode;
 #define TRUNCATE_TO_BYTE(i) ((i) & 0xff)
 // raw values are 0..5V, convert it to 8-bit (0..255)
 #define RAW_TO_BYTE(v) TRUNCATE_TO_BYTE((int)(v * 255.0 / 5.0))
+// barometric pressure in RAW_LUA_ANALOG_2: 50 kPa per "volt", about 1 kPa per bit, 250 kPa full scale
+#define QC_BARO_KPA_PER_VOLT 50.0f
 
 #if EFI_PROD_CODE
 /**
@@ -205,9 +207,16 @@ void sendQcBenchRawAnalogValues(size_t bus) {
 		Sensor::getRaw(SensorType::AuxAnalog7),
 		Sensor::getRaw(SensorType::AuxAnalog8),
 	};
+	// Digital sensors have no raw voltage: publish the converted value scaled into the
+	// same 0..5 "volts" byte encoding, the tester multiplies it back using mulCoef.
+	// Missing or failed sensor reads as zero.
+	const float lua_values_2[] = {
+		Sensor::get(SensorType::BarometricPressure).value_or(0) / QC_BARO_KPA_PER_VOLT,
+	};
 	static_assert(efi::size(values_1) <= 8);
 	static_assert(efi::size(values_2) <= 8);
 	static_assert(efi::size(lua_values_1) <= 8);
+	static_assert(efi::size(lua_values_2) <= 8);
 
 
 	// send the first packet
@@ -228,6 +237,12 @@ void sendQcBenchRawAnalogValues(size_t bus) {
 		CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::RAW_LUA_ANALOG_1, 8, bus, /*isExtended*/true);
 		for (size_t valueIdx = 0; valueIdx < efi::size(lua_values_1); valueIdx++) {
 			msg[valueIdx] = RAW_TO_BYTE(lua_values_1[valueIdx]);
+		}
+	}
+	{
+		CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::RAW_LUA_ANALOG_2, 8, bus, /*isExtended*/true);
+		for (size_t valueIdx = 0; valueIdx < efi::size(lua_values_2); valueIdx++) {
+			msg[valueIdx] = RAW_TO_BYTE(lua_values_2[valueIdx]);
 		}
 	}
 }

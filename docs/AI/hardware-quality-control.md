@@ -190,7 +190,8 @@ Any valid `HW_QC_IO_CONTROL` (0x770002) frame calls `setHwQcMode()`:
 digital inputs by counting stimulus edges), `BUTTON_COUNTERS` (brake/clutch/AC switch
 counters), `AUX_DIGITAL_COUNTERS` (Lua digital inputs), `RAW_ANALOG_1`/`RAW_ANALOG_2`/
 `RAW_LUA_ANALOG_1` (raw 0-5V sensor voltages packed one byte per channel - TPS, PPS, MAP,
-CLT, IAT, VBatt, aux analogs...), `BOARD_STATUS` (Hellen board ID, uptime, engine type),
+CLT, IAT, VBatt, aux analogs...), `RAW_LUA_ANALOG_2` (byte 0: barometric pressure in kPa
+divided by 50, same byte encoding; zero when the sensor is missing or failed), `BOARD_STATUS` (Hellen board ID, uptime, engine type),
 `IO_META_INFO`, `MANUAL_PIN_TEST` (echo for `qc_output`).
 
 ### User control over CAN (`processCanEcuControl`, non-QC)
