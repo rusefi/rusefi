@@ -40,6 +40,16 @@ import java.util.Date
 import java.util.Locale
 
 /**
+ * How many consecutive [BadResponse] failures (CRC mismatch or non-OK
+ * status -- ordinary Bluetooth bit noise over a long ride) are tolerated
+ * before the recording session is ended as a connection error. Generous
+ * enough that transient BT noise doesn't trip it, small enough that a
+ * truly dead link still ends the session in a few seconds at the 1Hz poll
+ * rate (5 seconds at the current poll interval).
+ */
+private const val MAX_CONSECUTIVE_BAD_FRAMES = 5
+
+/**
  * Device picker, Start/Stop control, and a once-per-second polling loop that
  * reads the ECU's output channels over Bluetooth and appends them to a CSV
  * file on external storage.
@@ -168,10 +178,29 @@ class MainActivity : AppCompatActivity() {
             try {
                 val socket = withContext(Dispatchers.IO) {
                     val s = device.createRfcommSocketToServiceRecord(RusefiSpp.UUID)
-                    s.connect()
+                    // Publish to activeSocket BEFORE the blocking connect() call so
+                    // that if Stop fires (or the Activity is destroyed) while
+                    // connect() is still in flight, stopRecording()'s
+                    // activeSocket?.close() can reach this socket and interrupt
+                    // the connection attempt instead of it completing unobserved
+                    // and leaking an RFCOMM connection to the BT module.
+                    activeSocket = s
+                    try {
+                        s.connect()
+                    } catch (e: Throwable) {
+                        // connect() failed or was interrupted by a concurrent
+                        // close()/cancellation -- make sure the socket doesn't
+                        // end up connected-but-abandoned in either direction.
+                        try {
+                            s.close()
+                        } catch (closeException: IOException) {
+                            // Already failing; nothing more to do with this.
+                        }
+                        activeSocket = null
+                        throw e
+                    }
                     s
                 }
-                activeSocket = socket
 
                 val connection = RusefiBtConnection(SocketTransport(socket))
 
@@ -187,15 +216,32 @@ class MainActivity : AppCompatActivity() {
                 statusView.text = "Recording to ${file.name}..."
 
                 val startNanos = System.nanoTime()
+                var consecutiveBadFrames = 0
                 while (isActive) {
-                    val channels = withContext(Dispatchers.IO) { connection.readChannels() }
+                    val channels = try {
+                        withContext(Dispatchers.IO) { connection.readChannels() }
+                    } catch (e: BadResponse) {
+                        // Ordinary BT bit noise (CRC mismatch or non-OK status) --
+                        // drop this one row and retry rather than ending the
+                        // whole ride on the first bad frame. Only a run of
+                        // MAX_CONSECUTIVE_BAD_FRAMES in a row means the link is
+                        // actually dead.
+                        consecutiveBadFrames++
+                        if (consecutiveBadFrames >= MAX_CONSECUTIVE_BAD_FRAMES) {
+                            errorReason = "bad response from ECU: ${e.message}"
+                            break
+                        }
+                        statusView.text =
+                            "Recording... bad frame, retrying... ($consecutiveBadFrames/$MAX_CONSECUTIVE_BAD_FRAMES)"
+                        delay(1000)
+                        continue
+                    }
+                    consecutiveBadFrames = 0
                     val tSeconds = (System.nanoTime() - startNanos) / 1_000_000_000.0
                     logger.appendRow(tSeconds, channels)
                     statusView.text = "Recording... RPM = ${channels.rpm.toInt()}"
                     delay(1000)
                 }
-            } catch (e: BadResponse) {
-                errorReason = "bad response from ECU: ${e.message}"
             } catch (e: IOException) {
                 if (!userRequestedStop) {
                     errorReason = "Bluetooth I/O error: ${e.message}"
