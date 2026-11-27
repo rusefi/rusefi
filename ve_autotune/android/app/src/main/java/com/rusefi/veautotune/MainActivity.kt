@@ -4,11 +4,14 @@ import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
-import android.bluetooth.BluetoothSocket
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.IBinder
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.LinearLayout
@@ -17,49 +20,23 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.rusefi.veautotune.bt.RusefiBtConnection
-import com.rusefi.veautotune.bt.RusefiSpp
-import com.rusefi.veautotune.bt.SocketTransport
-import com.rusefi.veautotune.logger.CsvLogger
-import com.rusefi.veautotune.protocol.BadResponse
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.BufferedWriter
 import java.io.File
-import java.io.FileWriter
-import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 /**
- * How many consecutive [BadResponse] failures (CRC mismatch or non-OK
- * status -- ordinary Bluetooth bit noise over a long ride) are tolerated
- * before the recording session is ended as a connection error. Generous
- * enough that transient BT noise doesn't trip it, small enough that a
- * truly dead link still ends the session in a few seconds at the 1Hz poll
- * rate (5 seconds at the current poll interval).
- */
-private const val MAX_CONSECUTIVE_BAD_FRAMES = 5
-
-/**
- * Device picker, Start/Stop control, and a once-per-second polling loop that
- * reads the ECU's output channels over Bluetooth and appends them to a CSV
- * file on external storage.
+ * Device picker, Start/Stop control, and a status display.
  *
- * Global Constraint: this class never builds or sends any ECU command
- * itself -- it only ever calls [RusefiBtConnection.readChannels], which is
- * the sole place in the app allowed to build the output-channel read
- * request (see [com.rusefi.veautotune.protocol.buildOutputChannelRequest]).
+ * As of the foreground-service follow-up, this Activity owns no Bluetooth
+ * connection, polling loop, or [com.rusefi.veautotune.logger.CsvLogger]
+ * itself any more -- all of that moved into [RecordingService], a proper
+ * foreground service, so a long ride survives this Activity going to the
+ * background (screen off, app switched away, or the OS reclaiming it under
+ * memory pressure). This class only binds to that service, tells it to
+ * start/stop, and reflects its status back into the UI.
+ *
+ * Global Constraint: unchanged -- still enforced inside RecordingService /
+ * RusefiBtConnection, not here. This fix does not touch the protocol layer.
  */
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), RecordingService.Listener {
 
     private val bluetoothAdapter: BluetoothAdapter? by lazy {
         (getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager)?.adapter
@@ -72,14 +49,35 @@ class MainActivity : AppCompatActivity() {
     /** Snapshot of bonded devices backing [deviceSpinner]'s selection. */
     private var devices: List<BluetoothDevice> = emptyList()
 
-    private var isRecording = false
-    private var userRequestedStop = false
+    private var boundService: RecordingService? = null
+    private var isBound = false
 
-    private var activeSocket: BluetoothSocket? = null
-    private var activeWriter: BufferedWriter? = null
-    private var pollingJob: Job? = null
+    /** Device to start recording with once the service connection completes,
+     * for the (rare) case where Start is tapped before onServiceConnected
+     * has run. */
+    private var pendingStartDevice: BluetoothDevice? = null
 
-    private val mainScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
+            val service = (binder as RecordingService.RecordingBinder).getService()
+            boundService = service
+            isBound = true
+            service.listener = this@MainActivity
+            if (service.isRecording) {
+                startStopButton.text = "Stop"
+            }
+            pendingStartDevice?.let { device ->
+                pendingStartDevice = null
+                service.startRecording(device)
+            }
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            boundService?.listener = null
+            boundService = null
+            isBound = false
+        }
+    }
 
     private val requestBluetoothPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
@@ -90,6 +88,12 @@ class MainActivity : AppCompatActivity() {
                 statusView.text = "Bluetooth permission denied; cannot connect."
             }
         }
+
+    // Best-effort: on API 33+ this is required for the recording
+    // notification to actually show, but the foreground service still runs
+    // fine without it, so a denial here is not fatal.
+    private val requestNotificationPermission =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,7 +114,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(root)
 
         startStopButton.setOnClickListener {
-            if (isRecording) {
+            if (boundService?.isRecording == true) {
                 stopRecording()
             } else {
                 onStartClicked()
@@ -120,12 +124,35 @@ class MainActivity : AppCompatActivity() {
         if (hasBluetoothConnectPermission()) {
             refreshDeviceList()
         }
+        maybeRequestNotificationPermission()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        mainScope.cancel()
-        closeResources()
+    override fun onStart() {
+        super.onStart()
+        bindService(Intent(this, RecordingService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        boundService?.listener = null
+        if (isBound) {
+            unbindService(serviceConnection)
+            isBound = false
+        }
+        // boundService itself is intentionally left set to null only via
+        // onServiceDisconnected/unbind bookkeeping below -- a running
+        // recording keeps going in RecordingService regardless, since it
+        // was started with startForegroundService, not just bound.
+        boundService = null
+    }
+
+    private fun maybeRequestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) !=
+            PackageManager.PERMISSION_GRANTED
+        ) {
+            requestNotificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
     }
 
     private fun hasBluetoothConnectPermission(): Boolean {
@@ -167,127 +194,39 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        userRequestedStop = false
-        isRecording = true
         startStopButton.text = "Stop"
         statusView.text = "Connecting to ${safeDeviceLabel(device)}..."
 
-        pollingJob = mainScope.launch {
-            var outputFile: File? = null
-            var errorReason: String? = null
-            try {
-                val socket = withContext(Dispatchers.IO) {
-                    val s = device.createRfcommSocketToServiceRecord(RusefiSpp.UUID)
-                    // Publish to activeSocket BEFORE the blocking connect() call so
-                    // that if Stop fires (or the Activity is destroyed) while
-                    // connect() is still in flight, stopRecording()'s
-                    // activeSocket?.close() can reach this socket and interrupt
-                    // the connection attempt instead of it completing unobserved
-                    // and leaking an RFCOMM connection to the BT module.
-                    activeSocket = s
-                    try {
-                        s.connect()
-                    } catch (e: Throwable) {
-                        // connect() failed or was interrupted by a concurrent
-                        // close()/cancellation -- make sure the socket doesn't
-                        // end up connected-but-abandoned in either direction.
-                        try {
-                            s.close()
-                        } catch (closeException: IOException) {
-                            // Already failing; nothing more to do with this.
-                        }
-                        activeSocket = null
-                        throw e
-                    }
-                    s
-                }
+        val intent = Intent(this, RecordingService::class.java)
+        ContextCompat.startForegroundService(this, intent)
 
-                val connection = RusefiBtConnection(SocketTransport(socket))
-
-                val timestamp = SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US).format(Date())
-                val file = File(getExternalFilesDir(null), "ride_$timestamp.csv")
-                val writer = BufferedWriter(FileWriter(file))
-                activeWriter = writer
-                outputFile = file
-
-                val logger = CsvLogger(writer)
-                logger.writeHeader()
-
-                statusView.text = "Recording to ${file.name}..."
-
-                val startNanos = System.nanoTime()
-                var consecutiveBadFrames = 0
-                while (isActive) {
-                    val channels = try {
-                        withContext(Dispatchers.IO) { connection.readChannels() }
-                    } catch (e: BadResponse) {
-                        // Ordinary BT bit noise (CRC mismatch or non-OK status) --
-                        // drop this one row and retry rather than ending the
-                        // whole ride on the first bad frame. Only a run of
-                        // MAX_CONSECUTIVE_BAD_FRAMES in a row means the link is
-                        // actually dead.
-                        consecutiveBadFrames++
-                        if (consecutiveBadFrames >= MAX_CONSECUTIVE_BAD_FRAMES) {
-                            errorReason = "bad response from ECU: ${e.message}"
-                            break
-                        }
-                        statusView.text =
-                            "Recording... bad frame, retrying... ($consecutiveBadFrames/$MAX_CONSECUTIVE_BAD_FRAMES)"
-                        delay(1000)
-                        continue
-                    }
-                    consecutiveBadFrames = 0
-                    val tSeconds = (System.nanoTime() - startNanos) / 1_000_000_000.0
-                    logger.appendRow(tSeconds, channels)
-                    statusView.text = "Recording... RPM = ${channels.rpm.toInt()}"
-                    delay(1000)
-                }
-            } catch (e: IOException) {
-                if (!userRequestedStop) {
-                    errorReason = "Bluetooth I/O error: ${e.message}"
-                }
-            } catch (e: SecurityException) {
-                errorReason = "Bluetooth permission error: ${e.message}"
-            } finally {
-                closeResources()
-                isRecording = false
-                startStopButton.text = "Start"
-                statusView.text = buildFinalStatus(errorReason, outputFile)
+        val service = boundService
+        if (service != null) {
+            service.startRecording(device)
+        } else {
+            // Not bound yet -- onServiceConnected (triggered by onStart's
+            // bindService, or the bind below if that hasn't happened yet
+            // for some reason) will start the recording once it fires.
+            pendingStartDevice = device
+            if (!isBound) {
+                bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
             }
         }
     }
 
     private fun stopRecording() {
-        userRequestedStop = true
-        pollingJob?.cancel()
-        // Closing the socket breaks any in-flight blocking read, so the
-        // polling coroutine's IOException branch runs promptly instead of
-        // waiting indefinitely on the next scheduled poll.
-        try {
-            activeSocket?.close()
-        } catch (e: IOException) {
-            // Already stopping; nothing more to do with this.
-        }
+        boundService?.stopRecording()
     }
 
-    private fun closeResources() {
-        try {
-            activeWriter?.flush()
-        } catch (e: IOException) {
-            // Best effort -- we're tearing down regardless.
+    override fun onStatusUpdate(status: String) {
+        runOnUiThread { statusView.text = status }
+    }
+
+    override fun onRecordingStopped(errorReason: String?, outputFile: File?) {
+        runOnUiThread {
+            startStopButton.text = "Start"
+            statusView.text = buildFinalStatus(errorReason, outputFile)
         }
-        try {
-            activeWriter?.close()
-        } catch (e: IOException) {
-            // Best effort -- we're tearing down regardless.
-        }
-        try {
-            activeSocket?.close()
-        } catch (e: IOException) {
-            // Best effort -- we're tearing down regardless.
-        }
-        activeWriter = null
-        activeSocket = null
     }
 
     private fun buildFinalStatus(errorReason: String?, outputFile: File?): String {

@@ -8,6 +8,15 @@
     <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
 
+    <!-- RecordingService: a foreground service of type connectedDevice while
+         a ride is being recorded. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
+    <!-- Needed at runtime on API 33+ to actually display the ongoing
+         recording notification; the foreground service still runs without
+         it, see MainActivity.maybeRequestNotificationPermission. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:allowBackup="true"
         android:label="VE Autotune Recorder"
@@ -20,6 +29,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- API 29+ (Android 10+): foregroundServiceType attribute; ignored
+             on API 26 through 28, where a plain startForeground() (no type)
+             is used instead; see RecordingService.startForegroundNotification. -->
+        <service
+            android:name=".RecordingService"
+            android:exported="false"
+            android:foregroundServiceType="connectedDevice" />
     </application>
 
 </manifest>
