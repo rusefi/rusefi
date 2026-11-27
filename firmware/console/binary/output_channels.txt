@@ -487,4 +487,52 @@ set_prefix "RAW"
 	int16_t autoscale rawAuxTemp2;"AUX Temp 2";"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	int16_t[LUA_ANALOG_INPUT_COUNT iterate] autoscale rawAnalogInput;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	uint8_t rawFlexFreq
+
+! [tag:sensor_gauge_validity] Append to preserve existing output channel offsets.
+set_prefix "Valid"
+bit isAcPressureValid;AcPressure
+bit isAcceleratorPedalValid;AcceleratorPedal
+bit isAmbientTemperatureValid;AmbientTemperature
+bit isBarometricPressureValid;BarometricPressure
+bit isBatteryVoltageValid;BatteryVoltage
+bit isCompressorDischargePressureValid;CompressorDischargePressure
+bit isCompressorDischargeTemperatureValid;Compressor discharge temp
+bit isEGT1Valid;EGT1
+bit isEGT2Valid;EGT2
+bit isEGT3Valid;EGT3
+bit isEGT4Valid;EGT4
+bit isEGT5Valid;EGT5
+bit isEGT6Valid;EGT6
+bit isEGT7Valid;EGT7
+bit isEGT8Valid;EGT8
+bit isFuelEthanolPercentValid;FuelEthanolPercent
+bit isFuelLevelValid;FuelLevel
+bit isFuelPressureHighValid;FuelPressureHigh
+bit isFuelPressureLowValid;FuelPressureLow
+bit isFuelTemperatureValid;FuelTemperature
+bit isIdlePositionValid;IdlePosition
+bit isIgnKeyVoltageValid;IgnKeyVoltage
+bit isInputShaftSpeedValid;InputShaftSpeed
+bit isLambda1Valid;Lambda1
+bit isLambda2Valid;Lambda2
+bit isMafValid;Maf
+bit isMaf2Valid;Maf2
+bit isMapSensorValid;Map
+bit isOilPressureValid;OilPressure
+bit isOilTemperatureValid;OilTemperature
+bit isOutputShaftSpeedValid;OutputShaftSpeed
+bit isRpmValid;Rpm
+bit isSmoothedLambda1Valid;SmoothedLambda1
+bit isSmoothedLambda2Valid;SmoothedLambda2
+bit isThrottleInletPressureValid;ThrottleInletPressure
+bit isTps1Valid;Tps1
+bit isTps2Valid;Tps2
+bit isTurbochargerSpeedValid;TurbochargerSpeed
+bit isVehicleSpeedValid;VehicleSpeed
+bit isWastegatePositionValid;WastegatePosition
+bit isWheelSlipRatioValid;WheelSlipRatio
+bit isVvtB1IValid;VvtB1I
+bit isVvtB1EValid;VvtB1E
+bit isVvtB2IValid;VvtB2I
+bit isVvtB2EValid;VvtB2E
 end_struct

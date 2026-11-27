@@ -361,6 +361,8 @@ static uint8_t packTSEngineState() {
 	return state;
 }
 
+// [tag:sensor_gauge_validity] Publish validity alongside each sensor value.
+// Legacy optional-sensor error indicators retain their separate fault semantics.
 static void updateTempSensors() {
 	SensorResult clt = Sensor::get(SensorType::Clt);
 	engine->outputChannels.coolant = clt.value_or(0);
@@ -378,16 +380,20 @@ static void updateTempSensors() {
 
 	SensorResult oilTemp = Sensor::get(SensorType::OilTemperature);
 	engine->outputChannels.oilTemp = oilTemp.value_or(0);
+	engine->outputChannels.isOilTemperatureValid = oilTemp.Valid;
 
     // see also updateFuelSensors()
 	SensorResult fuelTemp = Sensor::get(SensorType::FuelTemperature);
 	engine->outputChannels.fuelTemp = fuelTemp.value_or(0);
+	engine->outputChannels.isFuelTemperatureValid = fuelTemp.Valid;
 
 	SensorResult ambientTemp = Sensor::get(SensorType::AmbientTemperature);
 	engine->outputChannels.ambientTemp = ambientTemp.value_or(0);
+	engine->outputChannels.isAmbientTemperatureValid = ambientTemp.Valid;
 
 	SensorResult compressorDischargeTemp = Sensor::get(SensorType::CompressorDischargeTemperature);
 	engine->outputChannels.compressorDischargeTemp = compressorDischargeTemp.value_or(0);
+	engine->outputChannels.isCompressorDischargeTemperatureValid = compressorDischargeTemp.Valid;
 }
 
 void updateUnfilteredRawPedal();
@@ -395,16 +401,19 @@ void updateUnfilteredRawPedal();
 static void updateThrottles() {
 	SensorResult tps1 = Sensor::get(SensorType::Tps1);
 	engine->outputChannels.TPSValue = tps1.value_or(0);
+	engine->outputChannels.isTps1Valid = tps1.Valid;
 	engine->outputChannels.isTpsError = Sensor::hasSensor(SensorType::Tps1) ? !tps1.Valid : false;
 	engine->outputChannels.tpsADC = convertVoltageTo10bitADC(Sensor::getRaw(SensorType::Tps1Primary));
 
 	SensorResult tps2 = Sensor::get(SensorType::Tps2);
 	engine->outputChannels.TPS2Value = tps2.value_or(0);
+	engine->outputChannels.isTps2Valid = tps2.Valid;
 	// If we don't have a TPS2 at all, don't turn on the failure light
 	engine->outputChannels.isTps2Error = Sensor::hasSensor(SensorType::Tps2Primary) ? !tps2.Valid : false;
 
 	SensorResult pedal = Sensor::get(SensorType::AcceleratorPedal);
 	engine->outputChannels.throttlePedalPosition = pedal.value_or(0);
+	engine->outputChannels.isAcceleratorPedalValid = pedal.Valid;
 	// Only report fail if you have one (many people don't)
 	engine->outputChannels.isPedalError = Sensor::hasSensor(SensorType::AcceleratorPedal) ? !pedal.Valid : false;
 
@@ -425,59 +434,101 @@ static void updateLambda() {
 #if EFI_ENGINE_CONTROL
 	float lambdaValue = Sensor::getOrDefault(SensorType::Lambda1, 0.5f / STOICH_RATIO, 0.0f / STOICH_RATIO, 30.5f / STOICH_RATIO);
 	engine->outputChannels.lambdaValue = lambdaValue;
+	engine->outputChannels.isLambda1Valid = Sensor::get(SensorType::Lambda1).Valid;
 	engine->outputChannels.AFRValue = lambdaValue * engine->fuelComputer.stoichiometricRatio;
 	// TODO: this can be calculated on PC side!
 	engine->outputChannels.afrGasolineScale = lambdaValue * STOICH_RATIO;
-	engine->outputChannels.SmoothedAFRValue = Sensor::getOrZero(SensorType::SmoothedLambda1) * engine->fuelComputer.stoichiometricRatio;
+	const auto smoothedLambda1 = Sensor::get(SensorType::SmoothedLambda1);
+	engine->outputChannels.SmoothedAFRValue = smoothedLambda1.value_or(0) * engine->fuelComputer.stoichiometricRatio;
+	engine->outputChannels.isSmoothedLambda1Valid = smoothedLambda1.Valid;
 
 	float lambda2Value = Sensor::getOrDefault(SensorType::Lambda2, 0.5f / STOICH_RATIO, 0.0f / STOICH_RATIO, 30.5f / STOICH_RATIO);
 	engine->outputChannels.lambdaValue2 = lambda2Value;
+	engine->outputChannels.isLambda2Valid = Sensor::get(SensorType::Lambda2).Valid;
 	engine->outputChannels.AFRValue2 = lambda2Value * engine->fuelComputer.stoichiometricRatio;
 	// TODO: this can be calculated on PC side!
 	engine->outputChannels.afr2GasolineScale = lambda2Value * STOICH_RATIO;
-	engine->outputChannels.SmoothedAFRValue2 = Sensor::getOrZero(SensorType::SmoothedLambda2) * engine->fuelComputer.stoichiometricRatio;
+	const auto smoothedLambda2 = Sensor::get(SensorType::SmoothedLambda2);
+	engine->outputChannels.SmoothedAFRValue2 = smoothedLambda2.value_or(0) * engine->fuelComputer.stoichiometricRatio;
+	engine->outputChannels.isSmoothedLambda2Valid = smoothedLambda2.Valid;
 #endif // EFI_ENGINE_CONTROL
 }
 
 static void updateFuelSensors() {
 	// Low pressure is directly in kpa
-	engine->outputChannels.lowFuelPressure = Sensor::getOrZero(SensorType::FuelPressureLow);
+	const auto fuelPressureLowSensor = Sensor::get(SensorType::FuelPressureLow);
+	engine->outputChannels.lowFuelPressure = fuelPressureLowSensor.value_or(0);
+	engine->outputChannels.isFuelPressureLowValid = fuelPressureLowSensor.Valid;
 	// High pressure is in bar, aka 100 kpa
-	engine->outputChannels.highFuelPressure = KPA2BAR(Sensor::getOrZero(SensorType::FuelPressureHigh));
+	const auto fuelPressureHighSensor = Sensor::get(SensorType::FuelPressureHigh);
+	engine->outputChannels.highFuelPressure = KPA2BAR(fuelPressureHighSensor.value_or(0));
+	engine->outputChannels.isFuelPressureHighValid = fuelPressureHighSensor.Valid;
 
 	SensorResult flex = Sensor::get(SensorType::FuelEthanolPercent);
 	engine->outputChannels.flexPercent = flex.value_or(0);
+	engine->outputChannels.isFuelEthanolPercentValid = flex.Valid;
 	// Only report fail if a flex sensor is actually configured (many engines don't have one)
 	engine->outputChannels.isFlexError = Sensor::hasSensor(SensorType::FuelEthanolPercent) ? !flex.Valid : false;
 
-	engine->outputChannels.fuelTankLevel = Sensor::getOrZero(SensorType::FuelLevel);
+	const auto fuelLevelSensor = Sensor::get(SensorType::FuelLevel);
+	engine->outputChannels.fuelTankLevel = fuelLevelSensor.value_or(0);
+	engine->outputChannels.isFuelLevelValid = fuelLevelSensor.Valid;
 }
 
 static void updateEgtSensors() {
-	engine->outputChannels.egt[0] = Sensor::getOrZero(SensorType::EGT1);
-	engine->outputChannels.egt[1] = Sensor::getOrZero(SensorType::EGT2);
-	engine->outputChannels.egt[2] = Sensor::getOrZero(SensorType::EGT3);
-	engine->outputChannels.egt[3] = Sensor::getOrZero(SensorType::EGT4);
-	engine->outputChannels.egt[4] = Sensor::getOrZero(SensorType::EGT5);
-	engine->outputChannels.egt[5] = Sensor::getOrZero(SensorType::EGT6);
-	engine->outputChannels.egt[6] = Sensor::getOrZero(SensorType::EGT7);
-	engine->outputChannels.egt[7] = Sensor::getOrZero(SensorType::EGT8);
+	const auto egt1Sensor = Sensor::get(SensorType::EGT1);
+	engine->outputChannels.egt[0] = egt1Sensor.value_or(0);
+	engine->outputChannels.isEGT1Valid = egt1Sensor.Valid;
+	const auto egt2Sensor = Sensor::get(SensorType::EGT2);
+	engine->outputChannels.egt[1] = egt2Sensor.value_or(0);
+	engine->outputChannels.isEGT2Valid = egt2Sensor.Valid;
+	const auto egt3Sensor = Sensor::get(SensorType::EGT3);
+	engine->outputChannels.egt[2] = egt3Sensor.value_or(0);
+	engine->outputChannels.isEGT3Valid = egt3Sensor.Valid;
+	const auto egt4Sensor = Sensor::get(SensorType::EGT4);
+	engine->outputChannels.egt[3] = egt4Sensor.value_or(0);
+	engine->outputChannels.isEGT4Valid = egt4Sensor.Valid;
+	const auto egt5Sensor = Sensor::get(SensorType::EGT5);
+	engine->outputChannels.egt[4] = egt5Sensor.value_or(0);
+	engine->outputChannels.isEGT5Valid = egt5Sensor.Valid;
+	const auto egt6Sensor = Sensor::get(SensorType::EGT6);
+	engine->outputChannels.egt[5] = egt6Sensor.value_or(0);
+	engine->outputChannels.isEGT6Valid = egt6Sensor.Valid;
+	const auto egt7Sensor = Sensor::get(SensorType::EGT7);
+	engine->outputChannels.egt[6] = egt7Sensor.value_or(0);
+	engine->outputChannels.isEGT7Valid = egt7Sensor.Valid;
+	const auto egt8Sensor = Sensor::get(SensorType::EGT8);
+	engine->outputChannels.egt[7] = egt8Sensor.value_or(0);
+	engine->outputChannels.isEGT8Valid = egt8Sensor.Valid;
 }
 
 static void updateVvtSensors() {
 #if EFI_SHAFT_POSITION_INPUT
 	// 248
 	engine->outputChannels.vvtPositionB1I = engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0);
+	engine->outputChannels.isVvtB1IValid = engine->triggerCentral.isVvtPositionFresh(0, 0);
 	engine->outputChannels.vvtPositionB1E = engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/1);
+	engine->outputChannels.isVvtB1EValid = engine->triggerCentral.isVvtPositionFresh(0, 1);
 	engine->outputChannels.vvtPositionB2I = engine->triggerCentral.getVVTPosition(/*bankIndex*/1, /*camIndex*/0);
+	engine->outputChannels.isVvtB2IValid = engine->triggerCentral.isVvtPositionFresh(1, 0);
 	engine->outputChannels.vvtPositionB2E = engine->triggerCentral.getVVTPosition(/*bankIndex*/1, /*camIndex*/1);
+	engine->outputChannels.isVvtB2EValid = engine->triggerCentral.isVvtPositionFresh(1, 1);
+#else
+	engine->outputChannels.isVvtB1IValid = false;
+	engine->outputChannels.isVvtB1EValid = false;
+	engine->outputChannels.isVvtB2IValid = false;
+	engine->outputChannels.isVvtB2EValid = false;
 #endif
 }
 
 static void updateVehicleSpeed() {
 #if EFI_VEHICLE_SPEED
-	engine->outputChannels.vehicleSpeedKph = Sensor::getOrZero(SensorType::VehicleSpeed);
-	engine->outputChannels.wheelSlipRatio = Sensor::getOrZero(SensorType::WheelSlipRatio);
+	const auto vehicleSpeedSensor = Sensor::get(SensorType::VehicleSpeed);
+	engine->outputChannels.vehicleSpeedKph = vehicleSpeedSensor.value_or(0);
+	engine->outputChannels.isVehicleSpeedValid = vehicleSpeedSensor.Valid;
+	const auto wheelSlipRatioSensor = Sensor::get(SensorType::WheelSlipRatio);
+	engine->outputChannels.wheelSlipRatio = wheelSlipRatioSensor.value_or(0);
+	engine->outputChannels.isWheelSlipRatioValid = wheelSlipRatioSensor.Valid;
 #ifdef MODULE_GEAR_DETECTOR
 	engine->outputChannels.speedToRpmRatio = engine->module<GearDetector>()->getGearboxRatio();
 	engine->outputChannels.detectedGear = static_cast<int8_t>(Sensor::getOr(SensorType::DetectedGear, gear_e::INVALID));
@@ -547,17 +598,29 @@ static void updateRawSensors() {
 	engine->outputChannels.rawAfr = (engineConfiguration->afr.hwChannel == EFI_ADC_NONE) ? 0 : adcGetScaledVoltage("ego", engineConfiguration->afr.hwChannel).value_or(0);
 }
 static void updatePressures() {
-	engine->outputChannels.baroPressure = Sensor::getOrZero(SensorType::BarometricPressure);
-  // instantMAPValue is injected in a very different way
-  float mapValue = Sensor::getOrZero(SensorType::Map);
+	const auto barometricPressureSensor = Sensor::get(SensorType::BarometricPressure);
+	engine->outputChannels.baroPressure = barometricPressureSensor.value_or(0);
+	engine->outputChannels.isBarometricPressureValid = barometricPressureSensor.Valid;
+	// instantMAPValue is injected in a very different way
+	const auto mapSensor = Sensor::get(SensorType::Map);
+	float mapValue = mapSensor.value_or(0);
 	engine->outputChannels.MAPValue = mapValue;
+	engine->outputChannels.isMapSensorValid = mapSensor.Valid;
 
 	engine->outputChannels.mapFast = Sensor::getOrZero(SensorType::MapFast);
-	engine->outputChannels.oilPressure = Sensor::getOrZero(SensorType::OilPressure);
-  engine->outputChannels.acPressure = Sensor::getOrZero(SensorType::AcPressure);
+	const auto oilPressureSensor = Sensor::get(SensorType::OilPressure);
+	engine->outputChannels.oilPressure = oilPressureSensor.value_or(0);
+	engine->outputChannels.isOilPressureValid = oilPressureSensor.Valid;
+	const auto acPressureSensor = Sensor::get(SensorType::AcPressure);
+	engine->outputChannels.acPressure = acPressureSensor.value_or(0);
+	engine->outputChannels.isAcPressureValid = acPressureSensor.Valid;
 
- 	engine->outputChannels.compressorDischargePressure = Sensor::getOrZero(SensorType::CompressorDischargePressure);
- 	engine->outputChannels.throttleInletPressure = Sensor::getOrZero(SensorType::ThrottleInletPressure);
+	const auto compressorDischargePressureSensor = Sensor::get(SensorType::CompressorDischargePressure);
+	engine->outputChannels.compressorDischargePressure = compressorDischargePressureSensor.value_or(0);
+	engine->outputChannels.isCompressorDischargePressureValid = compressorDischargePressureSensor.Valid;
+	const auto throttleInletPressureSensor = Sensor::get(SensorType::ThrottleInletPressure);
+	engine->outputChannels.throttleInletPressure = throttleInletPressureSensor.value_or(0);
+	engine->outputChannels.isThrottleInletPressureValid = throttleInletPressureSensor.Valid;
 #if EFI_ENGINE_CONTROL
  	engine->outputChannels.throttlePressureRatio = getThrottlePressureRatio(mapValue);
 #endif // EFI_ENGINE_CONTROL
@@ -569,15 +632,27 @@ static void updatePressures() {
 }
 
 static void updateMiscSensors() {
-	engine->outputChannels.VBatt = Sensor::getOrZero(SensorType::BatteryVoltage);
-	engine->outputChannels.VIgn = Sensor::getOrZero(SensorType::IgnKeyVoltage);
+	const auto batteryVoltageSensor = Sensor::get(SensorType::BatteryVoltage);
+	engine->outputChannels.VBatt = batteryVoltageSensor.value_or(0);
+	engine->outputChannels.isBatteryVoltageValid = batteryVoltageSensor.Valid;
+	const auto ignKeyVoltageSensor = Sensor::get(SensorType::IgnKeyVoltage);
+	engine->outputChannels.VIgn = ignKeyVoltageSensor.value_or(0);
+	engine->outputChannels.isIgnKeyVoltageValid = ignKeyVoltageSensor.Valid;
 
-	engine->outputChannels.idlePositionSensor = Sensor::getOrZero(SensorType::IdlePosition);
+	const auto idlePositionSensor = Sensor::get(SensorType::IdlePosition);
+	engine->outputChannels.idlePositionSensor = idlePositionSensor.value_or(0);
+	engine->outputChannels.isIdlePositionValid = idlePositionSensor.Valid;
 
-	engine->outputChannels.wastegatePositionSensor = Sensor::getOrZero(SensorType::WastegatePosition);
+	const auto wastegatePositionSensor = Sensor::get(SensorType::WastegatePosition);
+	engine->outputChannels.wastegatePositionSensor = wastegatePositionSensor.value_or(0);
+	engine->outputChannels.isWastegatePositionValid = wastegatePositionSensor.Valid;
 
-	engine->outputChannels.ISSValue = static_cast<uint16_t>(Sensor::getOrZero(SensorType::InputShaftSpeed));
-	engine->outputChannels.outputShaftSpeed = Sensor::getOrZero(SensorType::OutputShaftSpeed);
+	const auto inputShaftSpeedSensor = Sensor::get(SensorType::InputShaftSpeed);
+	engine->outputChannels.ISSValue = static_cast<uint16_t>(inputShaftSpeedSensor.value_or(0));
+	engine->outputChannels.isInputShaftSpeedValid = inputShaftSpeedSensor.Valid;
+	const auto outputShaftSpeedSensor = Sensor::get(SensorType::OutputShaftSpeed);
+	engine->outputChannels.outputShaftSpeed = outputShaftSpeedSensor.value_or(0);
+	engine->outputChannels.isOutputShaftSpeedValid = outputShaftSpeedSensor.Valid;
 	engine->outputChannels.auxSpeed1 = static_cast<uint16_t>(Sensor::getOrZero(SensorType::AuxSpeed1));
 	engine->outputChannels.auxSpeed2 = static_cast<uint16_t>(Sensor::getOrZero(SensorType::AuxSpeed2));
 
@@ -656,7 +731,8 @@ void updateTunerStudioState() {
 	engine->outputChannels.isUsbConnected =	is_usb_serial_ready();
 #endif // EFI_USB_SERIAL
 
-	float rpm = Sensor::get(SensorType::Rpm).value_or(0);
+	const auto rpmSensor = Sensor::get(SensorType::Rpm);
+	float rpm = rpmSensor.value_or(0);
 
 
   static Timer blinkIndicatorsTimer;
@@ -687,6 +763,7 @@ void updateTunerStudioState() {
 	engine->dc_motors.isEnabled0_int = dc->msg() == nullptr;
 
 	tsOutputChannels->RPMValue = static_cast<uint16_t>(rpm);
+	tsOutputChannels->isRpmValid = rpmSensor.Valid;
 #if EFI_SHAFT_POSITION_INPUT
 	tsOutputChannels->instantRpm = static_cast<uint16_t>(engine->triggerCentral.instantRpm.getInstantRpm());
 	tsOutputChannels->instantRpmRange = static_cast<uint16_t>(engine->triggerCentral.instantRpm.getInstantRpmRange());
@@ -704,8 +781,12 @@ void updateTunerStudioState() {
 	tsCalibrationIsIdle();
 
 	// Output both the estimated air flow, and measured air flow (if available)
-	tsOutputChannels->mafMeasured = Sensor::getOrZero(SensorType::Maf);
-	tsOutputChannels->mafMeasured2 = Sensor::getOrZero(SensorType::Maf2);
+	const auto mafSensor = Sensor::get(SensorType::Maf);
+	tsOutputChannels->mafMeasured = mafSensor.value_or(0);
+	tsOutputChannels->isMafValid = mafSensor.Valid;
+	const auto maf2Sensor = Sensor::get(SensorType::Maf2);
+	tsOutputChannels->mafMeasured2 = maf2Sensor.value_or(0);
+	tsOutputChannels->isMaf2Valid = maf2Sensor.Valid;
 	tsOutputChannels->mafEstimate = engine->engineState.airflowEstimate;
 
 #if EFI_ENGINE_CONTROL
@@ -732,7 +813,9 @@ void updateTunerStudioState() {
   tsOutputChannels->torque = -1;
 #endif
 
-	tsOutputChannels->turboSpeed = static_cast<uint16_t>(Sensor::getOrZero(SensorType::TurbochargerSpeed));
+	const auto turbochargerSpeedSensor = Sensor::get(SensorType::TurbochargerSpeed);
+	tsOutputChannels->turboSpeed = static_cast<uint16_t>(turbochargerSpeedSensor.value_or(0));
+	tsOutputChannels->isTurbochargerSpeedValid = turbochargerSpeedSensor.Valid;
 	extern FrequencySensor inputShaftSpeedSensor;
 	tsOutputChannels->issEdgeCounter = inputShaftSpeedSensor.eventCounter;
 	extern FrequencySensor vehicleSpeedSensor;
