@@ -422,7 +422,7 @@ public class TuningTableViewTest {
             assertArrayEquals(new Object[]{"40", "11", "22", "33"}, tableRow(table, 1));
             assertEquals(CalibrationColorPalette.background(44, 11, 66), cellBackground(table, 0, 1));
             assertEquals(CalibrationColorPalette.background(33, 11, 66), cellBackground(table, 1, 3));
-            assertEquals(table.getBackground(), cellBackground(table, 0, 0),
+            assertEquals(CalibrationColorPalette.axisBackground(), cellBackground(table, 0, 0),
                 "Axis labels are not shaded as timing values");
 
             table.setValueAt("77", 0, 1);
@@ -1449,25 +1449,62 @@ public class TuningTableViewTest {
         TuningTableView.TuningTableModel model = new TuningTableView.TuningTableModel(data, new Double[]{100.0, 200.0}, new Double[]{10.0, 20.0}, 2);
         table.setModel(model);
 
-        // Whole numbers omit an all-zero decimal part.
-        assertEquals("3", table.getValueAt(0, 1));
-        assertEquals("1", table.getValueAt(1, 1));
-        // Non-zero decimal parts keep the configured precision.
+        // Every value shows the configured precision, so the decimals line up down a column.
+        assertEquals("3.00", table.getValueAt(0, 1));
+        assertEquals("1.00", table.getValueAt(1, 1));
         assertEquals("1.20", table.getValueAt(0, 2));
         // data[0][1] is 2.55, with precision 2 it should be "2.55"
         assertEquals("2.55", table.getValueAt(1, 2));
     }
 
     @Test
-    public void testNumbersAreCentered() {
+    public void testValuesAndAxisAreCentered() {
         TuningTableView view = new TuningTableView("Test");
         JTable table = findTable(view.getContent());
         table.setModel(new TuningTableView.TuningTableModel(
             new Double[][]{{1.0}}, new Double[]{100.0}, new Double[]{10.0}, 1));
 
-        Component renderer = table.prepareRenderer(table.getCellRenderer(0, 1), 0, 1);
-        assertTrue(renderer instanceof JLabel);
-        assertEquals(SwingConstants.CENTER, ((JLabel) renderer).getHorizontalAlignment());
+        Component value = table.prepareRenderer(table.getCellRenderer(0, 1), 0, 1);
+        assertTrue(value instanceof JLabel);
+        assertEquals(SwingConstants.CENTER, ((JLabel) value).getHorizontalAlignment());
+        Component axis = table.prepareRenderer(table.getCellRenderer(0, 0), 0, 0);
+        assertEquals(SwingConstants.CENTER, ((JLabel) axis).getHorizontalAlignment());
+    }
+
+    @Test
+    public void cellsAreTilesWithGapsAndNoGridLines() {
+        JTable table = findTable(new TuningTableView("Test").getContent());
+        assertEquals(new Dimension(2, 2), table.getIntercellSpacing());
+        assertFalse(table.getShowHorizontalLines());
+        assertFalse(table.getShowVerticalLines());
+    }
+
+    @Test
+    public void selectionTintsTheValueColourAndOutlinesTheBlock() {
+        TuningTableView view = new TuningTableView("Test");
+        JTable table = findTable(view.getContent());
+        table.setModel(new TuningTableView.TuningTableModel(
+            new Double[][]{{10.0, 20.0, 30.0}, {40.0, 50.0, 60.0}}, new Double[]{1.0, 2.0, 3.0}, new Double[]{1.0, 2.0}, 0));
+        Color unselected = ((JLabel) table.prepareRenderer(table.getCellRenderer(0, 1), 0, 1)).getBackground();
+
+        table.changeSelection(0, 1, false, false);
+        table.changeSelection(1, 2, false, true);
+
+        JLabel corner = (JLabel) table.prepareRenderer(table.getCellRenderer(0, 1), 0, 1);
+        assertEquals(CalibrationColorPalette.selected(unselected), corner.getBackground(),
+            "the value colour shows through the tint");
+        assertEquals(new Insets(2, 2, 0, 0), outline(corner), "top-left cell: outline on its outer sides only");
+        assertEquals(new Insets(0, 0, 2, 2), outline((JLabel) table.prepareRenderer(table.getCellRenderer(1, 2), 1, 2)));
+        JLabel outside = (JLabel) table.prepareRenderer(table.getCellRenderer(0, 3), 0, 3);
+        assertFalse(outside.getBorder() instanceof javax.swing.border.CompoundBorder
+            && ((javax.swing.border.CompoundBorder) outside.getBorder()).getOutsideBorder() instanceof javax.swing.border.MatteBorder);
+    }
+
+    private static Insets outline(JLabel cell) {
+        javax.swing.border.Border outside = ((javax.swing.border.CompoundBorder) cell.getBorder()).getOutsideBorder();
+        assertTrue(outside instanceof javax.swing.border.MatteBorder);
+        assertEquals(CalibrationColorPalette.selection(), ((javax.swing.border.MatteBorder) outside).getMatteColor());
+        return outside.getBorderInsets(cell);
     }
 
     @Test

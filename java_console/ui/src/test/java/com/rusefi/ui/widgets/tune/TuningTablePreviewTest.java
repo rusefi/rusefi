@@ -56,7 +56,7 @@ class TuningTablePreviewTest {
             assertEquals("120", table.getValueAt(0, 0));
             assertEquals("21", table.getValueAt(15, 0));
             assertEquals("10.5", table.getValueAt(0, 1));
-            assertEquals("35", table.getValueAt(0, 16));
+            assertEquals("35.0", table.getValueAt(0, 16));
             assertEquals("12.2", table.getValueAt(15, 1));
             assertEquals("42.9", table.getValueAt(15, 16));
             assertTrue(grid.getComponent(1).isVisible(), "The sandbox's real 16x16 ignition table must have a preview");

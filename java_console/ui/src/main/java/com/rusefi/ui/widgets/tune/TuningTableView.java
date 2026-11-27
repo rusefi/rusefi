@@ -13,6 +13,7 @@ import com.rusefi.config.StringFormatter;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.maintenance.CalibrationsInfo;
 import com.rusefi.ui.util.WrapLayout;
+import com.rusefi.ui.widgets.JoinedButtons;
 import com.rusefi.ui.widgets.SegmentedControl;
 
 import javax.swing.*;
@@ -44,7 +45,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class TuningTableView {
-    private static final int TOOLBAR_GAP = 6;
     private static final double SMOOTHING_FACTOR = 0.25;
     private static final int MIN_PREVIEW_HEIGHT = 240;
     private final boolean viewMode;
@@ -74,6 +74,23 @@ public class TuningTableView {
         }
 
         @Override
+        public void updateUI() {
+            super.updateUI();
+            // Cells as tiles: no grid lines, the table background shows in the gaps.
+            setShowGrid(false);
+            setIntercellSpacing(new Dimension(CELL_GAP, CELL_GAP));
+        }
+
+        @Override
+        public void changeSelection(int row, int column, boolean toggle, boolean extend) {
+            super.changeSelection(row, column, toggle, extend);
+            // JTable scrolls to the cell without its gap, which leaves the first row 1 px under the top.
+            if (getAutoscrolls() && row >= 0 && column >= 0) {
+                scrollRectToVisible(getCellRect(row, column, true));
+            }
+        }
+
+        @Override
         public boolean getScrollableTracksViewportWidth() {
             // Columns stretch to fill a wide window, but never below their minimum widths
             // (fitColumnWidths): a narrower window scrolls the grid sideways instead of
@@ -89,11 +106,14 @@ public class TuningTableView {
             return new Dimension(super.getPreferredScrollableViewportSize().width, getRowCount() * getRowHeight());
         }
     };
+    /** Gap between cells, where the table background shows. */
+    private static final int CELL_GAP = 2;
     /** Space around a cell's text, so values do not touch the grid lines. */
     private static final int CELL_TEXT_PADDING = 8;
     /** A column never needs more room than this to stay readable. */
     private static final int MAX_COLUMN_MIN_WIDTH = 90;
-    private static final int LIVE_DOT_RADIUS = 5;
+    /** The live dot is a ring about as tall as the digits, so it circles a centred value rather than hiding it. */
+    static final int LIVE_DOT_RADIUS = 7;
     private static final int TRAIL_DOT_RADIUS = 3;
     /** How long earlier operating points stay on the trail, fading out. */
     static final long TRAIL_MILLIS = 2000;
@@ -189,7 +209,6 @@ public class TuningTableView {
             }
         });
         table.getTableHeader().setReorderingAllowed(false);
-        table.setSelectionBackground(Color.ORANGE); // [tag:fixed_color] selected cells, with black text, in every theme
         table.setDefaultRenderer(Object.class, new GradientRenderer());
         table.setCellSelectionEnabled(true);
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -271,7 +290,9 @@ public class TuningTableView {
 
         JTextField deltaField = new JTextField("0.5", 5);
         deltaField.setToolTipText("Amount added or subtracted by the Up and Down buttons");
-        deltaField.setMaximumSize(new Dimension(100, 30));
+        deltaField.setHorizontalAlignment(JTextField.RIGHT);
+        // as tall as the joined buttons beside it, so the row lines up
+        deltaField.setPreferredSize(new Dimension(deltaField.getPreferredSize().width, JoinedButtons.HEIGHT));
         JButton upButton = new JButton("Up");
         JButton downButton = new JButton("Down");
         JButton equalsButton = new JButton("=");
@@ -315,7 +336,7 @@ public class TuningTableView {
         interpolateButton.setToolTipText("Interpolate selected cells - Key: /");
         smoothButton.setToolTipText("Smooth selected cells - Key: S");
 
-        JLabel deltaLabel = new JLabel("delta:");
+        JLabel deltaLabel = new JLabel("Delta");
         editControls.add(deltaLabel);
         editControls.add(deltaField);
         editControls.add(upButton);
@@ -327,7 +348,7 @@ public class TuningTableView {
         editControls.add(smoothButton);
 
         // Wraps onto further lines in a narrow window rather than squeezing or cutting off controls.
-        JPanel topPanel = new JPanel(new WrapLayout(FlowLayout.LEFT, TOOLBAR_GAP, 4));
+        JPanel topPanel = new JPanel(new WrapLayout(FlowLayout.LEFT, JoinedButtons.ROW_GAP, 4));
         topPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         topPanel.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));
         topPanel.add(new JLabel(title));
@@ -340,9 +361,10 @@ public class TuningTableView {
             delta.add(deltaLabel);
             delta.add(deltaField);
             topPanel.add(delta);
-            for (Component control : editControls.subList(2, editControls.size())) {
-                topPanel.add(control);
-            }
+            // Related actions share one outlined control, like the other console toolbars.
+            topPanel.add(new JoinedButtons(upButton, downButton, equalsButton));
+            topPanel.add(new JoinedButtons(horizontalButton, verticalButton));
+            topPanel.add(new JoinedButtons(interpolateButton, smoothButton));
 
             InputMap inputMap = content.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
             inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_H, 0), "interpolateHorizontal");
@@ -523,22 +545,74 @@ public class TuningTableView {
             trailGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             paintTrail(trailGraphics);
             trailGraphics.dispose();
-            // The marker sits on the value gradient, which looks the same in every theme, so it does too.
-            // Black-white-black rings stay visible on light and dark cells alike.
+            // The marker looks the same in every theme: black-white-black rings stay visible on the
+            // light cells of the light theme and the dark cells of the dark theme alike.
             g2.setColor(Color.BLACK); // [tag:fixed_color] live cell outline over the value gradient
             g2.drawRect(bounds.x, bounds.y, bounds.width - 1, bounds.height - 1);
             g2.drawRect(bounds.x + 2, bounds.y + 2, bounds.width - 5, bounds.height - 5);
-            g2.setColor(Color.WHITE); // [tag:fixed_color] middle ring and dot fill of the live marker
+            Color middleRing = Color.WHITE; // [tag:fixed_color] middle ring and dot core of the live marker
+            g2.setColor(middleRing);
             g2.drawRect(bounds.x + 1, bounds.y + 1, bounds.width - 3, bounds.height - 3);
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            // A hollow dot, with the value redrawn over it, so the number under the live point stays readable.
             Ellipse2D dot = new Ellipse2D.Double(x - LIVE_DOT_RADIUS, y - LIVE_DOT_RADIUS,
                 2 * LIVE_DOT_RADIUS, 2 * LIVE_DOT_RADIUS);
-            g2.fill(dot);
-            g2.setStroke(new BasicStroke(2f));
+            g2.setStroke(new BasicStroke(4f));
             g2.setColor(Color.BLACK); // [tag:fixed_color] live point dot outline over the value gradient
             g2.draw(dot);
+            g2.setStroke(new BasicStroke(2f));
+            g2.setColor(middleRing);
+            g2.draw(dot);
+            paintCellTextWithHalo(g2, cell.x, cell.y);
         } finally {
             g2.dispose();
+        }
+    }
+
+    /**
+     * Draws the cell's value again, where its renderer put it, with a one-pixel halo in the opposite
+     * text colour, so the live dot and trail under it do not hide the number.
+     */
+    private void paintCellTextWithHalo(Graphics2D g2, int row, int column) {
+        Component rendered = table.prepareRenderer(table.getCellRenderer(row, column), row, column);
+        if (!(rendered instanceof JLabel)) {
+            return;
+        }
+        JLabel label = (JLabel) rendered;
+        String text = label.getText();
+        if (text == null || text.isEmpty()) {
+            return;
+        }
+        Rectangle cell = table.getCellRect(row, column, false);
+        Insets insets = label.getInsets();
+        Rectangle view = new Rectangle(cell.x + insets.left, cell.y + insets.top,
+            cell.width - insets.left - insets.right, cell.height - insets.top - insets.bottom);
+        FontMetrics metrics = label.getFontMetrics(label.getFont());
+        Rectangle textBounds = new Rectangle();
+        String shown = SwingUtilities.layoutCompoundLabel(label, metrics, text, null,
+            label.getVerticalAlignment(), label.getHorizontalAlignment(),
+            label.getVerticalTextPosition(), label.getHorizontalTextPosition(),
+            view, new Rectangle(), textBounds, 0);
+        Graphics2D textGraphics = (Graphics2D) g2.create();
+        try {
+            Object desktopHints = Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints");
+            if (desktopHints instanceof java.util.Map) {
+                textGraphics.addRenderingHints((java.util.Map<?, ?>) desktopHints);
+            }
+            textGraphics.setFont(label.getFont());
+            int baseline = textBounds.y + metrics.getAscent();
+            textGraphics.setColor(CalibrationColorPalette.foreground(label.getForeground()));
+            for (int dx = -1; dx <= 1; dx++) {
+                for (int dy = -1; dy <= 1; dy++) {
+                    if (dx != 0 || dy != 0) {
+                        textGraphics.drawString(shown, textBounds.x + dx, baseline + dy);
+                    }
+                }
+            }
+            textGraphics.setColor(label.getForeground());
+            textGraphics.drawString(shown, textBounds.x, baseline);
+        } finally {
+            textGraphics.dispose();
         }
     }
 
@@ -635,9 +709,11 @@ public class TuningTableView {
         TableCellRenderer headerRenderer = table.getTableHeader().getDefaultRenderer();
         table.getTableHeader().setDefaultRenderer((source, value, selected, focused, row, column) -> {
             Component renderer = headerRenderer.getTableCellRendererComponent(source, value, selected, focused, row, column);
-            Color background = table.getTableHeader().getBackground();
+            Color background = CalibrationColorPalette.axisBackground();
             renderer.setBackground(isActiveValueCell() && column == activeColumn()
                 ? axisHighlight(background) : background);
+            renderer.setForeground(CalibrationColorPalette.axisForeground());
+            renderer.setFont(axisFont(table.getTableHeader().getFont()));
             UnburnedCellMark.apply(renderer, String.valueOf(value), burnedXAxisText(column), unburnedWording.get());
             return renderer;
         });
@@ -752,10 +828,19 @@ public class TuningTableView {
     }
 
     private Color axisHighlight(Color background) {
-        Color selection = table.getSelectionBackground();
-        return new Color((3 * background.getRed() + selection.getRed()) / 4,
-            (3 * background.getGreen() + selection.getGreen()) / 4,
-            (3 * background.getBlue() + selection.getBlue()) / 4);
+        return CalibrationColorPalette.mix(background, CalibrationColorPalette.selection(), 0.25);
+    }
+
+    private Font axisFontBase;
+    private Font axisFont;
+
+    /** Axis values are bold, so they read as headers rather than as table values. */
+    private Font axisFont(Font base) {
+        if (base != axisFontBase) {
+            axisFontBase = base;
+            axisFont = base == null ? null : base.deriveFont(Font.BOLD);
+        }
+        return axisFont;
     }
 
     private void installKeyboardEditing() {
@@ -2128,8 +2213,12 @@ public class TuningTableView {
             return formatNumber(data[reversedRowIndex][columnIndex - 1]);
         }
 
+        /** A value cell: always the INI's digits, so the decimals line up down a column. */
         private String formatNumber(Object value) {
-            return formatNumber(value, precision);
+            if (value instanceof Number) {
+                return String.format(java.util.Locale.ROOT, "%." + precision + "f", ((Number) value).doubleValue());
+            }
+            return String.valueOf(value);
         }
 
         private String formatNumber(Object value, int digits) {
@@ -2157,34 +2246,36 @@ public class TuningTableView {
         private Component renderCell(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             if (column == 0) {
-                c.setBackground(isActiveValueCell() && row == activeRow()
-                    ? axisHighlight(table.getBackground()) : table.getBackground());
-                c.setForeground(table.getForeground());
-                return c;
-            }
-            if (isSelected) {
-                c.setBackground(Color.ORANGE); // [tag:fixed_color] selected cell
-                c.setForeground(Color.BLACK); // [tag:fixed_color] text on the selected cell
+                Color background = CalibrationColorPalette.axisBackground();
+                c.setBackground(isActiveValueCell() && row == activeRow() ? axisHighlight(background) : background);
+                c.setForeground(CalibrationColorPalette.axisForeground());
+                c.setFont(axisFont(table.getFont()));
                 return c;
             }
 
-            if (value instanceof String) {
-                String strValue = (String) value;
-                if (!strValue.isEmpty()) {
-                    try {
-                        double val = Double.parseDouble(strValue);
-                        applyGradient(c, val);
-                    } catch (NumberFormatException ignored) {
-                    }
-                }
+            Color valueColor = valueColor(value);
+            Color background = valueColor != null ? valueColor : table.getBackground();
+            if (isSelected) {
+                // The value colour shows through the tint; the outline marks the block's edges.
+                background = CalibrationColorPalette.selected(background);
+                setBorder(BorderFactory.createCompoundBorder(CalibrationColorPalette.selectionEdges(table, row, column, 1), getBorder()));
             }
+            c.setBackground(background);
+            c.setForeground(valueColor != null || isSelected
+                ? CalibrationColorPalette.foreground(background) : table.getForeground());
             return c;
         }
 
-        private void applyGradient(Component c, double value) {
-            Color background = CalibrationColorPalette.background(value, minValue, maxValue);
-            c.setBackground(background);
-            c.setForeground(CalibrationColorPalette.foreground(background));
+        /** The value's place on the colour scale, or null for a cell that is not a number. */
+        private Color valueColor(Object value) {
+            if (value instanceof String && !((String) value).isEmpty()) {
+                try {
+                    return CalibrationColorPalette.background(Double.parseDouble((String) value), minValue, maxValue);
+                } catch (NumberFormatException ignored) {
+                }
+            }
+            return null;
         }
+
     }
 }

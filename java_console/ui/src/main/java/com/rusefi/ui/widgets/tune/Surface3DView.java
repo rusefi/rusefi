@@ -36,9 +36,7 @@ public class Surface3DView extends JPanel {
     /** Labels are centered on their anchor; keep room for half a label beyond the anchors. */
     static final int LABEL_HALF_WIDTH = 28;
     static final int LABEL_HALF_HEIGHT = 8;
-    private static final Color SELECTION_COLOR = Color.ORANGE; // [tag:fixed_color] lit facets, like the table selection
-    static final Color SELECTED_POINT_COLOR = Color.BLACK; // [tag:fixed_color] ringed in white below
-    /** The live point is the selected point's inverse, so the two never look alike. */
+    /** The live point is white, unlike the selection-coloured selected points, so the two never look alike. */
     static final Color LIVE_POINT_COLOR = Color.WHITE; // [tag:fixed_color] ringed in black below
     private static final int LIVE_POINT_RADIUS = 5;
     /** Live operating point trail as {x index, y index, opacity}, oldest first; null for none. */
@@ -186,13 +184,19 @@ public class Surface3DView extends JPanel {
                 // A cell is a surface point shared by up to four facets; selecting it lights them all.
                 boolean selected = isSelected(r, c) || isSelected(r + 1, c)
                     || isSelected(r + 1, c + 1) || isSelected(r, c + 1);
-                g2d.setColor(selected ? SELECTION_COLOR : CalibrationColorPalette.background(avgZ, minValue, maxValue));
+                Color facet = CalibrationColorPalette.background(avgZ, minValue, maxValue);
+                // As in tables: the value colour under the selection tint, outlined in the selection colour.
+                g2d.setColor(selected ? CalibrationColorPalette.selected(facet) : facet);
 
                 int[] xPoints = {p1.x, p2.x, p3.x, p4.x};
                 int[] yPoints = {p1.y, p2.y, p3.y, p4.y};
                 g2d.fillPolygon(xPoints, yPoints, 4);
 
-                g2d.setColor(Color.DARK_GRAY); // [tag:fixed_color] facet edges between value colours
+                if (selected) {
+                    g2d.setColor(CalibrationColorPalette.selection());
+                } else {
+                    g2d.setColor(Color.DARK_GRAY); // [tag:fixed_color] facet edges between value colours
+                }
                 g2d.drawPolygon(xPoints, yPoints, 4);
             }
         }
@@ -268,6 +272,11 @@ public class Surface3DView extends JPanel {
         return project(x, y, z, yaw, pitch, scale, centerX, centerY);
     }
 
+    /** A selected cell's own point: the selection colour, ringed in white. */
+    static Color selectedPointColor() {
+        return CalibrationColorPalette.selection();
+    }
+
     /** Marks each selected cell's own point in the middle of its lit facets. */
     private void paintSelectedPoints(Graphics2D g2d, Point3D[][] points) {
         int radius = 3;
@@ -275,7 +284,7 @@ public class Surface3DView extends JPanel {
             for (int c = 0; c < points[r].length; c++) {
                 if (isSelected(r, c)) {
                     Point3D point = points[r][c];
-                    g2d.setColor(SELECTED_POINT_COLOR);
+                    g2d.setColor(selectedPointColor());
                     g2d.fillOval(point.x - radius, point.y - radius, 2 * radius, 2 * radius);
                     g2d.setColor(Color.WHITE); // [tag:fixed_color] ring of the selected point
                     g2d.drawOval(point.x - radius - 1, point.y - radius - 1, 2 * radius + 2, 2 * radius + 2);

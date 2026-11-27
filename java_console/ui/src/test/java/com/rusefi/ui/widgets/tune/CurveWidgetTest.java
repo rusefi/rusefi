@@ -49,7 +49,7 @@ public class CurveWidgetTest {
                     assertEquals(masses[row], Double.valueOf(table.getValueAt(row, 1).toString()));
                     table.changeSelection(row, 1, false, false);
                     BufferedImage rendered = render(canvas);
-                    assertTrue(hasColor(rendered, Color.MAGENTA), "visible point " + row + " at " + size);
+                    assertTrue(hasColor(rendered, CalibrationColorPalette.selection()), "visible point " + row + " at " + size);
                     assertFalse(hasCurveOutsidePlot(rendered), "curve must stay inside the plot");
                 }
             }
@@ -189,7 +189,7 @@ public class CurveWidgetTest {
                 canvas.setSize(470, 360);
                 for (int row = 0; row < 2; row++) {
                     table.changeSelection(row, 1, false, false);
-                    assertTrue(hasColor(render(canvas), Color.MAGENTA));
+                    assertTrue(hasColor(render(canvas), CalibrationColorPalette.selection()));
                 }
                 edit(table, 0, 0, "-999");
                 assertEquals("-100", table.getValueAt(0, 0));
@@ -200,7 +200,7 @@ public class CurveWidgetTest {
                 edit(table, 1, 1, "1000");
                 assertEquals("1000", table.getValueAt(1, 1));
                 table.changeSelection(1, 1, false, false);
-                assertTrue(hasColor(render(canvas), Color.MAGENTA));
+                assertTrue(hasColor(render(canvas), CalibrationColorPalette.selection()));
                 AtomicInteger edits = new AtomicInteger();
                 widget.setOnEdit(edits::incrementAndGet);
                 for (String invalid : new String[]{"NaN", "Infinity", "-Infinity"}) {
@@ -243,7 +243,91 @@ public class CurveWidgetTest {
             }
             canvas.dispatchEvent(new MouseEvent(canvas, MouseEvent.MOUSE_RELEASED, 0, 0, end.x, end.y, 1, false));
             assertEquals(1200.0, ConfigurationImageGetterSetter.getArrayValues(yField, image)[3][0]);
-            assertTrue(hasColor(render(canvas), Color.MAGENTA), "released point is visible after fitting the scale");
+            assertTrue(hasColor(render(canvas), CalibrationColorPalette.selection()), "released point is visible after fitting the scale");
+        });
+    }
+
+    /** The priming curve: the first point (-40 C, 755 mg) is the tallest, so it sets the Y scale. */
+    private static ConfigurationImage primingImage(IniFileModel ini) {
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(24);
+        ConfigurationImageGetterSetter.setArrayValues((ArrayIniField) ini.findIniField("primeBins").get(), image,
+            new Double[]{-40.0, -20.0, 0.0, 20.0, 40.0, 60.0, 80.0, 100.0});
+        ConfigurationImageGetterSetter.setArrayValues((ArrayIniField) ini.findIniField("primeValues").get(), image,
+            new Double[]{755.0, 605.0, 265.0, 140.0, 75.0, 50.0, 45.0, 40.0});
+        return image;
+    }
+
+    private static void drag(JPanel canvas, Point from, Point to) {
+        canvas.dispatchEvent(new MouseEvent(canvas, MouseEvent.MOUSE_PRESSED, 0, 0, from.x, from.y, 1, false));
+        canvas.dispatchEvent(new MouseEvent(canvas, MouseEvent.MOUSE_DRAGGED, 0, 0, to.x, to.y, 0, false));
+        canvas.dispatchEvent(new MouseEvent(canvas, MouseEvent.MOUSE_RELEASED, 0, 0, to.x, to.y, 1, false));
+    }
+
+    @Test
+    public void grabbingAPointOffCentreAndDraggingStraightDownKeepsItsX() throws Throwable {
+        // The point moves by the drag, not to the mouse: a vertical drag that grabbed the point
+        // 4 px right of its centre keeps it at -40 C (it used to snap to -38 C).
+        IniFileModel ini = readPrimingIni();
+        ConfigurationImage image = primingImage(ini);
+        SwingUtilities.invokeAndWait(() -> {
+            CurveWidget widget = new CurveWidget(ini.getCurves().get("primingPulse"), ini, image);
+            CurveWidget.CurveCanvas canvas = (CurveWidget.CurveCanvas) widget.getContentPane().getComponent(0);
+            canvas.setSize(470, 360);
+            Point first = canvas.worldToCanvas(-40, 755);
+            drag(canvas, new Point(first.x + 4, first.y), new Point(first.x + 4, first.y + 30));
+            assertEquals(-40.0, ConfigurationImageGetterSetter.getArrayValues(
+                (ArrayIniField) ini.findIniField("primeBins").get(), image)[0][0]);
+        });
+    }
+
+    @Test
+    public void releasingADragOfTheTallestPointKeepsTheScale() throws Throwable {
+        // Lowering the tallest point used to refit the Y axis on release (0..800 -> 0..700), so points
+        // whose values did not change jumped on screen. The scale now only grows while editing.
+        IniFileModel ini = readPrimingIni();
+        ConfigurationImage image = primingImage(ini);
+        SwingUtilities.invokeAndWait(() -> {
+            CurveWidget widget = new CurveWidget(ini.getCurves().get("primingPulse"), ini, image);
+            CurveWidget.CurveCanvas canvas = (CurveWidget.CurveCanvas) widget.getContentPane().getComponent(0);
+            canvas.setSize(470, 360);
+            Point second = canvas.worldToCanvas(-20, 605);
+            Point first = canvas.worldToCanvas(-40, 755);
+            drag(canvas, first, new Point(first.x, first.y + 30));
+            assertEquals(605.0, ConfigurationImageGetterSetter.getArrayValues(
+                (ArrayIniField) ini.findIniField("primeValues").get(), image)[1][0], "the second point's value is unchanged");
+            assertEquals(second, canvas.worldToCanvas(-20, 605), "and it stays where it was drawn");
+        });
+    }
+
+    @Test
+    public void notBurnedCountAppearingKeepsTheCurveHeight() throws Throwable {
+        // The "1 cell not burned" line under the table is reserved while hidden: when it appeared on the
+        // first edit, the window grew the row it shares with the plot and the curve looked taller.
+        IniFileModel ini = readPrimingIni();
+        ConfigurationImage burned = primingImage(ini);
+        SwingUtilities.invokeAndWait(() -> {
+            CurveWidget widget = new CurveWidget(ini.getCurves().get("primingPulse"), ini, burned.clone());
+            widget.setBurnedImage(() -> burned);
+            int before = widget.getContentPane().getPreferredSize().height;
+            JTable table = findTable(widget.getContentPane());
+            edit(table, 1, 1, "500");
+            widget.refreshUnburnedMarks();
+            assertEquals("1 cell not burned", widget.getUnburnedCountLabelForTests().getText());
+            assertEquals(before, widget.getContentPane().getPreferredSize().height,
+                "the curve's panel asks for the same height once the label shows");
+        });
+    }
+
+    @Test
+    public void curveValuesAreCenteredLikeTableValues() throws Throwable {
+        IniFileModel ini = readPrimingIni();
+        ConfigurationImage image = primingImage(ini);
+        SwingUtilities.invokeAndWait(() -> {
+            JTable table = findTable(new CurveWidget(ini.getCurves().get("primingPulse"), ini, image).getContentPane());
+            for (int column = 0; column < 2; column++) {
+                JLabel cell = (JLabel) table.prepareRenderer(table.getCellRenderer(0, column), 0, column);
+                assertEquals(SwingConstants.CENTER, cell.getHorizontalAlignment(), "column " + column);
+            }
         });
     }
 
@@ -328,7 +412,7 @@ public class CurveWidgetTest {
             } finally {
                 graphics.dispose();
             }
-            assertEquals(Color.MAGENTA.getRGB(), rendered.getRGB(437, 245));
+            assertEquals(CalibrationColorPalette.selection().getRGB(), rendered.getRGB(437, 245));
 
             canvas.dispatchEvent(new MouseEvent(canvas, MouseEvent.MOUSE_PRESSED, 0, 0, 437, 245, 1, false));
             canvas.dispatchEvent(new MouseEvent(canvas, MouseEvent.MOUSE_DRAGGED, 0, 0, 450, 95, 0, false));
@@ -409,6 +493,23 @@ public class CurveWidgetTest {
             assertEquals(52.5, ConfigurationImageGetterSetter.getArrayValues(yField, image)[0][0], 0.001, "value");
             edit(table, 1, 0, "25,5");
             assertEquals(25.5, ConfigurationImageGetterSetter.getArrayValues(xField, image)[1][0], 0.001, "axis");
+        });
+    }
+
+    @Test
+    public void selectedCellsKeepTheirColourUnderTheTintAndGetOneOutline() throws Throwable {
+        IniFileModel ini = readIni();
+        ConfigurationImage image = ConfigurationImageTestHelper.newLittleEndian(20);
+        SwingUtilities.invokeAndWait(() -> {
+            JTable table = findTable(new CurveWidget(ini.getCurves().get("cltRevLimitCurve"), ini, image).getContentPane());
+            Color unselected = table.prepareRenderer(table.getCellRenderer(0, 1), 0, 1).getBackground();
+            table.changeSelection(0, 1, false, false);
+            table.changeSelection(1, 1, false, true);
+
+            JComponent first = (JComponent) table.prepareRenderer(table.getCellRenderer(0, 1), 0, 1);
+            assertEquals(CalibrationColorPalette.selected(unselected), first.getBackground());
+            javax.swing.border.Border outline = ((javax.swing.border.CompoundBorder) first.getBorder()).getOutsideBorder();
+            assertEquals(new Insets(2, 2, 0, 2), outline.getBorderInsets(first), "no line between the two selected cells");
         });
     }
 

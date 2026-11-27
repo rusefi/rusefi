@@ -137,8 +137,12 @@ public class TuningTableLiveMarkerTest {
             assertEquals(Color.BLACK.getRGB(), image.getRGB(bounds.x, middle), "Cell outline");
             assertEquals(Color.WHITE.getRGB(), image.getRGB(bounds.x + 1, middle));
             assertEquals(Color.BLACK.getRGB(), image.getRGB(bounds.x + 2, middle));
-            assertEquals(Color.WHITE.getRGB(), image.getRGB((int) bounds.getCenterX(), middle),
-                "The dot sits on the bin values exactly");
+            int centre = (int) bounds.getCenterX();
+            assertNotEquals(Color.WHITE.getRGB(), image.getRGB(centre, middle), "The dot is hollow, so the value shows");
+            // the top of the ring, above the digits it circles
+            Color ring = new Color(image.getRGB(centre, middle - TuningTableView.LIVE_DOT_RADIUS));
+            assertTrue(Math.min(ring.getRed(), Math.min(ring.getGreen(), ring.getBlue())) > 200,
+                "The dot's white ring sits on the bin values exactly: " + ring);
         });
     }
 
