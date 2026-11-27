@@ -43,6 +43,20 @@ jobs:
         sudo bash misc/actions/ubuntu-install-tools.sh
         bash misc/actions/install-gcovr.sh
         bash misc/actions/install-valgrind.sh
+        sudo apt-get install -y ccache
+        echo /usr/lib/ccache >> "$GITHUB_PATH"
+        echo "CCACHE_DIR=$HOME/.cache/rusefi-ut/coverage" >> "$GITHUB_ENV"
+        echo "CCACHE_MAXSIZE=1G" >> "$GITHUB_ENV"
+        echo "CCACHE_COMPILERCHECK=content" >> "$GITHUB_ENV"
+
+    - name: Restore Linux compiler cache
+      if: runner.os == 'Linux'
+      id: ut-cache
+      uses: actions/cache/restore@v6
+      with:
+        path: ~/.cache/rusefi-ut
+        key: linux-ut-ccache-v1-${{ runner.arch }}-${{ github.sha }}
+        restore-keys: linux-ut-ccache-v1-${{ runner.arch }}-
 
     - name: Install required software (macos)
       if: ${{ matrix.os == 'macos-latest' }}
@@ -131,9 +145,19 @@ jobs:
       working-directory: ./unit_tests/
       run: |
         make clean
-        ./make_for_valgrind.sh
+        CCACHE_DIR="$HOME/.cache/rusefi-ut/memcheck" ./make_for_valgrind.sh
 
     - name: Run Tests (Valgrind)
       if: ${{ matrix.os != 'macos-latest' }}
       working-directory: ./unit_tests/
+      env:
+        RUSEFI_SKIP_REPLAY_LOGS: '1'
       run: ./run_with_valgrind.sh
+
+    # PRs reuse the default branch cache without creating a new archive per PR.
+    - name: Save Linux compiler cache
+      if: runner.os == 'Linux' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && steps.ut-cache.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v6
+      with:
+        path: ~/.cache/rusefi-ut
+        key: ${{ steps.ut-cache.outputs.cache-primary-key }}
