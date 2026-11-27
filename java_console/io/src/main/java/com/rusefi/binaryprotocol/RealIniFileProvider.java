@@ -145,6 +145,11 @@ public class RealIniFileProvider implements IniFileProvider {
         this.statusConsumer = statusConsumer;
     }
 
+    @Override
+    public StatusConsumer getStatusConsumer() {
+        return statusConsumer;
+    }
+
     /**
      * @return .ini copied from TunerStudio's cache into ours (so the next connect is a plain cache
      * hit), the TunerStudio file itself if the copy failed, or null if TunerStudio does not have it

@@ -22,4 +22,9 @@ public interface IniFileProvider {
 
     default void setStatusConsumer(StatusConsumer statusConsumer) {
     }
+
+    /** The UI status sink, so the connect flow can report .ini-over-CAN download progress. */
+    default StatusConsumer getStatusConsumer() {
+        return StatusConsumer.VOID;
+    }
 }

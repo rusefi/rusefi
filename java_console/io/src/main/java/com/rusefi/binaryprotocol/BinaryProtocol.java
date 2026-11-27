@@ -351,11 +351,24 @@ public class BinaryProtocol {
      */
     @NotNull
     private IniFileModel downloadIniFromEcu(String signature) throws IOException, IniNotFoundException {
-        byte[] iniBytes = CanIniDownloader.downloadIni(this);
+        final com.rusefi.ui.StatusConsumer status = iniFileProvider.getStatusConsumer();
+        status.logLine("No local .ini for " + signature + "; downloading it from the ECU over CAN...");
+        final int[] lastShownPct = {-1};
+        byte[] iniBytes = CanIniDownloader.downloadIni(this, (bytesRead, totalBytes) -> {
+            int pct = totalBytes > 0 ? (int) (bytesRead * 100L / totalBytes) : 0;
+            // throttle to whole-percent changes so the UI isn't flooded (~38 chunks of 4 KB)
+            if (pct != lastShownPct[0]) {
+                lastShownPct[0] = pct;
+                status.logLine(String.format("Downloading .ini from ECU: %d%% (%d / %d bytes)",
+                        pct, bytesRead, totalBytes));
+            }
+        });
+        status.logLine("Extracting .ini from the ECU image...");
         java.io.File tmp = java.io.File.createTempFile("rusefi_ecu_", ".ini");
         tmp.deleteOnExit();
         java.nio.file.Files.write(tmp.toPath(), iniBytes);
         log.info("Pulled " + iniBytes.length + " .ini bytes from the ECU, caching for " + signature);
+        status.logLine("Got .ini from the ECU (" + iniBytes.length + " bytes), caching for " + signature);
         // so subsequent connects resolve it without any download or prompt
         SignatureHelper.importIntoCache(signature, tmp);
         return iniFileProvider.provide(signature);

@@ -33,7 +33,11 @@ public final class CanIniDownloader {
      * @throws IOException on any protocol, filesystem or decompression failure
      */
     public static byte[] downloadIni(BinaryProtocol bp) throws IOException {
-        byte[] image = FsImageReader.readImage(bp);
+        return downloadIni(bp, FsImageReader.ProgressListener.NONE);
+    }
+
+    public static byte[] downloadIni(BinaryProtocol bp, FsImageReader.ProgressListener progress) throws IOException {
+        byte[] image = FsImageReader.readImage(bp, progress);
         return extractIni(image);
     }
 

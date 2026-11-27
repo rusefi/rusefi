@@ -29,15 +29,25 @@ public class FsImageReader {
      * @return the whole filesystem image, CRC32-validated against the ECU
      * @throws IllegalStateException on any protocol failure or CRC mismatch
      */
+    /** Reports download progress so the UI can show it; called on the communication thread. */
+    public interface ProgressListener {
+        ProgressListener NONE = (bytesRead, totalBytes) -> {};
+        void onProgress(int bytesRead, int totalBytes);
+    }
+
     public static byte[] readImage(BinaryProtocol bp) {
+        return readImage(bp, ProgressListener.NONE);
+    }
+
+    public static byte[] readImage(BinaryProtocol bp, ProgressListener progress) {
         int totalSize = readImageSize(bp);
         if (totalSize <= 0) {
             throw new IllegalStateException("FS image not available, size=" + totalSize);
         }
 
-        byte[] image = readImageData(bp, totalSize, READ_CHUNK_SIZE_FAST);
+        byte[] image = readImageData(bp, totalSize, READ_CHUNK_SIZE_FAST, progress);
         if (image == null) {
-            image = readImageData(bp, totalSize, READ_CHUNK_SIZE_FALLBACK);
+            image = readImageData(bp, totalSize, READ_CHUNK_SIZE_FALLBACK, progress);
         }
         if (image == null) {
             throw new IllegalStateException("FS image read failed with both chunk sizes");
@@ -70,9 +80,10 @@ public class FsImageReader {
     /**
      * @return the image, or null when the ECU rejects this chunk size with an error code
      */
-    private static byte[] readImageData(BinaryProtocol bp, int totalSize, int chunkSize) {
+    private static byte[] readImageData(BinaryProtocol bp, int totalSize, int chunkSize, ProgressListener progress) {
         byte[] image = new byte[totalSize];
         int offset = 0;
+        progress.onProgress(0, totalSize);
         while (offset < totalSize) {
             int toRead = Math.min(chunkSize, totalSize - offset);
             byte[] response = bp.executeCommand(Integration.TS_READ32_COMMAND,
@@ -91,6 +102,7 @@ public class FsImageReader {
             }
             System.arraycopy(response, 1, image, offset, toRead);
             offset += toRead;
+            progress.onProgress(offset, totalSize);
         }
         return image;
     }
