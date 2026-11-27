@@ -17,23 +17,7 @@ from typing import Callable
 
 from ve_autotune.pipeline.analyze import ClosedLoopActive, _sibling_msq_path, analyze, write_output
 from ve_autotune.pipeline.burn_guard import diff_fields
-from ve_autotune.pipeline.msq import load_tune
-
-# Map TuneSnapshot's Python attribute names to the real .msq constant names
-# that diff_fields()'s default `ignore` set (and the rest of the ECU tooling)
-# uses, so e.g. the VE table is correctly ignored as "veTable", not
-# "ve_table". TuneSnapshot only models the handful of fields VE autotune
-# cares about (see msq.py) -- this is therefore a partial field diff, not the
-# full-tune diff design.md's burn-safety guard describes; see Task 9 report.
-_MSQ_FIELD_NAMES = {
-    "ve_table": "veTable",
-    "ve_rpm_bins": "veRpmBins",
-    "ve_load_bins": "veLoadBins",
-    "lambda_table": "lambdaTable",
-    "lambda_rpm_bins": "lambdaRpmBins",
-    "lambda_load_bins": "lambdaLoadBins",
-    "fuel_closed_loop_enabled": "fuelClosedLoopCorrectionEnabled",
-}
+from ve_autotune.pipeline.msq import read_all_constants
 
 _REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 _MCP_DRIVE = os.path.join(_REPO_ROOT, "mcp_drive.py")
@@ -55,8 +39,11 @@ def _default_run_mcp(tool: str, args: dict) -> str:
 
 
 def _read_msq_fields(path: str) -> dict:
-    snapshot = load_tune(path)
-    return {msq_name: getattr(snapshot, attr) for attr, msq_name in _MSQ_FIELD_NAMES.items()}
+    """Every <constant> field in the .msq, keyed by its real .msq name (e.g.
+    "veTable", "globalTriggerAngleOffset") -- a full-tune field dict, not
+    just the handful TuneSnapshot models, so the burn-safety diff below can
+    catch a change to *any* live ECU field, not only VE/lambda-table ones."""
+    return read_all_constants(path)
 
 
 def _read_live_tune_fields(run_mcp: Callable[[str, dict], str]) -> dict:
