@@ -100,14 +100,20 @@ static const std::unordered_set<std::string>& getLogDisabledTests() {
 	return s;
 }
 
-// Toggles setUnitTestCreateLogs(false) around tests known to overflow the
-// 16 MB per-file log cap (LogsTooLargeException), restoring the prior value
-// after each such test finishes.
+// These trigger replays check engine state, not the diagnostic files.
+static bool isExpensiveReplayLog(const ::testing::TestInfo& test) {
+	const std::string suite = test.test_suite_name();
+	return suite == "realKawasaki8minus1" || suite == "realNissanMaxima" ||
+		(suite == "realSuzukiK6A" && (strcmp(test.name(), "crankingWithSparkPlugs") == 0 ||
+			strcmp(test.name(), "crankingWithoutSparkPlugs") == 0));
+}
+
 class LogDisablerForHeavyTests : public ::testing::EmptyTestEventListener {
 	std::unique_ptr<ScopedUnitTestCreateLogs> disabler;
+	const bool skipReplayLogs = getenv("RUSEFI_SKIP_REPLAY_LOGS") != nullptr;
 	void OnTestStart(const ::testing::TestInfo& test_info) override {
 		std::string fullName = std::string(test_info.test_suite_name()) + "." + test_info.name();
-		if (getLogDisabledTests().count(fullName) > 0) {
+		if (getLogDisabledTests().count(fullName) > 0 || (skipReplayLogs && isExpensiveReplayLog(test_info))) {
 			disabler = std::make_unique<ScopedUnitTestCreateLogs>(false);
 		}
 	}

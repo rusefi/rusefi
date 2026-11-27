@@ -42,6 +42,11 @@ Exclusion patterns (e.g., for `googletest` or the `unit_tests` directory itself)
 
 The build system does not track compiler-flag changes, so run `make clean` in `unit_tests/` when switching between coverage and non-coverage builds — otherwise stale objects produce a near-zero (or needlessly instrumented) result.
 
+Linux CI keeps two `ccache` directories under `~/.cache/rusefi-ut`: `coverage`
+for the ASan/coverage build and `memcheck` for the unsanitized rebuild. Only
+compiler outputs are cached. A successful default-branch job saves the cache;
+PRs can restore the latest compatible archive and compile their own changes.
+
 Unit tests use Google Test and run on PC, not on the ECU.
 
 Fuel-pipeline fixtures used by custom boards must initialize `config->lambdaTable`
@@ -82,6 +87,11 @@ For Valgrind, rebuild with `SANITIZE=no`; the normal non-Windows unit-test build
 enables ASan. From `unit_tests/`, use `make clean`, `make -j12 SANITIZE=no`, then
 `./run_with_valgrind.sh`. `make_for_valgrind.sh` selects the flag but does not clean
 old objects, so running it alone after an ASan build can reuse incompatible objects.
+
+CI sets `RUSEFI_SKIP_REPLAY_LOGS=1` only for the Memcheck pass. Formatting diagnostic
+rows at 500 Hz dominates the Kawasaki 8-1, Nissan Maxima and Suzuki K6A cranking
+replays under instrumentation. The recordings still run in full. Leave the variable
+unset when reproducing a failure locally to get the usual MSL/CSV files.
 
 `EngineTestHelper::applyTriggerWaveform()` also increments the global configuration version and notifies hardware controllers. Static ETB controllers can retain PID pointers into an earlier test's destroyed configuration when the next test skips throttle initialization (for example, without TPS sensors). A later configuration notification then reads the stale pointer in `Pid::isSame()`, detectable under Valgrind. For tests that only need trigger/cylinder geometry refreshed, use `engine->updateTriggerConfiguration()` directly; tests of global configuration changes still require ETB lifetime isolation. See the MAP sampling tests and the 2026-09-29 report.
 

@@ -12,4 +12,5 @@ sudo apt-get install python3-pip
 #   python3 -m venv venv && ./venv/bin/pip install gcovr
 # and access
 #   ./venv/bin/gcovr
-pip install --break-system-packages gcovr
+# The CI image does not install libxml2/libxslt development headers.
+pip install --break-system-packages --only-binary=lxml gcovr
