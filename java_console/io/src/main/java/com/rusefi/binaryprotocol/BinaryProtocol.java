@@ -303,10 +303,18 @@ public class BinaryProtocol {
             // Let's check if we can use reflection or if there is a better way.
             // For now, let's try to fix the import or use the full name if it's available.
         } catch (IniNotFoundException e) {
-            log.info("INI not found for signature: " + signature);
-            linkManager.recordMissingIniFailure(signature);
-            close();
-            return "Failed to located .ini";
+            // #10349: the usual paths (bundle, cache, download) had no match. Pull the
+            // .ini straight from the ECU's embedded filesystem image over the live link.
+            log.info("INI not found for signature: " + signature + ", pulling it from the ECU");
+            try {
+                iniFile = Objects.requireNonNull(downloadIniFromEcu(signature));
+                linkManager.clearMissingIniFailure();
+            } catch (Throwable ecuPull) {
+                log.info("Could not pull .ini from the ECU: " + ecuPull);
+                linkManager.recordMissingIniFailure(signature);
+                close();
+                return "Failed to located .ini";
+            }
         }
         if (isSinglePageController()) {
             log.info("*** COMPATIBILITY MODE: older single-page firmware");
@@ -334,6 +342,23 @@ public class BinaryProtocol {
         }
         log.info("connectAndReadConfiguration: completed successfully");
         return null;
+    }
+
+    /**
+     * #10349: pull the .ini from the ECU's embedded filesystem image over the live
+     * link, cache it under the ECU signature, and resolve it through the normal
+     * provider (which validates the signature). Runs on the connection thread.
+     */
+    @NotNull
+    private IniFileModel downloadIniFromEcu(String signature) throws IOException, IniNotFoundException {
+        byte[] iniBytes = CanIniDownloader.downloadIni(this);
+        java.io.File tmp = java.io.File.createTempFile("rusefi_ecu_", ".ini");
+        tmp.deleteOnExit();
+        java.nio.file.Files.write(tmp.toPath(), iniBytes);
+        log.info("Pulled " + iniBytes.length + " .ini bytes from the ECU, caching for " + signature);
+        // so subsequent connects resolve it without any download or prompt
+        SignatureHelper.importIntoCache(signature, tmp);
+        return iniFileProvider.provide(signature);
     }
 
     private void startPullThread(final DataListener textListener) {

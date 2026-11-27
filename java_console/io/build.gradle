@@ -40,6 +40,11 @@ dependencies {
     api ts_plugin_libs.httpclient
     api ts_plugin_libs.httpcore
 
+    // Pure-Java extraction of the ECU-served .ini filesystem image (#10349):
+    // 7z/LZMA2 for the inner rusefi.ini.7z. FAT12 is parsed by our Fat12Reader.
+    implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.26.2'
+    implementation group: 'org.tukaani', name: 'xz', version: '1.9'
+
     testFixturesApi global_libs.mockito
     testFixturesApi testFixtures(project(':inifile'))
     testFixturesApi global_libs.annotations

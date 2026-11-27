@@ -78,7 +78,10 @@ public class CanIniDownloadSandbox {
             Files.write(workDir.resolve("fs_image.bin"), image);
         }
 
-        File iniFile = extractIni(maybeGunzip(image), workDir);
+        // Pure-Java extraction (FAT12 + 7z), shared with the console's #10349 fallback.
+        byte[] iniBytes = com.rusefi.binaryprotocol.CanIniDownloader.extractIni(image);
+        File iniFile = workDir.resolve("rusefi.ini").toFile();
+        Files.write(iniFile.toPath(), iniBytes);
         String iniSignature = IniLocator.readIniSignature(iniFile);
         System.out.println("Extracted " + iniFile + " " + iniFile.length() + " bytes, signature [" + iniSignature + "]");
         if (iniSignature == null) {
