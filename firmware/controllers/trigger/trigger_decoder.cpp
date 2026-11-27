@@ -325,8 +325,10 @@ void PrimaryTriggerDecoder::onTriggerError() {
 			// prepared, and only chooses again after it next fires. Engine phase is no longer
 			// known, so make them all choose again now, otherwise each one fires once more in
 			// sequential mode on a phase that is now a guess. [tag:injection_phase_sync]
+#if EFI_ENGINE_CONTROL
 			engine->ignitionEvents.isReady = false;
 			engine->injectionEvents.invalidate();
+#endif // EFI_ENGINE_CONTROL
 		}
 	#pragma GCC diagnostic pop
 }
