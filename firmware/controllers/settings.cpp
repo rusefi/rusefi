@@ -745,21 +745,21 @@ void setEngineTypeAndSave(int value) {
 }
 
 void setEngineType(int value, bool isWriteToFlash) {
-	{
-#if EFI_PROD_CODE
-		chibios_rt::CriticalSectionLocker csl;
-#endif // EFI_PROD_CODE
+	if (Sensor::getOrZero(SensorType::Rpm) > 0) {
+		efiPrintf("Refusing engine type change: RPM > 0");
+		return;
+	}
 
-		engineConfiguration->engineType = (engine_type_e)value;
-		resetConfigurationExt((engine_type_e)value);
-		engine->resetEngineSnifferIfInTestMode();
+	engineConfiguration->engineType = (engine_type_e)value;
+	resetConfigurationExt((engine_type_e)value);
+	engine->resetEngineSnifferIfInTestMode();
 
 #if EFI_CONFIGURATION_STORAGE
-		if (isWriteToFlash) {
-			writeToFlashNow();
-		}
-#endif /* EFI_CONFIGURATION_STORAGE */
+	if (isWriteToFlash) {
+		writeToFlashNow();
 	}
+#endif /* EFI_CONFIGURATION_STORAGE */
+
 	incrementGlobalConfigurationVersion("engineType");
 #if EFI_ENGINE_CONTROL && ! EFI_UNIT_TEST
 	printConfiguration();
