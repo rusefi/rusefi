@@ -50,6 +50,26 @@ def load_tune(path: str) -> TuneSnapshot:
     )
 
 
+def read_all_constants(path: str) -> dict[str, str]:
+    """Return every ``<constant name="X">...</constant>`` tag in the file as
+    ``{name: raw_text}``, not just the handful ``TuneSnapshot`` models.
+
+    Values are only whitespace-stripped, not quote-stripped (unlike the
+    closed-loop-flag lookup in ``load_tune``): raw-text equality is
+    intentionally conservative for a field-by-field diff -- a quoted vs.
+    unquoted mismatch would just mean "report it as different," which is the
+    safe direction.
+    """
+    root = ET.parse(path).getroot()
+    constants: dict[str, str] = {}
+    for el in root.iter():
+        if el.tag.split("}")[-1] == "constant":
+            name = el.get("name")
+            if name is not None and el.text is not None:
+                constants[name] = el.text.strip()
+    return constants
+
+
 def _constant_block_pattern(name: str) -> re.Pattern:
     return re.compile(r"(<constant\b[^>]*\bname=\"%s\"[^>]*>)(.*?)(</constant>)" % re.escape(name), re.S)
 

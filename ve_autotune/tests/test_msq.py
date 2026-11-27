@@ -1,6 +1,17 @@
-from ve_autotune.pipeline.msq import load_tune, write_tune_with_ve_table
+from ve_autotune.pipeline.msq import load_tune, read_all_constants, write_tune_with_ve_table
 
 FIXTURE = "ve_autotune/tests/fixtures/sample_tune.msq"
+
+# TuneSnapshot models exactly these 7 fields' worth of .msq constants.
+_TUNE_SNAPSHOT_CONSTANT_NAMES = {
+    "veTable",
+    "veRpmBins",
+    "veLoadBins",
+    "lambdaTable",
+    "lambdaRpmBins",
+    "lambdaLoadBins",
+    "fuelClosedLoopCorrectionEnabled",
+}
 
 
 def test_load_tune_reads_ve_and_lambda_tables():
@@ -36,3 +47,18 @@ def test_write_tune_rounds_ve_values_to_declared_digits(tmp_path):
     assert "30.0 34.1 " in text
     assert "29.9773" not in text
     assert "34.1121" not in text
+
+
+def test_read_all_constants_includes_veTable_and_closed_loop_flag():
+    constants = read_all_constants(FIXTURE)
+    assert constants["veTable"].startswith("29.0 29.0")
+    assert constants["fuelClosedLoopCorrectionEnabled"] == '"disabled"'
+
+
+def test_read_all_constants_is_not_limited_to_tune_snapshot_fields():
+    constants = read_all_constants(FIXTURE)
+    # Proves genuine comprehensiveness (every <constant> tag), not just the
+    # 7 fields TuneSnapshot models -- e.g. the fixture's unrelated tag.
+    assert "someOtherField" in constants
+    assert constants["someOtherField"] == '"keep me"'
+    assert set(constants) > _TUNE_SNAPSHOT_CONSTANT_NAMES
