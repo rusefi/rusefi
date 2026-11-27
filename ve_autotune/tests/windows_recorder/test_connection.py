@@ -14,6 +14,7 @@ class FakeTransport:
     def __init__(self, read_chunks):
         self._read_chunks = list(read_chunks)
         self.written = None
+        self.reset_input_buffer_calls = 0
 
     def write(self, data: bytes) -> None:
         self.written = data
@@ -22,6 +23,9 @@ class FakeTransport:
         chunk = self._read_chunks.pop(0)
         assert len(chunk) == n
         return chunk
+
+    def reset_input_buffer(self) -> None:
+        self.reset_input_buffer_calls += 1
 
 
 def _framed_response(payload: bytes) -> tuple[bytes, bytes, bytes]:
@@ -38,6 +42,16 @@ def test_read_channels_sends_exact_request():
     transport = FakeTransport([length_prefix, inner, crc])
     RusefiBtConnection(transport).read_channels()
     assert transport.written == build_output_channel_request(0, 214)
+
+
+def test_read_channels_resets_input_buffer_before_writing():
+    # Guards against a previous request's short error-reply frame (the
+    # ECU's own error-code path on a corrupted request) leaving trailing
+    # bytes in the OS buffer that would otherwise desync every later read.
+    length_prefix, inner, crc = _framed_response(bytes(214))
+    transport = FakeTransport([length_prefix, inner, crc])
+    RusefiBtConnection(transport).read_channels()
+    assert transport.reset_input_buffer_calls == 1
 
 
 def test_read_channels_decodes_response():

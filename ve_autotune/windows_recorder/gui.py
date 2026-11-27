@@ -6,8 +6,10 @@ channel values while recording, same wire protocol and CSV format as the
 Android app. This is the PyInstaller entry point (see windows_recorder.spec).
 """
 
+import os
 import queue
 import threading
+import time
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
@@ -91,6 +93,18 @@ class App(tk.Tk):
             messagebox.showerror("VE Autotune Recorder", "Select a COM port and an output CSV path first.")
             return
 
+        if os.path.exists(output_path):
+            # Re-pressing Start after a dropped connection keeps the same
+            # output path in the entry box, and opening it with "w" would
+            # silently truncate the previous ride's log -- ask first,
+            # rather than lose data the user may not realize is gone.
+            overwrite = messagebox.askyesno(
+                "VE Autotune Recorder",
+                f"{output_path} already exists. Overwrite it?",
+            )
+            if not overwrite:
+                return
+
         self._start_button.config(state="disabled")
         self._stop_button.config(state="normal")
         self._status_var.set("Connecting...")
@@ -112,6 +126,18 @@ class App(tk.Tk):
     def _on_close(self) -> None:
         if self._stop_event is not None:
             self._stop_event.set()
+            # Give the worker thread a bounded chance to actually close the
+            # CSV file and serial port before the window (and this process,
+            # since the worker is a daemon thread) goes away -- otherwise
+            # the session's teardown races the process exit instead of
+            # always running, as the design requires.
+            deadline = time.monotonic() + 5.0
+            while self._stop_event is not None and time.monotonic() < deadline:
+                try:
+                    message = self._queue.get(timeout=0.1)
+                except queue.Empty:
+                    continue
+                self._handle_message(message)
         self.destroy()
 
     @staticmethod
@@ -129,10 +155,17 @@ class App(tk.Tk):
             out_queue.put({"type": "stopped", "error": f"could not open {port_name}: {e}"})
             return
 
+        # Everything from here on must still reach the "stopped" message in
+        # the finally block below -- an uncaught exception from, say, a
+        # full disk during logger.append_row (raised inside run_session)
+        # must not leave the GUI's Start/Stop buttons wedged with no error
+        # shown, which a narrower try around just run_session's known
+        # exception types would do.
         error_reason = None
         try:
             logger = CsvLogger(csv_file)
             logger.write_header()
+            out_queue.put({"type": "status", "text": f"Recording to {os.path.basename(output_path)}..."})
             connection = RusefiBtConnection(SerialTransport(ser))
             error_reason = run_session(
                 connection,
@@ -140,12 +173,23 @@ class App(tk.Tk):
                 stop_event=stop_event,
                 on_status=lambda text: out_queue.put({"type": "status", "text": text}),
                 on_channels=lambda c: out_queue.put({"type": "channels", "channels": c}),
+                # stop_event.wait() both pauses between polls AND returns
+                # immediately once Stop is clicked, instead of blocking the
+                # full second regardless (plain time.sleep).
+                sleep=stop_event.wait,
             )
+        except Exception as e:
+            error_reason = f"unexpected error: {e}"
         finally:
-            csv_file.close()
-            ser.close()
-
-        out_queue.put({"type": "stopped", "error": error_reason})
+            try:
+                csv_file.close()
+            except OSError:
+                pass
+            try:
+                ser.close()
+            except OSError:
+                pass
+            out_queue.put({"type": "stopped", "error": error_reason})
 
     def _poll_queue(self) -> None:
         try:

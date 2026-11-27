@@ -1,5 +1,6 @@
 .dep*
 build/
+ve_autotune/windows_recorder/dist/
 triggers/*
 test_triggers
 build_kinetis/

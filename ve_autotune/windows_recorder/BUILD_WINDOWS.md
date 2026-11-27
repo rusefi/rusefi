@@ -11,14 +11,23 @@ just the final packaging step.
 Install Python 3.10 or newer from [python.org](https://www.python.org/downloads/)
 if you don't already have it. During setup, tick "Add Python to PATH".
 
-## 2. Get this folder onto the Windows machine
+## 2. Get the code onto the Windows machine
 
-Copy the whole `ve_autotune/windows_recorder/` folder (this one) to your
-Windows machine, keeping its contents together.
+`gui.py` imports itself as `ve_autotune.windows_recorder...`, so copying
+only this `windows_recorder/` folder is **not enough** — the build needs
+the `ve_autotune/` package it lives inside too. Copy the whole repository
+(or at least the whole `ve_autotune/` folder) to your Windows machine,
+keeping this `windows_recorder/` folder in its place inside it:
+
+```
+<copied repo>/ve_autotune/windows_recorder/   <- this folder, unchanged
+<copied repo>/ve_autotune/...                  <- the rest of ve_autotune/
+```
 
 ## 3. Build
 
-Open a terminal (PowerShell or Command Prompt) in this folder and run:
+Open a terminal (PowerShell or Command Prompt) **inside this
+`windows_recorder/` folder** (not the repo root) and run:
 
 ```
 pip install -r requirements.txt

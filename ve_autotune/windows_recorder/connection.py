@@ -34,6 +34,13 @@ class RusefiBtConnection:
         self._transport = transport
 
     def read_channels(self) -> Channels:
+        # Discard any bytes left over from a previous request's response --
+        # if that response was a short rejection frame (the ECU's own
+        # error-reply path for a corrupted request/CRC failure/unknown
+        # command), trailing bytes from it would otherwise still be sitting
+        # in the buffer and get read as part of THIS response, permanently
+        # desyncing every later read from the real frame boundaries.
+        self._transport.reset_input_buffer()
         self._transport.write(
             build_output_channel_request(_OUTPUT_CHANNELS_OFFSET, _OUTPUT_CHANNELS_COUNT)
         )

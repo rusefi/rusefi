@@ -7,12 +7,16 @@ class FakeSerial:
     def __init__(self, chunks):
         self._chunks = list(chunks)
         self.written = b""
+        self.reset_input_buffer_calls = 0
 
     def write(self, data: bytes) -> None:
         self.written += data
 
     def read(self, n: int) -> bytes:
         return self._chunks.pop(0) if self._chunks else b""
+
+    def reset_input_buffer(self) -> None:
+        self.reset_input_buffer_calls += 1
 
 
 def test_write_passes_bytes_through():
@@ -31,3 +35,9 @@ def test_read_fully_raises_timeout_on_empty_read():
     fake = FakeSerial([b"ab", b""])
     with pytest.raises(TimeoutError):
         SerialTransport(fake).read_fully(5)
+
+
+def test_reset_input_buffer_delegates_to_underlying_serial():
+    fake = FakeSerial([])
+    SerialTransport(fake).reset_input_buffer()
+    assert fake.reset_input_buffer_calls == 1

@@ -97,6 +97,34 @@ def test_bad_response_is_retried_not_fatal():
     assert any("retry" in msg.lower() or "1/5" in msg for msg in statuses)
 
 
+def test_timeout_error_is_retried_like_bad_response():
+    # A read timeout (e.g. one dropped byte, or firmware staying silent
+    # while out of sync) must NOT end the session on its own -- only a run
+    # of MAX_CONSECUTIVE_BAD_FRAMES timeouts/bad-responses in a row should.
+    stop_event = threading.Event()
+    connection = FakeConnection([TimeoutError("read timed out"), _CHANNELS])
+    logger = FakeLogger()
+    sleep_calls = []
+
+    def fake_sleep(_seconds):
+        sleep_calls.append(_seconds)
+        if len(sleep_calls) >= 2:
+            stop_event.set()
+
+    result = run_session(
+        connection,
+        logger,
+        stop_event=stop_event,
+        on_status=lambda msg: None,
+        on_channels=lambda c: None,
+        sleep=fake_sleep,
+        clock=_make_clock(),
+    )
+
+    assert result is None
+    assert len(logger.rows) == 1
+
+
 def test_fifth_consecutive_bad_response_ends_session():
     stop_event = threading.Event()
     connection = FakeConnection([BadResponse("noise")] * 5)

@@ -38,10 +38,21 @@ def run_session(
     while not stop_event.is_set():
         try:
             channels = connection.read_channels()
-        except BadResponse as e:
+        except (BadResponse, TimeoutError) as e:
+            # A read timeout is treated the same as a bad frame (not a
+            # fatal transport error): the 2-second read timeout exists
+            # specifically so a dead link "surfaces promptly as a bad
+            # frame" (one dropped byte, or firmware staying silent while
+            # out of sync, shouldn't end the whole ride on its own -- only
+            # MAX_CONSECUTIVE_BAD_FRAMES in a row should). A deeper OSError
+            # (port physically gone, access denied) is NOT caught here --
+            # it falls through to the except OSError branch below and ends
+            # the session immediately, since retrying a broken port can't
+            # recover. TimeoutError is itself an OSError subclass, so this
+            # clause must be listed first to take priority over that one.
             dead = bad_frames.record_failure()
             if dead:
-                error_reason = f"bad response from ECU: {e}"
+                error_reason = f"connection lost: bad response from ECU: {e}"
                 break
             on_status(
                 f"Recording... bad frame, retrying... "
@@ -49,7 +60,7 @@ def run_session(
             )
             sleep(_POLL_INTERVAL_SECONDS)
             continue
-        except (OSError, TimeoutError) as e:
+        except OSError as e:
             if not stop_event.is_set():
                 error_reason = f"serial I/O error: {e}"
             break

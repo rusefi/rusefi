@@ -19,6 +19,7 @@ import serial
 #: Bluetooth-via-TTL secondary TunerStudio channel.
 _BAUD_RATE = 38400
 _READ_TIMEOUT_SECONDS = 2.0
+_WRITE_TIMEOUT_SECONDS = 2.0
 
 
 class ByteTransport(Protocol):
@@ -26,17 +27,30 @@ class ByteTransport(Protocol):
 
     def read_fully(self, n: int) -> bytes: ...
 
+    def reset_input_buffer(self) -> None: ...
+
 
 class SerialTransport:
     """ByteTransport backed by anything exposing pyserial's
-    write(bytes)/read(n) -> bytes interface (a real serial.Serial, or a
-    fake with the same shape for tests)."""
+    write(bytes)/read(n)/reset_input_buffer() interface (a real
+    serial.Serial, or a fake with the same shape for tests)."""
 
     def __init__(self, ser):
         self._ser = ser
 
     def write(self, data: bytes) -> None:
         self._ser.write(data)
+
+    def reset_input_buffer(self) -> None:
+        """Discards any bytes already sitting in the OS's receive buffer.
+        Must be called before writing a new request: if the previous
+        request's response was a short rejection frame (the ECU's
+        sendErrorCode path -- e.g. a CRC failure or unknown-command reply),
+        trailing bytes from that reply are still in the buffer and would
+        otherwise be read as if they belonged to the next response,
+        permanently desyncing the stream (every later read lands mid-frame
+        instead of at a frame start)."""
+        self._ser.reset_input_buffer()
 
     def read_fully(self, n: int) -> bytes:
         buf = bytearray()
@@ -60,4 +74,5 @@ def open_port(port_name: str) -> serial.Serial:
         parity=serial.PARITY_NONE,
         stopbits=serial.STOPBITS_ONE,
         timeout=_READ_TIMEOUT_SECONDS,
+        write_timeout=_WRITE_TIMEOUT_SECONDS,
     )
