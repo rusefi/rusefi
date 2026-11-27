@@ -62,10 +62,12 @@ def write_tune_with_ve_table(source_path: str, ve_table: list[list[float]], dest
     match = _constant_block_pattern("veTable").search(text)
     if match is None:
         raise ValueError("constant 'veTable' not found")
+    digits_match = re.search(r"\bdigits=\"(\d+)\"", match.group(1))
+    digits = int(digits_match.group(1)) if digits_match else 1
     body = match.group(2)
     # Keep the original leading newline and closing indentation; replace only the value rows.
     rows = "".join(
-        "         " + " ".join(repr(float(v)) for v in row) + " \n" for row in ve_table
+        "         " + " ".join(f"{float(v):.{digits}f}" for v in row) + " \n" for row in ve_table
     )
     new_body = "\n" + rows + body.rsplit("\n", 1)[-1]
     text = text[: match.start(2)] + new_body + text[match.end(2) :]
