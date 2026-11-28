@@ -12,7 +12,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 |---|---|---:|---:|---|---:|---:|---|
 | firmware | accelerometer | 400 | 184 | normal SPI sensor read | 24 | 24 | PROXY +0, PROXY BELOW REVIEWED; partial proxy: 1 indirect |
 | firmware | bench test | 1600 | 148 | idle production worker | 1932 | 1932 | PROXY +0; partial proxy: 33 unknown, 6 indirect, recursion |
-| firmware | CAN RX | 768 | 440 | CAN serial receive | 1244 | 1372 | REVIEW PROXY +128; partial proxy: 59 unknown, 29 indirect, recursion |
+| firmware | CAN RX | 768 | 440 | CAN serial receive | 1244 | 1364 | REVIEW PROXY +120; partial proxy: 59 unknown, 29 indirect, recursion |
 | firmware | CAN TX | 1536 | - | - | - | 1364 | NOT REVIEWED: 37 unknown, 9 indirect, recursion |
 | firmware | electronic throttle | 512 | 304 | normal ETB update | 556 | 652 | REVIEW PROXY +96; partial proxy: 19 unknown, 3 indirect, recursion |
 | firmware | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
@@ -27,7 +27,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | stepper | 400 | 280 | dual H-bridge stepping | 676 | 772 | REVIEW PROXY +96; partial proxy: 24 unknown, 6 indirect, recursion |
 | firmware | storage manager | 1200 | 1032 | SD extra-page burn | 660 | 756 | REVIEW PROXY +96, PROXY BELOW REVIEWED; partial proxy: 30 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | 104 | normal watchdog sleep | 552 | 648 | REVIEW PROXY +96; partial proxy: 19 unknown, 2 indirect, recursion |
-| firmware | TunerStudio | 1200 | 824 | normal communication | 1324 | 1428 | REVIEW PROXY +104; partial proxy: 66 unknown, 38 indirect, recursion |
+| firmware | TunerStudio | 1200 | 824 | normal communication | 1324 | 1420 | REVIEW PROXY +96; partial proxy: 66 unknown, 38 indirect, recursion |
 | firmware | USB mass storage | 256 | 240 | SD block read | 756 | 852 | REVIEW PROXY +96; partial proxy: 26 unknown, 5 indirect, recursion |
 | bootloader | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | bootloader | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
@@ -70,7 +70,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | Image | Stack / entry | Nominal | Reviewed | Scenario | Proxy snapshot | Current proxy | Result |
 |---|---|---:|---:|---|---:|---:|---|
 | firmware | bench test | 1600 | - | - | - | 716 | NOT REVIEWED: 20 unknown, 3 indirect, recursion |
-| firmware | CAN RX | 768 | 296 | normal IOBox receive | 1212 | 1260 | REVIEW PROXY +48; partial proxy: 51 unknown, 29 indirect, recursion |
+| firmware | CAN RX | 768 | 296 | normal IOBox receive | 1212 | 1252 | REVIEW PROXY +40; partial proxy: 51 unknown, 29 indirect, recursion |
 | firmware | CAN TX | 1536 | - | - | - | 1260 | NOT REVIEWED: 27 unknown, 9 indirect, recursion |
 | firmware | electronic throttle | 512 | 256 | normal ETB update | 8 | 8 | PROXY +0, PROXY BELOW REVIEWED; partial proxy: 1 indirect |
 | firmware | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
@@ -84,7 +84,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | stepper | 400 | 220 | normal startup positioning | 652 | 668 | REVIEW PROXY +16; partial proxy: 15 unknown, 6 indirect, recursion |
 | firmware | storage manager | 400 | 308 | internal-flash tune burn | 628 | 644 | REVIEW PROXY +16; partial proxy: 20 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | 112 | normal watchdog sleep | 528 | 544 | REVIEW PROXY +16; partial proxy: 11 unknown, 2 indirect, recursion |
-| firmware | TunerStudio | 1200 | 804 | normal tune burn | 1244 | 1300 | REVIEW PROXY +56; partial proxy: 53 unknown, 36 indirect, recursion |
+| firmware | TunerStudio | 1200 | 804 | normal tune burn | 1244 | 1292 | REVIEW PROXY +48; partial proxy: 53 unknown, 36 indirect, recursion |
 | bootloader | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | bootloader | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
 | bootloader | LED | 256 | - | - | - | 80 | NOT REVIEWED: 3 unknown |
@@ -97,7 +97,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | 400 | canDashboardHondaK(CanCycle) | controllers/can/can_dash_honda.cpp:46:6 |
 | firmware | 248 | CanWrite::ThreadTask() | controllers/can/can_tx.cpp:34:6 |
 | firmware | 248 | luaO_pushvfstring | ext/lua/lobject.c:480:13 |
-| firmware | 240 | Engine::periodicFastCallback() | controllers/algo/engine.cpp:631:6 |
+| firmware | 240 | Engine::periodicFastCallback() | controllers/algo/engine.cpp:633:6 |
 | firmware | 240 | luaO_str2num | ext/lua/lobject.c:308:8 |
 | firmware | 200 | luaD_rawrunprotected | ext/lua/ldo.c:135:5 |
 | firmware | 192 | f_parser | ext/lua/ldo.c:999:13 |
@@ -127,7 +127,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 |---|---|---:|---:|---|---:|---:|---|
 | firmware | accelerometer | 400 | - | - | - | 24 | NOT REVIEWED: 1 indirect |
 | firmware | bench test | 1600 | - | - | - | 1940 | NOT REVIEWED: 33 unknown, 6 indirect, recursion |
-| firmware | CAN RX | 768 | - | - | - | 1364 | NOT REVIEWED: 63 unknown, 32 indirect, recursion |
+| firmware | CAN RX | 768 | - | - | - | 1356 | NOT REVIEWED: 63 unknown, 32 indirect, recursion |
 | firmware | CAN TX | 1536 | - | - | - | 1372 | NOT REVIEWED: 38 unknown, 10 indirect, recursion |
 | firmware | electronic throttle | 512 | - | - | - | 660 | NOT REVIEWED: 19 unknown, 3 indirect, recursion |
 | firmware | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
@@ -142,7 +142,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | stepper | 400 | - | - | - | 780 | NOT REVIEWED: 24 unknown, 6 indirect, recursion |
 | firmware | storage manager | 1200 | - | - | - | 764 | NOT REVIEWED: 30 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | - | - | - | 656 | NOT REVIEWED: 19 unknown, 2 indirect, recursion |
-| firmware | TunerStudio | 1200 | - | - | - | 1420 | NOT REVIEWED: 67 unknown, 39 indirect, recursion |
+| firmware | TunerStudio | 1200 | - | - | - | 1412 | NOT REVIEWED: 67 unknown, 39 indirect, recursion |
 | firmware | USB mass storage | 256 | - | - | - | 860 | NOT REVIEWED: 26 unknown, 5 indirect, recursion |
 | bootloader | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | bootloader | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
@@ -186,7 +186,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 |---|---|---:|---:|---|---:|---:|---|
 | firmware | accelerometer | 400 | - | - | - | 24 | NOT REVIEWED: 1 indirect |
 | firmware | bench test | 1600 | - | - | - | 1908 | NOT REVIEWED: 26 unknown, 6 indirect, recursion |
-| firmware | CAN RX | 768 | - | - | - | 1396 | NOT REVIEWED: 54 unknown, 33 indirect, recursion |
+| firmware | CAN RX | 768 | - | - | - | 1388 | NOT REVIEWED: 54 unknown, 33 indirect, recursion |
 | firmware | CAN TX | 1536 | - | - | - | 1372 | NOT REVIEWED: 30 unknown, 11 indirect, recursion |
 | firmware | electronic throttle | 512 | - | - | - | 652 | NOT REVIEWED: 12 unknown, 3 indirect, recursion |
 | firmware | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
@@ -201,7 +201,7 @@ Reviewed bytes are one manually traced realistic scenario, not a root-wide maxim
 | firmware | stepper | 400 | - | - | - | 772 | NOT REVIEWED: 16 unknown, 6 indirect, recursion |
 | firmware | storage manager | 1200 | - | - | - | 748 | NOT REVIEWED: 22 unknown, 5 indirect, recursion |
 | firmware | timer watchdog | 256 | - | - | - | 648 | NOT REVIEWED: 12 unknown, 2 indirect, recursion |
-| firmware | TunerStudio | 1200 | - | - | - | 1404 | NOT REVIEWED: 58 unknown, 39 indirect, recursion |
+| firmware | TunerStudio | 1200 | - | - | - | 1396 | NOT REVIEWED: 58 unknown, 39 indirect, recursion |
 | firmware | USB mass storage | 2048 | - | - | - | 852 | NOT REVIEWED: 19 unknown, 5 indirect, recursion |
 | bootloader | exception/ISR | 4096 | - | - | - | - | NOT REVIEWED |
 | bootloader | idle | 32 | - | - | - | 0 | NOT REVIEWED: direct graph resolved |
