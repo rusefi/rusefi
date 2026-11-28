@@ -247,7 +247,7 @@ enum class trigger_type_e : uint32_t {
   TT_CUSTOM_2 = 89,
 
   // 53022243AF 6.2 2009-22 Dodge Chrysler Jeep RAM 5.7L 6.2L 6.4L OHV V8
-  TT_CHRYSLER_PHASER = 90,
+  TT_CHRYSLER_PHASER_v8 = 90,
 
   TT_TOYOTA_3_TOOTH_UZ = 91,
 
@@ -275,6 +275,7 @@ enum class trigger_type_e : uint32_t {
 	// 36-1-1 crank wheel, repeating every 180 crank degrees.
 	TT_NISSAN_VK56DE = 101,
 	TT_NISSAN_VK56DE_CAM = 102,
+	TT_CHRYSLER_PHASER_v6 = 103,
 
 	// TL,DR https://github.com/rusefi/rusefi/commit/523805138589585cc8889d6afd9305d120180902 example of new trigger commit
 	//
@@ -287,7 +288,7 @@ enum class trigger_type_e : uint32_t {
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	TT_UNUSED = 103, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 104, // this is used if we want to iterate over all trigger types
 };
 
 typedef enum {

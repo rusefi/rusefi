@@ -227,7 +227,8 @@ static angle_t adjustCrankPhase(int camIndex) {
 	case VVT_MITSUBISHI_4G69:
 	case VVT_MITSUBISHI_3A92:
 	case VVT_MITSUBISHI_6G72:
-	case VVT_CHRYSLER_PHASER:
+	case VVT_CHRYSLER_PHASER_V8:
+	case VVT_CHRYSLER_PHASER_v6:
 	case VVT_HONDA_K_EXHAUST:
 	case VVT_HONDA_CBR_600:
 	case VVT_SUBARU_7TOOTH:

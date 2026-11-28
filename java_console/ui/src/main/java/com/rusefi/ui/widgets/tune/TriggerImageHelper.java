@@ -182,8 +182,10 @@ public class TriggerImageHelper {
                 return VariableRegistryValues.trigger_type_e_TT_VVT_MITSU_6G72;
             case VariableRegistryValues.vvt_mode_e_VVT_HONDA_CBR_600:
                 return VariableRegistryValues.trigger_type_e_TT_HONDA_CBR_600;
-            case VariableRegistryValues.vvt_mode_e_VVT_CHRYSLER_PHASER:
-                return VariableRegistryValues.trigger_type_e_TT_CHRYSLER_PHASER;
+            case VariableRegistryValues.vvt_mode_e_VVT_CHRYSLER_PHASER_V8:
+                return VariableRegistryValues.trigger_type_e_TT_CHRYSLER_PHASER_v8;
+            case VariableRegistryValues.vvt_mode_e_VVT_CHRYSLER_PHASER_v6:
+                return VariableRegistryValues.trigger_type_e_TT_CHRYSLER_PHASER_v6;
             case VariableRegistryValues.vvt_mode_e_VVT_TOYOTA_3TOOTH_UZ:
                 return VariableRegistryValues.trigger_type_e_TT_TOYOTA_3_TOOTH_UZ;
             case VariableRegistryValues.vvt_mode_e_VVT_NISSAN_MR:

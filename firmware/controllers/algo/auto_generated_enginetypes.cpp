@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sat Oct 17 23:34:51 UTC 2026
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Fri Nov 27 22:09:58 EST 2026
 // see also gen_config_and_enums.bat
 
 
@@ -258,8 +258,10 @@ const char *getTrigger_type_e(trigger_type_e value) {
 			return "TT_BMW_VANOS_RELUCTOR";
 		case trigger_type_e::TT_CHRYSLER_NGC_36_2_2:
 			return "TT_CHRYSLER_NGC_36_2_2";
-		case trigger_type_e::TT_CHRYSLER_PHASER:
-			return "TT_CHRYSLER_PHASER";
+		case trigger_type_e::TT_CHRYSLER_PHASER_v6:
+			return "TT_CHRYSLER_PHASER_v6";
+		case trigger_type_e::TT_CHRYSLER_PHASER_v8:
+			return "TT_CHRYSLER_PHASER_v8";
 		case trigger_type_e::TT_CUSTOM_1:
 			return "TT_CUSTOM_1";
 		case trigger_type_e::TT_CUSTOM_2:

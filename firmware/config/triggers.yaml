@@ -1869,48 +1869,44 @@
     - channel: 0
       angle: 0
       width: 180
-- name: TT_CHRYSLER_PHASER
+- name: TT_CHRYSLER_PHASER_v8
   humanName: Dodge/Chrysler/Jeep V8 5.7L
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
   syncGaps:
-    - from: 1.62
-      to: 2.7
-    - from: 1.56
-      to: 2.6
-    - from: 0.26
-      to: 0.42
+    - from: 2.5
+      to: 3.5
+    - from: 0.25
+      to: 0.4
   teeth:
     - channel: 0
       angle: 0
       count: 2
-      lastAngle: 11
+      lastAngle: 44.2
     - channel: 0
-      angle: 21
+      angle: 54.8
       count: 2
-      lastAngle: 44
+      lastAngle: 65.2
     - channel: 0
-      angle: 90
+      angle: 89
       count: 2
-      lastAngle: 132
+      lastAngle: 133.6
     - channel: 0
-      angle: 142
+      angle: 177.6
       count: 2
-      lastAngle: 176
+      lastAngle: 187.8
     - channel: 0
-      angle: 188
+      angle: 222
+      count: 3
+      lastAngle: 244.4
+    - channel: 0
+      angle: 269.2
       count: 2
-      lastAngle: 200
+      lastAngle: 279.8
     - channel: 0
-      angle: 224
+      angle: 314.8
       count: 2
-      lastAngle: 234
-    - channel: 0
-      angle: 269
-      count: 2
-      lastAngle: 281
-    - channel: 0
-      angle: 306
+      lastAngle: 325.4
 - name: TT_TOYOTA_3_TOOTH_UZ
   humanName: Toyota UZ 3 Tooth
   operationMode: FOUR_STROKE_CAM_SENSOR
@@ -2055,3 +2051,35 @@
       lastAngle: 55
     - channel: 0
       angle: 148
+- name: TT_CHRYSLER_PHASER_v6
+  humanName: Chrysler Phaser V6 3.6L
+  operationMode: FOUR_STROKE_CAM_SENSOR
+  syncEdge: RiseOnly
+  syncGaps:
+    - from: 1.05
+      to: 1.4
+    - from: 4
+      to: 5.4
+  teeth:
+    - channel: 0
+      angle: 0
+      count: 3
+      lastAngle: 21
+    - channel: 0
+      angle: 60
+      count: 2
+      lastAngle: 120
+    - channel: 0
+      angle: 130.5
+      count: 2
+      lastAngle: 180
+    - channel: 0
+      angle: 190.5
+      count: 2
+      lastAngle: 201
+    - channel: 0
+      angle: 240
+      count: 2
+      lastAngle: 250.5
+    - channel: 0
+      angle: 300

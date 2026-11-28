@@ -610,7 +610,19 @@ void configureJeepEVD_36_2_2(TriggerWaveform *s) {
 	}
 }
 
-void configureChryslerVtt15(TriggerWaveform *s) {
+void configureChryslerPhaserV6(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
+	static constexpr angle_t edges[] = {19, 40, 118, 139, 238, 358, 379, 400, 478, 598, 619, 718};
+	for (angle_t edge : edges) {
+		s->addEvent720(edge, TriggerValue::RISE);
+		s->addEvent720(edge + 2, TriggerValue::FALL);
+	}
+	// The 21, 99, 120 degree interval sequence ends at 358 crank degrees.
+	s->setTriggerSynchronizationGap3(0, 1.05f, 1.4f);
+	s->setTriggerSynchronizationGap3(1, 4.0f, 5.4f);
+}
+
+void configureChryslerPhaserV8(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 	int width = 5;
 

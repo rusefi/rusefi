@@ -100,7 +100,7 @@ typedef enum  __attribute__ ((__packed__)) {
 
 	VVT_MAP_V_TWIN = 13,
 
-  VVT_CHRYSLER_PHASER = 14,
+  VVT_CHRYSLER_PHASER_V8 = 14,
 
 	VVT_MAZDA_SKYACTIV = 15,
 
@@ -147,6 +147,7 @@ typedef enum  __attribute__ ((__packed__)) {
   VVT_CUSTOM_5 = 34,
 
   VVT_NISSAN_VK56DE = 35,
+  VVT_CHRYSLER_PHASER_v6 = 36,
 
 } vvt_mode_e;
 
