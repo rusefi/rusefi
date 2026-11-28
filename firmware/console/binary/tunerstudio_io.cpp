@@ -111,10 +111,17 @@ TsChannelBase::TsChannelBase(const char *p_name) {
 	this->name = p_name;
 }
 
-void TsChannelBase::assertPacketSize(size_t size, bool allowLongPackets) {
+// Returns true (and warns) when a long packet was requested on a channel that cannot send one,
+// for example the FS/.ini image read over CAN, whose ISO-TP response must fit the blocking factor.
+// The caller then refuses the request gracefully with an error code. We must NOT criticalError()
+// here: that latches a fatal fault and stops the engine over a mere protocol / console-version /
+// signature mismatch (a host asking for too big a chunk, e.g. the .ini download fallback over CAN).
+bool TsChannelBase::assertPacketSize(size_t size, bool allowLongPackets) {
 	if (isBigPacket(size) && !allowLongPackets) {
-		criticalError("[USE PROPER CONSOLE VERSION ] disallowed long packet of size %d", size);
+		warning(ObdCode::CUSTOM_TS_OVERFLOW, "[USE PROPER CONSOLE VERSION ] refused long packet of size %d", size);
+		return true;
 	}
+	return false;
 }
 
 /**
@@ -126,7 +133,12 @@ void TsChannelBase::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, siz
 		size = 0;
 	}
 
-	assertPacketSize(size, allowLongPackets);
+	if (assertPacketSize(size, allowLongPackets)) {
+		// Too large to send on this channel: refuse with an error code so the host can retry
+		// with a smaller chunk, instead of sending oversized data or killing the engine.
+		writeCrcResponse(TS_RESPONSE_OUT_OF_RANGE);
+		return;
+	}
 
 	if (isBigPacket(size)) {
 		// for larger packets we do not use a buffer for CRC calculation meaning data is now allowed to modify while pending

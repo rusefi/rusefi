@@ -72,7 +72,9 @@ public:
 #endif
 	const char *name;
 
-	void assertPacketSize(size_t size, bool allowLongPackets);
+	// returns true (and warns) when the packet is too large to send on this channel and long
+	// packets are not allowed; the caller then refuses the request instead of killing the engine
+	bool assertPacketSize(size_t size, bool allowLongPackets);
 	uint32_t writePacketHeader(const uint8_t responseCode, const size_t size);
 	uint32_t writePacketBody(const uint8_t* buf, const size_t size, uint32_t crc);
 	void writeCrcPacketTail(uint32_t crc);
