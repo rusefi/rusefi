@@ -3,21 +3,15 @@ package com.rusefi.ui.widgets.tune;
 import com.devexperts.logging.Logging;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.opensr5.ConfigurationImage;
-import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
-import com.opensr5.ini.field.IniField;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.UpdateOperationCallbacks;
-import com.rusefi.maintenance.CalibrationsHelper;
-import com.rusefi.maintenance.CalibrationsInfo;
 import com.rusefi.maintenance.OfflineTuneLoader;
 import com.rusefi.maintenance.jobs.AsyncJob;
 import com.rusefi.maintenance.jobs.AsyncJobExecutor;
 import com.rusefi.maintenance.jobs.JobHelper;
-import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.tune.xml.MsqFactory;
-import com.rusefi.tune.xml.Page;
 import com.rusefi.util.RestorePointStore;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.basic.LoadTuneHelper;
@@ -29,20 +23,26 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.io.IOException;
 import java.util.ArrayDeque;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.Future;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.FutureTask;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Toolbar for the Tune tab: Burn, Discard, Undo, and Redo buttons.
@@ -60,6 +60,8 @@ public class TuningToolbarWidget {
 
     private final JPanel panel;
     private Window dialogOwner;
+    private BiPredicate<String, Boolean> startTuneLoad;
+    private Function<JComponent, Runnable> reviewHost = content -> null;
     private final JButton burnButton;
     private final JButton discardButton;
 
@@ -69,13 +71,27 @@ public class TuningToolbarWidget {
     private final Consumer<Runnable> submit;
     private final AtomicReference<ConfigurationImage> sessionImage;
 
-    private final ArrayDeque<ConfigurationImage> undoStack = new ArrayDeque<>();
-    private final ArrayDeque<ConfigurationImage> redoStack = new ArrayDeque<>();
+    private final ArrayDeque<TuneSnapshot> undoStack = new ArrayDeque<>();
+    private final ArrayDeque<TuneSnapshot> redoStack = new ArrayDeque<>();
     private final AtomicReference<ConfigurationImage> undoBaseline = new AtomicReference<>();
 
     /** [tag:offline_tune] Baseline image for discard — set when a tune is loaded (from ECU or MSQ file). */
     private ConfigurationImage baselineImage;
-    private ConfigurationImage savedFileBaseline;
+    private Map<Integer, ConfigurationImage> secondaryBaseline = Map.of();
+    // Saved-to-file is independent of loaded/burned. Before the first Save this tracks the opened tune
+    // or the starting ECU image, so an untouched ECU tune does not prompt to be saved.
+    private Map<Integer, ConfigurationImage> savedPages = Map.of();
+    private String savedLayoutSignature;
+
+    private static final class TuneSnapshot {
+        final ConfigurationImage main;
+        final Map<Integer, ConfigurationImage> secondary;
+
+        TuneSnapshot(ConfigurationImage main, Map<Integer, ConfigurationImage> secondary) {
+            this.main = main;
+            this.secondary = secondary;
+        }
+    }
 
     private final JButton undoButton = new JButton("Undo");
     private final JButton redoButton = new JButton("Redo");
@@ -107,10 +123,11 @@ public class TuningToolbarWidget {
     private final Timer undoCommitTimer;
     private final Timer uploadTimer;
     private volatile boolean firmwareUpdateInProgress;
+    private volatile boolean loadInProgress;
     private boolean burnInProgress;
     private boolean saveInProgress;
     private Runnable onBaselineChanged = () -> { };
-    private long editGeneration;
+    private volatile long editGeneration;
     private volatile long connectionGeneration;
     private Consumer<String> errorHandler = message -> JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
 
@@ -146,7 +163,24 @@ public class TuningToolbarWidget {
         this.submit = submit;
         this.sessionImage = sessionImage;
         this.baselineImage = baselineImage;
-        resetTuneFileBaseline(baselineImage);
+        this.savedPages = baselineImage == null ? Map.of() : Map.of(0, baselineImage.clone());
+        IniFileModel initialIni = uiContext.iniFileState.getIniFileModel();
+        this.savedLayoutSignature = initialIni == null ? null : initialIni.getSignature();
+        uiContext.setSecondaryTuneListeners((id, before) -> {
+            secondaryBaseline = copyPages(secondaryBaseline);
+            secondaryBaseline.putIfAbsent(id, before.clone());
+            savedPages = copyPages(savedPages);
+            savedPages.putIfAbsent(id, before.clone());
+            ++editGeneration;
+            refreshState();
+        }, id -> {
+            ConfigurationImage burned = workingSecondary().get(id);
+            if (burned != null) {
+                secondaryBaseline = copyPages(secondaryBaseline);
+                secondaryBaseline.put(id, burned.clone());
+                refreshState();
+            }
+        });
         noteTimer.setRepeats(false);
         stateLabel.addMouseListener(noteClick);
         undoButton.setEnabled(false);
@@ -162,7 +196,7 @@ public class TuningToolbarWidget {
         Runnable flushUndoBaseline = () -> {
             ConfigurationImage baseline = undoBaseline.getAndSet(null);
             if (baseline != null) {
-                undoStack.push(baseline);
+                undoStack.push(new TuneSnapshot(baseline, workingSecondary()));
                 if (undoStack.size() > MAX_UNDO) {
                     undoStack.removeLast();
                 }
@@ -188,16 +222,16 @@ public class TuningToolbarWidget {
         buildSaveTuneAction(uiContext, right, sessionImage);
 
         undoButton.addActionListener(e -> {
-            if (undoStack.isEmpty()) {
+            if (loadInProgress || undoStack.isEmpty()) {
                 return;
             }
             undoCommitTimer.stop();
             undoBaseline.set(null);
             ConfigurationImage image = sessionImage.get();
             if (image != null) {
-                redoStack.push(image);
+                redoStack.push(new TuneSnapshot(image, workingSecondary()));
             }
-            sessionImage.set(undoStack.pop());
+            restoreHistory(undoStack.pop());
             String key = currentKey.get();
             // [tag:detached_calibration_sync] Restored windows may be open before a primary page
             // is selected. Publish replacements even with a null key (also redo/discard/load below).
@@ -209,16 +243,16 @@ public class TuningToolbarWidget {
         });
 
         redoButton.addActionListener(e -> {
-            if (redoStack.isEmpty()) {
+            if (loadInProgress || redoStack.isEmpty()) {
                 return;
             }
             undoCommitTimer.stop();
             undoBaseline.set(null);
             ConfigurationImage image = sessionImage.get();
             if (image != null) {
-                undoStack.push(image);
+                undoStack.push(new TuneSnapshot(image, workingSecondary()));
             }
-            sessionImage.set(redoStack.pop());
+            restoreHistory(redoStack.pop());
             String key = currentKey.get();
             right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
             publishReplacement();
@@ -228,6 +262,7 @@ public class TuningToolbarWidget {
 
         // sits on the Tuning tab's toolbar strip (TuningPane), which supplies the colour
         panel = layOut(CONTROLS_TOP, stateLabel, burnButton, discardButton, undoButton, redoButton);
+        panel.add(new JoinedButtons(new JButton(loadTuneAction)), 2);
 
         // [tag:offline_tune] Refresh the state label whenever offline mode toggles (e.g. Load Tune
         // while disconnected). Edit/discard/burn/connect/disconnect paths call refreshState() directly.
@@ -372,7 +407,7 @@ public class TuningToolbarWidget {
     }
 
     public void burnToEcuAndThen(CalibrationDialogWidget right, Runnable onSuccess) {
-        if (firmwareUpdateInProgress || burnInProgress) {
+        if (firmwareUpdateInProgress || burnInProgress || loadInProgress || uiContext.isOfflineMode()) {
             return;
         }
         BinaryProtocol bp = uiContext.getBinaryProtocol();
@@ -385,6 +420,10 @@ public class TuningToolbarWidget {
         }
         uploadTimer.stop();
         final ConfigurationImage image = toBurn.clone();
+        final Map<Integer, ConfigurationImage> secondary = copyPages(workingSecondary());
+        final Map<Integer, ConfigurationImage> previous = copyPages(secondaryBaseline);
+        final Set<Integer> changedSecondary = changedPages(previous, secondary);
+        final Map<Integer, ConfigurationImage> target = snapshotPages(image, secondary);
         final IniFileModel ini = uiContext.iniFileState.getIniFileModel();
         final RestorePointStore store = restorePoints;
         final long savedEditGeneration = editGeneration;
@@ -395,17 +434,30 @@ public class TuningToolbarWidget {
         loadTuneAction.setEnabled(false);
         try {
             submit.accept(() -> {
-                // the ECU's tune as it is before this Burn replaces it
-                boolean previousKept = saveRestorePoint(store, bp.getControllerConfiguration(), ini,
-                    RestorePointStore.Reason.BEFORE_BURN, RestorePointsWindow.vehicleNameOf(image, ini));
+                Set<Integer> acknowledged = new TreeSet<>();
+                boolean previousKept;
                 RuntimeException failure = null;
                 try {
+                    if (!sameLiveConnection(bp, savedConnectionGeneration)) {
+                        throw new IllegalStateException("The ECU session changed.");
+                    }
+                    requireSecondaryRam(bp, secondary, changedSecondary);
+                    previousKept = saveRestorePoint(store, snapshotPages(bp.getControllerConfiguration(), previous), ini,
+                        RestorePointStore.Reason.BEFORE_BURN, RestorePointsWindow.vehicleNameOf(image, ini));
                     bp.uploadChangesWithoutBurn(image);
                     bp.burn();
                     bp.setConfigurationImage(image);
+                    acknowledged.add(0);
+                    burnSecondaryPages(bp, changedSecondary, acknowledged, () -> {
+                        if (!sameLiveConnection(bp, savedConnectionGeneration)) {
+                            throw new IllegalStateException("The ECU session changed.");
+                        }
+                    });
                 } catch (RuntimeException ex) {
+                    previousKept = false;
                     failure = ex;
                 }
+                boolean restorePointKept = previousKept;
                 RuntimeException operationFailure = failure;
                 SwingUtilities.invokeLater(() -> {
                     boolean sameConnection = savedConnectionGeneration == connectionGeneration
@@ -417,18 +469,20 @@ public class TuningToolbarWidget {
                     burnInProgress = false;
                     burnButton.setEnabled(!firmwareUpdateInProgress && uiContext.getBinaryProtocol() != null);
                     discardButton.setEnabled(baselineImage != null);
-                    loadTuneAction.setEnabled(!firmwareUpdateInProgress);
+                    loadTuneAction.setEnabled(!firmwareUpdateInProgress && !loadInProgress);
                     if (!sameConnection) {
                         return;
                     }
+                    if (!acknowledged.isEmpty()) {
+                        adoptAcknowledgedBurns(acknowledged, target);
+                    }
                     if (operationFailure != null) {
                         refreshState();
-                        errorHandler.accept("Failed to burn tune: " + operationFailure.getMessage());
+                        errorHandler.accept("Failed to burn tune (some pages may already be persisted): "
+                            + operationFailure.getMessage());
                         return;
                     }
-                    setBaselineImage(image.clone());
-                    refreshState();
-                    if (previousKept) {
+                    if (restorePointKept) {
                         showNote(BURN_NOTE, "Restore points", showRestorePoints);
                     }
                     if (noNewEdits && onSuccess != null) {
@@ -448,8 +502,26 @@ public class TuningToolbarWidget {
     /** Call when ECU connects to enable the burn button. */
     public void onEcuConnected() {
         connectionGeneration++;
-        burnButton.setEnabled(!burnInProgress);
+        burnButton.setEnabled(!burnInProgress && !loadInProgress);
         refreshState();
+    }
+
+    public void resetTuneFileBaseline(ConfigurationImage image) {
+        secondaryBaseline = copyPages(workingSecondary());
+        savedPages = snapshotPages(image, secondaryBaseline);
+        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+        savedLayoutSignature = ini == null ? null : ini.getSignature();
+    }
+
+    public void adoptConnectedBaseline(ConfigurationImage image, boolean replacingOfflineTune) {
+        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+        String signature = ini == null ? null : ini.getSignature();
+        secondaryBaseline = Map.of();
+        if (replacingOfflineTune || savedPages.isEmpty() || !Objects.equals(signature, savedLayoutSignature)) {
+            uiContext.setTuneFilePath(null);
+            resetTuneFileBaseline(image);
+        }
+        setBaselineImage(image);
     }
 
     private @NotNull JButton getDiscardButton(UIContext uiContext,
@@ -461,11 +533,15 @@ public class TuningToolbarWidget {
         discardButton.setToolTipText("Restore the tune from the last load or burn");
 
         discardButton.addActionListener(e -> {
-            if (burnInProgress || baselineImage == null) {
+            if (burnInProgress || loadInProgress || baselineImage == null) {
                 return;
             }
             uploadTimer.stop();
             ConfigurationImage restoration = baselineImage.clone();
+            Map<Integer, ConfigurationImage> secondary = copyPages(secondaryBaseline);
+            Set<Integer> changedSecondary = changedPages(secondary, workingSecondary());
+            ++editGeneration;
+            uiContext.setWorkingSecondaryTunePages(secondary);
             sessionImage.set(restoration);
             String key = currentKey.get();
             right.update(key, uiContext.iniFileState.getIniFileModel(), restoration);
@@ -490,8 +566,9 @@ public class TuningToolbarWidget {
                             || firmwareUpdateInProgress || uiContext.isOfflineMode()) {
                         return;
                     }
-                    try {
-                        bp.uploadChangesWithoutBurn(snapshot);
+                     try {
+                         bp.uploadChangesWithoutBurn(snapshot);
+                        restoreSecondaryToRam(bp, secondary, changedSecondary);
                     } catch (RuntimeException ex) {
                         SwingUtilities.invokeLater(() ->
                             errorHandler.accept("Failed to restore tune to ECU: " + ex.getMessage()));
@@ -520,7 +597,7 @@ public class TuningToolbarWidget {
     }
 
     private void uploadPendingChanges() {
-        if (firmwareUpdateInProgress) {
+        if (firmwareUpdateInProgress || loadInProgress || uiContext.isOfflineMode()) {
             return;
         }
         BinaryProtocol bp = uiContext.getBinaryProtocol();
@@ -529,8 +606,12 @@ public class TuningToolbarWidget {
             return;
         }
         final ConfigurationImage snapshot = image.clone();
+        long connection = connectionGeneration;
         try {
             submit.accept(() -> {
+                if (!sameLiveConnection(bp, connection) || loadInProgress) {
+                    return;
+                }
                 try {
                     bp.uploadChangesWithoutBurn(snapshot);
                 } catch (RuntimeException ex) {
@@ -541,6 +622,100 @@ public class TuningToolbarWidget {
         } catch (RuntimeException ex) {
             SwingUtilities.invokeLater(() ->
                 errorHandler.accept("Failed to upload tune: " + ex.getMessage()));
+        }
+    }
+
+    private boolean sameLiveConnection(BinaryProtocol bp, long connection) {
+        return uiContext.getBinaryProtocol() == bp && connection == connectionGeneration
+            && !bp.isClosed() && !firmwareUpdateInProgress && !uiContext.isOfflineMode();
+    }
+
+    private Map<Integer, ConfigurationImage> workingSecondary() {
+        return uiContext.getWorkingSecondaryTunePages();
+    }
+
+    private static Map<Integer, ConfigurationImage> copyPages(Map<Integer, ConfigurationImage> pages) {
+        Map<Integer, ConfigurationImage> result = new TreeMap<>();
+        pages.forEach((id, image) -> result.put(id, image.clone()));
+        return result;
+    }
+
+    private static Map<Integer, ConfigurationImage> snapshotPages(ConfigurationImage main, Map<Integer, ConfigurationImage> secondary) {
+        Map<Integer, ConfigurationImage> result = copyPages(secondary);
+        if (main != null) {
+            result.put(0, main.clone());
+        }
+        return result;
+    }
+
+    private static boolean sameImage(ConfigurationImage a, ConfigurationImage b) {
+        return a == b || a != null && b != null && a.getByteOrder() == b.getByteOrder()
+            && Arrays.equals(a.getContent(), b.getContent());
+    }
+
+    private static Set<Integer> changedPages(Map<Integer, ConfigurationImage> previous, Map<Integer, ConfigurationImage> working) {
+        Set<Integer> changed = new TreeSet<>();
+        working.forEach((id, page) -> {
+            if (!sameImage(previous.get(id), page)) {
+                changed.add(id);
+            }
+        });
+        changed.remove(0);
+        return changed;
+    }
+
+    private void restoreHistory(TuneSnapshot snapshot) {
+        Set<Integer> changed = changedPages(workingSecondary(), snapshot.secondary);
+        Map<Integer, ConfigurationImage> restored = copyPages(workingSecondary());
+        restored.putAll(snapshot.secondary);
+        uiContext.setWorkingSecondaryTunePages(restored);
+        sessionImage.set(snapshot.main);
+        ++editGeneration;
+        BinaryProtocol bp = uiContext.getBinaryProtocol();
+        long connection = connectionGeneration;
+        if (bp != null && sameLiveConnection(bp, connection) && !burnInProgress) {
+            uploadTimer.stop();
+            submit.accept(() -> {
+                if (!sameLiveConnection(bp, connection) || loadInProgress) {
+                    return;
+                }
+                try {
+                    bp.uploadChangesWithoutBurn(snapshot.main);
+                    restoreSecondaryToRam(bp, snapshot.secondary, changed);
+                } catch (RuntimeException ex) {
+                    SwingUtilities.invokeLater(() -> errorHandler.accept("Failed to restore ECU RAM: " + ex.getMessage()));
+                }
+            });
+        }
+    }
+
+    private static void restoreSecondaryToRam(BinaryProtocol bp, Map<Integer, ConfigurationImage> pages, Set<Integer> changed) {
+        if (changed.isEmpty()) {
+            return;
+        }
+        Map<Integer, ConfigurationImage> wanted = new TreeMap<>();
+        Map<Integer, ConfigurationImage> actual = new TreeMap<>();
+        for (int page : changed) {
+            ConfigurationImage image = pages.get(page);
+            if (image == null) {
+                throw new IllegalStateException("Missing snapshot for calibration page " + page);
+            }
+            byte[] bytes = bp.readFromPage(page, 0, image.getSize());
+            if (bytes == null || bytes.length != image.getSize()) {
+                throw new IllegalStateException("Cannot verify current calibration page " + page);
+            }
+            wanted.put(page, image);
+            actual.put(page, new ConfigurationImage(bytes, image.getByteOrder()));
+        }
+        TunePageIo.uploadSecondary(bp, actual, wanted);
+    }
+
+    private static void requireSecondaryRam(BinaryProtocol bp, Map<Integer, ConfigurationImage> snapshots, Set<Integer> pages) {
+        for (int page : pages) {
+            ConfigurationImage expected = snapshots.get(page);
+            if (!Arrays.equals(bp.readFromPage(page, 0, expected.getSize()), expected.getContent())) {
+                throw new IllegalStateException(String.format("RAM on calibration page 0x%04X changed. Reopen the tune review.", page));
+            }
         }
     }
 
@@ -565,17 +740,24 @@ public class TuningToolbarWidget {
         loadTuneAction = new AbstractAction(LoadTuneHelper.LOAD_TUNE_TEXT) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (firmwareUpdateInProgress || burnInProgress || saveInProgress) {
+                if (firmwareUpdateInProgress || burnInProgress || loadInProgress || saveInProgress) {
                     return;
                 }
-                ConfigurationImage current = imageToSave(right.getWorkingImage(), sessionImage.get(), null, baselineImage);
+                ConfigurationImage current = currentImage(right);
                 if (hasUnsavedFileChanges(current)) {
                     String[] options = {"Save", "Continue Without Saving", "Cancel"};
                     int choice = JOptionPane.showOptionDialog(getDialogParent(),
                         "The current tune has changes that have not been saved to an .msq file.",
-                        "Unsaved Tune", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[2]);
+                        "Unsaved Tune", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+                        null, options, options[2]);
                     if (choice == 0) {
-                        saveTuneAndThen(right, this::chooseTune);
+                        long generation = editGeneration;
+                        long connection = connectionGeneration;
+                        saveTuneAndThen(right, () -> {
+                            if (generation == editGeneration && connection == connectionGeneration) {
+                                chooseTune();
+                            }
+                        });
                     } else if (choice == 1) {
                         chooseTune();
                     }
@@ -585,7 +767,7 @@ public class TuningToolbarWidget {
             }
 
             private void chooseTune() {
-                if (firmwareUpdateInProgress || burnInProgress || saveInProgress) {
+                if (firmwareUpdateInProgress || burnInProgress || loadInProgress || saveInProgress) {
                     return;
                 }
                 TuneFileFolder.openIn(chooser);
@@ -593,93 +775,195 @@ public class TuningToolbarWidget {
                     return;
                 }
                 TuneFileFolder.remember(chooser.getSelectedFile());
-                final String path = chooser.getSelectedFile().getAbsolutePath();
-                final String fileName = chooser.getSelectedFile().getName();
+                reviewTuneFile(chooser.getSelectedFile().getAbsolutePath());
+            }
+        };
+        startTuneLoad = (path, restoring) -> {
+                if (firmwareUpdateInProgress || burnInProgress || loadInProgress || saveInProgress) {
+                    return false;
+                }
+                final String fileName = new File(path).getName();
+
+                final BinaryProtocol bp = uiContext.isOfflineMode() ? null : uiContext.getBinaryProtocol();
+                final IniFileModel originalIni = uiContext.iniFileState.getIniFileModel();
+                final ConfigurationImage current = currentImage(right);
+                if (restoring && (current == null || originalIni == null)) {
+                    return false;
+                }
+                final Map<Integer, ConfigurationImage> working = snapshotPages(current, workingSecondary());
+                final long connection = connectionGeneration;
+                final long edit = editGeneration;
+                final boolean pendingUpload = uploadTimer.isRunning();
+                uploadTimer.stop();
+                loadInProgress = true;
+                uiContext.setTuneReviewInProgress(true);
+                updateLoadControls();
 
                 callbacks.clear();
                 onLoadStarted.run();
 
                 AsyncJobExecutor.INSTANCE.executeJob(
-                    new AsyncJob("Load Tune") {
+                    new AsyncJob(restoring ? "Restore Point" : "Load Tune") {
                         @Override
                         public void doJob(UpdateOperationCallbacks cb, Runnable onJobFinished) {
                             JobHelper.doJob(() -> {
+                                boolean[] applyAttempted = {false};
+                                AtomicReference<Map<Integer, ConfigurationImage>> burnTarget = new AtomicReference<>();
+                                Set<Integer> burnedPages = new TreeSet<>();
                                 try {
-                                    cb.logLine("Loading " + fileName + "...");
-                                    BinaryProtocol bp = uiContext.isOfflineMode() ? null : uiContext.getBinaryProtocol();
-                                    OfflineTuneLoader.Result result = bp == null
+                                    cb.logLine((restoring ? "Reading restore point " : "Loading ") + fileName + "...");
+                                    boolean opening = current == null;
+                                    if (bp != null && (opening || originalIni == null)) {
+                                        throw new IllegalStateException("Wait for the ECU tune to finish loading.");
+                                    }
+                                    OfflineTuneLoader.Result result = opening
                                         ? OfflineTuneLoader.loadTuneFromFile(path, null, cb::logLine)
                                         : OfflineTuneLoader.loadConnectedTuneFromFile(
-                                            path, uiContext.iniFileState.getIniFileModel(), cb::logLine);
+                                            path, originalIni, cb::logLine);
                                     if (result == null) {
                                         cb.error();
                                         SwingUtilities.invokeLater(() -> onLoadFinished.accept(true));
                                         return;
                                     }
-                                    if (firmwareUpdateInProgress) {
-                                        cb.logLine("Firmware update in progress; tune load cancelled.");
-                                        cb.error();
-                                        SwingUtilities.invokeLater(() -> onLoadFinished.accept(true));
+                                    if (opening) {
+                                        Map<Integer, ConfigurationImage> opened = TuneLoadPreparation.openOffline(result.msq, result.ini);
+                                        SwingUtilities.invokeAndWait(() -> {
+                                            requireCurrentReview(bp, originalIni, connection, edit);
+                                            uiContext.setIniFileModelForOffline(result.ini);
+                                            publishLoadedPages(right, currentKey, result.ini, opened);
+                                            uiContext.setOfflineMode(true);
+                                            uiContext.setTuneFilePath(path);
+                                            resetTuneFileBaseline(opened.get(0));
+                                            setBaselineImage(opened.get(0));
+                                        });
+                                        cb.done();
+                                        SwingUtilities.invokeLater(() -> onLoadFinished.accept(false));
                                         return;
                                     }
-                                    cb.logLine("Applying tune fields...");
-                                    IniFileModel targetIni = bp == null
-                                        ? result.ini
-                                        : uiContext.iniFileState.getIniFileModel();
-                                    ConfigurationImage currentImage = imageToSave(
-                                        right.getWorkingImage(),
-                                        sessionImage.get(),
-                                        bp == null ? null : bp.getControllerConfiguration(),
-                                        baselineImage
-                                    );
-                                    // the tune open now, unburned changes too: loading replaces it (and the ECU's)
-                                    saveRestorePoint(restorePoints, currentImage,
-                                        uiContext.iniFileState.getIniFileModel(), RestorePointStore.Reason.BEFORE_LOAD);
-                                    ConfigurationImage base = currentImage == null
-                                        ? new ConfigurationImage(targetIni.getMetaInfo().getPageSize(0), targetIni.getByteOrder())
-                                        : currentImage.clone();
-                                    ConfigurationImage newImage = bp == null
-                                        ? result.image
-                                        : applyLoadedTune(result.msq, result.ini, base, targetIni, cb);
 
+                                    List<String> warnings = new ArrayList<>();
+                                    Map<Integer, ConfigurationImage> base = new TreeMap<>(working);
+                                    Map<Integer, ConfigurationImage> devicePages = new TreeMap<>();
                                     if (bp != null) {
-                                        cb.logLine("Uploading and burning to ECU...");
-                                        Future<?> upload = uiContext.getLinkManager().submit(
-                                            () -> bp.uploadChanges(newImage));
-                                        try {
-                                            upload.get();
-                                        } catch (InterruptedException ex) {
-                                            Thread.currentThread().interrupt();
-                                            throw ex;
-                                        }
+                                        devicePages.putAll(onCommunicationThread(() -> {
+                                            requireCurrentReview(bp, originalIni, connection, edit);
+                                            Map<Integer, ConfigurationImage> pages = TunePageIo.readSecondary(bp, originalIni, warnings);
+                                            pages.put(0, bp.getControllerConfiguration().clone());
+                                            return pages;
+                                        }));
+                                        // An unread page cannot be reviewed against a stale working copy.
+                                        base.keySet().removeIf(id -> id != 0);
+                                        devicePages.forEach((id, page) -> {
+                                            if (id != 0 && TunePageIo.isBurnable(originalIni, id)) {
+                                                base.put(id, page);
+                                            }
+                                        });
                                     }
 
-                                    final boolean loadedWhileDisconnected = (bp == null);
+                                    TuneLoadPreparation prepared = TuneLoadPreparation.prepare(
+                                        result.msq, result.ini, originalIni, base, cb);
+                                    warnings.addAll(prepared.warnings);
+                                    Map<Integer, ConfigurationImage> incoming = restoring
+                                        ? RestorePointDiff.asShown(prepared.incoming, base, originalIni) : prepared.incoming;
+                                    TuneLoadPlan plan = TuneLoadPlan.create(originalIni, base, incoming, warnings);
+                                    TuneReviewDialog.Decision decision = reviewTune(fileName, plan, bp, originalIni, connection, edit,
+                                        restoring);
+                                    if (decision == null || decision.selected.isEmpty()) {
+                                        SwingUtilities.invokeLater(() -> onLoadFinished.accept(null));
+                                        return;
+                                    }
+
+                                    Map<Integer, ConfigurationImage> chosen = plan.select(decision.selected);
+                                    Set<Integer> changed = changedPages(base, chosen);
+                                    boolean reviewedMain = !sameImage(base.get(0), chosen.get(0));
+                                    Map<Integer, ConfigurationImage> replacement = new TreeMap<>(working);
+                                    Map<Integer, ConfigurationImage> before = copyPages(working);
+                                    replacement.put(0, chosen.get(0));
+                                    for (int page : changed) {
+                                        replacement.put(page, chosen.get(page));
+                                        before.put(page, base.get(page));
+                                    }
+                                    SwingUtilities.invokeAndWait(() -> requireCurrentReview(bp, originalIni, connection, edit));
+                                    if (!restoring) {
+                                        saveRestorePoint(restorePoints, base, originalIni, RestorePointStore.Reason.BEFORE_LOAD, null);
+                                    }
+                                    if (bp != null) {
+                                        cb.logLine("Applying reviewed changes to ECU RAM...");
+                                        onCommunicationThread(() -> {
+                                            requireCurrentReview(bp, originalIni, connection, edit);
+                                            if (decision.burn) {
+                                                saveRestorePoint(restorePoints, devicePages, originalIni,
+                                                    RestorePointStore.Reason.BEFORE_BURN,
+                                                    RestorePointsWindow.vehicleNameOf(chosen.get(0), originalIni));
+                                            }
+                                             Map<Integer, ConfigurationImage> target = applyReviewedTuneToRam(bp, plan,
+                                                 decision.selected, devicePages,
+                                                 () -> {
+                                                     requireCurrentReview(bp, originalIni, connection, edit);
+                                                     applyAttempted[0] = true;
+                                                 });
+                                            if (decision.burn) {
+                                                requireCurrentReview(bp, originalIni, connection, edit);
+                                                burnTarget.set(target);
+                                                try {
+                                                    burnReviewedPages(bp, devicePages, target, burnedPages, reviewedMain,
+                                                        () -> requireCurrentReview(bp, originalIni, connection, edit));
+                                                } catch (RuntimeException ex) {
+                                                    // RAM accepted the whole selection. Publish it if this is still the
+                                                    // same session, even if some of the requested burns were rejected.
+                                                    SwingUtilities.invokeLater(() -> {
+                                                        if (sameLiveConnection(bp, connection) && edit == editGeneration
+                                                                && uiContext.iniFileState.getIniFileModel() == originalIni) {
+                                                            adoptReviewedTune(right, currentKey, originalIni, before, replacement);
+                                                        }
+                                                    });
+                                                    throw ex;
+                                                }
+                                            }
+                                            return null;
+                                        });
+                                    }
                                     SwingUtilities.invokeAndWait(() -> {
-                                        sessionImage.set(newImage);
-                                        // [tag:offline_tune] Loading a tune with no ECU attached is an offline session.
-                                        if (loadedWhileDisconnected) {
-                                            uiContext.setIniFileModelForOffline(targetIni);
-                                            uiContext.setOfflineMode(true);
-                                            resetTuneFileBaseline(newImage);
-                                            uiContext.setTuneFilePath(path);
-                                        } else {
-                                            // A merge can retain ECU values omitted by the input file.
-                                            uiContext.setTuneFilePath(null);
+                                        requireCurrentReview(bp, originalIni, connection, edit);
+                                        adoptReviewedTune(right, currentKey, originalIni, before, replacement, !restoring);
+                                        if (restoring) {
+                                            showNote("Restore point put back as unburned changes");
                                         }
-                                        String key = currentKey.get();
-                                        right.update(key, targetIni, newImage);
-                                        // Adopt the loaded tune as baseline (enables discard + refreshes state label).
-                                        setBaselineImage(newImage.clone());
-                                        uiContext.fireConfigImageChanged(newImage);
                                     });
                                     cb.done();
                                     SwingUtilities.invokeLater(() -> onLoadFinished.accept(false));
-                                } catch (Exception ex) {
+                                 } catch (Exception ex) {
                                     log.error("Failed to load tune " + path, ex);
-                                    cb.logLine("Error: " + ex);
+                                    if (ex instanceof InterruptedException) {
+                                        Thread.currentThread().interrupt();
+                                    }
+                                    Throwable problem = ex instanceof java.lang.reflect.InvocationTargetException && ex.getCause() != null
+                                        ? ex.getCause() : ex;
+                                    cb.logLine("Tune load stopped: " + problem.getMessage());
+                                     if (burnTarget.get() != null) {
+                                        cb.logLine("ECU RAM was applied; flash may be only partially persisted. "
+                                            + "Check the ECU before continuing.");
+                                    } else if (applyAttempted[0]) {
+                                        cb.logLine("ECU RAM may have changed. Nothing was burned. Check the ECU before continuing.");
+                                    }
                                     cb.error();
                                     SwingUtilities.invokeLater(() -> onLoadFinished.accept(true));
+                                } finally {
+                                    SwingUtilities.invokeLater(() -> {
+                                         if (!burnedPages.isEmpty() && sameLiveConnection(bp, connection)
+                                                 && uiContext.iniFileState.getIniFileModel() == originalIni) {
+                                             adoptAcknowledgedBurns(burnedPages, burnTarget.get());
+                                        }
+                                        loadInProgress = false;
+                                        uiContext.setTuneReviewInProgress(false);
+                                         // A detached editor can invalidate the review while its upload is paused.
+                                         if (!applyAttempted[0] && (pendingUpload || edit != editGeneration)
+                                                 && bp != null && sameLiveConnection(bp, connection)
+                                                 && uiContext.iniFileState.getIniFileModel() == originalIni) {
+                                             uploadTimer.restart();
+                                        }
+                                        updateLoadControls();
+                                    });
                                 }
                             }, onJobFinished);
                         }
@@ -687,76 +971,181 @@ public class TuningToolbarWidget {
                     callbacks,
                     () -> { }
                 );
-            }
+                return true;
         };
     }
 
-    static ConfigurationImage applyLoadedTune(Msq tune, IniFileModel sourceIni,
-                                               ConfigurationImage base, IniFileModel targetIni,
-                                               UpdateOperationCallbacks callbacks) {
-        if (sourceIni == null) {
-            if (tune.getVersionInfo() == null
-                    || !Objects.equals(tune.getVersionInfo().getSignature(), targetIni.getSignature())) {
-                callbacks.logLine("Cannot import tune without its source INI because its signature differs "
-                    + "from the destination ECU.");
-                return base;
-            }
-            return applySameSignatureTune(tune, base, targetIni, callbacks);
-        }
-        Set<String> secondaryFields = new HashSet<>(sourceIni.getSecondaryIniFields().keySet());
-        secondaryFields.addAll(targetIni.getSecondaryIniFields().keySet());
-
-        CalibrationsInfo target = new CalibrationsInfo(
-            targetIni, ConfigurationImageWithMeta.valueOf(targetIni, base));
-        CalibrationsHelper.MergeResult result = CalibrationsHelper.mergeCalibrationsWithPartialFailure(
-            sourceIni, tune, target, callbacks, secondaryFields);
-
-        return result.mergedCalibrations
-            .map(calibrations -> calibrations.getImage().getConfigurationImage())
-            .orElse(base);
+    public boolean reviewRestorePoint(RestorePointStore.RestorePoint point) {
+        return startTuneLoad.test(point.file.toString(), true);
     }
 
-    private static ConfigurationImage applySameSignatureTune(Msq tune, ConfigurationImage base,
-                                                              IniFileModel targetIni,
-                                                              UpdateOperationCallbacks callbacks) {
-        ConfigurationImage result = base.clone();
-        Page page = tune.findPage();
-        if (page == null) {
-            callbacks.logLine("Tune has no values to import.");
-            return result;
+    boolean reviewTuneFile(String path) {
+        return startTuneLoad.test(path, false);
+    }
+
+    static void uploadLoadedTune(BinaryProtocol bp, ConfigurationImage image) {
+        bp.uploadChangesWithoutBurn(image);
+    }
+
+    static Map<Integer, ConfigurationImage> applyReviewedTuneToRam(BinaryProtocol bp, TuneLoadPlan plan,
+                                       Set<TuneLoadPlan.Change> selected,
+                                       Map<Integer, ConfigurationImage> devicePages, Runnable beforeWrite) {
+        if (selected == null || selected.isEmpty()) {
+            return devicePages;
         }
-        Map<String, IniField> targetFields = targetIni.getAllIniFields();
-        Set<String> secondaryFields = targetIni.getSecondaryIniFields().keySet();
-        for (Constant constant : page.constant) {
-            String name = constant.getName();
-            if (name.startsWith("UNALLOCATED_SPACE")) {
-                continue;
+        Map<Integer, ConfigurationImage> target = plan.select(selected, devicePages);
+        boolean mainChanged = !sameImage(devicePages.get(0), target.get(0));
+        if (!sameImage(devicePages.get(0), bp.getControllerConfiguration())) {
+            throw new IllegalStateException("The ECU tune changed. Start a new review.");
+        }
+        Set<Integer> changed = changedPages(devicePages, target);
+        if (!mainChanged && changed.isEmpty()) {
+            return target;
+        }
+        requireSecondaryRam(bp, devicePages, changed);
+        if (mainChanged) {
+            beforeWrite.run();
+            uploadLoadedTune(bp, target.get(0));
+        }
+        for (int page : changed) {
+            beforeWrite.run();
+            TunePageIo.uploadSecondary(bp, devicePages, Map.of(page, target.get(page)));
+        }
+        return target;
+    }
+
+    /** Persist only pages changed by the accepted review, recording each acknowledged burn. */
+    static void burnReviewedPages(BinaryProtocol bp, Map<Integer, ConfigurationImage> before,
+                                  Map<Integer, ConfigurationImage> target, Set<Integer> acknowledged) {
+        burnReviewedPages(bp, before, target, acknowledged, !sameImage(before.get(0), target.get(0)), () -> { });
+    }
+
+    static void burnReviewedPages(BinaryProtocol bp, Map<Integer, ConfigurationImage> before,
+                                  Map<Integer, ConfigurationImage> target, Set<Integer> acknowledged,
+                                  boolean reviewedMain, Runnable beforeEachBurn) {
+        boolean mainChanged = !sameImage(before.get(0), target.get(0));
+        Set<Integer> secondary = changedPages(before, target);
+        if (reviewedMain) {
+            beforeEachBurn.run();
+            if (mainChanged) {
+                bp.burn();
+            } else if (!bp.burnPage(0)) {
+                // The selected values may already be in RAM, but Apply and Burn explicitly persists them.
+                throw new IllegalStateException("Burn failed for the main calibration page.");
             }
-            if (secondaryFields.contains(name)) {
-                callbacks.logLine("Skipped " + name + ": secondary calibration.");
-                continue;
-            }
-            IniField field = targetFields.get(name);
-            if (field == null) {
-                callbacks.logLine("Skipped " + name + ": not available.");
-                continue;
-            }
-            try {
-                ConfigurationImage candidate = result.clone();
-                TuneLoadPreparation.applyTuneConstant(constant, field, candidate);
-                result = candidate;
-            } catch (RuntimeException e) {
-                String reason = e instanceof IllegalArgumentException ? e.getMessage() : null;
-                if (!"unknown pin".equals(reason) && !"pin is not available".equals(reason)
-                        && !"pin label is ambiguous".equals(reason) && !"value is out of range".equals(reason)
-                        && !"table size does not match".equals(reason) && !"units do not match".equals(reason)
-                        && !"invalid value".equals(reason)) {
-                    reason = "invalid value";
+            bp.cacheCurrentImage();
+            acknowledged.add(0);
+        }
+        burnSecondaryPages(bp, secondary, acknowledged, beforeEachBurn);
+    }
+
+    private static void burnSecondaryPages(BinaryProtocol bp, Set<Integer> pages, Set<Integer> acknowledged,
+                                           Runnable beforeEachBurn) {
+        for (int page : pages) {
+            beforeEachBurn.run();
+            TunePageIo.burnSecondary(bp, Set.of(page));
+            acknowledged.add(page);
+        }
+    }
+
+    private void adoptAcknowledgedBurns(Set<Integer> pages, Map<Integer, ConfigurationImage> target) {
+        if (pages.contains(0)) {
+            setBaselineImage(target.get(0));
+        }
+        if (pages.stream().anyMatch(page -> page != 0)) {
+            secondaryBaseline = copyPages(secondaryBaseline);
+            for (int page : pages) {
+                if (page != 0 && target.get(page) != null) {
+                    secondaryBaseline.put(page, target.get(page).clone());
                 }
-                callbacks.logLine("Skipped " + name + ": " + reason + ".");
             }
+            refreshState();
         }
-        return result;
+    }
+
+    public boolean isReviewInProgress() {
+        return loadInProgress;
+    }
+
+    void adoptReviewedTune(CalibrationDialogWidget right, AtomicReference<String> currentKey, IniFileModel ini,
+                           Map<Integer, ConfigurationImage> previous, Map<Integer, ConfigurationImage> replacement) {
+        adoptReviewedTune(right, currentKey, ini, previous, replacement, true);
+    }
+
+    private void adoptReviewedTune(CalibrationDialogWidget right, AtomicReference<String> currentKey, IniFileModel ini,
+                                    Map<Integer, ConfigurationImage> previous, Map<Integer, ConfigurationImage> replacement,
+                                    boolean clearFilePath) {
+        Map<Integer, ConfigurationImage> before = copyPages(previous);
+        ConfigurationImage main = before.remove(0);
+        // Newly reviewed pages get a reference snapshot, not an implicit burn or save of the result.
+        secondaryBaseline = copyPages(secondaryBaseline);
+        before.forEach(secondaryBaseline::putIfAbsent);
+        savedPages = copyPages(savedPages);
+        before.forEach(savedPages::putIfAbsent);
+        flushBeforeNavigate();
+        undoStack.push(new TuneSnapshot(main, before));
+        if (undoStack.size() > MAX_UNDO) {
+            undoStack.removeLast();
+        }
+        redoStack.clear();
+        undoButton.setEnabled(true);
+        redoButton.setEnabled(false);
+        ++editGeneration;
+        if (clearFilePath) {
+            uiContext.setTuneFilePath(null);
+        }
+        publishLoadedPages(right, currentKey, ini, replacement);
+    }
+
+    private ConfigurationImage currentImage(CalibrationDialogWidget right) {
+        BinaryProtocol bp = uiContext.isOfflineMode() ? null : uiContext.getBinaryProtocol();
+        return imageToSave(right.getWorkingImage(), sessionImage.get(),
+            bp == null ? null : bp.getControllerConfiguration(), baselineImage);
+    }
+
+    private void updateLoadControls() {
+        boolean available = !burnInProgress && !loadInProgress && !firmwareUpdateInProgress;
+        loadTuneAction.setEnabled(available && !saveInProgress);
+        discardButton.setEnabled(available && baselineImage != null);
+        burnButton.setEnabled(available && uiContext.getBinaryProtocol() != null && !uiContext.isOfflineMode());
+    }
+
+    private void requireCurrentReview(BinaryProtocol bp, IniFileModel ini, long connection, long edit) {
+        BinaryProtocol active = uiContext.isOfflineMode() ? null : uiContext.getBinaryProtocol();
+        if (firmwareUpdateInProgress || connectionGeneration != connection || editGeneration != edit
+                || active != bp || bp != null && bp.isClosed() || uiContext.iniFileState.getIniFileModel() != ini) {
+            throw new IllegalStateException("The tune or ECU connection changed. Start a new review.");
+        }
+    }
+
+    private <T> T onCommunicationThread(Callable<T> action) throws Exception {
+        FutureTask<T> task = new FutureTask<>(action);
+        submit.accept(task);
+        try {
+            return task.get();
+        } catch (java.util.concurrent.ExecutionException e) {
+            if (e.getCause() instanceof Exception) {
+                throw (Exception) e.getCause();
+            }
+            throw e;
+        }
+    }
+
+    private void publishLoadedPages(CalibrationDialogWidget right, AtomicReference<String> currentKey,
+                                    IniFileModel ini, Map<Integer, ConfigurationImage> pages) {
+        Map<Integer, ConfigurationImage> secondary = copyPages(pages);
+        ConfigurationImage image = secondary.remove(0);
+        uiContext.setWorkingSecondaryTunePages(secondary);
+        sessionImage.set(image);
+        right.update(currentKey.get(), ini, image);
+        publishReplacement();
+        refreshState();
+    }
+
+    static ConfigurationImage applyLoadedTune(Msq tune, IniFileModel sourceIni,
+                                                ConfigurationImage base, IniFileModel targetIni,
+                                                UpdateOperationCallbacks callbacks) {
+        return TuneLoadPreparation.prepare(tune, sourceIni, targetIni, Map.of(0, base), callbacks).incoming.get(0);
     }
 
     public void setFirmwareUpdateInProgress(boolean inProgress) {
@@ -764,7 +1153,7 @@ public class TuningToolbarWidget {
         if (inProgress) {
             uploadTimer.stop();
         }
-        loadTuneAction.setEnabled(!inProgress && !burnInProgress);
+        updateLoadControls();
     }
 
     private void buildSaveTuneAction(UIContext uiContext,
@@ -831,11 +1220,11 @@ public class TuningToolbarWidget {
             errorHandler.accept("No tune open to keep as a restore point");
             return;
         }
-        ConfigurationImage copy = image.clone();
+        Map<Integer, ConfigurationImage> pages = snapshotPages(image, workingSecondary());
         RestorePointStore store = restorePoints;
         fileWork.execute(() -> {
             try {
-                RestorePointStore.RestorePoint point = store.saveAlways(MsqFactory.valueOf(copy, ini),
+                RestorePointStore.RestorePoint point = store.saveAlways(MsqFactory.valueOf(pages, ini),
                     RestorePointStore.Reason.MANUAL, note);
                 log.info("Restore point " + point.file);
                 SwingUtilities.invokeLater(() -> showNote("Restore point created"));
@@ -905,6 +1294,9 @@ public class TuningToolbarWidget {
 
     /** Asks for a file, starting at the current tune file, and makes the chosen file the current one. */
     public void saveTuneAsAndThen(CalibrationDialogWidget right, Runnable onSuccess) {
+        if (loadInProgress || saveInProgress || firmwareUpdateInProgress) {
+            return;
+        }
         IniFileModel ini = uiContext.iniFileState.getIniFileModel();
         BinaryProtocol bp = uiContext.getBinaryProtocol();
         ConfigurationImage image = imageToSave(
@@ -960,22 +1352,39 @@ public class TuningToolbarWidget {
     }
 
     private void saveTuneToPathAndThen(IniFileModel ini, ConfigurationImage image, String path, Runnable onSuccess) {
-        if (saveInProgress) {
+        if (loadInProgress || saveInProgress || firmwareUpdateInProgress) {
             return;
         }
         saveInProgress = true;
-        ConfigurationImage snapshot = image.clone();
-        long connection = connectionGeneration;
-        long edit = editGeneration;
+        updateLoadControls();
+        final String finalPath = path;
+        final Map<Integer, ConfigurationImage> pages = snapshotPages(image, workingSecondary());
+        final BinaryProtocol bp = uiContext.isOfflineMode() ? null : uiContext.getBinaryProtocol();
+        final long connection = connectionGeneration;
+        final long edit = editGeneration;
         new Thread(() -> {
             try {
-                Path destination = Paths.get(path).toAbsolutePath();
+                if (bp != null) {
+                    List<String> warnings = new ArrayList<>();
+                    Map<Integer, ConfigurationImage> extra = onCommunicationThread(() -> {
+                        if (!sameLiveConnection(bp, connection)) {
+                            throw new IllegalStateException("The ECU session changed before the tune could be saved.");
+                        }
+                        return TunePageIo.readSecondary(bp, ini, warnings);
+                    });
+                    if (!warnings.isEmpty()) {
+                        throw new IllegalStateException("Could not save the complete tune: " + String.join("; ", warnings));
+                    }
+                    // Online pages are edited on the ECU itself; use their fresh contents.
+                    pages.putAll(extra);
+                }
+                Path destination = Path.of(finalPath).toAbsolutePath();
                 Path temporary = Files.createTempFile(destination.getParent(), ".tune-", ".msq");
                 try {
-                    MsqFactory.valueOf(snapshot, ini).writeXmlFile(temporary.toString());
+                    MsqFactory.valueOf(pages, ini).writeXmlFile(temporary.toString());
                     try {
                         Files.move(temporary, destination, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
-                    } catch (AtomicMoveNotSupportedException ex) {
+                    } catch (java.nio.file.AtomicMoveNotSupportedException e) {
                         Files.move(temporary, destination, StandardCopyOption.REPLACE_EXISTING);
                     }
                 } finally {
@@ -983,18 +1392,24 @@ public class TuningToolbarWidget {
                 }
                 SwingUtilities.invokeLater(() -> {
                     saveInProgress = false;
-                    if (connection != connectionGeneration || uiContext.iniFileState.getIniFileModel() != ini) {
+                    updateLoadControls();
+                    if (connection != connectionGeneration || ini != uiContext.iniFileState.getIniFileModel()) {
                         return;
                     }
-                    resetTuneFileBaseline(snapshot);
-                    uiContext.setTuneFilePath(path);
-                    if (onSuccess != null && edit == editGeneration) {
+                    savedPages = copyPages(pages);
+                    savedLayoutSignature = ini.getSignature();
+                    uiContext.setTuneFilePath(finalPath);
+                    if (edit == editGeneration && onSuccess != null) {
                         onSuccess.run();
                     }
                 });
             } catch (Exception ex) {
+                if (ex instanceof InterruptedException) {
+                    Thread.currentThread().interrupt();
+                }
                 SwingUtilities.invokeLater(() -> {
                     saveInProgress = false;
+                    updateLoadControls();
                     errorHandler.accept("Failed to save tune: " + ex.getMessage());
                 });
             }
@@ -1016,11 +1431,16 @@ public class TuningToolbarWidget {
      */
     static boolean saveRestorePoint(RestorePointStore store, ConfigurationImage image, IniFileModel ini,
                                     RestorePointStore.Reason reason, String vehicleName) {
-        if (store == null || image == null || ini == null) {
+        return image != null && saveRestorePoint(store, Map.of(0, image), ini, reason, vehicleName);
+    }
+
+    private static boolean saveRestorePoint(RestorePointStore store, Map<Integer, ConfigurationImage> pages,
+                                            IniFileModel ini, RestorePointStore.Reason reason, String vehicleName) {
+        if (store == null || !pages.containsKey(0) || ini == null) {
             return false;
         }
         try {
-            Msq tune = MsqFactory.valueOf(image, ini);
+            Msq tune = MsqFactory.valueOf(pages, ini);
             // empty when the newest point already holds this tune: it is kept all the same
             (vehicleName == null ? store.save(tune, reason, null) : store.save(tune, vehicleName, reason, null))
                 .ifPresent(point -> log.info("Restore point " + point.file));
@@ -1079,17 +1499,23 @@ public class TuningToolbarWidget {
         if (baselineImage == null) {
             return true;
         }
-        return !java.util.Arrays.equals(current.getContent(), baselineImage.getContent());
+        return !sameImage(current, baselineImage) || hasSecondaryEdits();
     }
 
-    /** The last file snapshot is independent of the image acknowledged by an ECU Burn. */
-    public void resetTuneFileBaseline(ConfigurationImage image) {
-        savedFileBaseline = image == null ? null : image.clone();
+    public boolean hasSecondaryEdits() {
+        return !changedPages(secondaryBaseline, workingSecondary()).isEmpty()
+            || !changedPages(workingSecondary(), secondaryBaseline).isEmpty();
     }
 
-    boolean hasUnsavedFileChanges(ConfigurationImage current) {
-        return current != null && (savedFileBaseline == null || current.getByteOrder() != savedFileBaseline.getByteOrder()
-            || !java.util.Arrays.equals(current.getContent(), savedFileBaseline.getContent()));
+    public boolean hasUnsavedFileChanges(ConfigurationImage current) {
+        if (current == null) {
+            return false;
+        }
+        if (!sameImage(savedPages.get(0), current)) {
+            return true;
+        }
+        return workingSecondary().entrySet().stream()
+            .anyMatch(page -> !sameImage(savedPages.get(page.getKey()), page.getValue()));
     }
 
     /** @return the loaded baseline image (pre-edit), or null if none loaded. */
@@ -1121,6 +1547,25 @@ public class TuningToolbarWidget {
         return panel;
     }
 
+    private TuneReviewDialog.Decision reviewTune(String fileName, TuneLoadPlan plan, BinaryProtocol bp,
+                                                  IniFileModel ini, long connection, long edit, boolean restoring) throws Exception {
+        CompletableFuture<TuneReviewDialog.Decision> decision = new CompletableFuture<>();
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                requireCurrentReview(bp, ini, connection, edit);
+                TuneReviewDialog.show(fileName, plan, bp != null, restoring, reviewHost, decision);
+            });
+            // Only the load worker waits. The Console must stay responsive while the review card is open.
+            return decision.get();
+        } finally {
+            decision.complete(null);
+        }
+    }
+
+    public void setTuneReviewHost(Function<JComponent, Runnable> reviewHost) {
+        this.reviewHost = reviewHost;
+    }
+
     /** File menu actions can run before the lazy Tuning tab is attached to the console. */
     public void setDialogOwner(Window owner) {
         dialogOwner = owner;
@@ -1138,7 +1583,9 @@ public class TuningToolbarWidget {
         editGeneration++;
         undoBaseline.compareAndSet(null, previousSessionImage);
         undoCommitTimer.restart();
-        uploadTimer.restart();
+        if (!loadInProgress) {
+            uploadTimer.restart();
+        }
         refreshState();
     }
 
@@ -1160,7 +1607,7 @@ public class TuningToolbarWidget {
             undoCommitTimer.stop();
             ConfigurationImage baseline = undoBaseline.getAndSet(null);
             if (baseline != null) {
-                undoStack.push(baseline);
+                undoStack.push(new TuneSnapshot(baseline, workingSecondary()));
                 if (undoStack.size() > MAX_UNDO) undoStack.removeLast();
                 redoStack.clear();
                 undoButton.setEnabled(!undoStack.isEmpty());
@@ -1185,7 +1632,7 @@ public class TuningToolbarWidget {
         // Disable burn button when ECU disconnects
         burnButton.setEnabled(false);
         discardButton.setEnabled(!burnInProgress && baselineImage != null);
-        loadTuneAction.setEnabled(!firmwareUpdateInProgress && !burnInProgress);
+        loadTuneAction.setEnabled(!firmwareUpdateInProgress && !burnInProgress && !loadInProgress && !saveInProgress);
         refreshState();
     }
 }

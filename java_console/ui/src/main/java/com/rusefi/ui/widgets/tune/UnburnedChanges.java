@@ -34,10 +34,16 @@ public final class UnburnedChanges {
     private final ConfigurationImage current;
     @Nullable
     private final ConfigurationImage burned;
+    private final int page;
 
     private UnburnedChanges(@Nullable ConfigurationImage current, @Nullable ConfigurationImage burned) {
+        this(current, burned, 0);
+    }
+
+    private UnburnedChanges(@Nullable ConfigurationImage current, @Nullable ConfigurationImage burned, int page) {
         this.current = current;
         this.burned = burned;
+        this.page = page;
     }
 
     /**
@@ -45,10 +51,14 @@ public final class UnburnedChanges {
      * @param burned  the last burned tune; null marks nothing
      */
     public static UnburnedChanges of(@Nullable ConfigurationImage current, @Nullable ConfigurationImage burned) {
+        return onPage(current, burned, 0);
+    }
+
+    static UnburnedChanges onPage(@Nullable ConfigurationImage current, @Nullable ConfigurationImage burned, int page) {
         if (current == null || burned == null || current.getByteOrder() != burned.getByteOrder()) {
             return NONE;
         }
-        return new UnburnedChanges(current, burned);
+        return new UnburnedChanges(current, burned, page);
     }
 
     public static UnburnedChanges none() {
@@ -134,10 +144,15 @@ public final class UnburnedChanges {
      * never reported as changed.
      */
     public static void restore(IniField field, ConfigurationImage burned, ConfigurationImage target) {
-        UnburnedChanges check = of(target, burned);
-        if (!check.comparable(field)) {
+        of(target, burned).copyField(field);
+    }
+
+    /** Copies the reference field into the current image, preserving unrelated bits. */
+    void copyField(IniField field) {
+        if (!comparable(field)) {
             return;
         }
+        ConfigurationImage target = current;
         if (field instanceof EnumIniField) {
             EnumIniField e = (EnumIniField) field;
             int size = e.getSize();
@@ -155,11 +170,11 @@ public final class UnburnedChanges {
         if (field == null || current == null || burned == null) {
             return false;
         }
-        if (field.getPageIndex() != 0 || field instanceof PcVariableArrayIniField) {
+        if (field.getPageIndex() != page || field instanceof PcVariableArrayIniField) {
             return false;
         }
         int end = field.getOffset() + field.getSize();
-        return field.getOffset() >= 0 && end <= current.getSize() && end <= burned.getSize();
+        return field.getOffset() >= 0 && end >= field.getOffset() && end <= current.getSize() && end <= burned.getSize();
     }
 
     private boolean bytesDiffer(int offset, int size) {

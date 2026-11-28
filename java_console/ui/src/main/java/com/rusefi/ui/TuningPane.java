@@ -41,6 +41,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2026
@@ -137,7 +138,11 @@ public class TuningPane {
             },
             failed -> {
                 showTuningTab.run();
-                showLoadResult(failed);
+                if (failed == null) {
+                    showTuningContent();
+                } else {
+                    showLoadResult(failed);
+                }
             }
         );
 
@@ -293,29 +298,34 @@ public class TuningPane {
                     if (bp == null || bp.getControllerConfiguration() == null) {
                         return;
                     }
-                    boolean replacingOfflineData = uiContext.isOfflineMode();
-                    boolean hadWorkingSession = sessionImage.get() != null;
-
                     // [tag:offline_tune] If we were editing offline and have pending changes, ask the
                     // user what to do before the freshly-read ECU image overwrites their edits. If the
                     // user chose to write/migrate, the helper takes over and we keep their edits.
                     ConfigurationImage offlineEdits = sessionImage.get();
-                    if (uiContext.isOfflineMode() && toolbar.hasUnsavedChanges(offlineEdits)
-                            && reconcileOfflineEditsOnConnect(bp, right, offlineEdits)) {
-                        return;
+                    if (uiContext.isOfflineMode()) {
+                        if (toolbar.hasSecondaryEdits()) {
+                            Object[] options = {"Stay Offline", "Use ECU Tune"};
+                            int choice = JOptionPane.showOptionDialog(content,
+                                "The offline tune has changes on additional pages. Save it as an .msq, then load it "
+                                    + "while connected to review and apply those pages.\n\n"
+                                    + "Use ECU Tune replaces your current offline working copy.",
+                                "ECU Connected", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+                                null, options, options[0]);
+                            if (choice != 1) {
+                                return;
+                            }
+                        } else if (toolbar.hasUnsavedChanges(offlineEdits) && reconcileOfflineEditsOnConnect(bp, right, offlineEdits)) {
+                            return;
+                        }
                     }
 
                     // Default: adopt the ECU's current tune; it no longer comes from the loaded file.
-                    if (uiContext.isOfflineMode()) {
-                        uiContext.setTuneFilePath(null);
-                    }
+                    boolean replacingOfflineTune = uiContext.isOfflineMode();
                     uiContext.setOfflineMode(false);
+                    uiContext.setWorkingSecondaryTunePages(java.util.Collections.emptyMap());
                     toolbar.onEcuConnected();
                     sessionImage.set(bp.getControllerConfiguration().clone());
-                    if (replacingOfflineData || !hadWorkingSession) {
-                        toolbar.resetTuneFileBaseline(sessionImage.get());
-                    }
-                    toolbar.setBaselineImage(sessionImage.get().clone());
+                    toolbar.adoptConnectedBaseline(sessionImage.get(), replacingOfflineTune);
                     left.refreshExpressions(sessionImage.get());
                     String key = currentKey.get();
                     right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
@@ -449,7 +459,7 @@ public class TuningPane {
     }
 
     private void showLoadResult(boolean failed) {
-        loadStatusCard.showResult("Tune loaded successfully", "Tune load failed", failed);
+        loadStatusCard.showResult("Tune applied", "Tune load failed", failed);
         ((CardLayout) content.getLayout()).show(content, LOAD_CARD);
     }
 
@@ -547,6 +557,9 @@ public class TuningPane {
      * @return false when there is no tune to edit (not connected and no tune loaded)
      */
     public boolean applyEdit(Consumer<ConfigurationImage> edit) {
+        if (toolbar.isReviewInProgress()) {
+            return false;
+        }
         ConfigurationImage current = sessionImage.get();
         if (current == null) {
             BinaryProtocol bp = uiContext.getBinaryProtocol();
@@ -610,7 +623,7 @@ public class TuningPane {
             owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
         }
         restorePointsWindow = new RestorePointsWindow(owner, toolbar.getRestorePointStore(),
-            () -> uiContext.iniFileState.getIniFileModel(), this::tuneToEdit, this::restoreTune,
+            () -> uiContext.iniFileState.getIniFileModel(), this::tuneToEdit, this::reviewRestorePoint,
             toolbar.getCreateRestorePointAction());
         Window settingsOwner = owner;
         // Setup › Vehicle Information holds the Engine Metadata panel; its own page as a fallback
@@ -630,14 +643,8 @@ public class TuningPane {
         return current;
     }
 
-    /** Puts a restore point's tune in place as one edit: undoable, unburned. */
-    boolean restoreTune(ConfigurationImage restored) {
-        boolean applied = applyEdit(image -> System.arraycopy(restored.getContent(), 0, image.getContent(), 0,
-            Math.min(restored.getSize(), image.getSize())));
-        if (applied) {
-            toolbar.showNote("Restore point put back as unburned changes");
-        }
-        return applied;
+    boolean reviewRestorePoint(RestorePointStore.RestorePoint point) {
+        return toolbar.reviewRestorePoint(point);
     }
 
     RestorePointsWindow getRestorePointsWindowForTests() {
@@ -659,6 +666,10 @@ public class TuningPane {
 
     public void setDialogOwner(Window owner) {
         toolbar.setDialogOwner(owner);
+    }
+
+    public void setTuneReviewHost(Function<JComponent, Runnable> reviewHost) {
+        toolbar.setTuneReviewHost(reviewHost);
     }
 
     enum ExitPrompt {
@@ -688,9 +699,13 @@ public class TuningPane {
     }
 
     public void requestExit(MainFrame mainFrame, Runnable exit, boolean firmwareUpdateInProgress) {
-        ExitPrompt prompt = exitPrompt(toolbar.hasUnsavedChanges(sessionImage.get()),
-                ConnectionStatusLogic.INSTANCE.isConnected() && uiContext.getBinaryProtocol() != null,
-                firmwareUpdateInProgress);
+        if (toolbar.isReviewInProgress()) {
+            return;
+        }
+        boolean live = !uiContext.isOfflineMode() && ConnectionStatusLogic.INSTANCE.isConnected()
+            && uiContext.getBinaryProtocol() != null && !firmwareUpdateInProgress;
+        ExitPrompt prompt = live && toolbar.hasUnsavedChanges(sessionImage.get()) ? ExitPrompt.BURN
+            : toolbar.hasUnsavedFileChanges(sessionImage.get()) ? ExitPrompt.SAVE : ExitPrompt.NONE;
         if (prompt == ExitPrompt.NONE) {
             exit.run();
             return;
@@ -708,7 +723,7 @@ public class TuningPane {
         mainFrame.showUnsavedTuneChangesOverlay(message, action,
             onSuccess -> {
                 if (burn) {
-                    toolbar.burnToEcuAndThen(right, onSuccess);
+                    toolbar.burnToEcuAndThen(right, () -> requestExit(mainFrame, onSuccess, firmwareUpdateInProgress));
                 } else if (autoSaveOfflineTune) {
                     toolbar.saveTuneToPathAndThen(right, offlineTunePath, onSuccess);
                 } else {
@@ -780,7 +795,7 @@ public class TuningPane {
         if (firmwareUpdateInProgress) {
             return true;
         }
-        IniFileModel ecuIni = bp.getIniFileNullable();
+        IniFileModel ecuIni = uiContext.iniFileState.getConnectedIniFileModel();
         String ecuSig = (ecuIni != null) ? ecuIni.getSignature() : bp.signature;
         String offlineSig = (offlineIni != null) ? offlineIni.getSignature() : null;
         boolean sameSignature = offlineSig != null && offlineSig.equals(ecuSig);

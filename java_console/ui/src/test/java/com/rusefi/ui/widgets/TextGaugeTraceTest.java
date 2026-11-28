@@ -155,7 +155,8 @@ class TextGaugeTraceTest {
         SensorCentral sensors = SensorCentral.getInstance();
         ConnectionStatusValue previous = ConnectionStatusLogic.INSTANCE.getValue();
         ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
-        TextGauge gauge = new TextGauge(uiContext, "steadyGauge", new Node(), name -> { });
+        // All three samples belong to the same history window, even if the Swing thread stalls.
+        TextGauge gauge = new TextGauge(uiContext, "steadyGauge", new Node(), name -> { }, () -> 0L);
         try {
             gauge.setActive(true);
             assertTrue(sensors.getOutputChannelDemand().getChannels().contains("steadychannel"));

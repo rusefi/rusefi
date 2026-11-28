@@ -118,6 +118,29 @@ public class UnburnedCellMarkTest {
     }
 
     @Test
+    void changeCountUsesTheImageForEachDisplayedAxis() throws Throwable {
+        IniFileModel ini = ini();
+        ini.findIniField("x").orElseThrow().setPageIndex(0x0100);
+        ConfigurationImage burned = burned();
+        ConfigurationImage xPage = burned.clone();
+        ConfigurationImage working = burned.clone();
+        working.getContent()[9] = 9; // Y changed from 7 on the main page; the X page is unchanged.
+        SwingUtilities.invokeAndWait(() -> {
+            TuningTableView view = new TuningTableView("Table", true, new Node());
+            view.displayTable(ini, "table", working, xPage, working);
+            view.setBurnedImage(() -> burned);
+
+            assertEquals("7", view.burnedCellText(1, 0));
+            assertTrue(view.getUnburnedCountLabelForTests().isVisible());
+            assertEquals("1 cell not burned", view.getUnburnedCountLabelForTests().getText());
+
+            ((JCheckBoxMenuItem) view.orientationMenuFor(0).getComponent(0)).doClick(0);
+            assertEquals("7", view.burnedXAxisText(1));
+            assertEquals("1 cell not burned", view.getUnburnedCountLabelForTests().getText());
+        });
+    }
+
+    @Test
     void marksFollowFlippedAndInvertedAxes() throws Throwable {
         IniFileModel ini = ini();
         ArrayIniField z = (ArrayIniField) ini.findIniField("z").get();

@@ -1,6 +1,7 @@
 package com.rusefi.ui.lua;
 
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.IniFileMetaInfo;
 import com.opensr5.ini.field.StringIniField;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.MessagesCentral;
@@ -62,6 +63,14 @@ class LuaScriptPanelCharacterizationTest {
         config.setProperty("SCRIPT_FOLDER", tempDir.toString());
         Files.write(tempDir.resolve("script.lua"), DISK_SCRIPT.getBytes(StandardCharsets.US_ASCII));
         TestProtocol testProtocol = new TestProtocol();
+        IniFileMetaInfo meta = mock(IniFileMetaInfo.class);
+        when(meta.getnPages()).thenReturn(2);
+        when(meta.getPageIdentifier(1)).thenReturn(testProtocol.field.getPageIndex());
+        when(meta.getPageSize(1)).thenReturn(testProtocol.field.getSize());
+        when(testProtocol.ini.getMetaInfo()).thenReturn(meta);
+        when(testProtocol.protocol.getWireByteOrder()).thenReturn(java.nio.ByteOrder.LITTLE_ENDIAN);
+        when(testProtocol.protocol.readFromPage(testProtocol.field.getPageIndex(), 0, testProtocol.field.getSize()))
+            .thenReturn(scriptBytes(ECU_SCRIPT, testProtocol.field.getSize()));
         Harness harness = harness(testProtocol.protocol, config, false);
         SwingUtilities.invokeAndWait(() -> editor(harness.panel).setText(ECU_SCRIPT));
 
@@ -347,10 +356,10 @@ class LuaScriptPanelCharacterizationTest {
     private static final class TestProtocol {
         private final BinaryProtocol protocol = mock(BinaryProtocol.class);
         private final StringIniField field = new StringIniField("luaScript", 0, 4096);
+        private final IniFileModel ini = mock(IniFileModel.class);
 
         private TestProtocol() {
             field.setPageIndex(0x0400);
-            IniFileModel ini = mock(IniFileModel.class);
             when(ini.findIniField("LUASCRIPT")).thenReturn(Optional.of(field));
             when(protocol.getIniFileNullable()).thenReturn(ini);
         }

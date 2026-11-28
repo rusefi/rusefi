@@ -23,6 +23,7 @@ import java.awt.geom.RoundRectangle2D;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.LongSupplier;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -73,12 +74,19 @@ public class TextGauge {
     private GaugeScale scale;
     /** This strip slot's preferences: holds the "Scale…" settings, like a Gauges tab slot. */
     private final Node slot;
+    private final LongSupplier nowMs;
 
     /**
      * @param slot this strip slot's preferences, where the "Scale…" settings are kept
      */
     public TextGauge(UIContext uiContext, String channelName, Node slot, Consumer<String> onChannelChange) {
+        this(uiContext, channelName, slot, onChannelChange, System::currentTimeMillis);
+    }
+
+    TextGauge(UIContext uiContext, String channelName, Node slot, Consumer<String> onChannelChange,
+              LongSupplier nowMs) {
         this.slot = slot;
+        this.nowMs = nowMs;
         TuningStyle.styleLiveValue(content, 3, 8);
 
         Font baseFont = UIManager.getFont("Label.font");
@@ -227,7 +235,7 @@ public class TextGauge {
     }
 
     private void showValue(double value, GaugeModel gaugeModel) {
-        showValue(value, gaugeModel, System.currentTimeMillis());
+        showValue(value, gaugeModel, nowMs.getAsLong());
     }
 
     private void showValue(double value, GaugeModel gaugeModel, long nowMs) {

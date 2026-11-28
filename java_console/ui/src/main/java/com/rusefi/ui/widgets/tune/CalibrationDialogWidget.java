@@ -259,7 +259,7 @@ public class CalibrationDialogWidget {
             return;
         }
         BinaryProtocol bp = uiContext.getBinaryProtocol();
-        if (bp == null) {
+        if (bp == null || uiContext.isOfflineMode()) {
             onResult.accept(null);
             return;
         }
@@ -293,6 +293,15 @@ public class CalibrationDialogWidget {
         }
 
         IniField field = valuesField.get();
+        ConfigurationImage secondaryImage =
+            uiContext.getWorkingSecondaryTunePages().get(field.getPageIndex());
+        if (secondaryImage != null) {
+            TuningTableView view = new TuningTableView(table.getTitle(), true, tableOrientationConfig);
+            displaySecondaryTable(view, iniFileModel, table, field, secondaryImage, workingImage);
+            view.setOnOrientationChange(onTableOrientationChange);
+            view.show3D(show3D);
+            return view.getContent();
+        }
         TuningTableView view = new TuningTableView(table.getTitle(), true, tableOrientationConfig);
         view.setOnOrientationChange(onTableOrientationChange);
         view.show3D(show3D);
@@ -301,32 +310,26 @@ public class CalibrationDialogWidget {
         panel.add(status, BorderLayout.NORTH);
         panel.add(view.getContent(), BorderLayout.CENTER);
         ConfigurationImage axisImage = workingImage;
-        int pageIndex = field.getPageIndex();
-        int readOffset = field.getOffset();
-        int readEnd = field.getOffset() + field.getSize();
-        for (String axisName : Arrays.asList(table.getXBinsConstant(), table.getYBinsConstant())) {
-            IniField axis = iniFileModel.findIniField(axisName).orElse(null);
-            if (axis != null && axis.getPageIndex() == pageIndex) {
-                readOffset = Math.min(readOffset, axis.getOffset());
-                readEnd = Math.max(readEnd, axis.getOffset() + axis.getSize());
+        int offset = field.getOffset();
+        int end = offset + field.getSize();
+        for (String axis : Arrays.asList(table.getXBinsConstant(), table.getYBinsConstant())) {
+            IniField bin = iniFileModel.findIniField(axis).orElse(null);
+            if (bin != null && bin.getPageIndex() == field.getPageIndex()) {
+                offset = Math.min(offset, bin.getOffset());
+                end = Math.max(end, bin.getOffset() + bin.getSize());
             }
         }
-        final int pageOffset = readOffset;
-        final int pageSize = readEnd - readOffset;
-        pageReader.read(pageIndex, pageOffset, pageSize, data -> {
-            if (data == null || data.length != pageSize) {
+        int readOffset = offset;
+        int readLength = end - offset;
+        pageReader.read(field.getPageIndex(), readOffset, readLength, data -> {
+            if (data == null || data.length != readLength) {
                 status.setText("Connect to the ECU to view this table");
                 return;
             }
-            byte[] page = new byte[pageOffset + data.length];
-            System.arraycopy(data, 0, page, pageOffset, data.length);
-            ConfigurationImage secondaryImage = new ConfigurationImage(page, pageByteOrder(axisImage, iniFileModel));
-            ConfigurationImage xAxisImage = axisImageForPage(iniFileModel, table.getXBinsConstant(),
-                pageIndex, secondaryImage, axisImage);
-            ConfigurationImage yAxisImage = axisImageForPage(iniFileModel, table.getYBinsConstant(),
-                pageIndex, secondaryImage, axisImage);
-            view.displayTable(iniFileModel, table.getTableId(),
-                secondaryImage, xAxisImage, yAxisImage);
+            byte[] page = new byte[readOffset + data.length];
+            System.arraycopy(data, 0, page, readOffset, data.length);
+            displaySecondaryTable(view, iniFileModel, table, field,
+                new ConfigurationImage(page, pageByteOrder(axisImage, iniFileModel)), axisImage);
             panel.remove(status);
             panel.revalidate();
             panel.repaint();
@@ -334,17 +337,23 @@ public class CalibrationDialogWidget {
         return panel;
     }
 
-    private static ConfigurationImage axisImageForPage(IniFileModel ini, String axisName, int valuesPage,
-                                                         ConfigurationImage valuesImage,
-                                                         ConfigurationImage mainImage) {
-        IniField axis = ini.findIniField(axisName).orElse(null);
-        if (axis == null) {
+    private void displaySecondaryTable(TuningTableView view, IniFileModel ini, TableModel table, IniField values,
+                                       ConfigurationImage tablePage, ConfigurationImage mainPage) {
+        view.displayTable(ini, table.getTableId(), tablePage,
+            tableAxisPage(ini, table.getXBinsConstant(), values.getPageIndex(), tablePage, mainPage),
+            tableAxisPage(ini, table.getYBinsConstant(), values.getPageIndex(), tablePage, mainPage));
+    }
+
+    private ConfigurationImage tableAxisPage(IniFileModel ini, String name, int tablePageId,
+                                             ConfigurationImage tablePage, ConfigurationImage mainPage) {
+        IniField field = ini.findIniField(name).orElse(null);
+        if (field == null) {
             return null;
         }
-        if (axis.getPageIndex() == 0) {
-            return mainImage;
+        if (field.getPageIndex() == 0) {
+            return mainPage;
         }
-        return axis.getPageIndex() == valuesPage ? valuesImage : null;
+        return field.getPageIndex() == tablePageId ? tablePage : uiContext.getWorkingSecondaryTunePages().get(field.getPageIndex());
     }
 
     /** Curves on extra TS pages must use those page bytes, never same-offset main settings. */
@@ -365,6 +374,13 @@ public class CalibrationDialogWidget {
         }
         if (xField.getPageIndex() != yField.getPageIndex()) {
             return new JLabel("Curve bins are on different ECU pages");
+        }
+
+        ConfigurationImage secondaryImage =
+            uiContext.getWorkingSecondaryTunePages().get(xField.getPageIndex());
+        if (secondaryImage != null) {
+            CurveWidget widget = new CurveWidget(curve, ini, secondaryImage, workingImage, true);
+            return widget.getContentPane();
         }
 
         int offset = Math.min(xField.getOffset(), yField.getOffset());

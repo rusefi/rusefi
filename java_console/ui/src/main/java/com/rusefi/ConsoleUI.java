@@ -531,6 +531,19 @@ console live data tab is broken #8402
                 }
                 TuningPane tp = new TuningPane(uiContext, offlineImage, getConfig().getRoot().getChild("tuning"));
                 tp.setDialogOwner(mainFrame.getFrame().getFrame());
+                tp.setTuneReviewHost(panel -> {
+                    if (nonTabContentActive) {
+                        return null;
+                    }
+                    showFullScreenPanel.accept(panel);
+                    return () -> {
+                        // A newer firmware panel or wizard owns the host if it displaced the review.
+                        if (rollbackPicker.isVisible() && panel.getParent() == rollbackPicker) {
+                            closeFullScreenPanel.run();
+                        }
+                        rollbackPicker.remove(panel);
+                    };
+                });
                 tuningHolder[0] = tp;
                 tuningPane = tp;
                 tp.setErrorHandler(mainFrame::showMessageOverlay);
