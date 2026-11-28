@@ -20,6 +20,7 @@ import com.rusefi.tune_manifest.TuneModel;
 import com.rusefi.ui.table.ButtonEditor;
 import com.rusefi.ui.table.ButtonRenderer;
 import com.rusefi.ui.widgets.tune.TuneFileFolder;
+import com.rusefi.ui.widgets.tune.TuneLoadPreparation;
 import com.rusefi.ui.widgets.StatusPanel;
 import org.jetbrains.annotations.Nullable;
 import org.json.simple.parser.ParseException;
@@ -33,7 +34,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -180,6 +183,9 @@ public class TuneManagementTab {
                     showImportError("Failed to load " + model.getUrl(), statusPanelTuneTab, showTuneTab);
                 } else if (!singleAsyncJobExecutor.isNotInProgress()) {
                     showImportError("Another job is already running, please wait.", statusPanelTuneTab, showTuneTab);
+                } else if (uiContext.isTuneReviewInProgress() || uiContext.isOfflineMode()) {
+                    showImportError("Finish the current tune review or reconnect before importing to an ECU.",
+                        statusPanelTuneTab, showTuneTab);
                 } else {
                     BinaryProtocol liveBp = uiContext.getBinaryProtocol();
                     LinkManager lm = uiContext.getLinkManager();
@@ -429,11 +435,21 @@ public class TuneManagementTab {
         if (result == null) {
             return;
         }
+        Map<Integer, ConfigurationImage> pages;
+        try {
+            pages = new TreeMap<>(TuneLoadPreparation.openOffline(result.msq, result.ini));
+        } catch (RuntimeException ex) {
+            JOptionPane.showMessageDialog(totalContent, "Failed to open tune: " + ex.getMessage(),
+                "Open Tune", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        ConfigurationImage main = pages.remove(0);
+        uiContext.setWorkingSecondaryTunePages(pages);
         uiContext.setTuneFilePath(path);
 
         // Hand off to the splash, which disposes itself and opens the console on the shared uiContext
         // (keeping the scanner alive so a later ECU connect transitions this console online — no 2nd window).
-        SwingUtilities.invokeLater(() -> offlineConsoleLauncher.accept(result.ini, result.image));
+        SwingUtilities.invokeLater(() -> offlineConsoleLauncher.accept(result.ini, main));
     }
 
     class MyTableModel extends AbstractTableModel {

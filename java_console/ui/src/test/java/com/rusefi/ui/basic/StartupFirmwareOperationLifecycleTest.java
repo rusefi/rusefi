@@ -282,8 +282,8 @@ class StartupFirmwareOperationLifecycleTest {
                 Thread.currentThread().interrupt();
             }
         });
-        assertTrue(edtEntered.await(5, TimeUnit.SECONDS));
         try {
+            assertTrue(edtEntered.await(5, TimeUnit.SECONDS));
             assertTrue(executor.startJob(a, null));
             assertTrue(aPreparing.await(5, TimeUnit.SECONDS));
             awaitQueuedEdtAction(aWorker.get());

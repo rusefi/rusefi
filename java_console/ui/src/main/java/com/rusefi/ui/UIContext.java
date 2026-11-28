@@ -14,7 +14,10 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.JComponent;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 import java.util.HashSet;
 import java.util.Set;
@@ -69,7 +72,7 @@ public class UIContext {
     public GaugesPanel.DetachedRepository DetachedRepositoryINSTANCE = new GaugesPanel.DetachedRepository(this);
 
     /** [tag:offline_tune] True when the console was opened in offline mode (no ECU connection, tune loaded from file). */
-    private boolean offlineMode;
+    private volatile boolean offlineMode;
     private String tuneFilePath;
     private final List<Runnable> tuneFileListeners = new ArrayList<>();
 
@@ -134,6 +137,10 @@ public class UIContext {
     private final List<Consumer<ConfigurationImage>> configImageListeners = new ArrayList<>();
     private ConfigurationImage currentConfigurationImage;
     private IniFileModel configurationImageIni;
+    private Map<Integer, ConfigurationImage> workingSecondaryTunePages = Collections.emptyMap();
+    private volatile boolean tuneReviewInProgress;
+    private java.util.function.BiConsumer<Integer, ConfigurationImage> secondaryEditListener = (page, before) -> {};
+    private Consumer<Integer> secondaryBurnListener = page -> {};
     private Function<Consumer<ConfigurationImage>, Boolean> tuneEditor = edit -> false;
 
     /** Edits from auxiliary tabs share Tuning's working image, undo history and upload queue. */
@@ -169,5 +176,40 @@ public class UIContext {
         }
         BinaryProtocol protocol = getBinaryProtocol();
         return protocol == null ? null : protocol.getControllerConfiguration();
+    }
+
+    /** On the EDT: working images for available secondary tune pages in the current session. */
+    public Map<Integer, ConfigurationImage> getWorkingSecondaryTunePages() {
+        return workingSecondaryTunePages;
+    }
+
+    /** On the EDT: replace secondary page images after staging or adopting a tune. */
+    public void setWorkingSecondaryTunePages(Map<Integer, ConfigurationImage> pages) {
+        workingSecondaryTunePages = Collections.unmodifiableMap(new HashMap<>(pages));
+    }
+
+    public boolean isTuneReviewInProgress() {
+        return tuneReviewInProgress;
+    }
+
+    public void setTuneReviewInProgress(boolean inProgress) {
+        tuneReviewInProgress = inProgress;
+    }
+
+    public void setSecondaryTuneListeners(java.util.function.BiConsumer<Integer, ConfigurationImage> edited,
+                                          Consumer<Integer> burned) {
+        secondaryEditListener = edited;
+        secondaryBurnListener = burned;
+    }
+
+    public void publishSecondaryTuneEdit(int page, ConfigurationImage before, ConfigurationImage after) {
+        Map<Integer, ConfigurationImage> pages = new HashMap<>(workingSecondaryTunePages);
+        pages.put(page, after);
+        setWorkingSecondaryTunePages(pages);
+        secondaryEditListener.accept(page, before);
+    }
+
+    public void publishSecondaryTuneBurn(int page) {
+        secondaryBurnListener.accept(page);
     }
 }

@@ -15,9 +15,6 @@ import java.awt.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CalibrationDialogLabelWidthTest {
-    /** Too narrow for label and editor side by side on Vehicle Information, wide enough for its editors. */
-    private static final int NARROW = 460;
-
     /** A label in a titled panel, whose border inset narrows its label column. */
     @Test
     void labelInTitledPanelIsNotCutOff() throws Exception, com.rusefi.ini.reader.IniParsingException {
@@ -51,7 +48,7 @@ class CalibrationDialogLabelWidthTest {
             CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
             widget.update("engineChars", ini, image);
             JScrollPane scroll = new JScrollPane(widget.getViewportPane());
-            for (int width : new int[]{1200, NARROW}) {
+            for (int width : new int[]{1200, 490, 460}) {
                 scroll.setSize(width, 800);
                 for (int pass = 0; pass < 2; pass++) {
                     // the second pass sees the rows' heights at their new widths
@@ -62,13 +59,17 @@ class CalibrationDialogLabelWidthTest {
                 JPanel row = (JPanel) label.getParent();
                 JComboBox<?> combo = findCombo(row);
                 assertNotNull(combo);
-                assertEquals(combo.getPreferredSize().width, combo.getWidth(), width + ": the editor keeps its width");
                 assertTrue(combo.getX() + combo.getWidth() <= row.getWidth(), width + ": the editor is inside its row");
                 assertTrue(combo.getY() + combo.getHeight() <= row.getHeight(), width + ": the row is tall enough");
-                if (width == NARROW) {
+                if (width < 1200) {
                     assertTrue(combo.getY() >= label.getY() + label.getHeight(), "A narrow row puts the editor under the label");
                     assertEquals(label.getX(), combo.getX(), "The editor lines up with its label");
+                    // The titled panel and scroll pane can leave less than the editor's preferred width.
+                    int available = row.getWidth() - row.getInsets().right - label.getX();
+                    assertEquals(Math.min(combo.getPreferredSize().width, available), combo.getWidth(),
+                        width + ": the wrapped editor only shrinks when necessary");
                 } else {
+                    assertEquals(combo.getPreferredSize().width, combo.getWidth());
                     assertTrue(combo.getX() > label.getX() + label.getWidth(), "A wide row keeps one line");
                 }
             }

@@ -28,9 +28,12 @@ class TuningToolbarLoadTuneTest {
         TestTuneMigrationContext context = AfrMsqImportMigrationContext.loadAfrToLambda();
         IniFileModel targetIni = context.getUpdatedIniFile();
         ConfigurationImage targetImage = context.getUpdatedTune().asImage(targetIni);
+        // The migration fixture has no file header; connected loads require the source signature.
+        Msq sourceTune = context.getPrevTune();
+        sourceTune.getVersionInfo().setSignature(context.getPrevIniFile().getSignature());
 
         ConfigurationImage loaded = TuningToolbarWidget.applyLoadedTune(
-            context.getPrevTune(), context.getPrevIniFile(), targetImage, targetIni, context.getCallbacks());
+            sourceTune, context.getPrevIniFile(), targetImage, targetIni, context.getCallbacks());
 
         ArrayIniField field = (ArrayIniField) targetIni.findIniField("lambdaTable").orElseThrow();
         assertEquals(147, rawValue(loaded, field, 0, 0));
@@ -267,11 +270,11 @@ class TuningToolbarLoadTuneTest {
             customPinTune(sourceIni), null, base, targetIni, callbacks);
 
         assertArrayEquals(base.getContent(), loaded.getContent());
-        assertTrue(callbacks.getContent().contains("signature differs"));
+        assertTrue(callbacks.getContent().contains("matching source INI is required"));
     }
 
     @Test
-    void sameSignatureImportIgnoresDestinationSecondaryPageFields() throws IniParsingException {
+    void sameSignatureImportDoesNotApplySecondaryFieldsWithoutACurrentPage() throws IniParsingException {
         IniFileModel sourceIni = ini("secondary = scalar, U08, 0, \"\", 1, 0, 0, 255, 0\n", 1);
         IniFileModel targetIni = secondaryIni();
         Msq tune = MsqFactory.valueOf(ConfigurationImageTestHelper.newLittleEndian(new byte[]{42}), sourceIni);
@@ -282,7 +285,7 @@ class TuningToolbarLoadTuneTest {
             tune, null, base, targetIni, callbacks);
 
         assertArrayEquals(base.getContent(), loaded.getContent());
-        assertTrue(callbacks.getContent().contains("secondary calibration"));
+        assertTrue(callbacks.getContent().contains("destination page is unavailable"));
     }
 
     private static int rawValue(ConfigurationImage image, ArrayIniField field, int row, int column) {

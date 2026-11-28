@@ -52,7 +52,7 @@ public final class RestorePointsWindow {
     private final RestorePointStore store;
     private final Supplier<IniFileModel> ini;
     private final Supplier<ConfigurationImage> openTune;
-    private final Predicate<ConfigurationImage> restore;
+    private final Predicate<RestorePointStore.RestorePoint> restore;
 
     private final PointsModel pointsModel = new PointsModel();
     final JTable pointsTable = new JTable(pointsModel);
@@ -143,7 +143,7 @@ public final class RestorePointsWindow {
      * @param createAction File › Create Restore Point…, offered at the top
      */
     public RestorePointsWindow(Window owner, RestorePointStore store, Supplier<IniFileModel> ini,
-                               Supplier<ConfigurationImage> openTune, Predicate<ConfigurationImage> restore,
+                               Supplier<ConfigurationImage> openTune, Predicate<RestorePointStore.RestorePoint> restore,
                                Action createAction) {
         this.store = store;
         this.ini = ini;
@@ -292,7 +292,7 @@ public final class RestorePointsWindow {
         descriptionLabel.setForeground(TuningStyle.muted());
 
         restoreButton.putClientProperty(FlatClientProperties.STYLE_CLASS, "primary");
-        restoreButton.setToolTipText("Put this tune's values in place as unburned changes: review, Undo or Burn them");
+        restoreButton.setToolTipText("Review and choose which changes to restore without burning");
         restoreButton.addActionListener(e -> restoreSelected());
         saveAsButton.setToolTipText("Save a copy of this restore point as a tune file");
         saveAsButton.addActionListener(e -> saveSelectedAs());
@@ -629,7 +629,7 @@ public final class RestorePointsWindow {
         detailCards.show(detailPanel, hasPoint ? "detail" : "none");
         deleteButton.setEnabled(hasPoint);
         saveAsButton.setEnabled(hasPoint);
-        restoreButton.setEnabled(known != null && known.diff != null && known.diff.changedValues > 0);
+        restoreButton.setEnabled(known != null && known.diff != null);
         if (!hasPoint) {
             titleLabel.setText(" ");
             descriptionLabel.setText(" ");
@@ -667,9 +667,9 @@ public final class RestorePointsWindow {
             return what + " It cannot be compared: no tune is open, or the file cannot be read.";
         }
         int changed = known.diff.changedValues;
-        return what + (changed == 0 ? " It is the same as the tune open now."
-            : String.format(Locale.ROOT, " %,d value%s differ%s from the tune open now.", changed,
-            changed == 1 ? "" : "s", changed == 1 ? "s" : ""));
+        return what + (changed == 0 ? " No differences on the main tune page."
+            : String.format(Locale.ROOT, " %,d value%s differ%s on the main tune page.", changed,
+                changed == 1 ? "" : "s", changed == 1 ? "s" : ""));
     }
 
     void restoreSelected() {
@@ -682,10 +682,10 @@ public final class RestorePointsWindow {
         if (other != null && !otherCarQuestion.test(other.label)) {
             return;
         }
-        if (restore.test(known.diff.restored)) {
+        if (restore.test(point)) {
             dialog.dispose();
         } else {
-            JOptionPane.showMessageDialog(dialog, "No tune is open to restore into.", "Restore Points",
+            JOptionPane.showMessageDialog(dialog, "Open a tune and wait for any ongoing tune operation to finish.", "Restore Points",
                 JOptionPane.WARNING_MESSAGE);
         }
     }

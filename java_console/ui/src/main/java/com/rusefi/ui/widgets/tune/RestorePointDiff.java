@@ -7,12 +7,14 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
+import com.opensr5.ini.field.StringIniField;
 import com.rusefi.config.StringFormatter;
 import com.rusefi.tune.xml.Msq;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -24,7 +26,7 @@ import java.util.Set;
  * values differ (counted like the unburned marks: one per setting, one per table cell) and one row per setting.
  */
 final class RestorePointDiff {
-    /** The open tune with the point's values: what Restore as changes puts in place. */
+    /** Candidate for the compact main-page comparison only, never an approved restore image. */
     final ConfigurationImage restored;
     final int changedValues;
     final List<Row> rows;
@@ -86,10 +88,29 @@ final class RestorePointDiff {
      * cell counts the same way; an enum or bit by its bits, a text by its characters.
      */
     static ConfigurationImage asShown(ConfigurationImage full, ConfigurationImage current, IniFileModel ini) {
+        return asShown(full, current, ini.getAllIniFields().values(), 0, ini.getPcVariableNames());
+    }
+
+    static Map<Integer, ConfigurationImage> asShown(Map<Integer, ConfigurationImage> full,
+                                                    Map<Integer, ConfigurationImage> current, IniFileModel ini) {
+        Map<Integer, ConfigurationImage> result = new LinkedHashMap<>(full);
+        List<IniField> fields = new ArrayList<>(ini.getAllIniFields().values());
+        fields.addAll(ini.getSecondaryIniFields().values());
+        current.forEach((id, base) -> {
+            if (full.containsKey(id)) {
+                result.put(id, asShown(full.get(id), base, fields, id, ini.getPcVariableNames()));
+            }
+        });
+        return result;
+    }
+
+    private static ConfigurationImage asShown(ConfigurationImage full, ConfigurationImage current,
+                                                Iterable<IniField> fields, int page, Set<String> pcVariables) {
         ConfigurationImage result = current.clone();
-        UnburnedChanges raw = UnburnedChanges.of(full, current);
-        for (IniField field : ini.getAllIniFields().values()) {
-            if (field.getPageIndex() != 0) {
+        UnburnedChanges raw = UnburnedChanges.onPage(full, current, page);
+        UnburnedChanges copy = UnburnedChanges.onPage(result, full, page);
+        for (IniField field : fields) {
+            if (field.getPageIndex() != page || pcVariables.contains(field.getName())) {
                 continue;
             }
             try {
@@ -97,13 +118,12 @@ final class RestorePointDiff {
                     copyCellsShownChanged((ArrayIniField) field, raw, full, current, result);
                 } else if (field instanceof EnumIniField) {
                     if (raw.isChanged(field)) {
-                        EnumIniField bits = (EnumIniField) field;
-                        int word = (int) bits.getType().readRawValue(full.getByteBuffer(bits));
-                        result.setBitValue(bits, ConfigurationImage.getBitRange(word, bits.getBitPosition(),
-                            bits.getBitSize0() + 1));
+                        copy.copyField(field);
                     }
-                } else if (raw.isChanged(field) && !ConfigurationImageGetterSetter.getStringValue(field, full)
-                    .equals(ConfigurationImageGetterSetter.getStringValue(field, current))) {
+                } else if (raw.isChanged(field) && (field instanceof StringIniField
+                    ? !TuneLoadPlan.ascii(full, field).equals(TuneLoadPlan.ascii(current, field))
+                    : !ConfigurationImageGetterSetter.getStringValue(field, full)
+                        .equals(ConfigurationImageGetterSetter.getStringValue(field, current)))) {
                     copy(full, result, field.getOffset(), field.getSize());
                 }
             } catch (RuntimeException e) {

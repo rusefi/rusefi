@@ -134,8 +134,7 @@ public class TuningTableView {
     private ConfigurationImage imageTarget;
     private ArrayIniField zBinsField;
     private ConfigurationImage axisImageTarget;
-    private ConfigurationImage displayXAxisImage;
-    private ConfigurationImage displayYAxisImage;
+    private ConfigurationImage yAxisImageTarget;
     private ArrayIniField xBinsField;
     private ArrayIniField yBinsField;
     private final JTextField xAxisEditor = new JTextField();
@@ -569,7 +568,10 @@ public class TuningTableView {
                 return;
             }
             orientationNode.setBoolProperty(key, option.isSelected());
-            displayTable(currentIni, currentTableName, imageTarget, displayXAxisImage, displayYAxisImage);
+            // Convert the current displayed targets back to source X/Y before applying the new orientation.
+            ConfigurationImage sourceX = flipAxes ? yAxisImageTarget : axisImageTarget;
+            ConfigurationImage sourceY = flipAxes ? axisImageTarget : yAxisImageTarget;
+            displayTable(currentIni, currentTableName, imageTarget, sourceX, sourceY);
             onOrientationChange.run();
         });
         menu.add(option);
@@ -1397,7 +1399,8 @@ public class TuningTableView {
 
     private void setAxisValue(boolean xAxis, int index, Object value) {
         ArrayIniField field = xAxis ? xBinsField : yBinsField;
-        if (viewMode || field == null || axisImageTarget == null || value == null
+        ConfigurationImage target = xAxis ? axisImageTarget : yAxisImageTarget;
+        if (viewMode || field == null || target == null || value == null
             || !(table.getModel() instanceof TuningTableModel)) {
             return;
         }
@@ -1420,14 +1423,14 @@ public class TuningTableView {
         int column = field.getRows() == 1 ? storedIndex : 0;
         // Encode only the edited element, then display the actual stored precision.
         int offset = field.getOffset(row, column);
-        ConfigurationImage candidate = axisImageTarget.clone();
+        ConfigurationImage candidate = target.clone();
         ConfigurationImage.setScalarValue(candidate.getByteBuffer(offset, field.getType().getStorageSize()),
             field.getType(), Double.toString(number), com.rusefi.config.Field.NO_BIT_OFFSET, field.getMultiplier(), 0);
         double encoded = ConfigurationImageGetterSetter.getArrayValues(field, candidate)[row][column];
         if (!Double.isFinite(encoded) || Double.compare(bins[index], encoded) == 0) {
             return;
         }
-        System.arraycopy(candidate.getContent(), offset, axisImageTarget.getContent(), offset,
+        System.arraycopy(candidate.getContent(), offset, target.getContent(), offset,
             field.getType().getStorageSize());
         bins[index] = encoded;
         if (xAxis) {
@@ -1712,8 +1715,8 @@ public class TuningTableView {
         displayTable(iniFile, tableName, zImage, axisImage, axisImage);
     }
 
-    public void displayTable(IniFileModel iniFile, String tableName, ConfigurationImage zImage,
-                             ConfigurationImage xAxisImage, ConfigurationImage yAxisImage) {
+    void displayTable(IniFileModel iniFile, String tableName, ConfigurationImage zImage,
+                      ConfigurationImage xAxisImage, ConfigurationImage yAxisImage) {
         finishXAxisEdit(false);
         if (table.isEditing()) {
             table.getCellEditor().cancelCellEditing();
@@ -1735,7 +1738,6 @@ public class TuningTableView {
         // Extract data from outputs buffer using the field's offset
         Double[][] storedValues = ConfigurationImageGetterSetter.getArrayValues(ltft, zImage);
 
-        // X and Y bins (RPM and load) are on page 1
         Double[] storedX = extractAxisBins(iniFile, iniTable.getXBinsConstant(), xAxisImage);
         Double[] storedY = extractAxisBins(iniFile, iniTable.getYBinsConstant(), yAxisImage);
 
@@ -1755,10 +1757,9 @@ public class TuningTableView {
 
         this.imageTarget = zImage;
         this.zBinsField = ltft;
-        this.displayXAxisImage = xAxisImage;
-        this.displayYAxisImage = yAxisImage;
-        // Editing only supports a single shared axis image; split images are for display.
-        this.axisImageTarget = xAxisImage == yAxisImage ? xAxisImage : null;
+        // Axis targets follow displayed axes after flip_xy, not the source X/Y names.
+        this.axisImageTarget = flipAxes ? yAxisImage : xAxisImage;
+        this.yAxisImageTarget = flipAxes ? xAxisImage : yAxisImage;
         this.xBinsField = editableAxisField(iniFile,
             flipAxes ? iniTable.getYBinsConstant() : iniTable.getXBinsConstant());
         this.yBinsField = editableAxisField(iniFile,
@@ -1772,7 +1773,7 @@ public class TuningTableView {
         TuningTableModel model = new TuningTableModel(dataValues, xBins, yBins, precision, !viewMode,
             edited -> commitEdit(edited, table.getSelectedRows(), table.getSelectedColumns()),
             flipAxes ? storedXName + " \\ " + storedYName : storedYName + " \\ " + storedXName);
-        if (!viewMode && axisImageTarget != null && yBinsField != null) {
+        if (!viewMode && yAxisImageTarget != null && yBinsField != null) {
             model.onYAxisEdit = (index, value) -> setAxisValue(false, index, value);
         }
         model.xPrecision = xBinsField == null ? precision : IniField.parseDigits(xBinsField.getDigits());
@@ -1813,9 +1814,10 @@ public class TuningTableView {
     int unburnedCellCount() {
         ConfigurationImage burned = burnedImage.get();
         UnburnedChanges values = UnburnedChanges.of(imageTarget, burned);
-        UnburnedChanges axes = UnburnedChanges.of(axisImageTarget, burned);
-        return values.countChangedCells(zBinsField) + axes.countChangedCells(xBinsField)
-            + axes.countChangedCells(yBinsField);
+        UnburnedChanges xAxis = UnburnedChanges.of(axisImageTarget, burned);
+        UnburnedChanges yAxis = UnburnedChanges.of(yAxisImageTarget, burned);
+        return values.countChangedCells(zBinsField) + xAxis.countChangedCells(xBinsField)
+            + yAxis.countChangedCells(yBinsField);
     }
 
     /**
@@ -1894,7 +1896,7 @@ public class TuningTableView {
                 return null;
             }
             int[] cell = storedAxisCell(yBinsField, model.yBins.length, invertY, index);
-            if (!UnburnedChanges.of(axisImageTarget, burned).isCellChanged(yBinsField, cell[0], cell[1])) {
+            if (!UnburnedChanges.of(yAxisImageTarget, burned).isCellChanged(yBinsField, cell[0], cell[1])) {
                 return null;
             }
             return model.formatNumber(UnburnedCellMark.burnedValue(yBinsField, cell[0], cell[1], burned), model.yPrecision);
@@ -2005,6 +2007,10 @@ public class TuningTableView {
         }
 
         ArrayIniField field = (ArrayIniField) binsField.get();
+        if (!(field instanceof com.opensr5.ini.field.PcVariableArrayIniField)
+                && (image == null || field.getOffset() < 0 || field.getOffset() + field.getSize() > image.getSize())) {
+            return null;
+        }
         Double[][] values = ConfigurationImageGetterSetter.getArrayValues(field, image);
 
         if (values.length == 0 || values[0].length == 0) {

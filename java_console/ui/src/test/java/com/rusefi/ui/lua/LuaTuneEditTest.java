@@ -47,6 +47,7 @@ class LuaTuneEditTest {
             TuningPane tuning = new TuningPane(context);
             try {
                 tuning.seedOfflineImage(ConfigurationImageTestHelper.newLittleEndian(ram.clone()), null);
+                context.setOfflineMode(false);
                 context.setTuneEditor(tuning::applyEdit);
                 assertTrue(tuning.applyEdit(image -> image.getContent()[0] = 42));
                 List<String> events = new ArrayList<>();

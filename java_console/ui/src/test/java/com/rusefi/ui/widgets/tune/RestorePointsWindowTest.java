@@ -171,8 +171,9 @@ class RestorePointsWindowTest {
         assumeFalse(GraphicsEnvironment.isHeadless(), "The window is a JDialog: requires a desktop or Xvfb");
         IniFileModel ini = ini();
         RestorePointStore store = new RestorePointStore(dir, 50, Clock.systemUTC());
-        store.saveAlways(MsqFactory.valueOf(olderTune(), ini), RestorePointStore.Reason.MANUAL, "before idle work");
-        AtomicReference<ConfigurationImage> restored = new AtomicReference<>();
+        RestorePointStore.RestorePoint point = store.saveAlways(MsqFactory.valueOf(olderTune(), ini),
+            RestorePointStore.Reason.MANUAL, "before idle work");
+        AtomicReference<RestorePointStore.RestorePoint> restored = new AtomicReference<>();
         SwingUtilities.invokeAndWait(() -> {
             window = new RestorePointsWindow(null, store, () -> ini, RestorePointsWindowTest::openTune,
                 image -> {
@@ -202,8 +203,8 @@ class RestorePointsWindowTest {
             assertFalse(window.carBox.isVisible(), "one car: nothing to pick");
 
             window.restoreButton.doClick();
-            assertArrayEquals(olderTune().getContent(), restored.get().getContent());
-            assertFalse(window.getDialogForTests().isDisplayable(), "the window closes once restored");
+            assertEquals(point.file, restored.get().file);
+            assertFalse(window.getDialogForTests().isDisplayable(), "the browser closes so the review can take focus");
         });
     }
 
@@ -253,9 +254,9 @@ class RestorePointsWindowTest {
             window.setDetailWorkForTests(Runnable::run);
             window.reload();
             assertEquals("0", window.pointsTable.getValueAt(0, 2));
-            assertTrue(window.descriptionLabel.getText().endsWith("It is the same as the tune open now."),
+            assertTrue(window.descriptionLabel.getText().endsWith("No differences on the main tune page."),
                 window.descriptionLabel.getText());
-            assertFalse(window.restoreButton.isEnabled());
+            assertTrue(window.restoreButton.isEnabled(), "the detailed review can still find changes on secondary pages");
         });
     }
 
@@ -311,7 +312,7 @@ class RestorePointsWindowTest {
         // this .ini has no Vehicle Name: the open car goes by its ECU's serial
         store.setSerialSourceForTests(() -> java.util.OptionalLong.of(7));
         store.save(MsqFactory.valueOf(olderTune(), ini), "Hunchback", RestorePointStore.Reason.BEFORE_BURN, null);
-        AtomicReference<ConfigurationImage> restored = new AtomicReference<>();
+        AtomicReference<RestorePointStore.RestorePoint> restored = new AtomicReference<>();
         AtomicReference<String> asked = new AtomicReference<>();
         SwingUtilities.invokeAndWait(() -> {
             window = new RestorePointsWindow(null, store, () -> ini, RestorePointsWindowTest::openTune,

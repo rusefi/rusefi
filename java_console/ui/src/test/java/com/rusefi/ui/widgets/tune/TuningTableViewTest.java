@@ -134,13 +134,20 @@ public class TuningTableViewTest {
             assertArrayEquals(originalAxes, axisImage.getContent());
             assertEquals(3, orientationChanges.get());
 
+            ConfigurationImage xPage = ConfigurationImageTestHelper.newLittleEndian(6);
+            ConfigurationImage yPage = ConfigurationImageTestHelper.newLittleEndian(10);
+            ConfigurationImageGetterSetter.setArrayValues(rpm, xPage, new Double[][]{{1000.0, 2500.0, 6000.0}});
+            ConfigurationImageGetterSetter.setArrayValues(load, yPage, new Double[][]{{40.0}, {120.0}});
             TuningTableView mixedPages = new TuningTableView("Ignition timing", true, new Node());
-            mixedPages.displayTable(ini, "ignition", timingImage, axisImage, axisImage.clone());
+            mixedPages.displayTable(ini, "ignition", timingImage, xPage, yPage);
             JTable mixedTable = findTable(mixedPages.getContent());
             assertEquals("1000", mixedTable.getColumnName(1));
             ((JCheckBoxMenuItem) mixedPages.orientationMenuFor(0).getComponent(0)).doClick(0);
             assertEquals("40", mixedTable.getColumnName(1), "flipping keeps the Y-axis image");
             assertEquals("6000", mixedTable.getValueAt(0, 0), "flipping keeps the X-axis image");
+            ((JCheckBoxMenuItem) mixedPages.orientationMenuFor(0).getComponent(1)).doClick(0);
+            assertEquals("120", mixedTable.getColumnName(1), "inverting after a flip keeps the Y page");
+            assertEquals("6000", mixedTable.getValueAt(0, 0), "inverting after a flip keeps the X page");
 
             table.setValueAt("77", 0, 1);
             table.setValueAt("88", 2, 2);
