@@ -5934,7 +5934,7 @@ gapTo.0=1.250000
 # end of meta section
 event 0 0 1 0.000000 0.000000
 event 1 0 0 360.000000 nan
-TRIGGERTYPE 90 30 TT_CHRYSLER_PHASER 0.00
+TRIGGERTYPE 90 30 TT_CHRYSLER_PHASER_v8 0.00
 knownOperationMode=true
 operationMode=FOUR_STROKE_CAM_SENSOR
 crankBased=false
@@ -6995,3 +6995,44 @@ event 16 0 1 540.000000 3.576923
 event 17 0 0 540.000000 nan
 event 18 0 1 575.000000 0.376344
 event 19 0 0 575.000000 nan
+TRIGGERTYPE 103 24 TT_CHRYSLER_PHASER_v6 0.00
+knownOperationMode=true
+operationMode=FOUR_STROKE_CAM_SENSOR
+crankBased=false
+hasSecondChannel=false
+isSecondWheelCam=false
+cycleDuration=720
+gapsCount=2
+syncEdge=RiseOnly
+isSynchronizationNeeded=true
+useOnlyPrimaryForSync=false
+shapeWithoutTdc=false
+gapFrom.0=1.050000
+gapTo.0=1.400000
+gapFrom.1=4.000000
+gapTo.1=5.400000
+# end of meta section
+event 0 0 1 0.000000 1.212121
+event 1 0 0 0.000000 nan
+event 2 0 1 21.000000 0.175000
+event 3 0 0 21.000000 nan
+event 4 0 1 42.000031 0.999952
+event 5 0 0 42.000031 nan
+event 6 0 1 120.000000 3.714510
+event 7 0 0 120.000000 nan
+event 8 0 1 240.000000 1.538442
+event 9 0 0 240.000000 nan
+event 10 0 1 261.000000 0.175000
+event 11 0 0 261.000000 nan
+event 12 0 1 360.000000 4.714286
+event 13 0 0 360.000000 nan
+event 14 0 1 381.000000 0.212121
+event 15 0 0 381.000000 nan
+event 16 0 1 402.000000 1.000000
+event 17 0 0 402.000000 nan
+event 18 0 1 480.000000 3.714286
+event 19 0 0 480.000000 nan
+event 20 0 1 501.000000 0.269231
+event 21 0 0 501.000000 nan
+event 22 0 1 600.000000 4.714286
+event 23 0 0 600.000000 nan
